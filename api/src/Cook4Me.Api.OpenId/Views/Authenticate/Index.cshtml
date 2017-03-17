@@ -1,0 +1,92 @@
+﻿@using SimpleIdentityServer.Host
+
+@model Cook4Me.Api.OpenId.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Authenticate";
+    var loginProviders = Context.Authentication.GetAuthenticationSchemes().Where(a => a.DisplayName != null);
+    var userNameState = ViewData.ModelState["UserName"];
+    var passwordState = ViewData.ModelState["Password"];
+}
+
+@section PageTitle
+{
+    <h1>Authenticate</h1>
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <div>
+            <h2>External authenticate</h2>
+        </div>
+        <div>
+            @if (!loginProviders.Any())
+            {
+                <p>There is no external authentication services configured</p>
+            }
+            else
+            {
+                using (Html.BeginForm("ExternalLogin", "Authenticate"))
+                {
+                    foreach (var loginProvider in loginProviders)
+                    {
+                        <button type="submit" class="btn btn-default" id="@loginProvider.AuthenticationScheme" name="provider" value="@loginProvider.AuthenticationScheme" title="Log in using your @loginProvider.AuthenticationScheme account">@loginProvider.DisplayName</button>
+                    }
+                }
+            }
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div>
+            <h2>Local Authentication</h2>
+        </div>
+        <div>
+            @Html.ValidationMessage("invalid_credentials")
+            <form name="form" method="POST" action="@Url.Action("LocalLogin")">
+                <fieldset>
+                    @if (userNameState != null && userNameState.Errors.Any())
+                    {
+                        <div class="form-group has-error">
+                            <label class="control-label">Username</label>
+                            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="@string.Join(",", userNameState.Errors.Select(e => e.ErrorMessage))"></span>
+                            <input maxlength="100" class="form-control" value="@Model.UserName" name="UserName" type="text" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label class="control-label">Username</label>
+                            <input maxlength="100" class="form-control" value="@Model.UserName" name="UserName" type="text" />
+                        </div>
+                    }
+
+                    @if (passwordState != null && passwordState.Errors.Any())
+                    {
+                        <div class="form-group has-error">
+                            <label class="control-label">Password</label>
+                            <span class="glyphicon glyphicon-info-sign" data-toggle="tooltip" data-placement="right" title="@string.Join(",", passwordState.Errors.Select(e => e.ErrorMessage))"></span>
+                            <input maxlength="100" class="form-control" value="@Model.Password" name="Password" type="password" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label class="control-label">Password</label>
+                            <input maxlength="100" class="form-control" value="@Model.Password" name="Password" type="password" />
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" value="@Model.IsChecked" name="IsChecked" />
+                            <strong>Remember</strong>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

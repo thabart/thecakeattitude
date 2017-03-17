@@ -1,0 +1,12 @@
+﻿@using SimpleIdentityServer.Host.Extensions
+
+@{
+    var user = await this.GetAuthenticatedUser(Cook4Me.Api.OpenId.Constants.CookieName);
+}
+
+<ul class="list-group">
+    @foreach(var claim in user.Claims)
+    {
+        <li class="list-group-item"><b>@claim.Type</b> : <span>@claim.Value</span></li>
+    }
+</ul>

@@ -1,0 +1,3 @@
+[submodule "api/simpleidserver"]
+	path = api/simpleidserver
+	url = https://github.com/thabart/SimpleIdentityServer.git

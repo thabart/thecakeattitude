@@ -1,0 +1,31 @@
+{
+  "version": "1.0.0-*",
+  "description": "Cook4Me.Api.Core Class Library",
+  "authors": [ "thierry habart" ],
+  "packOptions": {
+    "tags": [ "" ],
+    "licenseUrl": "",
+    "projectUrl": ""
+  },
+  "dependencies": {
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0"
+  },
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools": {
+      "imports": [ "dnxcore50", "portable-net451+win8" ],
+      "version": "1.0.0-preview2-final"
+    }
+  },
+  "frameworks": {
+    "net46": { },
+    "netcoreapp1.0": {
+      "imports": [ "dnxcore50", "portable-net451+win8" ],
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        }
+      }
+    }
+  }
+}
