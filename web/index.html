@@ -1,0 +1,211 @@
+<html>
+	<head>		
+		<meta charset="utf-8">
+		<title>Cake attitude</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+		<!-- Jquery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+		<!-- Bootstrap -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+		<!-- Google map -->
+		<script type="text/javascript">
+			var map;
+			function initMap() {
+				console.log(document.getElementById('map'));
+			  map = new google.maps.Map(document.getElementById('map'), {
+				center: {lat: -34.397, lng: 150.644},
+				zoom: 8
+			  });
+			}
+		</script>
+		<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN72d3ipuyzbqhJgjwav5HnnKkLqp3KCU&callback=initMap"></script>
+		<!-- CSS Libraries -->
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" >
+		<style type="text/css">
+			.no-padding {
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="#">Cake attitude</a>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Maps</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Cookers</a>
+					</li>
+				</ul>
+				<ul class="navbar-nav my-2 my-lg-0">
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Account</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="#">Disconnect</a>
+						</div>
+					</li>
+				</form>
+			</div>
+		</nav>
+		<div>
+			<div class="row">
+				<div class="col-md-6">
+					<div id="map" class="col-md-12" style="height:500px;"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="row">
+						<!-- Display top cookers (requesters) -->
+						<div class="col-md-5" style="padding-top:10px;">
+							<div class="card">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="#top-cookers">
+									<div class="p-2">
+										Top 10 cookers				
+									</div>
+									<div class="p-2">
+										<i class="fa fa-pencil" aria-hidden="true"></i>
+									</div>
+								</div>
+								<div id="top-cookers" class="collapse show">
+									<div class="list-group list-group-flush">
+										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+											<div class="d-flex w-100">
+												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+												<div class="d-flex flex-column">
+													<h5 class="mb-1">Khin Mya yee</h5>		
+													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+												</div>
+											</div>
+										</a>
+										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+											<div class="d-flex w-100">
+												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+												<div class="d-flex flex-column">
+													<h5 class="mb-1">Khin Mya yee</h5>		
+													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+												</div>
+											</div>
+										</a>
+										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+											<div class="d-flex w-100">
+												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+												<div class="d-flex flex-column">
+													<h5 class="mb-1">Khin Mya yee</h5>		
+													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+												</div>
+											</div>
+										</a>
+										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+											<div class="d-flex w-100">
+												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+												<div class="d-flex flex-column">
+													<h5 class="mb-1">Khin Mya yee</h5>		
+													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+												</div>
+											</div>
+										</a>
+									</div>
+									<nav style="padding-top:20px;">
+										<ul class="pagination">
+											<li class="page-item"><a class="page-link" href="#">1</a></li>
+											<li class="page-item"><a class="page-link" href="#">2</a></li>
+											<li class="page-item"><a class="page-link" href="#">3</a></li>
+											<li class="page-item"><a class="page-link" href="#">Next</a></li>
+										</ul>
+									</nav>
+									<div class="card-block">
+									<a href="#" class="card-link">View more</a>
+								</div>
+								</div>
+							</div>						
+						</div>
+						<!-- Display closest products (requesters) -->
+						<div class="col-md-5" style="padding-top:10px;">							
+							<div class="card">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="#closest-products">
+									<div class="p-2">
+										"Interesting" products									
+									</div>
+									<div class="p-2">
+										<i class="fa fa-pencil" aria-hidden="true"></i>
+									</div>
+								</div>
+								<div id="closest-products" class="collapse show">
+									<div class="list-group list-group-flush">
+										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+											<div class="d-flex w-100">
+												<img src="https://www.thecheesecakefactory.com/assets/images/Menu-Import/CCF_SaltedCaramelCheesecake.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+												<div class="d-flex flex-column">
+													<h5 class="mb-1">Cheesecake</h5>		
+													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+												</div>
+											</div>
+										</a>								
+									</div>
+									<nav style="padding-top:20px;">
+										<ul class="pagination">
+											<li class="page-item"><a class="page-link" href="#">1</a></li>
+											<li class="page-item"><a class="page-link" href="#">2</a></li>
+											<li class="page-item"><a class="page-link" href="#">3</a></li>
+											<li class="page-item"><a class="page-link" href="#">Next</a></li>
+										</ul>
+									</nav>
+									<div class="card-block">								
+										<a href="#" class="card-link">View more</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Display orders (cookers) -->
+						<div class="col-md-5" style="padding-top:10px;">							
+							<div class="card">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="">
+									<div class="p-2">
+										"Interesting" orders									
+									</div>
+									<div class="p-2">
+										<i class="fa fa-pencil" aria-hidden="true"></i>
+									</div>
+								</div>
+							</div>						
+						</div>
+						<!-- Display quick view (your orders) -->
+						<div class="col-md-5" style="padding-top:10px;">							
+							<div class="card">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
+									<div class="p-2">
+										Your orders							
+									</div>
+									<div class="p-2">
+										<i class="fa fa-pencil" aria-hidden="true"></i>
+									</div>
+								</div>
+							</div>						
+						</div>
+						<!-- Your top cookers -->
+						<div class="col-md-5" style="padding-top:10px;">
+							<div class="card">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
+									<div class="p-2">
+										Your top cookers							
+									</div>
+									<div class="p-2">
+										<i class="fa fa-pencil" aria-hidden="true"></i>
+									</div>
+								</div>							
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
