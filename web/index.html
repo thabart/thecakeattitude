@@ -49,6 +49,19 @@
 				color: white;
 			}
 			
+			.card-lst {
+				padding-left: 5px;
+				padding-right: 5px;
+			}
+			
+			.cell {
+				padding-top: 10px;
+			}
+			
+			.card-header {
+				cursor: pointer;
+			}
+			
 			@media only screen and (min-width: 768px) {
 			  .cd-breadcrumb.triangle {
 				/* reset basic style */
@@ -134,7 +147,7 @@
 				background-image: none;
 			  }
 			  .cd-breadcrumb.triangle.custom-icons li::after, .cd-breadcrumb.triangle.custom-icons li > *::after {
-				/* 50px is the height of the <a> element */
+				/* 50px is the height of the a element */
 				border-top-width: 25px;
 				border-bottom-width: 25px;
 			  }
@@ -150,6 +163,7 @@
 		</style>
 	</head>
 	<body>
+		<!-- Header -->
 		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
 			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -161,7 +175,7 @@
 						<a class="nav-link" href="#">Maps</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Cookers</a>
+						<a class="nav-link" href="#">Sellers</a>
 					</li>
 				</ul>
 				<ul class="navbar-nav my-2 my-lg-0">
@@ -174,161 +188,149 @@
 				</form>
 			</div>
 		</nav>
+		<!-- Body -->
 		<div>
 			<div class="row">
+				<!-- Display map -->
 				<div class="col-md-6">
 					<div id="map" class="col-md-12" style="height:500px;"></div>
 				</div>
+				<!-- Display widgets -->
 				<div class="col-md-6">
-					<div class="row">
-						<!-- Display top cookers (requesters) -->
-						<div class="col-md-5" style="padding-top:10px;">
+					<ul id="widgets-container" class="list-unstyled row">
+						<!-- Display trending sellers (shops) -->
+						<li class="col-md-5 cell">
 							<div class="card">
 								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="#top-cookers">
 									<div class="p-2">
-										Top 10 cookers				
+										Trending sellers			
 									</div>
 									<div class="p-2">
 										<i class="fa fa-pencil" aria-hidden="true"></i>
+										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
+										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
 								<div id="top-cookers" class="collapse show">
-									<div class="list-group list-group-flush">
-										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
-											<div class="d-flex w-100">
-												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
-												<div class="d-flex flex-column">
-													<h5 class="mb-1">Khin Mya yee</h5>		
-													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+									<div class="card-lst">
+										<div class="list-group list-group-flush">
+											<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+												<div class="d-flex w-100">
+													<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+													<div class="d-flex flex-column">
+														<h5 class="mb-1">Khin Mya yee</h5>		
+														<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+													</div>
 												</div>
-											</div>
-										</a>
-										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
-											<div class="d-flex w-100">
-												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
-												<div class="d-flex flex-column">
-													<h5 class="mb-1">Khin Mya yee</h5>		
-													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+											</a>
+											<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+												<div class="d-flex w-100">
+													<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+													<div class="d-flex flex-column">
+														<h5 class="mb-1">Khin Mya yee</h5>		
+														<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+													</div>
 												</div>
-											</div>
-										</a>
-										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
-											<div class="d-flex w-100">
-												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
-												<div class="d-flex flex-column">
-													<h5 class="mb-1">Khin Mya yee</h5>		
-													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+											</a>
+											<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+												<div class="d-flex w-100">
+													<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+													<div class="d-flex flex-column">
+														<h5 class="mb-1">Khin Mya yee</h5>		
+														<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+													</div>
 												</div>
-											</div>
-										</a>
-										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
-											<div class="d-flex w-100">
-												<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
-												<div class="d-flex flex-column">
-													<h5 class="mb-1">Khin Mya yee</h5>		
-													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+											</a>
+											<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+												<div class="d-flex w-100">
+													<img src="https://files.meilleurduchef.com/mdc/photo/recettes-categorie/chef/cedric-bechade/cedric-bechade-44-300.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+													<div class="d-flex flex-column">
+														<h5 class="mb-1">Khin Mya yee</h5>		
+														<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+													</div>
 												</div>
-											</div>
-										</a>
+											</a>
+										</div>
+										<nav style="padding-top:20px;">
+											<ul class="pagination">
+												<li class="page-item"><a class="page-link" href="#">1</a></li>
+												<li class="page-item"><a class="page-link" href="#">2</a></li>
+												<li class="page-item"><a class="page-link" href="#">3</a></li>
+												<li class="page-item"><a class="page-link" href="#">Next</a></li>
+											</ul>
+										</nav>
 									</div>
-									<nav style="padding-top:20px;">
-										<ul class="pagination">
-											<li class="page-item"><a class="page-link" href="#">1</a></li>
-											<li class="page-item"><a class="page-link" href="#">2</a></li>
-											<li class="page-item"><a class="page-link" href="#">3</a></li>
-											<li class="page-item"><a class="page-link" href="#">Next</a></li>
-										</ul>
-									</nav>
 									<div class="card-block">
-									<a href="#" class="card-link">View more</a>
-								</div>
+										<a href="#" class="card-link">View more</a>
+									</div>
 								</div>
 							</div>						
-						</div>
-						<!-- Display closest products (requesters) -->
-						<div class="col-md-5" style="padding-top:10px;">							
+						</li>
+						<!-- Display promotions -->
+						<li class="col-md-5 cell">							
 							<div class="card">
 								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="#closest-products">
 									<div class="p-2">
-										"Interesting" products									
+										Actions									
 									</div>
 									<div class="p-2">
 										<i class="fa fa-pencil" aria-hidden="true"></i>
+										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
+										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
 								<div id="closest-products" class="collapse show">
-									<div class="list-group list-group-flush">
-										<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
-											<div class="d-flex w-100">
-												<img src="https://www.thecheesecakefactory.com/assets/images/Menu-Import/CCF_SaltedCaramelCheesecake.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
-												<div class="d-flex flex-column">
-													<h5 class="mb-1">Cheesecake</h5>		
-													<p class="mb-1">Rating : <i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></p>
+									<div class="card-lst">
+										<div class="list-group list-group-flush">
+											<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
+												<div class="d-flex w-100">
+													<img src="https://www.thecheesecakefactory.com/assets/images/Menu-Import/CCF_SaltedCaramelCheesecake.jpg" style="width:80px; height:80px;" class="img-thumbnail rounded float-left" />
+													<div class="d-flex flex-column">
+														<h5 class="mb-1">-20% on all the cheesecake</h5>		
+													</div>
 												</div>
-											</div>
-										</a>								
+											</a>								
+										</div>
+										<nav style="padding-top:20px;">
+											<ul class="pagination">
+												<li class="page-item"><a class="page-link" href="#">1</a></li>
+												<li class="page-item"><a class="page-link" href="#">2</a></li>
+												<li class="page-item"><a class="page-link" href="#">3</a></li>
+												<li class="page-item"><a class="page-link" href="#">Next</a></li>
+											</ul>
+										</nav>
 									</div>
-									<nav style="padding-top:20px;">
-										<ul class="pagination">
-											<li class="page-item"><a class="page-link" href="#">1</a></li>
-											<li class="page-item"><a class="page-link" href="#">2</a></li>
-											<li class="page-item"><a class="page-link" href="#">3</a></li>
-											<li class="page-item"><a class="page-link" href="#">Next</a></li>
-										</ul>
-									</nav>
 									<div class="card-block">								
 										<a href="#" class="card-link">View more</a>
 									</div>
 								</div>
 							</div>
-						</div>
-						<!-- Display orders (cookers) -->
-						<div class="col-md-5" style="padding-top:10px;">							
+						</li>
+						<!-- Public announcement -->
+						<li class="col-md-10 cell">							
 							<div class="card">
 								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="">
 									<div class="p-2">
-										"Interesting" orders									
+										Public announcement								
 									</div>
 									<div class="p-2">
 										<i class="fa fa-pencil" aria-hidden="true"></i>
+										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
+										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
 							</div>						
-						</div>
-						<!-- Display quick view (your orders) -->
-						<div class="col-md-5" style="padding-top:10px;">							
-							<div class="card">
-								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
-									<div class="p-2">
-										Your orders							
-									</div>
-									<div class="p-2">
-										<i class="fa fa-pencil" aria-hidden="true"></i>
-									</div>
-								</div>
-							</div>						
-						</div>
-						<!-- Your top cookers -->
-						<div class="col-md-5" style="padding-top:10px;">
-							<div class="card">
-								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
-									<div class="p-2">
-										Your top cookers							
-									</div>
-									<div class="p-2">
-										<i class="fa fa-pencil" aria-hidden="true"></i>
-									</div>
-								</div>							
-							</div>
-						</div>
-					</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
 		<!-- Display float add button -->
+		<!--
 		<div class="float-button">
 			<a href="#" id="add-order"><span class="fa fa-plus fa-3 add" aria-hidden="true"></span></a>
 		</div>
+		-->
 		<!-- Create a new order -->
 		<div class="modal fade" id="new-order">			
 		  <div class="modal-dialog modal-lg" role="document">
@@ -353,6 +355,9 @@
 			$("#add-order").click(function(e) {
 				e.preventDefault();
 				$("#new-order").modal('toggle');
+			});
+			$("#widgets-container").sortable({
+				handle: '.card-header'
 			});
 		});
 	</script>
