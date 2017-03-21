@@ -54,7 +54,7 @@
 				padding-right: 5px;
 			}
 			
-			.card-header {
+			.card-header [data-toggle='collapse'] {
 				cursor: pointer;
 			}
 			
@@ -109,17 +109,18 @@
 						<!-- Display trending sellers (shops) -->
 						<li class="col-md-5 cell">
 							<div class="card">
-								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="#top-cookers">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
 									<div class="p-2">
 										Trending sellers			
 									</div>
 									<div class="p-2">
-										<i class="fa fa-pencil" aria-hidden="true"></i>
+										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#trending-sellers"></i>
+										<i class="fa fa-search" aria-hidden="true"></i>
 										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
-								<div id="top-cookers" class="collapse show">
+								<div id="trending-sellers" class="collapse show">
 									<div class="card-lst">
 										<div class="list-group list-group-flush">
 											<a href="#" class="list-group-item list-group-item-action flex-column align-items-start no-padding">
@@ -177,12 +178,13 @@
 						<!-- Display promotions -->
 						<li class="col-md-5 cell">							
 							<div class="card card-red">
-								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="#best-deals">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
 									<div class="p-2">
 										Best deals	<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>							
 									</div>
 									<div class="p-2">
-										<i class="fa fa-pencil" aria-hidden="true"></i>
+										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#best-deals"></i>
+										<i class="fa fa-search" aria-hidden="true"></i>
 										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
@@ -217,12 +219,13 @@
 						<!-- Public announcement -->
 						<li class="col-md-10 cell">							
 							<div class="card">
-								<div class="card-header d-flex justify-content-between bd-highlight mb-3" data-toggle="collapse" href="#announcements">
+								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
 									<div class="p-2">
 										Public announcements <i class="fa fa-bullhorn" aria-hidden="true"></i>					
 									</div>
 									<div class="p-2">
-										<i class="fa fa-pencil" aria-hidden="true"></i>
+										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#announcements"></i>
+										<i class="fa fa-search" aria-hidden="true"></i>
 										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
@@ -308,6 +311,13 @@
 				placeholder: 'placeholder',
 				forcePlaceholderSize: true,
 				cursor: 'move'
+			});
+			$(".card-header [data-toggle='collapse']").click(function() {
+				if ($(this).hasClass('fa-arrow-up')) {
+					$(this).switchClass('fa-arrow-up', 'fa-arrow-down');					
+				} else {					
+					$(this).switchClass('fa-arrow-down', 'fa-arrow-up');			
+				}
 			});
 		});
 	</script>
