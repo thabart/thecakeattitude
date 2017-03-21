@@ -57,6 +57,17 @@
 			.card-header [data-toggle],
 			.card-header .fa-times {
 				cursor: pointer;
+				padding: 4px;
+			}
+			
+			.card-header [data-toggle]:hover,
+			.card-header .fa-times:hover {
+				background-color: #d9d9de;
+			}
+			
+			.card-red .card-header [data-toggle]:hover,
+			.card-red .card-header .fa-times:hover {
+				background-color: #d83733 !important;
 			}
 			
 			.card-red .card-header {
@@ -119,7 +130,7 @@
 					<ul id="widgets-container" class="list-unstyled row">
 						<!-- Display trending sellers (shops) -->
 						<li class="col-md-6 cell">
-							<div class="card">
+							<div class="card" id="sellers">
 								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
 									<div class="p-2">
 										Trending sellers			
@@ -127,6 +138,7 @@
 									<div class="p-2">
 										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#trending-sellers"></i>
 										<i class="fa fa-search" aria-hidden="true" data-toggle="modal" data-target="#search-sellers"></i>
+										<i class="fa fa-arrows-alt" aria-hidden="true"  data-toggle="full-screen" data-target="#sellers"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
@@ -187,7 +199,7 @@
 						</li>
 						<!-- Display deals -->
 						<li class="col-md-6 cell">							
-							<div class="card card-red">
+							<div class="card card-red" id="deals">
 								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
 									<div class="p-2">
 										Best deals	<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>							
@@ -195,6 +207,7 @@
 									<div class="p-2">
 										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#best-deals"></i>
 										<i class="fa fa-search" aria-hidden="true" data-toggle="modal" data-target="#search-deals"></i>
+										<i class="fa fa-arrows-alt" aria-hidden="true"  data-toggle="full-screen" data-target="#deals"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
@@ -227,7 +240,7 @@
 						</li>
 						<!-- Public announcement -->
 						<li class="col-md-12 cell">							
-							<div class="card">
+							<div class="card" id="public-announcements">
 								<div class="card-header d-flex justify-content-between bd-highlight mb-3">
 									<div class="p-2">
 										Public announcements <i class="fa fa-bullhorn" aria-hidden="true"></i>					
@@ -235,6 +248,7 @@
 									<div class="p-2">
 										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#announcements"></i>
 										<i class="fa fa-search" aria-hidden="true" data-toggle="modal" data-target="#search-announcements"></i>
+										<i class="fa fa-arrows-alt" aria-hidden="true"  data-toggle="full-screen" data-target="#public-announcements"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
@@ -298,8 +312,8 @@
 				
 			  </div>
 			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Next</button>
-				<button type="button" class="btn btn-danger">Close</button>
+				<button type="button" class="btn btn-default">Search</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 			  </div>
 			</div>
 		  </div>
@@ -316,8 +330,8 @@
 				
 			  </div>
 			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Next</button>
-				<button type="button" class="btn btn-danger">Close</button>
+				<button type="button" class="btn btn-default">Search</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 			  </div>
 			</div>
 		  </div>
@@ -334,26 +348,11 @@
 				
 			  </div>
 			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Next</button>
-				<button type="button" class="btn btn-danger">Close</button>
+				<button type="button" class="btn btn-default">Search</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 			  </div>
 			</div>
 		  </div>		
-		</div>
-		<!-- Close the widget -->
-		<div class="modal fade" id="close-widget">			
-		  <div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Do-you want to close the widget ?</h4>
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
-				<button type="button" class="btn btn-danger">No</button>
-			  </div>
-			</div>
-		  </div>	
 		</div>
 	</body>
 	<script type="text/javascript">
@@ -388,6 +387,24 @@
 					dialog.modal('toggle');
 				});
 				dialog.modal();
+			});
+			$("[data-toggle='full-screen']").click(function() {
+				var cssSelector = $(this).data('target');
+				if ($(cssSelector).hasClass('is-full-screen')) {					
+					$(cssSelector).css('position', 'relative')
+						.css('top', "")
+						.css('z-index', '')
+						.css('left', "")
+						.css('width', "")
+						.css('height', "");
+					$(cssSelector).removeClass('is-full-screen');
+					return;
+				}
+				
+				$(cssSelector).css('position', 'fixed')
+					.css('z-index', 1000)
+					.animate({top: 0, left: 0, width: '100%', height: '100%'}, 200);
+				$(cssSelector).addClass('is-full-screen');
 			});
 		});
 	</script>
