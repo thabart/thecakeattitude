@@ -54,12 +54,14 @@
 				padding-right: 5px;
 			}
 			
-			.card-header [data-toggle] {
+			.card-header [data-toggle],
+			.card-header .fa-times {
 				cursor: pointer;
 			}
 			
 			.card-red .card-header {
 				background-color: #f55450 !important;
+				text-transform: uppercase;
 			}
 			
 			.cell {
@@ -125,7 +127,6 @@
 									<div class="p-2">
 										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#trending-sellers"></i>
 										<i class="fa fa-search" aria-hidden="true" data-toggle="modal" data-target="#search-sellers"></i>
-										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
@@ -194,7 +195,6 @@
 									<div class="p-2">
 										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#best-deals"></i>
 										<i class="fa fa-search" aria-hidden="true" data-toggle="modal" data-target="#search-deals"></i>
-										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
@@ -235,7 +235,6 @@
 									<div class="p-2">
 										<i class="fa fa-arrow-up" aria-hidden="true" data-toggle="collapse" data-target="#announcements"></i>
 										<i class="fa fa-search" aria-hidden="true" data-toggle="modal" data-target="#search-announcements"></i>
-										<i class="fa fa-arrows-alt" aria-hidden="true"></i>
 										<i class="fa fa-times" aria-hidden="true"></i>
 									</div>
 								</div>
@@ -305,7 +304,7 @@
 			</div>
 		  </div>
 		</div>
-		<!-- Best deals -->
+		<!-- Search deals -->
 		<div class="modal fade" id="search-deals">			
 		  <div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -323,6 +322,7 @@
 			</div>
 		  </div>
 		</div>
+		<!-- Search sellers -->
 		<div class="modal fade" id="search-sellers">
 		  <div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
@@ -339,10 +339,33 @@
 			  </div>
 			</div>
 		  </div>		
-		</div<
+		</div>
+		<!-- Close the widget -->
+		<div class="modal fade" id="close-widget">			
+		  <div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Do-you want to close the widget ?</h4>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
+				<button type="button" class="btn btn-danger">No</button>
+			  </div>
+			</div>
+		  </div>	
+		</div>
 	</body>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			function getDialog(title) {
+				var html = "<div class='modal fade'><div class='modal-dialog modal-lg' role='document'><div class='modal-content'><div class='modal-header'>"+
+					"<button type='button' class='close'><span aria-hidden='true'>&times;</span></button>"+
+						"<h4 class='modal-title'>"+title+"</h4></div>"+
+						"<div class='modal-footer'><button type='button' class='btn btn-success yes'>Yes</button><button type='button' class='btn btn-danger' data-dismiss='modal'>No</button></div></div></div></div>";
+				return html;
+			}
+		
 			$("#widgets-container").sortable({
 				handle: '.card-header',
 				opacity: 0.4,				
@@ -356,6 +379,15 @@
 				} else {					
 					$(this).switchClass('fa-arrow-down', 'fa-arrow-up');			
 				}
+			});
+			$(".card-header .fa-times").click(function() {
+				var widget = $(this).closest('.card');
+				var dialog = $(getDialog("Do-you want to close the widget ?"));
+				dialog.find('.yes').click(function() {
+					widget.remove();
+					dialog.modal('toggle');
+				});
+				dialog.modal();
 			});
 		});
 	</script>
