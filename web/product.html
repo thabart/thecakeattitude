@@ -1,0 +1,137 @@
+<html>
+	<head>		
+		<meta charset="utf-8">
+		<title>Cake attitude</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+		<!-- Jquery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+		<!-- Bootstrap -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+		<!-- Carousel -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.js"></script>
+		<!-- CSS Libraries -->
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" >
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.css" >
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.green.css" >
+		<style type="text/css">
+			.cover-title {
+				position: relative;
+				bottom: 10px;
+				left: 10px;
+			}
+			
+			.section {
+				margin-top: 20px; 
+				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+			}
+			
+			.section,
+			.sub-section {
+				background-color: white; 
+			}
+			
+			.section-description {
+				padding: 20px;
+			}
+			
+			.sub-section {
+				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+				border-top: 1px solid #f1f0f0;
+			}
+			
+			.product {
+				height: 10rem;
+				padding: 1rem;
+				text-align: center;			
+				border: 1px solid rgba(0,0,0,0.13);
+				overflow: hidden;
+			}
+			
+			.product img {
+				margin: auto;
+				width: 100px;
+			}
+			
+			.products .product {
+				margin-right: 10px;
+				margin-bottom: 10px;
+			}
+		</style>
+	</head>
+	<body style="background-color: #f1f0f0;">
+		<!-- Header -->
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="#">Cake attitude</a>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Maps</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Sellers</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Account</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="#">Disconnect</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<!-- Body -->
+		<div class="container">
+			<!-- Display image and description -->
+			<section class="row section section-description">
+					<div class="col-md-2">
+						<img src="http://static.cuisineaz.com/400x320/i53200-photo-de-tiramisu.jpg" class="img-thumbnail" style="width: 150px;" />
+					</div>
+					<div class="col-md-8">						
+						<h1>Tiramisu</h1>
+						<p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text</p>
+					</div>
+			</section>
+			<!-- Display stock information if needed -->
+			<section class="row section section-description">
+				<table style="margin: auto;">
+					<tbody>
+						<tr>
+							<td style="text-align: center;">					
+								<i class="fa fa-home" aria-hidden="true" style="font-size: 40pt;"></i><br />
+								<span style="color: green;">25 products available</span>
+							</td>
+							<td style="text-align: center; padding-left: 10px;">
+								<i class="fa fa-map-marker" aria-hidden="true" style="font-size: 40pt;"></i><br />
+								<span>223 avenue des croix du feu</span>
+							</td>							
+						</tr>
+					</tbody>
+				</table>
+			</section>
+			<!-- Display price -->
+			<section class="row section section-description">
+				<h2 class="col-md-5">Price</h2>
+				<h2>25 euros</h2>				
+			</section>
+			<!-- Add order button -->
+			<section class="row sub-section section-description">
+				<button class="btn btn-success btn-lg">Add</button>
+			</section>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$(".owl-carousel").owlCarousel({
+				loop: false,
+				margin: 10,
+				nav: true
+			});
+		});
+	</script>
+</html>
