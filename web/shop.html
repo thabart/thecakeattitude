@@ -9,9 +9,13 @@
 		<!-- Bootstrap -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+		<!-- Carousel -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.js"></script>
 		<!-- CSS Libraries -->
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" >
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.css" >
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.green.css" >
 		<style type="text/css">
 			.cover-title {
 				position: relative;
@@ -36,6 +40,24 @@
 			.sub-section {
 				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
 				border-top: 1px solid #f1f0f0;
+			}
+			
+			.product {
+				height: 10rem;
+				padding: 1rem;
+				text-align: center;			
+				border: 1px solid rgba(0,0,0,0.13);
+				overflow: hidden;
+			}
+			
+			.product img {
+				margin: auto;
+				width: 100px;
+			}
+			
+			.products .product {
+				margin-right: 10px;
+				margin-bottom: 10px;
 			}
 		</style>
 	</head>
@@ -83,7 +105,7 @@
 			</section>
 			<section class="row sub-section section-description">
 				<h5 style="width: 100%;">Contact information</h5>
-				<table>
+				<table style="margin: auto;">
 					<tbody>
 						<tr>
 							<td style="text-align: center;">
@@ -101,16 +123,68 @@
 			<!-- Display top deals -->
 			<section class="row section section-description">
 				<h5>Best deals</h5>
+				<ul class="owl-carousel owl-theme">
+					<div class="product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+				</ul>
 			</section>
 			<!-- Display products -->
-			<section class="row section section-description">
-				<h5>Products</h5>
+			<section class="row section section-description products">
+				<h4>Products</h4> <a href="#">(view shop)</a>
+				<div class="col-md-12 row">
+					<div class="col-md-4 product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="col-md-4 product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="col-md-4 product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="col-md-4 product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="col-md-4 product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="col-md-4 product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+					<div class="col-md-4 product">
+						<img src="http://img.cac.pmdstatic.net/fit/http.3A.2F.2Fwww.2Ecuisineactuelle.2Efr.2Fvar.2Fcui.2Fstorage.2Fimages.2Feditos.2Ftiramisu.2F1088254-1-fre-FR.2Ftiramisu.2Ejpg/345x258/crop-from/center/tiramisu.jpg" style="width:100px;" />
+						<h5>t is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English</h5>
+					</div>
+				</div>
 			</section>
 		</div>
 	</body>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			
+			$(".owl-carousel").owlCarousel({
+				loop: false,
+				margin: 10,
+				nav: true
+			});
 		});
 	</script>
 </html>
