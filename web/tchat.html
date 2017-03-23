@@ -20,8 +20,19 @@
 	<body>
 	</body>
 	<script type="text/javascript">
-		$(document).ready(function() {
-			var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Cake attitute');
+		$(document).ready(function() {			
+			var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Cake attitute', { preload : preload, create, create });
+			function preload() {
+				// Load phaser map : http://examples.phaser.io/_site/view_full.html?d=loader&f=load+tilemap+json.js&t=load%20tilemap%20json
+				game.load.tilemap('game', 'http://localhost:3000/public/map/map.json', null, Phaser.Tilemap.TILED_JSON);
+				
+			}
+			
+			var map,
+				layer;
+			function create() {				
+				map = game.add.tilemap('game');
+			}
 		});
 	</script>
 </html>
