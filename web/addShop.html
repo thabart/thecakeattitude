@@ -1,0 +1,213 @@
+<html>
+	<head>		
+		<meta charset="utf-8">
+		<title>Add shop - Cake attitude</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+		<!-- Jquery -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+		<!-- Bootstrap -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
+		<!-- Carousel -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/owl.carousel.js"></script>
+		<!-- CSS Libraries -->
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" >
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.carousel.css" >
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.2.1/assets/owl.theme.green.css" >
+		<style type="text/css">
+			.section {
+				margin-top: 20px; 
+				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+			}
+			
+			.section,
+			.sub-section {
+				background-color: white; 
+			}
+			
+			.section-description {
+				padding: 20px;
+			}
+			
+			.sub-section {
+				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+				border-top: 1px solid #f1f0f0;
+			}
+			
+			.progressbar {
+				counter-reset: step;
+			}
+			
+			.progressbar li {
+				text-align: center;
+				list-style-type: none;
+				text-transform: uppercase;				
+				float: left;
+				width: 16.6%;
+			}
+			
+			.progressbar li:before {
+				content: counter(step);
+				counter-increment: step;
+				width: 30px;
+				line-height: 30px;
+				display: block;
+				color: #333;
+				background: white;
+				border-radius: 50%;
+				margin: 0 auto 5px auto;
+			}
+			
+			.progressbar li:after {
+				content: '';
+				height: 2px;
+				right: 50%;
+				background: rgba(148, 135, 135, 0.9);
+				display: block;
+				position: relative;
+				top: -45px;
+				width: 100%;
+				z-index: -1;
+			}
+			
+			.progressbar li:first-child:after {
+				content: none; 
+			}
+			
+			.progressbar li.active:before {
+				color: white;
+			}
+			
+			.progressbar li.active:before,
+			.progressbar li.active:after {
+				background: #27AE60;
+				
+			}
+		</style>
+	</head>
+	<body style="background-color: #f1f0f0;">
+		<!-- Header -->
+		<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+			<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<a class="navbar-brand" href="#">Cake attitude</a>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li class="nav-item active">
+						<a class="nav-link" href="#">Maps</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="#">Sellers</a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Account</a>
+						<div class="dropdown-menu">
+							<a class="dropdown-item" href="#">Disconnect</a>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<!-- Body -->
+		<!-- Check example : https://codepen.io/atakan/pen/gqbIz -->
+		<div class="container">
+			<ul class="progressbar">
+				<li class="active">Description</li>
+				<li>Address</li>
+				<li>Contact</li>
+				<li>Tags</li>
+				<li>Products</li>
+				<li>Payment</li>
+			</ul>
+			<div id="tab-content">
+				<section class="tab">
+					<section class="row section section-description">
+						<h5>Description</h5>
+						
+					</section>				
+					<section class="row sub-section section-description">
+						<button class="btn btn-primary next" style="margin-right: 10px;">Next</button>
+					</section>
+				</section>
+				<section class="tab" style="display: none;">
+					<section class="row section section-description">
+						<h5>Address</h5>						
+					</section>				
+					<section class="row sub-section section-description">
+						<button class="btn btn-primary previous" style="margin-right: 10px;">Previous</button>
+						<button class="btn btn-primary next">Next</button>
+					</section>
+				</section>
+				<section class="tab" style="display: none;">
+					<section class="row section section-description">
+						<h5>Contact</h5>						
+					</section>				
+					<section class="row sub-section section-description">
+						<button class="btn btn-primary previous" style="margin-right: 10px;">Previous</button>
+						<button class="btn btn-primary next">Next</button>
+					</section>
+				</section>
+				<section class="tab" style="display: none;">
+					<section class="row section section-description">
+						<h5>Tags</h5>						
+					</section>				
+					<section class="row sub-section section-description">
+						<button class="btn btn-primary previous" style="margin-right: 10px;">Previous</button>
+						<button class="btn btn-primary next">Next</button>
+					</section>
+				</section>
+				<section class="tab" style="display: none;">
+					<section class="row section section-description">
+						<h5>Products</h5>						
+					</section>				
+					<section class="row sub-section section-description">
+						<button class="btn btn-primary previous" style="margin-right: 10px;">Previous</button>
+						<button class="btn btn-primary next">Next</button>
+					</section>
+				</section>
+				<section class="tab" style="display: none;">
+					<section class="row section section-description">
+						<h5>Payment</h5>						
+					</section>				
+					<section class="row sub-section section-description">
+						<button class="btn btn-primary previous" style="margin-right: 10px;">Previous</button>
+						<button class="btn btn-success">Save</button>
+					</section>
+				</section>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var navigate = function(oldTab, newTab) {
+				oldTab.animate({opacity: 0}, {
+					duration: 800,
+					complete: function() {
+						$(oldTab).hide();
+						$(newTab).show();		
+						$(newTab).css('opacity', '100');
+						var lst = $(".progressbar li");
+						lst.removeClass("active");
+						for(var i = 0; i <= $(newTab).index(); i++) {
+							$(lst.get(i)).addClass('active');
+						}
+					}
+				});				
+			};
+			
+			$('.next').click(function() {
+				var parent = $(this).closest('.tab');
+				var nextTab = $(parent).next();
+				navigate(parent, nextTab);
+			});
+			$('.previous').click(function() {
+				var parent = $(this).closest('.tab');
+				var previousTab = $(parent).prev();		
+				navigate(parent, previousTab);
+			});
+		});
+	</script>
+</html>
