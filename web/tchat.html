@@ -25,13 +25,22 @@
 			function preload() {
 				// Load phaser map : http://examples.phaser.io/_site/view_full.html?d=loader&f=load+tilemap+json.js&t=load%20tilemap%20json
 				game.load.tilemap('game', 'http://localhost:3000/public/map/map.json', null, Phaser.Tilemap.TILED_JSON);
-				
+				game.load.image('tallgrass', 'http://localhost:3000/public/map/tilesets/tallgrass.png');
+				game.load.image('farming_fishing', 'http://localhost:3000/public/map/tilesets/farming_fishing.png');
 			}
 			
 			var map,
-				layer;
+				collisionLayer,
+				alimentationLayer;
 			function create() {				
+				game.stage.backgroundColor = '#787878';
 				map = game.add.tilemap('game');
+				map.addTilesetImage('tallgrass', 'tallgrass');
+				map.addTilesetImage('farming_fishing', 'farming_fishing');
+				collisionLayer = map.createLayer('Collision');
+				alimentationLayer = map.createLayer('Alimentations');
+				collisionLayer.resizeWorld();
+				alimentationLayer.resizeWorld();
 			}
 		});
 	</script>
