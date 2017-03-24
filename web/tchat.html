@@ -21,83 +21,90 @@
 	</body>
 	<script type="text/javascript">
 		$(document).ready(function() {			
-			var game = new Phaser.Game(800, 600, Phaser.AUTO, 'Cake attitute', { preload : preload, create, create, update });
-			function preload() {
-				// Load phaser map : http://examples.phaser.io/_site/view_full.html?d=loader&f=load+tilemap+json.js&t=load%20tilemap%20json
-				game.load.tilemap('game', 'http://localhost:3000/public/map/map.json', null, Phaser.Tilemap.TILED_JSON);
-				game.load.image('tallgrass', 'http://localhost:3000/public/map/tilesets/tallgrass.png');
-				game.load.image('farming_fishing', 'http://localhost:3000/public/map/tilesets/farming_fishing.png');
-				game.load.image('tiles', 'http://localhost:3000/public/map/tilesets/tiles.png');
-				game.load.image('player', 'http://localhost:3000/public/map/character/phaser-dude.png');
-			}
-			
-			var map,
-				alimentationLayer,
-				earthLayer,
-				groundLayer,
-				collisionLayer,
-				cursors,
-				player;
-			function create() {	
-				// Start the Arcade physics systems.
-				game.physics.startSystem(Phaser.Physics.ARCADE);
-				// Change background color.				
-				game.stage.backgroundColor = '#787878';
-				// Add tile map and tile set image.
-				map = game.add.tilemap('game');
-				map.addTilesetImage('tallgrass', 'tallgrass');
-				map.addTilesetImage('farming_fishing', 'farming_fishing');
-				map.addTilesetImage('tiles', 'tiles');
-				// Add the layers.
-				collisionLayer = map.createLayer('Collision');
-				groundLayer = map.createLayer('Ground');
-				earthLayer = map.createLayer('Earth');
-				alimentationLayer = map.createLayer('Alimentations');
-				// Specify which tile can collide.
-				map.setCollision(421, true, 'Collision');		
-				// Add the player to the world.
-				player = game.add.sprite(0, 0, 'player');
-				game.physics.arcade.enable(player);
-				// Change the world size the match the size of this layer.
-				earthLayer.resizeWorld();				
-				// Make the camera follow the sprite.
-				game.camera.follow(player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	
-				cursors = game.input.keyboard.createCursorKeys();				
-			}
-			
-			function update() {
-				if (game.physics.arcade.collide(player, collisionLayer, collisionHandler)) {
-					console.log('boom');
+			var tchat = function() {			
+				this.fields = {
+					game: null,
+					map: null,
+					cursors: null,
+					player: null,
+					layers : {
+						alimentation : null,
+						earth : null,
+						ground: null,
+						collision : null
+					}
+				};
+					
+				function preload() {
+					this.fields.game.load.tilemap('game', 'http://localhost:3000/public/map/map.json', null, Phaser.Tilemap.TILED_JSON);
+					this.fields.game.load.image('tallgrass', 'http://localhost:3000/public/map/tilesets/tallgrass.png');
+					this.fields.game.load.image('farming_fishing', 'http://localhost:3000/public/map/tilesets/farming_fishing.png');
+					this.fields.game.load.image('tiles', 'http://localhost:3000/public/map/tilesets/tiles.png');
+					this.fields.game.load.image('player', 'http://localhost:3000/public/map/character/phaser-dude.png');
 				}
 				
-				player.body.velocity.x = 0;
-				player.body.velocity.y = 0;
-				// game.physics.arcade.collide(player, collisionLayer); 
-				if (cursors.left.isDown)
-				{
-					player.body.velocity.x = -200;
+				function create() {	
+					// Start the Arcade physics systems.
+					this.fields.game.physics.startSystem(Phaser.Physics.ARCADE);
+					// Change background color.				
+					this.fields.game.stage.backgroundColor = '#787878';
+					// Add tile map and tile set image.
+					this.fields.map = this.fields.game.add.tilemap('game');
+					this.fields.map.addTilesetImage('tallgrass', 'tallgrass');
+					this.fields.map.addTilesetImage('farming_fishing', 'farming_fishing');
+					this.fields.map.addTilesetImage('tiles', 'tiles');
+					// Add the layers.
+					this.fields.layers.collision = this.fields.map.createLayer('Collision');
+					this.fields.layers.ground = this.fields.map.createLayer('Ground');
+					this.fields.layers.earth = this.fields.map.createLayer('Earth');
+					this.fields.layers.alimentation = this.fields.map.createLayer('Alimentations');
+					// Specify which tile can collide.
+					this.fields.map.setCollision(421, true, 'Collision');		
+					// Add the player to the world.
+					this.fields.player = this.fields.game.add.sprite(0, 0, 'player');
+					this.fields.game.physics.arcade.enable(this.fields.player);
+					// Change the world size the match the size of this layer.
+					this.fields.layers.earth.resizeWorld();				
+					// Make the camera follow the sprite.
+					this.fields.game.camera.follow(this.fields.player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	
+					this.fields.cursors = this.fields.game.input.keyboard.createCursorKeys();				
 				}
-				else if (cursors.right.isDown)
-				{
-					player.body.velocity.x = 200;
-				}
+							
+				function update() {
+					if (this.fields.game.physics.arcade.collide(this.fields.player, this.fields.layers.collision)) {
+						console.log('boom');
+					}
+					
+					this.fields.player.body.velocity.x = 0;
+					this.fields.player.body.velocity.y = 0;
+					// game.physics.arcade.collide(player, collisionLayer); 
+					if (this.fields.cursors.left.isDown)
+					{
+						this.fields.player.body.velocity.x = -200;
+					}
+					else if (this.fields.cursors.right.isDown)
+					{
+						this.fields.player.body.velocity.x = 200;
+					}
 
-				if (cursors.up.isDown)
-				{
-					player.body.velocity.y = -200;
+					if (this.fields.cursors.up.isDown)
+					{
+						this.fields.player.body.velocity.y = -200;
+					}
+					else if (this.fields.cursors.down.isDown)
+					{
+						this.fields.player.body.velocity.y = 200;
+					}
 				}
-				else if (cursors.down.isDown)
-				{
-					player.body.velocity.y = 200;
-				}
-			}
+				
+				this.init = function() {
+					var self = this;
+					this.fields.game = new Phaser.Game(800, 600, Phaser.AUTO, 'Cake attitute', { preload : function() { preload.call(self); }, create : function() { create.call(self); }, update : function() { update.call(self); } });
+				};
+			};
 			
-			function collisionHandler (player, veg) {
-				if (veg.frame === 17)
-				{
-					veg.kill();
-				}
-			}
+			var t = new tchat();
+			t.init();
 		});
 	</script>
 </html>
