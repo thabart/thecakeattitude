@@ -18,6 +18,17 @@
 		</style>
 	</head>
 	<body>
+		<div style="width:980px; margin: 0 auto;">
+			<div id="game">
+			
+			</div>
+			<div style="background-color: gray;">
+				<div class="col-md-12">
+					<input type="text" class="form-control" style="width: 300px; display:inline-block;" id="message-text" />
+					<button class="fa fa-envelope-o" style="display: inline-block;" id="send-message"></button>
+				</div>
+			</div>
+		</div>
 	</body>
 	<script type="text/javascript">
 		$(document).ready(function() {			
@@ -27,6 +38,7 @@
 					map: null,
 					cursors: null,
 					player: null,
+					message: null,
 					layers : {
 						alimentation : null,
 						earth : null,
@@ -53,6 +65,7 @@
 					this.fields.map.addTilesetImage('tallgrass', 'tallgrass');
 					this.fields.map.addTilesetImage('farming_fishing', 'farming_fishing');
 					this.fields.map.addTilesetImage('tiles', 'tiles');
+					// Add input field
 					// Add the layers.
 					this.fields.layers.collision = this.fields.map.createLayer('Collision');
 					this.fields.layers.ground = this.fields.map.createLayer('Ground');
@@ -72,7 +85,7 @@
 							
 				function update() {
 					if (this.fields.game.physics.arcade.collide(this.fields.player, this.fields.layers.collision)) {
-						console.log('boom');
+						// TODO : Manage collision.
 					}
 					
 					this.fields.player.body.velocity.x = 0;
@@ -95,16 +108,42 @@
 					{
 						this.fields.player.body.velocity.y = 200;
 					}
+					
+					if (this.fields.message != null) {
+						this.fields.message.x = Math.floor(this.fields.player.x);
+						this.fields.message.y = Math.floor(this.fields.player.y);
+					}
+				}
+				
+				function fadeMessage() {
+					this.fields.message.destroy();
+					this.fields.message = null;
 				}
 				
 				this.init = function() {
 					var self = this;
-					this.fields.game = new Phaser.Game(800, 600, Phaser.AUTO, 'Cake attitute', { preload : function() { preload.call(self); }, create : function() { create.call(self); }, update : function() { update.call(self); } });
+					this.fields.game = new Phaser.Game(980, 600, Phaser.AUTO, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); }, update : function() { update.call(self); } });
+				};
+				this.displayMessage = function(txt) {
+					if (this.fields.message != null) {
+						this.fields.message.destroy();
+						this.fields.message = null;
+					}
+					
+					var style = { font: "Arial", fill: "black", wordWrap: true, wordWrapWidth: this.fields.player.width, align: "center" };
+					this.fields.message = this.fields.game.add.text(Math.floor(this.fields.player.x), Math.floor(this.fields.player.y), txt, style);
+					this.fields.game.time.events.add(Phaser.Timer.SECOND * 5, fadeMessage, this);
 				};
 			};
 			
 			var t = new tchat();
 			t.init();
+			
+			$("#send-message").click(function() {
+				var txt = $("#message-text").val();
+				t.displayMessage(txt);
+				console.log(txt);
+			});
 		});
 	</script>
 </html>
