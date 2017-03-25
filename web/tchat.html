@@ -39,9 +39,27 @@
 				this.x = x;
 				this.y = y;
 				this.sprite = sprite;
+				this.direction = [];
+				
+				function updateDirection(dir, val) {
+					if (dir.isDown && this.direction.indexOf(val) == -1) {
+						this.direction.push(val);
+					} else if (dir.isUp && this.direction.indexOf(val) != -1) {
+						this.direction.splice(this.direction.indexOf(val), 1);							
+					}
+				}
 				
 				this.remove = function() {
 					this.sprite.destroy();
+				};
+				
+				this.updateWithCursors = function(cursors) {
+					this.sprite.body.velocity.x = 0;
+					this.sprite.body.velocity.y = 0;
+					updateDirection.call(this, cursors.up, 0);
+					updateDirection.call(this, cursors.right, 1);
+					updateDirection.call(this, cursors.down, 2);
+					updateDirection.call(this, cursors.left, 3);
 				};
 				
 				this.update = function(x, y) {					
@@ -95,12 +113,12 @@
 					// Specify which tile can collide.
 					this.fields.map.setCollision(421, true, 'Collision');		
 					// Add the player to the world.
-					this.fields.player = this.fields.game.add.sprite(0, 0, 'player');
-					this.fields.game.physics.arcade.enable(this.fields.player);
+					this.fields.player = new Player(null, 0, 0, this.fields.game.add.sprite(0, 0, 'player'));
+					this.fields.game.physics.arcade.enable(this.fields.player.sprite);
 					// Change the world size the match the size of this layer.
 					this.fields.layers.earth.resizeWorld();				
 					// Make the camera follow the sprite.
-					this.fields.game.camera.follow(this.fields.player, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	
+					this.fields.game.camera.follow(this.fields.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	
 					this.fields.cursors = this.fields.game.input.keyboard.createCursorKeys();				
 					if (opts && opts.createCallback) {
 						opts.createCallback();
@@ -108,13 +126,14 @@
 				}
 							
 				function update() {
-					if (this.fields.game.physics.arcade.collide(this.fields.player, this.fields.layers.collision)) {
+					if (this.fields.game.physics.arcade.collide(this.fields.player.sprite, this.fields.layers.collision)) {
 						// TODO : Manage collision.
 					}
 					
-					this.fields.player.body.velocity.x = 0;
-					this.fields.player.body.velocity.y = 0;
-					// game.physics.arcade.collide(player, collisionLayer); 
+					this.fields.player.updateWithCursors(this.fields.cursors);
+					console.log(this.fields.player.direction);
+					/*
+					
 					if (this.fields.cursors.left.isDown)
 					{
 						this.fields.player.body.velocity.x = -200;
@@ -137,9 +156,10 @@
 						this.fields.message.x = Math.floor(this.fields.player.x);
 						this.fields.message.y = Math.floor(this.fields.player.y);
 					}
+					*/
 					
 					if (opts && opts.updateCallback) {
-						opts.updateCallback();
+						// opts.updateCallback();
 					}
 				}
 				
@@ -169,8 +189,8 @@
 						this.fields.message = null;
 					}
 					
-					var style = { font: "Arial", fill: "black", wordWrap: true, wordWrapWidth: this.fields.player.width, align: "center" };
-					this.fields.message = this.fields.game.add.text(Math.floor(this.fields.player.x), Math.floor(this.fields.player.y), txt, style);
+					var style = { font: "Arial", fill: "black", wordWrap: true, wordWrapWidth: this.fields.player.sprite.width, align: "center" };
+					this.fields.message = this.fields.game.add.text(Math.floor(this.fields.player.sprite.x), Math.floor(this.fields.player.sprite.y), txt, style);
 					this.fields.game.time.events.add(Phaser.Timer.SECOND * 5, fadeMessage, this);
 				};
 				this.cleanPlayers = function() {
@@ -200,7 +220,7 @@
 						return;
 					}
 					
-					player.update(x, y);
+					// player.update(x, y);
 				};
 			};
 			
@@ -252,8 +272,8 @@
 			var proxy = new socketProxy({
 				socketConnectedCallback : function() {
 					c.cleanPlayers();
-					var x = c.fields.player.x;
-					var y = c.fields.player.y;
+					var x = c.fields.player.sprite.x;
+					var y = c.fields.player.sprite.y;
 					proxy.newPlayer(x, y);
 				},
 				newPlayerCallback: function(data) {
@@ -271,8 +291,8 @@
 					proxy.init();
 				},
 				updateCallback: function() {
-					var x = c.fields.player.x;
-					var y = c.fields.player.y;
+					var x = c.fields.player.sprite.x;
+					var y = c.fields.player.sprite.y;
 					proxy.updatePlayer(x, y);
 				}
 			});
