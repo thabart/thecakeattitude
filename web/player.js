@@ -1,13 +1,18 @@
 'use strict';
-var Player = function(startX, startY) {
+var Player = function(startX, startY, startDirection) {
 	var x = startX;
 	var y = startY;
+	var direction = startDirection;
 	var getX = function() {
 		return x;
 	};
 	
 	var getY = function() {
 		return y;
+	};
+	
+	var getDirection = function() {
+		return direction;
 	};
 	
 	var setX = function(newX) {
@@ -18,11 +23,17 @@ var Player = function(startX, startY) {
 		y = newY;
 	};
 	
+	var setDirection = function(newDirection) {
+		direction = newDirection;
+	};
+	
 	return {
 		getX : getX,
 		getY : getY,
 		setX : setX,
-		setY : setY
+		setY : setY,
+		getDirection : getDirection,
+		setDirection: setDirection
 	};
 };
 

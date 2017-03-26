@@ -9,13 +9,13 @@ var io = require('socket.io').listen(3001, function() {
 io.on('connection', function(socket) {
 	console.log('a user is connected');
 	socket.on('new_player', function(data) {
-		var newPlayer = new Player(data.x, data.y);
+		var newPlayer = new Player(data.x, data.y, data.direction);
 		newPlayer.id = this.id;
-		this.broadcast.emit('new_player', { id: newPlayer.id, x : newPlayer.getX(), y : newPlayer.getY() });
+		this.broadcast.emit('new_player', { id: newPlayer.id, x : newPlayer.getX(), y : newPlayer.getY(), direction: newPlayer.getDirection() });
 		var i, existingPlayer
 		for (i = 0; i < players.length; i++) {
 			existingPlayer = players[i];			
-			this.emit('new_player', { id: existingPlayer.id, x : existingPlayer.getX(), y : existingPlayer.getY() });
+			this.emit('new_player', { id: existingPlayer.id, x : existingPlayer.getX(), y : existingPlayer.getY(), direction: newPlayer.getDirection() });
 		}
 		
 		players.push(newPlayer);
@@ -27,7 +27,7 @@ io.on('connection', function(socket) {
 		}
 
 		players.splice(players.indexOf(removePlayer), 1);
-		this.broadcast.emit('remove_player', {id: this.id});
+		this.broadcast.emit('remove_player', { id: this.id });
 	});
 	socket.on('move_player', function(data) {
 		var player = getPlayer(this.id);
@@ -37,7 +37,8 @@ io.on('connection', function(socket) {
 		
 		player.setX(data.x);
 		player.setY(data.y);
-		this.broadcast.emit('move_player', { id : player.id, x : player.getX(), y : player.getY() });
+		player.setDirection(data.direction);
+		this.broadcast.emit('move_player', { id : player.id, x : player.getX(), y : player.getY(), direction : player.getDirection() });
 	});
 });
 

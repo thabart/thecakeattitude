@@ -34,39 +34,61 @@
 	</body>
 	<script type="text/javascript">
 		$(document).ready(function() {	
-			var Player = function(id, x, y, sprite) {
+			var Player = function(id, sprite) {
 				this.id = id;
-				this.x = x;
-				this.y = y;
 				this.sprite = sprite;
 				this.direction = [];
 				
 				function updateDirection(dir, val) {
+					var result = false;
 					if (dir.isDown && this.direction.indexOf(val) == -1) {
 						this.direction.push(val);
+						result = true;
 					} else if (dir.isUp && this.direction.indexOf(val) != -1) {
-						this.direction.splice(this.direction.indexOf(val), 1);							
+						this.direction.splice(this.direction.indexOf(val), 1);		
+						result = true;
 					}
+					
+					return result;
 				}
 				
 				this.remove = function() {
 					this.sprite.destroy();
 				};
 				
-				this.updateWithCursors = function(cursors) {
-					this.sprite.body.velocity.x = 0;
-					this.sprite.body.velocity.y = 0;
-					updateDirection.call(this, cursors.up, 0);
-					updateDirection.call(this, cursors.right, 1);
-					updateDirection.call(this, cursors.down, 2);
-					updateDirection.call(this, cursors.left, 3);
+				// Update direction.
+				// Returns : true if the direction changes.
+				this.updateDirection = function(cursors) {
+					var result = false;
+					result = result || updateDirection.call(this, cursors.up, 0);
+					result = result || updateDirection.call(this, cursors.right, 1);
+					result = result || updateDirection.call(this, cursors.down, 2);
+					result = result || updateDirection.call(this, cursors.left, 3);
+					return result;
 				};
 				
-				this.update = function(x, y) {					
-					this.x = x;
-					this.y = y;
+				// Update the properties.
+				this.update = function(x, y, direction) {
 					this.sprite.x = x;
 					this.sprite.y = y;
+					this.direction = direction;
+				};
+				
+				// Update player position.
+				this.updatePosition = function() {					
+					this.sprite.body.velocity.x = 0;
+					this.sprite.body.velocity.y = 0;
+					if (this.direction.indexOf(0) != -1) {						
+						this.sprite.body.velocity.y = -200;
+					} else if (this.direction.indexOf(2) != -1) {			
+						this.sprite.body.velocity.y = 200;						
+					}
+					
+					if (this.direction.indexOf(1) != -1) {	
+						this.sprite.body.velocity.x = 200;
+					} else if (this.direction.indexOf(3) != -1) {			
+						this.sprite.body.velocity.x = -200;						
+					}
 				};
 			}
 		
@@ -113,7 +135,7 @@
 					// Specify which tile can collide.
 					this.fields.map.setCollision(421, true, 'Collision');		
 					// Add the player to the world.
-					this.fields.player = new Player(null, 0, 0, this.fields.game.add.sprite(0, 0, 'player'));
+					this.fields.player = new Player(null, this.fields.game.add.sprite(0, 0, 'player'));
 					this.fields.game.physics.arcade.enable(this.fields.player.sprite);
 					// Change the world size the match the size of this layer.
 					this.fields.layers.earth.resizeWorld();				
@@ -126,12 +148,20 @@
 				}
 							
 				function update() {
+					this.fields.players.forEach(function(p) {
+						p.updatePosition();
+					});
+					
 					if (this.fields.game.physics.arcade.collide(this.fields.player.sprite, this.fields.layers.collision)) {
-						// TODO : Manage collision.
+						return;
 					}
 					
-					this.fields.player.updateWithCursors(this.fields.cursors);
-					console.log(this.fields.player.direction);
+					var isPositionUpdated = this.fields.player.updateDirection(this.fields.cursors);
+					this.fields.player.updatePosition();					
+					if (isPositionUpdated && opts && opts.updateCallback) {
+						opts.updateCallback(this.fields.player);
+					}
+					
 					/*
 					
 					if (this.fields.cursors.left.isDown)
@@ -157,10 +187,6 @@
 						this.fields.message.y = Math.floor(this.fields.player.y);
 					}
 					*/
-					
-					if (opts && opts.updateCallback) {
-						// opts.updateCallback();
-					}
 				}
 				
 				function fadeMessage() {
@@ -200,11 +226,15 @@
 					
 					this.fields.players = [];
 				};
-				this.addPlayer = function(id, x, y) {
+				// Add a new player to the map.
+				this.addPlayer = function(id, x, y, direction) {
 					var newPlayer = this.fields.game.add.sprite(x, y, 'player');
 					this.fields.game.physics.enable(newPlayer, Phaser.Physics.ARCADE)
-					this.fields.players.push(new Player(id, x, y, newPlayer));
+					var newPlayer = new Player(id, newPlayer);
+					newPlayer.direction = direction;
+					this.fields.players.push(newPlayer);
 				};
+				// Remove the player from the map.
 				this.removePlayer = function(id) {
 					var player = getPlayer.call(this, id);
 					if (!player) {
@@ -214,13 +244,14 @@
 					player.remove();
 					this.fields.players.splice(this.fields.players.indexOf(player), 1);						
 				};
-				this.updatePlayer = function(id, x, y) {
+				// Update the player position.
+				this.updatePlayer = function(id, x, y, direction) {
 					var player = getPlayer.call(this, id);
 					if (!player) {
 						return;
 					}
 					
-					// player.update(x, y);
+					player.update(x, y, direction);
 				};
 			};
 			
@@ -261,39 +292,39 @@
 						}
 					});
 				};
-				this.newPlayer = function(x, y) {
-					this.socket.emit('new_player', { x : x, y : y });
+				// Send a message to connect the player.
+				this.newPlayer = function(x, y, direction) {
+					this.socket.emit('new_player', { x : x, y : y, direction : direction });
 				};
-				this.updatePlayer = function(x, y) {
-					this.socket.emit('move_player', {x : x, y : y });
+				// Send a message to update the player position.
+				this.updatePlayer = function(x, y, direction) {
+					this.socket.emit('move_player', {x : x, y : y, direction : direction });
 				};
 			};
 			
 			var proxy = new socketProxy({
 				socketConnectedCallback : function() {
+					// Clean all the players.
 					c.cleanPlayers();
-					var x = c.fields.player.sprite.x;
-					var y = c.fields.player.sprite.y;
-					proxy.newPlayer(x, y);
+					// Send a message to connect the player.
+					proxy.newPlayer(c.fields.player.sprite.x, c.fields.player.sprite.y, c.fields.player.direction);
 				},
 				newPlayerCallback: function(data) {
-					c.addPlayer(data.id, data.x, data.y);
+					c.addPlayer(data.id, data.x, data.y, data.direction);
 				},
 				removePlayerCallback: function(data) {
 					c.removePlayer(data.id);
 				},
 				movePlayerCallback: function(data) {
-					c.updatePlayer(data.id, data.x, data.y);					
+					c.updatePlayer(data.id, data.x, data.y, data.direction);					
 				}
 			});
 			var c = new canvas({
 				createCallback: function() {
 					proxy.init();
 				},
-				updateCallback: function() {
-					var x = c.fields.player.sprite.x;
-					var y = c.fields.player.sprite.y;
-					proxy.updatePlayer(x, y);
+				updateCallback: function(p) {
+					proxy.updatePlayer(p.sprite.x, p.sprite.y, p.direction);
 				}
 			});
 			c.init();
