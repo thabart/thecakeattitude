@@ -90,6 +90,11 @@
 						this.sprite.body.velocity.x = -200;						
 					}
 				};
+				
+				// Reset the direction.
+				this.resetDirection = function() {
+					this.direction = [];
+				};
 			}
 		
 			var canvas = function(opts) {			
@@ -121,6 +126,8 @@
 					this.fields.game.physics.startSystem(Phaser.Physics.ARCADE);
 					// Change background color.				
 					this.fields.game.stage.backgroundColor = '#787878';
+					// Keep running on losing focus
+					this.fields.game.stage.disableVisibilityChange = true;
 					// Add tile map and tile set image.
 					this.fields.map = this.fields.game.add.tilemap('game');
 					this.fields.map.addTilesetImage('tallgrass', 'tallgrass');
@@ -148,40 +155,24 @@
 				}
 							
 				function update() {
+					var self = this;
 					this.fields.players.forEach(function(p) {
-						p.updatePosition();
+						if (!self.fields.game.physics.arcade.collide(p.sprite, self.fields.layers.collision)) {
+							p.updatePosition();							
+						}
 					});
 					
 					if (this.fields.game.physics.arcade.collide(this.fields.player.sprite, this.fields.layers.collision)) {
 						return;
 					}
 					
-					var isPositionUpdated = this.fields.player.updateDirection(this.fields.cursors);
-					this.fields.player.updatePosition();					
+					isPositionUpdated = this.fields.player.updateDirection(this.fields.cursors);
+					this.fields.player.updatePosition();						
 					if (isPositionUpdated && opts && opts.updateCallback) {
 						opts.updateCallback(this.fields.player);
 					}
 					
-					/*
-					
-					if (this.fields.cursors.left.isDown)
-					{
-						this.fields.player.body.velocity.x = -200;
-					}
-					else if (this.fields.cursors.right.isDown)
-					{
-						this.fields.player.body.velocity.x = 200;
-					}
-
-					if (this.fields.cursors.up.isDown)
-					{
-						this.fields.player.body.velocity.y = -200;
-					}
-					else if (this.fields.cursors.down.isDown)
-					{
-						this.fields.player.body.velocity.y = 200;
-					}
-										
+					/*				
 					if (this.fields.message != null) {
 						this.fields.message.x = Math.floor(this.fields.player.x);
 						this.fields.message.y = Math.floor(this.fields.player.y);
