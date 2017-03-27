@@ -209,6 +209,7 @@
 					cursors: null,
 					player: null,
 					players: [],
+					wraps: [],
 					layers : {
 						alimentation : null,
 						earth : null,
@@ -240,6 +241,10 @@
 					this.fields.map.addTilesetImage('tallgrass', 'tallgrass');
 					this.fields.map.addTilesetImage('farming_fishing', 'farming_fishing');
 					this.fields.map.addTilesetImage('tiles', 'tiles');
+					// Load all the wraps
+					this.fields.wraps = this.fields.game.add.group();
+					this.fields.wraps.enableBody = true;
+					this.fields.map.createFromObjects('Wraps', 3, 'wrap', 0, true, false, this.fields.wraps);
 					// Add input field
 					// Add the layers.
 					this.fields.layers.collision = this.fields.map.createLayer('Collision');
@@ -255,7 +260,7 @@
 					this.fields.layers.earth.resizeWorld();				
 					// Make the camera follow the sprite.
 					this.fields.game.camera.follow(this.fields.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	
-					this.fields.cursors = this.fields.game.input.keyboard.createCursorKeys();				
+					this.fields.cursors = this.fields.game.input.keyboard.createCursorKeys();	
 					if (opts && opts.createCallback) {
 						opts.createCallback();
 					}
@@ -272,6 +277,10 @@
 					
 					if (this.fields.game.physics.arcade.collide(this.fields.player.sprite, this.fields.layers.collision)) {
 						return;
+					}
+					
+					if (this.fields.game.physics.arcade.collide(this.fields.player.sprite, this.fields.wraps)) {
+						console.log('tmp');
 					}
 					
 					// Update player.
@@ -368,8 +377,7 @@
 				this.socket = null;
 				
 				function onSocketConnected() {
-					console.log('Connected to socket server');
-					
+					console.log('Connected to socket server');					
 				}
 			
 				this.init = function() {					
