@@ -179,6 +179,7 @@
 					player: null,
 					players: [],
 					message: null,
+					evtMessage : null,
 					layers : {
 						alimentation : null,
 						earth : null,
@@ -288,11 +289,15 @@
 						this.fields.message = null;
 					}
 					
+					if (this.fields.evtMessage != null) {
+						this.fields.game.time.events.remove(this.fields.evtMessage);
+					}
+					
 					// Construct the speech bubble.
 					this.fields.message = new SpeechBubble(this.fields.game, this.fields.player.sprite.x + (this.fields.player.sprite.width / 2), this.fields.player.sprite.y, 150, txt);
 					var bubble = this.fields.game.world.add(this.fields.message);
 					// Hide the bubble after 5 seconds.
-					this.fields.game.time.events.add(Phaser.Timer.SECOND * 5, fadeMessage, this);
+					this.fields.evtMessage = this.fields.game.time.events.add(Phaser.Timer.SECOND * 5, fadeMessage, this);
 				};
 				this.cleanPlayers = function() {
 					this.fields.players.forEach(function(player) {
