@@ -40,6 +40,14 @@ io.on('connection', function(socket) {
 		player.setDirection(data.direction);
 		this.broadcast.emit('move_player', { id : player.id, x : player.getX(), y : player.getY(), direction : player.getDirection() });
 	});
+	socket.on('message', function(data) {
+		var player = getPlayer(this.id);
+		if(!player) {
+			return;
+		}
+		
+		this.broadcast.emit('message', { id : player.id, message : data.message });
+	});
 });
 
 function getPlayer(id) {

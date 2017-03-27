@@ -26,8 +26,10 @@
 			</div>
 			<div style="background-color: gray;">
 				<div class="col-md-12">
-					<input type="text" class="form-control" style="width: 300px; display:inline-block;" id="message-text" />
-					<button class="fa fa-envelope-o" style="display: inline-block;" id="send-message"></button>
+					<form id="message-form">
+						<input type="text" class="form-control" style="width: 300px; display:inline-block;" id="message-text" />
+						<input type="submit" class="btn btn-default" style="display: inline-block;" id="send-message" value="Send"></input>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -112,6 +114,8 @@
 				this.id = id;
 				this.sprite = sprite;
 				this.direction = [];
+				this.message = null;
+				this.evtMessage = null;
 				
 				function updateDirection(dir, val) {
 					var result = false;
@@ -148,6 +152,23 @@
 					this.direction = direction;
 				};
 				
+				// Display message
+				this.displayMessage = function(message, evtMessage) {
+					this.message = message;
+					this.evtMessage = evtMessage;
+				};
+				
+				// Destroy the message.
+				this.destroyMessage = function() {
+					if (this.message == null) {
+						return;
+					}
+					
+					this.message.destroy();
+					this.message = null;
+					this.evtMessage = null;					
+				};
+				
 				// Update player position.
 				this.updatePosition = function() {					
 					this.sprite.body.velocity.x = 0;
@@ -165,6 +186,16 @@
 					}
 				};
 				
+				// Update message position.
+				this.updateMessagePosition = function() {
+					if (this.message == null) {
+						return;
+					}
+					
+					this.message.x = Math.floor(this.sprite.x + (this.sprite.width / 2));
+					this.message.y = Math.floor(this.sprite.y);				
+				};
+				
 				// Reset the direction.
 				this.resetDirection = function() {
 					this.direction = [];
@@ -178,8 +209,6 @@
 					cursors: null,
 					player: null,
 					players: [],
-					message: null,
-					evtMessage : null,
 					layers : {
 						alimentation : null,
 						earth : null,
@@ -236,7 +265,8 @@
 					var self = this;
 					this.fields.players.forEach(function(p) {
 						if (!self.fields.game.physics.arcade.collide(p.sprite, self.fields.layers.collision)) {
-							p.updatePosition();							
+							p.updatePosition();		
+							p.updateMessagePosition();						
 						}
 					});
 					
@@ -247,11 +277,7 @@
 					// Update player.
 					isPositionUpdated = this.fields.player.updateDirection(this.fields.cursors);
 					this.fields.player.updatePosition();	
-					// Update message direction.
-					if (this.fields.message != null) {
-						this.fields.message.x = Math.floor(this.fields.player.sprite.x + (this.fields.player.sprite.width / 2));
-						this.fields.message.y = Math.floor(this.fields.player.sprite.y);						
-					}
+					this.fields.player.updateMessagePosition();
 					
 					if (isPositionUpdated && opts && opts.updateCallback) {
 						opts.updateCallback(this.fields.player);
@@ -283,21 +309,24 @@
 					this.fields.game = new Phaser.Game(980, 600, Phaser.AUTO, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); }, update : function() { update.call(self); } });
 				};
 				// Display message.
-				this.displayMessage = function(txt) {
-					if (this.fields.message != null) {
-						this.fields.message.destroy();
-						this.fields.message = null;
+				this.displayMessage = function(txt, id) {
+					var player = this.fields.player;
+					if (id) {
+						player = getPlayer.call(this, id);
 					}
 					
-					if (this.fields.evtMessage != null) {
-						this.fields.game.time.events.remove(this.fields.evtMessage);
+					// 1. Destroy the message.
+					if (player.evtMessage != null) {
+						this.fields.game.time.events.remove(player.evtMessage);
 					}
 					
-					// Construct the speech bubble.
-					this.fields.message = new SpeechBubble(this.fields.game, this.fields.player.sprite.x + (this.fields.player.sprite.width / 2), this.fields.player.sprite.y, 150, txt);
-					var bubble = this.fields.game.world.add(this.fields.message);
-					// Hide the bubble after 5 seconds.
-					this.fields.evtMessage = this.fields.game.time.events.add(Phaser.Timer.SECOND * 5, fadeMessage, this);
+					player.destroyMessage();					
+					var speechBubble = new SpeechBubble(this.fields.game, player.sprite.x + (player.sprite.width / 2), player.sprite.y, 150, txt);
+					this.fields.game.world.add(speechBubble);
+					var evtMessage = this.fields.game.time.events.add(Phaser.Timer.SECOND * 5, function() {
+						player.destroyMessage();
+					}, this);
+					player.displayMessage(speechBubble, evtMessage);
 				};
 				this.cleanPlayers = function() {
 					this.fields.players.forEach(function(player) {
@@ -371,6 +400,11 @@
 							opts.movePlayerCallback(data);
 						}
 					});
+					this.socket.on('message', function(data) {
+						if (opts && opts.messageCallback) {
+							opts.messageCallback(data);
+						}
+					});
 				};
 				// Send a message to connect the player.
 				this.newPlayer = function(x, y, direction) {
@@ -379,6 +413,10 @@
 				// Send a message to update the player position.
 				this.updatePlayer = function(x, y, direction) {
 					this.socket.emit('move_player', {x : x, y : y, direction : direction });
+				};
+				// Send a message
+				this.sendMessage = function(message) {
+					this.socket.emit('message', { message : message });
 				};
 			};
 			
@@ -397,6 +435,9 @@
 				},
 				movePlayerCallback: function(data) {
 					c.updatePlayer(data.id, data.x, data.y, data.direction);					
+				},
+				messageCallback: function(data) {
+					c.displayMessage(data.message, data.id);
 				}
 			});
 			var c = new canvas({
@@ -410,9 +451,12 @@
 			c.init();
 			
 			// Send message.
-			$("#send-message").click(function() {
+			$("#message-form").submit(function(e) {
+				e.preventDefault();
 				var txt = $("#message-text").val();
 				c.displayMessage(txt);
+				proxy.sendMessage(txt);
+				$("#message-text").val('');
 			});			
 			
 		});
