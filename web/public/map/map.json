@@ -47,16 +47,16 @@
         {
          "color":"#f17510",
          "draworder":"topdown",
-         "height":100,
+         "height":0,
          "name":"Wraps",
          "objects":[
                 {
                  "height":63.5,
-                 "gid":3,
-                 "name":"",
+                 "id":3,
+                 "name":"wrap",
                  "properties":
                     {
-                     "map":"map2.json"
+                     "map":"secondMap"
                     },
                  "propertytypes":
                     {
@@ -68,25 +68,34 @@
                  "width":65,
                  "x":0,
                  "y":352
+                }, 
+                {
+                 "height":60,
+                 "id":11,
+                 "name":"wrap",
+                 "properties":
+                    {
+                     "map":"secondMap"
+                    },
+                 "propertytypes":
+                    {
+                     "map":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":63,
+                 "x":98,
+                 "y":1
                 }],
          "opacity":1,
-         "properties":
-            {
-             "gid":"3",
-             "map":"map2.json"
-            },
-         "propertytypes":
-            {
-             "gid":"string",
-             "map":"string"
-            },
          "type":"objectgroup",
          "visible":true,
-         "width":100,
+         "width":0,
          "x":0,
          "y":0
         }],
- "nextobjectid":5,
+ "nextobjectid":12,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

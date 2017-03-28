@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="5">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="11">
  <tileset firstgid="1" name="tallgrass" tilewidth="32" tileheight="32" tilecount="18" columns="3">
   <image source="tilesets/tallgrass.png" width="96" height="192"/>
  </tileset>
@@ -426,11 +426,7 @@
 </data>
  </layer>
  <objectgroup color="#f17510" name="Wraps">
-  <properties>
-   <property name="gid" value="3"/>
-   <property name="map" value="map2.json"/>
-  </properties>
-  <object id="3" x="0" y="352" width="65" height="63.5">
+  <object id="3" name="wrap" x="0" y="352" width="65" height="63.5">
    <properties>
     <property name="map" value="map2.json"/>
    </properties>
