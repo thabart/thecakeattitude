@@ -24,7 +24,7 @@ var Map = function(tileMap, game, player) {
 		// Load the WRAPS.
 		this.wraps = game.add.group();
 		this.wraps.enableBody = true;
-		this.tileMap.createFromObjects('Wraps', 421, 'wrap', 0, true, false, this.wraps);		
+		this.tileMap.createFromObjects('Wraps', 'wrap', 'wrap', 0, true, false, this.wraps);		
 		// ADD SPRITE : 
 		// this.wraps.add('tiles'); => sprite
 		// Specify which tile can collide.

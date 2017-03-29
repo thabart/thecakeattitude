@@ -51,9 +51,8 @@
          "name":"Wraps",
          "objects":[
                 {
-                 "gid":421,
-                 "height":32,
-                 "id":37,
+                 "height":63.6666666666667,
+                 "id":19,
                  "name":"wrap",
                  "properties":
                     {
@@ -66,29 +65,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":32,
-                 "x":129,
+                 "width":63,
+                 "x":320.333333333333,
                  "y":32
-                }, 
-                {
-                 "gid":421,
-                 "height":32,
-                 "id":38,
-                 "name":"wrap",
-                 "properties":
-                    {
-                     "map":"secondMap"
-                    },
-                 "propertytypes":
-                    {
-                     "map":"string"
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":97,
-                 "y":128
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -97,7 +76,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":39,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

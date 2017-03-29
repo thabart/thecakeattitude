@@ -99,7 +99,6 @@ Game.prototype = {
 		}
 		
 		if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.wraps, function(e, wrap) {
-			// TODO : Load an another map.
 			var map = wrap.map;
 			var tileMap = self.game.add.tilemap(map);
 			self.map.destroy();
