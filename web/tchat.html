@@ -37,252 +37,18 @@
 	<script type="text/javascript">
 		$(document).ready(function() {	
 			// Speech bubble
-			var SpeechBubble = function(game, x, y, width, text) {
-				Phaser.Sprite.call(this, game, x, y);
-				
-				// Some sensible minimum defaults
-				width = width || 27;
-				var height = 18;
-				
-				// Set up our text and run our custom wrapping routine on it
-				this.bitmapText = game.make.bitmapText(x + 12, y + 4, '8bitoperator', text, 14);
-				SpeechBubble.wrapBitmapText(this.bitmapText, width);
-				
-				// Calculate the width and height needed for the edges
-				var bounds = this.bitmapText.getLocalBounds();
-				if (bounds.width + 18 > width) {
-					width = bounds.width + 18;
-				}
-				if (bounds.height + 14 > height) {
-					height = bounds.height + 14;
-				}
-				
-				// Create all of our corners and edges
-				this.borders = [
-					game.make.tileSprite(x + 9, y + 9, width - 9, height - 9, 'bubble-border', 4),
-					game.make.image(x, y, 'bubble-border', 0),
-					game.make.image(x + width, y, 'bubble-border', 2),
-					game.make.image(x + width, y + height, 'bubble-border', 8),
-					game.make.image(x, y + height, 'bubble-border', 6),
-					game.make.tileSprite(x + 9, y, width - 9, 9, 'bubble-border', 1),
-					game.make.tileSprite(x + 9, y + height, width - 9, 9, 'bubble-border', 7),
-					game.make.tileSprite(x, y + 9, 9, height - 9, 'bubble-border', 3),
-					game.make.tileSprite(x + width, y + 9, 9, height - 9, 'bubble-border', 5)
-				];  
-				
-				// Add all of the above to this sprite
-				for (var b = 0, len = this.borders.length; b < len; b++) {
-					this.addChild(this.borders[b]);   
-				}
-
-				// Add the tail
-				this.tail = this.addChild(game.make.image(x + 18, y + 3 + height, 'bubble-tail'));
-
-				// Add our text last so it's on top
-				this.addChild(this.bitmapText);
-				this.bitmapText.tint = 0x111111;
-				
-				// Offset the position to be centered on the end of the tail
-				this.pivot.set(x + 25, y + height + 24);
-			};
-
-			SpeechBubble.prototype = Object.create(Phaser.Sprite.prototype);
-			SpeechBubble.prototype.constructor = SpeechBubble;
-
-			SpeechBubble.wrapBitmapText = function (bitmapText, maxWidth) {
-				var words = bitmapText.text.split(' '), output = "", test = "";
-				
-				for (var w = 0, len = words.length; w < len; w++) {
-					test += words[w] + " ";
-					bitmapText.text = test;
-					bitmapText.updateText();
-					if (bitmapText.textWidth > maxWidth) {
-						output += "\n" + words[w] + " ";
-					}
-					else {
-						output += words[w] + " ";
-					}
-					test = output;
-				}
-				
-				output = output.replace(/(\s)$/gm, ""); // remove trailing spaces
-				bitmapText.text = output;
-				bitmapText.updateText();
-			};
-		
-			var Player = function(id, sprite) {
-				this.id = id;
-				this.sprite = sprite;
-				this.direction = [];
-				this.message = null;
-				this.evtMessage = null;
-				
-				function updateDirection(dir, val) {
-					var result = false;
-					if (dir.isDown && this.direction.indexOf(val) == -1) {
-						this.direction.push(val);
-						result = true;
-					} else if (dir.isUp && this.direction.indexOf(val) != -1) {
-						this.direction.splice(this.direction.indexOf(val), 1);		
-						result = true;
-					}
-					
-					return result;
-				}
-				
-				// Remove the player.
-				this.remove = function() {
-					this.sprite.destroy();
-					if (this.message != null)
-					{					
-						this.message.destroy();
-					}
-				};				
-				// Update direction.
-				// Returns : true if the direction changes.
-				this.updateDirection = function(cursors) {
-					var result = false;
-					result = result || updateDirection.call(this, cursors.up, 0);
-					result = result || updateDirection.call(this, cursors.right, 1);
-					result = result || updateDirection.call(this, cursors.down, 2);
-					result = result || updateDirection.call(this, cursors.left, 3);
-					return result;
-				};				
-				// Update the properties.
-				this.update = function(x, y, direction) {
-					this.sprite.x = x;
-					this.sprite.y = y;
-					this.direction = direction;
-				};				
-				// Display message
-				this.displayMessage = function(message, evtMessage) {
-					this.message = message;
-					this.evtMessage = evtMessage;
-				};				
-				// Destroy the message.
-				this.destroyMessage = function() {
-					if (this.message == null) {
-						return;
-					}
-					
-					this.message.destroy();
-					this.message = null;
-					this.evtMessage = null;					
-				};				
-				// Update player position.
-				this.updatePosition = function() {					
-					this.sprite.body.velocity.x = 0;
-					this.sprite.body.velocity.y = 0;
-					if (this.direction.indexOf(0) != -1) {						
-						this.sprite.body.velocity.y = -200;
-					} else if (this.direction.indexOf(2) != -1) {			
-						this.sprite.body.velocity.y = 200;						
-					}
-					
-					if (this.direction.indexOf(1) != -1) {	
-						this.sprite.body.velocity.x = 200;
-					} else if (this.direction.indexOf(3) != -1) {			
-						this.sprite.body.velocity.x = -200;						
-					}
-				};				
-				// Update message position.
-				this.updateMessagePosition = function() {
-					if (this.message == null) {
-						return;
-					}
-					
-					this.message.x = Math.floor(this.sprite.x + (this.sprite.width / 2));
-					this.message.y = Math.floor(this.sprite.y);				
-				};				
-				// Reset the direction.
-				this.resetDirection = function() {
-					this.direction = [];
-				};
-			}
-		
-			var Map = function(tileMap, game) {
-				this.tileMap = tileMap;		
-				this.wraps = [];
-				this.player = null;
-				this.players = [];
-				this.layers = {
-					alimentation : null,
-					earth : null,
-					ground: null,
-					collision : null					
-				};
-				
-				this.init = function() {
-					// TODO : Load all the IMAGES.
-					this.tileMap.addTilesetImage('tallgrass', 'tallgrass');
-					this.tileMap.addTilesetImage('farming_fishing', 'farming_fishing');
-					this.tileMap.addTilesetImage('tiles', 'tiles');
-					// Add layers.					
-					this.layers.collision = this.tileMap.createLayer('Collision');
-					this.layers.ground = this.tileMap.createLayer('Ground');
-					this.layers.earth = this.tileMap.createLayer('Earth');
-					this.layers.alimentation = this.tileMap.createLayer('Alimentations');
-					this.tileMap.createLayer('Wraps');
-					// Load the WRAPS.
-					this.wraps = game.add.group();
-					this.wraps.enableBody = true;
-					this.tileMap.createFromObjects('Wraps', 421, 'wrap', 0, true, false, this.wraps);		
-					// ADD SPRITE : 
-					// this.wraps.add('tiles'); => sprite
-					// Specify which tile can collide.
-					this.tileMap.setCollision(421, true, 'Collision');
-					// Add the player to the world.
-					this.player = new Player(null, game.add.sprite(0, 0, 'player'));
-					game.physics.arcade.enable(this.player.sprite);			
-					// Make the camera follow the sprite.
-					game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	
-					// Display layer.
-					this.layers.earth.resizeWorld();
-				};
-				
-				this.destroy = function() {
-					// Destroy the layers & objects.
-					this.layers.collision.destroy();
-					this.layers.ground.destroy();
-					this.layers.earth.destroy();
-					this.layers.alimentation.destroy();
-					this.wraps.destroy();
-					this.tileMap.destroy();
-					this.player.remove();
-					this.players.forEach(function(p) {
-						p.remove();
-					});
-				};
-			};
-			
-			var canvas = function(opts) {			
-				this.fields = {
-					game: null,
-					map: null,
-					cursors: null
-				};
-					
+			var canvas = function(opts) {
+				this.game = null;
 				function preload() {
-					// TODO : Load all the assets from the configuration endpoint.
-					this.fields.game.load.script('splash', 'public/states/Splash.js');
+					this.game.load.script('splash', 'public/states/Splash.js');
 				};
 				
 				function create() {	
 					// ADD STATE : https://github.com/MattMcFarland/phaser-menu-system
-					this.fields.game.state.add('Splash', Splash);
-					this.fields.game.state.start('Splash');
+					this.game.state.add('Splash', Splash);
+					var s = this.game.state.start('Splash');
+					console.log(s);
 					/*
-					// Start the Arcade physics systems.
-					this.fields.game.physics.startSystem(Phaser.Physics.ARCADE);
-					// Change background color.				
-					this.fields.game.stage.backgroundColor = '#787878';
-					// Keep running on losing focus
-					this.fields.game.stage.disableVisibilityChange = true;
-					// Add tile map and tile set image.
-					var tileMap = this.fields.game.add.tilemap('firstMap');
-					this.fields.map = new Map(tileMap, this.fields.game);		
-					this.fields.map.init();
-					this.fields.cursors = this.fields.game.input.keyboard.createCursorKeys();	
 					if (opts && opts.createCallback) {
 						opts.createCallback();
 					}*/
@@ -290,74 +56,21 @@
 							
 				function update() {
 					/*
-					var self = this;
-					this.fields.map.players.forEach(function(p) {
-						if (!self.fields.game.physics.arcade.collide(p.sprite, self.fields.map.layers.collision)) {
-							p.updatePosition();		
-							p.updateMessagePosition();						
-						}
-					});
-					
-					if (self.fields.game.physics.arcade.collide(self.fields.map.player.sprite, self.fields.map.layers.collision)) {
-						return;
-					}
-					
-					if (self.fields.game.physics.arcade.overlap(self.fields.map.player.sprite, self.fields.map.wraps, function(e, wrap) {
-						// TODO : Load an another map.
-						var map = wrap.map;
-						var tileMap = self.fields.game.add.tilemap(map);
-						self.fields.map.destroy();
-						self.fields.map = new Map(tileMap, self.fields.game);
-						self.fields.map.init();
-					})) {
-						return;
-					}
-					
-					// Update player.
-					isPositionUpdated = this.fields.map.player.updateDirection(this.fields.cursors);
-					this.fields.map.player.updatePosition();	
-					this.fields.map.player.updateMessagePosition();
-					
 					if (isPositionUpdated && opts && opts.updateCallback) {
 						opts.updateCallback(this.fields.map.player);
 					}*/
 				}
 				
-				function getPlayer(id) {
-					var i;
-					for (i = 0; i < this.fields.map.players.length; i++) {
-						if (this.fields.map.players[i].id === id) {
-							return this.fields.map.players[i];
-						}
-					}
-				
-					return false
-				}
 				
 				// Initialize the game.
 				this.init = function() {
 					var self = this;
-					this.fields.game = new Phaser.Game(980, 600, Phaser.AUTO, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); }, update : function() { update.call(self); } });
+					this.game = new Phaser.Game(980, 600, Phaser.AUTO, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
 				};
 				// Display message.
 				this.displayMessage = function(txt, id) {
-					var player = this.fields.map.player;
-					if (id) {
-						player = getPlayer.call(this, id);
-					}
-					
-					// 1. Destroy the message.
-					if (player.evtMessage != null) {
-						this.fields.game.time.events.remove(player.evtMessage);
-					}
-					
-					player.destroyMessage();					
-					var speechBubble = new SpeechBubble(this.fields.game, player.sprite.x + (player.sprite.width / 2), player.sprite.y, 150, txt);
-					this.fields.game.world.add(speechBubble);
-					var evtMessage = this.fields.game.time.events.add(Phaser.Timer.SECOND * 5, function() {
-						player.destroyMessage();
-					}, this);
-					player.displayMessage(speechBubble, evtMessage);
+					var state = this.game.state.states['Game'];
+					state.displayMessage(txt, id);
 				};
 				// Clean the players.
 				this.cleanPlayers = function() {
@@ -486,7 +199,7 @@
 				e.preventDefault();
 				var txt = $("#message-text").val();
 				c.displayMessage(txt);
-				proxy.sendMessage(txt);
+				// proxy.sendMessage(txt);
 				$("#message-text").val('');
 			});			
 			
