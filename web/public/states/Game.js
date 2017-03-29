@@ -1,6 +1,7 @@
 var Game = function () {
 	this.map = null;
 	this.cursors = null;
+	this.socket = null;
 	this.getPlayer = function(id) {
 		var i;
 		for (i = 0; i < this.map.players.length; i++) {
@@ -10,12 +11,44 @@ var Game = function () {
 		}
 	
 		return false
-	}
+	};
+	this.addPlayer = function(id, x, y, direction) {
+		var newPlayer = this.game.add.sprite(x, y, 'player');
+		this.game.physics.enable(newPlayer, Phaser.Physics.ARCADE)
+		var newPlayer = new Player(id, newPlayer);
+		newPlayer.direction = direction;
+		this.map.players.push(newPlayer);
+	};
+	this.removePlayer = function(id) {		
+		var player = this.getPlayer(id);
+		if (!player) {
+			return;
+		}
+		
+		player.remove();
+		this.map.players.splice(this.map.players.indexOf(player), 1);	
+	};
+	this.cleanPlayers = function() {		
+		this.map.players.forEach(function(player) {
+			player.remove();
+		});
+		
+		this.map.players = [];
+	};
+	this.updatePlayer = function(id, x, y, direction) {
+		var player = this.getPlayer(id);
+		if (!player) {
+			return;
+		}
+		
+		player.update(x, y, direction);
+	};
 };
 Game.prototype = {
 	init: function() {
 	},
 	create: function() {
+		var self = this;
 		// Start the Arcade physics systems.
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		// Change background color.				
@@ -27,6 +60,30 @@ Game.prototype = {
 		this.map = new Map(tileMap, this.game);		
 		this.map.init();
 		this.cursors = this.game.input.keyboard.createCursorKeys();	
+		// Connect to socket server		
+		this.socket = io('http://localhost:3001').connect();		
+		this.socket.on('connect', function() {
+			console.log('socket connected');			
+			self.cleanPlayers();
+			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection() });
+		});
+		this.socket.on('disconnect', function() {
+			console.log('socket disconnected');
+		});
+		this.socket.on('new_player', function(data) {
+			console.log('new player');
+			self.addPlayer(data.id, data.x, data.y, data.direction);
+		});
+		this.socket.on('remove_player', function(data) {
+			console.log('remove player');
+			self.removePlayer(data.id);
+		});
+		this.socket.on('move_player', function(data) {
+			self.updatePlayer(data.id, data.x, data.y, data.direction);		
+		});
+		this.socket.on('message', function(data) {
+			self.displayMessage(data.message, data.id);
+		});
 	},
 	update: function() {		
 		var self = this;
@@ -56,6 +113,9 @@ Game.prototype = {
 		isPositionUpdated = this.map.player.updateDirection(this.cursors);
 		this.map.player.updatePosition();	
 		this.map.player.updateMessagePosition();
+		if (isPositionUpdated) {			
+			this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
+		}
 	},
 	displayMessage : function(txt, id) {
 		var player = this.map.player;
@@ -75,5 +135,9 @@ Game.prototype = {
 			player.destroyMessage();
 		}, this);
 		player.displayMessage(speechBubble, evtMessage);
+	},
+	sendMessage: function(txt) {
+		this.displayMessage(txt);		
+		this.socket.emit('message', { message : txt });
 	}
 };

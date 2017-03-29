@@ -86,5 +86,17 @@ var Player = function(id, sprite) {
 	this.resetDirection = function() {
 		this.direction = [];
 	};
+	// Get x.
+	this.getX = function() {
+		return this.sprite.x;
+	};
+	// Get y.
+	this.getY = function() {
+		return this.sprite.y;
+	};
+	// Get direction.
+	this.getDirection = function() {
+		return this.direction;
+	}
 }
 		

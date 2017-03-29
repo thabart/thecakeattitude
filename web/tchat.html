@@ -47,159 +47,29 @@
 					// ADD STATE : https://github.com/MattMcFarland/phaser-menu-system
 					this.game.state.add('Splash', Splash);
 					var s = this.game.state.start('Splash');
-					console.log(s);
-					/*
-					if (opts && opts.createCallback) {
-						opts.createCallback();
-					}*/
 				}
-							
-				function update() {
-					/*
-					if (isPositionUpdated && opts && opts.updateCallback) {
-						opts.updateCallback(this.fields.map.player);
-					}*/
-				}
-				
-				
+								
 				// Initialize the game.
 				this.init = function() {
 					var self = this;
 					this.game = new Phaser.Game(980, 600, Phaser.AUTO, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
 				};
 				// Display message.
-				this.displayMessage = function(txt, id) {
+				this.sendMessage = function(txt, id) {
+					console.log('coucou');
 					var state = this.game.state.states['Game'];
-					state.displayMessage(txt, id);
-				};
-				// Clean the players.
-				this.cleanPlayers = function() {
-					this.fields.map.players.forEach(function(player) {
-						player.remove();
-					});
-					
-					this.fields.map.players = [];
-				};
-				// Add a new player to the map.
-				this.addPlayer = function(id, x, y, direction) {
-					var newPlayer = this.fields.game.add.sprite(x, y, 'player');
-					this.fields.game.physics.enable(newPlayer, Phaser.Physics.ARCADE)
-					var newPlayer = new Player(id, newPlayer);
-					newPlayer.direction = direction;
-					this.fields.map.players.push(newPlayer);
-				};
-				// Remove the player from the map.
-				this.removePlayer = function(id) {
-					var player = getPlayer.call(this, id);
-					if (!player) {
-						return;
-					}
-					
-					player.remove();
-					this.fields.players.splice(this.fields.map.players.indexOf(player), 1);						
-				};
-				// Update the player position.
-				this.updatePlayer = function(id, x, y, direction) {
-					var player = getPlayer.call(this, id);
-					if (!player) {
-						return;
-					}
-					
-					player.update(x, y, direction);
+					state.sendMessage(txt, id);
 				};
 			};
 			
-			var socketProxy = function(opts) {
-				this.socket = null;
-				
-				function onSocketConnected() {
-					console.log('Connected to socket server');					
-				}
-			
-				this.init = function() {					
-					this.socket = io('http://localhost:3001').connect();
-					this.socket.on('connect', function() {
-						console.log('socket connected');
-						if (opts && opts.socketConnectedCallback) {
-							opts.socketConnectedCallback();
-						}
-					});
-					this.socket.on('disconnect', function() {
-						console.log('socket disconnected');
-					});
-					this.socket.on('new_player', function(data) {
-						console.log('new player');
-						if (opts && opts.newPlayerCallback) {
-							opts.newPlayerCallback(data);
-						}
-					});
-					this.socket.on('remove_player', function(data) {
-						console.log('remove player');
-						if (opts && opts.removePlayerCallback) {
-							opts.removePlayerCallback(data);
-						}
-					});
-					this.socket.on('move_player', function(data) {
-						if (opts && opts.movePlayerCallback) {
-							opts.movePlayerCallback(data);
-						}
-					});
-					this.socket.on('message', function(data) {
-						if (opts && opts.messageCallback) {
-							opts.messageCallback(data);
-						}
-					});
-				};
-				// Send a message to connect the player.
-				this.newPlayer = function(x, y, direction) {
-					this.socket.emit('new_player', { x : x, y : y, direction : direction });
-				};
-				// Send a message to update the player position.
-				this.updatePlayer = function(x, y, direction) {
-					this.socket.emit('move_player', {x : x, y : y, direction : direction });
-				};
-				// Send a message
-				this.sendMessage = function(message) {
-					this.socket.emit('message', { message : message });
-				};
-			};
-			
-			var proxy = new socketProxy({
-				socketConnectedCallback : function() {
-					// Clean all the players.
-					c.cleanPlayers();
-					// Send a message to connect the player.
-					proxy.newPlayer(c.fields.map.player.sprite.x, c.fields.map.player.sprite.y, c.fields.map.player.direction);
-				},
-				newPlayerCallback: function(data) {
-					c.addPlayer(data.id, data.x, data.y, data.direction);
-				},
-				removePlayerCallback: function(data) {
-					c.removePlayer(data.id);
-				},
-				movePlayerCallback: function(data) {
-					c.updatePlayer(data.id, data.x, data.y, data.direction);					
-				},
-				messageCallback: function(data) {
-					c.displayMessage(data.message, data.id);
-				}
-			});
-			var c = new canvas({
-				createCallback: function() {
-					proxy.init();
-				},
-				updateCallback: function(p) {
-					proxy.updatePlayer(p.sprite.x, p.sprite.y, p.direction);
-				}
-			});
+			var c = new canvas();
 			c.init();
 			
 			// Send message.
 			$("#message-form").submit(function(e) {
 				e.preventDefault();
 				var txt = $("#message-text").val();
-				c.displayMessage(txt);
-				// proxy.sendMessage(txt);
+				c.sendMessage(txt);
 				$("#message-text").val('');
 			});			
 			
