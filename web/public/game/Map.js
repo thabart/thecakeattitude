@@ -2,6 +2,7 @@ var Map = function(key, tileMap, game, player) {
 	this.key = key;
 	this.tileMap = tileMap;		
 	this.wraps = [];
+	this.npcs = [];
 	this.player = player;
 	this.players = [];
 	this.layers = {
@@ -24,8 +25,19 @@ var Map = function(key, tileMap, game, player) {
 		this.tileMap.createLayer('Wraps');
 		// Load the WRAPS.
 		this.wraps = game.add.group();
+		this.npcs = game.add.group();
 		this.wraps.enableBody = true;
-		this.tileMap.createFromObjects('Wraps', 'wrap', 'wrap', 0, true, false, this.wraps);		
+		this.tileMap.createFromObjects('Wraps', 'wrap', 'wrap', 0, true, false, this.wraps);	
+		var npcs = tileMap.objects['Npcs'];
+		npcs.forEach(function(npc) {
+			switch(npc.type) {
+				case "warper":
+					
+				break;
+			}
+		});
+		// this.tileMap.createFromObjects('Npcs', 'npc', 'npc', 0, true, false, this.npcs);
+		console.log(this.npcs);
 		// ADD SPRITE : 
 		// this.wraps.add('tiles'); => sprite
 		// Specify which tile can collide.

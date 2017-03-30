@@ -51,8 +51,8 @@
          "name":"Wraps",
          "objects":[
                 {
-                 "height":63.6666666666667,
-                 "id":19,
+                 "height":63.5,
+                 "id":3,
                  "name":"wrap",
                  "properties":
                     {
@@ -65,9 +65,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":63,
-                 "x":320.333333333333,
-                 "y":32
+                 "width":65,
+                 "x":322,
+                 "y":34
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -75,8 +75,32 @@
          "width":0,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":100,
+         "name":"Npcs",
+         "objects":[
+                {
+                 "gid":2399,
+                 "height":32,
+                 "id":12,
+                 "name":"npc",
+                 "rotation":0,
+                 "type":"warper",
+                 "visible":true,
+                 "width":32,
+                 "x":224,
+                 "y":224
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":100,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":22,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -115,6 +139,19 @@
          "imagewidth":1920,
          "margin":0,
          "name":"tiles",
+         "spacing":0,
+         "tilecount":1980,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "columns":60,
+         "firstgid":2399,
+         "image":"tilesets\/npcs.png",
+         "imageheight":1080,
+         "imagewidth":1920,
+         "margin":0,
+         "name":"npcs",
          "spacing":0,
          "tilecount":1980,
          "tileheight":32,
