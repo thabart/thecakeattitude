@@ -1,8 +1,14 @@
 'use strict';
-var Player = function(startX, startY, startDirection) {
+var Player = function(startX, startY, startDirection, mapId) {
+	var id = null;
 	var x = startX;
 	var y = startY;
+	var mapId = mapId;
 	var direction = startDirection;
+	var getId = function() {
+		return id;
+	};
+	
 	var getX = function() {
 		return x;
 	};
@@ -13,6 +19,14 @@ var Player = function(startX, startY, startDirection) {
 	
 	var getDirection = function() {
 		return direction;
+	};
+	
+	var getMapId = function() {
+		return mapId;
+	};
+	
+	var setId = function(newId) {
+		id = newId;
 	};
 	
 	var setX = function(newX) {
@@ -27,13 +41,21 @@ var Player = function(startX, startY, startDirection) {
 		direction = newDirection;
 	};
 	
+	var setMapId = function(newMapId) {
+		mapId = newMapId;
+	};
+	
 	return {
+		getId: getId,
 		getX : getX,
 		getY : getY,
+		getDirection : getDirection,
+		getMapId : getMapId,
+		setId: setId,
 		setX : setX,
 		setY : setY,
-		getDirection : getDirection,
-		setDirection: setDirection
+		setDirection: setDirection,
+		setMapId : setMapId
 	};
 };
 

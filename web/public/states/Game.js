@@ -57,7 +57,7 @@ Game.prototype = {
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
 		var tileMap = this.game.add.tilemap('firstMap');
-		this.map = new Map(tileMap, this.game);		
+		this.map = new Map('firstMap', tileMap, this.game);		
 		this.map.init();
 		this.cursors = this.game.input.keyboard.createCursorKeys();	
 		// Connect to socket server		
@@ -65,21 +65,24 @@ Game.prototype = {
 		this.socket.on('connect', function() {
 			console.log('socket connected');			
 			self.cleanPlayers();
-			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection() });
+			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
 		});
 		this.socket.on('disconnect', function() {
 			console.log('socket disconnected');
+			self.socket.emit('remove');
 		});
 		this.socket.on('new_player', function(data) {
 			console.log('new player');
-			self.addPlayer(data.id, data.x, data.y, data.direction);
+			if (data.mapId == self.map.key) {
+				self.addPlayer(data.id, data.x, data.y, data.direction);
+			}
 		});
 		this.socket.on('remove_player', function(data) {
 			console.log('remove player');
 			self.removePlayer(data.id);
 		});
 		this.socket.on('move_player', function(data) {
-			self.updatePlayer(data.id, data.x, data.y, data.direction);		
+			self.updatePlayer(data.id, data.x, data.y, data.direction);
 		});
 		this.socket.on('message', function(data) {
 			self.displayMessage(data.message, data.id);
@@ -102,8 +105,11 @@ Game.prototype = {
 			var map = wrap.map;
 			var tileMap = self.game.add.tilemap(map);
 			self.map.destroy();
-			self.map = new Map(tileMap, self.game);
+			self.map = new Map(map, tileMap, self.game);
 			self.map.init();
+			// Remove the player from the map	& add him to the new map.		
+			self.socket.emit('remove');
+			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });			
 		})) {
 			return;
 		}
@@ -120,6 +126,9 @@ Game.prototype = {
 		var player = this.map.player;
 		if (id) {
 			player = this.getPlayer(id);
+			if (!player) {
+				return;
+			}
 		}
 		
 		// 1. Destroy the message.

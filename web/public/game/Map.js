@@ -1,4 +1,5 @@
-var Map = function(tileMap, game, player) {
+var Map = function(key, tileMap, game, player) {
+	this.key = key;
 	this.tileMap = tileMap;		
 	this.wraps = [];
 	this.player = player;
