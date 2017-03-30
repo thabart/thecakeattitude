@@ -35,6 +35,10 @@ var Map = function(key, tileMap, game, player) {
 		game.physics.arcade.enable(this.player.sprite);			
 		// Make the camera follow the sprite.
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	
+		// Add sprite
+		var villager = game.add.sprite(10, 20, 'villager');
+		var anim = villager.animations.add('walk');
+		villager.animations.play('walk', 1, true);
 		// Display layer.
 		this.layers.earth.resizeWorld();
 	};

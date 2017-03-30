@@ -18,6 +18,7 @@ Splash.prototype = {
 		this.game.load.script('Player', 'public/game/Player.js');
 		this.game.load.script('SpeechBubble', 'public/game/SpeechBubble.js');
 		this.game.load.script('Game', 'public/states/Game.js');
+		this.game.load.spritesheet('villager', 'public/map/character/villager.png',  24, 24, 2);
 		this.game.add.existing(this.loadingBar);
 	},
 	create: function() {
