@@ -31,7 +31,7 @@ var Map = function(key, tileMap, game, player) {
 		// Specify which tile can collide.
 		this.tileMap.setCollision(421, true, 'Collision');
 		// Add the player to the world.
-		this.player = new Player(null, game.add.sprite(0, 0, 'player'));
+		this.player = new Player(null, 0, 0, game, true);
 		game.physics.arcade.enable(this.player.sprite);			
 		// Make the camera follow the sprite.
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);	

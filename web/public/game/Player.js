@@ -1,9 +1,17 @@
-var Player = function(id, sprite) {
+var Player = function(id, x, y, game, currentUser) {
 	this.id = id;
-	this.sprite = sprite;
+	this.sprite = game.add.sprite(x, y, 'player');;
 	this.direction = [];
 	this.message = null;
 	this.evtMessage = null;
+	// TODO : MAX : Characters in pseudo = 10
+	var style = { font: '15px', wordWrap: true, wordWrapWidth: 60, align: 'center' };
+	if (currentUser) {
+		style.fill = '#FFA500';
+	}
+	this.pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', style);
+	
+	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	
 	function updateDirection(dir, val) {
 		var result = false;
@@ -21,6 +29,7 @@ var Player = function(id, sprite) {
 	// Remove the player.
 	this.remove = function() {
 		this.sprite.destroy();
+		this.pseudo.destroy();
 		if (this.message != null)
 		{					
 			this.message.destroy();
@@ -72,6 +81,9 @@ var Player = function(id, sprite) {
 		} else if (this.direction.indexOf(3) != -1) {			
 			this.sprite.body.velocity.x = -200;						
 		}
+		
+		this.pseudo.x = this.sprite.x - 20 ;
+		this.pseudo.y = this.sprite.y - this.sprite.height / 2;
 	};				
 	// Update message position.
 	this.updateMessagePosition = function() {

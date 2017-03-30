@@ -27,8 +27,9 @@ io.on('connection', function(socket) {
 			return
 		}
 
+		var id = removePlayer.getId();
 		players.splice(players.indexOf(removePlayer), 1);
-		this.broadcast.emit('remove_player', { id: removePlayer.getId() });
+		this.broadcast.emit('remove_player', { id: id });
 	});
 	socket.on('move_player', function(data) {
 		var player = getPlayer(this.id);

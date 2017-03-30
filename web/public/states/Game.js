@@ -13,9 +13,7 @@ var Game = function () {
 		return false
 	};
 	this.addPlayer = function(id, x, y, direction) {
-		var newPlayer = this.game.add.sprite(x, y, 'player');
-		this.game.physics.enable(newPlayer, Phaser.Physics.ARCADE)
-		var newPlayer = new Player(id, newPlayer);
+		var newPlayer = new Player(id, x, y, this.game);
 		newPlayer.direction = direction;
 		this.map.players.push(newPlayer);
 	};
