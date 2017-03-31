@@ -1,0 +1,21 @@
+{
+	"frames": [
+		{
+			"filename": "stay01",
+			"frame": {"x":0,"y":0,"w":24,"h":24},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+			"sourceSize": {"w":24,"h":24}
+		},
+		{
+			"filename": "stay02",
+			"frame": {"x":24,"y":0,"w":24,"h":24},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+			"sourceSize": {"w":24,"h":24}
+		}
+	],
+	"meta": {}
+}
