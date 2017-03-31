@@ -2,6 +2,8 @@ var Game = function () {
 	this.map = null;
 	this.cursors = null;
 	this.socket = null;
+	var spaceBar = null,
+		currentNpc = null;
 	this.getPlayer = function(id) {
 		var i;
 		for (i = 0; i < this.map.players.length; i++) {
@@ -47,6 +49,7 @@ Game.prototype = {
 	},
 	create: function() {
 		var self = this;
+		this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
 		// Start the Arcade physics systems.
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		// Change background color.				
@@ -85,6 +88,15 @@ Game.prototype = {
 		this.socket.on('message', function(data) {
 			self.displayMessage(data.message, data.id);
 		});
+		// Listen keyboard events
+		spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		spaceBar.onDown.add(function() {
+			if (currentNpc == null) {
+				return;
+			}
+			
+			currentNpc.interact();
+		}, this);
 	},
 	update: function() {		
 		var self = this;
@@ -116,8 +128,10 @@ Game.prototype = {
 		// Interact with NPCs.
 		if (!self.game.physics.arcade.overlap(self.map.player.hitZone, self.map.getNpcObjs(), function(e, npc) {
 			self.map.player.displayInteraction();
+			currentNpc = self.map.getNpc(npc);
 		})) {
 			self.map.player.hideInteraction();
+			currentNpc = null;
 		}
 		
 		// Update player.
