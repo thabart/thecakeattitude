@@ -9,6 +9,16 @@ var io = require('socket.io').listen(3001, function() {
 
 io.on('connection', function(socket) {
 	console.log('a user is connected');
+	var removePlayer = function(id, bc) {
+		var removePlayer = getPlayer(id);
+		if (!removePlayer) {
+			return
+		}
+
+		var id = removePlayer.getId();
+		players.splice(players.indexOf(removePlayer), 1);
+		bc.emit('remove_player', { id: id });		
+	};
 	socket.on('new_player', function(data) {
 		var player = new Player(data.x, data.y, data.direction, data.mapId);		
 		player.setId(this.id);
@@ -22,14 +32,10 @@ io.on('connection', function(socket) {
 		players.push(player);
 	});
 	socket.on('remove', function() {
-		var removePlayer = getPlayer(this.id);
-		if (!removePlayer) {
-			return
-		}
-
-		var id = removePlayer.getId();
-		players.splice(players.indexOf(removePlayer), 1);
-		this.broadcast.emit('remove_player', { id: id });
+		removePlayer(this.id, this.broadcast);
+	});
+	socket.on('disconnect', function() {
+		removePlayer(this.id, this.broadcast);		
 	});
 	socket.on('move_player', function(data) {
 		var player = getPlayer(this.id);

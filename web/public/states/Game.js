@@ -99,6 +99,7 @@ Game.prototype = {
 			return;
 		}
 		
+		// Warp the player to another map.
 		if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.wraps, function(e, wrap) {
 			var map = wrap.map;
 			var tileMap = self.game.add.tilemap(map);
@@ -110,6 +111,13 @@ Game.prototype = {
 			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });			
 		})) {
 			return;
+		}
+		
+		// Interact with NPCs.
+		if (!self.game.physics.arcade.overlap(self.map.player.hitZone, self.map.getNpcObjs(), function(e, npc) {
+			self.map.player.displayInteraction();
+		})) {
+			self.map.player.hideInteraction();
 		}
 		
 		// Update player.

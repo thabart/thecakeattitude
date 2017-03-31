@@ -1,15 +1,25 @@
 var Player = function(id, x, y, game, currentUser) {
+	console.log('new player');
+	var hitPadding = 30;
 	this.id = id;
 	this.sprite = game.add.sprite(x, y, 'player');;
 	this.direction = [];
 	this.message = null;
 	this.evtMessage = null;
+	this.hitZone = game.add.graphics(x, y);
+	this.hitZone.lineStyle(2, 0x0000FF, 1);
+	this.hitZone.drawRect(x - hitPadding / 2, y - hitPadding / 2, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
+	var interactionSprite = game.add.sprite(0, game.camera.height - 50, 'spacebar');
+	interactionSprite.fixedToCamera = true;
+	interactionSprite.visible = false;
+	this.sprite.addChild(this.hitZone);
+	
 	// TODO : MAX : Characters in pseudo = 10
-	var style = { font: '15px', wordWrap: true, wordWrapWidth: 60, align: 'center' };
+	var pseudoStyle = { font: '15px', wordWrap: true, wordWrapWidth: 60, align: 'center' };
 	if (currentUser) {
-		style.fill = '#FFA500';
+		pseudoStyle.fill = '#FFA500';
 	}
-	this.pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', style);
+	pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', pseudoStyle);
 	
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	
@@ -29,7 +39,9 @@ var Player = function(id, x, y, game, currentUser) {
 	// Remove the player.
 	this.remove = function() {
 		this.sprite.destroy();
-		this.pseudo.destroy();
+		this.hitZone.destroy();
+		pseudo.destroy();
+		interactionSprite.destroy();
 		if (this.message != null)
 		{					
 			this.message.destroy();
@@ -82,8 +94,8 @@ var Player = function(id, x, y, game, currentUser) {
 			this.sprite.body.velocity.x = -200;						
 		}
 		
-		this.pseudo.x = this.sprite.x - 20 ;
-		this.pseudo.y = this.sprite.y - this.sprite.height / 2;
+		pseudo.x = this.sprite.x - 20 ;
+		pseudo.y = this.sprite.y - this.sprite.height / 2;
 	};				
 	// Update message position.
 	this.updateMessagePosition = function() {
@@ -109,6 +121,14 @@ var Player = function(id, x, y, game, currentUser) {
 	// Get direction.
 	this.getDirection = function() {
 		return this.direction;
-	}
+	};
+	// Display the interaction button.
+	this.displayInteraction = function() {
+		interactionSprite.visible = true;
+	};
+	// Hide interaction button.
+	this.hideInteraction = function() {
+		 interactionSprite.visible = false;		
+	};
 }
 		

@@ -1,8 +1,9 @@
 var Map = function(key, tileMap, game, player) {
+	var npcs = [],
+		npcObjs = null;
 	this.key = key;
 	this.tileMap = tileMap;		
 	this.wraps = [];
-	this.npcs = [];
 	this.player = player;
 	this.players = [];
 	this.layers = {
@@ -26,19 +27,19 @@ var Map = function(key, tileMap, game, player) {
 		this.tileMap.createLayer('Wraps');
 		// Create all the objects.
 		this.wraps = game.add.group();
-		this.npcs = game.add.group();
+		npcObjs = game.add.group();
 		this.wraps.enableBody = true;
-		this.npcs.enableBody = true;
+		npcObjs.enableBody = true;
 		this.tileMap.createFromObjects('Wraps', 'wrap', 'wrap', 0, true, false, this.wraps);	
 		var npcsObjs = tileMap.objects['Npcs'];
 		if (npcsObjs) {
 			npcsObjs.forEach(function(npc) {
 				switch(npc.type) {
 					case "warper":
-						var warper = game.add.sprite(npc.x, npc.y, 'wraper');
-						warper.animations.add('stay');
-						warper.animations.play('stay', 1, true);
-						self.npcs.add(warper);
+						var warper = new Warper(game, npc);
+						var sprite = warper.getSprite();
+						npcObjs.add(sprite);
+						npcs.push([sprite, warper ]);
 					break;
 				}
 			});
@@ -50,7 +51,6 @@ var Map = function(key, tileMap, game, player) {
 		this.tileMap.setCollision(421, true, 'Collision');
 		// Add the player to the world.
 		this.player = new Player(null, 0, 0, game, true);
-		game.physics.arcade.enable(this.player.sprite);			
 		// Make the camera follow the sprite.
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 		// Display layer.
@@ -69,5 +69,20 @@ var Map = function(key, tileMap, game, player) {
 		this.players.forEach(function(p) {
 			p.remove();
 		});
+	};
+	
+	this.getNpcObjs = function() {
+		return npcObjs;
+	};
+	
+	this.getNpc = function(sprite) {
+		var result = null;
+		npcs.forEach(function(kvp) {
+			if (kvp[0] == sprite) {
+				result = kvp[1];
+			}
+		});
+		
+		return result;
 	};
 };
