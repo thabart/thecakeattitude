@@ -57,8 +57,8 @@ Game.prototype = {
 		// Keep running on losing focus
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
-		var tileMap = this.game.add.tilemap('firstMap');
-		this.map = new Map('firstMap', tileMap, this.game);		
+		var tileMap = this.game.add.tilemap('secondMap');
+		this.map = new Map('secondMap', tileMap, this.game);		
 		this.map.init();
 		this.cursors = this.game.input.keyboard.createCursorKeys();	
 		// Connect to socket server		
@@ -112,7 +112,7 @@ Game.prototype = {
 		}
 		
 		// Warp the player to another map.
-		if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.wraps, function(e, wrap) {
+		if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, wrap) {
 			var map = wrap.map;
 			var tileMap = self.game.add.tilemap(map);
 			self.map.destroy();
@@ -120,7 +120,7 @@ Game.prototype = {
 			self.map.init();
 			// Remove the player from the map	& add him to the new map.		
 			self.socket.emit('remove');
-			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });			
+			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
 		})) {
 			return;
 		}

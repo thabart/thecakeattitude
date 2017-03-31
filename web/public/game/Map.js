@@ -1,9 +1,11 @@
 var Map = function(key, tileMap, game, player) {
 	var npcs = [],
-		npcObjs = null;
+		npcObjs = null,
+		constructionsObjs = null,
+		houseObj = null,
+		warps = null;
 	this.key = key;
 	this.tileMap = tileMap;		
-	this.wraps = [];
 	this.player = player;
 	this.players = [];
 	this.layers = {
@@ -13,12 +15,27 @@ var Map = function(key, tileMap, game, player) {
 		collision : null					
 	};
 	
-	this.init = function() {
-		var self = this;
+	this.init = function() {		
+		var addWrap = function(gm, obj, name, groupName, group) {			
+			var rect = new Phaser.Sprite(gm, obj.x, obj.y, name);
+			rect.name = groupName;
+			rect.exists = true;
+			rect.autoCull = false;
+			rect.width = obj.width;
+			rect.height = obj.height;
+			group.add(rect);
+			for (var property in obj.properties)
+            {
+                group.set(rect, property, obj.properties[property], false, false, 0, true);
+            }
+		};
+	
+		var self = this;		
 		// TODO : Load all the IMAGES.
 		this.tileMap.addTilesetImage('tallgrass', 'tallgrass');
 		this.tileMap.addTilesetImage('farming_fishing', 'farming_fishing');
 		this.tileMap.addTilesetImage('tiles', 'tiles');
+		this.tileMap.addTilesetImage('plowed_soil', 'plowed_soil');
 		// Add layers.					
 		this.layers.collision = this.tileMap.createLayer('Collision');
 		this.layers.ground = this.tileMap.createLayer('Ground');
@@ -26,12 +43,16 @@ var Map = function(key, tileMap, game, player) {
 		this.layers.alimentation = this.tileMap.createLayer('Alimentations');
 		this.tileMap.createLayer('Wraps');
 		// Create all the objects.
-		this.wraps = game.add.group();
+		warps = game.add.group();
 		npcObjs = game.add.group();
-		this.wraps.enableBody = true;
+		constructionsObjs = game.add.group();
+		warps.enableBody = true;
 		npcObjs.enableBody = true;
-		this.tileMap.createFromObjects('Wraps', 'wrap', 'wrap', 0, true, false, this.wraps);	
+		constructionsObjs.enableBody = true;
 		var npcsObjs = tileMap.objects['Npcs'];
+		var wps = tileMap.objects['Wraps'];
+		var constructions = tileMap.objects['Constructions'];
+		// Create npcs.
 		if (npcsObjs) {
 			npcsObjs.forEach(function(npc) {
 				switch(npc.type) {
@@ -42,6 +63,20 @@ var Map = function(key, tileMap, game, player) {
 						npcs.push([sprite, warper ]);
 					break;
 				}
+			});
+		}
+		
+		// Create warps.
+		if (wps) {
+			wps.forEach(function(warp) {
+				addWrap(game, warp, 'warp', 'Warps', warps);
+			});
+		}
+		
+		// Create constructions.
+		if (constructions) {
+			constructions.forEach(function(construction) {
+				addWrap(game, construction, 'construction', 'Constructions', constructionsObjs);
 			});
 		}
 		
@@ -63,7 +98,9 @@ var Map = function(key, tileMap, game, player) {
 		this.layers.ground.destroy();
 		this.layers.earth.destroy();
 		this.layers.alimentation.destroy();
-		this.wraps.destroy();
+		warps.destroy();
+		npcObjs.destroy();
+		constructionsObjs.destroy();
 		this.tileMap.destroy();
 		this.player.remove();
 		this.players.forEach(function(p) {
@@ -84,5 +121,9 @@ var Map = function(key, tileMap, game, player) {
 		});
 		
 		return result;
+	};
+	
+	this.getWarps = function() {
+		return warps;
 	};
 };

@@ -9,6 +9,7 @@ Splash.prototype = {
 		this.game.load.tilemap('secondMap', 'public/map/map2.json', null, Phaser.Tilemap.TILED_JSON);
 		this.game.load.image('tallgrass', 'public/map/tilesets/tallgrass.png');
 		this.game.load.image('farming_fishing', 'public/map/tilesets/farming_fishing.png');
+		this.game.load.image('plowed_soil', 'public/map/tilesets/plowed_soil.png');
 		this.game.load.image('tiles', 'public/map/tilesets/tiles.png');
 		this.game.load.image('player', 'public/map/character/phaser-dude.png');		
 		this.game.load.image('bubble-tail', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVAgMAAADUeU0FAAAADFBMVEUAAAAAAAD////MzMyoZCTaAAAAAXRSTlMAQObYZgAAAC1JREFUCNdjCA3NWrXUAY36/xULxYyN+hu1amUAAyYVwoBBhYYyYFDh/w9gUADQUTeozcOYAwAAAABJRU5ErkJggg==');
