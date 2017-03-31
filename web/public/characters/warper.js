@@ -1,10 +1,21 @@
 var Warper = function(game, npc) {
+	var self = this;
 	var isInteracting = false;
 	var modal = null;
 	// Initialize the sprite.
 	var sprite = game.add.sprite(npc.x, npc.y, 'wraper');
 	sprite.animations.add('stay');
 	sprite.animations.play('stay', 1, true);
+	sprite.inputEnabled = true;
+	sprite.events.onInputOver.add(function() {
+		game.canvas.style.cursor = "pointer";
+	});
+	sprite.events.onInputOut.add(function() {
+		game.canvas.style.cursor = "default";
+	});
+	sprite.events.onInputDown.add(function() {
+		this.interact();
+	}, this);
 	
 	var buildModal = function() {
 		modal = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'>"+
@@ -20,6 +31,7 @@ var Warper = function(game, npc) {
 		$(document.body).append(modal);
 		$(modal).on('hidden.bs.modal', function() {
 			isInteracting = false;
+			game.canvas.style.cursor = "default";
 		});
 	};
 	
