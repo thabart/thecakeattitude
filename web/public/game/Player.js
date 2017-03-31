@@ -19,7 +19,8 @@ var Player = function(id, x, y, game, currentUser) {
 	if (currentUser) {
 		pseudoStyle.fill = '#FFA500';
 	}
-	pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', pseudoStyle);
+	this.pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', pseudoStyle);
+	console.log('PLAYER');
 	
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	
@@ -40,7 +41,7 @@ var Player = function(id, x, y, game, currentUser) {
 	this.remove = function() {
 		this.sprite.destroy();
 		this.hitZone.destroy();
-		pseudo.destroy();
+		this.pseudo.destroy();
 		interactionSprite.destroy();
 		if (this.message != null)
 		{					
@@ -94,8 +95,8 @@ var Player = function(id, x, y, game, currentUser) {
 			this.sprite.body.velocity.x = -200;						
 		}
 		
-		pseudo.x = this.sprite.x - 20 ;
-		pseudo.y = this.sprite.y - this.sprite.height / 2;
+		this.pseudo.x = this.sprite.x - 20 ;
+		this.pseudo.y = this.sprite.y - this.sprite.height / 2;
 	};				
 	// Update message position.
 	this.updateMessagePosition = function() {
