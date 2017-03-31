@@ -127,8 +127,13 @@ Game.prototype = {
 		
 		// Interact with NPCs.
 		if (!self.game.physics.arcade.overlap(self.map.player.hitZone, self.map.getNpcObjs(), function(e, npc) {
-			self.map.player.displayInteraction();
 			currentNpc = self.map.getNpc(npc);
+			if (!currentNpc.getIsEnabled()) {
+				self.map.player.hideInteraction();
+				return;
+			}
+			
+			self.map.player.displayInteraction();
 		})) {
 			self.map.player.hideInteraction();
 			currentNpc = null;

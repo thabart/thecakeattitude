@@ -102,7 +102,6 @@ var Map = function(key, tileMap, game, player) {
 		this.layers.alimentation.destroy();
 		warps.destroy();
 		npcObjs.destroy();
-		constructionsObjs.destroy();
 		this.tileMap.destroy();
 		this.player.remove();
 		this.players.forEach(function(p) {

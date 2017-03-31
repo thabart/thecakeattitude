@@ -1,6 +1,8 @@
 'use strict';
 var Shop = function(game, npc, map) {
+	var freePlaceState = "freePlace";
 	var self = this;
+	var isEnabled = false;
 	var isInteracting = false;
 	var modal = null;
 	// Initialize the sprite.
@@ -10,6 +12,10 @@ var Shop = function(game, npc, map) {
 			tileSheet = t;
 		}
 	});
+	
+	if (tileSheet.name == freePlaceState) {
+		isEnabled = true;
+	}
 	
 	var sprite = game.add.sprite(npc.x, npc.y - tileSheet.tileHeight, tileSheet.name);	
 	sprite.inputEnabled = true;
@@ -32,15 +38,22 @@ var Shop = function(game, npc, map) {
 			"<p>Do you want to take this shop ?</p>"+
 			"</div>"+
 			"<div class='modal-footer'>"+
-			"<button type='button' class='btn btn-success' data-dismiss='modal'>Yes</button>"+
+			"<button type='button' class='btn btn-success'>Yes</button>"+
 			"<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>"+
 			"</div></div></div></div>");
 		$(document.body).append(modal);
 		$(modal).on('hidden.bs.modal', function() {
-			isInteracting = false;
+			isInteracting = true;
 			game.canvas.style.cursor = "default";
 		});
 		$(modal).find('.btn-success').click(function() {
+			if (tileSheet.name == freePlaceState) {
+				sprite.loadTexture('house', 0);
+				isEnabled = false;
+				sprite.events.onInputOver.removeAll();
+				sprite.events.onInputOut.removeAll();
+				$(modal).modal('toggle');
+			}
 		});
 	};
 	
@@ -51,11 +64,15 @@ var Shop = function(game, npc, map) {
 	};
 	
 	this.interact = function() {
-		if (isInteracting) {
+		if (isInteracting || !isEnabled) {
 			return;
 		}
 		
 		isInteracting = true;
 		$(modal).modal('toggle');
 	};	
+	
+	this.getIsEnabled = function() {
+		return isEnabled;
+	};
 };

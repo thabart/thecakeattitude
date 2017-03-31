@@ -49,4 +49,8 @@ var Warper = function(game, npc) {
 		isInteracting = true;
 		$(modal).modal('toggle');
 	};
+	
+	this.getIsEnabled = function() {
+		return true;
+	};
 };
