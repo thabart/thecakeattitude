@@ -6,9 +6,9 @@ var Player = function(id, x, y, game, currentUser) {
 	this.direction = [];
 	this.message = null;
 	this.evtMessage = null;
-	this.hitZone = game.add.graphics(x, y);
+	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2));
 	this.hitZone.lineStyle(2, 0x0000FF, 1);
-	this.hitZone.drawRect(x - hitPadding / 2, y - hitPadding / 2, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
+	this.hitZone.drawRect(0, 0, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
 	var interactionSprite = game.add.sprite(0, game.camera.height - 50, 'spacebar');
 	interactionSprite.fixedToCamera = true;
 	interactionSprite.visible = false;

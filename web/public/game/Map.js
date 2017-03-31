@@ -1,7 +1,6 @@
 var Map = function(key, tileMap, game, player) {
 	var npcs = [],
 		npcObjs = null,
-		constructionsObjs = null,
 		houseObj = null,
 		warps = null;
 	this.key = key;
@@ -28,6 +27,8 @@ var Map = function(key, tileMap, game, player) {
             {
                 group.set(rect, property, obj.properties[property], false, false, 0, true);
             }
+			
+			return rect;
 		};
 	
 		var self = this;		
@@ -36,6 +37,8 @@ var Map = function(key, tileMap, game, player) {
 		this.tileMap.addTilesetImage('farming_fishing', 'farming_fishing');
 		this.tileMap.addTilesetImage('tiles', 'tiles');
 		this.tileMap.addTilesetImage('plowed_soil', 'plowed_soil');
+		this.tileMap.addTilesetImage('house', 'house');
+		this.tileMap.addTilesetImage('freePlace', 'freePlace');
 		// Add layers.					
 		this.layers.collision = this.tileMap.createLayer('Collision');
 		this.layers.ground = this.tileMap.createLayer('Ground');
@@ -45,24 +48,30 @@ var Map = function(key, tileMap, game, player) {
 		// Create all the objects.
 		warps = game.add.group();
 		npcObjs = game.add.group();
-		constructionsObjs = game.add.group();
 		warps.enableBody = true;
 		npcObjs.enableBody = true;
-		constructionsObjs.enableBody = true;
 		var npcsObjs = tileMap.objects['Npcs'];
 		var wps = tileMap.objects['Wraps'];
-		var constructions = tileMap.objects['Constructions'];
 		// Create npcs.
 		if (npcsObjs) {
 			npcsObjs.forEach(function(npc) {
+				var o = null;
 				switch(npc.type) {
 					case "warper":
-						var warper = new Warper(game, npc);
-						var sprite = warper.getSprite();
-						npcObjs.add(sprite);
-						npcs.push([sprite, warper ]);
+						o = new Warper(game, npc);
+					break;
+					case "shop":
+						o = new Shop(game, npc, tileMap);
 					break;
 				}
+				
+				if (o == null) {
+					return;
+				}
+				
+				var sp = o.getSprite();
+				npcObjs.add(sp);
+				npcs.push([sp, o ]);
 			});
 		}
 		
@@ -73,19 +82,12 @@ var Map = function(key, tileMap, game, player) {
 			});
 		}
 		
-		// Create constructions.
-		if (constructions) {
-			constructions.forEach(function(construction) {
-				addWrap(game, construction, 'construction', 'Constructions', constructionsObjs);
-			});
-		}
-		
 		// ADD SPRITE : 
 		// this.wraps.add('tiles'); => sprite
 		// Specify which tile can collide.
 		this.tileMap.setCollision(421, true, 'Collision');
 		// Add the player to the world.
-		this.player = new Player(null, 0, 0, game, true);
+		this.player = new Player(null, 1673, 926, game, true);
 		// Make the camera follow the sprite.
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 		// Display layer.

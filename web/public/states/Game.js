@@ -57,8 +57,8 @@ Game.prototype = {
 		// Keep running on losing focus
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
-		var tileMap = this.game.add.tilemap('secondMap');
-		this.map = new Map('secondMap', tileMap, this.game);		
+		var tileMap = this.game.add.tilemap('firstMap');
+		this.map = new Map('firstMap', tileMap, this.game);		
 		this.map.init();
 		this.cursors = this.game.input.keyboard.createCursorKeys();	
 		// Connect to socket server		
@@ -141,6 +141,9 @@ Game.prototype = {
 		if (isPositionUpdated) {			
 			this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
 		}
+	},
+	render: function() {		
+		this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
 	},
 	displayMessage : function(txt, id) {
 		var player = this.map.player;
