@@ -49,19 +49,19 @@ namespace Cook4Me.Api.Host.Controllers
             var result = _requestBuilder.GetAddShop(obj);
             result.Id = Guid.NewGuid().ToString();
             result.CreateDateTime = DateTime.UtcNow;
-            await _repository.Add(result);
-            var relativePath = @"shops/" + result.Id + "_shop.json";
-            var path = Path.Combine(_env.WebRootPath, relativePath);
+            result.RelativePath = @"shops/" + result.Id + "_shop.json";
+            var path = Path.Combine(_env.WebRootPath, result.RelativePath);
             var file = System.IO.File.Create(path);
             using (var writer = new StreamWriter(file))
             {
                 foreach (var line in lines)
                 {
-                    writer.WriteLine(line);
+                    writer.WriteLine(line.Replace("<map_name>", result.MapName));
                 }
             }
 
-            var res = new { id = result.Id, map = relativePath };
+            var res = new { id = result.Id, path = result.RelativePath };
+            await _repository.Add(result);
             return new OkObjectResult(res);
         }
 

@@ -32,8 +32,39 @@
          "width":26,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":15,
+         "name":"Wraps",
+         "objects":[
+                {
+                 "height":31.8181818181818,
+                 "id":1,
+                 "name":"wrap",
+                 "properties":
+                    {
+                     "map":"<map_name>"
+                    },
+                 "propertytypes":
+                    {
+                     "map":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":63.8181818181818,
+                 "x":384.181818181818,
+                 "y":416.181818181818
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":26,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":1,
+ "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

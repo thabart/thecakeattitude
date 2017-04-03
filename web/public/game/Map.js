@@ -99,7 +99,10 @@ var Map = function(key, tileMap, game, opts = null) {
 		this.layers.collision.destroy();
 		this.layers.ground.destroy();
 		this.layers.earth.destroy();
-		this.layers.alimentation.destroy();
+		if (this.layers.alimentation) {			
+			this.layers.alimentation.destroy();
+		}
+		
 		warps.destroy();
 		npcObjs.destroy();
 		this.tileMap.destroy();

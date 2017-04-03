@@ -35,7 +35,8 @@ namespace Cook4Me.Api.EF.Extensions
                 CreateDateTime = shop.CreateDateTime,
                 MapName = shop.MapName,
                 PlaceId = shop.PlaceId,
-                Title = shop.Title
+                Title = shop.Title,
+                RelativePath = shop.RelativePath
             };
         }
 
@@ -52,7 +53,8 @@ namespace Cook4Me.Api.EF.Extensions
                 CreateDateTime = shop.CreateDateTime,
                 MapName = shop.MapName,
                 PlaceId = shop.PlaceId,
-                Title = shop.Title
+                Title = shop.Title,
+                RelativePath = shop.RelativePath
             };
 
         }

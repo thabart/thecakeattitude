@@ -32,8 +32,39 @@
          "width":26,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":15,
+         "name":"Wraps",
+         "objects":[
+                {
+                 "height":31.8181818181818,
+                 "id":1,
+                 "name":"wrap",
+                 "properties":
+                    {
+                     "map":"<map_name>"
+                    },
+                 "propertytypes":
+                    {
+                     "map":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":63.8181818181818,
+                 "x":384.181818181818,
+                 "y":416.181818181818
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":26,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":1,
+ "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -41,7 +72,7 @@
         {
          "columns":8,
          "firstgid":1,
-         "image":"tilesets\/floor.png",
+         "image":"..\/wwwroot\/shops\/tilesets\/floor.png",
          "imageheight":256,
          "imagewidth":256,
          "margin":0,
@@ -54,7 +85,7 @@
         {
          "columns":60,
          "firstgid":65,
-         "image":"tilesets\/tiles.png",
+         "image":"..\/wwwroot\/shops\/tilesets\/tiles.png",
          "imageheight":1080,
          "imagewidth":1920,
          "margin":0,
@@ -67,7 +98,7 @@
         {
          "columns":8,
          "firstgid":2045,
-         "image":"tilesets\/stuff.png",
+         "image":"..\/wwwroot\/shops\/tilesets\/stuff.png",
          "imageheight":7000,
          "imagewidth":256,
          "margin":0,

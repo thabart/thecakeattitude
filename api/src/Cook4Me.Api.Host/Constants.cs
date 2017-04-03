@@ -34,6 +34,7 @@ namespace Cook4Me.Api.Host
                 public const string Title = "title";
                 public const string Map = "map";
                 public const string Place = "place";
+                public const string Path = "path";
             }
         }
     }

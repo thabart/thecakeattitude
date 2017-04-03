@@ -39,9 +39,19 @@ var Shop = function(game, npc, map, group, opts = null) {
 	};
 	
 	// Display shop.
-	var displayShop = function() {
+	var displayShop = function(r) {
 		removeInteraction();
-		sprite.loadTexture('house', 0);		
+		sprite.loadTexture('house', 0);				
+		if (game.cache.checkTilemapKey(r.id)) {
+			addWarp(r.id);			
+			return;
+		}
+		
+		var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.path, null, Phaser.Tilemap.TILED_JSON);		
+		loader.onLoadComplete.add(function() {
+			addWarp(r.id);			
+		}, group);
+		loader.start();
 	};
 	
 	// Load the data.
@@ -56,7 +66,7 @@ var Shop = function(game, npc, map, group, opts = null) {
 					return;
 				}
 				
-				displayShop();
+				displayShop(r[0]);
 			}
 		});
 	};
@@ -96,12 +106,7 @@ var Shop = function(game, npc, map, group, opts = null) {
 				contentType: "application/json",
 				data: JSON.stringify({ title: 'first-shop', map: map.key, place: npc.name }),
 				success: function(r) {
-					displayShop();			
-					var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.map, null, Phaser.Tilemap.TILED_JSON);
-					loader.onLoadComplete.add(function() {	
-						addWarp(r.id);
-					}, this);
-					loader.start();
+					displayShop(r);
 				},
 				error: function() {
 					// TODO : Display message error.

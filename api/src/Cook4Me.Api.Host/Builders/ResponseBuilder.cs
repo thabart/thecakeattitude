@@ -41,6 +41,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Title, shop.Title);
             result.Add(Constants.DtoNames.Shop.Map, shop.MapName);
             result.Add(Constants.DtoNames.Shop.Place, shop.PlaceId);
+            result.Add(Constants.DtoNames.Shop.Path, shop.RelativePath);
             return result;
         }
     }
