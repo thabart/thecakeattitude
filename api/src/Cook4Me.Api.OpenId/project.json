@@ -29,8 +29,7 @@
     "Microsoft.AspNetCore.Server.Kestrel.Https": "1.0.0",
     "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.0",
     "Microsoft.AspNetCore.Authentication.MicrosoftAccount": "1.0.0",
-    "Microsoft.AspNetCore.Authentication.Facebook": "1.1.0",
-    "SimpleIdentityServer.Host": { "target": "project" }
+    "Microsoft.AspNetCore.Authentication.Facebook": "1.1.0"
   },
   "frameworks": {
     "net46": {

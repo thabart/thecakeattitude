@@ -61,7 +61,7 @@ var Map = function(key, tileMap, game, player) {
 						o = new Warper(game, npc);
 					break;
 					case "shop":
-						o = new Shop(game, npc, tileMap);
+						o = new Shop(game, npc, tileMap, warps);
 					break;
 				}
 				

@@ -21,7 +21,20 @@ namespace Cook4Me.Api.Host
         public static class RouteNames
         {
             public const string Products = "products";
+            public const string Shops = "shops";
             public const string Search = ".search";
+        }
+
+        public static class DtoNames
+        {
+            public static class Shop
+            {
+                public const string Id = "id";
+                public const string CreateDateTime = "create_datetime";
+                public const string Title = "title";
+                public const string Map = "map";
+                public const string Place = "place";
+            }
         }
     }
 }

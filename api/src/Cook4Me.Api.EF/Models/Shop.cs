@@ -1,4 +1,4 @@
-#region copyright
+﻿#region copyright
 // Copyright 2017 Habart Thierry
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,22 +14,16 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.EF.Models;
-using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.EF
+namespace Cook4Me.Api.EF.Models
 {
-    public class CookDbContext : DbContext
+    public class Shop
     {
-        public CookDbContext(DbContextOptions dbContextOptions):base(dbContextOptions)
-        {
-        }
-
-        public virtual DbSet<Shop> Shops { get; set; }
-        
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-        }
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string MapName { get; set; }
+        public string PlaceId { get; set; }
+        public DateTime CreateDateTime { get; set; }
     }
 }

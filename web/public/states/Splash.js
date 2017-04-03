@@ -4,6 +4,7 @@ Splash.prototype = {
 		this.loadingBar = this.game.make.text(this.game.world.centerX, 380, 'Loading...', {fill: 'white'});
 	},
 	preload: function() {		
+		var self = this;
 		// LOAD ALL THE ASSETS.
 		this.game.load.tilemap('firstMap', 'public/map/map.json', null, Phaser.Tilemap.TILED_JSON);
 		this.game.load.tilemap('secondMap', 'public/map/map2.json', null, Phaser.Tilemap.TILED_JSON);

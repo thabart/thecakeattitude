@@ -15,12 +15,12 @@
 #endregion
 
 using Cook4Me.Api.EF;
+using Cook4Me.Api.Host.Builders;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SimpleIdentityServer.Oauth2Instrospection.Authentication;
 
 namespace Cook4Me.Api.Host
 {
@@ -90,6 +90,8 @@ namespace Cook4Me.Api.Host
         private static void RegisterDependencies(IServiceCollection services)
         {
             services.AddCookForMeStoreInMemory();
+            services.AddTransient<IResponseBuilder, ResponseBuilder>();
+            services.AddTransient<IRequestBuilder, RequestBuilder>();
         }
     }
 }

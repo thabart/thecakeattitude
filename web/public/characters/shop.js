@@ -1,5 +1,5 @@
 'use strict';
-var Shop = function(game, npc, map) {
+var Shop = function(game, npc, map, warps) {
 	var freePlaceState = "freePlace";
 	var self = this;
 	var isEnabled = false;
@@ -28,6 +28,49 @@ var Shop = function(game, npc, map) {
 	sprite.events.onInputDown.add(function() {
 		this.interact();
 	}, this);
+
+	// Remove all the interactions.
+	var removeInteraction = function() {
+		isEnabled = false;
+		sprite.inputEnabled = false;
+		sprite.events.onInputOver.removeAll();
+		sprite.events.onInputOut.removeAll();
+		sprite.events.onInputDown.removeAll();
+	};
+	
+	// Display shop.
+	var displayShop = function() {
+		removeInteraction();
+		sprite.loadTexture('house', 0);		
+	};
+	
+	// Load the data.
+	var init = function() {
+		$.ajax({
+			url: 'http://localhost:5000/shops/.search',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({map: map.key, place: npc.name}),
+			success: function(r) {
+				if (r.length != 1) {
+					return;
+				}
+				
+				displayShop();
+			}
+		});
+	};
+	
+	var addWarp = function() {		
+		var rect = new Phaser.Sprite(game, npc.x + (tileSheet.tileWidth / 2) - 15, npc.y, 'name');
+		rect.name = 'Warps';
+		rect.exists = true;
+		rect.autoCull = false;
+		rect.width = 30;
+		rect.height = 30;
+		warps.add(rect);
+        warps.set(rect, 'map', 'secondMap', false, false, 0, true);
+	};
 	
 	var buildModal = function() {
 		modal = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'>"+
@@ -47,17 +90,25 @@ var Shop = function(game, npc, map) {
 			game.canvas.style.cursor = "default";
 		});
 		$(modal).find('.btn-success').click(function() {
-			if (tileSheet.name == freePlaceState) {
-				sprite.loadTexture('house', 0);
-				isEnabled = false;
-				sprite.events.onInputOver.removeAll();
-				sprite.events.onInputOut.removeAll();
-				$(modal).modal('toggle');
-			}
+			$.ajax({
+				url: 'http://localhost:5000/shops',
+				method: 'POST',
+				contentType: "application/json",
+				data: JSON.stringify({ title: 'first-shop', map: map.key, place: npc.name }),
+				success: function() {
+					// TODO : Close the window.
+					displayShop();					
+					$(modal).modal('toggle');
+				},
+				error: function() {
+					// TODO : Display message error.
+				}
+			});
 		});
 	};
 	
 	buildModal();
+	init();
 	
 	this.getSprite = function() {
 		return sprite;

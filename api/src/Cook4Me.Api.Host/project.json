@@ -30,8 +30,6 @@
     "Microsoft.AspNetCore.Server.Kestrel.Https": "1.0.0",
     "Microsoft.AspNetCore.Authentication.OpenIdConnect": "1.0.0",
     "Microsoft.AspNetCore.Authentication.MicrosoftAccount": "1.0.0",
-    "SimpleIdentityServer.Oauth2Instrospection.Authentication": { "target": "project" },
-    "SimpleIdentityServer.Core.Jwt": { "target": "project" },
     "Cook4Me.Api.Core": { "target": "project" },
     "Cook4Me.Api.EF": { "target": "project" }
   },

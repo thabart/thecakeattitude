@@ -14,6 +14,8 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.EF.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,7 +83,7 @@ namespace Cook4Me.Api.EF
 
         private static void RegisterServices(IServiceCollection serviceCollection)
         {
-			// TODO : Add all the repositories
+            serviceCollection.AddTransient<IShopRepository, ShopRepository>();
         }
     }
 }
