@@ -56,6 +56,9 @@ io.on('connection', function(socket) {
 		
 		this.broadcast.emit('message', { id : player.getId(), message : data.message });
 	});
+	socket.on('new_shop', function(data) {
+		
+	});
 });
 
 function getPlayer(id) {

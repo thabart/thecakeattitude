@@ -86,7 +86,7 @@ var Shop = function(game, npc, map, warps) {
 			"</div></div></div></div>");
 		$(document.body).append(modal);
 		$(modal).on('hidden.bs.modal', function() {
-			isInteracting = true;
+			isInteracting = false;
 			game.canvas.style.cursor = "default";
 		});
 		$(modal).find('.btn-success').click(function() {

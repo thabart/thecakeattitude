@@ -52,7 +52,7 @@
 				// Initialize the game.
 				this.init = function() {
 					var self = this;
-					this.game = new Phaser.Game(980, 600, Phaser.AUTO, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
+					this.game = new Phaser.Game(980, 600, Phaser.CANVAS, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
 				};
 				// Display message.
 				this.sendMessage = function(txt, id) {

@@ -16,9 +16,11 @@
 
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,22 +32,37 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IShopRepository _repository;
         private readonly IRequestBuilder _requestBuilder;
         private readonly IResponseBuilder _responseBuilder;
+        private readonly IHostingEnvironment _env;
 
-        public ShopsController(IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder)
+        public ShopsController(IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder, IHostingEnvironment env)
         {
             _repository = repository;
             _requestBuilder = requestBuilder;
             _responseBuilder = responseBuilder;
+            _env = env;
         }
 
         [HttpPost]
         public async Task<IActionResult> AddShop([FromBody] JObject obj)
         {
+            var lines = System.IO.File.ReadAllLines("./Assets/House.json");
             var result = _requestBuilder.GetAddShop(obj);
             result.Id = Guid.NewGuid().ToString();
             result.CreateDateTime = DateTime.UtcNow;
             await _repository.Add(result);
-            return new OkResult();
+            var relativePath = @"shops\" + result.Id + "_shop.json";
+            var path = Path.Combine(_env.WebRootPath, relativePath);
+            var file = System.IO.File.Create(path);
+            using (var writer = new StreamWriter(file))
+            {
+                foreach (var line in lines)
+                {
+                    writer.WriteLine(line);
+                }
+            }
+
+            var res = new { id = result.Id, map = relativePath };
+            return new OkObjectResult(res);
         }
 
         [HttpGet]

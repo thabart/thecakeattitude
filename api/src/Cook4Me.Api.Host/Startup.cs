@@ -42,7 +42,8 @@ namespace Cook4Me.Api.Host
             // 1. Add the dependencies needed to enable CORS
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader()));
+                .AllowAnyHeader()
+                .AllowCredentials()));
             // 2. Add the dependencies to run ASP.NET MVC
             services.AddMvc();
             // 3. Add authorization rule.
@@ -66,7 +67,9 @@ namespace Cook4Me.Api.Host
             app.UseStatusCodePages();
             // 2. Enable CORS
             app.UseCors("AllowAll");
-            // 3. Authenticate the request with OAUTH2.0 introspection endpoint.
+            // 3. Use static files
+            app.UseStaticFiles();
+            // 4. Authenticate the request with OAUTH2.0 introspection endpoint.
             /*
             app.UseAuthenticationWithIntrospection(new Oauth2IntrospectionOptions
             {
@@ -75,9 +78,9 @@ namespace Cook4Me.Api.Host
                 ClientSecret = clientSecret
             });
             */
-            // 4. Use static files
+            // 5. Use static files
             app.UseStaticFiles();
-            // 5. Launch ASP.NET MVC
+            // 6. Launch ASP.NET MVC
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
