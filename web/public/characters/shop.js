@@ -81,7 +81,7 @@ var Shop = function(game, npc, map, group, opts = null) {
 			"<p>Do you want to take this shop ?</p>"+
 			"</div>"+
 			"<div class='modal-footer'>"+
-			"<button type='button' class='btn btn-success'>Yes</button>"+
+			"<button type='button' class='btn btn-success'  data-dismiss='modal'>Yes</button>"+
 			"<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>"+
 			"</div></div></div></div>");
 		$(document.body).append(modal);
@@ -98,8 +98,7 @@ var Shop = function(game, npc, map, group, opts = null) {
 				success: function(r) {
 					displayShop();			
 					var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.map, null, Phaser.Tilemap.TILED_JSON);
-					loader.onLoadComplete.add(function() {		
-						$(modal).modal('toggle');
+					loader.onLoadComplete.add(function() {	
 						addWarp(r.id);
 					}, this);
 					loader.start();
