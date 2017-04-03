@@ -13,6 +13,8 @@ Splash.prototype = {
 		this.game.load.image('farming_fishing', 'http://localhost:5000/maps/tilesets/farming_fishing.png');
 		this.game.load.image('plowed_soil', 'http://localhost:5000/maps/tilesets/plowed_soil.png');
 		this.game.load.image('tiles', 'http://localhost:5000/maps/tilesets/tiles.png');
+		this.game.load.image('floor', 'http://localhost:5000/shops/tilesets/floor.png');
+		this.game.load.image('stuff', 'http://localhost:5000/shops/tilesets/stuff.png');
 		this.game.load.image('player', 'http://localhost:5000/characters/phaser-dude.png');		
 		this.game.load.image('house', 'http://localhost:5000/maps/tilesets/house.png');
 		this.game.load.image('freePlace', 'http://localhost:5000/maps/tilesets/freePlace.png');

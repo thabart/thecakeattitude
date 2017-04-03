@@ -1,5 +1,5 @@
 'use strict';
-var Shop = function(game, npc, map, warps) {
+var Shop = function(game, npc, map, group, opts = null) {
 	var freePlaceState = "freePlace";
 	var self = this;
 	var isEnabled = false;
@@ -61,15 +61,15 @@ var Shop = function(game, npc, map, warps) {
 		});
 	};
 	
-	var addWarp = function() {		
+	var addWarp = function(mapId) {		
 		var rect = new Phaser.Sprite(game, npc.x + (tileSheet.tileWidth / 2) - 15, npc.y, 'name');
 		rect.name = 'Warps';
 		rect.exists = true;
 		rect.autoCull = false;
 		rect.width = 30;
 		rect.height = 30;
-		warps.add(rect);
-        warps.set(rect, 'map', 'secondMap', false, false, 0, true);
+		group.add(rect);
+        group.set(rect, 'map', mapId, false, false, 0, true);
 	};
 	
 	var buildModal = function() {
@@ -95,10 +95,14 @@ var Shop = function(game, npc, map, warps) {
 				method: 'POST',
 				contentType: "application/json",
 				data: JSON.stringify({ title: 'first-shop', map: map.key, place: npc.name }),
-				success: function() {
-					// TODO : Close the window.
-					displayShop();					
-					$(modal).modal('toggle');
+				success: function(r) {
+					displayShop();			
+					var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.map, null, Phaser.Tilemap.TILED_JSON);
+					loader.onLoadComplete.add(function() {		
+						$(modal).modal('toggle');
+						addWarp(r.id);
+					}, this);
+					loader.start();
 				},
 				error: function() {
 					// TODO : Display message error.

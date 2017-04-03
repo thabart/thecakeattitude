@@ -19,9 +19,7 @@ var Player = function(id, x, y, game, currentUser) {
 	if (currentUser) {
 		pseudoStyle.fill = '#FFA500';
 	}
-	this.pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', pseudoStyle);
-	console.log('PLAYER');
-	
+	this.pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', pseudoStyle);	
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	
 	function updateDirection(dir, val) {

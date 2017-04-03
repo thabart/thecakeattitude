@@ -45,12 +45,12 @@ namespace Cook4Me.Api.Host.Controllers
         [HttpPost]
         public async Task<IActionResult> AddShop([FromBody] JObject obj)
         {
-            var lines = System.IO.File.ReadAllLines("./Assets/House.json");
+            var lines = System.IO.File.ReadAllLines("./Assets/shop.json");
             var result = _requestBuilder.GetAddShop(obj);
             result.Id = Guid.NewGuid().ToString();
             result.CreateDateTime = DateTime.UtcNow;
             await _repository.Add(result);
-            var relativePath = @"shops\" + result.Id + "_shop.json";
+            var relativePath = @"shops/" + result.Id + "_shop.json";
             var path = Path.Combine(_env.WebRootPath, relativePath);
             var file = System.IO.File.Create(path);
             using (var writer = new StreamWriter(file))

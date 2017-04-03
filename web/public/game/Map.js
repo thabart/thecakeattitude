@@ -1,11 +1,11 @@
-var Map = function(key, tileMap, game, player) {
+var Map = function(key, tileMap, game, opts = null) {
 	var npcs = [],
 		npcObjs = null,
 		houseObj = null,
 		warps = null;
 	this.key = key;
 	this.tileMap = tileMap;		
-	this.player = player;
+	this.player = null;
 	this.players = [];
 	this.layers = {
 		alimentation : null,
@@ -39,6 +39,8 @@ var Map = function(key, tileMap, game, player) {
 		this.tileMap.addTilesetImage('plowed_soil', 'plowed_soil');
 		this.tileMap.addTilesetImage('house', 'house');
 		this.tileMap.addTilesetImage('freePlace', 'freePlace');
+		this.tileMap.addTilesetImage('floor', 'floor');
+		this.tileMap.addTilesetImage('stuff', 'stuff');
 		// Add layers.					
 		this.layers.collision = this.tileMap.createLayer('Collision');
 		this.layers.ground = this.tileMap.createLayer('Ground');
@@ -85,13 +87,11 @@ var Map = function(key, tileMap, game, player) {
 		// ADD SPRITE : 
 		// this.wraps.add('tiles'); => sprite
 		// Specify which tile can collide.
-		this.tileMap.setCollision(421, true, 'Collision');
-		// Add the player to the world.
-		this.player = new Player(null, 1673, 926, game, true);
+		this.tileMap.setCollisionBetween(10, 421, true, 'Collision');
+		this.layers.earth.resizeWorld();
+		this.player = new Player(null, game.world.centerX, game.world.centerY, game, true);
 		// Make the camera follow the sprite.
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-		// Display layer.
-		this.layers.earth.resizeWorld();
 	};
 	
 	this.destroy = function() {
