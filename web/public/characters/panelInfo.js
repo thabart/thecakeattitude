@@ -37,11 +37,14 @@ var InfoPanel = function(game, npc, map, shop) {
 	};
 	
 	this.interact = function() {
-		console.log(modal);
 		$(modal).modal('toggle');
 	};	
 	
 	this.getIsEnabled = function() {
 		return true;
+	};	
+	
+	this.destroy = function() {
+		sprite.destroy();
 	};
 };

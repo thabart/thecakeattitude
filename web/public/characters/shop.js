@@ -6,7 +6,7 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		shopTitleTxt = null,
 		shopTitleBorderPadding = 2;
 	var self = this;
-	var isEnabled = false;
+	var isEnabled = true;
 	var isInteracting = false;
 	var modal = null;
 	// Initialize the sprite.
@@ -53,21 +53,15 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 	// Display shop.
 	var displayShop = function(r) {
 		removeInteraction();
-		sprite.loadTexture('house', 0);				
-		if (game.cache.checkTilemapKey(r.id)) {
-			addWarp(r.id);			
-			displayTile(r.title);
-			displayPanelInfo();
-			return;
+		sprite.loadTexture('house', 0);
+		if (!game.cache.checkTilemapKey(r.id)) {
+			var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.path, null, Phaser.Tilemap.TILED_JSON);
+			loader.start();
 		}
 		
+		addWarp(r.id);			
 		displayTile(r.title);
 		displayPanelInfo(r);
-		var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.path, null, Phaser.Tilemap.TILED_JSON);		
-		loader.onLoadComplete.add(function() {
-			addWarp(r.id);			
-		}, warpGroup);
-		loader.start();
 	};
 	
 	var displayTile = function(title) {
@@ -135,6 +129,7 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 				contentType: "application/json",
 				data: JSON.stringify({ title: 'first-shop', map: map.key, place: npc.name }),
 				success: function(r) {
+					r.title = 'first-shop';
 					displayShop(r);
 				},
 				error: function() {

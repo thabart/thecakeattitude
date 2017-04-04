@@ -196,7 +196,8 @@ Game.prototype = {
         }
 		
 		globalGroup.scale.x += (worldScale-globalGroup.scale.x)*0.1;   //easing
-        globalGroup.scale.y += (worldScale-globalGroup.scale.y)*0.1;*/
+        globalGroup.scale.y += (worldScale-globalGroup.scale.y)*0.1;
+		*/
 		
 		// Update player.
 		isPositionUpdated = this.map.player.updateDirection(this.cursors);
