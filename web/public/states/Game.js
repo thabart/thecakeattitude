@@ -165,6 +165,7 @@ Game.prototype = {
 			
 			// Zoom on the map
 			if (worldScale != previousScale) {				
+				self.game.world.scale.set(worldScale);
 				/*
 				self.game.camera.scale.x = worldScale;
 				self.game.camera.scale.y = worldScale;
