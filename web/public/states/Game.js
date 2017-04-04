@@ -135,43 +135,56 @@ Game.prototype = {
 	},
 	update: function() {		
 		var self = this;
-		this.map.players.forEach(function(p) {
-			if (!self.game.physics.arcade.collide(p.sprite, self.map.layers.collision)) {
-				p.updatePosition();		
-				p.updateMessagePosition();						
-			}
-		});
-		
-		if (self.game.physics.arcade.collide(self.map.player.sprite, self.map.layers.collision)) {
-			return;
-		}
-		
-		// Warp the player to another map.
-		if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, wrap) {
-			var map = wrap.map;
-			var tileMap = self.game.add.tilemap(map);
-			self.map.destroy();
-			self.map = new Map(map, tileMap, self.game);
-			self.map.init();
-			// Remove the player from the map	& add him to the new map.		
-			self.socket.emit('remove');
-			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
-		})) {
-			return;
-		}
-		
-		// Interact with NPCs.
-		if (!self.game.physics.arcade.overlap(self.map.player.hitZone, self.map.getNpcObjs(), function(e, npc) {
-			currentNpc = self.map.getNpc(npc);
-			if (!currentNpc.getIsEnabled()) {
-				self.map.player.hideInteraction();
+		try {
+			this.map.players.forEach(function(p) {
+				if (!self.game.physics.arcade.collide(p.sprite, self.map.layers.collision)) {
+					p.updatePosition();		
+					p.updateMessagePosition();						
+				}
+			});
+			
+			if (self.game.physics.arcade.collide(self.map.player.sprite, self.map.layers.collision)) {
 				return;
 			}
 			
-			self.map.player.displayInteraction();
-		})) {
-			self.map.player.hideInteraction();
-			currentNpc = null;
+			// Warp the player to another map.
+			if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, wrap) {
+				var map = wrap.map;
+				var tileMap = self.game.add.tilemap(map);
+				self.map.destroy();
+				self.map = new Map(map, tileMap, self.game);
+				self.map.init();
+				// Remove the player from the map	& add him to the new map.		
+				self.socket.emit('remove');
+				self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
+			})) {
+				return;
+			}
+			
+			// Interact with NPCs.
+			if (!self.game.physics.arcade.overlap(self.map.player.hitZone, self.map.getNpcObjs(), function(e, npc) {
+				currentNpc = self.map.getNpc(npc);
+				if (!currentNpc.getIsEnabled()) {
+					self.map.player.hideInteraction();
+					return;
+				}
+				
+				self.map.player.displayInteraction();
+			})) {
+				self.map.player.hideInteraction();
+				currentNpc = null;
+			}
+		
+			// Update player.
+			isPositionUpdated = this.map.player.updateDirection(this.cursors);
+			this.map.player.updatePosition();	
+			this.map.player.updateMessagePosition();
+			if (isPositionUpdated) {			
+				this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
+			}
+		}
+		catch(err) {
+			
 		}
 		
 		// Zoom & dezoom
@@ -198,14 +211,6 @@ Game.prototype = {
 		globalGroup.scale.x += (worldScale-globalGroup.scale.x)*0.1;   //easing
         globalGroup.scale.y += (worldScale-globalGroup.scale.y)*0.1;
 		*/
-		
-		// Update player.
-		isPositionUpdated = this.map.player.updateDirection(this.cursors);
-		this.map.player.updatePosition();	
-		this.map.player.updateMessagePosition();
-		if (isPositionUpdated) {			
-			this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
-		}
 	},
 	render: function() {		
 		this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
