@@ -18,6 +18,7 @@ Splash.prototype = {
 		this.game.load.image('player', 'http://localhost:5000/characters/phaser-dude.png');		
 		this.game.load.image('house', 'http://localhost:5000/maps/tilesets/house.png');
 		this.game.load.image('freePlace', 'http://localhost:5000/maps/tilesets/freePlace.png');
+		this.game.load.image('panel-info', 'http://localhost:5000/maps/tilesets/panel-info.png');
 		this.game.load.image('bubble-tail', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVAgMAAADUeU0FAAAADFBMVEUAAAAAAAD////MzMyoZCTaAAAAAXRSTlMAQObYZgAAAC1JREFUCNdjCA3NWrXUAY36/xULxYyN+hu1amUAAyYVwoBBhYYyYFDh/w9gUADQUTeozcOYAwAAAABJRU5ErkJggg==');
 		this.game.load.image('spacebar', 'http://localhost:5000/images/space-bar.png');
 		this.game.load.spritesheet('bubble-border', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbAgMAAADwuhzGAAAADFBMVEUAAAD///8AAADMzMyl8w72AAAAAXRSTlMAQObYZgAAADlJREFUCNdjYGDQWrWqgQGT5poaGpqFSTMtDQWCFRj0PyrR/3+B7cGgmf+/AroLk2bg////AwMGDQCR0FKxG5KiwAAAAABJRU5ErkJggg==', 9, 9);
@@ -30,6 +31,7 @@ Splash.prototype = {
 		this.game.load.script('Game', 'public/states/Game.js');
 		this.game.load.script('Warper', 'public/characters/warper.js');
 		this.game.load.script('Shop', 'public/characters/shop.js');
+		this.game.load.script('InfoPanel', 'public/characters/panelInfo.js');
 		this.game.add.existing(this.loadingBar);
 	},
 	create: function() {

@@ -234,7 +234,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":48,
+ "nextobjectid":51,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -329,6 +329,32 @@
          "tilecount":1,
          "tileheight":202,
          "tilewidth":256
+        }, 
+        {
+         "columns":8,
+         "firstgid":4399,
+         "image":"tilesets\/stuff.png",
+         "imageheight":7000,
+         "imagewidth":256,
+         "margin":0,
+         "name":"stuff",
+         "spacing":0,
+         "tilecount":1744,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "columns":1,
+         "firstgid":6143,
+         "image":"tilesets\/panel-info.png",
+         "imageheight":42,
+         "imagewidth":30,
+         "margin":0,
+         "name":"panel-info",
+         "spacing":0,
+         "tilecount":1,
+         "tileheight":42,
+         "tilewidth":30
         }],
  "tilewidth":32,
  "version":1,

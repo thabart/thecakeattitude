@@ -1,7 +1,6 @@
 'use strict';
-var Shop = function(game, npc, map, warpGroup, opts = null) {
-	var freePlaceState = "freePlace",
-		shopTitleWidth = 200,
+var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
+	var shopTitleWidth = 200,
 		shopTitleHeight = 41,
 		shopTitleRect = null,
 		shopTitleTxt = null,
@@ -17,10 +16,6 @@ var Shop = function(game, npc, map, warpGroup, opts = null) {
 			tileSheet = t;
 		}
 	});
-	
-	if (tileSheet.name == freePlaceState) {
-		isEnabled = true;
-	}
 	
 	var sprite = game.add.sprite(npc.x, npc.y - tileSheet.tileHeight, tileSheet.name);	
 	sprite.inputEnabled = true;
@@ -43,6 +38,18 @@ var Shop = function(game, npc, map, warpGroup, opts = null) {
 		sprite.events.onInputDown.removeAll();
 	};
 	
+	// Display panel information.
+	var displayPanelInfo = function(r) {
+		var panel = {
+			x : npc.x,
+			y : npc.y
+		};
+		var panelInfo = new InfoPanel(game, panel, map, r);
+		var sp = panelInfo.getSprite();
+		npcsGroup.add(sp);
+		npcs.push([sp, panelInfo ]);
+	};
+	
 	// Display shop.
 	var displayShop = function(r) {
 		removeInteraction();
@@ -50,10 +57,12 @@ var Shop = function(game, npc, map, warpGroup, opts = null) {
 		if (game.cache.checkTilemapKey(r.id)) {
 			addWarp(r.id);			
 			displayTile(r.title);
+			displayPanelInfo();
 			return;
 		}
 		
 		displayTile(r.title);
+		displayPanelInfo(r);
 		var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.path, null, Phaser.Tilemap.TILED_JSON);		
 		loader.onLoadComplete.add(function() {
 			addWarp(r.id);			

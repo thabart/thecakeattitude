@@ -41,6 +41,7 @@ var Map = function(key, tileMap, game, opts = null) {
 		this.tileMap.addTilesetImage('freePlace', 'freePlace');
 		this.tileMap.addTilesetImage('floor', 'floor');
 		this.tileMap.addTilesetImage('stuff', 'stuff');
+		this.tileMap.addTilesetImage('panel-info', 'panel-info');
 		// Add layers.					
 		this.layers.collision = this.tileMap.createLayer('Collision');
 		this.layers.ground = this.tileMap.createLayer('Ground');
@@ -63,7 +64,7 @@ var Map = function(key, tileMap, game, opts = null) {
 						o = new Warper(game, npc);
 					break;
 					case "shop":
-						o = new Shop(game, npc, tileMap, warps);
+						o = new Shop(game, npc, tileMap, warps, npcObjs, npcs);
 					break;
 				}
 				
