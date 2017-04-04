@@ -19,7 +19,9 @@ var Player = function(id, x, y, game, currentUser) {
 	if (currentUser) {
 		pseudoStyle.fill = '#FFA500';
 	}
-	this.pseudo = game.add.text(this.sprite.x - 20, this.sprite.y - this.sprite.height / 2,  'aaaaaaaaaa', pseudoStyle);	
+	
+	this.pseudo = game.add.text(-this.sprite.width / 2, -15, "aaaaaaaaaa", pseudoStyle);
+	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	
 	function updateDirection(dir, val) {
@@ -92,9 +94,6 @@ var Player = function(id, x, y, game, currentUser) {
 		} else if (this.direction.indexOf(3) != -1) {			
 			this.sprite.body.velocity.x = -200;						
 		}
-		
-		this.pseudo.x = this.sprite.x - 20 ;
-		this.pseudo.y = this.sprite.y - this.sprite.height / 2;
 	};				
 	// Update message position.
 	this.updateMessagePosition = function() {
