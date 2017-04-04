@@ -1,6 +1,11 @@
 'use strict';
-var Shop = function(game, npc, map, group, opts = null) {
-	var freePlaceState = "freePlace";
+var Shop = function(game, npc, map, warpGroup, opts = null) {
+	var freePlaceState = "freePlace",
+		shopTitleWidth = 200,
+		shopTitleHeight = 41,
+		shopTitleRect = null,
+		shopTitleTxt = null,
+		shopTitleBorderPadding = 2;
 	var self = this;
 	var isEnabled = false;
 	var isInteracting = false;
@@ -44,14 +49,29 @@ var Shop = function(game, npc, map, group, opts = null) {
 		sprite.loadTexture('house', 0);				
 		if (game.cache.checkTilemapKey(r.id)) {
 			addWarp(r.id);			
+			displayTile(r.title);
 			return;
 		}
 		
+		displayTile(r.title);
 		var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.path, null, Phaser.Tilemap.TILED_JSON);		
 		loader.onLoadComplete.add(function() {
 			addWarp(r.id);			
-		}, group);
+		}, warpGroup);
 		loader.start();
+	};
+	
+	var displayTile = function(title) {
+		shopTitleRect = game.add.graphics(0,0);
+		shopTitleRect.lineStyle(shopTitleBorderPadding, 0xd9d9d9, 1);
+		shopTitleRect.beginFill(0xFFFFFF, 1);
+		var x = npc.x;
+		var y = npc.y - tileSheet.tileHeight / 2;
+		shopTitleRect.drawRoundedRect(x, y, shopTitleWidth, 41, 5);
+		// TODO : Max title size = 12 characters.
+		shopTitleTxt = game.add.text(x + shopTitleBorderPadding, y + shopTitleBorderPadding,  title, { 
+			font: 'bold 19pt Arial', fill: 'black', align: 'center', stroke: 'gray',strokeThickness: 2, wordWrapWidth: shopTitleWidth, wordWrap: true
+		});
 	};
 	
 	// Load the data.
@@ -78,8 +98,8 @@ var Shop = function(game, npc, map, group, opts = null) {
 		rect.autoCull = false;
 		rect.width = 30;
 		rect.height = 30;
-		group.add(rect);
-        group.set(rect, 'map', mapId, false, false, 0, true);
+		warpGroup.add(rect);
+        warpGroup.set(rect, 'map', mapId, false, false, 0, true);
 	};
 	
 	var buildModal = function() {
@@ -133,5 +153,18 @@ var Shop = function(game, npc, map, group, opts = null) {
 	
 	this.getIsEnabled = function() {
 		return isEnabled;
+	};
+	
+	this.destroy = function() {
+		sprite.destroy();
+		if (shopTitleRect != null)
+		{
+			shopTitleRect.destroy();		
+		}
+		
+		if (shopTitleTxt != null)
+		{
+			shopTitleTxt.destroy();		
+		}
 	};
 };

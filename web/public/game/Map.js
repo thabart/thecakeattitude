@@ -90,6 +90,8 @@ var Map = function(key, tileMap, game, opts = null) {
 		this.tileMap.setCollisionBetween(10, 421, true, 'Collision');
 		this.layers.earth.resizeWorld();
 		this.player = new Player(null, game.world.centerX, game.world.centerY, game, true);
+		// Add fake text.
+		// txt.anchor.set(0.5);
 		// Make the camera follow the sprite.
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 	};
@@ -103,8 +105,13 @@ var Map = function(key, tileMap, game, opts = null) {
 			this.layers.alimentation.destroy();
 		}
 		
+		npcs.forEach(function(npc) {
+			console.log(npc);
+			npc[1].destroy();
+		});
+
 		warps.destroy();
-		npcObjs.destroy();
+		npcObjs.destroy();		
 		this.tileMap.destroy();
 		this.player.remove();
 		this.players.forEach(function(p) {

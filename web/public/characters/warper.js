@@ -53,4 +53,8 @@ var Warper = function(game, npc) {
 	this.getIsEnabled = function() {
 		return true;
 	};
+	
+	this.destroy = function() {
+		sprite.destroy();
+	};
 };
