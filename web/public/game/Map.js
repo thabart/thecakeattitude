@@ -90,7 +90,9 @@ var Map = function(key, tileMap, game, opts = null) {
 		// Specify which tile can collide.
 		this.tileMap.setCollisionBetween(10, 421, true, 'Collision');
 		this.layers.earth.resizeWorld();
+        game.world.setBounds(0, 0, game.world.width, game.world.height);
 		this.player = new Player(null, game.world.centerX, game.world.centerY, game, true);
+		this.player.sprite.body.collideWorldBounds = true;
 		// Add fake text.
 		// txt.anchor.set(0.5);
 		// Make the camera follow the sprite.

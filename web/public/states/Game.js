@@ -5,14 +5,8 @@ var Game = function () {
 	var spaceBar = null,
 		currentNpc = null,
 		worldScale = null,
-		worldwidth = 600,
-		worldheight = 600,
-		mapSizeX = 8000,
-		mapSizeY = 8000,
-		mapSizeCurrent = 8000,
-		prevScale = {},
-		nextScale = {},
-		zoompoint = {};
+		previousScale = null,
+		plane = null;
 	this.getPlayer = function(id) {
 		var i;
 		for (i = 0; i < this.map.players.length; i++) {
@@ -99,30 +93,17 @@ Game.prototype = {
 		});
 		
 		// Listen keyboard events
-		console.log();
 		spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		worldScale = 1;
-		prevScale = {};
-		nextScale = {};
-		zoompoint = {};
-		worldwidth = this.game.camera.width;
-		worldHeight = this.game.camera.height;
-		mapSizeX = this.game.world.width;
-		mapSizeY = this.game.world.height;
-		mapSizeMax = this.game.world.width;
-		mapSizeCurrent = this.game.world.height;
+		worldScale = 1
+		previousScale = 1;
 		this.game.input.mouse.mouseWheelCallback = function(evt) {
-			var wheelDelt = self.game.input.mouse.wheelDelta;
-            if (wheelDelt < 0)  {   
-				mapSizeCurrent -= 400; 
-				mapSizeCurrent = Phaser.Math.clamp(mapSizeCurrent, worldwidth , mapSizeMax);
+			var wheelDelta = self.game.input.mouse.wheelDelta;
+            if (wheelDelta < 0)  {   
+				worldScale -= 0.005;
 			}
             else {   
-				mapSizeCurrent += 400;  
-				mapSizeCurrent = Phaser.Math.clamp(mapSizeCurrent, worldwidth , mapSizeMax);
+				worldScale += 0.005;
 			}
-			
-            worldScale = (mapSizeCurrent/mapSizeMax);
 		};
 		spaceBar.onDown.add(function() {
 			if (currentNpc == null) {
@@ -130,8 +111,7 @@ Game.prototype = {
 			}
 			
 			currentNpc.interact();
-		}, this);		
-		this.game.world.setBounds(0, 0, 4000, 4000);
+		}, this);
 	},
 	update: function() {		
 		var self = this;
@@ -181,6 +161,33 @@ Game.prototype = {
 			this.map.player.updateMessagePosition();
 			if (isPositionUpdated) {			
 				this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
+			}
+			
+			// Zoom on the map
+			if (worldScale != previousScale) {				
+				/*
+				self.game.camera.scale.x = worldScale;
+				self.game.camera.scale.y = worldScale;
+				self.game.camera.bounds.x = plane.x * worldScale;
+				self.game.camera.bounds.y = plane.y * worldScale;
+				self.game.camera.bounds.width = plane.width * worldScale;
+				self.game.camera.bounds.height = plane.height * worldScale;*/
+				/*
+				self.map.layers.earth.scale = {x:worldScale, y:worldScale};
+				self.map.layers.ground.scale = {x:worldScale, y:worldScale};
+				self.map.layers.collision.scale = {x:worldScale, y:worldScale};				
+				self.map.npcObjs.scale.x = worldScale;		
+				self.map.npcObjs.scale.y = worldScale;	
+				self.map.warps.scale.x = worldScale;		
+				self.map.warps.scale.y = worldScale;
+
+				self.map.layers.earth.resizeWorld();
+				self.map.layers.ground.resizeWorld();
+				self.map.layers.collision.resizeWorld();
+				/*
+				self.game.camera.width -= 100;
+				self.game.camera.x -= 100;*/
+				previousScale = worldScale;
 			}
 		}
 		catch(err) {
