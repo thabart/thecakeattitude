@@ -2,7 +2,8 @@ var Map = function(key, tileMap, game, opts = null) {
 	var npcs = [],
 		npcObjs = null,
 		houseObj = null,
-		warps = null;
+		warps = null,
+		globalGroup = null;
 	this.key = key;
 	this.tileMap = tileMap;		
 	this.player = null;
@@ -91,6 +92,15 @@ var Map = function(key, tileMap, game, opts = null) {
 		this.tileMap.setCollisionBetween(10, 421, true, 'Collision');
 		this.layers.earth.resizeWorld();
 		this.player = new Player(null, game.world.centerX, game.world.centerY, game, true);
+		// Add global group		
+		globalGroup = game.add.group();
+		globalGroup.add(this.layers.collision);
+		globalGroup.add(this.layers.ground);
+		globalGroup.add(this.layers.earth);
+		globalGroup.add(this.layers.alimentation);
+		globalGroup.add(npcObjs);
+		globalGroup.add(warps);
+		globalGroup.add(this.player.sprite);
 		// Add fake text.
 		// txt.anchor.set(0.5);
 		// Make the camera follow the sprite.
@@ -113,6 +123,7 @@ var Map = function(key, tileMap, game, opts = null) {
 
 		warps.destroy();
 		npcObjs.destroy();		
+		globalGroup.destroy();
 		this.tileMap.destroy();
 		this.player.remove();
 		this.players.forEach(function(p) {
@@ -137,5 +148,9 @@ var Map = function(key, tileMap, game, opts = null) {
 	
 	this.getWarps = function() {
 		return warps;
+	};
+	
+	this.getGlobalGroup = function() {
+		return globalGroup;
 	};
 };

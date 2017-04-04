@@ -3,7 +3,16 @@ var Game = function () {
 	this.cursors = null;
 	this.socket = null;
 	var spaceBar = null,
-		currentNpc = null;
+		currentNpc = null,
+		worldScale = null,
+		worldwidth = 600,
+		worldheight = 600,
+		mapSizeX = 8000,
+		mapSizeY = 8000,
+		mapSizeCurrent = 8000,
+		prevScale = {},
+		nextScale = {},
+		zoompoint = {};
 	this.getPlayer = function(id) {
 		var i;
 		for (i = 0; i < this.map.players.length; i++) {
@@ -88,15 +97,41 @@ Game.prototype = {
 		this.socket.on('message', function(data) {
 			self.displayMessage(data.message, data.id);
 		});
+		
 		// Listen keyboard events
+		console.log();
 		spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		worldScale = 1;
+		prevScale = {};
+		nextScale = {};
+		zoompoint = {};
+		worldwidth = this.game.camera.width;
+		worldHeight = this.game.camera.height;
+		mapSizeX = this.game.world.width;
+		mapSizeY = this.game.world.height;
+		mapSizeMax = this.game.world.width;
+		mapSizeCurrent = this.game.world.height;
+		this.game.input.mouse.mouseWheelCallback = function(evt) {
+			var wheelDelt = self.game.input.mouse.wheelDelta;
+            if (wheelDelt < 0)  {   
+				mapSizeCurrent -= 400; 
+				mapSizeCurrent = Phaser.Math.clamp(mapSizeCurrent, worldwidth , mapSizeMax);
+			}
+            else {   
+				mapSizeCurrent += 400;  
+				mapSizeCurrent = Phaser.Math.clamp(mapSizeCurrent, worldwidth , mapSizeMax);
+			}
+			
+            worldScale = (mapSizeCurrent/mapSizeMax);
+		};
 		spaceBar.onDown.add(function() {
 			if (currentNpc == null) {
 				return;
 			}
 			
 			currentNpc.interact();
-		}, this);
+		}, this);		
+		this.game.world.setBounds(0, 0, 4000, 4000);
 	},
 	update: function() {		
 		var self = this;
@@ -138,6 +173,30 @@ Game.prototype = {
 			self.map.player.hideInteraction();
 			currentNpc = null;
 		}
+		
+		// Zoom & dezoom
+		/*
+		zoompoint.x = self.game.input.mousePointer.worldX;
+        zoompoint.y = self.game.input.mousePointer.worldY;
+		var globalGroup = this.map.getGlobalGroup();
+		rescalefactorx = mapSizeX / (mapSizeX * globalGroup.scale.x);
+        rescalefactory = mapSizeY / (mapSizeY * globalGroup.scale.y);
+        prevScale.x = globalGroup.scale.x;
+        prevScale.y = globalGroup.scale.y;
+        nextScale.x = prevScale.x + (worldScale-globalGroup.scale.x)*0.1;
+        nextScale.y = prevScale.y + (worldScale-globalGroup.scale.y)*0.1;
+        var xAdjust = (zoompoint.x - self.game.camera.position.x) * (nextScale.x - prevScale.x);
+        var yAdjust = (zoompoint.y - self.game.camera.position.y) * (nextScale.y - prevScale.y);
+		if (prevScale.x != nextScale.x || prevScale.y != nextScale.y) {
+            var scaleAdjustX = nextScale.x / prevScale.x;
+            var scaleAdjustY = nextScale.y / prevScale.y;
+            var focusX = (self.game.camera.position.x * scaleAdjustX) + xAdjust*(rescalefactorx);
+            var focusY = (self.game.camera.position.y * scaleAdjustY) + yAdjust*(rescalefactory);
+            self.game.camera.focusOnXY(focusX, focusY);
+        }
+		
+		globalGroup.scale.x += (worldScale-globalGroup.scale.x)*0.1;   //easing
+        globalGroup.scale.y += (worldScale-globalGroup.scale.y)*0.1;*/
 		
 		// Update player.
 		isPositionUpdated = this.map.player.updateDirection(this.cursors);
