@@ -1,4 +1,4 @@
-var Map = function(key, tileMap, game, opts = null) {
+var Map = function(key, tileMap, game) {
 	var npcs = [],
 		npcObjs = null,
 		houseObj = null,
@@ -15,9 +15,9 @@ var Map = function(key, tileMap, game, opts = null) {
 	};
 	
 	this.init = function() {		
-		var addWrap = function(gm, obj, name, groupName, group) {			
-			var rect = new Phaser.Sprite(gm, obj.x, obj.y, name);
-			rect.name = groupName;
+		var addWrap = function(gm, obj, group) {			
+			var rect = new Phaser.Sprite(gm, obj.x, obj.y, obj.name);
+			rect.name = obj.name;
 			rect.exists = true;
 			rect.autoCull = false;
 			rect.width = obj.width;
@@ -32,6 +32,7 @@ var Map = function(key, tileMap, game, opts = null) {
 		};
 	
 		var self = this;		
+		var deferredLoaded = [];
 		// TODO : Load all the IMAGES.
 		this.tileMap.addTilesetImage('tallgrass', 'tallgrass');
 		this.tileMap.addTilesetImage('farming_fishing', 'farming_fishing');
@@ -65,6 +66,7 @@ var Map = function(key, tileMap, game, opts = null) {
 					break;
 					case "shop":
 						o = new Shop(game, npc, tileMap, warps, npcObjs, npcs);
+						deferredLoaded.push(o.init());
 					break;
 				}
 				
@@ -81,20 +83,26 @@ var Map = function(key, tileMap, game, opts = null) {
 		// Create warps.
 		if (wps) {
 			wps.forEach(function(warp) {
-				addWrap(game, warp, 'warp', 'Warps', warps);
+				addWrap(game, warp, warps);
 			});
 		}
 		
-		// ADD SPRITE : 
-		// this.wraps.add('tiles'); => sprite
 		// Specify which tile can collide.
 		this.tileMap.setCollisionBetween(10, 421, true, 'Collision');
 		this.layers.earth.resizeWorld();
         game.world.setBounds(0, 0, game.world.width, game.world.height);
-		this.player = new Player(null, game.world.centerX, game.world.centerY, game, true);
+		
+		var result = $.Deferred();
+		$.when.apply(null, deferredLoaded).done(function() {
+			result.resolve();
+		});
+		
+		return result.promise();
+	};
+	
+	this.addPlayer = function(playerX, playerY) {		
+		this.player = new Player(null, playerX, playerY, game, true);
 		this.player.sprite.body.collideWorldBounds = true;
-		// Add fake text.
-		// txt.anchor.set(0.5);
 		// Make the camera follow the sprite.
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 	};

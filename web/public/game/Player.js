@@ -1,5 +1,4 @@
 var Player = function(id, x, y, game, currentUser) {
-	console.log('new player');
 	var hitPadding = 30;
 	this.id = id;
 	this.sprite = game.add.sprite(x, y, 'player');;

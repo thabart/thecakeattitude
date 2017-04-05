@@ -45,14 +45,12 @@
                  "properties":
                     {
                      "entry_dir":"top",
-                     "map":"<map_name>",
-                     "warp_entry":"<warp_entry>"
+                     "map":"<map_name>"
                     },
                  "propertytypes":
                     {
                      "entry_dir":"string",
-                     "map":"string",
-                     "warp_entry":"string"
+                     "map":"string"
                     },
                  "rotation":0,
                  "type":"",

@@ -5,8 +5,50 @@ var Game = function () {
 	var spaceBar = null,
 		currentNpc = null,
 		worldScale = null,
-		previousScale = null,
-		plane = null;
+		previousScale = null;
+	this.getPlayerPosition = function(warp, wps, playerHeight, playerWidth) {
+		var map = warp.map;				
+		var warpEntryName = warp.warp_entry;
+		var padding = 20;
+		var result = {
+			x : 0,
+			y : 0
+		};
+		
+		if (warpEntryName) {
+			if (wps) {
+				wps.children.forEach(function(wp) {
+					if (wp.name == warpEntryName && (wp.entry_dir == "top" || wp.entry_dir == "bottom"  || wp.entry_dir == "right" || wp.entry_dir == "left")) {
+						var x = wp.x,
+							y = wp.y;
+						switch(wp.entry_dir) {
+							case "top":
+								y -= playerHeight + padding;
+								x += wp.width / 2;
+							break;
+							case "bottom":
+								y += wp.height + playerHeight + padding;
+								x += wp.width / 2;
+							break;
+							case "right":
+								y += wp.height / 2;
+								x += playerWidth + wp.width + padding;
+							break;
+							case "left":
+								y += wp.height / 2;
+								x -= playerWidth + padding;
+							break;
+						}
+						
+						result.x = x;
+						result.y = y;
+					}
+				});
+			}
+		}
+		
+		return result;
+	};
 	this.getPlayer = function(id) {
 		var i;
 		for (i = 0; i < this.map.players.length; i++) {
@@ -63,6 +105,7 @@ Game.prototype = {
 		var tileMap = this.game.add.tilemap('firstMap');
 		this.map = new Map('firstMap', tileMap, this.game);		
 		this.map.init();
+		this.map.addPlayer(1600, 1600);
 		this.cursors = this.game.input.keyboard.createCursorKeys();	
 		// Connect to socket server		
 		this.socket = io('http://localhost:3001').connect();		
@@ -128,15 +171,20 @@ Game.prototype = {
 			}
 			
 			// Warp the player to another map.
-			if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, wrap) {
-				var map = wrap.map;
-				var tileMap = self.game.add.tilemap(map);
+			if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, warp) {
+				var tileMap = self.game.add.tilemap(warp.map),
+					playerHeight = self.map.player.sprite.height,
+					playerWidth = self.map.player.sprite.width;
 				self.map.destroy();
-				self.map = new Map(map, tileMap, self.game);
-				self.map.init();
-				// Remove the player from the map	& add him to the new map.		
-				self.socket.emit('remove');
-				self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
+				self.map = new Map(warp.map, tileMap, self.game);
+				self.map.init().done(function() {
+					console.log('bingo');
+					var playerPosition = self.getPlayerPosition(warp, self.map.getWarps(), playerHeight, playerWidth);
+					self.map.addPlayer(playerPosition.x, playerPosition.y);
+					// Remove the player from the map & add him to the new map.		
+					self.socket.emit('remove');
+					self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
+				});				
 			})) {
 				return;
 			}
@@ -165,63 +213,16 @@ Game.prototype = {
 			
 			// Zoom on the map
 			if (worldScale != previousScale) {				
-				self.game.world.scale.set(worldScale);
-				/*
-				self.game.camera.scale.x = worldScale;
-				self.game.camera.scale.y = worldScale;
-				self.game.camera.bounds.x = plane.x * worldScale;
-				self.game.camera.bounds.y = plane.y * worldScale;
-				self.game.camera.bounds.width = plane.width * worldScale;
-				self.game.camera.bounds.height = plane.height * worldScale;*/
-				/*
-				self.map.layers.earth.scale = {x:worldScale, y:worldScale};
-				self.map.layers.ground.scale = {x:worldScale, y:worldScale};
-				self.map.layers.collision.scale = {x:worldScale, y:worldScale};				
-				self.map.npcObjs.scale.x = worldScale;		
-				self.map.npcObjs.scale.y = worldScale;	
-				self.map.warps.scale.x = worldScale;		
-				self.map.warps.scale.y = worldScale;
-
-				self.map.layers.earth.resizeWorld();
-				self.map.layers.ground.resizeWorld();
-				self.map.layers.collision.resizeWorld();
-				/*
-				self.game.camera.width -= 100;
-				self.game.camera.x -= 100;*/
+				// self.game.world.scale.set(worldScale);
 				previousScale = worldScale;
 			}
 		}
 		catch(err) {
-			
+			console.log(err);
 		}
-		
-		// Zoom & dezoom
-		/*
-		zoompoint.x = self.game.input.mousePointer.worldX;
-        zoompoint.y = self.game.input.mousePointer.worldY;
-		var globalGroup = this.map.getGlobalGroup();
-		rescalefactorx = mapSizeX / (mapSizeX * globalGroup.scale.x);
-        rescalefactory = mapSizeY / (mapSizeY * globalGroup.scale.y);
-        prevScale.x = globalGroup.scale.x;
-        prevScale.y = globalGroup.scale.y;
-        nextScale.x = prevScale.x + (worldScale-globalGroup.scale.x)*0.1;
-        nextScale.y = prevScale.y + (worldScale-globalGroup.scale.y)*0.1;
-        var xAdjust = (zoompoint.x - self.game.camera.position.x) * (nextScale.x - prevScale.x);
-        var yAdjust = (zoompoint.y - self.game.camera.position.y) * (nextScale.y - prevScale.y);
-		if (prevScale.x != nextScale.x || prevScale.y != nextScale.y) {
-            var scaleAdjustX = nextScale.x / prevScale.x;
-            var scaleAdjustY = nextScale.y / prevScale.y;
-            var focusX = (self.game.camera.position.x * scaleAdjustX) + xAdjust*(rescalefactorx);
-            var focusY = (self.game.camera.position.y * scaleAdjustY) + yAdjust*(rescalefactory);
-            self.game.camera.focusOnXY(focusX, focusY);
-        }
-		
-		globalGroup.scale.x += (worldScale-globalGroup.scale.x)*0.1;   //easing
-        globalGroup.scale.y += (worldScale-globalGroup.scale.y)*0.1;
-		*/
 	},
 	render: function() {		
-		this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
+		// this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
 	},
 	displayMessage : function(txt, id) {
 		var player = this.map.player;

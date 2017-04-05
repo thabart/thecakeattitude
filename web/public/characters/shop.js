@@ -4,12 +4,12 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		shopTitleHeight = 41,
 		shopTitleRect = null,
 		shopTitleTxt = null,
-		shopTitleBorderPadding = 2;
-	var self = this;
-	var isEnabled = true;
-	var isInteracting = false;
-	var modal = null;
-	// Initialize the sprite.
+		shopTitleBorderPadding = 2,
+		sprite = null,
+		self = this,
+		isEnabled = true,
+		isInteracting = false,
+		modal = null;
 	var tileSheet = null;
 	map.tilesets.forEach(function(t) {
 		if (t.firstgid == npc.gid) {
@@ -17,18 +17,6 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		}
 	});
 	
-	var sprite = game.add.sprite(npc.x, npc.y - tileSheet.tileHeight, tileSheet.name);	
-	sprite.inputEnabled = true;
-	sprite.events.onInputOver.add(function() {
-		game.canvas.style.cursor = "pointer";
-	});
-	sprite.events.onInputOut.add(function() {
-		game.canvas.style.cursor = "default";
-	});
-	sprite.events.onInputDown.add(function() {
-		this.interact();
-	}, this);
-
 	// Remove all the interactions.
 	var removeInteraction = function() {
 		isEnabled = false;
@@ -76,33 +64,18 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 			font: 'bold 19pt Arial', fill: 'black', align: 'center', stroke: 'gray',strokeThickness: 2, wordWrapWidth: shopTitleWidth, wordWrap: true
 		});
 	};
-	
-	// Load the data.
-	var init = function() {
-		$.ajax({
-			url: 'http://localhost:5000/shops/.search',
-			method: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({map: map.key, place: npc.name}),
-			success: function(r) {
-				if (r.length != 1) {
-					return;
-				}
-				
-				displayShop(r[0]);
-			}
-		});
-	};
-	
+		
 	var addWarp = function(mapId) {		
-		var rect = new Phaser.Sprite(game, npc.x + (tileSheet.tileWidth / 2) - 15, npc.y, 'name');
-		rect.name = 'Warps';
+		var rect = new Phaser.Sprite(game, npc.x + (tileSheet.tileWidth / 2) - 15, npc.y, 'shopentry_' + mapId);
+		rect.name = 'shopentry_' + mapId;
 		rect.exists = true;
 		rect.autoCull = false;
 		rect.width = 30;
 		rect.height = 30;
 		warpGroup.add(rect);
         warpGroup.set(rect, 'map', mapId, false, false, 0, true);
+        warpGroup.set(rect, 'warp_entry', 'warp', false, false, 0, true);
+        warpGroup.set(rect, 'entry_dir', 'bottom', false, false, 0, true);
 	};
 	
 	var buildModal = function() {
@@ -139,8 +112,44 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		});
 	};
 	
-	buildModal();
-	init();
+	// Initialize the shop.
+	this.init = function() {		
+		buildModal();
+		// Initialize the sprite.		
+		sprite = game.add.sprite(npc.x, npc.y - tileSheet.tileHeight, tileSheet.name);	
+		sprite.inputEnabled = true;
+		sprite.events.onInputOver.add(function() {
+			game.canvas.style.cursor = "pointer";
+		});
+		sprite.events.onInputOut.add(function() {
+			game.canvas.style.cursor = "default";
+		});
+		sprite.events.onInputDown.add(function() {
+			this.interact();
+		}, this);
+		var result = $.Deferred();
+		$.ajax({
+			url: 'http://localhost:5000/shops/.search',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify({map: map.key, place: npc.name}),
+			success: function(r) {
+				if (r.length != 1) {
+					result.resolve();
+					return;
+				}
+				
+				displayShop(r[0]);
+				console.log('resolve');
+				result.resolve();
+			}, 
+			error: function() {
+				result.resolve();
+			}
+		});	
+		
+		return result.promise();
+	};
 	
 	this.getSprite = function() {
 		return sprite;

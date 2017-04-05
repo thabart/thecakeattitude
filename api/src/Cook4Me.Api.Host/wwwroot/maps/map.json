@@ -53,7 +53,7 @@
                 {
                  "height":159.863636363636,
                  "id":3,
-                 "name":"wrap",
+                 "name":"warp",
                  "properties":
                     {
                      "map":"secondMap"
@@ -72,7 +72,7 @@
                 {
                  "height":151.378787878788,
                  "id":16,
-                 "name":"wrap",
+                 "name":"warp",
                  "properties":
                     {
                      "map":"secondMap"
@@ -91,7 +91,7 @@
                 {
                  "height":63.5,
                  "id":17,
-                 "name":"wrap",
+                 "name":"warp",
                  "properties":
                     {
                      "map":"secondMap"

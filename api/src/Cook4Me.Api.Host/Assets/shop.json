@@ -41,14 +41,18 @@
                 {
                  "height":31.8181818181818,
                  "id":1,
-                 "name":"wrap",
+                 "name":"warp",
                  "properties":
                     {
-                     "map":"<map_name>"
+                     "entry_dir":"top",
+                     "map":"<map_name>",
+                     "warp_entry":"<warp_entry>"
                     },
                  "propertytypes":
                     {
-                     "map":"string"
+                     "entry_dir":"string",
+                     "map":"string",
+                     "warp_entry":"string"
                     },
                  "rotation":0,
                  "type":"",
@@ -64,7 +68,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":2,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -72,7 +76,7 @@
         {
          "columns":8,
          "firstgid":1,
-         "image":"..\/wwwroot\/shops\/tilesets\/floor.png",
+         "image":"tilesets\/floor.png",
          "imageheight":256,
          "imagewidth":256,
          "margin":0,
@@ -85,7 +89,7 @@
         {
          "columns":60,
          "firstgid":65,
-         "image":"..\/wwwroot\/shops\/tilesets\/tiles.png",
+         "image":"tilesets\/tiles.png",
          "imageheight":1080,
          "imagewidth":1920,
          "margin":0,
@@ -94,20 +98,20 @@
          "tilecount":1980,
          "tileheight":32,
          "tilewidth":32
-        }, 
-        {
-         "columns":8,
-         "firstgid":2045,
-         "image":"..\/wwwroot\/shops\/tilesets\/stuff.png",
-         "imageheight":7000,
-         "imagewidth":256,
-         "margin":0,
-         "name":"stuff",
-         "spacing":0,
-         "tilecount":1744,
-         "tileheight":32,
-         "tilewidth":32
-        }],
+        },
+  {
+    "columns": 8,
+    "firstgid": 2045,
+    "image": "tilesets/stuff.png",
+    "imageheight": 7000,
+    "imagewidth": 256,
+    "margin": 0,
+    "name": "stuff",
+    "spacing": 0,
+    "tilecount": 1744,
+    "tileheight": 32,
+    "tilewidth": 32
+  }],
  "tilewidth":32,
  "version":1,
  "width":26

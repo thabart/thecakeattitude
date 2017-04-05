@@ -56,7 +56,7 @@ namespace Cook4Me.Api.Host.Controllers
             {
                 foreach (var line in lines)
                 {
-                    writer.WriteLine(line.Replace("<map_name>", result.MapName));
+                    writer.WriteLine(line.Replace("<map_name>", result.MapName).Replace("<warp_entry>", "shopentry_"+result.Id));
                 }
             }
 
