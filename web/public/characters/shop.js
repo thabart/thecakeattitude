@@ -140,7 +140,6 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 				}
 				
 				displayShop(r[0]);
-				console.log('resolve');
 				result.resolve();
 			}, 
 			error: function() {

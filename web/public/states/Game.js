@@ -3,6 +3,7 @@ var Game = function () {
 	this.cursors = null;
 	this.socket = null;
 	this.isFocusLost = false;
+	this.preventUpdate = false;
 	var spaceBar = null,
 		currentNpc = null,
 		worldScale = null,
@@ -167,7 +168,7 @@ Game.prototype = {
 	update: function() {		
 		var self = this;
 		try {
-			if (!this.map.player || !this.map.layers.collision) return;
+			if (!this.map.player || !this.map.layers.collision || this.preventUpdate) return;
 			this.map.players.forEach(function(p) {
 				if (!self.game.physics.arcade.collide(p.sprite, self.map.layers.collision)) {
 					p.updatePosition();		
@@ -184,6 +185,7 @@ Game.prototype = {
 				var tileMap = self.game.add.tilemap(warp.map),
 					playerHeight = self.map.player.sprite.height,
 					playerWidth = self.map.player.sprite.width;
+				self.preventUpdate = true;
 				self.map.destroy();
 				self.map = new Map(warp.map, tileMap, self.game);
 				self.map.init().done(function() {
@@ -192,6 +194,8 @@ Game.prototype = {
 					// Remove the player from the map & add him to the new map.		
 					self.socket.emit('remove');
 					self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
+					// self.preventUpdate = false;
+					// console.log(self.map.player.getX());
 				});				
 			})) {
 				return;
@@ -223,7 +227,6 @@ Game.prototype = {
 			isPositionUpdated = this.map.player.updateDirection(this.cursors);
 			
 			this.map.player.updatePosition();	
-			this.map.player.updateMessagePosition();
 			if (isPositionUpdated) {			
 				this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
 			}
@@ -239,7 +242,7 @@ Game.prototype = {
 		}
 	},
 	render: function() {		
-		// this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
+		if (this.map.player) this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
 	},
 	displayMessage : function(txt, id) {
 		var player = this.map.player;

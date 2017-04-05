@@ -22,6 +22,7 @@ var Player = function(id, x, y, game, currentUser) {
 	this.pseudo = game.add.text(-this.sprite.width / 2, -15, "aaaaaaaaaa", pseudoStyle);
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	console.log(this.sprite.body.x);
 	
 	function updateDirection(dir, val) {
 		var result = false;
@@ -86,7 +87,8 @@ var Player = function(id, x, y, game, currentUser) {
 		this.evtMessage = null;					
 	};				
 	// Update player position.
-	this.updatePosition = function() {					
+	this.updatePosition = function() {
+		console.log(this.sprite.body.x);
 		this.sprite.body.velocity.x = 0;
 		this.sprite.body.velocity.y = 0;
 		if (this.direction.indexOf(0) != -1) {						
@@ -100,16 +102,7 @@ var Player = function(id, x, y, game, currentUser) {
 		} else if (this.direction.indexOf(3) != -1) {			
 			this.sprite.body.velocity.x = -200;						
 		}
-	};				
-	// Update message position.
-	this.updateMessagePosition = function() {
-		if (this.message == null) {
-			return;
-		}
-		
-		this.message.x = Math.floor(this.sprite.x + (this.sprite.width / 2));
-		this.message.y = Math.floor(this.sprite.y);				
-	};				
+	};	
 	// Reset the direction.
 	this.resetDirection = function() {
 		this.direction = [];
