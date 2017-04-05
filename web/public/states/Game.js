@@ -2,6 +2,7 @@ var Game = function () {
 	this.map = null;
 	this.cursors = null;
 	this.socket = null;
+	this.isFocusLost = false;
 	var spaceBar = null,
 		currentNpc = null,
 		worldScale = null,
@@ -148,6 +149,13 @@ Game.prototype = {
 				worldScale += 0.005;
 			}
 		};
+		
+		this.game.onFocus.add(function(e) {
+			self.isFocusLost = false;
+		});
+		this.game.onBlur.add(function(e) {
+			self.isFocusLost = true;
+		});
 		spaceBar.onDown.add(function() {
 			if (currentNpc == null) {
 				return;
@@ -204,7 +212,16 @@ Game.prototype = {
 			}
 		
 			// Update player.
+			if (self.isFocusLost) {
+				this.cursors.up.isDown = false;
+				this.cursors.right.isDown = false;
+				this.cursors.down.isDown = false;
+				this.cursors.left.isDown = false;
+				this.map.player.setDirection([]);
+			}
+			
 			isPositionUpdated = this.map.player.updateDirection(this.cursors);
+			
 			this.map.player.updatePosition();	
 			this.map.player.updateMessagePosition();
 			if (isPositionUpdated) {			

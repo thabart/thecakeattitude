@@ -126,6 +126,10 @@ var Player = function(id, x, y, game, currentUser) {
 	this.getDirection = function() {
 		return this.direction;
 	};
+	// Set direction
+	this.setDirection = function(dir) {
+		this.direction = dir;
+	};
 	// Display the interaction button.
 	this.displayInteraction = function() {
 		interactionSprite.visible = true;
