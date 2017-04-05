@@ -89,8 +89,6 @@ var Map = function(key, tileMap, game) {
 		
 		// Specify which tile can collide.
 		this.tileMap.setCollisionBetween(10, 421, true, 'Collision');
-		this.layers.earth.resizeWorld();
-        game.world.setBounds(0, 0, game.world.width, game.world.height);
 		
 		var result = $.Deferred();
 		$.when.apply(null, deferredLoaded).done(function() {
@@ -100,11 +98,31 @@ var Map = function(key, tileMap, game) {
 		return result.promise();
 	};
 	
-	this.addPlayer = function(playerX, playerY) {		
+	this.addPlayer = function(playerX, playerY) {	
+		this.layers.earth.resizeWorld();
+        game.world.setBounds(0, 0, game.world.width, game.world.height);
 		this.player = new Player(null, playerX, playerY, game, true);
 		this.player.sprite.body.collideWorldBounds = true;
 		// Make the camera follow the sprite.
+		// game.camera.follow(this.player.sprite);
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+	};
+	
+	this.display = function(isVisible) {
+		if (this.layers.collision) this.layers.collision.visible = isVisible;
+		if (this.layers.ground) this.layers.ground.visible = isVisible;
+		if (this.layers.earth) this.layers.earth.visible = isVisible;
+		if (this.layers.alimentation) this.layers.alimentation.visible = isVisible;
+		npcs.forEach(function(npc) {
+			npc[1].isVisible = isVisible;
+		});
+
+		if (warps) warps.visible = isVisible;
+		if (npcObjs) npcObjs.visible = isVisible;
+		if (this.player) this.player.display(isVisible);
+		if (this.players) this.players.forEach(function(p) {
+			p.display(isVisible);
+		});
 	};
 	
 	this.destroy = function() {

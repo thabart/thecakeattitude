@@ -47,6 +47,13 @@ var Player = function(id, x, y, game, currentUser) {
 			this.message.destroy();
 		}
 	};				
+	
+	this.display = function(isVisible) {
+		if (this.sprite) this.sprite.visible = isVisible;
+		if (this.hitZone) this.hitZone.visible = isVisible;
+		if (this.pseudo) this.pseudo.visible = isVisible;
+	};
+	
 	// Update direction.
 	// Returns : true if the direction changes.
 	this.updateDirection = function(cursors) {

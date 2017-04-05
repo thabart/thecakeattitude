@@ -159,6 +159,7 @@ Game.prototype = {
 	update: function() {		
 		var self = this;
 		try {
+			if (!this.map.player || !this.map.layers.collision) return;
 			this.map.players.forEach(function(p) {
 				if (!self.game.physics.arcade.collide(p.sprite, self.map.layers.collision)) {
 					p.updatePosition();		
@@ -178,7 +179,6 @@ Game.prototype = {
 				self.map.destroy();
 				self.map = new Map(warp.map, tileMap, self.game);
 				self.map.init().done(function() {
-					console.log('bingo');
 					var playerPosition = self.getPlayerPosition(warp, self.map.getWarps(), playerHeight, playerWidth);
 					self.map.addPlayer(playerPosition.x, playerPosition.y);
 					// Remove the player from the map & add him to the new map.		
