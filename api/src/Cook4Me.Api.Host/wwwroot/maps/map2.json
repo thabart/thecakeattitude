@@ -53,21 +53,71 @@
                 {
                  "height":63.5,
                  "id":3,
-                 "name":"wrap",
+                 "name":"firstWarp",
                  "properties":
                     {
-                     "map":"firstMap"
+                     "entry_dir":"left",
+                     "map":"firstMap",
+                     "warp_entry":"firstWarp"
                     },
                  "propertytypes":
                     {
-                     "map":"string"
+                     "entry_dir":"string",
+                     "map":"string",
+                     "warp_entry":"string"
                     },
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":65,
-                 "x":128,
-                 "y":354
+                 "x":1056,
+                 "y":479
+                }, 
+                {
+                 "height":63.5,
+                 "id":11,
+                 "name":"secondWarp",
+                 "properties":
+                    {
+                     "entry_dir":"right",
+                     "map":"firstMap",
+                     "warp_entry":"secondWarp"
+                    },
+                 "propertytypes":
+                    {
+                     "entry_dir":"string",
+                     "map":"string",
+                     "warp_entry":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":65,
+                 "x":-0.5,
+                 "y":514.25
+                }, 
+                {
+                 "height":63.5,
+                 "id":12,
+                 "name":"thirdWarp",
+                 "properties":
+                    {
+                     "entry_dir":"top",
+                     "map":"firstMap",
+                     "warp_entry":"thirdWarp"
+                    },
+                 "propertytypes":
+                    {
+                     "entry_dir":"string",
+                     "map":"string",
+                     "warp_entry":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":351,
+                 "x":470.5,
+                 "y":636.25
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -76,7 +126,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":11,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

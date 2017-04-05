@@ -53,14 +53,18 @@
                 {
                  "height":159.863636363636,
                  "id":3,
-                 "name":"warp",
+                 "name":"secondWarp",
                  "properties":
                     {
-                     "map":"secondMap"
+                     "entry_dir":"right",
+                     "map":"secondMap",
+                     "warp_entry":"secondWarp"
                     },
                  "propertytypes":
                     {
-                     "map":"string"
+                     "entry_dir":"string",
+                     "map":"string",
+                     "warp_entry":"string"
                     },
                  "rotation":0,
                  "type":"",
@@ -72,14 +76,18 @@
                 {
                  "height":151.378787878788,
                  "id":16,
-                 "name":"warp",
+                 "name":"firstWarp",
                  "properties":
                     {
-                     "map":"secondMap"
+                     "entry_dir":"left",
+                     "map":"secondMap",
+                     "warp_entry":"firstWarp"
                     },
                  "propertytypes":
                     {
-                     "map":"string"
+                     "entry_dir":"string",
+                     "map":"string",
+                     "warp_entry":"string"
                     },
                  "rotation":0,
                  "type":"",
@@ -91,14 +99,18 @@
                 {
                  "height":63.5,
                  "id":17,
-                 "name":"warp",
+                 "name":"thirdWarp",
                  "properties":
                     {
-                     "map":"secondMap"
+                     "entry_dir":"top",
+                     "map":"secondMap",
+                     "warp_entry":"thirdWarp"
                     },
                  "propertytypes":
                     {
-                     "map":"string"
+                     "entry_dir":"string",
+                     "map":"string",
+                     "warp_entry":"string"
                     },
                  "rotation":0,
                  "type":"",
