@@ -105,6 +105,7 @@ var Map = function(key, tileMap, game) {
 		this.player.sprite.body.collideWorldBounds = true;
 		// Make the camera follow the sprite.
 		// game.camera.follow(this.player.sprite);
+		game.camera.focusOnXY(playerX, playerY);
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 	};
 	

@@ -194,8 +194,8 @@ Game.prototype = {
 					// Remove the player from the map & add him to the new map.		
 					self.socket.emit('remove');
 					self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
-					// self.preventUpdate = false;
-					// console.log(self.map.player.getX());
+					self.game.camera.focusOnXY(playerPosition.x, playerPosition.y);
+					self.preventUpdate = false;
 				});				
 			})) {
 				return;
@@ -227,6 +227,7 @@ Game.prototype = {
 			isPositionUpdated = this.map.player.updateDirection(this.cursors);
 			
 			this.map.player.updatePosition();	
+			this.map.player.updateMessagePosition();	
 			if (isPositionUpdated) {			
 				this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
 			}

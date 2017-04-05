@@ -22,7 +22,6 @@ var Player = function(id, x, y, game, currentUser) {
 	this.pseudo = game.add.text(-this.sprite.width / 2, -15, "aaaaaaaaaa", pseudoStyle);
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	console.log(this.sprite.body.x);
 	
 	function updateDirection(dir, val) {
 		var result = false;
@@ -47,14 +46,21 @@ var Player = function(id, x, y, game, currentUser) {
 		{					
 			this.message.destroy();
 		}
-	};				
-	
+	};
+	// Update message position.
+	this.updateMessagePosition = function() {
+		if (this.message == null) {
+			return;
+		}
+		
+		this.message.x = Math.floor(this.sprite.x + (this.sprite.width / 2));
+		this.message.y = Math.floor(this.sprite.y);				
+	};
 	this.display = function(isVisible) {
 		if (this.sprite) this.sprite.visible = isVisible;
 		if (this.hitZone) this.hitZone.visible = isVisible;
 		if (this.pseudo) this.pseudo.visible = isVisible;
 	};
-	
 	// Update direction.
 	// Returns : true if the direction changes.
 	this.updateDirection = function(cursors) {
@@ -64,7 +70,7 @@ var Player = function(id, x, y, game, currentUser) {
 		result = result || updateDirection.call(this, cursors.down, 2);
 		result = result || updateDirection.call(this, cursors.left, 3);
 		return result;
-	};				
+	};		
 	// Update the properties.
 	this.update = function(x, y, direction) {
 		this.sprite.x = x;
@@ -88,7 +94,6 @@ var Player = function(id, x, y, game, currentUser) {
 	};				
 	// Update player position.
 	this.updatePosition = function() {
-		console.log(this.sprite.body.x);
 		this.sprite.body.velocity.x = 0;
 		this.sprite.body.velocity.y = 0;
 		if (this.direction.indexOf(0) != -1) {						
