@@ -71,6 +71,7 @@ Menu.prototype = {
 					drawGraphic(gr, false);						
 				});
 				
+				selectedUser = player;				
 				self.start.visible = true;			
 			}, this);
 			var style = { font: "20px Arial" };
@@ -95,7 +96,8 @@ Menu.prototype = {
 			self = this,
 			rectPlayers = [],
 			rectFreePlaces = [],
-			modal = createModal();
+			modal = createModal(),
+			selectedUser = null;
 			
 		$(modal).find('#confirm').click(function() {
 			if (!rectFreePlaces || rectFreePlaces.length == 0) {
@@ -132,13 +134,15 @@ Menu.prototype = {
 			} else {
 				var spr = this.game.add.sprite(rectX + (rectWidth / 2) - addPlayerWidth / 2, rectY + (rectHeight / 2) - addPlayerHeight / 2, 'addPlayer');
 				graphic.events.onInputDown.add(function() {
-					$(modal).modal('toggle');
+					
 				});
 				rectFreePlaces.push(new freePlace(spr, graphic));
 			}
 		}
 		
-		this.start = this.game.add.button(this.game.width - playPaddingRight - playWidth, this.game.height - playHeight - playPaddingBottom, 'start', null, this, 2, 1, 0);
+		this.start = this.game.add.button(this.game.width - playPaddingRight - playWidth, this.game.height - playHeight - playPaddingBottom, 'start', function() {
+			self.game.state.start("Game");
+		}, this, 2, 1, 0);
 		this.start.visible = false;
 	},
 	create: function() {

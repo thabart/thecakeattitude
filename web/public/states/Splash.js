@@ -40,6 +40,7 @@ Splash.prototype = {
 	create: function() {
 		var self = this;
 		this.game.state.add('Menu', Menu);
+		this.game.state.add('Game', Game);
 		 setTimeout(function () {
 		  self.game.state.start("Menu");
 		}, 1000);
