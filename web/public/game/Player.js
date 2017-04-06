@@ -1,4 +1,4 @@
-var Player = function(id, x, y, game, currentUser) {
+var Player = function(id, x, y, game, currentUser, pseudo) {
 	var hitPadding = 30;
 	this.id = id;
 	this.sprite = game.add.sprite(x, y, 'player');;
@@ -19,7 +19,7 @@ var Player = function(id, x, y, game, currentUser) {
 		pseudoStyle.fill = '#FFA500';
 	}
 	
-	this.pseudo = game.add.text(-this.sprite.width / 2, -15, "aaaaaaaaaa", pseudoStyle);
+	this.pseudo = game.add.text(-this.sprite.width / 2, -15, pseudo, pseudoStyle);
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 	

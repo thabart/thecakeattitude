@@ -1,9 +1,10 @@
 'use strict';
-var Player = function(startX, startY, startDirection, mapId) {
+var Player = function(startX, startY, startDirection, mapId, pseudo) {
 	var id = null;
 	var x = startX;
 	var y = startY;
 	var mapId = mapId;
+	var pseudo = pseudo;
 	var direction = startDirection;
 	var getId = function() {
 		return id;
@@ -23,6 +24,10 @@ var Player = function(startX, startY, startDirection, mapId) {
 	
 	var getMapId = function() {
 		return mapId;
+	};
+	
+	var getPseudo = function() {
+		return pseudo;
 	};
 	
 	var setId = function(newId) {
@@ -51,6 +56,7 @@ var Player = function(startX, startY, startDirection, mapId) {
 		getY : getY,
 		getDirection : getDirection,
 		getMapId : getMapId,
+		getPseudo: getPseudo,
 		setId: setId,
 		setX : setX,
 		setY : setY,

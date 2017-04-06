@@ -98,10 +98,10 @@ var Map = function(key, tileMap, game) {
 		return result.promise();
 	};
 	
-	this.addPlayer = function(playerX, playerY) {	
+	this.addPlayer = function(playerX, playerY, pseudo) {	
 		this.layers.earth.resizeWorld();
         game.world.setBounds(0, 0, game.world.width, game.world.height);
-		this.player = new Player(null, playerX, playerY, game, true);
+		this.player = new Player(null, playerX, playerY, game, true, pseudo);
 		this.player.sprite.body.collideWorldBounds = true;
 		// Make the camera follow the sprite.
 		// game.camera.follow(this.player.sprite);

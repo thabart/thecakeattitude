@@ -141,7 +141,7 @@ Menu.prototype = {
 		}
 		
 		this.start = this.game.add.button(this.game.width - playPaddingRight - playWidth, this.game.height - playHeight - playPaddingBottom, 'start', function() {
-			self.game.state.start("Game");
+			self.game.state.start("Game", true, false, selectedUser);
 		}, this, 2, 1, 0);
 		this.start.visible = false;
 	},

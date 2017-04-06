@@ -20,13 +20,13 @@ io.on('connection', function(socket) {
 		bc.emit('remove_player', { id: id });		
 	};
 	socket.on('new_player', function(data) {
-		var player = new Player(data.x, data.y, data.direction, data.mapId);		
+		var player = new Player(data.x, data.y, data.direction, data.mapId, data.pseudo);		
 		player.setId(this.id);
-		this.broadcast.emit('new_player', { id: player.getId(), x : player.getX(), y : player.getY(), direction: player.getDirection(), mapId : player.getMapId() });
+		this.broadcast.emit('new_player', { id: player.getId(), x : player.getX(), y : player.getY(), direction: player.getDirection(), mapId : player.getMapId(), pseudo: player.getPseudo() });
 		var i, existingPlayer
 		for (i = 0; i < players.length; i++) {
 			existingPlayer = players[i];			
-			this.emit('new_player', { id: existingPlayer.getId(), x : existingPlayer.getX(), y : existingPlayer.getY(), direction: existingPlayer.getDirection(), mapId : existingPlayer.getMapId() });
+			this.emit('new_player', { id: existingPlayer.getId(), x : existingPlayer.getX(), y : existingPlayer.getY(), direction: existingPlayer.getDirection(), mapId : existingPlayer.getMapId(), pseudo: player.getPseudo() });
 		}
 		
 		players.push(player);

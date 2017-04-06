@@ -61,8 +61,8 @@ var Game = function () {
 	
 		return false
 	};
-	this.addPlayer = function(id, x, y, direction) {
-		var newPlayer = new Player(id, x, y, this.game);
+	this.addPlayer = function(id, x, y, direction, pseudo) {
+		var newPlayer = new Player(id, x, y, this.game, false, pseudo);
 		newPlayer.direction = direction;
 		this.map.players.push(newPlayer);
 	};
@@ -92,7 +92,8 @@ var Game = function () {
 	};
 };
 Game.prototype = {
-	init: function() {
+	init: function(selectedUser) {
+		this.selectedUser = selectedUser;
 	},
 	create: function() {
 		var self = this;
@@ -107,14 +108,14 @@ Game.prototype = {
 		var tileMap = this.game.add.tilemap('firstMap');
 		this.map = new Map('firstMap', tileMap, this.game);		
 		this.map.init();
-		this.map.addPlayer(1600, 1600);
+		this.map.addPlayer(1600, 1600, this.selectedUser.pseudo);
 		this.cursors = this.game.input.keyboard.createCursorKeys();	
 		// Connect to socket server		
 		this.socket = io('http://localhost:3001').connect();		
 		this.socket.on('connect', function() {
 			console.log('socket connected');			
 			self.cleanPlayers();
-			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
+			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: self.selectedUser.pseudo });
 		});
 		this.socket.on('disconnect', function() {
 			console.log('socket disconnected');
@@ -123,7 +124,7 @@ Game.prototype = {
 		this.socket.on('new_player', function(data) {
 			console.log('new player');
 			if (data.mapId == self.map.key) {
-				self.addPlayer(data.id, data.x, data.y, data.direction);
+				self.addPlayer(data.id, data.x, data.y, data.direction, data.pseudo);
 			}
 		});
 		this.socket.on('remove_player', function(data) {
