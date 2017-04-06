@@ -16,11 +16,13 @@ Splash.prototype = {
 		this.game.load.image('floor', 'http://localhost:5000/shops/tilesets/floor.png');
 		this.game.load.image('stuff', 'http://localhost:5000/shops/tilesets/stuff.png');
 		this.game.load.image('player', 'http://localhost:5000/characters/phaser-dude.png');		
+		this.game.load.image('addPlayer', 'http://localhost:5000/images/add-player.png');
 		this.game.load.image('house', 'http://localhost:5000/maps/tilesets/house.png');
 		this.game.load.image('freePlace', 'http://localhost:5000/maps/tilesets/freePlace.png');
 		this.game.load.image('panel-info', 'http://localhost:5000/maps/tilesets/panel-info.png');
 		this.game.load.image('bubble-tail', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVAgMAAADUeU0FAAAADFBMVEUAAAAAAAD////MzMyoZCTaAAAAAXRSTlMAQObYZgAAAC1JREFUCNdjCA3NWrXUAY36/xULxYyN+hu1amUAAyYVwoBBhYYyYFDh/w9gUADQUTeozcOYAwAAAABJRU5ErkJggg==');
 		this.game.load.image('spacebar', 'http://localhost:5000/images/space-bar.png');
+		this.game.load.image('start', 'http://localhost:5000/images/playbutton.png');
 		this.game.load.spritesheet('bubble-border', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbAgMAAADwuhzGAAAADFBMVEUAAAD///8AAADMzMyl8w72AAAAAXRSTlMAQObYZgAAADlJREFUCNdjYGDQWrWqgQGT5poaGpqFSTMtDQWCFRj0PyrR/3+B7cGgmf+/AroLk2bg////AwMGDQCR0FKxG5KiwAAAAABJRU5ErkJggg==', 9, 9);
 		this.game.load.spritesheet('villager', 'http://localhost:5000/characters/villager.png',  24, 24, 2);
 		this.game.load.atlas('wraper', 'http://localhost:5000/characters/villager.png', 'public/sprites/wraper.json');
@@ -29,6 +31,7 @@ Splash.prototype = {
 		this.game.load.script('Player', 'public/game/Player.js');
 		this.game.load.script('SpeechBubble', 'public/game/SpeechBubble.js');
 		this.game.load.script('Game', 'public/states/Game.js');
+		this.game.load.script('Menu', 'public/states/Menu.js');
 		this.game.load.script('Warper', 'public/characters/warper.js');
 		this.game.load.script('Shop', 'public/characters/shop.js');
 		this.game.load.script('InfoPanel', 'public/characters/panelInfo.js');
@@ -36,9 +39,9 @@ Splash.prototype = {
 	},
 	create: function() {
 		var self = this;
-		this.game.state.add('Game', Game);
+		this.game.state.add('Menu', Menu);
 		 setTimeout(function () {
-		  self.game.state.start("Game");
+		  self.game.state.start("Menu");
 		}, 1000);
 	}
 };
