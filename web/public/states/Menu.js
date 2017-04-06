@@ -40,9 +40,9 @@ Menu.prototype = {
 			"<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>"+
 			"</div>"+
 			"<div class='modal-body'>"+
-			"<div class='form-group'><label>Pseudo</label><input type='text' class='form-control' /></div>"+
-			"<div class='form-group'><label>Category</label><select class='form-control'><option>Pâtisserie/Boulangerie</option><option>Habits/Boulangerie</option></select></div>"+
-			"<div class='form-group'><label>Sub-Category</label><select class='form-control'><option>Chaussures</option> </select></div>"+
+			"<div class='form-group'><label>Pseudo</label><input type='text' class='form-control' id='pseudo'/></div>"+
+			"<div class='form-group'><label>Category</label><select class='form-control' id='category'><option>Pâtisserie/Boulangerie</option><option>Habits/Boulangerie</option></select></div>"+
+			"<div class='form-group'><label>Sub-Category</label><select class='form-control' id='sub-category'><option>Chaussures</option> </select></div>"+
 			"</div>"+
 			"<div class='modal-footer'>"+
 			"<button type='button' class='btn btn-success' id='confirm'>Confirm</button>"+
@@ -52,8 +52,10 @@ Menu.prototype = {
 			return result;
 		};
 		
-		var addPlayer = function(graph) {
-			self.game.add.sprite(graph.x + (graph.width / 2) - playerWidth / 2, graph.y + (graph.height / 2) - playerHeight / 2, 'player');
+		var addPlayer = function(graph, player) {
+			var sprX = graph.x + (graph.width / 2) - playerWidth / 2,
+				sprY = graph.y + (graph.height / 2) - playerHeight / 2;
+			self.game.add.sprite(sprX, sprY, 'player');
 			graph.events.onInputDown.add(function(g) {
 				var isSelected = false;
 				if (!g.isSelected) {
@@ -70,7 +72,9 @@ Menu.prototype = {
 				});
 				
 				self.start.visible = true;			
-			}, this);		
+			}, this);
+			var style = { font: "20px Arial" };
+			self.game.add.text(sprX - 30, sprY + pseudoPaddingTop + playerHeight, player.pseudo, style);
 			rectPlayers.push(graph);			
 		};
 		
@@ -85,6 +89,7 @@ Menu.prototype = {
 			playHeight = 111,
 			playPaddingBottom = 0,
 			playPaddingRight = 0,
+			pseudoPaddingTop = 10,
 			maxSquares = 6,
 			nbPlayers = players.length,
 			self = this,
@@ -102,7 +107,10 @@ Menu.prototype = {
 			var ind = rectFreePlaces.indexOf(p);
 			p.destroy();
 			rectFreePlaces.splice(0, 1);
-			addPlayer(p.graphic);
+			var newPlayer = {
+				pseudo : $(modal).find('#pseudo').val()
+			};
+			addPlayer(p.graphic, newPlayer);
 			$(modal).modal('hide');
 		});
 		
@@ -120,7 +128,7 @@ Menu.prototype = {
 				self.game.canvas.style.cursor = "default";
 			});
 			if (ind + 1 <= nbPlayers) {
-				addPlayer(graphic);
+				addPlayer(graphic, players[ind]);
 			} else {
 				var spr = this.game.add.sprite(rectX + (rectWidth / 2) - addPlayerWidth / 2, rectY + (rectHeight / 2) - addPlayerHeight / 2, 'addPlayer');
 				graphic.events.onInputDown.add(function() {
