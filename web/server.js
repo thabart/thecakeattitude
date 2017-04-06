@@ -26,7 +26,7 @@ io.on('connection', function(socket) {
 		var i, existingPlayer
 		for (i = 0; i < players.length; i++) {
 			existingPlayer = players[i];			
-			this.emit('new_player', { id: existingPlayer.getId(), x : existingPlayer.getX(), y : existingPlayer.getY(), direction: existingPlayer.getDirection(), mapId : existingPlayer.getMapId(), pseudo: player.getPseudo() });
+			this.emit('new_player', { id: existingPlayer.getId(), x : existingPlayer.getX(), y : existingPlayer.getY(), direction: existingPlayer.getDirection(), mapId : existingPlayer.getMapId(), pseudo: existingPlayer.getPseudo() });
 		}
 		
 		players.push(player);

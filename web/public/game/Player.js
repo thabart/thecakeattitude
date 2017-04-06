@@ -120,6 +120,10 @@ var Player = function(id, x, y, game, currentUser, pseudo) {
 	this.getY = function() {
 		return this.sprite.y;
 	};
+	// Get the pseudo.
+	this.getPseudo = function() {
+		return pseudo;
+	}
 	// Get direction.
 	this.getDirection = function() {
 		return this.direction;

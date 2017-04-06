@@ -134,7 +134,7 @@ Menu.prototype = {
 			} else {
 				var spr = this.game.add.sprite(rectX + (rectWidth / 2) - addPlayerWidth / 2, rectY + (rectHeight / 2) - addPlayerHeight / 2, 'addPlayer');
 				graphic.events.onInputDown.add(function() {
-					
+					$(modal).modal('toggle');
 				});
 				rectFreePlaces.push(new freePlace(spr, graphic));
 			}

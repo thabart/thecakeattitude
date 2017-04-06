@@ -185,16 +185,17 @@ Game.prototype = {
 			if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, warp) {
 				var tileMap = self.game.add.tilemap(warp.map),
 					playerHeight = self.map.player.sprite.height,
-					playerWidth = self.map.player.sprite.width;
+					playerWidth = self.map.player.sprite.width,
+					pseudo = self.map.player.getPseudo();
 				self.preventUpdate = true;
 				self.map.destroy();
 				self.map = new Map(warp.map, tileMap, self.game);
 				self.map.init().done(function() {
 					var playerPosition = self.getPlayerPosition(warp, self.map.getWarps(), playerHeight, playerWidth);
-					self.map.addPlayer(playerPosition.x, playerPosition.y);
+					self.map.addPlayer(playerPosition.x, playerPosition.y, pseudo);
 					// Remove the player from the map & add him to the new map.		
 					self.socket.emit('remove');
-					self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key });
+					self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: pseudo });
 					self.game.camera.focusOnXY(playerPosition.x, playerPosition.y);
 					self.preventUpdate = false;
 				});				
