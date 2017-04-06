@@ -32,6 +32,8 @@ Splash.prototype = {
 		this.game.load.script('SpeechBubble', 'public/game/SpeechBubble.js');
 		this.game.load.script('Game', 'public/states/Game.js');
 		this.game.load.script('Menu', 'public/states/Menu.js');
+		this.game.load.script('CharacterChooser', 'public/states/CharacterChooser.js');
+		this.game.load.script('Connect', 'public/states/Connect.js');
 		this.game.load.script('Warper', 'public/characters/warper.js');
 		this.game.load.script('Shop', 'public/characters/shop.js');
 		this.game.load.script('InfoPanel', 'public/characters/panelInfo.js');
@@ -39,10 +41,12 @@ Splash.prototype = {
 	},
 	create: function() {
 		var self = this;
+		this.game.state.add('Connect', Connect);
 		this.game.state.add('Menu', Menu);
+		this.game.state.add('CharacterChooser', CharacterChooser);
 		this.game.state.add('Game', Game);
 		 setTimeout(function () {
-		  self.game.state.start("Menu");
+		  self.game.state.start("CharacterChooser");
 		}, 1000);
 	}
 };
