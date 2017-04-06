@@ -17,6 +17,63 @@ Menu.prototype = {
 			g.isSelected = isSelected;
 		};
 		
+		var players = [
+			{ pseudo: 'mili', map: '' },
+			{ pseudo: 'lili', map: '' },
+			{ pseudo : 'loki', map: '' },
+			{ pseudo : 'mulan', map: '' }
+		];
+		
+		var freePlace = function(spr, g) {
+			this.sprite = spr;
+			this.graphic = g;
+			
+			this.destroy = function() {
+				this.sprite.destroy();
+				this.graphic.events.onInputDown.removeAll();
+			};
+		};
+		
+		var createModal = function() {
+			var result = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'>"+
+			"<h5 class='modal-title'>New character</h5>"+
+			"<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>"+
+			"</div>"+
+			"<div class='modal-body'>"+
+			"<div class='form-group'><label>Pseudo</label><input type='text' class='form-control' /></div>"+
+			"<div class='form-group'><label>Category</label><select class='form-control'><option>Pâtisserie/Boulangerie</option><option>Habits/Boulangerie</option></select></div>"+
+			"<div class='form-group'><label>Sub-Category</label><select class='form-control'><option>Chaussures</option> </select></div>"+
+			"</div>"+
+			"<div class='modal-footer'>"+
+			"<button type='button' class='btn btn-success' id='confirm'>Confirm</button>"+
+			"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>"+
+			"</div></div></div></div>");
+			$(document.body).append(result);
+			return result;
+		};
+		
+		var addPlayer = function(graph) {
+			self.game.add.sprite(graph.x + (graph.width / 2) - playerWidth / 2, graph.y + (graph.height / 2) - playerHeight / 2, 'player');
+			graph.events.onInputDown.add(function(g) {
+				var isSelected = false;
+				if (!g.isSelected) {
+					isSelected = true;
+				}
+				
+				drawGraphic(g, true);
+				rectPlayers.forEach(function(gr) {
+					if (gr == g) {
+						return;
+					}
+					
+					drawGraphic(gr, false);						
+				});
+				
+				self.start.visible = true;			
+			}, this);		
+			rectPlayers.push(graph);			
+		};
+		
 		var rectHeight = 150,
 			rectWidth = 150,
 			paddingLeft = 10,
@@ -29,9 +86,26 @@ Menu.prototype = {
 			playPaddingBottom = 0,
 			playPaddingRight = 0,
 			maxSquares = 6,
-			nbPlayers = 3,
+			nbPlayers = players.length,
 			self = this,
-			graphics = [];
+			rectPlayers = [],
+			rectFreePlaces = [],
+			modal = createModal();
+			
+		$(modal).find('#confirm').click(function() {
+			if (!rectFreePlaces || rectFreePlaces.length == 0) {
+				console.log('not enough space');
+				return;
+			}
+			
+			var p = rectFreePlaces[0];
+			var ind = rectFreePlaces.indexOf(p);
+			p.destroy();
+			rectFreePlaces.splice(0, 1);
+			addPlayer(p.graphic);
+			$(modal).modal('hide');
+		});
+		
 		// Create several players.
 		for (var ind = 0; ind < maxSquares; ind++) {
 			var rectX = ind * (rectWidth + paddingLeft) + paddingLeft,
@@ -46,29 +120,14 @@ Menu.prototype = {
 				self.game.canvas.style.cursor = "default";
 			});
 			if (ind + 1 <= nbPlayers) {
-				this.game.add.sprite(rectX + (rectWidth / 2) - playerWidth / 2, rectY + (rectHeight / 2) - playerHeight / 2, 'player');
-				graphic.events.onInputDown.add(function(g) {
-					var isSelected = false;
-					if (!g.isSelected) {
-						isSelected = true;
-					}
-					
-					drawGraphic(g, true);
-					graphics.forEach(function(gr) {
-						if (gr == g) {
-							return;
-						}
-						
-						drawGraphic(gr, false);						
-					});
-					
-					self.start.visible = true;					
-				}, this);
+				addPlayer(graphic);
 			} else {
-				this.game.add.sprite(rectX + (rectWidth / 2) - addPlayerWidth / 2, rectY + (rectHeight / 2) - addPlayerHeight / 2, 'addPlayer');
+				var spr = this.game.add.sprite(rectX + (rectWidth / 2) - addPlayerWidth / 2, rectY + (rectHeight / 2) - addPlayerHeight / 2, 'addPlayer');
+				graphic.events.onInputDown.add(function() {
+					$(modal).modal('toggle');
+				});
+				rectFreePlaces.push(new freePlace(spr, graphic));
 			}
-			
-			graphics.push(graphic);
 		}
 		
 		this.start = this.game.add.button(this.game.width - playPaddingRight - playWidth, this.game.height - playHeight - playPaddingBottom, 'start', null, this, 2, 1, 0);
