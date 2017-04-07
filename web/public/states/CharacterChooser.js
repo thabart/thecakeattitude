@@ -88,8 +88,12 @@ CharacterChooser.prototype = {
 			playerHeight = 40, 
 			playWidth = 341,
 			playHeight = 111,
+			backWidth = 108,
+			backHeight = 100,
 			playPaddingBottom = 0,
 			playPaddingRight = 0,
+			backPaddingLeft = 10,
+			backPaddingBottom = 10,
 			pseudoPaddingTop = 10,
 			titlePaddingTop = 10,
 			titlePaddingLeft = 10,
@@ -147,6 +151,9 @@ CharacterChooser.prototype = {
 		this.start = this.game.add.button(this.game.width - playPaddingRight - playWidth, this.game.height - playHeight - playPaddingBottom, 'start', function() {
 			self.game.state.start("Game", true, false, selectedUser);
 		}, this, 2, 1, 0);
+		this.game.add.button(backPaddingLeft, this.game.height - backHeight - backPaddingLeft, 'back', function() {
+			self.game.state.start('Menu');
+		});
 		this.start.visible = false;
 	},
 	create: function() {

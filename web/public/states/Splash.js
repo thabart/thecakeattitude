@@ -23,6 +23,10 @@ Splash.prototype = {
 		this.game.load.image('bubble-tail', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVAgMAAADUeU0FAAAADFBMVEUAAAAAAAD////MzMyoZCTaAAAAAXRSTlMAQObYZgAAAC1JREFUCNdjCA3NWrXUAY36/xULxYyN+hu1amUAAyYVwoBBhYYyYFDh/w9gUADQUTeozcOYAwAAAABJRU5ErkJggg==');
 		this.game.load.image('spacebar', 'http://localhost:5000/images/space-bar.png');
 		this.game.load.image('start', 'http://localhost:5000/images/playbutton.png');
+		this.game.load.image('background', 'http://localhost:5000/images/background.jpg');
+		this.game.load.image('seller', 'http://localhost:5000/images/seller.png');
+		this.game.load.image('shopper', 'http://localhost:5000/images/shopper.png');
+		this.game.load.image('back', 'http://localhost:5000/images/back.gif');
 		this.game.load.spritesheet('bubble-border', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbAgMAAADwuhzGAAAADFBMVEUAAAD///8AAADMzMyl8w72AAAAAXRSTlMAQObYZgAAADlJREFUCNdjYGDQWrWqgQGT5poaGpqFSTMtDQWCFRj0PyrR/3+B7cGgmf+/AroLk2bg////AwMGDQCR0FKxG5KiwAAAAABJRU5ErkJggg==', 9, 9);
 		this.game.load.spritesheet('villager', 'http://localhost:5000/characters/villager.png',  24, 24, 2);
 		this.game.load.atlas('wraper', 'http://localhost:5000/characters/villager.png', 'public/sprites/wraper.json');
@@ -46,7 +50,7 @@ Splash.prototype = {
 		this.game.state.add('CharacterChooser', CharacterChooser);
 		this.game.state.add('Game', Game);
 		 setTimeout(function () {
-		  self.game.state.start("CharacterChooser");
+		  self.game.state.start("Connect");
 		}, 1000);
 	}
 };
