@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Microsoft.AspNetCore.Hosting;
@@ -45,22 +46,18 @@ namespace Cook4Me.Api.Host.Controllers
         [HttpPost]
         public async Task<IActionResult> AddShop([FromBody] JObject obj)
         {
-            var lines = System.IO.File.ReadAllLines("./Assets/shop.json");
             var result = _requestBuilder.GetAddShop(obj);
             result.Id = Guid.NewGuid().ToString();
             result.CreateDateTime = DateTime.UtcNow;
-            result.RelativePath = @"shops/" + result.Id + "_shop.json";
-            var path = Path.Combine(_env.WebRootPath, result.RelativePath);
-            var file = System.IO.File.Create(path);
-            using (var writer = new StreamWriter(file))
+            result.ShopRelativePath = GetRelativeShopPath(result.Id);
+            result.UndergroundRelativePath = GetRelativeUndergroundPath(result.Id);
+            if (!AddShopMap(result))
             {
-                foreach (var line in lines)
-                {
-                    writer.WriteLine(line.Replace("<map_name>", result.MapName).Replace("<warp_entry>", "shopentry_"+result.Id));
-                }
+                // Return an error.
+                return null;
             }
 
-            var res = new { id = result.Id, path = result.RelativePath };
+            var res = new { id = result.Id, shop_path = result.ShopRelativePath, underground_path =  result.UndergroundRelativePath };
             await _repository.Add(result);
             return new OkObjectResult(res);
         }
@@ -95,6 +92,47 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return new OkObjectResult(arr);
+        }
+
+        private bool AddShopMap(Shop shop)
+        {
+            if (!System.IO.File.Exists("./Assets/shop.json") || !System.IO.File.Exists("./Assets/underground.json"))
+            {
+                return false;
+            }
+
+            var shopLines = System.IO.File.ReadAllLines("./Assets/shop.json");
+            var undergroundLines = System.IO.File.ReadAllLines("./Assets/underground.json");
+            var shopPath = Path.Combine(_env.WebRootPath, shop.ShopRelativePath);
+            var undergroundPath = Path.Combine(_env.WebRootPath, shop.UndergroundRelativePath);
+            var shopFile = System.IO.File.Create(shopPath);
+            var undergroundFile = System.IO.File.Create(undergroundPath);
+            using (var shopWriter = new StreamWriter(shopFile))
+            {
+                foreach (var shopLine in shopLines)
+                {
+                    shopWriter.WriteLine(shopLine.Replace("<map_name>", shop.MapName).Replace("<warp_entry>", "shopentry_" + shop.Id).Replace("<underground_name>", "underground_" + shop.Id));
+                }
+            }
+
+            using (var undergroundWriter = new StreamWriter(undergroundFile))
+            {
+                foreach(var undergroundLine in undergroundLines)
+                {
+                    undergroundWriter.WriteLine(undergroundLine.Replace("<map_name>", "shop_" + shop.Id));
+                }
+            }
+            return true;
+        }
+
+        private static string GetRelativeShopPath(string id)
+        {
+            return @"shops/" + id + "_shop.json";
+        }
+
+        private static string GetRelativeUndergroundPath(string id)
+        {
+            return @"shops/" + id + "_underground.json";
         }
     }
 }

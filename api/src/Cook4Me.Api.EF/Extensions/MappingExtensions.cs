@@ -36,7 +36,8 @@ namespace Cook4Me.Api.EF.Extensions
                 MapName = shop.MapName,
                 PlaceId = shop.PlaceId,
                 Title = shop.Title,
-                RelativePath = shop.RelativePath
+                ShopRelativePath = shop.ShopRelativePath,
+                UndergroundRelativePath = shop.UndergroundRelativePath
             };
         }
 
@@ -54,7 +55,8 @@ namespace Cook4Me.Api.EF.Extensions
                 MapName = shop.MapName,
                 PlaceId = shop.PlaceId,
                 Title = shop.Title,
-                RelativePath = shop.RelativePath
+                ShopRelativePath = shop.ShopRelativePath,
+                UndergroundRelativePath = shop.UndergroundRelativePath
             };
 
         }

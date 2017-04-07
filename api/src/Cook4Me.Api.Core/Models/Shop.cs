@@ -24,7 +24,8 @@ namespace Cook4Me.Api.Core.Models
         public string Title { get; set; }
         public string MapName { get; set; }
         public string PlaceId { get; set; }
-        public string RelativePath { get; set; }
+        public string ShopRelativePath { get; set; }
+        public string UndergroundRelativePath { get; set; }
         public DateTime CreateDateTime { get; set; }
     }
 }

@@ -42,12 +42,17 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 	var displayShop = function(r) {
 		removeInteraction();
 		sprite.loadTexture('house', 0);
-		if (!game.cache.checkTilemapKey(r.id)) {
-			var loader = game.load.tilemap(r.id, 'http://localhost:5000/' + r.path, null, Phaser.Tilemap.TILED_JSON);
+		if (!game.cache.checkTilemapKey("shop_" + r.id)) {
+			var loader = game.load.tilemap("shop_" + r.id, 'http://localhost:5000/' + r.shop_path, null, Phaser.Tilemap.TILED_JSON);
 			loader.start();
 		}
 		
-		addWarp(r.id);			
+		if (!game.cache.checkTilemapKey("underground_path" + r.id)) {
+			var loader = game.load.tilemap("underground_" + r.id, 'http://localhost:5000/' + r.underground_path, null, Phaser.Tilemap.TILED_JSON);
+			loader.start();
+		}
+		
+		addWarp(r.id);	
 		displayTile(r.title);
 		displayPanelInfo(r);
 	};
@@ -73,7 +78,7 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		rect.width = 30;
 		rect.height = 30;
 		warpGroup.add(rect);
-        warpGroup.set(rect, 'map', mapId, false, false, 0, true);
+        warpGroup.set(rect, 'map', "shop_" + mapId, false, false, 0, true);
         warpGroup.set(rect, 'warp_entry', 'warp', false, false, 0, true);
         warpGroup.set(rect, 'entry_dir', 'bottom', false, false, 0, true);
 	};

@@ -88,7 +88,7 @@ var Map = function(key, tileMap, game) {
 		}
 		
 		// Specify which tile can collide.
-		this.tileMap.setCollisionBetween(10, 421, true, 'Collision');
+		this.tileMap.setCollision(3, true, 'Collision');
 		
 		var result = $.Deferred();
 		$.when.apply(null, deferredLoaded).done(function() {
