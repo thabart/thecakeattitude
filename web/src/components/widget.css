@@ -1,0 +1,8 @@
+.widget-header .fa {
+	cursor: pointer;
+	padding: 4px;
+}
+
+.widget-header .fa:hover {
+	background-color: #d9d9de;
+}
