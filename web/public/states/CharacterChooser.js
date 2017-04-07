@@ -18,10 +18,10 @@ CharacterChooser.prototype = {
 		};
 		
 		var players = [
-			{ pseudo: 'mili', map: '' },
-			{ pseudo: 'lili', map: '' },
-			{ pseudo : 'loki', map: '' },
-			{ pseudo : 'mulan', map: '' }
+			{ pseudo: 'mili', map: 'firstMap' },
+			{ pseudo: 'lili', map: 'secondMap' },
+			{ pseudo : 'loki', map: 'secondMap' },
+			{ pseudo : 'mulan', map: 'firstMap' }
 		];
 		
 		var freePlace = function(spr, g) {
@@ -118,7 +118,8 @@ CharacterChooser.prototype = {
 			p.destroy();
 			rectFreePlaces.splice(0, 1);
 			var newPlayer = {
-				pseudo : $(modal).find('#pseudo').val()
+				pseudo : $(modal).find('#pseudo').val(),
+				map: 'firstMap'
 			};
 			addPlayer(p.graphic, newPlayer);
 			$(modal).modal('hide');

@@ -2,8 +2,7 @@
 var Menu = function() {};
 Menu.prototype = {
 	preload: function() { },
-	init: function() {
-		
+	init: function() {		
 		var buildModal = function() {
 			var result = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'>"+
 			"<h5 class='modal-title'>Client</h5>"+
@@ -37,7 +36,8 @@ Menu.prototype = {
 			titleStyle = { font: '32px Arial', fill: '#ffffff' };
 		$(modal).find('#confirm').click(function() {
 			var newPlayer = {
-				pseudo : $(modal).find('#pseudo').val()
+				pseudo : $(modal).find('#pseudo').val(),
+				map: 'firstMap'
 			};
 
 			$(modal).modal('hide');			
