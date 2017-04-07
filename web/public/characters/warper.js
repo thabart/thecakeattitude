@@ -1,7 +1,10 @@
 var Warper = function(game, npc) {
-	var self = this;
-	var isInteracting = false;
-	var modal = null;
+	var self = this,
+		npcTitlePaddingLeft = -10,
+		npcTitlePaddingTop = -20,
+		isInteracting = false,
+		modal = null,
+		titleStyle = { font: '20px Arial' };
 	// Initialize the sprite.
 	var sprite = game.add.sprite(npc.x, npc.y, 'wraper');
 	sprite.animations.add('stay');
@@ -16,6 +19,9 @@ var Warper = function(game, npc) {
 	sprite.events.onInputDown.add(function() {
 		this.interact();
 	}, this);
+	var titleX = npc.x + npcTitlePaddingLeft,
+		titleY = npc.y + npcTitlePaddingTop;
+	var text = game.add.text(titleX, titleY, npc.name, titleStyle);
 	
 	var buildModal = function() {
 		modal = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'>"+
@@ -56,5 +62,6 @@ var Warper = function(game, npc) {
 	
 	this.destroy = function() {
 		sprite.destroy();
+		text.destroy();
 	};
 };

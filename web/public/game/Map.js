@@ -68,6 +68,9 @@ var Map = function(key, tileMap, game) {
 						o = new Shop(game, npc, tileMap, warps, npcObjs, npcs);
 						deferredLoaded.push(o.init());
 					break;
+					case "stock_manager":
+						o = new StockManager(game, npc);
+					break;
 				}
 				
 				if (o == null) {
