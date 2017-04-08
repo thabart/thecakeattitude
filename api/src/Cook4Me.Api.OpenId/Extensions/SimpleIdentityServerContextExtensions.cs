@@ -501,18 +501,18 @@ namespace Cook4Me.Api.OpenId.Extensions
             {
                 context.Clients.AddRange(new[]
                 {
-                    // Android application.
+                    // Game application.
                     new Client
                     {
-                        ClientId = "AndroidApplication",
-                        ClientName = "Android application",
+                        ClientId = "game",
+                        ClientName = "Game application",
                         ClientSecrets = new List<ClientSecret>
                         {
                             new ClientSecret
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Type = SecretTypes.SharedSecret,
-                                Value = "AndroidApplication"
+                                Value = "game"
                             }
                         },
                         TokenEndPointAuthMethod = TokenEndPointAuthenticationMethods.client_secret_post,
@@ -544,35 +544,11 @@ namespace Cook4Me.Api.OpenId.Extensions
                                 ScopeName = "address"
                             }
                         },
-                        GrantTypes = "1",
+                        GrantTypes = "1,4",
                         ResponseTypes = "0,1,2",
                         IdTokenSignedResponseAlg = "RS256",
                         ApplicationType = ApplicationTypes.native,
-                        RedirectionUrls = "http://nativateapplication/callback"
-                    },
-                    // Courier API.
-                    new Client
-                    {
-                        ClientId = "CourierApi",
-                        ClientName = "Courier Api",
-                        ClientSecrets = new List<ClientSecret>
-                        {
-                            new ClientSecret
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Type = SecretTypes.SharedSecret,
-                                Value = "CourierApi"
-                            }
-                        },
-                        TokenEndPointAuthMethod = TokenEndPointAuthenticationMethods.client_secret_post,
-                        LogoUri = "http://img.over-blog-kiwi.com/1/47/73/14/20150513/ob_06dc4f_chiot-shiba-inu-a-vendre-prix-2015.jpg",
-                        ClientScopes = new List<ClientScope>
-                        {
-                            new ClientScope
-                            {
-                                ScopeName = "openid"
-                            }
-                        }
+                        RedirectionUrls = "http://localhost:3000/callback"
                     }
                 });
             }

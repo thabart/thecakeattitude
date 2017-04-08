@@ -1,5 +1,6 @@
 {
-  "name": "CakeAttitude.OpenId",
+  "name": "cakattitude",
   "dependencies": {
+    "bootstrap": "^3.3.7"
   }
 }

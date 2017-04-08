@@ -17,12 +17,37 @@
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" >
 		<style type="text/css">	
+			#errors li{
+				list-style-type: none;
+				background-color: white;
+				padding: 10px;
+				border-radius: 5px;
+				margin-bottom: 10px;
+				max-width: 300px;
+			}
+			
+			#errors {
+				position: absolute; 
+				top: 10px; 
+				right: 20px;
+			}
+			
+			#errors .success {
+				background-color: green !important;
+				color: white !important;	
+			}
+			
+			#errors .error {
+				background-color: red !important;
+				color: white !important;
+			}
 		</style>
 	</head>
 	<body>
 		<div style="width:980px; margin: 0 auto;">
-			<div id="game">
-			
+			<div id="game" style="position: relative;">
+				<!-- Display error message -->
+				<ul id="errors"></ul>
 			</div>
 			<div style="background-color: gray;">
 				<div class="col-md-12">
@@ -35,6 +60,19 @@
 		</div>
 	</body>
 	<script type="text/javascript">
+		(function() {
+			var errorModal = {
+				display: function(msg, time, state) {
+					var html = $("<li class='"+state+"'>"+msg+" <i class='fa fa-times fa-1 close'></i></li>");
+					$('#errors').append(html);
+					$('#errors').find('li:last-child').delay(time).fadeOut(100);
+					$('#errors').find('li:last-child .close').click(function() {
+						$(this).closest('li').hide();
+					});
+				}
+			};
+			window.errorModal = errorModal;
+		})();
 		$(document).ready(function() {	
 			// Speech bubble
 			var canvas = function(opts) {
