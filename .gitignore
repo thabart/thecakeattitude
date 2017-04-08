@@ -215,7 +215,7 @@ FakesAssemblies/
 *.opt
 
 # Ignore the bower files
-SimpleIdentityServer/VNEXT/src/SimpleIdentityServer.Host/wwwroot/lib/*
+api/src/Cook4Me.Api.OpenId/wwwroot/lib/*
 
 log-*.txt
 

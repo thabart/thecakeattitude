@@ -122,6 +122,7 @@ namespace Cook4Me.Api.Host.Controllers
                     undergroundWriter.WriteLine(undergroundLine.Replace("<map_name>", "shop_" + shop.Id));
                 }
             }
+
             return true;
         }
 
