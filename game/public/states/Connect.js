@@ -13,7 +13,7 @@ Connect.prototype = {
 					"<div class='form-group'><label>Password</label><input type='password' class='form-control' name='password' /></div>"+
 					"<div class='form-group'><input type='submit' class='btn btn-default' value='login' /></div>"+
 					"<div class='form-group'><a href='#'>Create an account</a></div>"+
-					"<div class='form-group'><a href='#'>Use external account</a></div>"+
+					"<div class='form-group'><a href='http://localhost:5001/authorization?scope=openid%20profile&state=75BCNvRlEGHpQRCT&redirect_uri=http://localhost:3000/callback&response_type=id_token%20token&client_id=game&nonce=nonce&response_mode=query' id='use-external-account'>Use external account</a></div>"+
 				"</div></form>"+
 				"</div>");
 			$(game).append(result);
@@ -35,6 +35,15 @@ Connect.prototype = {
 				});
 
 				return indexed_array;
+			},
+			getParameterByName = function(name, url) {
+				if (!url) url = window.location.href;
+				name = name.replace(/[\[\]]/g, "\\$&");
+				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+					results = regex.exec(url);
+				if (!results) return null;
+				if (!results[2]) return '';
+				return decodeURIComponent(results[2].replace(/\+/g, " "));
 			};
 		loginWindow.find('form').submit(function(e) {
 			e.preventDefault();
@@ -62,10 +71,26 @@ Connect.prototype = {
 					errorModal.display('an error occured while trying to authenticate the user', 3000, 'error');
 				});
 			});
-			$.ajax({
-				type: 'POST',
+		});
+		loginWindow.find('#use-external-account').click(function(e) {
+			e.preventDefault();
+			var href = $(this).attr('href');
+			var w = window.open(href, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
+			var interval = setInterval(function() {		
+				if (w.closed) {					
+					clearInterval(interval);
+					return;
+				}
 				
-			});
+				var href = w.location.href;
+				var accessToken = getParameterByName('access_token', href);
+				if (accessToken) {					
+					clearInterval(interval);
+					w.close();
+					loginWindow.remove();
+					self.game.state.start("Menu");
+				}
+			}, 1000);
 		});
 	}	
 };
