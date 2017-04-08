@@ -549,6 +549,38 @@ namespace Cook4Me.Api.OpenId.Extensions
                         IdTokenSignedResponseAlg = "RS256",
                         ApplicationType = ApplicationTypes.native,
                         RedirectionUrls = "http://localhost:3000/callback"
+                    },
+                    // Shopping API.
+                    new Client
+                    {
+                        ClientId = "shopping_api",
+                        ClientName = "Shopping API",
+                        ClientSecrets = new List<ClientSecret>
+                        {
+                            new ClientSecret
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Type = SecretTypes.SharedSecret,
+                                Value = "shopping_api"
+                            }
+                        },
+                        TokenEndPointAuthMethod = TokenEndPointAuthenticationMethods.client_secret_post,
+                        LogoUri = "http://img.over-blog-kiwi.com/1/47/73/14/20150513/ob_06dc4f_chiot-shiba-inu-a-vendre-prix-2015.jpg",
+                        ClientScopes = new List<ClientScope>
+                        {
+                            new ClientScope
+                            {
+                                ScopeName = "openid"
+                            },
+                            new ClientScope
+                            {
+                                ScopeName = "profile"
+                            }
+                        },
+                        GrantTypes = "3",
+                        ResponseTypes = "0,1,2",
+                        IdTokenSignedResponseAlg = "RS256",
+                        ApplicationType = ApplicationTypes.native
                     }
                 });
             }

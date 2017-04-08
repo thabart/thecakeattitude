@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -73,6 +74,14 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return new OkObjectResult(arr);
+        }
+
+        [HttpGet(Constants.RouteNames.Me)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> GetMineShops()
+        {
+            string s = "";
+            return null;
         }
 
         [HttpPost(Constants.RouteNames.Search)]

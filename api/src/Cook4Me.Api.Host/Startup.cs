@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using SimpleIdentityServer.Oauth2Instrospection.Authentication;
 
 namespace Cook4Me.Api.Host
 {
@@ -70,14 +71,12 @@ namespace Cook4Me.Api.Host
             // 3. Use static files
             app.UseStaticFiles();
             // 4. Authenticate the request with OAUTH2.0 introspection endpoint.
-            /*
             app.UseAuthenticationWithIntrospection(new Oauth2IntrospectionOptions
             {
                 InstrospectionEndPoint = introspectUrl,
                 ClientId = clientId,
                 ClientSecret = clientSecret
             });
-            */
             // 5. Use static files
             app.UseStaticFiles();
             // 6. Launch ASP.NET MVC

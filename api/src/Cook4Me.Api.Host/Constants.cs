@@ -23,6 +23,7 @@ namespace Cook4Me.Api.Host
             public const string Products = "products";
             public const string Shops = "shops";
             public const string Search = ".search";
+            public const string Me = "me";
         }
 
         public static class DtoNames
