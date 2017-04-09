@@ -9,8 +9,11 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		self = this,
 		isEnabled = true,
 		isInteracting = false,
-		modal = null;
-	var tileSheet = null;
+		modal = null,
+		tileSheet = null,
+		warpRectangle = null,
+		warpHeight = 30,
+		warpWidth = 30;
 	map.tilesets.forEach(function(t) {
 		if (t.firstgid == npc.gid) {
 			tileSheet = t;
@@ -71,12 +74,18 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 	};
 		
 	var addWarp = function(mapId) {		
-		var rect = new Phaser.Sprite(game, npc.x + (tileSheet.tileWidth / 2) - 15, npc.y, 'shopentry_' + mapId);
+		var x = npc.x + (tileSheet.tileWidth / 2) - warpWidth / 2,
+			y = npc.y;
+		// 1. Display warp.
+		warpRectangle = game.add.graphics(0, 0);
+		warpRectangle.lineStyle(shopTitleBorderPadding, 0xd9d9d9, 1);
+		warpRectangle.beginFill(0xFFFFFF, 1);
+		warpRectangle.drawRect(x, y, warpWidth, warpHeight);
+		// 2. Add transparent warp into the group.
+		var rect = game.add.sprite(x, y, null);
+		game.physics.enable(rect, Phaser.Physics.ARCADE);
 		rect.name = 'shopentry_' + mapId;
-		rect.exists = true;
-		rect.autoCull = false;
-		rect.width = 30;
-		rect.height = 30;
+		rect.body.setSize(warpWidth, warpHeight, 0, 0);
 		warpGroup.add(rect);
         warpGroup.set(rect, 'map', "shop_" + mapId, false, false, 0, true);
         warpGroup.set(rect, 'warp_entry', 'warp', false, false, 0, true);
@@ -174,14 +183,8 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 	
 	this.destroy = function() {
 		sprite.destroy();
-		if (shopTitleRect != null)
-		{
-			shopTitleRect.destroy();		
-		}
-		
-		if (shopTitleTxt != null)
-		{
-			shopTitleTxt.destroy();		
-		}
+		if (shopTitleRect != null) shopTitleRect.destroy();				
+		if (shopTitleTxt != null) shopTitleTxt.destroy();
+		if (warpRectangle != null) warpRectangle.destroy();
 	};
 };

@@ -1,12 +1,13 @@
 var Map = function(key, tileMap, game) {
-	var npcs = [],
-		npcObjs = null,
-		houseObj = null,
-		warps = null;
+	var houseObj = null;
+	this.npcs = [];
+	this.npcObjs = null;
+	this.warps = null;
 	this.key = key;
 	this.tileMap = tileMap;		
 	this.player = null;
 	this.players = [];
+	this.warpRectangles = [];
 	this.layers = {
 		alimentation : null,
 		earth : null,
@@ -16,17 +17,6 @@ var Map = function(key, tileMap, game) {
 	
 	this.init = function() {		
 		var addWrap = function(gm, obj, group) {			
-			var rect = new Phaser.Sprite(gm, obj.x, obj.y, obj.name);
-			rect.name = obj.name;
-			rect.exists = true;
-			rect.autoCull = false;
-			rect.width = obj.width;
-			rect.height = obj.height;
-			group.add(rect);
-			for (var property in obj.properties)
-            {
-                group.set(rect, property, obj.properties[property], false, false, 0, true);
-            }
 			
 			return rect;
 		};
@@ -50,10 +40,10 @@ var Map = function(key, tileMap, game) {
 		this.layers.alimentation = this.tileMap.createLayer('Alimentations');
 		this.tileMap.createLayer('Wraps');
 		// Create all the objects.
-		warps = game.add.group();
-		npcObjs = game.add.group();
-		warps.enableBody = true;
-		npcObjs.enableBody = true;
+		this.warps = game.add.group();
+		this.npcObjs = game.add.group();
+		this.warps.enableBody = true;
+		this.npcObjs.enableBody = true;
 		var npcsObjs = tileMap.objects['Npcs'];
 		var wps = tileMap.objects['Wraps'];
 		// Create npcs.
@@ -65,7 +55,7 @@ var Map = function(key, tileMap, game) {
 						o = new Warper(game, npc);
 					break;
 					case "shop":
-						o = new Shop(game, npc, tileMap, warps, npcObjs, npcs);
+						o = new Shop(game, npc, tileMap, self.warps, self.npcObjs, self.npcs);
 						deferredLoaded.push(o.init());
 					break;
 					case "stock_manager":
@@ -78,21 +68,35 @@ var Map = function(key, tileMap, game) {
 				}
 				
 				var sp = o.getSprite();
-				npcObjs.add(sp);
-				npcs.push([sp, o ]);
+				self.npcObjs.add(sp);
+				self.npcs.push([sp, o ]);
 			});
 		}
 		
 		// Create warps.
 		if (wps) {
-			wps.forEach(function(warp) {
-				addWrap(game, warp, warps);
+			wps.forEach(function(warp) {				
+				// Display warp.				
+				var warpRectangle = game.add.graphics(0, 0);
+				warpRectangle.lineStyle(2, 0xd9d9d9, 1);
+				warpRectangle.beginFill(0xFFFFFF, 1);
+				warpRectangle.drawRect(warp.x, warp.y, warp.width, warp.height);
+				self.warpRectangles.push(warpRectangle);
+				// Add transparent warp into the group.
+				var rect = game.add.sprite(warp.x, warp.y, null);
+				game.physics.enable(rect, Phaser.Physics.ARCADE);
+				rect.name = warp.name;
+				rect.body.setSize(warp.width, warp.height, 0, 0);
+				self.warps.add(rect);
+				for (var property in warp.properties)
+				{
+					self.warps.set(rect, property, warp.properties[property], false, false, 0, true);
+				}
 			});
 		}
 		
 		// Specify which tile can collide.
-		this.tileMap.setCollision(3, true, 'Collision');
-		
+		this.tileMap.setCollision(3, true, 'Collision');		
 		var result = $.Deferred();
 		$.when.apply(null, deferredLoaded).done(function() {
 			result.resolve();
@@ -117,12 +121,12 @@ var Map = function(key, tileMap, game) {
 		if (this.layers.ground) this.layers.ground.visible = isVisible;
 		if (this.layers.earth) this.layers.earth.visible = isVisible;
 		if (this.layers.alimentation) this.layers.alimentation.visible = isVisible;
-		npcs.forEach(function(npc) {
+		this.npcs.forEach(function(npc) {
 			npc[1].isVisible = isVisible;
 		});
 
-		if (warps) warps.visible = isVisible;
-		if (npcObjs) npcObjs.visible = isVisible;
+		if (this.warps) this.warps.visible = isVisible;
+		if (this.npcObjs) this.npcObjs.visible = isVisible;
 		if (this.player) this.player.display(isVisible);
 		if (this.players) this.players.forEach(function(p) {
 			p.display(isVisible);
@@ -130,34 +134,36 @@ var Map = function(key, tileMap, game) {
 	};
 	
 	this.destroy = function() {
-		// Destroy the layers & objects.
-		this.layers.collision.destroy();
-		this.layers.ground.destroy();
-		this.layers.earth.destroy();
-		if (this.layers.alimentation) {			
-			this.layers.alimentation.destroy();
-		}
+		// Destroy the layers
+		if (this.layers.collision) this.layers.collision.destroy();
+		if (this.layers.ground) this.layers.ground.destroy();
+		if (this.layers.earth) this.layers.earth.destroy();
+		if (this.layers.alimentation) this.layers.alimentation.destroy();
 		
-		npcs.forEach(function(npc) {
+		// Destroy objects
+		this.npcs.forEach(function(npc) {
 			npc[1].destroy();
 		});
-
-		warps.destroy();
-		npcObjs.destroy();
-		this.tileMap.destroy();
-		this.player.remove();
+		this.warpRectangles.forEach(function(warp) {
+			warp.destroy();
+		});
 		this.players.forEach(function(p) {
 			p.remove();
 		});
+
+		if (this.warps) this.warps.destroy();
+		if (this.npcObjs) this.npcObjs.destroy();
+		if (this.tileMap) this.tileMap.destroy();
+		if (this.player) this.player.remove();
 	};
 	
 	this.getNpcObjs = function() {
-		return npcObjs;
+		return this.npcObjs;
 	};
 	
 	this.getNpc = function(sprite) {
 		var result = null;
-		npcs.forEach(function(kvp) {
+		this.npcs.forEach(function(kvp) {
 			if (kvp[0] == sprite) {
 				result = kvp[1];
 			}
@@ -167,6 +173,6 @@ var Map = function(key, tileMap, game) {
 	};
 	
 	this.getWarps = function() {
-		return warps;
+		return this.warps;
 	};
 };

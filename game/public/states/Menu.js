@@ -46,7 +46,7 @@ Menu.prototype = {
 		self.game.add.text(titlePaddingTop, titlePaddingLeft, '<title>', titleStyle);
 		var menu = [
 			{
-				title: 'Shopper',
+				title: 'Seller',
 				spriteName: 'shopper',
 				width: shopperWidth,
 				height: shopperHeight,
@@ -54,7 +54,7 @@ Menu.prototype = {
 					self.game.state.start("CharacterChooser");
 				}
 			}, {
-				title: 'Seller',
+				title: 'Shopper',
 				spriteName: 'seller',
 				width: sellerWidth,
 				height: sellerHeight,
