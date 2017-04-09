@@ -24,6 +24,7 @@ namespace Cook4Me.Api.Host.Builders
     public interface IResponseBuilder
     {
         JObject GetShop(Shop shop);
+        JObject GetError(string errorCode, string errorDescription);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -43,6 +44,24 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Place, shop.PlaceId);
             result.Add(Constants.DtoNames.Shop.ShopPath, shop.ShopRelativePath);
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
+            return result;
+        }
+
+        public JObject GetError(string errorCode, string errorDescription)
+        {
+            if (string.IsNullOrWhiteSpace(errorCode))
+            {
+                throw new ArgumentNullException(nameof(errorCode));
+            }
+
+            if (string.IsNullOrWhiteSpace(errorDescription))
+            {
+                throw new ArgumentNullException(nameof(errorDescription));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.Error.Code, errorCode);
+            result.Add(Constants.DtoNames.Error.Description, errorDescription);
             return result;
         }
     }

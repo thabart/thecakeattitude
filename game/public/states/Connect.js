@@ -83,10 +83,12 @@ Connect.prototype = {
 					}
 					
 					displayLoading(false);
-				}).fail(function() {					
+				}).fail(function() {		
+					displayLoading(false);			
 					sessionStorage.removeItem(sessionName);
 				});
 			}).fail(function() {
+				displayLoading(false);
 				errorModal.display('Cannot contact the server', 3000, 'error');				
 			});
 		} else {

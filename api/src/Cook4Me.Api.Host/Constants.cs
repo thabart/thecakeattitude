@@ -38,6 +38,12 @@ namespace Cook4Me.Api.Host
                 public const string ShopPath = "shop_path";
                 public const string UndergroundPath = "underground_path";
             }
+
+            public static class Error
+            {
+                public const string Code = "error";
+                public const string Description = "error_description";
+            }
         }
     }
 }

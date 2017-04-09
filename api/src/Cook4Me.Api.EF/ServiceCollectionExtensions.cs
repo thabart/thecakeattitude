@@ -84,6 +84,8 @@ namespace Cook4Me.Api.EF
         private static void RegisterServices(IServiceCollection serviceCollection)
         {
             serviceCollection.AddTransient<IShopRepository, ShopRepository>();
+            serviceCollection.AddTransient<IUserRepository, UserRepository>();
+            serviceCollection.AddTransient<ICategoryRepository, CategoryRepository>();
         }
     }
 }

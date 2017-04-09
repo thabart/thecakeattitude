@@ -1,4 +1,4 @@
-#region copyright
+﻿#region copyright
 // Copyright 2017 Habart Thierry
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,27 +14,29 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.EF.Mappings;
 using Cook4Me.Api.EF.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.EF
+namespace Cook4Me.Api.EF.Mappings
 {
-    public class CookDbContext : DbContext
+    internal static class UserMapping
     {
-        public CookDbContext(DbContextOptions dbContextOptions):base(dbContextOptions)
+        public static ModelBuilder AddUserMapping(this ModelBuilder modelBuilder)
         {
-        }
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
 
-        public virtual DbSet<Shop> Shops { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.AddCategory()
-                .AddUserMapping()
-                .AddShopMapping();
+            modelBuilder.Entity<User>()
+                .ToTable("users")
+                .HasKey(p => p.Id);
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Shops)
+                .WithOne(s => s.User)
+                .HasForeignKey(s => s.UserId);
+            return modelBuilder;
         }
     }
 }

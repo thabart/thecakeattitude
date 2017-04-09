@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
@@ -47,17 +49,20 @@ namespace Cook4Me.Api.Host.Controllers
         [HttpPost]
         public async Task<IActionResult> AddShop([FromBody] JObject obj)
         {
+            // 1. Get the request.
             var result = _requestBuilder.GetAddShop(obj);
             result.Id = Guid.NewGuid().ToString();
             result.CreateDateTime = DateTime.UtcNow;
             result.ShopRelativePath = GetRelativeShopPath(result.Id);
             result.UndergroundRelativePath = GetRelativeUndergroundPath(result.Id);
+            // 2. Add the files.
             if (!AddShopMap(result))
             {
-                // Return an error.
-                return null;
+                var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeAdded);
+                return this.BuildResponse(error, HttpStatusCode.InternalServerError);
             }
 
+            // 3. Persist the shop.
             var res = new { id = result.Id, shop_path = result.ShopRelativePath, underground_path =  result.UndergroundRelativePath };
             await _repository.Add(result);
             return new OkObjectResult(res);
@@ -80,6 +85,13 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> GetMineShops()
         {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
             string s = "";
             return null;
         }
