@@ -60,6 +60,21 @@ Menu.prototype = {
 			settingsHeight = 48,
 			optPaddingLeft = -20,
 			optPaddingTop = 10,
+			parseAddress = function(adr) {
+				try {
+					return JSON.parse(adr);
+				} catch(e) {					
+					var result = {};
+					adr.replace('{','').replace('}','').split(',').forEach(function(elt) {
+						var kvp = elt.split(':');
+						var key = kvp[0].replace(/ /g,'');
+						var value = kvp[1].replace(/'/g, '').replace(/^[ ]+|[ ]+$/g, '');
+						result[key] = value;
+					});
+					
+					return result;
+				}
+			},
 			self = this,
 			sessionName = Constants.SessionName,
 			modal = buildModal(),
@@ -88,14 +103,15 @@ Menu.prototype = {
 					$(settingsModal).find("input[name='phone_number']").val(userInfo.phone_number);
 					$(settingsModal).find("input[name='email']").val(userInfo.email);
 					if (userInfo.address) {
-						var adr = JSON.parse(userInfo.address);						
+						var adr = parseAddress(userInfo.address);	
 						$(settingsModal).find("input[name='street_address']").val(adr.street_address);
 						$(settingsModal).find("input[name='postal_code']").val(adr.postal_code);
 						$(settingsModal).find("input[name='country']").val(adr.country);
 					}
 					
 					displaySettingsLoading(false);
-				}).fail(function() {						
+				}).fail(function(e, m) {
+					console.log(e);
 					displaySettingsLoading(false);
 					errorModal.display('User information cannot be retrieved', 3000, 'error');		
 				});
