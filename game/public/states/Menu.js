@@ -32,11 +32,10 @@ Menu.prototype = {
 					"</div>"+
 					"<div class='tab-pane' id='address'>"+
 						"<div class='form-group'><label class='control-label'>Email</label><input type='text' class='form-control' name='email'/></div>"+
-						"<div class='form-group'><label class='control-label'>Pseudo</label><input type='text' class='form-control' name='phone_number' /></div>"+
+						"<div class='form-group'><label class='control-label'>Phone number</label><input type='text' class='form-control' name='phone_number' /></div>"+
 					"</div>"+
 					"<div class='tab-pane' id='contactinformation'>"+
 						"<div class='form-group'><label class='control-label'>Street Address</label><input type='text' class='form-control' name='street_address' /></div>"+
-						"<div class='form-group'><label class='control-label'>Street number</label><input type='text' class='form-control' name='street_number' /></div>"+	
 						"<div class='form-group'><label class='control-label'>Postal code</label><input type='text' class='form-control' name='postal_code' /></div>"+	
 						"<div class='form-group'><label class='control-label'>City</label><input type='text' class='form-control' name='country' /></div>"+
 						"<div class='form-group'><input type='checkbox' /> Use current location</div>"+
@@ -79,23 +78,26 @@ Menu.prototype = {
 			},
 			displaySettings = function() {
 				displaySettingsLoading(true);
-				$.get(Constants.openIdWellKnownConfiguration).then(function(r) {
-					var userInfoEdp = r.userinfo_endpoint;
-					$.ajax(userInfoEdp, {
-						type: 'GET',
-						headers: {
-							'Authorization': 'Bearer '+accessToken
-						}
-					}).then(function(userInfo) {	
-						console.log(userInfo);
-						displaySettingsLoading(false);
-					}).fail(function() {						
-						displaySettingsLoading(false);
-						errorModal.display('User information cannot be retrieved', 3000, 'error');		
-					});
-				}).fail(function() {	
-					displaySettingsLoading(false);			
-					errorModal.display('Cannot contact the server', 3000, 'error');		
+				$.ajax(Constants.userClaims, {
+					type: 'GET',
+					headers: {
+						'Authorization': 'Bearer '+accessToken
+					}
+				}).then(function(userInfo) {	
+					$(settingsModal).find("input[name='name']").val(userInfo.name);
+					$(settingsModal).find("input[name='phone_number']").val(userInfo.phone_number);
+					$(settingsModal).find("input[name='email']").val(userInfo.email);
+					if (userInfo.address) {
+						var adr = JSON.parse(userInfo.address);						
+						$(settingsModal).find("input[name='street_address']").val(adr.street_address);
+						$(settingsModal).find("input[name='postal_code']").val(adr.postal_code);
+						$(settingsModal).find("input[name='country']").val(adr.country);
+					}
+					
+					displaySettingsLoading(false);
+				}).fail(function() {						
+					displaySettingsLoading(false);
+					errorModal.display('User information cannot be retrieved', 3000, 'error');		
 				});
 			},
 			optStyle = { font: '20px Arial', fill: '#ffffff' },
@@ -113,6 +115,8 @@ Menu.prototype = {
 			};
 
 			$(modal).modal('hide');			
+			$(settingsModal).remove();
+			$(modal).remove();
 			self.game.state.start("Game", true, false, newPlayer);
 		});
 		$(settingsModal).find('#update-profile').submit(function(e) {
@@ -141,6 +145,8 @@ Menu.prototype = {
 				width: shopperWidth,
 				height: shopperHeight,
 				callback: function() {
+					$(settingsModal).remove();
+					$(modal).remove();
 					self.game.state.start("CharacterChooser");
 				}
 			}, {

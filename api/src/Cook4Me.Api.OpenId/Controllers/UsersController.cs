@@ -34,7 +34,7 @@ using System.Threading.Tasks;
 namespace Cook4Me.Api.OpenId.Controllers
 {
     [Route(Constants.RouteNames.Users)]
-    public class UserController : Controller
+    public class UsersController : Controller
     {
         private class GetSubjectResult
         {
@@ -61,7 +61,7 @@ namespace Cook4Me.Api.OpenId.Controllers
         private readonly IResourceOwnerRepository _resourceOwnerRepository;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        public UserController(IGrantedTokenValidator grantedTokenValidator,
+        public UsersController(IGrantedTokenValidator grantedTokenValidator,
             IGrantedTokenRepository grantedTokenRepository,
             IRequestBuilder requestBuilder,
             IHostingEnvironment hostingEnvironment,
@@ -72,6 +72,32 @@ namespace Cook4Me.Api.OpenId.Controllers
             _requestBuilder = requestBuilder;
             _hostingEnvironment = hostingEnvironment;
             _resourceOwnerRepository = resourceOwnerRepository;
+        }
+
+        [HttpGet(Constants.RouteNames.UserClaims)]
+        public async Task<IActionResult> GetClaims()
+        {
+            // 1. Get the subject.
+            var subjectResult = await GetSubject();
+            if (!subjectResult.IsValid)
+            {
+                return subjectResult.Error;
+            }
+            
+            // 2. Get the user.
+            var user = await _resourceOwnerRepository.GetAsync(subjectResult.Subject);
+            if (user == null)
+            {
+                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
+            }
+
+            var jObj = new JObject();
+            foreach(var claim in user.Claims)
+            {
+                jObj.Add(claim.Type, claim.Value);
+            }
+
+            return new OkObjectResult(jObj);
         }
 
         [HttpPut(Constants.RouteNames.UserClaims)]
