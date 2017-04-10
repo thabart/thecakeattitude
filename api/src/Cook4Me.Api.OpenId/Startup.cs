@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.OpenId.Builders;
 using Cook4Me.Api.OpenId.Extensions;
 using Cook4Me.Api.OpenId.Parsers;
 using Microsoft.AspNetCore.Authentication;
@@ -138,7 +139,7 @@ namespace Cook4Me.Api.OpenId
 
         private static void RegisterDependencies(IServiceCollection services)
         {
-            // services.AddTransient<IRequestBuilder, RequestBuilder>();
+            services.AddTransient<IRequestBuilder, RequestBuilder>();
         }
 
         private static OAuthOptions GetFacebookOptions(IDataProtector protector)

@@ -20,5 +20,33 @@ namespace Cook4Me.Api.OpenId
     {
         public const string CookieName = "Cook4MeOpenIdCookie";
         public const string ExternalCookieName = "ExternalCook4MeOpenIdCookie";
+
+        public static class RouteNames
+        {
+            public const string Users = "users";
+            public const string UserClaims = "claims";
+        }
+
+        public static class ErrorMessages
+        {
+            public const string ErrorOccuredWhileTryingToUpdateTheUser = "an error occured while trying to update the user";
+            public const string SubjectDoesntExist = "the subject doesn't exist";
+        }
+
+        public static class Dtos
+        {
+            public static class UpdateUser
+            {
+                public const string Name = "name";
+                public const string Picture = "picture";
+                public const string StreetAddress = "street_address";
+                public const string Locality = "locality";
+                public const string PostalCode = "postal_code";
+                public const string Country = "country";
+                public const string Email = "email";
+                public const string PhoneNumber = "phone_number";
+                public const string Password = "password";
+            }
+        }
     }
 }

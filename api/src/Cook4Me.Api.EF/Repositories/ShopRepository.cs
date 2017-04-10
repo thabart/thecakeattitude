@@ -37,9 +37,16 @@ namespace Cook4Me.Api.EF.Repositories
 
         public async Task<bool> Add(Shop shop)
         {
-            _context.Shops.Add(shop.ToModel());
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-            return true;
+            try
+            {
+                _context.Shops.Add(shop.ToModel());
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public async Task<IEnumerable<Shop>> Get()

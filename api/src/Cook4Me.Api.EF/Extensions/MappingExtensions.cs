@@ -58,7 +58,48 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopRelativePath = shop.ShopRelativePath,
                 UndergroundRelativePath = shop.UndergroundRelativePath
             };
+        }
 
+        public static Domain.User ToDomain(this User user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return new Domain.User
+            {
+                City = user.City,
+                Email = user.Email,
+                Id = user.Id,
+                IsSeller = user.IsSeller,
+                PhoneNumber = user.PhoneNumber,
+                PostalCode = user.PostalCode,
+                Pseudo = user.Pseudo,
+                StreetAddress = user.StreetAddress,
+                StreetNumber = user.StreetNumber
+            };
+        }
+
+        public static User ToModel(this Domain.User user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return new User
+            {
+                City = user.City,
+                Email = user.Email,
+                Id = user.Id,
+                IsSeller = user.IsSeller,
+                PhoneNumber = user.PhoneNumber,
+                PostalCode = user.PostalCode,
+                Pseudo = user.Pseudo,
+                StreetAddress = user.StreetAddress,
+                StreetNumber = user.StreetNumber
+            };
         }
     }
 }

@@ -24,19 +24,11 @@ Connect.prototype = {
 			playWidth = 341,
 			playHeight = 111,
 			self = this,
-			clientId = "game",
-			clientSecret = "game",
-			sessionName = 'gameAccessToken',
+			clientId = Constants.ClientId,
+			clientSecret = Constants.ClientSecret,
+			sessionName = Constants.SessionName,
 			loginWindow = buildLoginModal(),
-			getFormData = function getFormData(form){
-				var unindexed_array = $(form).serializeArray();
-				var indexed_array = {};
-				$.map(unindexed_array, function(n, i){
-					indexed_array[n['name']] = n['value'];
-				});
-
-				return indexed_array;
-			},
+			getFormData = Helpers.getFormData,
 			getParameterByName = function(name, url) {
 				if (!url) url = window.location.href;
 				name = name.replace(/[\[\]]/g, "\\$&");
@@ -46,7 +38,7 @@ Connect.prototype = {
 				if (!results[2]) return '';
 				return decodeURIComponent(results[2].replace(/\+/g, " "));
 			},
-			openIdWellKnownConfiguration = "http://localhost:5001/.well-known/openid-configuration",
+			openIdWellKnownConfiguration = Constants.openIdWellKnownConfiguration,
 			displayLoading = function(isLoading) {
 				if (isLoading) {
 					$(loginWindow).find('.fa-spinner').show();
@@ -56,34 +48,40 @@ Connect.prototype = {
 					$(loginWindow).find('form').show();
 				}
 			},
-			navigateToMenu = function() {
-				self.game.state.start("Menu");		
+			navigateToMenu = function(subject) {
+				self.game.state.start("Menu", true, false, subject);		
 				loginWindow.remove();		
+			},
+			introspectAccessToken = function(accessToken, introspectionUrl, successCallback, errorCallback) {
+				var json = {
+					client_id : clientId,
+					client_secret : clientSecret,
+					token : accessToken,
+					token_type_hint : 'access_token'
+				};			
+				$.ajax(introspectionUrl, {
+					data: json,
+					method: 'POST',
+					dataType: 'json'
+				}).then(function(r) {
+					if (r.active) {
+						if (successCallback) successCallback(r);
+						return;
+					}
+					
+					if (errorCallback) errorCallback();
+				}).fail(function() {	
+					if (errorCallback) errorCallback();	
+				});
 			};
 		
 		if (sessionStorage.getItem(sessionName)) {
 			var accessToken = sessionStorage.getItem(sessionName);
 			$.get(openIdWellKnownConfiguration).then(function(c) {
 				var introspectionUrl = c.introspection_endpoint;
-				var json = {
-					client_id : clientId,
-					client_secret : clientSecret,
-					token : accessToken,
-					token_type_hint : 'access_token'
-				};
-				$.ajax(introspectionUrl, {
-					data: json,
-					method: 'POST',
-					dataType: 'json',					
-					contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
-				}).then(function(r) {
-					if (r.active) {
-						navigateToMenu();
-						return;
-					}
-					
-					displayLoading(false);
-				}).fail(function() {		
+				introspectAccessToken(accessToken, introspectionUrl, function(r) {				
+					navigateToMenu(r.sub);
+				}, function() {					
 					displayLoading(false);			
 					sessionStorage.removeItem(sessionName);
 				});
@@ -107,16 +105,18 @@ Connect.prototype = {
 				client_secret: clientSecret
 			};
 			var data = encodeURIComponent(JSON.stringify(json));
-			$.get(openIdWellKnownConfiguration).then(function(r) {
-				$.ajax(r.token_endpoint, {
+			$.get(openIdWellKnownConfiguration).then(function(config) {			
+				var introspectionUrl = config.introspection_endpoint;
+				$.ajax(config.token_endpoint, {
 					data: json,
 					method: 'POST',
-					dataType: 'json',
-					contentType: 'application/x-www-form-urlencoded; charset=UTF-8'
-				}).then(function(r) {
+					dataType: 'json'
+				}).then(function(r) {					
 					var accessToken = r.access_token;
-					sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.
-					navigateToMenu();
+					introspectAccessToken(accessToken, introspectionUrl, function(i) {			
+						sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.	
+						navigateToMenu(i.sub);
+					});
 				}).fail(function(e, p , t) {
 					errorModal.display('an error occured while trying to authenticate the user', 3000, 'error');
 				});
@@ -136,11 +136,16 @@ Connect.prototype = {
 				
 				var href = w.location.href;
 				var accessToken = getParameterByName('access_token', href);
-				if (accessToken) {					
-					clearInterval(interval);
-					w.close();
-					sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.
-					navigateToMenu();
+				if (accessToken) {				
+					$.get(openIdWellKnownConfiguration).then(function(config) {							
+						var introspectionUrl = config.introspection_endpoint;
+						introspectAccessToken(accessToken, introspectionUrl, function(i) {			
+							clearInterval(interval);
+							w.close();
+							sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.	
+							navigateToMenu(i.sub);
+						});	
+					});
 				}
 			}, 1000);
 		});

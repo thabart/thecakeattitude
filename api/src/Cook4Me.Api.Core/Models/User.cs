@@ -14,9 +14,7 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Models
 {
     public class User
     {
@@ -29,6 +27,5 @@ namespace Cook4Me.Api.EF.Models
         public string City { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
     }
 }

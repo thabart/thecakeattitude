@@ -26,6 +26,7 @@ Splash.prototype = {
 		this.game.load.image('background', 'http://localhost:5000/images/background.jpg');
 		this.game.load.image('seller', 'http://localhost:5000/images/seller.png');
 		this.game.load.image('shopper', 'http://localhost:5000/images/shopper.png');
+		this.game.load.image('settings', 'http://localhost:5000/images/settings.png');
 		this.game.load.image('back', 'http://localhost:5000/images/back.gif');
 		this.game.load.spritesheet('bubble-border', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABsAAAAbAgMAAADwuhzGAAAADFBMVEUAAAD///8AAADMzMyl8w72AAAAAXRSTlMAQObYZgAAADlJREFUCNdjYGDQWrWqgQGT5poaGpqFSTMtDQWCFRj0PyrR/3+B7cGgmf+/AroLk2bg////AwMGDQCR0FKxG5KiwAAAAABJRU5ErkJggg==', 9, 9);
 		// this.game.load.spritesheet('villager', 'http://localhost:5000/characters/villager.png',  24, 24, 2);
@@ -43,6 +44,8 @@ Splash.prototype = {
 		this.game.load.script('Shop', 'public/characters/shop.js');
 		this.game.load.script('StockManager', 'public/characters/stockManager.js');
 		this.game.load.script('InfoPanel', 'public/characters/panelInfo.js');
+		this.game.load.script('Constants', 'public/game/Constants.js');
+		this.game.load.script('Helpers', 'public/game/Helpers.js');
 		this.game.add.existing(this.loadingBar);
 	},
 	create: function() {

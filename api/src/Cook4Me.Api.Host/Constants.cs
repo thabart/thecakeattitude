@@ -22,6 +22,8 @@ namespace Cook4Me.Api.Host
         {
             public const string Products = "products";
             public const string Shops = "shops";
+            public const string Users = "users";
+            public const string Claims = "claims";
             public const string Search = ".search";
             public const string Me = "me";
         }
@@ -37,6 +39,25 @@ namespace Cook4Me.Api.Host
                 public const string Place = "place";
                 public const string ShopPath = "shop_path";
                 public const string UndergroundPath = "underground_path";
+            }
+
+            public static class Seller
+            {
+                public const string Pseudo = "pseudo";
+                public const string Email = "email";
+                public const string PhoneNumber = "phone_number";
+            }
+
+            public static class User
+            {
+                public const string Pseudo = "pseudo";
+                public const string IsSeller = "is_seller";
+                public const string StreetAddress = "street_address";
+                public const string StreetNumber = "street_number";
+                public const string PostalCode = "postal_code";
+                public const string City = "city";
+                public const string Email = "email";
+                public const string PhoneNumber = "phone_number";
             }
 
             public static class Error

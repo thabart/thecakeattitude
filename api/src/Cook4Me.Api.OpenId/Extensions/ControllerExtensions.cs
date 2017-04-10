@@ -15,7 +15,10 @@
 #endregion
 
 using Microsoft.AspNetCore.Mvc;
+using SimpleIdentityServer.Core.Common.Extensions;
+using SimpleIdentityServer.Host.DTOs.Response;
 using System;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -32,6 +35,27 @@ namespace Cook4Me.Api.OpenId.Extensions
 
             var user = await controller.HttpContext.Authentication.AuthenticateAsync(Constants.ExternalCookieName);
             return user ?? new ClaimsPrincipal(new ClaimsIdentity());
+        }
+
+        public static ActionResult BuildError(this Controller controller, string code, string message)
+        {
+            return BuildError(controller, code, message, HttpStatusCode.InternalServerError);
+        }
+
+        public static ActionResult BuildError(this Controller controller, string code, string message, HttpStatusCode status)
+        {
+            var error = new ErrorResponse
+            {
+                error = code,
+                error_description = message
+            };
+
+            return new ContentResult
+            {
+                Content = error.SerializeWithDataContract(),
+                ContentType = "application/json",
+                StatusCode = (int)status
+            };
         }
     }
 }

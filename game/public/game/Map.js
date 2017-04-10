@@ -1,3 +1,4 @@
+'use strict';
 var Map = function(key, tileMap, game) {
 	var houseObj = null;
 	this.npcs = [];

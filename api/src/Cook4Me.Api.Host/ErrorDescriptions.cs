@@ -20,5 +20,7 @@ namespace Cook4Me.Api.Host
     {
         public const string TheSubjectCannotBeRetrieved = "subject cannot be retrieved";
         public const string TheShopCannotBeAdded = "an error occured while trying to add the shop";
+        public const string TheUserCannotBeAdded = "an error occured while trying to add the user";
+        public const string TheUserCannotBeUpdated = "an error occured while trying to update the user";
     }
 }

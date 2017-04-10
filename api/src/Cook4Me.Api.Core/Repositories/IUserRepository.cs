@@ -14,9 +14,15 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Models;
+using System.Threading.Tasks;
+
 namespace Cook4Me.Api.Core.Repositories
 {
     public interface IUserRepository
     {
+        Task<User> Get(string id);
+        Task<bool> Add(User user);
+        Task<bool> Update(User user);
     }
 }

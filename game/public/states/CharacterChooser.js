@@ -2,7 +2,7 @@ var CharacterChooser = function() { };
 CharacterChooser.prototype = {
 	preload: function() {
 	},
-	init: function() {		
+	init: function(user) {		
 		var drawGraphic = function(g, isSelected) {		
 			g.clear();		
 			g.beginFill(0xb8bbc1, 0.5);
@@ -16,6 +16,7 @@ CharacterChooser.prototype = {
 			g.endFill();
 			g.isSelected = isSelected;
 		};
+		
 		
 		var players = [
 			{ pseudo: 'mili', map: 'firstMap' },

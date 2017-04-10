@@ -17,6 +17,35 @@ Menu.prototype = {
 			"</div></div></div></div>");			
 			$(document.body).append(result);
 			return result;
+		};		
+		var buildSettingsModal = function() {
+			var result = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'>"+
+				"<div class='modal-header'><h5 class='modal-title'>Settings</h5><button type='button' class='close' data-dismiss='modal'><span >&times;</span></button></div>"+
+				"<form id='update-profile'><div id='content' style='display: none;'><div class='modal-body'><ul class='nav nav-tabs'>"+
+					"<li class='nav-item'><a href='#general' data-toggle='tab' class='nav-link active'>General</a></li>"+
+					"<li class='nav-item'><a href='#address' data-toggle='tab' class='nav-link'>Contact information</a></li>"+
+					"<li class='nav-item'><a href='#contactinformation' data-toggle='tab' class='nav-link'>Address</a></li>"+
+				"</ul>"+
+				"<div class='tab-content'>"+
+					"<div class='tab-pane active' id='general'>"+
+						"<div class='form-group'><label class='control-label'>Pseudo</label><input type='text' class='form-control' name='name' /></div>"+
+					"</div>"+
+					"<div class='tab-pane' id='address'>"+
+						"<div class='form-group'><label class='control-label'>Email</label><input type='text' class='form-control' name='email'/></div>"+
+						"<div class='form-group'><label class='control-label'>Pseudo</label><input type='text' class='form-control' name='phone_number' /></div>"+
+					"</div>"+
+					"<div class='tab-pane' id='contactinformation'>"+
+						"<div class='form-group'><label class='control-label'>Street Address</label><input type='text' class='form-control' name='street_address' /></div>"+
+						"<div class='form-group'><label class='control-label'>Street number</label><input type='text' class='form-control' name='street_number' /></div>"+	
+						"<div class='form-group'><label class='control-label'>Postal code</label><input type='text' class='form-control' name='postal_code' /></div>"+	
+						"<div class='form-group'><label class='control-label'>City</label><input type='text' class='form-control' name='country' /></div>"+
+						"<div class='form-group'><input type='checkbox' /> Use current location</div>"+
+					"</div>"+
+				"</div></div></div><div style='width:100%; text-align: center;' id='loading'><i class='fa fa-spinner fa-spin' style='font-size:24px; width: 24px; height:24px;'></i></div>"+
+				"<div class='modal-footer'><input type='submit' class='btn btn-primary' value='Save'></input><button class='btn btn-default' data-dismiss='modal'>Close</button></div></form>"+
+				"</div></div></div>");
+			$(document.body).append(result);
+			return result;
 		};
 		
 		var titlePaddingTop = 10,
@@ -28,12 +57,55 @@ Menu.prototype = {
 			shopperWidth = 48,
 			sellerHeight = 48,
 			sellerWidth = 48,
+			settingsWidth = 48,
+			settingsHeight = 48,
 			optPaddingLeft = -20,
 			optPaddingTop = 10,
 			self = this,
+			sessionName = Constants.SessionName,
 			modal = buildModal(),
+			accessToken = sessionStorage.getItem(sessionName),
+			getFormData = Helpers.getFormData,
+			settingsModal = buildSettingsModal(),
+			displaySettingsLoading = function(isLoading) {
+				if (isLoading) {				
+					$(settingsModal).find('#loading').show();
+					$(settingsModal).find('#content').hide();
+					return;
+				}
+				
+				$(settingsModal).find('#loading').hide();
+				$(settingsModal).find('#content').show();		
+			},
+			displaySettings = function() {
+				displaySettingsLoading(true);
+				$.get(Constants.openIdWellKnownConfiguration).then(function(r) {
+					var userInfoEdp = r.userinfo_endpoint;
+					$.ajax(userInfoEdp, {
+						type: 'GET',
+						headers: {
+							'Authorization': 'Bearer '+accessToken
+						}
+					}).then(function(userInfo) {	
+						console.log(userInfo);
+						displaySettingsLoading(false);
+					}).fail(function() {						
+						displaySettingsLoading(false);
+						errorModal.display('User information cannot be retrieved', 3000, 'error');		
+					});
+				}).fail(function() {	
+					displaySettingsLoading(false);			
+					errorModal.display('Cannot contact the server', 3000, 'error');		
+				});
+			},
 			optStyle = { font: '20px Arial', fill: '#ffffff' },
-			titleStyle = { font: '32px Arial', fill: '#ffffff' };
+			titleStyle = { font: '32px Arial', fill: '#ffffff' };	
+			
+		if (!accessToken) {			
+			errorModal.display('You must be connected', 3000, 'error');			
+			return;
+		}
+		
 		$(modal).find('#confirm').click(function() {
 			var newPlayer = {
 				pseudo : $(modal).find('#pseudo').val(),
@@ -42,6 +114,24 @@ Menu.prototype = {
 
 			$(modal).modal('hide');			
 			self.game.state.start("Game", true, false, newPlayer);
+		});
+		$(settingsModal).find('#update-profile').submit(function(e) {
+			e.preventDefault();
+			displaySettingsLoading(true);
+			var json = getFormData(this);
+			$.ajax('http://localhost:5001/users/claims', {
+				type: 'PUT',
+				contentType: 'application/json',
+				data: JSON.stringify(json),
+				headers: {
+					'Authorization': 'Bearer '+accessToken
+				}				
+			}).then(function() {
+				displaySettings();
+			}).fail(function(e, m) {
+				errorModal.display('Error while trying to update the user information', 3000, 'error');		
+				displaySettingsLoading(false);				
+			});
 		});
 		self.game.add.text(titlePaddingTop, titlePaddingLeft, '<title>', titleStyle);
 		var menu = [
@@ -60,6 +150,15 @@ Menu.prototype = {
 				height: sellerHeight,
 				callback: function() {
 					$(modal).modal('toggle');
+				}
+			}, {
+				title: 'Settings',
+				spriteName: 'settings',
+				width: settingsWidth,
+				height: settingsHeight,
+				callback: function() {
+					$(settingsModal).modal('toggle');
+					displaySettings();
 				}
 			}
 		];
@@ -90,7 +189,5 @@ Menu.prototype = {
 			self.game.add.sprite(sprX, sprY, record.spriteName);
 			self.game.add.text(titleX, titleY, record.title, optStyle);
 		}
-		// TODO : Display : Connect as a client
-		// TODO : Display : Connect as a shopper.
 	}
 };
