@@ -51,6 +51,71 @@
 				border: 1px solid gray;
 				padding: 10px;	
 			}
+			.section {
+				margin-top: 20px; 
+				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+			}
+			
+			.section,
+			.sub-section {
+				background-color: white; 
+			}
+			
+			.section-description {
+				padding: 20px;
+			}
+			
+			.sub-section {
+				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+				border-top: 1px solid #f1f0f0;
+			}
+			
+			.progressbar {
+				counter-reset: step;
+			}
+			
+			.progressbar li {
+				text-align: center;
+				list-style-type: none;
+				text-transform: uppercase;				
+				float: left;
+				width: 33.2%;
+			}
+			
+			.progressbar li:before {
+				content: counter(step);
+				counter-increment: step;
+				width: 30px;
+				line-height: 30px;
+				display: block;
+				color: white;
+				background: rgba(148, 135, 135, 0.9);
+				border-radius: 50%;
+				margin: 0 auto 5px auto;
+				z-index: 1;
+			}
+			
+			.progressbar li:after {
+				content: '';
+				height: 2px;
+				right: 50%;
+				background: rgba(148, 135, 135, 0.9);
+				display: block;
+				position: relative;
+				top: -45px;
+				width: 100%;
+				z-index: 0;
+			}
+			
+			.progressbar li:first-child:after {
+				content: none; 
+			}
+			
+			.progressbar li.active:before,
+			.progressbar li.active:after {
+				background: #27AE60;
+				
+			}
 		</style>
 	</head>
 	<body>

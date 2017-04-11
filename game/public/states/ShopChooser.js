@@ -7,11 +7,87 @@ ShopChooser.prototype = {
 			overview = 'overview_firstMap',
 			map = 'firstMap';
 		var MiniShop = function(shop, spr) {
+			function buildAddShopModal() {
+				var result = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'>"+
+					"<div class='modal-header'><h5 class='modal-title'>Add shop</h5><button type='button' class='close' data-dismiss='modal'><span >&times;</span></button></div>"+
+					"<form id='update-profile'>"+
+						"<div class='modal-body'>"+
+							"<ul class='progressbar'>"+
+								"<li class='active'>Description</li>"+
+								"<li class='active'>Tags</li>"+
+								"<li>Products</li>"+
+							"</ul>"+
+							"<div class='tab-content'>"+
+								"<section class='tab'>"+
+									"<section>"+
+										"<div class='form-group'><label class='control-label'>Name</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Description</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Banner image</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Picture</label><input type='text' class='form-control' /></div>"+
+									"</section>"+
+									"<section>"+
+										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
+									"</section>"+
+								"</section>"+
+								"<section class='tab' style='display:none;'>"+
+									"<section>"+
+									"</section>"+
+									"<section>"+
+										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
+										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
+									"</section>"+
+								"</section>"+
+								"<section class='tab' style='display:none;'>"+
+									"<section>"+
+									"</section>"+
+									"<section>"+
+										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
+										"<button class='btn btn-success' style='margin-right: 10px;'>Confirm</button>"+
+									"</section>"+
+								"</section>"+
+							"</div>"+
+						"</div>"+
+						"<div class='modal-footer'><input type='submit' class='btn btn-primary' value='Save'></input><button class='btn btn-default' data-dismiss='modal'>Close</button></div>"+
+					"</form></div></div></div>");
+				$(document.body).append(result);
+				return result;
+			}
 			this.shop = shop;
 			this.spr = spr;
+			this.modal = buildAddShopModal();
 			
-			this.interact = function() {
-				spr.loadTexture('house', 0);
+			var navigate = function(oldTab, newTab) {
+				oldTab.animate({opacity: 0}, {
+					duration: 800,
+					complete: function() {
+						$(oldTab).hide();
+						$(newTab).show();		
+						$(newTab).css('opacity', '100');
+						var lst = $(".progressbar li");
+						lst.removeClass("active");
+						for(var i = 0; i <= $(newTab).index(); i++) {
+							$(lst.get(i)).addClass('active');
+						}
+					}
+				});				
+			};
+			
+			$(this.modal).find('.next').click(function(e) {
+				e.preventDefault();
+				var parent = $(this).closest('.tab');
+				var nextTab = $(parent).next();
+				navigate(parent, nextTab);
+			});
+			$(this.modal).find('.previous').click(function(e) {
+				e.preventDefault();
+				var parent = $(this).closest('.tab');
+				var previousTab = $(parent).prev();		
+				navigate(parent, previousTab);
+			});
+			
+			this.interact = function() {				
+				$(this.modal).modal('toggle');
+				// spr.loadTexture('house', 0);
 			}
 		};
 		// Change background color.				
