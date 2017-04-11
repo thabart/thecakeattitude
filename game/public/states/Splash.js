@@ -9,6 +9,7 @@ Splash.prototype = {
 		// this.game.load.crossOrigin = "anonymous";
 		this.game.load.tilemap('firstMap', 'http://localhost:5000/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
 		this.game.load.tilemap('secondMap', 'http://localhost:5000/maps/map2.json', null, Phaser.Tilemap.TILED_JSON);
+		this.game.load.image('overview_firstMap', 'http://localhost:5000/maps/overview_map.png');
 		this.game.load.image('tallgrass', 'http://localhost:5000/maps/tilesets/tallgrass.png');
 		this.game.load.image('farming_fishing', 'http://localhost:5000/maps/tilesets/farming_fishing.png');
 		this.game.load.image('plowed_soil', 'http://localhost:5000/maps/tilesets/plowed_soil.png');
@@ -38,6 +39,7 @@ Splash.prototype = {
 		this.game.load.script('SpeechBubble', 'public/game/SpeechBubble.js');
 		this.game.load.script('Game', 'public/states/Game.js');
 		this.game.load.script('Menu', 'public/states/Menu.js');
+		this.game.load.script('ShopChooser', 'public/states/ShopChooser.js');
 		this.game.load.script('CharacterChooser', 'public/states/CharacterChooser.js');
 		this.game.load.script('Connect', 'public/states/Connect.js');
 		this.game.load.script('Warper', 'public/characters/warper.js');
@@ -54,8 +56,15 @@ Splash.prototype = {
 		this.game.state.add('Menu', Menu);
 		this.game.state.add('CharacterChooser', CharacterChooser);
 		this.game.state.add('Game', Game);
+		this.game.state.add('ShopChooser', ShopChooser);
 		 setTimeout(function () {
-		  self.game.state.start("Connect");
+			// self.game.state.start("Connect");
+			/*			
+			var newPlayer = {
+				pseudo : 'player',
+				map: 'firstMap'
+			};*/
+			self.game.state.start("ShopChooser");
 		}, 1000);
 	}
 };
