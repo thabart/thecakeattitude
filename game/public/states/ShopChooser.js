@@ -6,6 +6,14 @@ ShopChooser.prototype = {
 		var self = this,
 			overview = 'overview_firstMap',
 			map = 'firstMap';
+		var MiniShop = function(shop, spr) {
+			this.shop = shop;
+			this.spr = spr;
+			
+			this.interact = function() {
+				spr.loadTexture('house', 0);
+			}
+		};
 		// Change background color.				
 		this.game.stage.backgroundColor = '#787878';	
 		var bg = this.game.add.sprite(0, 0, overview);
@@ -41,9 +49,28 @@ ShopChooser.prototype = {
 				newY = scaleY * shop.y,
 				newWidth = scaleX * shop.width,
 				newHeight = scaleY * shop.height;
-			var house = self.game.add.sprite(newX, newY, 'house');
+			var house = self.game.add.sprite(newX, newY, 'freePlace');
+			house.inputEnabled = true;
+			var miniShop = new MiniShop(shop, house);
+			house.events.onInputOver.add(function() {
+				self.game.canvas.style.cursor = "pointer";
+			});
+			house.events.onInputOut.add(function() {
+				self.game.canvas.style.cursor = "default";
+			});
+			house.events.onInputDown.add(function() {
+				this.interact();
+			}, miniShop);
 			house.width = newWidth;
 			house.height = newHeight;
+			$.ajax(Constants.apiUrl, {
+				url: 'http://localhost:5000/shops/.search',
+				method: 'POST',
+				contentType: 'application/json',
+				data: JSON.stringify({map: map, place: shop.name}),
+			}).then(function() {
+				house.loadTexture('house', 0);
+			}).fail(function() { });
 		});
 	},
 	update: function() {
