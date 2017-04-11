@@ -14,16 +14,16 @@ ShopChooser.prototype = {
 						"<div class='modal-body'>"+
 							"<ul class='progressbar'>"+
 								"<li class='active'>Description</li>"+
-								"<li class='active'>Tags</li>"+
+								"<li>Tags</li>"+
 								"<li>Products</li>"+
 							"</ul>"+
 							"<div class='tab-content'>"+
 								"<section class='tab'>"+
 									"<section>"+
 										"<div class='form-group'><label class='control-label'>Name</label><input type='text' class='form-control' /></div>"+
-										"<div class='form-group'><label class='control-label'>Description</label><input type='text' class='form-control' /></div>"+
-										"<div class='form-group'><label class='control-label'>Banner image</label><input type='text' class='form-control' /></div>"+
-										"<div class='form-group'><label class='control-label'>Picture</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Description</label><textarea class='form-control'></textarea></div>"+
+										"<div class='form-group'><label class='control-label'>Banner image</label><div><input type='file' ><div></div>"+
+										"<div class='form-group'><label class='control-label'>Picture</label><div><input type='file' ><div></div>"+
 									"</section>"+
 									"<section>"+
 										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
@@ -47,7 +47,6 @@ ShopChooser.prototype = {
 								"</section>"+
 							"</div>"+
 						"</div>"+
-						"<div class='modal-footer'><input type='submit' class='btn btn-primary' value='Save'></input><button class='btn btn-default' data-dismiss='modal'>Close</button></div>"+
 					"</form></div></div></div>");
 				$(document.body).append(result);
 				return result;
@@ -56,14 +55,14 @@ ShopChooser.prototype = {
 			this.spr = spr;
 			this.modal = buildAddShopModal();
 			
-			var navigate = function(oldTab, newTab) {
+			var navigate = function(oldTab, newTab, modal) {
 				oldTab.animate({opacity: 0}, {
 					duration: 800,
 					complete: function() {
 						$(oldTab).hide();
 						$(newTab).show();		
 						$(newTab).css('opacity', '100');
-						var lst = $(".progressbar li");
+						var lst = $(modal).find(".progressbar li");
 						lst.removeClass("active");
 						for(var i = 0; i <= $(newTab).index(); i++) {
 							$(lst.get(i)).addClass('active');
@@ -76,13 +75,13 @@ ShopChooser.prototype = {
 				e.preventDefault();
 				var parent = $(this).closest('.tab');
 				var nextTab = $(parent).next();
-				navigate(parent, nextTab);
+				navigate(parent, nextTab, $(this).closest('.fade'));
 			});
 			$(this.modal).find('.previous').click(function(e) {
 				e.preventDefault();
 				var parent = $(this).closest('.tab');
 				var previousTab = $(parent).prev();		
-				navigate(parent, previousTab);
+				navigate(parent, previousTab,  $(this).closest('.fade'));
 			});
 			
 			this.interact = function() {				
