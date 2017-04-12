@@ -13,6 +13,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.js"></script>
 		<!-- Socket IO -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+		<!-- Autocompletebox -->
+		<script src="/public/autocompletebox.js"></script>
 		<!-- CSS Libraries -->
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" >
@@ -51,23 +53,14 @@
 				border: 1px solid gray;
 				padding: 10px;	
 			}
-			.section {
-				margin-top: 20px; 
-				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+			
+			.tab .content{
+				border-bottom: 1px solid #f1f0f0;
+				padding-bottom: 10px;
 			}
 			
-			.section,
-			.sub-section {
-				background-color: white; 
-			}
-			
-			.section-description {
-				padding: 20px;
-			}
-			
-			.sub-section {
-				box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
-				border-top: 1px solid #f1f0f0;
+			.tab .navigation {
+				padding-top: 10px;
 			}
 			
 			.progressbar {
@@ -79,7 +72,7 @@
 				list-style-type: none;
 				text-transform: uppercase;				
 				float: left;
-				width: 33.2%;
+				width: 16.5%;
 			}
 			
 			.progressbar li:before {
@@ -135,6 +128,7 @@
 		</div>
 	</body>
 	<script type="text/javascript">
+		// Display error.
 		(function() {
 			var errorModal = {
 				display: function(msg, time, state) {
@@ -148,6 +142,8 @@
 			};
 			window.errorModal = errorModal;
 		})();
+		// Display autocompletebox.
+		
 		$(document).ready(function() {	
 			// Speech bubble
 			var canvas = function(opts) {

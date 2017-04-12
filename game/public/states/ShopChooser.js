@@ -8,39 +8,80 @@ ShopChooser.prototype = {
 			map = 'firstMap';
 		var MiniShop = function(shop, spr) {
 			function buildAddShopModal() {
-				var result = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'>"+
+				var result = $("<div class='modal fade'><div class='modal-dialog modal-lg'><div class='modal-content'>"+
 					"<div class='modal-header'><h5 class='modal-title'>Add shop</h5><button type='button' class='close' data-dismiss='modal'><span >&times;</span></button></div>"+
 					"<form id='update-profile'>"+
 						"<div class='modal-body'>"+
 							"<ul class='progressbar'>"+
 								"<li class='active'>Description</li>"+
+								"<li>Address</li>"+
+								"<li>Contact</li>"+
 								"<li>Tags</li>"+
 								"<li>Products</li>"+
+								"<li>Payment</li>"+
 							"</ul>"+
 							"<div class='tab-content'>"+
 								"<section class='tab'>"+
-									"<section>"+
+									"<section class='content'>"+ // General information.
 										"<div class='form-group'><label class='control-label'>Name</label><input type='text' class='form-control' /></div>"+
 										"<div class='form-group'><label class='control-label'>Description</label><textarea class='form-control'></textarea></div>"+
+										"<div class='form-group'><label class='control-label'>Category</label>Category / Sub category</div>"+
 										"<div class='form-group'><label class='control-label'>Banner image</label><div><input type='file' ><div></div>"+
 										"<div class='form-group'><label class='control-label'>Picture</label><div><input type='file' ><div></div>"+
 									"</section>"+
-									"<section>"+
+									"<section class='navigation'>"+
 										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
 									"</section>"+
 								"</section>"+
 								"<section class='tab' style='display:none;'>"+
-									"<section>"+
+									"<section class='content'>"+ // Address.
+										"<div class='form-group'><label class='control-label'>Street address</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Postal code</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Locality</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Country</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><input type='checkbox' /> Use current location</div>"+
 									"</section>"+
-									"<section>"+
+									"<section class='navigation'>"+
 										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
 										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
 									"</section>"+
 								"</section>"+
 								"<section class='tab' style='display:none;'>"+
-									"<section>"+
+									"<section class='content'>"+ // Contact information.
+										"<div class='form-group'><label class='control-label'>Email</label><input type='text' class='form-control' readonly /></div>"+
+										"<div class='form-group'><label class='control-label'>Phone</label><input type='text' class='form-control' readonly /></div>"+
 									"</section>"+
-									"<section>"+
+									"<section class='navigation'>"+
+										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
+										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
+									"</section>"+
+								"</section>"+
+								"<section class='tab' style='display:none;'>"+
+									"<section class='content'>"+ // Tags
+										"<iframe {id} style='width:100%;height:125px;'>#document<html><head></head><body></body></html></iframe>"+
+									"</section>"+
+									"<section class='navigation'>"+
+										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
+										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
+									"</section>"+
+								"</section>"+
+								"<section class='tab' style='display:none;'>"+
+									"<section class='content'>"+ // Products
+										"<button type='button' class='btn btn-success'><span class='fa fa-plus glyphicon-align-left'></span> Add product</button>"+
+									"</section>"+
+									"<section class='navigation'>"+
+										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
+										"<button class='btn btn-primary next' style='margin-right: 10px;'>Next</button>"+
+									"</section>"+
+								"</section>"+
+								"<section class='tab' style='display:none;'>"+
+									"<section class='content'>"+ // Payment
+										"<div class='input-group'><span class='input-group-addon'><input type='radio' /></span><span class='form-control'>Card</span></div>"+
+										"<div class='input-group'><span class='input-group-addon'><input type='radio' /></span><span class='form-control'>Cash</span></div>"+
+										"<div class='input-group'><span class='input-group-addon'><input type='radio' /></span><span class='form-control'>Bank transfer</span></div>"+
+										"<div class='input-group'><span class='input-group-addon'><input type='radio' /></span><span class='form-control'>Paypal</span></div>"+
+									"</section>"+
+									"<section class='navigation'>"+
 										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
 										"<button class='btn btn-success' style='margin-right: 10px;'>Confirm</button>"+
 									"</section>"+
@@ -49,6 +90,7 @@ ShopChooser.prototype = {
 						"</div>"+
 					"</form></div></div></div>");
 				$(document.body).append(result);
+				$(result).find('iframe').editableIFrame();
 				return result;
 			}
 			this.shop = shop;
