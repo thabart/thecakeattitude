@@ -28,6 +28,7 @@ namespace Cook4Me.Api.EF
 
         public virtual DbSet<Shop> Shops { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

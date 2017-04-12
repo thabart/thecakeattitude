@@ -47,15 +47,24 @@ namespace Cook4Me.Api.Host.Controllers
         }
 
         [HttpPost]
+        [Authorize("Connected")]
         public async Task<IActionResult> AddShop([FromBody] JObject obj)
         {
-            // 1. Get the request.
+            // 1. Try to retrieve the subject.
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            // 2. Get the request.
             var result = _requestBuilder.GetAddShop(obj);
             result.Id = Guid.NewGuid().ToString();
             result.CreateDateTime = DateTime.UtcNow;
             result.ShopRelativePath = GetRelativeShopPath(result.Id);
             result.UndergroundRelativePath = GetRelativeUndergroundPath(result.Id);
-            // 2. Add the files.
+            // 3. Add the files.
             if (!AddShopMap(result))
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeAdded);

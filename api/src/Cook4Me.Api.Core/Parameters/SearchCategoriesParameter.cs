@@ -14,17 +14,10 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Core.Parameters;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Parameters
 {
-    public interface ICategoryRepository
+    public class SearchCategoriesParameter
     {
-        Task<IEnumerable<Category>> GetAll();
-        Task<Category> Get(string id);
-        Task<IEnumerable<Category>> Search(SearchCategoriesParameter parameter);
+        public string ParentId { get; set; }
     }
 }

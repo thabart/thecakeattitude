@@ -58,13 +58,14 @@ Splash.prototype = {
 		this.game.state.add('Game', Game);
 		this.game.state.add('ShopChooser', ShopChooser);
 		 setTimeout(function () {
-			// self.game.state.start("Connect");
+			self.game.state.start("Connect");
 			/*			
 			var newPlayer = {
 				pseudo : 'player',
 				map: 'firstMap'
-			};*/
+			};
 			self.game.state.start("ShopChooser");
+			*/
 		}, 1000);
 	}
 };

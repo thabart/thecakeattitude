@@ -23,6 +23,8 @@ namespace Cook4Me.Api.Host
             public const string Products = "products";
             public const string Shops = "shops";
             public const string Users = "users";
+            public const string Categories = "categories";
+            public const string Parents = "parents";
             public const string Claims = "claims";
             public const string Search = ".search";
             public const string Me = "me";
@@ -46,6 +48,14 @@ namespace Cook4Me.Api.Host
                 public const string Pseudo = "pseudo";
                 public const string Email = "email";
                 public const string PhoneNumber = "phone_number";
+            }
+
+            public static class Category
+            {
+                public const string Id = "id";
+                public const string Name = "name";
+                public const string Description = "description";
+                public const string ParentId = "parent_id";
             }
 
             public static class User

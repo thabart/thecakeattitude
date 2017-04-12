@@ -26,6 +26,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetShop(Shop shop);
         JObject GetError(string errorCode, string errorDescription);
         JObject GetUser(User user);
+        JObject GetCategory(Category category);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -83,6 +84,20 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.User.StreetAddress, user.StreetAddress);
             result.Add(Constants.DtoNames.User.StreetNumber, user.StreetNumber);
             return result;
+        }
+
+        public JObject GetCategory(Category category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Category.Id, category.Id);
+            jObj.Add(Constants.DtoNames.Category.Name, category.Name);
+            jObj.Add(Constants.DtoNames.Category.Description, category.Description);
+            return jObj;
         }
     }
 }

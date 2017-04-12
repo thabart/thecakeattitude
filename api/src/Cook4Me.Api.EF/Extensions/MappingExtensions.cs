@@ -101,5 +101,37 @@ namespace Cook4Me.Api.EF.Extensions
                 StreetNumber = user.StreetNumber
             };
         }
+
+        public static Domain.Category ToDomain(this Category category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            return new Domain.Category
+            {
+                Id = category.Id,
+                Description = category.Description,
+                Name = category.Name,
+                ParentId = category.ParentId
+            };
+        }
+
+        public static Category ToModel(this Domain.Category category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            return new Category
+            {
+                Id = category.Id,
+                Description = category.Description,
+                Name = category.Name,
+                ParentId = category.ParentId
+            };
+        }
     }
 }

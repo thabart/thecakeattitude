@@ -14,7 +14,15 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.EF.Extensions;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Cook4Me.Api.Core.Parameters;
+using System;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -25,6 +33,38 @@ namespace Cook4Me.Api.EF.Repositories
         public CategoryRepository(CookDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<Category> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var result = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(false);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToDomain();
+        }
+
+        public async Task<IEnumerable<Category>> GetAll()
+        {
+            return await _context.Categories.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+        }
+
+        public async Task<IEnumerable<Category>> Search(SearchCategoriesParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            var categories = _context.Categories.Where(c => c.ParentId == parameter.ParentId);
+            return await categories.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
     }
 }
