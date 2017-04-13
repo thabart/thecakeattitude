@@ -16,6 +16,9 @@
 
 using Cook4Me.Api.EF.Models;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Domain = Cook4Me.Api.Core.Models;
 
 namespace Cook4Me.Api.EF.Extensions
@@ -109,12 +112,19 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(category));
             }
 
+            IEnumerable<Domain.Category> children = null;
+            if (category.Children != null && category.Children.Any())
+            {
+                children = category.Children.Select(c => c.ToDomain());
+            }
+
             return new Domain.Category
             {
                 Id = category.Id,
                 Description = category.Description,
                 Name = category.Name,
-                ParentId = category.ParentId
+                ParentId = category.ParentId,
+                Children = children
             };
         }
 

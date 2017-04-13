@@ -87,6 +87,7 @@ namespace Cook4Me.Api.Host
             {
                 public const string Self = "self";
                 public const string Links = "_links";
+                public const string Items = "items";
                 public const string Embedded = "_embedded";
             }
         }

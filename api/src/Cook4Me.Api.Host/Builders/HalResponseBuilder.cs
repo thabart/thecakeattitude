@@ -30,6 +30,7 @@ namespace Cook4Me.Api.Host.Builders
     public class HalLinksBuilder
     {
         private readonly JObject _linksObject;
+        private JArray _items;
 
         public HalLinksBuilder(JObject linksObject)
         {
@@ -47,6 +48,23 @@ namespace Cook4Me.Api.Host.Builders
             return this;
         }
 
+        public HalLinksBuilder AddItem(Link link)
+        {
+            if (link == null)
+            {
+                throw new ArgumentNullException(nameof(link));
+            }
+
+            if (_items == null)
+            {
+                _items = new JArray();
+                _linksObject.Add(Constants.DtoNames.HalResponse.Items, _items);
+            }
+
+            _items.Add(BuildLink(link));
+            return this;
+        }
+
         public HalLinksBuilder AddLink(string name, Link link)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -59,6 +77,13 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentNullException(nameof(link));
             }
 
+            var jObj = BuildLink(link);
+            _linksObject.Add(name, jObj);
+            return this;
+        }
+
+        private static JObject BuildLink(Link link)
+        {
             var jObj = new JObject();
             jObj.Add(new JProperty(Constants.DtoNames.HalLink.Href, link.Href));
             if (!string.IsNullOrWhiteSpace(link.Name))
@@ -71,8 +96,7 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(new JProperty(Constants.DtoNames.HalLink.Templated, "true"));
             }
 
-            _linksObject.Add(name, jObj);
-            return this;
+            return jObj;
         }
     }
 
@@ -161,7 +185,14 @@ namespace Cook4Me.Api.Host.Builders
 
             if (_embeddedObjects != null)
             {
-                result.Add(Constants.DtoNames.HalResponse.Embedded, _embeddedObjects);
+                if (_embeddedObjects.Count == 1)
+                {
+                    result.Add(Constants.DtoNames.HalResponse.Embedded, _embeddedObjects.First);
+                }
+                else
+                {
+                    result.Add(Constants.DtoNames.HalResponse.Embedded, _embeddedObjects);
+                }
             }
 
             return result;

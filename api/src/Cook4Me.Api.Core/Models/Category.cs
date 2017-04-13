@@ -14,6 +14,8 @@
 // limitations under the License.
 #endregion
 
+using System.Collections.Generic;
+
 namespace Cook4Me.Api.Core.Models
 {
     public class Category
@@ -22,5 +24,6 @@ namespace Cook4Me.Api.Core.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string ParentId { get; set; }
+        public IEnumerable<Category> Children { get; set; }
     }
 }
