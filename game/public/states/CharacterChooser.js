@@ -45,6 +45,16 @@ CharacterChooser.prototype = {
 					"</div>"+
 					"<div style='display: none;' class='content'>"+
 						"<div class='modal-body'>"+
+							"<div class='form-group'>"+
+								"<label class='control-label'>Category</label>"+
+								"<select class='category form-control'>"+								
+								"</select>"+
+							"</div>"+
+							"<div class='form-group'>"+
+								"<label class='control-label'>Sub category</label>"+
+								"<select class='sub-category form-control'>"+								
+								"</select>"+
+							"</div>"+
 						"</div>"+
 						"<div class='modal-footer'>"+
 							"<button type='button' class='btn btn-success' id='confirm'>Confirm</button>"+
@@ -129,9 +139,9 @@ CharacterChooser.prototype = {
 						return;
 					}
 					
-					$(modal).find('');
+					var category = $(modal).find('.category');
 					result['_embedded'].forEach(function(record) {
-						
+						$(category).append("<option value='"+record.id+"'>"+record.name+"</option>");
 					});
 				}).fail(function() {				
 					displayLoadingAddShop(false);
@@ -140,7 +150,7 @@ CharacterChooser.prototype = {
 			};
 			
 		var titleStyle = { font: '32px Arial', fill: '#ffffff' };
-		self.game.add.text(titlePaddingTop, titlePaddingLeft, 'Choose your character', titleStyle);
+		self.game.add.text(titlePaddingTop, titlePaddingLeft, 'Choose your shop', titleStyle);
 		$(modal).find('#confirm').click(function() {
 			if (!rectFreePlaces || rectFreePlaces.length == 0) {
 				console.log('not enough space');
@@ -157,6 +167,9 @@ CharacterChooser.prototype = {
 			};
 			addPlayer(p.graphic, newPlayer);
 			$(modal).modal('hide');
+		});
+		$(modal).find('.category').change(function() {
+			console.log('change');
 		});
 		
 		// Create several players.
