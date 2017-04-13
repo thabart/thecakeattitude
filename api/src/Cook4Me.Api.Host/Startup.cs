@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.EF;
 using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -79,7 +80,15 @@ namespace Cook4Me.Api.Host
             });
             // 5. Use static files
             app.UseStaticFiles();
-            // 6. Launch ASP.NET MVC
+            // 6. Migrate the data.
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var simpleIdentityServerContext = serviceScope.ServiceProvider.GetService<CookDbContext>();
+                simpleIdentityServerContext.Database.EnsureCreated();
+                simpleIdentityServerContext.EnsureSeedData();
+            }
+
+            // 7. Launch ASP.NET MVC
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -94,6 +103,7 @@ namespace Cook4Me.Api.Host
             services.AddCookForMeStoreInMemory();
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
+            services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
         }
     }
 }

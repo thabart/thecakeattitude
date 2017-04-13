@@ -29,18 +29,26 @@ namespace Cook4Me.Api.Host.Controllers
     {
         private readonly ICategoryRepository _repository;
         private readonly IResponseBuilder _responseBuilder;
+        private readonly IHalResponseBuilder _halResponseBuilder;
 
-        public CategoriesController(ICategoryRepository repository, IResponseBuilder responseBuilder)
+        public CategoriesController(ICategoryRepository repository, IResponseBuilder responseBuilder, IHalResponseBuilder halResponseBuilder)
         {
             _repository = repository;
             _responseBuilder = responseBuilder;
+            _halResponseBuilder = halResponseBuilder;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var categories = (await _repository.GetAll()).Select(c => _responseBuilder.GetCategory(c));
-            return new OkObjectResult(categories);
+            var categories = await _repository.GetAll();
+            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Categories));
+            foreach(var category in categories)
+            {
+                _halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetCategory(category), (l) => l.AddSelf(@"/"+Constants.RouteNames.Categories+"/"+category.Id)));
+            }
+            
+            return new OkObjectResult(_halResponseBuilder.Build());
         }
 
         [HttpGet(Constants.RouteNames.Parents)]

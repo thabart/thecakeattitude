@@ -75,6 +75,20 @@ namespace Cook4Me.Api.Host
                 public const string Code = "error";
                 public const string Description = "error_description";
             }
+
+            public static class HalLink
+            {
+                public const string Name = "name";
+                public const string Templated = "templated";
+                public const string Href = "href";
+            }
+
+            public static class HalResponse
+            {
+                public const string Self = "self";
+                public const string Links = "_links";
+                public const string Embedded = "_embedded";
+            }
         }
     }
 }
