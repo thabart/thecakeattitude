@@ -36,19 +36,24 @@ CharacterChooser.prototype = {
 		};
 		
 		var createModal = function() {
-			var result = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'>"+
-			"<h5 class='modal-title'>New character</h5>"+
-			"<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>"+
-			"</div>"+
-			"<div class='modal-body'>"+
-			"<div class='form-group'><label>Pseudo</label><input type='text' class='form-control' id='pseudo'/></div>"+
-			"<div class='form-group'><label>Category</label><select class='form-control' id='category'><option>Pâtisserie/Boulangerie</option><option>Habits/Boulangerie</option></select></div>"+
-			"<div class='form-group'><label>Sub-Category</label><select class='form-control' id='sub-category'><option>Chaussures</option> </select></div>"+
-			"</div>"+
-			"<div class='modal-footer'>"+
-			"<button type='button' class='btn btn-success' id='confirm'>Confirm</button>"+
-			"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>"+
-			"</div></div></div></div>");
+			var result = $("<div class='modal fade'>"+
+			"<div class='modal-dialog'>"+
+				"<div class='modal-content'>"+
+					"<div class='modal-header'>"+
+						"<h5 class='modal-title'>Add shop</h5>"+
+						"<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>"+
+					"</div>"+
+					"<div style='display: none;' class='content'>"+
+						"<div class='modal-body'>"+
+						"</div>"+
+						"<div class='modal-footer'>"+
+							"<button type='button' class='btn btn-success' id='confirm'>Confirm</button>"+
+							"<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>"+
+						"</div>"+
+					"</div>"+
+					"<div style='text-align:center;'><i class='fa fa-spinner fa-spin' style='font-size:24px; width: 24px; height:24px;'></i></div>"+
+				"</div>"+
+			"</div></div>");
 			$(document.body).append(result);
 			return result;
 		};
@@ -104,7 +109,35 @@ CharacterChooser.prototype = {
 			rectPlayers = [],
 			rectFreePlaces = [],
 			modal = createModal(),
-			selectedUser = null;
+			selectedUser = null,
+			displayLoadingAddShop = function(isLoading) {
+				if (isLoading) {
+					$(modal).find('.fa-spinner').show();
+					$(modal).find('.content').hide();
+					return;
+				}
+				
+				$(modal).find('.fa-spinner').hide();
+				$(modal).find('.content').show();
+			},
+			displayAddShop = function() {
+				$(modal).modal('toggle');
+				$.get(Constants.apiUrl + '/categories/parents').then(function(result) {
+					displayLoadingAddShop(false);
+					if (!result['_embedded']) {
+						errorModal.display('categories cannot be displayed', 3000, 'error');
+						return;
+					}
+					
+					$(modal).find('');
+					result['_embedded'].forEach(function(record) {
+						
+					});
+				}).fail(function() {				
+					displayLoadingAddShop(false);
+					errorModal.display('categories cannot be displayed', 3000, 'error');
+				});
+			};
 			
 		var titleStyle = { font: '32px Arial', fill: '#ffffff' };
 		self.game.add.text(titlePaddingTop, titlePaddingLeft, 'Choose your character', titleStyle);
@@ -144,7 +177,7 @@ CharacterChooser.prototype = {
 			} else {
 				var spr = this.game.add.sprite(rectX + (rectWidth / 2) - addPlayerWidth / 2, rectY + (rectHeight / 2) - addPlayerHeight / 2, 'addPlayer');
 				graphic.events.onInputDown.add(function() {
-					$(modal).modal('toggle');
+					displayAddShop();
 				});
 				rectFreePlaces.push(new freePlace(spr, graphic));
 			}
