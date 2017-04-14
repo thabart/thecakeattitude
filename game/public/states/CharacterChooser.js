@@ -139,13 +139,36 @@ CharacterChooser.prototype = {
 						return;
 					}
 					
-					var category = $(modal).find('.category');
+					var elt = $(modal).find('.category');
 					result['_embedded'].forEach(function(record) {
-						$(category).append("<option value='"+record.id+"'>"+record.name+"</option>");
+						var selfLink = record['_links'].self;
+						$(elt).append("<option value='"+record.id+"' data-href='"+selfLink+"'>"+record.name+"</option>");					
 					});
+					var partialUrl = $(elt).find(':selected').data('href');
+					displaySubCategories(partialUrl);
+					
 				}).fail(function() {				
 					displayLoadingAddShop(false);
 					errorModal.display('categories cannot be displayed', 3000, 'error');
+				});
+			}, 
+			displaySubCategories = function(partialUrl) {
+				var elt = $(modal).find('.sub-category');
+				$(elt).empty();
+				$.get(Constants.apiUrl + partialUrl).then(function(result) {
+					if (!result['_links'] || !result['_links'].items) {
+						errorModal.display('sub categories cannot be displayed', 3000, 'error');
+						return;
+					}
+					
+					var items = result['_links'].items;
+					items.forEach(function(record) {
+						var parts = record.href.split('/');
+						var href = parts[parts.length - 1];
+						$(elt).append("<option value='"+href+"'>"+record.name+"</option>");					
+					});
+				}).fail(function() {
+					errorModal.display('sub categories cannot be displayed', 3000, 'error');				
 				});
 			};
 			
@@ -169,7 +192,8 @@ CharacterChooser.prototype = {
 			$(modal).modal('hide');
 		});
 		$(modal).find('.category').change(function() {
-			console.log('change');
+			var partialUrl = $(this).find(':selected').data('href');
+			displaySubCategories(partialUrl);
 		});
 		
 		// Create several players.
