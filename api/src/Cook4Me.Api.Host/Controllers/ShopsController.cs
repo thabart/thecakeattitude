@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,13 +38,17 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IRequestBuilder _requestBuilder;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IHostingEnvironment _env;
+        private readonly IAddShopValidator _addShopValidator;
 
-        public ShopsController(IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder, IHostingEnvironment env)
+        public ShopsController(
+            IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder,
+            IHostingEnvironment env, IAddShopValidator addShopValidator)
         {
             _repository = repository;
             _requestBuilder = requestBuilder;
             _responseBuilder = responseBuilder;
             _env = env;
+            _addShopValidator = addShopValidator;
         }
 
         [HttpPost]
@@ -58,22 +63,30 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            // 2. Get the request.
-            var result = _requestBuilder.GetAddShop(obj);
-            result.Id = Guid.NewGuid().ToString();
-            result.CreateDateTime = DateTime.UtcNow;
-            result.ShopRelativePath = GetRelativeShopPath(result.Id);
-            result.UndergroundRelativePath = GetRelativeUndergroundPath(result.Id);
+            // 2. Check the request.
+            var addShopParameter = _requestBuilder.GetAddShop(obj);
+            var validationResult = await _addShopValidator.Validate(addShopParameter, subject);
+            if (!validationResult.IsValid)
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
+            }
+
+            addShopParameter.Id = Guid.NewGuid().ToString();
+            addShopParameter.CreateDateTime = DateTime.UtcNow;
+            addShopParameter.UpdateDateTime = DateTime.UtcNow;
+            addShopParameter.Subject = subject;
+            addShopParameter.ShopRelativePath = GetRelativeShopPath(addShopParameter.Id);
+            addShopParameter.UndergroundRelativePath = GetRelativeUndergroundPath(addShopParameter.Id);
             // 3. Add the files.
-            if (!AddShopMap(result))
+            if (!AddShopMap(addShopParameter, validationResult.Category))
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeAdded);
                 return this.BuildResponse(error, HttpStatusCode.InternalServerError);
             }
 
-            // 3. Persist the shop.
-            var res = new { id = result.Id, shop_path = result.ShopRelativePath, underground_path =  result.UndergroundRelativePath };
-            await _repository.Add(result);
+            // 4. Persist the shop.
+            var res = new { id = addShopParameter.Id, shop_path = addShopParameter.ShopRelativePath, underground_path = addShopParameter.UndergroundRelativePath };
+            await _repository.Add(addShopParameter);
             return new OkObjectResult(res);
         }
 
@@ -124,7 +137,7 @@ namespace Cook4Me.Api.Host.Controllers
             return new OkObjectResult(arr);
         }
 
-        private bool AddShopMap(Shop shop)
+        private bool AddShopMap(Shop shop, Category category)
         {
             if (!System.IO.File.Exists("./Assets/shop.json") || !System.IO.File.Exists("./Assets/underground.json"))
             {
@@ -141,7 +154,7 @@ namespace Cook4Me.Api.Host.Controllers
             {
                 foreach (var shopLine in shopLines)
                 {
-                    shopWriter.WriteLine(shopLine.Replace("<map_name>", shop.MapName).Replace("<warp_entry>", "shopentry_" + shop.Id).Replace("<underground_name>", "underground_" + shop.Id));
+                    shopWriter.WriteLine(shopLine.Replace("<map_name>", category.MapName).Replace("<warp_entry>", "shopentry_" + shop.Id).Replace("<underground_name>", "underground_" + shop.Id));
                 }
             }
 

@@ -46,61 +46,8 @@ Menu.prototype = {
 			settingsHeight = 48,
 			optPaddingLeft = -20,
 			optPaddingTop = 10,
-			parseAddress = function(adr) {
-				try {
-					return JSON.parse(adr);
-				} catch(e) {					
-					var result = {};
-					adr.replace('{','').replace('}','').split(',').forEach(function(elt) {
-						var kvp = elt.split(':');
-						var key = kvp[0].replace(/ /g,'');
-						var value = kvp[1].replace(/'/g, '').replace(/^[ ]+|[ ]+$/g, '');
-						result[key] = value;
-					});
-					
-					return result;
-				}
-			},
-			getAddress = function(adrComponents) {
-				var result = {};
-				var streetNumber = "",
-					route = "";
-				adrComponents.forEach(function(adrComponent) {		
-					if (!adrComponent.types) {
-						return;
-					}
-					
-					if (adrComponent.types.includes("street_number")) {
-						streetNumber = adrComponent.long_name;
-						return;
-					}
-					
-					if (adrComponent.types.includes("route")) {
-						route = adrComponent.long_name;
-						return;
-					}
-				
-					if (adrComponent.types.includes("postal_code")) {
-						result['postal_code'] = adrComponent.long_name;
-						return;
-					}
-					
-					if (adrComponent.types.includes("locality")) {
-						result['locality'] = adrComponent.long_name;
-						return;
-					}
-
-					if (adrComponent.types.includes("country")) {
-						console.log(adrComponent);
-						result['country'] = adrComponent.long_name;
-						return;
-					}
-				});
-				
-				result["street_address"] = streetNumber +" "+route;
-				console.log(result);
-				return result;
-			},
+			getCurrentLocation = Helpers.getCurrentLocation,
+			parseAddress = Helpers.parseAddress,
 			self = this,
 			displayAddress = function(adr) {				
 				$(settingsModal).find("input[name='street_address']").val(adr.street_address);
@@ -179,29 +126,17 @@ Menu.prototype = {
 			});
 		});
 		$(settingsModal).find("input[type='checkbox']").click(function() {
-			var isChecked = $(this).is(':checked');
-			if (!navigator.geolocation) {
-				errorModal.display('the geolocation is not supported by this browser', 3000, 'error');
+			var isChecked = $(this).is(':checked');			
+			if (!isChecked)	{
 				return;
 			}
 			
-			displaySettingsLoading(true);
-			navigator.geolocation.getCurrentPosition(function(position) {
-				var url = Constants.googleMapUrl + "/geocode/json?latlng="+position.coords.latitude+","+position.coords.longitude;
-				$.get(url).then(function(r) {					
-					displaySettingsLoading(false);
-					if (!r || !r.results || r.results.length == 0) {
-						return;
-					}
-					
-					var adrComponent = r.results[0].address_components;
-					var adr = getAddress(adrComponent);	
-					displayAddress(adr);
-				})
-				.fail(function() {
-					errorModal.display('Google map cannot be reached', 3000, 'error');						
-					displaySettingsLoading(false);	
-				});
+			displaySettingsLoading(true);	
+			getCurrentLocation(function(adr) {
+				displaySettingsLoading(false);	
+				displayAddress(adr);
+			}, function() {								
+				displaySettingsLoading(false);	
 			});
 		});
 		var menu = [

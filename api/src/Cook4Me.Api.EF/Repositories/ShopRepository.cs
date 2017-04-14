@@ -61,7 +61,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            return await _context.Shops.Where(s => s.MapName == parameter.Map && s.PlaceId == parameter.Place).Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await _context.Shops.Where(s => s.PlaceId == parameter.Place).Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
     }
 }

@@ -20,8 +20,8 @@ Splash.prototype = {
 					return;
 				}
 				
-				var tileMapLoader = self.game.load.tilemap('tilemap_' + category.id, Constants.apiUrl + category.map_link, null, Phaser.Tilemap.TILED_JSON);
-				var imageLoader = self.game.load.image('overview_' + category.id, Constants.apiUrl + category.overview_link);
+				var tileMapLoader = self.game.load.tilemap(category.map_name, Constants.apiUrl + category.map_link, null, Phaser.Tilemap.TILED_JSON);
+				var imageLoader = self.game.load.image(category.overview_name, Constants.apiUrl + category.overview_link);
 				tileMapLoader.start();
 				imageLoader.start();
 			});

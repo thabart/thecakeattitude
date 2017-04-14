@@ -39,8 +39,14 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var result = new Shop();
-            result.Title = jObj.Value<string>(Constants.DtoNames.Shop.Title);
-            result.MapName = jObj.Value<string>(Constants.DtoNames.Shop.Map);
+            result.Name = jObj.Value<string>(Constants.DtoNames.Shop.Name);
+            result.Description = jObj.Value<string>(Constants.DtoNames.Shop.Description);
+            result.CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId);
+            result.StreetAddress = jObj.Value<string>(Constants.DtoNames.Shop.StreetAddress);
+            result.PostalCode = jObj.Value<string>(Constants.DtoNames.Shop.PostalCode);
+            result.Locality = jObj.Value<string>(Constants.DtoNames.Shop.Locality);
+            result.Country = jObj.Value<string>(Constants.DtoNames.Shop.Country);
+            // result.Tags = jObj.Value<string>(Constants.DtoNames.Shop.Tags);
             result.PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place);
             return result;
         }
@@ -75,8 +81,8 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new SearchShopsParameter
             {
-                Map = jObj.Value<string>(Constants.DtoNames.Shop.Map),
-                Place = jObj.Value<string>(Constants.DtoNames.Shop.Place)
+                // Map = jObj.Value<string>(Constants.DtoNames.Shop.Map),
+                // Place = jObj.Value<string>(Constants.DtoNames.Shop.Place)
             };
             return result;
         }

@@ -6,16 +6,20 @@ ShopChooser.prototype = {
 	},
 	create: function() {
 		var self = this,
-			overview = 'overview_' + self.category.id,
-			map = 'tilemap_' + self.category.id,
+			overview = self.category.overview_name,
+			map = self.category.map_name,
 			name = self.category.name,
 			titlePaddingLeft = 10,
 			titlePaddingTop = 10,
 			backPaddingLeft = 10,
 			backPaddingBottom = 10,
 			backWidth = 108,
-			backHeight = 100;
+			backHeight = 100,			
+			parseAddress = Helpers.parseAddress,			
+			getCurrentLocation = Helpers.getCurrentLocation,
+			accessToken = sessionStorage.getItem(Constants.SessionName);
 		var MiniShop = function(shop, spr) {
+			var selfModal = this;
 			function buildAddShopModal() {
 				var result = $("<div class='modal fade'><div class='modal-dialog modal-lg'><div class='modal-content'>"+
 					"<div class='modal-header'><h5 class='modal-title'>Add shop</h5><button type='button' class='close' data-dismiss='modal'><span >&times;</span></button></div>"+
@@ -29,7 +33,7 @@ ShopChooser.prototype = {
 								"<li>Products</li>"+
 								"<li>Payment</li>"+
 							"</ul>"+
-							"<div class='tab-content'>"+
+							"<div class='tab-content' style='display: none;'>"+
 								"<section class='tab'>"+
 									"<section class='content'>"+ // General information.
 										"<div class='form-group'><label class='control-label'>Name</label><input type='text' class='form-control' /></div>"+
@@ -44,10 +48,10 @@ ShopChooser.prototype = {
 								"</section>"+
 								"<section class='tab' style='display:none;'>"+
 									"<section class='content'>"+ // Address.
-										"<div class='form-group'><label class='control-label'>Street address</label><input type='text' class='form-control' /></div>"+
-										"<div class='form-group'><label class='control-label'>Postal code</label><input type='text' class='form-control' /></div>"+
-										"<div class='form-group'><label class='control-label'>Locality</label><input type='text' class='form-control' /></div>"+
-										"<div class='form-group'><label class='control-label'>Country</label><input type='text' class='form-control' /></div>"+
+										"<div class='form-group'><label class='control-label'>Street address</label><input type='text' class='form-control' name='street_address' /></div>"+
+										"<div class='form-group'><label class='control-label'>Postal code</label><input type='text' class='form-control' name='postal_code' /></div>"+
+										"<div class='form-group'><label class='control-label'>Locality</label><input type='text' class='form-control' name='locality' /></div>"+
+										"<div class='form-group'><label class='control-label'>Country</label><input type='text' class='form-control' name='country' /></div>"+
 										"<div class='form-group'><input type='checkbox' /> Use current location</div>"+
 									"</section>"+
 									"<section class='navigation'>"+
@@ -57,8 +61,8 @@ ShopChooser.prototype = {
 								"</section>"+
 								"<section class='tab' style='display:none;'>"+
 									"<section class='content'>"+ // Contact information.
-										"<div class='form-group'><label class='control-label'>Email</label><input type='text' class='form-control' readonly /></div>"+
-										"<div class='form-group'><label class='control-label'>Phone</label><input type='text' class='form-control' readonly /></div>"+
+										"<div class='form-group'><label class='control-label'>Email</label><input type='text' class='form-control' name='email' readonly /></div>"+
+										"<div class='form-group'><label class='control-label'>Phone</label><input type='text' class='form-control' name='phone_number' readonly /></div>"+
 									"</section>"+
 									"<section class='navigation'>"+
 										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
@@ -95,7 +99,7 @@ ShopChooser.prototype = {
 										"<button class='btn btn-success' style='margin-right: 10px;'>Confirm</button>"+
 									"</section>"+
 								"</section>"+
-							"</div>"+
+							"</div><div style='text-align:center;'><i class='fa fa-spinner fa-spin' style='font-size:24px; width: 24px; height:24px;'></i></div>"+
 						"</div>"+
 					"</form></div></div></div>");
 				$(document.body).append(result);
@@ -131,11 +135,61 @@ ShopChooser.prototype = {
 				var parent = $(this).closest('.tab');
 				var previousTab = $(parent).prev();		
 				navigate(parent, previousTab,  $(this).closest('.fade'));
-			});			
-			this.interact = function() {				
+			});		
+			this.interact = function() {		
+				this.displayLoading(true);
 				$(this.modal).modal('toggle');
-				// spr.loadTexture('house', 0);
 			}
+			this.displayLoading = function(isLoading) {
+				if (isLoading) {
+					$(this.modal).find('.tab-content').hide();
+					$(this.modal).find('.fa-spinner').show();
+					return;
+				}
+				
+				$(this.modal).find('.tab-content').show();
+				$(this.modal).find('.fa-spinner').hide();
+			};
+			this.setUserInformation = function(userInfo) {
+				var adr = parseAddress(userInfo.address);
+				selfModal.setAddress(adr);
+				$(selfModal.modal).find("input[name='email']").val(userInfo.email);
+				$(selfModal.modal).find("input[name='phone_number']").val(userInfo.phone_number);
+			};
+			this.setAddress = function(adr) {
+				$(selfModal.modal).find("input[name='street_address']").val(adr.street_address);
+				$(selfModal.modal).find("input[name='postal_code']").val(adr.postal_code);
+				$(selfModal.modal).find("input[name='locality']").val(adr.locality);
+				$(selfModal.modal).find("input[name='country']").val(adr.country);				
+			};
+			$(this.modal).on('shown.bs.modal', function() {	
+				$.ajax(Constants.userClaims, {
+					type: 'GET',
+					headers: {
+						'Authorization': 'Bearer '+accessToken
+					}
+				}).then(function(userInfo) {	
+					selfModal.displayLoading(false);
+					selfModal.setUserInformation(userInfo);				
+				}).fail(function(e, m) {
+					selfModal.displayLoading(false);
+					errorModal.display('User information cannot be retrieved', 3000, 'error');
+				});	
+			});
+			$(this.modal).find("input[type='checkbox']").click(function() {
+				var isChecked = $(this).is(':checked');			
+				if (!isChecked)	{
+					return;
+				}
+				
+				selfModal.displayLoading(true);
+				getCurrentLocation(function(adr) {
+					selfModal.displayLoading(false);
+					selfModal.setAddress(adr);
+				}, function() {								
+					selfModal.displayLoading(false);	
+				});				
+			});
 		};
 		
 		// Change background color.	

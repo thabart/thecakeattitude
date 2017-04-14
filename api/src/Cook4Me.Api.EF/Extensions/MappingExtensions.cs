@@ -35,12 +35,19 @@ namespace Cook4Me.Api.EF.Extensions
             return new Domain.Shop
             {
                 Id = shop.Id,
-                CreateDateTime = shop.CreateDateTime,
-                MapName = shop.MapName,
+                Subject = shop.Subject,
+                Name = shop.Name,
+                Description = shop.Description,
+                CategoryId = shop.CategoryId,
+                StreetAddress = shop.StreetAddress,
+                PostalCode = shop.PostalCode,
+                Locality = shop.Locality,
+                Country = shop.Country,
                 PlaceId = shop.PlaceId,
-                Title = shop.Title,
                 ShopRelativePath = shop.ShopRelativePath,
-                UndergroundRelativePath = shop.UndergroundRelativePath
+                UndergroundRelativePath = shop.UndergroundRelativePath,
+                CreateDateTime = shop.CreateDateTime,
+                UpdateDateTime = shop.UpdateDateTime
             };
         }
 
@@ -54,12 +61,19 @@ namespace Cook4Me.Api.EF.Extensions
             return new Shop
             {
                 Id = shop.Id,
-                CreateDateTime = shop.CreateDateTime,
-                MapName = shop.MapName,
+                Subject = shop.Subject,
+                Name = shop.Name,
+                Description = shop.Description,
+                CategoryId = shop.CategoryId,
+                StreetAddress = shop.StreetAddress,
+                PostalCode = shop.PostalCode,
+                Locality = shop.Locality,
+                Country = shop.Country,
                 PlaceId = shop.PlaceId,
-                Title = shop.Title,
                 ShopRelativePath = shop.ShopRelativePath,
-                UndergroundRelativePath = shop.UndergroundRelativePath
+                UndergroundRelativePath = shop.UndergroundRelativePath,
+                CreateDateTime = shop.CreateDateTime,
+                UpdateDateTime = shop.UpdateDateTime
             };
         }
 
@@ -123,6 +137,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Id = category.Id,
                 Description = category.Description,
                 Name = category.Name,
+                MapName = category.MapName,
+                OverviewName = category.OverviewName,
                 PartialMapUrl = category.PartialMapUrl,
                 PartialOverviewUrl = category.PartialOverviewUrl,
                 ParentId = category.ParentId,
@@ -143,6 +159,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Description = category.Description,
                 Name = category.Name,
                 ParentId = category.ParentId,
+                MapName = category.MapName,
+                OverviewName = category.OverviewName,
                 PartialMapUrl = category.PartialMapUrl,
                 PartialOverviewUrl = category.PartialOverviewUrl
             };

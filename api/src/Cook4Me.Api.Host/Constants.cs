@@ -35,12 +35,26 @@ namespace Cook4Me.Api.Host
             public static class Shop
             {
                 public const string Id = "id";
-                public const string CreateDateTime = "create_datetime";
-                public const string Title = "title";
-                public const string Map = "map";
+                // General information.
+                public const string Name = "name";
+                public const string Description = "description";
+                public const string CategoryId = "category_id";
+                // Address
+                public const string StreetAddress = "street_address";
+                public const string PostalCode = "postal_code";
+                public const string Locality = "locality";
+                public const string Country = "country";
+                // Tags
+                public const string Tags = "tags";
+                // Payment
+                public const string Payment = "payment";
+                // Tilemap information
                 public const string Place = "place";
                 public const string ShopPath = "shop_path";
                 public const string UndergroundPath = "underground_path";
+                // Other information
+                public const string CreateDateTime = "create_datetime";
+                public const string UpdateDateTime = "update_datetime";
             }
 
             public static class Seller
@@ -56,6 +70,8 @@ namespace Cook4Me.Api.Host
                 public const string Name = "name";
                 public const string Description = "description";
                 public const string ParentId = "parent_id";
+                public const string MapName = "map_name";
+                public const string OverViewName = "overview_name";
                 public const string MapPartialUrl = "map_link";
                 public const string OverviewPartialUrl = "overview_link";
             }

@@ -21,40 +21,21 @@ namespace Cook4Me.Api.EF.Models
     public class Shop
     {
         public string Id { get; set; }
-        public string UserId { get; set; }
-
-        #region General information
-
-        public string Title { get; set; } // TODO : Check size : 15 characters.
-        public string Description { get; set; } // TODO : Check size : 255 characters.
+        public string Subject { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string CategoryId { get; set; }
         public string BannerImage { get; set; }
         public string Picture { get; set; }
-        public string CategoryId { get; set; }
-
-        #endregion
-
-        #region Tags
-
-
-
-        #endregion
-
-        #region Game
-
-        public string MapName { get; set; }
+        public string StreetAddress { get; set; }
+        public string PostalCode { get; set; }
+        public string Locality { get; set; }
+        public string Country { get; set; }
         public string PlaceId { get; set; }
         public string ShopRelativePath { get; set; }
         public string UndergroundRelativePath { get; set; }
-
-        #endregion
-
-        #region Other information
-
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-
-        #endregion
-
         public virtual Category Category { get; set; }
         public virtual User User { get; set; }
     }

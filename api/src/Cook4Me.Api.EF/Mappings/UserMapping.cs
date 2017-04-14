@@ -32,10 +32,11 @@ namespace Cook4Me.Api.EF.Mappings
             modelBuilder.Entity<User>()
                 .ToTable("users")
                 .HasKey(p => p.Id);
+            /*
             modelBuilder.Entity<User>()
                 .HasMany(u => u.Shops)
                 .WithOne(s => s.User)
-                .HasForeignKey(s => s.UserId);
+                .HasForeignKey(s => s.Subject);*/
             return modelBuilder;
         }
     }

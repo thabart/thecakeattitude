@@ -15,17 +15,35 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Models
 {
+    public enum PaymentMethods
+    {
+        Cash,
+        Card,
+        BankTransfer,
+        PayPal    
+    }
+
     public class Shop
     {
         public string Id { get; set; }
-        public string Title { get; set; }
-        public string MapName { get; set; }
+        public string Subject { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string CategoryId { get; set; }
+        public string StreetAddress { get; set; }
+        public string PostalCode { get; set; }
+        public string Locality { get; set; }
+        public string Country { get; set; }
+        public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<PaymentMethods> Payments { get; set; }
         public string PlaceId { get; set; }
         public string ShopRelativePath { get; set; }
         public string UndergroundRelativePath { get; set; }
         public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
     }
 }

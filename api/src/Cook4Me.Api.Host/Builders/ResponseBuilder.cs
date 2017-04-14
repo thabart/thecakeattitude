@@ -41,12 +41,13 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new JObject();
             result.Add(Constants.DtoNames.Shop.Id, shop.Id);
-            result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime);
-            result.Add(Constants.DtoNames.Shop.Title, shop.Title);
-            result.Add(Constants.DtoNames.Shop.Map, shop.MapName);
+            result.Add(Constants.DtoNames.Shop.Name, shop.Name);
+            result.Add(Constants.DtoNames.Shop.Description, shop.Description);
+            result.Add(Constants.DtoNames.Shop.CategoryId, shop.CategoryId);
             result.Add(Constants.DtoNames.Shop.Place, shop.PlaceId);
             result.Add(Constants.DtoNames.Shop.ShopPath, shop.ShopRelativePath);
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
+            result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime);
             return result;
         }
 
@@ -98,6 +99,8 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Category.Id, category.Id);
             jObj.Add(Constants.DtoNames.Category.Name, category.Name);
             jObj.Add(Constants.DtoNames.Category.Description, category.Description);
+            jObj.Add(Constants.DtoNames.Category.MapName, category.MapName);
+            jObj.Add(Constants.DtoNames.Category.OverViewName, category.OverviewName);
             jObj.Add(Constants.DtoNames.Category.MapPartialUrl, category.PartialMapUrl);
             jObj.Add(Constants.DtoNames.Category.OverviewPartialUrl, category.PartialOverviewUrl);
             return jObj;

@@ -18,7 +18,6 @@ var Map = function(key, tileMap, game) {
 	
 	this.init = function() {		
 		var addWrap = function(gm, obj, group) {			
-			
 			return rect;
 		};
 	

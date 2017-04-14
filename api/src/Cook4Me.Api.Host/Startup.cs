@@ -17,6 +17,7 @@
 using Cook4Me.Api.EF;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -104,6 +105,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
+            services.AddTransient<IAddShopValidator, AddShopValidator>();
         }
     }
 }
