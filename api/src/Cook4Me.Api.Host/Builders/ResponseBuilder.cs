@@ -41,9 +41,14 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new JObject();
             result.Add(Constants.DtoNames.Shop.Id, shop.Id);
+            result.Add(Constants.DtoNames.Shop.Subject, shop.Subject);
             result.Add(Constants.DtoNames.Shop.Name, shop.Name);
             result.Add(Constants.DtoNames.Shop.Description, shop.Description);
             result.Add(Constants.DtoNames.Shop.CategoryId, shop.CategoryId);
+            result.Add(Constants.DtoNames.Shop.StreetAddress, shop.StreetAddress);
+            result.Add(Constants.DtoNames.Shop.PostalCode, shop.PostalCode);
+            result.Add(Constants.DtoNames.Shop.Locality, shop.Locality);
+            result.Add(Constants.DtoNames.Shop.Country, shop.Country);
             result.Add(Constants.DtoNames.Shop.Place, shop.PlaceId);
             result.Add(Constants.DtoNames.Shop.ShopPath, shop.ShopRelativePath);
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);

@@ -25,6 +25,7 @@ namespace Cook4Me.Api.OpenId
         {
             public const string Users = "users";
             public const string UserClaims = "claims";
+            public const string PublicClaims = "{id}/public";
         }
 
         public static class ErrorMessages

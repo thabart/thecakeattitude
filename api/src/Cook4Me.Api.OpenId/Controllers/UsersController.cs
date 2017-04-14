@@ -100,6 +100,34 @@ namespace Cook4Me.Api.OpenId.Controllers
             return new OkObjectResult(jObj);
         }
 
+        [HttpGet(Constants.RouteNames.PublicClaims)]
+        public async Task<IActionResult> GetPublicClaims(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            // 1. Get the subject.
+            var subjectResult = await GetSubject();
+            if (!subjectResult.IsValid)
+            {
+                return subjectResult.Error;
+            }
+
+            // 2. Get the user.
+            var user = await _resourceOwnerRepository.GetAsync(id);
+            if (user == null)
+            {
+                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
+            }
+
+            var jObj = new JObject();
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email));
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber));
+            return new OkObjectResult(jObj);
+        }
+
         [HttpPut(Constants.RouteNames.UserClaims)]
         public async Task<IActionResult> UpdateClaims([FromBody] JObject json)
         {
@@ -187,6 +215,17 @@ namespace Cook4Me.Api.OpenId.Controllers
             }
 
             return authorization.Parameter;
+        }
+
+        private static string TryGetValue(IEnumerable<Claim> claims, string type)
+        {
+            var claim = claims.FirstOrDefault(c => c.Type == type);
+            if (claim == null)
+            {
+                return string.Empty;
+            }
+
+            return claim.Value;
         }
     }
 }
