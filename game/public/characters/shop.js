@@ -148,12 +148,12 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs, categoryId) {
 			contentType: 'application/json',
 			data: JSON.stringify({category_id: categoryId, place: npc.name}),
 			success: function(r) {
-				if (r.length != 1) {
+				if (!r['_embedded']) {
 					result.resolve();
 					return;
 				}
 				
-				displayShop(r[0]);
+				displayShop(r['_embedded']);
 				result.resolve();
 			}, 
 			error: function() {

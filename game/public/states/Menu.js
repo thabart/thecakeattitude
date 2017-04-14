@@ -158,7 +158,8 @@ Menu.prototype = {
 					retrieUserInformation(function(userInfo) {						
 						var newPlayer = {
 							pseudo : userInfo.name,
-							map: 'MainMap'
+							map: 'MainMap',
+							category_id: null
 						};
 
 						$(settingsModal).remove();

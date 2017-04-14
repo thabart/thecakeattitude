@@ -106,7 +106,7 @@ Game.prototype = {
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
 		var tileMap = this.game.add.tilemap(self.selectedUser.map);
-		this.map = new Map(self.selectedUser.map, tileMap, this.game);		
+		this.map = new Map(self.selectedUser.map, tileMap, this.game, this.selectedUser.category_id);		
 		this.map.init();
 		this.map.addPlayer(1600, 1600, self.selectedUser.pseudo);
 		this.cursors = this.game.input.keyboard.createCursorKeys();	

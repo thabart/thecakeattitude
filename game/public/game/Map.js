@@ -1,5 +1,5 @@
 'use strict';
-var Map = function(key, tileMap, game) {
+var Map = function(key, tileMap, game, categoryId) {
 	var houseObj = null;
 	this.npcs = [];
 	this.npcObjs = null;
@@ -55,7 +55,7 @@ var Map = function(key, tileMap, game) {
 						o = new Warper(game, npc);
 					break;
 					case "shop":
-						o = new Shop(game, npc, tileMap, self.warps, self.npcObjs, self.npcs);
+						o = new Shop(game, npc, tileMap, self.warps, self.npcObjs, self.npcs, categoryId);
 						deferredLoaded.push(o.init());
 					break;
 					case "stock_manager":

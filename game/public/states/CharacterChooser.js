@@ -28,6 +28,19 @@ CharacterChooser.prototype = {
 			rectFreePlaces = [],
 			selectedShop = null,
 			selectedCategory = null,
+			retrieUserInformation = function(successCb, errorCb) {
+				$.ajax(Constants.userClaims, {
+					type: 'GET',
+					headers: {
+						'Authorization': 'Bearer '+accessToken
+					}
+				}).then(function(userInfo) {	
+					if (successCb) successCb(userInfo);
+				}).fail(function(e, m) {
+					errorModal.display('User information cannot be retrieved', 3000, 'error');		
+					if (errorCb) errorCb();
+				});				
+			},
 			freePlace = function(spr, g) {
 				this.sprite = spr;
 				this.graphic = g;
@@ -97,7 +110,7 @@ CharacterChooser.prototype = {
 				rectShops.push(graph);			
 			},
 			drawGraphic = function(g, isSelected) {		
-				g.clear();		
+				g.clear();				
 				g.beginFill(0xb8bbc1, 0.5);
 				if (isSelected) {
 					g.lineStyle(2, 0xEC1515, 1);			
@@ -199,13 +212,6 @@ CharacterChooser.prototype = {
 		}).fail(function() {
 			
 		});
-		/*
-		var players = [
-			{ pseudo: 'mili', map: 'firstMap' },
-			{ pseudo: 'lili', map: 'secondMap' },
-			{ pseudo : 'loki', map: 'secondMap' },
-			{ pseudo : 'mulan', map: 'firstMap' }
-		];*/
 		
 		// Display the title.
 		var titleStyle = { font: '32px Arial', fill: '#ffffff' };
@@ -235,7 +241,20 @@ CharacterChooser.prototype = {
 		});
 		// Add buttons.
 		this.start = this.game.add.button(this.game.width - playPaddingRight - playWidth, this.game.height - playHeight - playPaddingBottom, 'start', function() {
-			// self.game.state.start("Game", true, false, selectedUser);
+			$.get(Constants.apiUrl + selectedShop['_links']['items'][0].href).then(function(category) {
+				var mapName = category['_embedded'].map_name;
+				retrieUserInformation(function(userInfo) {						
+					var newPlayer = {
+						pseudo : userInfo.name,
+						map: mapName,
+						category_id: category['_embedded'].id
+					};
+					self.game.state.start("Game", true, false, newPlayer)
+				});
+			}).fail(function() {
+				
+			});
+			// ;
 		}, this, 2, 1, 0);
 		this.game.add.button(backPaddingLeft, this.game.height - backHeight - backPaddingLeft, 'back', function() {
 			self.game.state.start('Menu');
