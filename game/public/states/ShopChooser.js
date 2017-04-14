@@ -17,13 +17,14 @@ ShopChooser.prototype = {
 			backHeight = 100,			
 			parseAddress = Helpers.parseAddress,			
 			getCurrentLocation = Helpers.getCurrentLocation,
+			getFormData = Helpers.getFormData,
 			accessToken = sessionStorage.getItem(Constants.SessionName);
 		var MiniShop = function(shop, spr) {
 			var selfModal = this;
-			function buildAddShopModal() {
+			function buildAddShopModal(cat) {
 				var result = $("<div class='modal fade'><div class='modal-dialog modal-lg'><div class='modal-content'>"+
 					"<div class='modal-header'><h5 class='modal-title'>Add shop</h5><button type='button' class='close' data-dismiss='modal'><span >&times;</span></button></div>"+
-					"<form id='update-profile'>"+
+					"<form class='update'>"+
 						"<div class='modal-body'>"+
 							"<ul class='progressbar'>"+
 								"<li class='active'>Description</li>"+
@@ -36,9 +37,9 @@ ShopChooser.prototype = {
 							"<div class='tab-content' style='display: none;'>"+
 								"<section class='tab'>"+
 									"<section class='content'>"+ // General information.
-										"<div class='form-group'><label class='control-label'>Name</label><input type='text' class='form-control' /></div>"+
-										"<div class='form-group'><label class='control-label'>Description</label><textarea class='form-control'></textarea></div>"+
-										"<div class='form-group'><label class='control-label'>Category</label>Category / Sub category</div>"+
+										"<div class='form-group'><label class='control-label'>Name</label><input type='text' class='form-control' name='name'/></div>"+
+										"<div class='form-group'><label class='control-label'>Description</label><textarea class='form-control' name='description'></textarea></div>"+
+										"<div class='form-group'><label class='control-label'>Category</label><input type='hidden' name='category_id' value='"+cat.id+"' />"+cat.name+"</div>"+
 										"<div class='form-group'><label class='control-label'>Banner image</label><div><input type='file' ><div></div>"+
 										"<div class='form-group'><label class='control-label'>Picture</label><div><input type='file' ><div></div>"+
 									"</section>"+
@@ -96,7 +97,7 @@ ShopChooser.prototype = {
 									"</section>"+
 									"<section class='navigation'>"+
 										"<button class='btn btn-primary previous' style='margin-right: 10px;'>Previous</button>"+
-										"<button class='btn btn-success' style='margin-right: 10px;'>Confirm</button>"+
+										"<input type='submit' class='btn btn-success confirm' style='margin-right: 10px;' value='Confirm' />"+
 									"</section>"+
 								"</section>"+
 							"</div><div style='text-align:center;'><i class='fa fa-spinner fa-spin' style='font-size:24px; width: 24px; height:24px;'></i></div>"+
@@ -108,21 +109,16 @@ ShopChooser.prototype = {
 			}
 			this.shop = shop;
 			this.spr = spr;
-			this.modal = buildAddShopModal();			
+			this.modal = buildAddShopModal(self.category);			
 			var navigate = function(oldTab, newTab, modal) {
-				oldTab.animate({opacity: 0}, {
-					duration: 800,
-					complete: function() {
-						$(oldTab).hide();
-						$(newTab).show();		
-						$(newTab).css('opacity', '100');
-						var lst = $(modal).find(".progressbar li");
-						lst.removeClass("active");
-						for(var i = 0; i <= $(newTab).index(); i++) {
-							$(lst.get(i)).addClass('active');
-						}
-					}
-				});				
+				$(oldTab).hide();
+				$(newTab).show();		
+				$(newTab).css('opacity', '100');
+				var lst = $(modal).find(".progressbar li");
+				lst.removeClass("active");
+				for(var i = 0; i <= $(newTab).index(); i++) {
+					$(lst.get(i)).addClass('active');
+				}
 			};			
 			$(this.modal).find('.next').click(function(e) {
 				e.preventDefault();
@@ -190,6 +186,28 @@ ShopChooser.prototype = {
 					selfModal.displayLoading(false);	
 				});				
 			});
+			$(this.modal).find('.update').submit(function(e) {
+				e.preventDefault();
+				var j = getFormData(this);
+				j['place'] = selfModal.spr.name;
+				$.ajax(Constants.apiUrl + '/shops', {		
+					method: 'POST',
+					contentType: "application/json",
+					data: JSON.stringify(j),
+					headers: {
+						'Authorization': 'Bearer '+accessToken
+					}
+				}).then(function(r) {
+					$(selfModal.modal).modal('hide');
+				}).fail(function(e) {
+					$(selfModal.modal).modal('hide');				
+					if (e.responseJSON && e.responseJSON['error_description']) {
+						errorModal.display(e.responseJSON['error_description'], 3000, 'error');			
+					} else {
+						errorModal.display('An error occured while trying to add the shop', 3000, 'error');						
+					}
+				});
+			});
 		};
 		
 		// Change background color.	
@@ -240,6 +258,7 @@ ShopChooser.prototype = {
 			}, miniShop);
 			house.width = newWidth;
 			house.height = newHeight;
+			house.name = shop.name;
 			$.ajax(Constants.apiUrl, {
 				url: Constants.apiUrl + '/shops/.search',
 				method: 'POST',

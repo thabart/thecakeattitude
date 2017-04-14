@@ -111,7 +111,7 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		});
 		$(modal).find('.btn-success').click(function() {
 			$.ajax({
-				url: 'http://localhost:5000/shops',
+				url: Constants.apiUrl + '/shops',
 				method: 'POST',
 				contentType: "application/json",
 				data: JSON.stringify({ title: 'first-shop', map: map.key, place: npc.name }),

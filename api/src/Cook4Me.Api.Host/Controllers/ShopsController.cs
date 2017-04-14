@@ -69,6 +69,7 @@ namespace Cook4Me.Api.Host.Controllers
             if (!validationResult.IsValid)
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
             addShopParameter.Id = Guid.NewGuid().ToString();
