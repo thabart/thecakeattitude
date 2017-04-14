@@ -188,6 +188,7 @@ ShopChooser.prototype = {
 			});
 			$(this.modal).find('.update').submit(function(e) {
 				e.preventDefault();
+				selfModal.displayLoading(true);
 				var j = getFormData(this);
 				j['place'] = selfModal.spr.name;
 				$.ajax(Constants.apiUrl + '/shops', {		
@@ -198,9 +199,12 @@ ShopChooser.prototype = {
 						'Authorization': 'Bearer '+accessToken
 					}
 				}).then(function(r) {
+					selfModal.displayLoading(false);
 					$(selfModal.modal).modal('hide');
-				}).fail(function(e) {
-					$(selfModal.modal).modal('hide');				
+					errorModal.display('The shop has been added', 3000, 'success');
+					selfModal.spr.loadTexture('house', 0);			
+				}).fail(function(e) {			
+					selfModal.displayLoading(false);	
 					if (e.responseJSON && e.responseJSON['error_description']) {
 						errorModal.display(e.responseJSON['error_description'], 3000, 'error');			
 					} else {
@@ -259,11 +263,10 @@ ShopChooser.prototype = {
 			house.width = newWidth;
 			house.height = newHeight;
 			house.name = shop.name;
-			$.ajax(Constants.apiUrl, {
-				url: Constants.apiUrl + '/shops/.search',
+			$.ajax( Constants.apiUrl + '/shops/.search', {
 				method: 'POST',
 				contentType: 'application/json',
-				data: JSON.stringify({map: map, place: shop.name}),
+				data: JSON.stringify({category_id: self.category.id, place: shop.name}),
 			}).then(function() {
 				house.loadTexture('house', 0);
 			}).fail(function() { });

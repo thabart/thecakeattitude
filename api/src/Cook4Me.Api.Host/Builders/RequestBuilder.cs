@@ -81,8 +81,9 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new SearchShopsParameter
             {
-                // Map = jObj.Value<string>(Constants.DtoNames.Shop.Map),
-                // Place = jObj.Value<string>(Constants.DtoNames.Shop.Place)
+                CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId),
+                PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place),
+                Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject)
             };
             return result;
         }

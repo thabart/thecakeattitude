@@ -61,7 +61,22 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            return await _context.Shops.Where(s => s.PlaceId == parameter.Place).Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
+            IQueryable<Models.Shop> shops = _context.Shops;
+            if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
+            {
+                shops = shops.Where(s => s.CategoryId == parameter.CategoryId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                shops = shops.Where(s => s.Subject == parameter.Subject);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.PlaceId))
+            {
+                shops = shops.Where(s => s.PlaceId == parameter.PlaceId);
+            }
+            return await shops.Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
     }
 }

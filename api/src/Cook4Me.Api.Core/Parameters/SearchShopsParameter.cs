@@ -18,7 +18,8 @@ namespace Cook4Me.Api.Core.Parameters
 {
     public class SearchShopsParameter
     {
-        public string Place { get; set; }
-        public string Map { get; set; }
+        public string PlaceId { get; set; }
+        public string CategoryId { get; set; }
+        public string Subject { get; set; }
     }
 }

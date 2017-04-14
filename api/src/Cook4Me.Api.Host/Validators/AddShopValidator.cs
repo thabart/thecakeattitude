@@ -15,8 +15,10 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Validators
@@ -48,10 +50,12 @@ namespace Cook4Me.Api.Host.Validators
     public class AddShopValidator : IAddShopValidator
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IShopRepository _shopRepository;
 
-        public AddShopValidator(ICategoryRepository categoryRepository)
+        public AddShopValidator(ICategoryRepository categoryRepository, IShopRepository shopRepository)
         {
             _categoryRepository = categoryRepository;
+            _shopRepository = shopRepository;
         }
 
         public async Task<AddShopValidationResult> Validate(Shop shop, string subject)
@@ -71,6 +75,16 @@ namespace Cook4Me.Api.Host.Validators
             if (category == null)
             {
                 return new AddShopValidationResult(ErrorDescriptions.TheCategoryDoesntExist);
+            }
+
+            // Check the user doesn't already have a shop on the same category.
+            if ((await _shopRepository.Search(new SearchShopsParameter
+            {
+                CategoryId = shop.CategoryId,
+                Subject = subject   
+            })).Any())
+            {
+                return new AddShopValidationResult(ErrorDescriptions.TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory);
             }
 
             // Check mandatory parameters.

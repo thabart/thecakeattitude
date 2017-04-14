@@ -88,6 +88,11 @@ namespace Cook4Me.Api.Host
                 public const string PhoneNumber = "phone_number";
             }
 
+            public static class SearchShop
+            {
+                public const string Subject = "subject";
+            }
+
             public static class Error
             {
                 public const string Code = "error";

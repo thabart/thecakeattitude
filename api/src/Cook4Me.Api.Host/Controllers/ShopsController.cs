@@ -91,6 +91,25 @@ namespace Cook4Me.Api.Host.Controllers
             return new OkObjectResult(res);
         }
 
+        [HttpPost(Constants.RouteNames.Search)]
+        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        {
+            var request = _requestBuilder.GetSearchShops(jObj);
+            var shops = await _repository.Search(request);
+            var arr = new JArray();
+            foreach (var shop in shops)
+            {
+                arr.Add(_responseBuilder.GetShop(shop));
+            }
+
+            if (!arr.Any())
+            {
+                return new NotFoundResult();
+            }
+
+            return new OkObjectResult(arr);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetShops()
         {
@@ -117,25 +136,6 @@ namespace Cook4Me.Api.Host.Controllers
 
             string s = "";
             return null;
-        }
-
-        [HttpPost(Constants.RouteNames.Search)]
-        public async Task<IActionResult> Search([FromBody] JObject jObj)
-        {
-            var request = _requestBuilder.GetSearchShops(jObj);
-            var shops = await _repository.Search(request);
-            var arr = new JArray();
-            foreach (var shop in shops)
-            {
-                arr.Add(_responseBuilder.GetShop(shop));
-            }
-
-            if (!arr.Any())
-            {
-                return new NotFoundResult();
-            }
-
-            return new OkObjectResult(arr);
         }
 
         private bool AddShopMap(Shop shop, Category category)
