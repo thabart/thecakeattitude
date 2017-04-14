@@ -1,11 +1,20 @@
 var ShopChooser = function () {  };
 ShopChooser.prototype = {
-	init: function() {
+	init: function(category, previousState) {
+		this.category = category;
+		this.previousState = previousState;
 	},
 	create: function() {
 		var self = this,
-			overview = 'overview_firstMap',
-			map = 'firstMap';
+			overview = 'overview_' + self.category.id,
+			map = 'tilemap_' + self.category.id,
+			name = self.category.name,
+			titlePaddingLeft = 10,
+			titlePaddingTop = 10,
+			backPaddingLeft = 10,
+			backPaddingBottom = 10,
+			backWidth = 108,
+			backHeight = 100;
 		var MiniShop = function(shop, spr) {
 			function buildAddShopModal() {
 				var result = $("<div class='modal fade'><div class='modal-dialog modal-lg'><div class='modal-content'>"+
@@ -95,8 +104,7 @@ ShopChooser.prototype = {
 			}
 			this.shop = shop;
 			this.spr = spr;
-			this.modal = buildAddShopModal();
-			
+			this.modal = buildAddShopModal();			
 			var navigate = function(oldTab, newTab, modal) {
 				oldTab.animate({opacity: 0}, {
 					duration: 800,
@@ -111,8 +119,7 @@ ShopChooser.prototype = {
 						}
 					}
 				});				
-			};
-			
+			};			
 			$(this.modal).find('.next').click(function(e) {
 				e.preventDefault();
 				var parent = $(this).closest('.tab');
@@ -124,25 +131,25 @@ ShopChooser.prototype = {
 				var parent = $(this).closest('.tab');
 				var previousTab = $(parent).prev();		
 				navigate(parent, previousTab,  $(this).closest('.fade'));
-			});
-			
+			});			
 			this.interact = function() {				
 				$(this.modal).modal('toggle');
 				// spr.loadTexture('house', 0);
 			}
 		};
-		// Change background color.				
-		this.game.stage.backgroundColor = '#787878';	
-		var bg = this.game.add.sprite(0, 0, overview);
-		bg.width = this.game.world.width;
-		bg.height = this.game.world.height;
-		var tileMapData = this.game.cache.getTilemapData(map);
+		
+		// Change background color.	
+		// self.game.stage.backgroundColor = '#787878';	
+		var bg = self.game.add.sprite(0, 0, overview);
+		bg.width = self.game.world.width;
+		bg.height = self.game.world.height;
+		var tileMapData = self.game.cache.getTilemapData(map);
 		var data = tileMapData.data,
 			layers = data.layers,
 			totalWidth = data.width * data.tilewidth,
 			totalHeight = data.height * data.tileheight,
-			scaleX = ((100 * this.game.world.width) / totalWidth) / 100,
-			scaleY = ((100 * this.game.world.height) / totalHeight) / 100,
+			scaleX = ((100 * self.game.world.width) / totalWidth) / 100,
+			scaleY = ((100 * self.game.world.height) / totalHeight) / 100,
 			shops = [];
 		// Fetch all the shops.
 		layers.forEach(function(layer) {
@@ -158,8 +165,7 @@ ShopChooser.prototype = {
 					}
 				});
 			}
-		});
-		
+		});		
 		// Display all the shops.
 		shops.forEach(function(shop) {
 			var newX =  scaleX * shop.x,
@@ -181,13 +187,18 @@ ShopChooser.prototype = {
 			house.width = newWidth;
 			house.height = newHeight;
 			$.ajax(Constants.apiUrl, {
-				url: 'http://localhost:5000/shops/.search',
+				url: Constants.apiUrl + '/shops/.search',
 				method: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify({map: map, place: shop.name}),
 			}).then(function() {
 				house.loadTexture('house', 0);
 			}).fail(function() { });
+		});
+		var style = { font: "20px Arial" };
+		self.game.add.text(titlePaddingLeft, titlePaddingTop, 'Choose a placement in the sub-category ' + name, style);
+		self.game.add.button(backPaddingLeft, self.game.height - backHeight - backPaddingBottom, 'back', function() {
+			self.game.state.start(self.previousState);
 		});
 	},
 	update: function() {

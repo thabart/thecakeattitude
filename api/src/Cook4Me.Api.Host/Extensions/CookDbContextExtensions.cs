@@ -44,8 +44,8 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     clothesCategory,
                     alimentationCategory,
-                    new Category { Id = Guid.NewGuid().ToString(), Name = "Shoes", Description = "Shoes", ParentId = clothesCategory.Id },
-                    new Category { Id = Guid.NewGuid().ToString(), Name = "Pastry & Bakery", Description = "Pastry & Bakery", ParentId = alimentationCategory.Id }
+                    new Category { Id = Guid.NewGuid().ToString(), Name = "Shoes", Description = "Shoes", ParentId = clothesCategory.Id, PartialMapUrl = "/maps/map.json", PartialOverviewUrl = "/maps/overview_map.png" },
+                    new Category { Id = Guid.NewGuid().ToString(), Name = "Pastry & Bakery", Description = "Pastry & Bakery", ParentId = alimentationCategory.Id, PartialMapUrl = "/maps/map2.json", PartialOverviewUrl = "/maps/overview_map2.png" }
                 });
             }
         }

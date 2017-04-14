@@ -123,6 +123,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Id = category.Id,
                 Description = category.Description,
                 Name = category.Name,
+                PartialMapUrl = category.PartialMapUrl,
+                PartialOverviewUrl = category.PartialOverviewUrl,
                 ParentId = category.ParentId,
                 Children = children
             };
@@ -140,7 +142,9 @@ namespace Cook4Me.Api.EF.Extensions
                 Id = category.Id,
                 Description = category.Description,
                 Name = category.Name,
-                ParentId = category.ParentId
+                ParentId = category.ParentId,
+                PartialMapUrl = category.PartialMapUrl,
+                PartialOverviewUrl = category.PartialOverviewUrl
             };
         }
     }

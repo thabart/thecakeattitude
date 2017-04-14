@@ -98,6 +98,8 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Category.Id, category.Id);
             jObj.Add(Constants.DtoNames.Category.Name, category.Name);
             jObj.Add(Constants.DtoNames.Category.Description, category.Description);
+            jObj.Add(Constants.DtoNames.Category.MapPartialUrl, category.PartialMapUrl);
+            jObj.Add(Constants.DtoNames.Category.OverviewPartialUrl, category.PartialOverviewUrl);
             return jObj;
         }
     }

@@ -6,6 +6,26 @@ Splash.prototype = {
 	preload: function() {		
 		var self = this;
 		// LOAD ALL THE ASSETS.
+		$.get(Constants.apiUrl + '/categories').then(function(result) {
+			var embedded = result['_embedded'];
+			if (!embedded) {
+				return;
+			}
+			if (!$.isArray(embedded)) {
+				embedded = [ embedded ];
+			}
+			
+			embedded.forEach(function(category) {
+				if (!category.overview_link || !category.map_link) {
+					return;
+				}
+				
+				var tileMapLoader = self.game.load.tilemap('tilemap_' + category.id, Constants.apiUrl + category.map_link, null, Phaser.Tilemap.TILED_JSON);
+				var imageLoader = self.game.load.image('overview_' + category.id, Constants.apiUrl + category.overview_link);
+				tileMapLoader.start();
+				imageLoader.start();
+			});
+		});
 		// this.game.load.crossOrigin = "anonymous";
 		this.game.load.tilemap('firstMap', 'http://localhost:5000/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
 		this.game.load.tilemap('secondMap', 'http://localhost:5000/maps/map2.json', null, Phaser.Tilemap.TILED_JSON);
@@ -46,7 +66,6 @@ Splash.prototype = {
 		this.game.load.script('Shop', 'public/characters/shop.js');
 		this.game.load.script('StockManager', 'public/characters/stockManager.js');
 		this.game.load.script('InfoPanel', 'public/characters/panelInfo.js');
-		this.game.load.script('Constants', 'public/game/Constants.js');
 		this.game.load.script('Helpers', 'public/game/Helpers.js');
 		this.game.add.existing(this.loadingBar);
 	},

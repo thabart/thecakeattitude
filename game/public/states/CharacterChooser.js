@@ -120,6 +120,7 @@ CharacterChooser.prototype = {
 			rectFreePlaces = [],
 			modal = createModal(),
 			selectedUser = null,
+			selectedCategory = null,
 			displayLoadingAddShop = function(isLoading) {
 				if (isLoading) {
 					$(modal).find('.fa-spinner').show();
@@ -164,8 +165,8 @@ CharacterChooser.prototype = {
 					var items = result['_links'].items;
 					items.forEach(function(record) {
 						var parts = record.href.split('/');
-						var href = parts[parts.length - 1];
-						$(elt).append("<option value='"+href+"'>"+record.name+"</option>");					
+						var id = parts[parts.length - 1];
+						$(elt).append("<option value='"+id+"' data-href='"+record.href+"'>"+record.name+"</option>");					
 					});
 				}).fail(function() {
 					errorModal.display('sub categories cannot be displayed', 3000, 'error');				
@@ -175,21 +176,22 @@ CharacterChooser.prototype = {
 		var titleStyle = { font: '32px Arial', fill: '#ffffff' };
 		self.game.add.text(titlePaddingTop, titlePaddingLeft, 'Choose your shop', titleStyle);
 		$(modal).find('#confirm').click(function() {
-			if (!rectFreePlaces || rectFreePlaces.length == 0) {
-				console.log('not enough space');
+			var partialUrl = $(modal).find('.sub-category').find(':selected').data('href');
+			$.get(Constants.apiUrl + partialUrl).then(function(r) {	
+				selectedCategory = r;
+				$(modal).modal('toggle');
+			}).fail(function() {			
+				$(modal).modal('toggle');
+				errorModal.display('error while trying to display the map', 3000, 'error');			
+			});
+		});
+		$(modal).on('hidden.bs.modal', function(e) {
+			if (selectedCategory == null) {
 				return;
 			}
 			
-			var p = rectFreePlaces[0];
-			var ind = rectFreePlaces.indexOf(p);
-			p.destroy();
-			rectFreePlaces.splice(0, 1);
-			var newPlayer = {
-				pseudo : $(modal).find('#pseudo').val(),
-				map: 'firstMap'
-			};
-			addPlayer(p.graphic, newPlayer);
-			$(modal).modal('hide');
+			var category = selectedCategory['_embedded'];
+			self.game.state.start("ShopChooser", true, false, category, 'CharacterChooser');
 		});
 		$(modal).find('.category').change(function() {
 			var partialUrl = $(this).find(':selected').data('href');

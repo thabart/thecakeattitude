@@ -56,6 +56,8 @@ namespace Cook4Me.Api.Host
                 public const string Name = "name";
                 public const string Description = "description";
                 public const string ParentId = "parent_id";
+                public const string MapPartialUrl = "map_link";
+                public const string OverviewPartialUrl = "overview_link";
             }
 
             public static class User
