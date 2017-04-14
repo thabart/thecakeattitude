@@ -51,7 +51,7 @@ namespace Cook4Me.Api.EF.Repositories
 
         public async Task<IEnumerable<Shop>> Get()
         {
-            return await _context.Shops.Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await _context.Shops.Include(c => c.Category).Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<Shop>> Search(SearchShopsParameter parameter)
@@ -61,7 +61,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Shop> shops = _context.Shops;
+            IQueryable<Models.Shop> shops = _context.Shops.Include(c => c.Category);
             if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
             {
                 shops = shops.Where(s => s.CategoryId == parameter.CategoryId);

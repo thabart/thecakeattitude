@@ -1,5 +1,5 @@
 'use strict';
-var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
+var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs, categoryId) {
 	var shopTitleWidth = 200,
 		shopTitleHeight = 41,
 		shopTitleRect = null,
@@ -143,10 +143,10 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs) {
 		}, this);
 		var result = $.Deferred();
 		$.ajax({
-			url: 'http://localhost:5000/shops/.search',
+			url: Constants.apiUrl + '/shops/.search',
 			method: 'POST',
 			contentType: 'application/json',
-			data: JSON.stringify({map: map.key, place: npc.name}),
+			data: JSON.stringify({category_id: categoryId, place: npc.name}),
 			success: function(r) {
 				if (r.length != 1) {
 					result.resolve();

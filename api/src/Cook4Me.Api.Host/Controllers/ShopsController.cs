@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
@@ -39,16 +40,18 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IResponseBuilder _responseBuilder;
         private readonly IHostingEnvironment _env;
         private readonly IAddShopValidator _addShopValidator;
+        private readonly IHalResponseBuilder _halResponseBuilder;
 
         public ShopsController(
             IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder,
-            IHostingEnvironment env, IAddShopValidator addShopValidator)
+            IHostingEnvironment env, IAddShopValidator addShopValidator, IHalResponseBuilder halResponseBuilder)
         {
             _repository = repository;
             _requestBuilder = requestBuilder;
             _responseBuilder = responseBuilder;
             _env = env;
             _addShopValidator = addShopValidator;
+            _halResponseBuilder = halResponseBuilder;
         }
 
         [HttpPost]
@@ -96,18 +99,18 @@ namespace Cook4Me.Api.Host.Controllers
         {
             var request = _requestBuilder.GetSearchShops(jObj);
             var shops = await _repository.Search(request);
-            var arr = new JArray();
-            foreach (var shop in shops)
-            {
-                arr.Add(_responseBuilder.GetShop(shop));
-            }
-
-            if (!arr.Any())
+            if (!shops.Any())
             {
                 return new NotFoundResult();
             }
+            
+            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops + "/" + Constants.RouteNames.Search));
+            foreach(var shop in shops)
+            {
+                AddShop(_halResponseBuilder, _responseBuilder, shop);
+            }
 
-            return new OkObjectResult(arr);
+            return new OkObjectResult(_halResponseBuilder.Build());
         }
 
         [HttpGet]
@@ -115,12 +118,13 @@ namespace Cook4Me.Api.Host.Controllers
         {
             var arr = new JArray();
             var shops = await _repository.Get();
-            foreach(var shop in shops)
+            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops));
+            foreach (var shop in shops)
             {
-                arr.Add(_responseBuilder.GetShop(shop));
+                AddShop(_halResponseBuilder, _responseBuilder, shop);
             }
 
-            return new OkObjectResult(arr);
+            return new OkObjectResult(_halResponseBuilder.Build());
         }
 
         [HttpGet(Constants.RouteNames.Me)]
@@ -133,9 +137,18 @@ namespace Cook4Me.Api.Host.Controllers
                 var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
+            
+            var shops = await _repository.Search(new SearchShopsParameter
+            {
+                Subject = subject
+            });
+            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops+"/"+Constants.RouteNames.Me));
+            foreach (var shop in shops)
+            {
+                AddShop(_halResponseBuilder, _responseBuilder, shop);
+            }
 
-            string s = "";
-            return null;
+            return new OkObjectResult(_halResponseBuilder.Build());
         }
 
         private bool AddShopMap(Shop shop, Category category)
@@ -178,6 +191,11 @@ namespace Cook4Me.Api.Host.Controllers
         private static string GetRelativeUndergroundPath(string id)
         {
             return @"shops/" + id + "_underground.json";
+        }
+
+        private void AddShop(IHalResponseBuilder halResponseBuilder, IResponseBuilder responseBuilder, Shop shop)
+        {
+            _halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetShop(shop), (l) => l.AddItem(new Dtos.Link("/" + Constants.RouteNames.Categories + "/" + shop.CategoryId, shop.Category.Name))));
         }
     }
 }

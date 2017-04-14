@@ -32,6 +32,12 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(shop));
             }
 
+            Domain.Category category = null;
+            if (shop.Category != null)
+            {
+                category = shop.Category.ToDomain();
+            }
+
             return new Domain.Shop
             {
                 Id = shop.Id,
@@ -47,7 +53,8 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopRelativePath = shop.ShopRelativePath,
                 UndergroundRelativePath = shop.UndergroundRelativePath,
                 CreateDateTime = shop.CreateDateTime,
-                UpdateDateTime = shop.UpdateDateTime
+                UpdateDateTime = shop.UpdateDateTime,
+                Category = category
             };
         }
 

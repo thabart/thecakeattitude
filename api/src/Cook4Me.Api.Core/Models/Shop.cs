@@ -43,6 +43,7 @@ namespace Cook4Me.Api.Core.Models
         public string PlaceId { get; set; }
         public string ShopRelativePath { get; set; }
         public string UndergroundRelativePath { get; set; }
+        public Category Category { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
     }

@@ -304,19 +304,19 @@ ShopChooser.prototype = {
 			house.width = newWidth;
 			house.height = newHeight;
 			house.name = shop.name;
-			$.ajax( Constants.apiUrl + '/shops/.search', {
+			$.ajax(Constants.apiUrl + '/shops/.search', {
 				method: 'POST',
 				contentType: 'application/json',
 				data: JSON.stringify({category_id: self.category.id, place: shop.name}),
 			}).then(function(j) {
 				house.loadTexture('house', 0);
-				$.ajax(Constants.userPublicClaims.replace('{id}', j[0].subject), {					
+				$.ajax(Constants.userPublicClaims.replace('{id}', j['_embedded'].subject), {					
 					type: 'GET',
 					headers: {
 						'Authorization': 'Bearer '+accessToken
 					}
 				}).then(function(r) {
-					var result = $.extend({}, j[0], r);
+					var result = $.extend({}, j['_embedded'], r);
 					var miniShop = new MiniShop(shop, house, false, result);
 					addClickHandler(house, function() {
 						miniShop.interact();

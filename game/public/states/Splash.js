@@ -27,8 +27,7 @@ Splash.prototype = {
 			});
 		});
 		// this.game.load.crossOrigin = "anonymous";
-		this.game.load.tilemap('firstMap', 'http://localhost:5000/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
-		this.game.load.tilemap('secondMap', 'http://localhost:5000/maps/map2.json', null, Phaser.Tilemap.TILED_JSON);
+		this.game.load.tilemap('MainMap', 'http://localhost:5000/maps/main.json', null, Phaser.Tilemap.TILED_JSON);
 		this.game.load.image('overview_firstMap', 'http://localhost:5000/maps/overview_map.png');
 		this.game.load.image('tallgrass', 'http://localhost:5000/maps/tilesets/tallgrass.png');
 		this.game.load.image('farming_fishing', 'http://localhost:5000/maps/tilesets/farming_fishing.png');
@@ -37,7 +36,7 @@ Splash.prototype = {
 		this.game.load.image('floor', 'http://localhost:5000/shops/tilesets/floor.png');
 		this.game.load.image('stuff', 'http://localhost:5000/shops/tilesets/stuff.png');
 		this.game.load.image('player', 'http://localhost:5000/characters/phaser-dude.png');		
-		this.game.load.image('addPlayer', 'http://localhost:5000/images/add-player.png');
+		this.game.load.image('addShop', 'http://localhost:5000/images/add-player.png');
 		this.game.load.image('house', 'http://localhost:5000/maps/tilesets/house.png');
 		this.game.load.image('freePlace', 'http://localhost:5000/maps/tilesets/freePlace.png');
 		this.game.load.image('panel-info', 'http://localhost:5000/maps/tilesets/panel-info.png');
