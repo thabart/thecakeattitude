@@ -106,7 +106,7 @@ CharacterChooser.prototype = {
 					self.start.visible = true;			
 				}, this);
 				var style = { font: "20px Arial" };
-				self.game.add.text(sprX - 30, sprY + pseudoPaddingTop + shopHeight, shop.name + ' (' + shop['_links']['items'][0].name + ')', style);
+				self.game.add.text(sprX - 30, sprY + pseudoPaddingTop + shopHeight, shop.name, style);
 				rectShops.push(graph);			
 			},
 			drawGraphic = function(g, isSelected) {		
@@ -142,6 +142,7 @@ CharacterChooser.prototype = {
 					}
 					
 					var elt = $(modal).find('.category');
+					$(elt).empty();
 					result['_embedded'].forEach(function(record) {
 						var selfLink = record['_links'].self;
 						$(elt).append("<option value='"+record.id+"' data-href='"+selfLink+"'>"+record.name+"</option>");					
@@ -181,7 +182,10 @@ CharacterChooser.prototype = {
 			}
 		}).then(function(r) {
 			var shops = r['_embedded'];
-			if (!$.isArray(shops)) {
+			if (!shops) {
+				shops = [];
+			}
+			else if (!$.isArray(shops)) {
 				shops = [shops];
 			}
 			
@@ -241,18 +245,29 @@ CharacterChooser.prototype = {
 		});
 		// Add buttons.
 		this.start = this.game.add.button(this.game.width - playPaddingRight - playWidth, this.game.height - playHeight - playPaddingBottom, 'start', function() {
-			$.get(Constants.apiUrl + selectedShop['_links']['items'][0].href).then(function(category) {
-				var mapName = category['_embedded'].map_name;
-				retrieUserInformation(function(userInfo) {						
-					var newPlayer = {
-						pseudo : userInfo.name,
-						map: mapName,
-						category_id: category['_embedded'].id
-					};
-					self.game.state.start("Game", true, false, newPlayer)
-				});
-			}).fail(function() {
-				
+			if (!selectedShop) {
+				return;
+			}
+			
+			// Load the map.
+			if (!self.game.cache.checkTilemapKey("shop_" + selectedShop.id)) {
+				var loader = self.game.load.tilemap("shop_" + selectedShop.id, Constants.apiUrl + '/' + selectedShop.shop_path, null, Phaser.Tilemap.TILED_JSON);
+				loader.start();
+			}
+		
+			// Load the underground.
+			if (!self.game.cache.checkTilemapKey("underground_path" + selectedShop.id)) {
+				var loader = self.game.load.tilemap("underground_" + selectedShop.id, Constants.apiUrl + '/' + selectedShop.underground_path, null, Phaser.Tilemap.TILED_JSON);
+				loader.start();
+			}
+			
+			retrieUserInformation(function(userInfo) {						
+				var newPlayer = {
+					pseudo : userInfo.name,
+					map: "shop_" + selectedShop.id,
+					category_id: selectedShop.category_id
+				};
+				self.game.state.start("Game", true, false, newPlayer)
 			});
 			// ;
 		}, this, 2, 1, 0);
