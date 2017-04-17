@@ -1,18 +1,20 @@
 'use strict';
-var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs, categoryId) {
+var Shop = function(game, npc, map, category) {
 	var shopTitleWidth = 200,
 		shopTitleHeight = 41,
 		shopTitleRect = null,
 		shopTitleTxt = null,
 		shopTitleBorderPadding = 2,
 		sprite = null,
+		interaction = null,
 		self = this,
 		isEnabled = true,
 		isInteracting = false,
-		modal = null,
 		tileSheet = null,
 		warpRectangle = null,
+		warpSprite = null,
 		warpHeight = 30,
+		panelInfo = null,
 		warpWidth = 30;
 	map.tilesets.forEach(function(t) {
 		if (t.firstgid == npc.gid) {
@@ -35,10 +37,7 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs, categoryId) {
 			x : npc.x,
 			y : npc.y
 		};
-		var panelInfo = new InfoPanel(game, panel, map, r);
-		var sp = panelInfo.getSprite();
-		npcsGroup.add(sp);
-		npcs.push([sp, panelInfo ]);
+		panelInfo = new InfoPanel(game, panel, map, r);
 	};
 	
 	// Display shop.
@@ -82,53 +81,14 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs, categoryId) {
 		warpRectangle.beginFill(0xFFFFFF, 1);
 		warpRectangle.drawRect(x, y, warpWidth, warpHeight);
 		// 2. Add transparent warp into the group.
-		var rect = game.add.sprite(x, y, null);
-		game.physics.enable(rect, Phaser.Physics.ARCADE);
-		rect.name = 'shopentry_' + mapId;
-		rect.body.setSize(warpWidth, warpHeight, 0, 0);
-		warpGroup.add(rect);
-        warpGroup.set(rect, 'map', "shop_" + mapId, false, false, 0, true);
-        warpGroup.set(rect, 'warp_entry', 'warp', false, false, 0, true);
-        warpGroup.set(rect, 'entry_dir', 'bottom', false, false, 0, true);
+		warpSprite = game.add.sprite(x, y, null);
+		game.physics.enable(warpSprite, Phaser.Physics.ARCADE);
+		warpSprite.name = 'shopentry_' + mapId;
+		warpSprite.body.setSize(warpWidth, warpHeight, 0, 0);
 	};
-	
-	var buildModal = function() {
-		modal = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'>"+
-			"<h5 class='modal-title'>"+npc.name+"</h5>"+
-			"<button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>"+
-			"</div>"+
-			"<div class='modal-body'>"+
-			"<p>Do you want to take this shop ?</p>"+
-			"</div>"+
-			"<div class='modal-footer'>"+
-			"<button type='button' class='btn btn-success'  data-dismiss='modal'>Yes</button>"+
-			"<button type='button' class='btn btn-secondary' data-dismiss='modal'>No</button>"+
-			"</div></div></div></div>");
-		$(document.body).append(modal);
-		$(modal).on('hidden.bs.modal', function() {
-			isInteracting = false;
-			game.canvas.style.cursor = "default";
-		});
-		$(modal).find('.btn-success').click(function() {
-			$.ajax({
-				url: Constants.apiUrl + '/shops',
-				method: 'POST',
-				contentType: "application/json",
-				data: JSON.stringify({ title: 'first-shop', map: map.key, place: npc.name }),
-				success: function(r) {
-					r.title = 'first-shop';
-					displayShop(r);
-				},
-				error: function() {
-					// TODO : Display message error.
-				}
-			});
-		});
-	};
-	
+		
 	// Initialize the shop.
 	this.init = function() {		
-		buildModal();
 		// Initialize the sprite.		
 		sprite = game.add.sprite(npc.x, npc.y - tileSheet.tileHeight, tileSheet.name);	
 		sprite.inputEnabled = true;
@@ -146,18 +106,19 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs, categoryId) {
 			url: Constants.apiUrl + '/shops/.search',
 			method: 'POST',
 			contentType: 'application/json',
-			data: JSON.stringify({category_id: categoryId, place: npc.name}),
+			data: JSON.stringify({category_id: category.id, place: npc.name}),
 			success: function(r) {
 				if (!r['_embedded']) {
-					result.resolve();
+					result.resolve({panelInfo : null, warp: null, map_id: null});
 					return;
 				}
 				
 				displayShop(r['_embedded']);
-				result.resolve();
+				result.resolve({panelInfo : panelInfo, warp: warpSprite, map_id: r['_embedded'].id});
 			}, 
 			error: function() {
-				result.resolve();
+				result.resolve({panelInfo : null, warp: null, map_id: null});
+				interaction = new ShopInteraction(npc, category, sprite, true);
 			}
 		});	
 		
@@ -169,16 +130,20 @@ var Shop = function(game, npc, map, warpGroup, npcsGroup, npcs, categoryId) {
 	};
 	
 	this.interact = function() {
-		if (isInteracting || !isEnabled) {
+		if (isInteracting || !isEnabled || interaction == null) {
 			return;
 		}
 		
 		isInteracting = true;
-		$(modal).modal('toggle');
+		interaction.interact();
 	};	
 	
 	this.getIsEnabled = function() {
 		return isEnabled;
+	};
+	
+	this.getPanelInfo = function() {
+		return panelInfo;
 	};
 	
 	this.destroy = function() {

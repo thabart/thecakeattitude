@@ -28,6 +28,7 @@ CharacterChooser.prototype = {
 			rectFreePlaces = [],
 			selectedShop = null,
 			selectedCategory = null,
+			getCategory = CategoryClient.getCategory,
 			retrieUserInformation = function(successCb, errorCb) {
 				$.ajax(Constants.userClaims, {
 					type: 'GET',
@@ -261,13 +262,19 @@ CharacterChooser.prototype = {
 				loader.start();
 			}
 			
-			retrieUserInformation(function(userInfo) {						
-				var newPlayer = {
-					pseudo : userInfo.name,
-					map: "shop_" + selectedShop.id,
-					category_id: selectedShop.category_id
-				};
-				self.game.state.start("Game", true, false, newPlayer)
+			// Retrieve the user information & category name.
+			retrieUserInformation(function(userInfo) {
+				getCategory(selectedShop.category_id).then(function(category) {
+					var options = {
+						pseudo : userInfo.name,
+						map: "shop_" + selectedShop.id,
+						category: {
+							id : selectedShop.category_id,
+							name: category.name
+						}
+					};
+					self.game.state.start("Game", true, false, options);					
+				});
 			});
 			// ;
 		}, this, 2, 1, 0);

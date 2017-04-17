@@ -92,8 +92,8 @@ var Game = function () {
 	};
 };
 Game.prototype = {
-	init: function(selectedUser) {
-		this.selectedUser = selectedUser;
+	init: function(options) {
+		this.options = options;
 	},
 	create: function() {
 		var self = this;
@@ -105,17 +105,17 @@ Game.prototype = {
 		// Keep running on losing focus
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
-		var tileMap = this.game.add.tilemap(self.selectedUser.map);
-		this.map = new Map(self.selectedUser.map, tileMap, this.game, this.selectedUser.category_id);		
+		var tileMap = this.game.add.tilemap(self.options.map);
+		this.map = new Map(self.options.map, tileMap, this.game, this.options.category);		
 		this.map.init();
-		this.map.addPlayer(300, 300, self.selectedUser.pseudo);
+		this.map.addPlayer(300, 300, self.options.pseudo);
 		this.cursors = this.game.input.keyboard.createCursorKeys();	
 		// Connect to socket server		
 		this.socket = io('http://localhost:3001').connect();		
 		this.socket.on('connect', function() {
 			console.log('socket connected');			
 			self.cleanPlayers();
-			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: self.selectedUser.pseudo });
+			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: self.options.pseudo });
 		});
 		this.socket.on('disconnect', function() {
 			console.log('socket disconnected');
@@ -189,7 +189,7 @@ Game.prototype = {
 					pseudo = self.map.player.getPseudo();
 				self.preventUpdate = true;
 				self.map.destroy();
-				self.map = new Map(warp.map, tileMap, self.game);
+				self.map = new Map(warp.map, tileMap, self.game, warp.category); // TODO : Pass category.
 				self.map.init().done(function() {
 					var playerPosition = self.getPlayerPosition(warp, self.map.getWarps(), playerHeight, playerWidth);
 					self.map.addPlayer(playerPosition.x, playerPosition.y, pseudo);

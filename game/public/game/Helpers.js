@@ -89,5 +89,9 @@ var Helpers = {
 				if (errorCb) errorCb();
 			});
 		});
+	},
+	// Get the access token.
+	getAccessToken: function() {
+		return sessionStorage.getItem(Constants.SessionName);	
 	}
 };

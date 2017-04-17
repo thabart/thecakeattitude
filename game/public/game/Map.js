@@ -1,5 +1,5 @@
 'use strict';
-var Map = function(key, tileMap, game, categoryId) {
+var Map = function(key, tileMap, game, category) {
 	var houseObj = null;
 	this.npcs = [];
 	this.npcObjs = null;
@@ -16,11 +16,7 @@ var Map = function(key, tileMap, game, categoryId) {
 		collision : null					
 	};
 	
-	this.init = function() {		
-		var addWrap = function(gm, obj, group) {			
-			return rect;
-		};
-	
+	this.init = function() {	
 		var self = this;		
 		var deferredLoaded = [];
 		// TODO : Load all the IMAGES.
@@ -55,8 +51,24 @@ var Map = function(key, tileMap, game, categoryId) {
 						o = new Warper(game, npc);
 					break;
 					case "shop":
-						o = new Shop(game, npc, tileMap, self.warps, self.npcObjs, self.npcs, categoryId);
-						deferredLoaded.push(o.init());
+						var promise = $.Deferred();
+						o = new Shop(game, npc, tileMap, category);
+						o.init().then(function(obj) {
+							if (obj.panelInfo == null || obj.warp == null || obj.map_id == null) {
+								promise.resolve();
+								return;
+							}
+														
+							self.npcObjs.add(obj.panelInfo.getSprite());
+							self.npcs.push([obj.panelInfo.getSprite(), obj.panelInfo ]);							
+							self.warps.add(obj.warp);
+							self.warps.set(obj.warp, 'map', "shop_" + obj.map_id, false, false, 0, true);
+							self.warps.set(obj.warp, 'warp_entry', 'warp', false, false, 0, true);
+							self.warps.set(obj.warp, 'entry_dir', 'bottom', false, false, 0, true);
+							self.warps.set(obj.warp, 'category', category, false, false, 0, true);
+							promise.resolve();					
+						});
+						deferredLoaded.push(promise);
 					break;
 					case "stock_manager":
 						o = new StockManager(game, npc);
@@ -92,6 +104,8 @@ var Map = function(key, tileMap, game, categoryId) {
 				{
 					self.warps.set(rect, property, warp.properties[property], false, false, 0, true);
 				}
+				
+				self.warps.set(rect, 'category', category, false, false, 0, true);
 			});
 		}
 		

@@ -156,14 +156,14 @@ Menu.prototype = {
 				height: sellerHeight,
 				callback: function() {
 					retrieUserInformation(function(userInfo) {						
-						var newPlayer = {
+						var options = {
 							pseudo : userInfo.name,
 							map: 'MainMap',
-							category_id: null
+							category: {}
 						};
 
 						$(settingsModal).remove();
-						self.game.state.start("Game", true, false, newPlayer);
+						self.game.state.start("Game", true, false, options);
 					});
 				}
 			}, {
