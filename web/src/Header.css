@@ -1,0 +1,14 @@
+.separator {
+  text-align: center;
+  color: gray;
+}
+
+.loading {
+  text-align: center;
+}
+
+.loading .fa-spinner {
+  font-size:24px;
+  width: 24px;
+  height:24px;
+}

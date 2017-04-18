@@ -1,0 +1,12 @@
+.placeholder{
+  background: #f0f0f0;
+	border:1px dashed #ddd;
+}
+
+.widget {
+  padding-top: 10px;
+}
+
+.search {
+  padding: 10px 0 10px 0;
+}
