@@ -66,7 +66,6 @@ class AddShop extends Component {
           </TabPane>
           <TabPane tabId='4'>
             <section className="row section">
-              <iframe>#document<html><head></head><body></body></html></iframe>
             </section>
             <section className="row sub-section section-description">
     					<button className="btn btn-primary previous" onClick={() => { this.toggle('3'); }}>Previous</button>
