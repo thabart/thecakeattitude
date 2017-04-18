@@ -2,19 +2,42 @@ import React, { Component } from 'react';
 import TrendingSellers from './widgets/trendingSellers';
 import BestDeals from './widgets/bestDeals';
 import PublicAnnouncements from './widgets/publicAnnouncements';
-import { withGoogleMap, GoogleMap } from 'react-google-maps';
+import { withGoogleMap, GoogleMap, Circle, InfoWindow } from 'react-google-maps';
 import './Map.css';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
 
 const GettingStartedGoogleMap = withGoogleMap(props => (
   <GoogleMap
-    defaultZoom={3}
-    defaultCenter={{ lat: -25.363882, lng: 131.044922 }}>
+    ref={props.onMapLoad}
+    defaultZoom={12}
+    center={props.center}
+  >
+    {props.center && <InfoWindow position={props.center}>
+        <div>{props.centerContent}</div>
+    </InfoWindow>}
+    <Circle
+        center={props.center}
+        radius={200}
+        options={{
+          fillColor: `red`,
+          fillOpacity: 0.20,
+          strokeColor: `red`,
+          strokeOpacity: 1,
+          strokeWeight: 1,
+        }}
+      />
   </GoogleMap>
 ));
 
 class Map extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      center : null,
+      centerContent: null
+    };
+  }
   render() {
     return (
       <div>
@@ -25,14 +48,16 @@ class Map extends Component {
         <div className="row">
           <div className="col-md-6">
             <div id="map" className="col-md-12">
-            <GettingStartedGoogleMap
-                  containerElement={
-                    <div style={{ height: `100%` }} />
-                  }
-                  mapElement={
-                    <div style={{ height: `100%` }} />
-                  }
-                />
+              <GettingStartedGoogleMap
+                center={this.state.center}
+                centerContent={this.state.centerContent}
+                containerElement={
+                  <div style={{ height: `100%` }} />
+                }
+                mapElement={
+                  <div style={{ height: `100%` }} />
+                }>
+              </GettingStartedGoogleMap>
             </div>
           </div>
           <div className="col-md-6">
@@ -53,6 +78,8 @@ class Map extends Component {
     );
   }
   componentDidMount() {
+    var self = this;
+    // Can reorder all the widgets.
     $(this.widgetContainer).sortable({
       handle: '.card-header',
       opacity: 0.4,
@@ -60,6 +87,20 @@ class Map extends Component {
       forcePlaceholderSize: true,
       cursor: 'move'
     });
+    // Get the current location and display it.
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        self.setState({
+          center: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          },
+          centerContent: 'Current location'
+        });
+      });
+    } else {
+      // TODO : Geolocation is not possible.
+    }
   }
 }
 
