@@ -26,6 +26,7 @@ class Header extends Component {
       isLoading: false,
       isAccessTokenChecked : false,
       isAccountOpened : false,
+      isLoggedIn : false,
       activeAuthenticateTab: '1'
     };
   }
@@ -76,13 +77,15 @@ class Header extends Component {
       self.setState({
         isErrorDisplayed : false,
         isLoading : false,
-        isAuthenticateOpened: false
+        isAuthenticateOpened: false,
+        isLoggedIn : true
       });
       SessionService.setSession(resp.access_token);
     }).catch(function(e) {
       self.setState({
         isErrorDisplayed : true,
-        isLoading : false
+        isLoading : false,
+        isLoggedIn : false
       });
     });
   }
@@ -115,7 +118,8 @@ class Header extends Component {
             self.setState({
               isErrorDisplayed : false,
               isLoading : false,
-              isAuthenticateOpened: false
+              isAuthenticateOpened: false,
+              isLoggedIn: true
             });
           });
         }
@@ -123,7 +127,9 @@ class Header extends Component {
     });
   }
   disconnect() {
-    console.log('disconnect');
+    this.setState({
+      isLoggedIn : false
+    });
     SessionService.remove();
   }
   componentWillMount() {
@@ -138,11 +144,13 @@ class Header extends Component {
 
       OpenIdService.introspect(accessToken).then(function() {
         self.setState({
-          isAccessTokenChecked: true
+          isAccessTokenChecked: true,
+          isLoggedIn : true
         });
       }).catch(function() {
         self.setState({
-          isAccessTokenChecked: true
+          isAccessTokenChecked: true,
+          isLoggedIn : false
         });
         SessionService.remove();
       });
@@ -165,10 +173,10 @@ class Header extends Component {
                   <Link to="/sellers" className="nav-link">Sellers</Link>
                 </NavItem>
                 {
-                  (!SessionService.isLoggedIn()) ? <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}><a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a></NavItem> : ''
+                  (!this.state.isLoggedIn) ? <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}><a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a></NavItem> : ''
                 }
                 {
-                  (SessionService.isLoggedIn()) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
+                  (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
                     <DropdownToggle nav caret>Account</DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
