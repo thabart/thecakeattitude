@@ -9,27 +9,12 @@ import './App.css';
 
 class App extends Component {
   componentWillMount() {
-    var parameters = window.location.search.substring(1);
     var accessToken = SessionService.getSession();
-    if (parameters && (!accessToken || accessToken == null)) {
-      var dic = parameters.split('&');
-      var accessToken = null;
-      dic.forEach(function(concat) {
-        var kvp = concat.split('=');
-        if (kvp[0] == 'access_token') {
-          accessToken = kvp[1];
-        }
-      });
-    }
-
-    if (accessToken == null) {
+    if (!accessToken || accessToken == null) {
       return;
     }
 
-    OpenIdService.introspect(accessToken).then(function(intro) {
-      SessionService.setItem(accessToken);
-      window.location.href = '/';
-    }).catch(function() {
+    OpenIdService.introspect(accessToken).catch(function() {
       SessionService.remove();
     });
   }

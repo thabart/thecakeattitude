@@ -78,8 +78,40 @@ class Header extends Component {
     });
   }
   externalAuthenticate() {
+    var getParameterByName = function(name, url) {
+				if (!url) url = window.location.href;
+				name = name.replace(/[\[\]]/g, "\\$&");
+				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+					results = regex.exec(url);
+				if (!results) return null;
+				if (!results[2]) return '';
+				return decodeURIComponent(results[2].replace(/\+/g, " "));
+    };
+    var self = this;
     OpenIdService.getAuthorizationurl().then(function(url) {
-      window.location.href = url;
+      var w = window.open(url, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
+      var interval = setInterval(function() {
+        if (w.closed) {
+          clearInterval(interval);
+          return;
+        }
+
+        var href = w.location.href;
+        var accessToken = getParameterByName('access_token', href);
+          console.log(accessToken);
+        if (accessToken) {
+          OpenIdService.introspect(accessToken).then(function(introspect) {
+            clearInterval(interval);
+            w.close();
+            SessionService.setSession(accessToken);
+            self.setState({
+              isErrorDisplayed : false,
+              isLoading : false,
+              isAuthenticateOpened: false
+            });
+          });
+        }
+      })
     });
   }
   render() {
