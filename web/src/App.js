@@ -8,16 +8,6 @@ import SessionService from './services/Session';
 import './App.css';
 
 class App extends Component {
-  componentWillMount() {
-    var accessToken = SessionService.getSession();
-    if (!accessToken || accessToken == null) {
-      return;
-    }
-
-    OpenIdService.introspect(accessToken).catch(function() {
-      SessionService.remove();
-    });
-  }
   render() {
     return (
       <Router>

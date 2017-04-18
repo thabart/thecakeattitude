@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink,  Modal, ModalHeader, ModalBody, ModalFooter, Button, TabContent, TabPane } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu, NavLink,  Modal, ModalHeader, ModalBody, ModalFooter, Button, TabContent, TabPane } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 import OpenIdService from './services/OpenId';
@@ -13,15 +13,19 @@ class Header extends Component {
     this.toggleAccount = this.toggleAccount.bind(this);
     this.toggleAuthenticate = this.toggleAuthenticate.bind(this);
     this.toggleAuthenticateMethod = this.toggleAuthenticateMethod.bind(this);
+    this.toggleAccount = this.toggleAccount.bind(this);
     this.authenticate = this.authenticate.bind(this);
     this.externalAuthenticate = this.externalAuthenticate.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.disconnect = this.disconnect.bind(this);
     this.state = {
       isMenuOpen: false,
       isAccountOpen: false,
       isAuthenticateOpened: false,
       isErrorDisplayed: false,
       isLoading: false,
+      isAccessTokenChecked : false,
+      isAccountOpened : false,
       activeAuthenticateTab: '1'
     };
   }
@@ -48,6 +52,11 @@ class Header extends Component {
     this.setState({
       activeAuthenticateTab: tab
     })
+  }
+  toggleAccount() {
+    this.setState({
+      isAccountOpened: !this.state.isAccountOpened
+    });
   }
   handleInputChange(e) {
     const target = e.target;
@@ -98,7 +107,6 @@ class Header extends Component {
 
         var href = w.location.href;
         var accessToken = getParameterByName('access_token', href);
-          console.log(accessToken);
         if (accessToken) {
           OpenIdService.introspect(accessToken).then(function(introspect) {
             clearInterval(interval);
@@ -114,6 +122,31 @@ class Header extends Component {
       })
     });
   }
+  disconnect() {
+    console.log('disconnect');
+    SessionService.remove();
+  }
+  componentWillMount() {
+      var self = this;
+      var accessToken = SessionService.getSession();
+      if (!accessToken || accessToken == null) {
+        self.setState({
+          isAccessTokenChecked: true
+        });
+        return;
+      }
+
+      OpenIdService.introspect(accessToken).then(function() {
+        self.setState({
+          isAccessTokenChecked: true
+        });
+      }).catch(function() {
+        self.setState({
+          isAccessTokenChecked: true
+        });
+        SessionService.remove();
+      });
+  }
   render() {
     return (
       <div>
@@ -122,15 +155,26 @@ class Header extends Component {
             <NavbarBrand href="/">Application name</NavbarBrand>
             <Collapse isOpen={this.state.isMenuOpen} navbar>
               <Nav className="mr-auto" navbar>
-                <NavItem>
+                <NavItem className={this.state.isAccessTokenChecked ? 'hidden' : ''}>
+                  <i className='fa fa-spinner fa-spin'></i>
+                </NavItem>
+                <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}>
                   <Link to="/" className="nav-link">Map</Link>
                 </NavItem>
-                <NavItem>
+                <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}>
                   <Link to="/sellers" className="nav-link">Sellers</Link>
                 </NavItem>
-                <NavItem>
-                  <a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a>
-                </NavItem>
+                {
+                  (!SessionService.isLoggedIn()) ? <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}><a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a></NavItem> : ''
+                }
+                {
+                  (SessionService.isLoggedIn()) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
+                    <DropdownToggle nav caret>Account</DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
+                    </DropdownMenu>
+                  </NavDropdown> : ''
+                }
               </Nav>
             </Collapse>
         </Navbar>

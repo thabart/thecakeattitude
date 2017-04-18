@@ -8,5 +8,8 @@ module.exports = {
   },
   remove: function() {
     sessionStorage.removeItem(sessionName);
+  },
+  isLoggedIn: function() {
+    return this.getSession() !== null && this.getSession();
   }
 };

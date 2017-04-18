@@ -58,8 +58,11 @@ module.exports = {
           dataType: 'json'
         }).then(function(intro) {
           if (intro.active) {
-            console.log(intro);
+            resolve(intro);
+            return;
           }
+
+          reject();
         }).fail(function() {
           reject();
         })
