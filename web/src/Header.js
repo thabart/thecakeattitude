@@ -176,12 +176,15 @@ class Header extends Component {
                   (!this.state.isLoggedIn) ? <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}><a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a></NavItem> : ''
                 }
                 {
-                  (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
+                  (this.state.isLoggedIn) ? <NavDropdown className={!this.state.isAccessTokenChecked ? 'hidden' : ''} isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
                     <DropdownToggle nav caret>Account</DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
                     </DropdownMenu>
                   </NavDropdown> : ''
+                }
+                {
+                  (this.state.isLoggedIn) ? <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}><Link to="/addshop" className="nav-link">Add shop</Link></NavItem> : ''
                 }
               </Nav>
             </Collapse>

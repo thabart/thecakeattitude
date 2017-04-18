@@ -1,0 +1,72 @@
+.section {
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+  background-color: white;
+  padding: 20px;
+}
+
+.section,
+.sub-section {
+	background-color: white;
+}
+
+.section-description {
+	padding: 20px;
+}
+
+.sub-section {
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+	border-top: 1px solid #f1f0f0;
+}
+
+.sub-section .previous {
+  margin-right: 10px;
+}
+
+.progressbar {
+  counter-reset: step;
+  min-height: 90px;
+}
+.progressbar li {
+  text-align: center;
+  list-style-type: none;
+  text-transform: uppercase;
+  float: left;
+  width: 16.6%;
+}
+
+.progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 30px;
+  line-height: 30px;
+  display: block;
+  color: #333;
+  background: white;
+  border-radius: 50%;
+  margin: 0 auto 5px auto;
+}
+
+.progressbar li:after {
+  content: '';
+  height: 2px;
+  right: 50%;
+  background: rgba(148, 135, 135, 0.9);
+  display: block;
+  position: relative;
+  top: -45px;
+  width: 100%;
+  z-index: -1;
+}
+
+.progressbar li:first-child:after {
+  content: none;
+}
+
+.progressbar li.active:before {
+  color: white;
+}
+
+.progressbar li.active:before,
+.progressbar li.active:after {
+  background: #27AE60;
+}
