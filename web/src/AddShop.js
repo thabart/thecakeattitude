@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
 import { TabContent, TabPane } from 'reactstrap';
+import { withGoogleMap, GoogleMap} from 'react-google-maps';
 import './AddShop.css';
 
+const GettingStartedGoogleMap = withGoogleMap(props => (
+  <GoogleMap
+    ref={props.onMapLoad}
+    defaultZoom={3}
+    defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
+  >
+  </GoogleMap>
+));
 class AddShop extends Component {
   constructor(props) {
     super(props);
     this.toggle.bind(this);
     this.state = {
-      activeTab: '1'
+      activeTab: '1',
+      center: null
     };
   }
   toggle(tab) {
@@ -21,12 +31,12 @@ class AddShop extends Component {
     return (
       <div className="container">
         <ul className="progressbar">
-          <li className="active">Description</li>
-          <li>Address</li>
-          <li>Contact</li>
-          <li>Tags</li>
-          <li>Products</li>
-          <li>Payment</li>
+          <li className={(parseInt(this.state.activeTab) >= 1) ?'active' : ''}>Description</li>
+          <li className={(parseInt(this.state.activeTab) >= 2) ?'active' : ''}>Address</li>
+          <li className={(parseInt(this.state.activeTab) >= 3) ?'active' : ''}>Contact</li>
+          <li className={(parseInt(this.state.activeTab) >= 4) ?'active' : ''}>Tags</li>
+          <li className={(parseInt(this.state.activeTab) >= 5) ?'active' : ''}>Products</li>
+          <li className={(parseInt(this.state.activeTab) >= 6) ?'active' : ''}>Payment</li>
         </ul>
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId='1'>
@@ -43,11 +53,24 @@ class AddShop extends Component {
           </TabPane>
           <TabPane tabId='2'>
             <section className="row section">
-              <div className='form-group col-md-12'><label className='control-label'>Street address</label><input type='text' className='form-control' name='street_address' /></div>
-              <div className='form-group col-md-12'><label className='control-label'>Postal code</label><input type='text' className='form-control' name='postal_code' /></div>
-              <div className='form-group col-md-12'><label className='control-label'>Locality</label><input type='text' className='form-control' name='locality' /></div>
-              <div className='form-group col-md-12'><label className='control-label'>Country</label><input type='text' className='form-control' name='country' /></div>
-              <div className='form-group col-md-12'><input type='checkbox' /> Use current location</div>
+              <div className="col-md-6">
+                <div className='form-group col-md-12'><label className='control-label'>Street address</label><input type='text' className='form-control' name='street_address' /></div>
+                <div className='form-group col-md-12'><label className='control-label'>Postal code</label><input type='text' className='form-control' name='postal_code' /></div>
+                <div className='form-group col-md-12'><label className='control-label'>Locality</label><input type='text' className='form-control' name='locality' /></div>
+                <div className='form-group col-md-12'><label className='control-label'>Country</label><input type='text' className='form-control' name='country' /></div>
+                <div className='form-group col-md-12'><input type='checkbox' /> Use current location</div>
+              </div>
+              <div className="col-md-6">
+                  <GettingStartedGoogleMap
+                    center={this.state.center}
+                    containerElement={
+                      <div style={{ height: `100%` }} />
+                    }
+                    mapElement={
+                      <div style={{ height: `100%` }} />
+                    }>
+                  </GettingStartedGoogleMap>
+              </div>
             </section>
     				<section className="row sub-section section-description">
     					<button className="btn btn-primary previous" onClick={() => { this.toggle('1'); }}>Previous</button>
