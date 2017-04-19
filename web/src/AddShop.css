@@ -1,20 +1,13 @@
-.section {
+.progressbar-content {
 	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
   background-color: white;
-  padding: 20px;
 }
 
-.section,
-.sub-section {
-	background-color: white;
-}
-
-.section-description {
-	padding: 20px;
+.progressbar-content section {	
+	padding: 30px;
 }
 
 .sub-section {
-	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
 	border-top: 1px solid #f1f0f0;
 }
 
