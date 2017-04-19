@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import { TabContent, TabPane } from 'reactstrap';
-import { withGoogleMap, GoogleMap, InfoWindow, Circle, Marker } from 'react-google-maps';
+import { withGoogleMap, GoogleMap, InfoWindow, Circle, Marker, Tooltip } from 'react-google-maps';
 import Constants from '../Constants';
 import SearchBox from 'react-google-maps/lib/places/SearchBox'
 import { MAP } from 'react-google-maps/lib/constants';
+import DescriptionForm from './shop/descriptionForm';
 import $ from 'jquery';
 import './AddShop.css';
 
@@ -219,16 +220,7 @@ class AddShop extends Component {
         <TabContent activeTab={this.state.activeTab} className="progressbar-content">
           <div className={this.state.isLoading ? 'loading': 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
           <TabPane tabId='1' className={this.state.isLoading ? 'hidden': ''}>
-            <section className="col-md-12 section">
-              <div className='form-group col-md-12'><label className='control-label'>Name</label><input type='text' className='form-control' name='name'/></div>
-              <div className='form-group col-md-12'><label className='control-label'>Description</label><textarea className='form-control' name='description'></textarea></div>
-							<div className='form-group col-md-12'><label className='control-label'>Category</label></div>
-							<div className='form-group col-md-12'><label className='control-label'>Banner image</label><div><input type='file' /></div></div>
-              <div className='form-group col-md-12'><label className='control-label'>Picture</label><div><input type='file' /></div></div>
-            </section>
-  					<section className="col-md-12 sub-section">
-  						<button className="btn btn-primary next" onClick={() => { this.toggle('2'); }}>Next</button>
-  					</section>
+            <DescriptionForm onNext={() => { this.toggle('2'); }}/>
           </TabPane>
           <TabPane tabId='2' className={this.state.isLoading ? 'hidden': ''}>
             <section className="row section">
