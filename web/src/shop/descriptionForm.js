@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
+import CategoryService from '../services/Category';
 import Game from '../game/game';
 
 class DescriptionForm extends Component {
@@ -10,11 +11,16 @@ class DescriptionForm extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.validate = this.validate.bind(this);
+    this.selectCategory = this.selectCategory.bind(this);
     this.state = {
       name: null,
       description: null,
       bannerImage: null,
       pictureImage: null,
+      isCategoryLoading: false,
+      isSubCategoryLoading: false,
+      categories: [],
+      subCategories: [],
       tooltip: {
         toggleName : false,
         toggleDescription: false,
@@ -93,11 +99,34 @@ class DescriptionForm extends Component {
       this.props.onNext();
     }
   }
+  selectCategory(e) {
+    var self = this;
+    self.setState({
+      isSubCategoryLoading: true
+    });
+    CategoryService.get(e.target.value).then(function(r) {
+      var links = r['_links']['items'];
+      var subCategories = [];
+      links.forEach(function(link) {
+        subCategories.push({ id: link.href, name: link.name });
+      });
+      self.setState({
+        subCategories: subCategories,
+        isSubCategoryLoading: false
+      });
+    }).catch(function() {
+      self.setState({
+        isSubCategoryLoading: false
+      });
+    });
+  }
   render() {
     var bannerImagePreview,
       pictureImagePreview,
       nameError,
-      descriptionError;
+      descriptionError,
+      categories = [],
+      subCategories = [];
     if (this.state.bannerImage) {
       bannerImagePreview = (<div className='image-container'><img src={this.state.bannerImage} width='50' height='50' /></div>);
     }
@@ -120,6 +149,13 @@ class DescriptionForm extends Component {
       </Tooltip></span>);
     }
 
+    this.state.categories.forEach(function(category) {
+      categories.push(<option value={category.id}>{category.name}</option>);
+    });
+
+    this.state.subCategories.forEach(function(category) {
+      subCategories.push(<option value={category.id}>{category.name}</option>);
+    });
     return(
       <div>
         <section className="row section">
@@ -140,7 +176,26 @@ class DescriptionForm extends Component {
                {descriptionError}
               <textarea className='form-control' name='description' onChange={this.handleInputChange}></textarea>
             </div>
-            <div className='form-group col-md-12'><label className='control-label'>Category</label></div>
+            <div className='row'>
+              <div className='col-md-6'>
+                <div className='form-group'>
+                  <label className='control-label'>Categories</label>
+                  <div className={this.state.isCategoryLoading ? 'loading' : 'hidden'}><i className='fa fa-spinner fa-spin'></i></div>
+                  <select className={this.state.isCategoryLoading ? 'hidden' : 'form-control'} onChange={this.selectCategory}>
+                    {categories}
+                  </select>
+                </div>
+              </div>
+              <div className='col-md-6'>
+                <div className='form-group'>
+                  <label className='control-label'>Sub categories</label>
+                  <div className={this.state.isSubCategoryLoading ? 'loading' : 'hidden'}><i className='fa fa-spinner fa-spin'></i></div>
+                  <select className={this.state.isSubCategoryLoading ? 'hidden' : 'form-control'}>
+                    {subCategories}
+                  </select>
+                </div>
+              </div>
+            </div>
             <div className='form-group col-md-12'>
               <label className='control-label'>Banner image</label>
               <div><input type='file' onChange={(e) => this.uploadBannerImage(e)} /></div>
@@ -161,6 +216,30 @@ class DescriptionForm extends Component {
         </section>
       </div>
     );
+  }
+  componentDidMount() {
+    var self = this;
+    self.setState({
+      isCategoryLoading: true,
+      isSubCategoryLoading: true
+    })
+    CategoryService.getParents().then(function(result) {
+      var categories = result['_embedded'];
+      var result = [];
+      categories.forEach(function(category) {
+        result.push({ id : category.id, name: category.name });
+      });
+      self.setState({
+        isCategoryLoading: false,
+        isSubCategoryLoading: false,
+        categories : result
+      });
+    }).catch(function() {
+      self.setState({
+        isCategoryLoading: false,
+        isSubCategoryLoading: false
+      });
+    });
   }
 }
 
