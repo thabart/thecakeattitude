@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
 import CategoryService from '../services/Category';
 import Game from '../game/game';
+import Constants from '../../Constants';
+import $ from 'jquery';
 
 class DescriptionForm extends Component {
   constructor(props) {
@@ -12,6 +14,7 @@ class DescriptionForm extends Component {
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.validate = this.validate.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
+    this.selectSubCategory = this.selectSubCategory.bind(this);
     this.state = {
       name: null,
       description: null,
@@ -100,11 +103,23 @@ class DescriptionForm extends Component {
     }
   }
   selectCategory(e) {
+    this.displaySubCategory(e.target.value);
+  }
+  selectSubCategory(e) {
+    this.displayMap(e.target.value);
+  }
+  displayMap(categoryId) {
+    var self = this;
+    $.get(Constants.apiUrl + categoryId).then(function(r) {
+      self.refs.game.loadMap(r['_embedded'])
+    });
+  }
+  displaySubCategory(categoryId) {
     var self = this;
     self.setState({
       isSubCategoryLoading: true
     });
-    CategoryService.get(e.target.value).then(function(r) {
+    CategoryService.get(categoryId).then(function(r) {
       var links = r['_links']['items'];
       var subCategories = [];
       links.forEach(function(link) {
@@ -114,6 +129,7 @@ class DescriptionForm extends Component {
         subCategories: subCategories,
         isSubCategoryLoading: false
       });
+      self.displayMap(subCategories[0].id);
     }).catch(function() {
       self.setState({
         isSubCategoryLoading: false
@@ -190,7 +206,7 @@ class DescriptionForm extends Component {
                 <div className='form-group'>
                   <label className='control-label'>Sub categories</label>
                   <div className={this.state.isSubCategoryLoading ? 'loading' : 'hidden'}><i className='fa fa-spinner fa-spin'></i></div>
-                  <select className={this.state.isSubCategoryLoading ? 'hidden' : 'form-control'}>
+                  <select className={this.state.isSubCategoryLoading ? 'hidden' : 'form-control'} onChange={this.selectSubCategory}>
                     {subCategories}
                   </select>
                 </div>
@@ -208,7 +224,7 @@ class DescriptionForm extends Component {
             </div>
           </div>
           <div className="col-md-6">
-            <Game />
+            <Game ref="game"/>
           </div>
         </section>
         <section className="col-md-12 sub-section">
@@ -234,6 +250,7 @@ class DescriptionForm extends Component {
         isSubCategoryLoading: false,
         categories : result
       });
+      self.displaySubCategory(result[0].id);
     }).catch(function() {
       self.setState({
         isCategoryLoading: false,

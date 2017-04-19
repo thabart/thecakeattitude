@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Splash from './states/splash';
 
-class Game extends  Component {
+class Game extends Component {
   constructor(props) {
     super(props);
     this._game = null;
@@ -11,10 +11,12 @@ class Game extends  Component {
   }
   create() {
     this._game.state.add('Splash', Splash, false);
-    this._game.state.start('Splash');
   }
   render() {
     return (<div ref="game"></div>);
+  }
+  loadMap(category) {
+    this._game.state.start('Splash', true, true, category);
   }
   componentDidMount() {
     var game = this.refs.game;
