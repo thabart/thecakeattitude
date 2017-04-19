@@ -1,23 +1,69 @@
 import React, { Component } from 'react';
+import ReactDom from 'react-dom';
 import { TabContent, TabPane } from 'reactstrap';
-import { withGoogleMap, GoogleMap} from 'react-google-maps';
+import { withGoogleMap, GoogleMap, InfoWindow, Circle } from 'react-google-maps';
+import SearchBox from 'react-google-maps/lib/places/SearchBox'
+import { MAP } from 'react-google-maps/lib/constants';
+import $ from 'jquery';
 import './AddShop.css';
+const INPUT_STYLE = {
+  boxSizing: `border-box`,
+  MozBoxSizing: `border-box`,
+  border: `1px solid transparent`,
+  width: `240px`,
+  height: `32px`,
+  marginTop: `5px`,
+  padding: `0 12px`,
+  borderRadius: `1px`,
+  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+  fontSize: `14px`,
+  outline: `none`,
+  textOverflow: `ellipses`,
+};
+
 
 const GettingStartedGoogleMap = withGoogleMap(props => (
   <GoogleMap
+    defaultZoom={12}
+    center={props.center}
     ref={props.onMapLoad}
-    defaultZoom={3}
-    defaultCenter={{ lat: -25.363882, lng: 131.044922 }}
   >
+    <SearchBox
+        ref={props.onSearchBoxCreated}
+        bounds={props.bounds}
+        onPlacesChanged={props.onPlacesChanged}
+        inputPlaceholder="Enter your address" controlPosition={window.google.maps.ControlPosition.TOP_LEFT} inputStyle={INPUT_STYLE}
+      />
+      {props.center && <InfoWindow position={props.center}>
+          <div>{props.centerContent}</div>
+      </InfoWindow>}
+      {props.center && <Circle
+          center={props.center}
+          radius={200}
+          options={{
+            fillColor: `red`,
+            fillOpacity: 0.20,
+            strokeColor: `red`,
+            strokeOpacity: 1,
+            strokeWeight: 1,
+          }}
+        />}
   </GoogleMap>
 ));
 class AddShop extends Component {
   constructor(props) {
     super(props);
-    this.toggle.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.onMapLoad = this.onMapLoad.bind(this);
+    this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
+    this.onPlacesChanged = this.onPlacesChanged.bind(this);
+    this.search = this.search.bind(this);
+    this.googleMap = null;
     this.state = {
       activeTab: '1',
-      center: null
+      center: null,
+      centerContent: null,
+      bounds: null
     };
   }
   toggle(tab) {
@@ -25,7 +71,27 @@ class AddShop extends Component {
       this.setState({
         activeTab: tab
       });
+
+      if (tab === '2') {
+        var self = this;
+        setTimeout(function() {
+          const mapInstance = self._googleMap.context[MAP];
+          window.google.maps.event.trigger(mapInstance, 'resize');
+        }, 100);
+      }
     }
+  }
+  search() {
+
+  }
+  onMapLoad(map) {
+    this._googleMap = map;
+  }
+  onSearchBoxCreated() {
+
+  }
+  onPlacesChanged() {
+
   }
   render() {
     return (
@@ -62,7 +128,13 @@ class AddShop extends Component {
               </div>
               <div className="col-md-6">
                   <GettingStartedGoogleMap
+                    ref={(i) => this.googleMap = i }
                     center={this.state.center}
+                    centerContent={this.state.centerContent}
+                    onMapLoad={this.onMapLoad}
+                    onSearchBoxCreated={this.onSearchBoxCreated}
+                    onPlacesChanged={this.onPlacesChanged}
+                    bounds={this.state.bounds}
                     containerElement={
                       <div style={{ height: `100%` }} />
                     }
@@ -74,6 +146,7 @@ class AddShop extends Component {
             </section>
     				<section className="row sub-section section-description">
     					<button className="btn btn-primary previous" onClick={() => { this.toggle('1'); }}>Previous</button>
+              <button className="btn btn-primary previous" onClick={() => {this.search(); }}>Search</button>
       				<button className="btn btn-primary next" onClick={() => {this.toggle('3'); }}>Next</button>
     				</section>
           </TabPane>
@@ -119,6 +192,23 @@ class AddShop extends Component {
         </TabContent>
       </div>
     );
+  }
+  componentDidMount() {
+    var self = this;
+    // Get the current location and display it.
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        self.setState({
+          center: {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          },
+          centerContent: 'Current location'
+        });
+      });
+    } else {
+      // TODO : Geolocation is not possible.
+    }
   }
 }
 
