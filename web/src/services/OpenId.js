@@ -80,5 +80,24 @@ module.exports = {
         reject();
       })
     });
+  },
+  getUserInfo: function(accessToken) {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+      self.getWellKnownConfiguration().then(function(res) {
+         $.ajax(res.userinfo_endpoint, {
+           type: 'GET',
+           headers: {
+             'Authorization':'Bearer '+accessToken
+           }
+         }).then(function(userInfo) {
+           resolve(userInfo);
+         }).fail(function() {
+           reject();
+         });
+      }).catch(function() {
+        reject();
+      });
+    });
   }
 };

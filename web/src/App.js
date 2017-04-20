@@ -20,14 +20,15 @@ class App extends Component {
   }
   componentWillMount() {
     var self = this;
-    var accessToken = SessionService.getSession();
-    if (!accessToken || accessToken == null) {
+    var session = SessionService.getSession();
+    if (!session || session == null) {
       self.setState({
         isAccessTokenChecked: true
       });
+      return;
     }
 
-    OpenIdService.introspect(accessToken).then(function() {
+    OpenIdService.introspect(session.access_token).then(function() {
       self.setState({
         isAccessTokenChecked: true,
         isLoggedIn : true

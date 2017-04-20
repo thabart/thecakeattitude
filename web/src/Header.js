@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu, NavLink,  Modal, ModalHeader, ModalBody, ModalFooter, Button, TabContent, TabPane } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu, NavLink,  Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import { Link, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import Promise from 'bluebird';
 import classnames from 'classnames';
 import OpenIdService from './services/OpenId';
+import AuthenticateService from './services/Authenticate';
 import SessionService from './services/Session';
 import './Header.css';
 
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.toggleMenu = this.toggleMenu.bind(this);
-    this.toggleAccount = this.toggleAccount.bind(this);
-    this.toggleAuthenticate = this.toggleAuthenticate.bind(this);
-    this.toggleAuthenticateMethod = this.toggleAuthenticateMethod.bind(this);
-    this.toggleAccount = this.toggleAccount.bind(this);
+    this.toggle = this.toggle.bind(this);
     this.authenticate = this.authenticate.bind(this);
     this.externalAuthenticate = this.externalAuthenticate.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.disconnect = this.disconnect.bind(this);
     this.state = {
+      user: null,
       isMenuOpen: false,
       isAccountOpen: false,
       isAuthenticateOpened: false,
@@ -27,37 +26,12 @@ class Header extends Component {
       isLoading: false,
       isAccountOpened : false,
       isLoggedIn : false,
-      activeAuthenticateTab: '1'
+      isConnectHidden: false
     };
   }
-  toggleMenu() {
-    this.setState({
-      isMenuOpen: !this.state.isMenuOpen
-    });
-  }
-  toggleAccount() {
-    this.setState({
-      isAccountOpen: !this.state.isAccountOpen
-    });
-  }
-  toggleAuthenticate() {
-    this.setState({
-      isAuthenticateOpened: !this.state.isAuthenticateOpened
-    });
-  }
-  toggleAuthenticateMethod(tab) {
-    if (this.state.activeAuthenticateTab === tab) {
-      return;
-    }
-
-    this.setState({
-      activeAuthenticateTab: tab
-    })
-  }
-  toggleAccount() {
-    this.setState({
-      isAccountOpened: !this.state.isAccountOpened
-    });
+  toggle(name) {
+    this.state[name] = !this.state[name];
+    this.setState(this.state);
   }
   handleInputChange(e) {
     const target = e.target;
@@ -67,6 +41,25 @@ class Header extends Component {
       [name]: value
     });
   }
+  handleAuthenticationError() {
+    this.setState({
+      isErrorDisplayed : true,
+      isLoading : false,
+      isLoggedIn : false
+    });
+  }
+  handeAuthenticationSuccess() {
+    var self = this;
+    self.displayUserName().then(function() {
+        self.setState({
+          isErrorDisplayed : false,
+          isLoading : false,
+          isAuthenticateOpened: false,
+          isLoggedIn : true
+        });
+    });
+  }
+  // Authenticate with login and password
   authenticate(e) {
     e.preventDefault();
     var self = this;
@@ -74,21 +67,17 @@ class Header extends Component {
       isLoading : true
     });
     OpenIdService.passwordAuthentication(this.state.login, this.state.password).then(function(resp) {
-      self.setState({
-        isErrorDisplayed : false,
-        isLoading : false,
-        isAuthenticateOpened: false,
-        isLoggedIn : true
+      AuthenticateService.authenticate(resp.access_token).then(function() {
+        console.log('AUTH SUCCESS');
+        self.handeAuthenticationSuccess();
+      }).catch(function() {
+        self.handleAuthenticationError();
       });
-      SessionService.setSession(resp.access_token);
     }).catch(function(e) {
-      self.setState({
-        isErrorDisplayed : true,
-        isLoading : false,
-        isLoggedIn : false
-      });
+      self.handleAuthenticationError();
     });
   }
+  // Authenticate with external identity providers.
   externalAuthenticate() {
     var getParameterByName = function(name, url) {
 				if (!url) url = window.location.href;
@@ -111,39 +100,75 @@ class Header extends Component {
         var href = w.location.href;
         var accessToken = getParameterByName('access_token', href);
         if (accessToken) {
-          OpenIdService.introspect(accessToken).then(function(introspect) {
+          AuthenticateService.authenticate(accessToken).then(function() {
             clearInterval(interval);
-            w.close();
-            SessionService.setSession(accessToken);
-            self.setState({
-              isErrorDisplayed : false,
-              isLoading : false,
-              isAuthenticateOpened: false,
-              isLoggedIn: true
-            });
+            w.close();http://localhost:3000/#
+            self.handeAuthenticationSuccess();
+          }).catch(function() {
+            self.handleAuthenticationError();
           });
         }
       })
     });
   }
+  // Disconnect
   disconnect() {
+    this.state.isLoggedIn = false;
     this.setState({
       isLoggedIn : false
     });
     SessionService.remove();
     this.props.history.push('/');
   }
-  componentWillMount() {
-    var session = SessionService.getSession();
+  // Display the user information.
+  displayUser(isLoggedIn, user) {
+    this.state.isLoggedIn = isLoggedIn;
     this.setState({
-      isLoggedIn: session && session != null
+      isLoggedIn: this.state.isLoggedIn,
+      user: user
+    });
+  }
+  // Display username
+  displayUserName() {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+      var session = SessionService.getSession();
+      var isLoggedIn = session && session != null;
+      if (!isLoggedIn) {
+        self.displayUser(isLoggedIn);
+        resolve();
+        return;
+      }
+
+      OpenIdService.getUserInfo(session.access_token).then(function(userInfo) {
+        self.displayUser(true, userInfo);
+        resolve();
+      }).catch(function() {
+        self.displayUser(false);
+        reject();
+      });
+    });
+  }
+  componentWillMount() {
+    var self = this;
+    this.setState({
+      isConnectHidden: true
+    });
+    this.displayUserName().then(function() {
+      self.setState({
+        isConnectHidden: false
+      });
+    }).catch(function() {
+      self.setState({
+        isConnectHidden: false
+      });
     });
   }
   render() {
     return (
       <div>
         <Navbar color="faded" light toggleable>
-            <NavbarToggler right onClick={this.toggleMenu} />
+            <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
             <NavbarBrand href="/">Application name</NavbarBrand>
             <Collapse isOpen={this.state.isMenuOpen} navbar>
               <Nav className="mr-auto" navbar>
@@ -154,24 +179,26 @@ class Header extends Component {
                   <Link to="/sellers" className="nav-link">Sellers</Link>
                 </NavItem>
                 {
-                  (!this.state.isLoggedIn) ? <NavItem><a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a></NavItem> : ''
+                  (this.state.isLoggedIn) ? <NavItem><Link to="/addshop" className="nav-link">Add shop</Link></NavItem> : ''
+                }
+              </Nav>
+              <Nav className={(this.state.isConnectHidden ? 'hidden' : 'ml-auto')} navbar>
+                {
+                  (!this.state.isLoggedIn) ? <NavItem><a href="#" className="nav-link" onClick={() => { this.toggle('isAuthenticateOpened'); }}>Connect</a></NavItem> : ''
                 }
                 {
-                  (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
-                    <DropdownToggle nav caret>Account</DropdownToggle>
+                  (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={() => { this.toggle('isAccountOpened'); }}>
+                    <DropdownToggle nav caret>Welcome <strong>{this.state.user.name}</strong></DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
                     </DropdownMenu>
                   </NavDropdown> : ''
                 }
-                {
-                  (this.state.isLoggedIn) ? <NavItem><Link to="/addshop" className="nav-link">Add shop</Link></NavItem> : ''
-                }
               </Nav>
             </Collapse>
         </Navbar>
         <Modal isOpen={this.state.isAuthenticateOpened}>
-          <ModalHeader toggle={this.toggleAuthenticate}>Authenticate</ModalHeader>
+          <ModalHeader toggle={() => { this.toggle('isAuthenticateOpened'); }}>Authenticate</ModalHeader>
           <ModalBody>
             <div className={this.state.isErrorDisplayed ? 'alert alert-danger' : 'alert alert-danger hidden'}>
               <strong>Error !</strong> Either your login or your password is invalid
