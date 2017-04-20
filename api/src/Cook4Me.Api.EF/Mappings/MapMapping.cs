@@ -14,17 +14,25 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.Core.Models
+namespace Cook4Me.Api.EF.Mappings
 {
-    public class Category
+    internal static class MapMapping
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ParentId { get; set; }
-        public IEnumerable<Category> Children { get; set; }
-        public IEnumerable<Map> Maps { get; set; }
+        public static ModelBuilder AddMapMapping(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+            modelBuilder.Entity<Map>()
+                .ToTable("maps")
+                .HasKey(m => m.MapName);
+            return modelBuilder;
+        }
     }
 }

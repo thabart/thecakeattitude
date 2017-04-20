@@ -17,6 +17,7 @@
 using Cook4Me.Api.EF;
 using Cook4Me.Api.EF.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Cook4Me.Api.Host.Extensions
@@ -29,7 +30,7 @@ namespace Cook4Me.Api.Host.Extensions
             {
                 throw new ArgumentNullException(nameof(context));
             }
-
+            
             InsertCategories(context);
             context.SaveChanges();
         }
@@ -38,14 +39,53 @@ namespace Cook4Me.Api.Host.Extensions
         {
             if (!context.Categories.Any())
             {
+                var shoesCategoryId = Guid.NewGuid().ToString();
+                var bakeryCategoryId = Guid.NewGuid().ToString();
                 var clothesCategory = new Category { Id = Guid.NewGuid().ToString(), Name = "Clothes", Description = "Clothes" };
                 var alimentationCategory = new Category { Id = Guid.NewGuid().ToString(), Name = "Alimentation", Description = "Alimentation" };
                 context.Categories.AddRange(new[]
                 {
                     clothesCategory,
                     alimentationCategory,
-                    new Category { Id = Guid.NewGuid().ToString(), Name = "Shoes", Description = "Shoes", ParentId = clothesCategory.Id, PartialMapUrl = "/maps/map.json", PartialOverviewUrl = "/maps/overview_map.png", MapName = "shoes_map", OverviewName = "shoes_overview" },
-                    new Category { Id = Guid.NewGuid().ToString(), Name = "Pastry & Bakery", Description = "Pastry & Bakery", ParentId = alimentationCategory.Id, PartialMapUrl = "/maps/map2.json", PartialOverviewUrl = "/maps/overview_map2.png", MapName = "bakery_map", OverviewName = "bakery_overview" }
+                    new Category { Id = shoesCategoryId, Name = "Shoes", Description = "Shoes", ParentId = clothesCategory.Id },
+                    new Category { Id = bakeryCategoryId, Name = "Pastry & Bakery", Description = "Pastry & Bakery", ParentId = alimentationCategory.Id }
+                });
+                context.Maps.AddRange(new[]
+                {
+                    new Map
+                    {
+                        CategoryId = shoesCategoryId,
+                        MapName = "first_shoes_map",
+                        PartialMapUrl = "/maps/map.json",
+                        PartialOverviewUrl = "/maps/overview_map.png",
+                        OverviewName = "shoes_overview",
+                        IsMain = true
+                    },
+                    new Map
+                    {
+                        CategoryId = shoesCategoryId,
+                        MapName = "second_shoes_map",
+                        PartialMapUrl = "/maps/map.json",
+                        PartialOverviewUrl = "/maps/overview_map.png",
+                        OverviewName = "shoes_overview"
+                    },
+                    new Map
+                    {
+                        CategoryId = bakeryCategoryId,
+                        MapName = "first_bakery_map",
+                        PartialMapUrl = "/maps/map2.json",
+                        PartialOverviewUrl = "/maps/overview_map2.png",
+                        OverviewName = "bakery_overview",
+                        IsMain = true
+                    },
+                    new Map
+                    {
+                        CategoryId = bakeryCategoryId,
+                        MapName = "second_bakery_map",
+                        PartialMapUrl = "/maps/map2.json",
+                        PartialOverviewUrl = "/maps/overview_map2.png",
+                        OverviewName = "bakery_overview"
+                    }
                 });
             }
         }

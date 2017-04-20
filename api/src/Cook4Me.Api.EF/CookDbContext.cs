@@ -29,13 +29,15 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<Shop> Shops { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Map> Maps { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.AddCategory()
                 .AddUserMapping()
-                .AddShopMapping();
+                .AddShopMapping()
+                .AddMapMapping();
         }
     }
 }

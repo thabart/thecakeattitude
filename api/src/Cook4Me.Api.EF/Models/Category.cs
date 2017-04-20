@@ -23,13 +23,10 @@ namespace Cook4Me.Api.EF.Models
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string MapName { get; set; }
-        public string OverviewName { get; set; }
-        public string PartialMapUrl { get; set; }
-        public string PartialOverviewUrl { get; set; }
         public string ParentId { get; set; }
         public virtual ICollection<Category> Children { get; set; }
         public virtual Category Parent { get; set; }
         public virtual ICollection<Shop> Shops { get; set; }
+        public virtual ICollection<Map> Maps { get; set; }
     }
 }

@@ -15,10 +15,9 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Host.Dtos;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -104,10 +103,28 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Category.Id, category.Id);
             jObj.Add(Constants.DtoNames.Category.Name, category.Name);
             jObj.Add(Constants.DtoNames.Category.Description, category.Description);
-            jObj.Add(Constants.DtoNames.Category.MapName, category.MapName);
-            jObj.Add(Constants.DtoNames.Category.OverViewName, category.OverviewName);
-            jObj.Add(Constants.DtoNames.Category.MapPartialUrl, category.PartialMapUrl);
-            jObj.Add(Constants.DtoNames.Category.OverviewPartialUrl, category.PartialOverviewUrl);
+            if (category.Maps != null && category.Maps.Any())
+            {
+                var arr = new JArray();
+                foreach(var map in category.Maps)
+                {
+                    arr.Add(GetMap(map));
+                }
+
+                jObj.Add(Constants.DtoNames.Category.Maps, arr);
+            }
+
+            return jObj;
+        }
+
+        private JObject GetMap(Map map)
+        {
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Map.MapName, map.MapName);
+            jObj.Add(Constants.DtoNames.Map.MapPartialUrl, map.PartialMapUrl);
+            jObj.Add(Constants.DtoNames.Map.OverViewName, map.OverviewName);
+            jObj.Add(Constants.DtoNames.Map.OverviewPartialUrl, map.PartialOverviewUrl);
+            jObj.Add(Constants.DtoNames.Map.IsMain, map.IsMain);
             return jObj;
         }
     }

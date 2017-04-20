@@ -16,7 +16,6 @@
 
 using Cook4Me.Api.EF.Models;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Domain = Cook4Me.Api.Core.Models;
@@ -139,17 +138,20 @@ namespace Cook4Me.Api.EF.Extensions
                 children = category.Children.Select(c => c.ToDomain());
             }
 
+            IEnumerable<Domain.Map> maps = null;
+            if (category.Maps != null && category.Maps.Any())
+            {
+                maps = category.Maps.Select(m => m.ToDomain());
+            }
+
             return new Domain.Category
             {
                 Id = category.Id,
                 Description = category.Description,
                 Name = category.Name,
-                MapName = category.MapName,
-                OverviewName = category.OverviewName,
-                PartialMapUrl = category.PartialMapUrl,
-                PartialOverviewUrl = category.PartialOverviewUrl,
                 ParentId = category.ParentId,
-                Children = children
+                Children = children,
+                Maps = maps
             };
         }
 
@@ -160,16 +162,55 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(category));
             }
 
+            ICollection<Map> maps = null;
+            if (category.Maps != null && category.Maps.Any())
+            {
+                maps = category.Maps.Select(m => m.ToModel()).ToList();
+            }
+
             return new Category
             {
                 Id = category.Id,
                 Description = category.Description,
                 Name = category.Name,
                 ParentId = category.ParentId,
-                MapName = category.MapName,
-                OverviewName = category.OverviewName,
-                PartialMapUrl = category.PartialMapUrl,
-                PartialOverviewUrl = category.PartialOverviewUrl
+                Maps = maps
+            };
+        }
+
+        public static Domain.Map ToDomain(this Map map)
+        {
+            if (map == null)
+            {
+                throw new ArgumentNullException(nameof(map));
+            }
+
+            return new Domain.Map
+            {
+                CategoryId = map.CategoryId,
+                MapName = map.MapName,
+                OverviewName = map.OverviewName,
+                PartialMapUrl = map.PartialMapUrl,
+                PartialOverviewUrl = map.PartialOverviewUrl,
+                IsMain = map.IsMain
+            };
+        }
+
+        public static Map ToModel(this Domain.Map map)
+        {
+            if (map == null)
+            {
+                throw new ArgumentNullException(nameof(map));
+            }
+
+            return new Map
+            {
+                CategoryId = map.CategoryId,
+                MapName = map.MapName,
+                OverviewName = map.OverviewName,
+                PartialMapUrl = map.PartialMapUrl,
+                PartialOverviewUrl = map.PartialOverviewUrl,
+                IsMain = map.IsMain
             };
         }
     }

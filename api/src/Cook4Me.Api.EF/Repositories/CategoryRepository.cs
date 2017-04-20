@@ -42,7 +42,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(id));
             }
 
-            var result = await _context.Categories.Include(c => c.Children).FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(false);
+            var result = await _context.Categories.Include(c => c.Children).Include(c => c.Maps).FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(false);
             if (result == null)
             {
                 return null;
