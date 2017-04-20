@@ -133,6 +133,10 @@ class DescriptionForm extends Component {
     var self = this;
     $.get(Constants.apiUrl + mapHref).then(function(map) {
       self.refs.game.loadMap(map['_embedded'])
+      self.state.place = null;
+      self.setState({
+        place: self.state.place
+      });
     });
   }
   displayMaps(categoryId) {
@@ -149,9 +153,6 @@ class DescriptionForm extends Component {
 
       var mainMap = maps[0];
       self.displayMap(mainMap .href);
-      self.setState({
-        place: null
-      });
     });
   }
   displaySubCategory(categoryId) {
