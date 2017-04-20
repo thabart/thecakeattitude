@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu, NavLink,  Modal, ModalHeader, ModalBody, ModalFooter, Button, TabContent, TabPane } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import classnames from 'classnames';
 import OpenIdService from './services/OpenId';
 import SessionService from './services/Session';
@@ -24,7 +25,6 @@ class Header extends Component {
       isAuthenticateOpened: false,
       isErrorDisplayed: false,
       isLoading: false,
-      isAccessTokenChecked : false,
       isAccountOpened : false,
       isLoggedIn : false,
       activeAuthenticateTab: '1'
@@ -131,29 +131,13 @@ class Header extends Component {
       isLoggedIn : false
     });
     SessionService.remove();
+    this.props.history.push('/');
   }
   componentWillMount() {
-      var self = this;
-      var accessToken = SessionService.getSession();
-      if (!accessToken || accessToken == null) {
-        self.setState({
-          isAccessTokenChecked: true
-        });
-        return;
-      }
-
-      OpenIdService.introspect(accessToken).then(function() {
-        self.setState({
-          isAccessTokenChecked: true,
-          isLoggedIn : true
-        });
-      }).catch(function() {
-        self.setState({
-          isAccessTokenChecked: true,
-          isLoggedIn : false
-        });
-        SessionService.remove();
-      });
+    var session = SessionService.getSession();
+    this.setState({
+      isLoggedIn: session && session != null
+    });
   }
   render() {
     return (
@@ -163,20 +147,17 @@ class Header extends Component {
             <NavbarBrand href="/">Application name</NavbarBrand>
             <Collapse isOpen={this.state.isMenuOpen} navbar>
               <Nav className="mr-auto" navbar>
-                <NavItem className={this.state.isAccessTokenChecked ? 'hidden' : ''}>
-                  <i className='fa fa-spinner fa-spin'></i>
-                </NavItem>
-                <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}>
+                <NavItem>
                   <Link to="/" className="nav-link">Map</Link>
                 </NavItem>
-                <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}>
+                <NavItem>
                   <Link to="/sellers" className="nav-link">Sellers</Link>
                 </NavItem>
                 {
-                  (!this.state.isLoggedIn) ? <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}><a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a></NavItem> : ''
+                  (!this.state.isLoggedIn) ? <NavItem><a href="#" className="nav-link" onClick={this.toggleAuthenticate}>Connect</a></NavItem> : ''
                 }
                 {
-                  (this.state.isLoggedIn) ? <NavDropdown className={!this.state.isAccessTokenChecked ? 'hidden' : ''} isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
+                  (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={this.toggleAccount}>
                     <DropdownToggle nav caret>Account</DropdownToggle>
                     <DropdownMenu>
                       <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
@@ -184,7 +165,7 @@ class Header extends Component {
                   </NavDropdown> : ''
                 }
                 {
-                  (this.state.isLoggedIn) ? <NavItem className={!this.state.isAccessTokenChecked ? 'hidden' : ''}><Link to="/addshop" className="nav-link">Add shop</Link></NavItem> : ''
+                  (this.state.isLoggedIn) ? <NavItem><Link to="/addshop" className="nav-link">Add shop</Link></NavItem> : ''
                 }
               </Nav>
             </Collapse>
@@ -224,4 +205,4 @@ class Header extends Component {
   }
 }
 
-export default Header;
+export default withRouter(Header);

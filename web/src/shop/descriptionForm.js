@@ -85,6 +85,7 @@ class DescriptionForm extends Component {
     var self = this;
     var valid = self.state.valid;
     var isValid = true;
+    // Check name
     if (!self.state.name || self.state.name.length < 1 || self.state.name.length > 15) {
       valid.isNameInvalid = true;
       isValid = false;
@@ -92,6 +93,7 @@ class DescriptionForm extends Component {
       valid.isNameInvalid = false;
     }
 
+    // Check description
     if (!self.state.description || self.state.description.length < 1 || self.state.description.length > 255) {
       valid.isDescriptionInvalid = true;
       isValid = false;
@@ -99,11 +101,13 @@ class DescriptionForm extends Component {
       valid.isDescriptionInvalid = false;
     }
 
+    // Check at least one place is selected.
     if (!self.state.place || self.state.place === null) {
       valid.isPlaceInvalid = true;
       isValid = false;
     } else {
       valid.isPlaceInvalid = false;
+      
     }
 
     this.setState({
