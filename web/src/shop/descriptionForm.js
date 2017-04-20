@@ -15,6 +15,7 @@ class DescriptionForm extends Component {
     this.validate = this.validate.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
     this.selectSubCategory = this.selectSubCategory.bind(this);
+    this.selectMap = this.selectMap.bind(this);
     this.onHouseSelected = this.onHouseSelected.bind(this);
     this.state = {
       name: null,
@@ -26,6 +27,7 @@ class DescriptionForm extends Component {
       isSubCategoryLoading: false,
       categories: [],
       subCategories: [],
+      maps: [],
       tooltip: {
         toggleName : false,
         toggleDescription: false,
@@ -107,7 +109,7 @@ class DescriptionForm extends Component {
       isValid = false;
     } else {
       valid.isPlaceInvalid = false;
-      
+
     }
 
     this.setState({
@@ -122,12 +124,34 @@ class DescriptionForm extends Component {
     this.displaySubCategory(e.target.value);
   }
   selectSubCategory(e) {
+    this.displayMaps(e.target.value);
+  }
+  selectMap(e) {
     this.displayMap(e.target.value);
   }
-  displayMap(categoryId) {
+  displayMap(mapHref) {
+    var self = this;
+    $.get(Constants.apiUrl + mapHref).then(function(map) {
+      self.refs.game.loadMap(map['_embedded'])
+    });
+  }
+  displayMaps(categoryId) {
     var self = this;
     $.get(Constants.apiUrl + categoryId).then(function(r) {
-      self.refs.game.loadMap(r['_embedded'])
+      var maps = r['_links']['maps'];
+      self.setState({
+        maps: maps
+      });
+
+      if (!maps) {
+        return;
+      }
+
+      var mainMap = maps[0];
+      self.displayMap(mainMap .href);
+      self.setState({
+        place: null
+      });
     });
   }
   displaySubCategory(categoryId) {
@@ -145,7 +169,7 @@ class DescriptionForm extends Component {
         subCategories: subCategories,
         isSubCategoryLoading: false
       });
-      self.displayMap(subCategories[0].id);
+      self.displayMaps(subCategories[0].id);
     }).catch(function() {
       self.setState({
         isSubCategoryLoading: false
@@ -175,7 +199,8 @@ class DescriptionForm extends Component {
       descriptionError = this.buildErrorTooltip('isDescriptionInvalid', 'Should contains 1 to 255 characters'),
       placeError = this.buildErrorTooltip('isPlaceInvalid', 'A place should be selected'),
       categories = [],
-      subCategories = [];
+      subCategories = [],
+      maps = [];
     if (this.state.bannerImage) {
       bannerImagePreview = (<div className='image-container'><img src={this.state.bannerImage} width='50' height='50' /></div>);
     }
@@ -184,13 +209,23 @@ class DescriptionForm extends Component {
       pictureImagePreview = (<div className='image-container'><img src={this.state.pictureImage} width='100' height='100' /></div>);
     }
 
-    this.state.categories.forEach(function(category) {
-      categories.push(<option value={category.id}>{category.name}</option>);
-    });
+    if (this.state.categories) {
+      this.state.categories.forEach(function(category) {
+        categories.push(<option value={category.id}>{category.name}</option>);
+      });
+    }
 
-    this.state.subCategories.forEach(function(category) {
-      subCategories.push(<option value={category.id}>{category.name}</option>);
-    });
+    if (this.state.subCategories) {
+      this.state.subCategories.forEach(function(category) {
+        subCategories.push(<option value={category.id}>{category.name}</option>);
+      });
+    }
+
+    if (this.state.maps) {
+      this.state.maps.forEach(function(map) {
+        maps.push(<option value={map.href}>{map.name}</option>);
+      });
+    }
     return(
       <div>
         <section className="row section">
@@ -248,6 +283,7 @@ class DescriptionForm extends Component {
               Placement in the game
             </Tooltip>
              {placeError}
+            <select className="form-control col-md-5" onChange={this.selectMap}>{maps}</select>
             <Game ref="game" onHouseSelected={this.onHouseSelected}/>
           </div>
         </section>

@@ -89,6 +89,14 @@ namespace Cook4Me.Api.Host.Controllers
                 }
             }
 
+            if (category.Maps != null && category.Maps.Any())
+            {
+                foreach(var map in category.Maps)
+                {
+                    _halResponseBuilder.AddLinks(l => l.AddOtherItem(Constants.DtoNames.Category.Maps, new Link("/" + Constants.RouteNames.Maps + "/" + map.MapName, map.MapName)));
+                }
+            }
+
             return new OkObjectResult(_halResponseBuilder.Build());
         }
 

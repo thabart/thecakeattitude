@@ -17,6 +17,8 @@
 using Cook4Me.Api.Host.Dtos;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -30,10 +32,12 @@ namespace Cook4Me.Api.Host.Builders
     public class HalLinksBuilder
     {
         private readonly JObject _linksObject;
+        private readonly Dictionary<string, JArray> _otherItems;
         private JArray _items;
 
         public HalLinksBuilder(JObject linksObject)
         {
+            _otherItems = new Dictionary<string, JArray>();
             _linksObject = linksObject;
         }
 
@@ -62,6 +66,31 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             _items.Add(BuildLink(link));
+            return this;
+        }
+
+        public HalLinksBuilder AddOtherItem(string itemName, Link link)
+        {
+            if (string.IsNullOrWhiteSpace(itemName))
+            {
+                throw new ArgumentNullException(nameof(itemName));
+            }
+
+            if (link == null)
+            {
+                throw new ArgumentNullException(nameof(link));
+            }
+
+            var kvp = _otherItems.FirstOrDefault(o => o.Key == itemName);
+            if (kvp.Equals(default(KeyValuePair<string, JArray>)) || kvp.Value == null)
+            {
+                var arr = new JArray();
+                _otherItems.Add(itemName, arr);
+                kvp = _otherItems.First(o => o.Key == itemName);
+                _linksObject.Add(itemName, arr);
+            }
+
+            kvp.Value.Add(BuildLink(link));
             return this;
         }
 
@@ -140,6 +169,16 @@ namespace Cook4Me.Api.Host.Builders
     {
         private JObject _linkObjects;
         private JArray _embeddedObjects;
+        private HalLinksBuilder halLinkBuilder;
+        private HalEmbeddedBuilder halEmbeddedBuilder;
+
+        public HalResponseBuilder()
+        {
+            _linkObjects = new JObject();
+            _embeddedObjects = new JArray();
+            halLinkBuilder = new HalLinksBuilder(_linkObjects);
+            halEmbeddedBuilder = new HalEmbeddedBuilder(_embeddedObjects);
+        }
 
         public IHalResponseBuilder AddLinks(Action<HalLinksBuilder> callback)
         {
@@ -148,13 +187,7 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            if (_linkObjects == null)
-            {
-                _linkObjects = new JObject();
-            }
-
-            var builder = new HalLinksBuilder(_linkObjects);
-            callback(builder);
+            callback(halLinkBuilder);
             return this;
         }
 
@@ -164,14 +197,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 throw new ArgumentNullException(nameof(callback));
             }
-
-            if (_embeddedObjects == null)
-            {
-                _embeddedObjects = new JArray();
-            }
-
-            var builder = new HalEmbeddedBuilder(_embeddedObjects);
-            callback(builder);
+            
+            callback(halEmbeddedBuilder);
             return this;
         }
 

@@ -27,6 +27,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetError(string errorCode, string errorDescription);
         JObject GetUser(User user);
         JObject GetCategory(Category category);
+        JObject GetMap(Map map);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -103,21 +104,10 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Category.Id, category.Id);
             jObj.Add(Constants.DtoNames.Category.Name, category.Name);
             jObj.Add(Constants.DtoNames.Category.Description, category.Description);
-            if (category.Maps != null && category.Maps.Any())
-            {
-                var arr = new JArray();
-                foreach(var map in category.Maps)
-                {
-                    arr.Add(GetMap(map));
-                }
-
-                jObj.Add(Constants.DtoNames.Category.Maps, arr);
-            }
-
             return jObj;
         }
 
-        private JObject GetMap(Map map)
+        public JObject GetMap(Map map)
         {
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Map.MapName, map.MapName);
