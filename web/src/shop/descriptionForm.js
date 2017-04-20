@@ -15,9 +15,11 @@ class DescriptionForm extends Component {
     this.validate = this.validate.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
     this.selectSubCategory = this.selectSubCategory.bind(this);
+    this.onHouseSelected = this.onHouseSelected.bind(this);
     this.state = {
       name: null,
       description: null,
+      place: null,
       bannerImage: null,
       pictureImage: null,
       isCategoryLoading: false,
@@ -27,12 +29,15 @@ class DescriptionForm extends Component {
       tooltip: {
         toggleName : false,
         toggleDescription: false,
+        toggleChoosePlace: false,
         toggleErrorName: false,
-        toggleErrorDescription : false
+        toggleErrorDescription : false,
+        toggleErrorPlace: false
       },
       valid: {
         isNameInvalid : false,
-        isDescriptionInvalid: false
+        isDescriptionInvalid: false,
+        isPlaceInvalid: false
       }
     };
   }
@@ -94,6 +99,13 @@ class DescriptionForm extends Component {
       valid.isDescriptionInvalid = false;
     }
 
+    if (!self.state.place || self.state.place === null) {
+      valid.isPlaceInvalid = true;
+      isValid = false;
+    } else {
+      valid.isPlaceInvalid = false;
+    }
+
     this.setState({
       valid: valid
     });
@@ -136,11 +148,28 @@ class DescriptionForm extends Component {
       });
     });
   }
+  onHouseSelected(place) {
+    this.setState({
+      place: place
+    });
+  }
+  buildErrorTooltip(validName, description) {
+    var result;
+    if (this.state.valid[validName]) {
+      result = (<span><i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
+      <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => { this.toggleTooltip(validName); }}>
+        {description}
+      </Tooltip></span>);
+    }
+
+    return result;
+  }
   render() {
     var bannerImagePreview,
       pictureImagePreview,
-      nameError,
-      descriptionError,
+      nameError = this.buildErrorTooltip('isNameInvalid', 'Should contains 1 to 15 characters'),
+      descriptionError = this.buildErrorTooltip('isDescriptionInvalid', 'Should contains 1 to 255 characters'),
+      placeError = this.buildErrorTooltip('isPlaceInvalid', 'A place should be selected'),
       categories = [],
       subCategories = [];
     if (this.state.bannerImage) {
@@ -149,20 +178,6 @@ class DescriptionForm extends Component {
 
     if (this.state.pictureImage) {
       pictureImagePreview = (<div className='image-container'><img src={this.state.pictureImage} width='100' height='100' /></div>);
-    }
-
-    if (this.state.valid.isNameInvalid) {
-      nameError = (<span><i className="fa fa-exclamation-triangle validation-error" id="nameErrorToolTip"></i>
-      <Tooltip placement="right" target="nameErrorToolTip" isOpen={this.state.tooltip.toggleErrorName} toggle={() => { this.toggleTooltip('toggleErrorName'); }}>
-        Should contains 1 to 15 characters
-      </Tooltip></span>);
-    }
-
-    if (this.state.valid.isDescriptionInvalid) {
-      descriptionError = (<span><i className="fa fa-exclamation-triangle validation-error" id="descriptionErrorTooltip"></i>
-      <Tooltip placement="right" target="descriptionErrorTooltip" isOpen={this.state.tooltip.toggleErrorDescription} toggle={() => { this.toggleTooltip('toggleErrorDescription'); }}>
-        Should contains 1 to 255 characters
-      </Tooltip></span>);
     }
 
     this.state.categories.forEach(function(category) {
@@ -224,7 +239,12 @@ class DescriptionForm extends Component {
             </div>
           </div>
           <div className="col-md-6">
-            <Game ref="game"/>
+            <label className="control-label">Choose a place</label> <i className="fa fa-exclamation-circle" id="choosePlaceToolTip"></i>
+            <Tooltip placement="right" target="choosePlaceToolTip" isOpen={this.state.tooltip.toggleChoosePlace} toggle={() => { this.toggleTooltip('toggleChoosePlace'); }}>
+              Placement in the game
+            </Tooltip>
+             {placeError}
+            <Game ref="game" onHouseSelected={this.onHouseSelected}/>
           </div>
         </section>
         <section className="col-md-12 sub-section">

@@ -16,7 +16,7 @@ class Game extends Component {
     return (<div ref="game"></div>);
   }
   loadMap(category) {
-    this._game.state.start('Splash', true, true, category);
+    this._game.state.start('Splash', true, true, category, this);
   }
   componentDidMount() {
     var game = this.refs.game;
