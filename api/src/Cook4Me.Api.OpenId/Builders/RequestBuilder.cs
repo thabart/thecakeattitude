@@ -34,7 +34,9 @@ namespace Cook4Me.Api.OpenId.Builders
             { Constants.Dtos.UpdateUser.Name, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, v)) },
             { Constants.Dtos.UpdateUser.Picture, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, v)) },
             { Constants.Dtos.UpdateUser.Email, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, v)) },
-            { Constants.Dtos.UpdateUser.PhoneNumber, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber, v)) }
+            { Constants.Dtos.UpdateUser.PhoneNumber, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber, v)) },
+            { Constants.Claims.HomePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.HomePhoneNumber, v)) },
+            { Constants.Claims.MobilePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.MobilePhoneNumber, v)) }
         };
 
         private Dictionary<string, Action<JObject, string>> _mappingKeyToAddress = new Dictionary<string, Action<JObject, string>>

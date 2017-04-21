@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
-import { CategoryService, SessionService, OpenIdService } from '../services';
+import { CategoryService, SessionService, OpenIdService, UserService } from '../services';
 import Game from '../game/game';
 import Constants from '../../Constants';
 import $ from 'jquery';
+import './contactInfoForm.css';
 
 class ContactInfoForm extends Component {
   constructor(props) {
@@ -11,11 +12,55 @@ class ContactInfoForm extends Component {
     this.previous = this.previous.bind(this);
     this.next = this.next.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.update = this.update.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
       isEnabled : false,
       isContactInfoHidden: false,
-      userInfo: null
+      userInfo: null,
+      isUpdating: false,
+      isEmailInvalid: false,
+      isMobilePhoneInvalid: false,
+      isHomePhoneInvalid: false
     };
+  }
+  handleInputChange(e) {
+    var self = this;
+    const target = e.target;
+    const name = target.name;
+    var isEmailInvalid = false,
+      isMobilePhoneInvalid = false,
+      isHomePhoneInvalid = false;
+    switch (name) {
+      case "email":
+        var regex = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
+        if (!regex.test(target.value)) {
+          isEmailInvalid= true;
+        }
+      break;
+      case "mobile_phone_number":
+      case "home_phone_number":
+        var regex = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
+        if (!regex.test(target.value)) {
+          if (name == "mobile_phone_number") {
+            isMobilePhoneInvalid = true;
+          } else {
+            isHomePhoneInvalid = true;
+          }
+        }
+      break;
+    }
+
+    self.setState({
+      isEmailInvalid: isEmailInvalid,
+      isMobilePhoneInvalid: isMobilePhoneInvalid,
+      isHomePhoneInvalid: isHomePhoneInvalid
+    });
+
+    this.state.userInfo[name] = target.value;
+    this.setState({
+      userInfo: this.state.userInfo
+    });
   }
   previous() {
     this.props.onPrevious();
@@ -28,20 +73,33 @@ class ContactInfoForm extends Component {
       isEnabled : e.target.checked
     });
   }
+  update() {
+    var json = {
+      home_phone_number: this.state.userInfo.home_phone_number,
+      mobile_phone_number: this.state.userInfo.mobile_phone_number,
+      email: this.state.userInfo.email
+    };
+    var self = this;
+    self.setState({
+      isUpdating: true
+    });
+    UserService.updateClaims(json).then(function() {
+      self.setState({
+        isUpdating: false
+      });
+    }).catch(function() {
+      self.props.onError('an error occured while trying to update the profile');
+      self.setState({
+        isUpdating: false
+      });
+    });
+  }
   componentWillMount() {
     var self = this;
     this.setState({
       isContactInfoHidden: true
     });
-    var session = SessionService.getSession();
-    if (!session || !session.access_token) {
-      self.props.onError('token cannot be retrieved');
-      self.setState({
-        isContactInfoHidden: false
-      });
-    }
-
-    OpenIdService.getUserInfo(session.access_token).then(function(userInfo) {
+    UserService.getClaims().then(function(userInfo) {
       self.setState({
         isContactInfoHidden: false,
         userInfo: userInfo
@@ -62,17 +120,49 @@ class ContactInfoForm extends Component {
     if (!this.state.isEnabled) {
       opts['readOnly'] = 'readOnly';
     }
+
+    var isInvalid = this.state.isEmailInvalid || this.state.isMobilePhoneInvalid || this.state.isHomePhoneInvalid;
+    var optsActions = {};
+    if (isInvalid) {
+      optsActions['disabled'] = 'disabled';
+    }
+
     return (
       <div>
         <section className="col-md-12 section">
           <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Those information are coming from your profile.</p><p>Do-you want to update them ? <input type='checkbox' onClick={this.toggle} /> Yes or No</p></div>
-          <div className='form-group col-md-12'><label className='control-label'>Email</label><input type='text' className='form-control' value={this.state.userInfo.email} name='email' {...opts} /></div>
-          <div className='form-group col-md-12'><label className='control-label'>Mobile phone</label><input type='text' className='form-control' value={this.state.userInfo.mobile_phone_number} name='mobile_phone_number' {...opts} /></div>
-          <div className='form-group col-md-12'><label className='control-label'>Home phone</label><input type='text' className='form-control' value={this.state.userInfo.home_phone_number} name='home_phone_number' {...opts} /></div>
+          <div className='form-group col-md-12'>
+            <label className='control-label'>Email</label>
+            {!this.state.isEmailInvalid ?
+              (<input type='email' className='form-control' value={this.state.userInfo.email}  onChange={this.handleInputChange} name='email' {...opts} />) :
+              (<div><input type='email' className='form-control invalid' value={this.state.userInfo.email}  onChange={this.handleInputChange} name='email' {...opts} /><span className="invalid-description">The email is invalid</span></div>)
+            }
+          </div>
+          <div className='form-group col-md-12'>
+            <label className='control-label'>Mobile phone</label>
+            {!this.state.isMobilePhoneInvalid ?
+              (<input type='text' className='form-control' value={this.state.userInfo.mobile_phone_number}  onChange={this.handleInputChange} name='mobile_phone_number' {...opts} />) :
+              (<div><input type='text' className='form-control invalid' value={this.state.userInfo.mobile_phone_number}  onChange={this.handleInputChange} name='mobile_phone_number' {...opts} /><span className="invalid-description">The mobile phone is not valid</span></div>)
+            }
+          </div>
+          <div className='form-group col-md-12'>
+            <label className='control-label'>Home phone</label>
+            {!this.state.isHomePhoneInvalid ?
+              (<input type='text' className='form-control' value={this.state.userInfo.home_phone_number}  onChange={this.handleInputChange} name='home_phone_number' {...opts} />) :
+              (<div><input type='text' className='form-control invalid' value={this.state.userInfo.home_phone_number}  onChange={this.handleInputChange} name='home_phone_number' {...opts} /><span className="invalid-description">The home phone is not valid</span></div>)
+            }
+          </div>
         </section>
         <section className="col-md-12 sub-section">
           <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
-          <button className="btn btn-primary next" onClick={this.next}>Next</button>
+          {!this.state.isUpdating ?
+            (<button className="btn btn-primary previous" onClick={this.update} {...optsActions}>Update</button>) :
+            (<button className="btn btn-primary previous" disabled><i className='fa fa-spinner fa-spin'></i> Processing update ...</button>)
+          }
+          {!this.state.isUpdating ?
+            (<button className="btn btn-primary next" onClick={this.next} {...optsActions}>Next</button>) :
+            (<button className="btn btn-primary next" disabled>Next</button>)
+          }
         </section>
       </div>
     );
