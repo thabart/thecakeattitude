@@ -66,12 +66,12 @@ class TagsForm extends Component {
     var input = this.refs.shopTags.refs.input;
     var container = this.refs.shopTags.refs.div;
     var paddingLeft = 5,
-      paddingTop = 5,
-      newWidth = $(container).width() + 5;
-    self.popup = $("<div class='popup' style='position: absolute; left:"+$(container).offset().left+"px; width:"+ newWidth +"px; display: none;'>"+
-      "<ul></ul></div>");
+      paddingTop = 5;
+    self.popup = $("<div class='popup' style='position: absolute;display: none;'><ul></ul></div>");
     $(document.body).append(self.popup);
     $(input).on('input', function() {
+      $(self.popup).width($(container).width() + 5);
+      $(self.popup).css('left', $(container).offset().left);
       $(self.popup).css('top', $(container).offset().top + $(container).height());
       if (!this.value || this.value == "") {
         self.hidePopup();

@@ -101,7 +101,7 @@ class AddShop extends Component {
     this._searchBox = null;
     this.state = {
       zoom: 12,
-      activeTab: '4',
+      activeTab: '1',
       center: null,
       centerContent: null,
       bounds: null,
