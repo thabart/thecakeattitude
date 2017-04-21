@@ -27,6 +27,7 @@ namespace Cook4Me.Api.Host.Builders
         User GetUser(JObject jObj);
         Shop GetAddShop(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
+        SearchTagsParameter GetSearchTags(JObject jObj);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -84,6 +85,20 @@ namespace Cook4Me.Api.Host.Builders
                 CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId),
                 PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place),
                 Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject)
+            };
+            return result;
+        }
+
+        public SearchTagsParameter GetSearchTags(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new SearchTagsParameter
+            {
+                Name = jObj.Value<string>(Constants.DtoNames.Tag.Name)
             };
             return result;
         }

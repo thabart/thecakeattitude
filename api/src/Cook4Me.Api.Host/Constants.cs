@@ -28,6 +28,7 @@ namespace Cook4Me.Api.Host
             public const string Parents = "parents";
             public const string Claims = "claims";
             public const string Search = ".search";
+            public const string Tags = "tags";
             public const string Me = "me";
         }
 
@@ -83,6 +84,12 @@ namespace Cook4Me.Api.Host
                 public const string MapPartialUrl = "map_link";
                 public const string OverviewPartialUrl = "overview_link";
                 public const string IsMain = "is_main";
+            }
+
+            public static class Tag
+            {
+                public const string Name = "name";
+                public const string Description = "description";
             }
 
             public static class User

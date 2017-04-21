@@ -28,6 +28,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetUser(User user);
         JObject GetCategory(Category category);
         JObject GetMap(Map map);
+        JObject GetTag(Tag tag);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -115,6 +116,19 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Map.OverViewName, map.OverviewName);
             jObj.Add(Constants.DtoNames.Map.OverviewPartialUrl, map.PartialOverviewUrl);
             jObj.Add(Constants.DtoNames.Map.IsMain, map.IsMain);
+            return jObj;
+        }
+
+        public JObject GetTag(Tag tag)
+        {
+            if (tag == null)
+            {
+                throw new ArgumentNullException(nameof(tag));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Tag.Name, tag.Name);
+            jObj.Add(Constants.DtoNames.Tag.Description, tag.Description);
             return jObj;
         }
     }

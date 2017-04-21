@@ -14,32 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.EF.Mappings;
-using System;
 using System.Collections.Generic;
 
 namespace Cook4Me.Api.EF.Models
 {
-    public class Shop
+    public class Tag
     {
-        public string Id { get; set; }
-        public string Subject { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string CategoryId { get; set; }
-        public string BannerImage { get; set; }
-        public string Picture { get; set; }
-        public string StreetAddress { get; set; }
-        public string PostalCode { get; set; }
-        public string Locality { get; set; }
-        public string Country { get; set; }
-        public string PlaceId { get; set; }
-        public string ShopRelativePath { get; set; }
-        public string UndergroundRelativePath { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public virtual Category Category { get; set; }
-        public virtual User User { get; set; }
         public virtual ICollection<ShopTag> ShopTags { get; set; }
     }
 }

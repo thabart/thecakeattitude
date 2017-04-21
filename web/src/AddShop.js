@@ -5,8 +5,7 @@ import { withGoogleMap, GoogleMap, InfoWindow, Circle, Marker, Tooltip } from 'r
 import Constants from '../Constants';
 import SearchBox from 'react-google-maps/lib/places/SearchBox'
 import { MAP } from 'react-google-maps/lib/constants';
-import DescriptionForm from './shop/descriptionForm';
-import ContactInfoForm from './shop/contactInfoForm';
+import { DescriptionForm, ContactInfoForm, TagsForm } from './shop';
 import $ from 'jquery';
 import './AddShop.css';
 
@@ -102,7 +101,7 @@ class AddShop extends Component {
     this._searchBox = null;
     this.state = {
       zoom: 12,
-      activeTab: '3',
+      activeTab: '4',
       center: null,
       centerContent: null,
       bounds: null,
@@ -262,12 +261,7 @@ class AddShop extends Component {
             <ContactInfoForm onError={(msg) => { this.displayError(msg); }} onPrevious={() => { this.toggle('2'); }} onNext={() => { this.toggle('4'); }}/>
           </TabPane>
           <TabPane tabId='4' className={this.state.isLoading ? 'hidden': ''}>
-            <section className="col-md-12 section">
-            </section>
-            <section className="col-md-12 sub-section section-description">
-    					<button className="btn btn-primary previous" onClick={() => { this.toggle('3'); }}>Previous</button>
-      				<button className="btn btn-primary next" onClick={() => { this.toggle('5'); }}>Next</button>
-            </section>
+            <TagsForm onError={(msg) => { this.displayError(msg); }} onPrevious={() => { this.toggle('3'); }} onNext={() => { this.toggle('5'); }}/>
           </TabPane>
           <TabPane tabId='5' className={this.state.isLoading ? 'hidden': ''}>
             <section className="col-md-12 section">

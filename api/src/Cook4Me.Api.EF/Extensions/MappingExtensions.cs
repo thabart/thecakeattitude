@@ -213,5 +213,33 @@ namespace Cook4Me.Api.EF.Extensions
                 IsMain = map.IsMain
             };
         }
+
+        public static Domain.Tag ToDomain(this Tag tag)
+        {
+            if (tag == null)
+            {
+                throw new ArgumentNullException(nameof(tag));
+            }
+
+            return new Domain.Tag
+            {
+                Name = tag.Name,
+                Description = tag.Description
+            };
+        }
+
+        public static Tag ToModel(this Domain.Tag tag)
+        {
+            if (tag == null)
+            {
+                throw new ArgumentNullException(nameof(tag));
+            }
+
+            return new Tag
+            {
+                Name = tag.Name,
+                Description = tag.Description
+            };
+        }
     }
 }

@@ -20,22 +20,22 @@ using System;
 
 namespace Cook4Me.Api.EF.Mappings
 {
-    internal static class ShopMapping
+    internal static class TagMapping
     {
-        public static ModelBuilder AddShopMapping(this ModelBuilder modelBuilder)
+        public static ModelBuilder AddTagMapping(this ModelBuilder modelBuilder)
         {
             if (modelBuilder == null)
             {
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
 
-            modelBuilder.Entity<Shop>()
-                .ToTable("shops")
-                .HasKey(p => p.Id);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.ShopTags)
-                .WithOne(t => t.Shop)
-                .HasForeignKey(t => t.ShopId);
+            modelBuilder.Entity<Tag>()
+                .ToTable("tags")
+                .HasKey(s => s.Name);
+            modelBuilder.Entity<Tag>()
+                .HasMany(t => t.ShopTags)
+                .WithOne(st => st.Tag)
+                .HasForeignKey(st => st.TagName);
             return modelBuilder;
         }
     }

@@ -32,6 +32,7 @@ namespace Cook4Me.Api.Host.Extensions
             }
             
             InsertCategories(context);
+            InsertTags(context);
             context.SaveChanges();
         }
 
@@ -85,6 +86,26 @@ namespace Cook4Me.Api.Host.Extensions
                         PartialMapUrl = "/maps/second_bakery_map.json",
                         PartialOverviewUrl = "/maps/second_bakery_map_overview.png",
                         OverviewName = "second_bakery_overview"
+                    }
+                });
+            }
+        }
+
+        private static void InsertTags(CookDbContext context)
+        {
+            if (!context.Tags.Any())
+            {
+                context.Tags.AddRange(new[]
+                {
+                    new Tag
+                    {
+                        Name = "eco",
+                        Description = "ecologique"
+                    },
+                    new Tag
+                    {
+                        Name = "second hand",
+                        Description = "second hand"
                     }
                 });
             }
