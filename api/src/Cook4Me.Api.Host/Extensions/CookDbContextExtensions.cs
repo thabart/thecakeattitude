@@ -56,35 +56,35 @@ namespace Cook4Me.Api.Host.Extensions
                     {
                         CategoryId = shoesCategoryId,
                         MapName = "first_shoes_map",
-                        PartialMapUrl = "/maps/map.json",
-                        PartialOverviewUrl = "/maps/overview_map.png",
-                        OverviewName = "shoes_overview",
+                        PartialMapUrl = "/maps/first_shoes_map.json",
+                        PartialOverviewUrl = "/maps/first_shoes_map_overview.png",
+                        OverviewName = "first_shoes_map_overview",
                         IsMain = true
                     },
                     new Map
                     {
                         CategoryId = shoesCategoryId,
                         MapName = "second_shoes_map",
-                        PartialMapUrl = "/maps/map.json",
-                        PartialOverviewUrl = "/maps/overview_map.png",
-                        OverviewName = "shoes_overview"
+                        PartialMapUrl = "/maps/second_shoes_map.json",
+                        PartialOverviewUrl = "/maps/second_shoes_map_overview.png",
+                        OverviewName = "second_shoes_map_overview"
                     },
                     new Map
                     {
                         CategoryId = bakeryCategoryId,
                         MapName = "first_bakery_map",
-                        PartialMapUrl = "/maps/map2.json",
-                        PartialOverviewUrl = "/maps/overview_map2.png",
-                        OverviewName = "bakery_overview",
+                        PartialMapUrl = "/maps/first_bakery_map.json",
+                        PartialOverviewUrl = "/maps/first_bakery_overview.png",
+                        OverviewName = "first_bakery_overview",
                         IsMain = true
                     },
                     new Map
                     {
                         CategoryId = bakeryCategoryId,
                         MapName = "second_bakery_map",
-                        PartialMapUrl = "/maps/map2.json",
-                        PartialOverviewUrl = "/maps/overview_map2.png",
-                        OverviewName = "bakery_overview"
+                        PartialMapUrl = "/maps/second_bakery_map.json",
+                        PartialOverviewUrl = "/maps/second_bakery_map_overview.png",
+                        OverviewName = "second_bakery_overview"
                     }
                 });
             }

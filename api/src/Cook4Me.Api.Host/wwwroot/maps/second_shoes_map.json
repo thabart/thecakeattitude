@@ -57,7 +57,7 @@
                  "properties":
                     {
                      "entry_dir":"right",
-                     "map":"secondMap",
+                     "map":"first_shoes_map",
                      "warp_entry":"secondWarp"
                     },
                  "propertytypes":
@@ -80,7 +80,7 @@
                  "properties":
                     {
                      "entry_dir":"left",
-                     "map":"secondMap",
+                     "map":"first_shoes_map",
                      "warp_entry":"firstWarp"
                     },
                  "propertytypes":
@@ -103,7 +103,7 @@
                  "properties":
                     {
                      "entry_dir":"top",
-                     "map":"secondMap",
+                     "map":"first_shoes_map",
                      "warp_entry":"thirdWarp"
                     },
                  "propertytypes":

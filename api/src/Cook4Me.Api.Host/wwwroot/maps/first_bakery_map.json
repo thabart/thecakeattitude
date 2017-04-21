@@ -57,7 +57,7 @@
                  "properties":
                     {
                      "entry_dir":"left",
-                     "map":"firstMap",
+                     "map":"second_bakery_map",
                      "warp_entry":"firstWarp"
                     },
                  "propertytypes":
@@ -80,7 +80,7 @@
                  "properties":
                     {
                      "entry_dir":"right",
-                     "map":"firstMap",
+                     "map":"second_bakery_map",
                      "warp_entry":"secondWarp"
                     },
                  "propertytypes":
@@ -103,7 +103,7 @@
                  "properties":
                     {
                      "entry_dir":"top",
-                     "map":"firstMap",
+                     "map":"second_bakery_map",
                      "warp_entry":"thirdWarp"
                     },
                  "propertytypes":

@@ -132,7 +132,7 @@ class DescriptionForm extends Component {
   displayMap(mapHref) {
     var self = this;
     $.get(Constants.apiUrl + mapHref).then(function(map) {
-      self.refs.game.loadMap(map['_embedded'])
+      self.refs.game.loadMap(map['_embedded']);
       self.state.place = null;
       self.setState({
         place: self.state.place
