@@ -133,24 +133,18 @@ class ContactInfoForm extends Component {
           <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Those information are coming from your profile.</p><p>Do-you want to update them ? <input type='checkbox' onClick={this.toggle} /> Yes or No</p></div>
           <div className='form-group col-md-12'>
             <label className='control-label'>Email</label>
-            {!this.state.isEmailInvalid ?
-              (<input type='email' className='form-control' value={this.state.userInfo.email}  onChange={this.handleInputChange} name='email' {...opts} />) :
-              (<div><input type='email' className='form-control invalid' value={this.state.userInfo.email}  onChange={this.handleInputChange} name='email' {...opts} /><span className="invalid-description">The email is invalid</span></div>)
-            }
+            <input type='email' className={!this.state.isEmailInvalid ? 'form-control' : 'form-control invalid'} value={this.state.userInfo.email}  onChange={this.handleInputChange} name='email' {...opts} />
+            { this.state.isEmailInvalid  && (<span className="invalid-description">The email is invalid</span>) }
           </div>
           <div className='form-group col-md-12'>
             <label className='control-label'>Mobile phone</label>
-            {!this.state.isMobilePhoneInvalid ?
-              (<input type='text' className='form-control' value={this.state.userInfo.mobile_phone_number}  onChange={this.handleInputChange} name='mobile_phone_number' {...opts} />) :
-              (<div><input type='text' className='form-control invalid' value={this.state.userInfo.mobile_phone_number}  onChange={this.handleInputChange} name='mobile_phone_number' {...opts} /><span className="invalid-description">The mobile phone is not valid</span></div>)
-            }
+            <input type='text' className={!this.state.isMobilePhoneInvalid ? 'form-control' : 'form-control invalid'} value={this.state.userInfo.mobile_phone_number}  onChange={this.handleInputChange} name='mobile_phone_number' {...opts} />
+            { this.state.isMobilePhoneInvalid && (<span className="invalid-description">The mobile phone is not valid</span>) }
           </div>
           <div className='form-group col-md-12'>
             <label className='control-label'>Home phone</label>
-            {!this.state.isHomePhoneInvalid ?
-              (<input type='text' className='form-control' value={this.state.userInfo.home_phone_number}  onChange={this.handleInputChange} name='home_phone_number' {...opts} />) :
-              (<div><input type='text' className='form-control invalid' value={this.state.userInfo.home_phone_number}  onChange={this.handleInputChange} name='home_phone_number' {...opts} /><span className="invalid-description">The home phone is not valid</span></div>)
-            }
+            <input type='text' className={!this.state.isHomePhoneInvalid ? 'form-control' : 'form-control invalid'} value={this.state.userInfo.home_phone_number}  onChange={this.handleInputChange} name='home_phone_number' {...opts} />
+            { this.state.isHomePhoneInvalid && <span className="invalid-description">The home phone is not valid</span> }
           </div>
         </section>
         <section className="col-md-12 sub-section">
