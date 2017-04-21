@@ -5,7 +5,7 @@ import { withGoogleMap, GoogleMap, InfoWindow, Circle, Marker, Tooltip } from 'r
 import Constants from '../Constants';
 import SearchBox from 'react-google-maps/lib/places/SearchBox'
 import { MAP } from 'react-google-maps/lib/constants';
-import { DescriptionForm, ContactInfoForm, TagsForm } from './shop';
+import { DescriptionForm, ContactInfoForm, TagsForm, PaymentForm } from './shop';
 import $ from 'jquery';
 import './AddShop.css';
 
@@ -273,16 +273,7 @@ class AddShop extends Component {
             </section>
           </TabPane>
           <TabPane tabId='6' className={this.state.isLoading ? 'hidden': ''}>
-            <section className="col-md-12 section">
-              <div className='input-group'><span className='input-group-addon'><input type='radio' /></span><span className='form-control'>Card</span></div>
-							<div className='input-group'><span className='input-group-addon'><input type='radio' /></span><span className='form-control'>Cash</span></div>
-							<div className='input-group'><span className='input-group-addon'><input type='radio' /></span><span className='form-control'>Bank transfer</span></div>
-							<div className='input-group'><span className='input-group-addon'><input type='radio' /></span><span className='form-control'>Paypal</span></div>
-            </section>
-            <section className="col-md-12 sub-section">
-    					<button className="btn btn-primary previous" onClick={() => { this.toggle('5'); }}>Previous</button>
-      				<button className="btn btn-success confirm">Confirm</button>
-            </section>
+            <PaymentForm  onPrevious={() => { this.toggle('5'); }} />
           </TabPane>
         </TabContent>
       </div>
