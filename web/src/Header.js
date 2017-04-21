@@ -68,7 +68,6 @@ class Header extends Component {
     });
     OpenIdService.passwordAuthentication(this.state.login, this.state.password).then(function(resp) {
       AuthenticateService.authenticate(resp.access_token).then(function() {
-        console.log('AUTH SUCCESS');
         self.handeAuthenticationSuccess();
       }).catch(function() {
         self.handleAuthenticationError();

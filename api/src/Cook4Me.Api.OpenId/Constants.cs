@@ -34,6 +34,12 @@ namespace Cook4Me.Api.OpenId
             public const string SubjectDoesntExist = "the subject doesn't exist";
         }
 
+        public static class Claims
+        {
+            public const string MobilePhoneNumber = "mobile_phone_number";
+            public const string HomePhoneNumber = "home_phone_number";
+        }
+
         public static class Dtos
         {
             public static class UpdateUser

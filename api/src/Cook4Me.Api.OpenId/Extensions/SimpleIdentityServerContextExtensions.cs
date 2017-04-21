@@ -61,8 +61,8 @@ namespace Cook4Me.Api.OpenId.Extensions
                     new Claim { Code = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email },
                     new Claim { Code = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.EmailVerified },
                     new Claim { Code = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Address },
-                    new Claim { Code = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber },
-                    new Claim { Code = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumberVerified },
+                    new Claim { Code = Constants.Claims.MobilePhoneNumber },
+                    new Claim { Code = Constants.Claims.HomePhoneNumber },
                     new Claim { Code = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Role }
                 });
             }
@@ -144,8 +144,8 @@ namespace Cook4Me.Api.OpenId.Extensions
                         Description = "Access to the phone",
                         ScopeClaims = new List<ScopeClaim>
                         {
-                            new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber },
-                            new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumberVerified }
+                            new ScopeClaim { ClaimCode = Constants.Claims.MobilePhoneNumber },
+                            new ScopeClaim { ClaimCode = Constants.Claims.HomePhoneNumber }
                         },
                         Type = ScopeType.ResourceOwner
                     },
@@ -443,7 +443,13 @@ namespace Cook4Me.Api.OpenId.Extensions
                             new ResourceOwnerClaim
                             {
                                 Id = Guid.NewGuid().ToString(),
-                                ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber,
+                                ClaimCode = Constants.Claims.MobilePhoneNumber,
+                                Value = "0485350536"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = Constants.Claims.HomePhoneNumber,
                                 Value = "0485350536"
                             }
                         },

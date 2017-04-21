@@ -6,6 +6,7 @@ import Constants from '../Constants';
 import SearchBox from 'react-google-maps/lib/places/SearchBox'
 import { MAP } from 'react-google-maps/lib/constants';
 import DescriptionForm from './shop/descriptionForm';
+import ContactInfoForm from './shop/contactInfoForm';
 import $ from 'jquery';
 import './AddShop.css';
 
@@ -96,11 +97,12 @@ class AddShop extends Component {
     this.onMapLoad = this.onMapLoad.bind(this);
     this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
     this.onPlacesChanged = this.onPlacesChanged.bind(this);
+    this.displayError = this.displayError.bind(this);
     this._googleMap = null;
     this._searchBox = null;
     this.state = {
       zoom: 12,
-      activeTab: '1',
+      activeTab: '3',
       center: null,
       centerContent: null,
       bounds: null,
@@ -257,14 +259,7 @@ class AddShop extends Component {
     				</section>
           </TabPane>
           <TabPane tabId='3' className={this.state.isLoading ? 'hidden': ''}>
-            <section className="col-md-12 section">
-              <div className='form-group col-md-12'><label className='control-label'>Email</label><input type='text' className='form-control' name='email' readOnly /></div>
-              <div className='form-group col-md-12'><label className='control-label'>Phone</label><input type='text' className='form-control' name='phone_number' readOnly /></div>
-            </section>
-            <section className="col-md-12 sub-section">
-    					<button className="btn btn-primary previous" onClick={() => { this.toggle('2'); }}>Previous</button>
-      				<button className="btn btn-primary next" onClick={() => { this.toggle('4'); }}>Next</button>
-            </section>
+            <ContactInfoForm onError={(msg) => { this.displayError(msg); }} onPrevious={() => { this.toggle('2'); }} onNext={() => { this.toggle('4'); }}/>
           </TabPane>
           <TabPane tabId='4' className={this.state.isLoading ? 'hidden': ''}>
             <section className="col-md-12 section">

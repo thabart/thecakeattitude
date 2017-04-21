@@ -24,7 +24,7 @@ module.exports = {
           grant_type: 'password',
           username: login,
           password: password,
-          scope: 'openid profile',
+          scope: 'openid profile phone email',
           client_id: Constants.ClientId,
           client_secret: Constants.ClientSecret
         };
@@ -75,7 +75,7 @@ module.exports = {
     var self = this;
     return new Promise(function(resolve, reject) {
       self.getWellKnownConfiguration().then(function(res) {
-        resolve(res.authorization_endpoint + "?scope=openid%20profile&state=75BCNvRlEGHpQRCT&redirect_uri=http://localhost:3000&response_type=id_token%20token&client_id="+Constants.ClientId+"&nonce=nonce&response_mode=query");
+        resolve(res.authorization_endpoint + "?scope=openid%20profile%20phone%20email&state=75BCNvRlEGHpQRCT&redirect_uri=http://localhost:3000&response_type=id_token%20token&client_id="+Constants.ClientId+"&nonce=nonce&response_mode=query");
       }).catch(function() {
         reject();
       })
