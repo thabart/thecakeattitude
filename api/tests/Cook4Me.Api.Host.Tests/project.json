@@ -31,7 +31,8 @@
   "buildOptions": {
     "copyToOutput": [
       "appsettings.json",
-      "map.json"
+      "map.json",
+      "wwwroot/*.json"
     ]
   }
 }

@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -92,12 +93,13 @@ namespace Cook4Me.Api.Host.Validators
             }
 
             // 3. Check place id exists.
-            if (!File.Exists(map.PartialMapUrl))
+            var partialMap = "wwwroot" + map.PartialMapUrl;
+            if (!File.Exists(partialMap))
             {
                 return new AddShopValidationResult(ErrorDescriptions.TheMapFileDoesntExist);
             }
 
-            using (var stream = File.OpenText(map.PartialMapUrl))
+            using (var stream = File.OpenText(partialMap))
             {
                 using (var reader = new JsonTextReader(stream))
                 {
@@ -155,7 +157,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Country));
             }
 
-            if (shop.Payments == null || shop.Payments.Any())
+            if (shop.Payments == null || !shop.Payments.Any())
             {
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Payments));
             }

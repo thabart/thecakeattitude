@@ -73,6 +73,7 @@ class ShopChooser extends window.Phaser.State {
       text.events.onInputDown.add(function() {
         MapService.get(warp).then(function(m) {
           self.component.loadMap(m['_embedded']);
+          self.component.props.onLoadMap(m['_embedded'].map_name);
         });
       });
       i++;

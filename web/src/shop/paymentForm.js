@@ -24,8 +24,7 @@ class PaymentForm extends Component {
   }
   confirm() {
     var self = this;
-    var currentItem = this.state.currentItem;
-    if (!currentItem || currentItem === '') {
+    if (!this.state.activateCash && !this.state.activateBankTransfer && !this.state.activatePaypal) {
       self.props.onError('A payment method should be selected');
       return;
     }
@@ -72,7 +71,7 @@ class PaymentForm extends Component {
     return (
       <div>
         <section className="col-md-12 section">
-          <p>Choose one or more payment method(s)</p>
+          <p><i className="fa fa-exclamation-circle"></i> Choose one or more payment method(s)</p>
           <div className="list-group">
             <a href="#" className={this.state.activateCash ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateCash"); }}>
               <div className="form-group">

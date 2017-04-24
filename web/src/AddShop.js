@@ -3,6 +3,7 @@ import ReactDom from 'react-dom';
 import { TabContent, TabPane, Alert } from 'reactstrap';
 import Constants from '../Constants';
 import { DescriptionForm, ContactInfoForm, PaymentForm, AddressForm } from './shop';
+import { ShopsService } from './services';
 import $ from 'jquery';
 import './AddShop.css';
 
@@ -67,7 +68,8 @@ class AddShop extends Component {
     });
   }
   save(json) {
-    var content = json;
+    var content = json,
+      self = this;
     if (!this.data || !this.data['1'] || !this.data['2']) {
       this.displayError('The request cannot be saved because the information are not complete');
       return;
@@ -77,7 +79,14 @@ class AddShop extends Component {
       $.extend(content, this.data[key]);
     }
 
-    console.log(content);
+    self.loading(true);
+    ShopsService.add(content).then(function() {
+      self.loading(false);
+      console.log('bingo');
+    }).catch(function(e) {
+      self.loading(false);
+      console.log(e);
+    });
   }
   render() {
     return (

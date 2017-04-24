@@ -21,6 +21,7 @@ class DescriptionForm extends Component {
     this.selectMap = this.selectMap.bind(this);
     this.onHouseSelected = this.onHouseSelected.bind(this);
     this.handleTags = this.handleTags.bind(this);
+    this.changeMap = this.changeMap.bind(this);
     this.state = {
       name: null,
       description: null,
@@ -159,6 +160,9 @@ class DescriptionForm extends Component {
         mapNameSelected: m.map_name
       });
     });
+  }
+  changeMap(mapName) {
+    this.state.mapNameSelected = mapName;
   }
   displayMaps(categoryId) {
     var self = this;
@@ -343,7 +347,7 @@ class DescriptionForm extends Component {
             </Tooltip>
              {placeError}
             <select className="form-control col-md-5" onChange={this.selectMap}>{maps}</select>
-            <Game ref="game" onHouseSelected={this.onHouseSelected}/>
+            <Game ref="game" onHouseSelected={this.onHouseSelected} onLoadMap={(mapName) => { this.changeMap(mapName); }}/>
           </div>
         </section>
         <section className="col-md-12 sub-section">

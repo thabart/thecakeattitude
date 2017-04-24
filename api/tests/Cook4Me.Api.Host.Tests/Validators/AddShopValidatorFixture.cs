@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Validators;
+using Microsoft.AspNetCore.Hosting;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -81,7 +82,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
             _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Category()));
             _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Map
             {
-                PartialMapUrl = "map2.json"
+                PartialMapUrl = "/map2.json"
             }));
 
             // ACT
@@ -101,7 +102,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
             _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Category()));
             _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Map
             {
-                PartialMapUrl = "map.json"
+                PartialMapUrl = "/map.json"
             }));
 
             // ACT
