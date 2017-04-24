@@ -40,7 +40,8 @@ namespace Cook4Me.Api.EF
                 .AddShopMapping()
                 .AddMapMapping()
                 .AddTagMapping()
-                .AddShopTagMapping();
+                .AddShopTagMapping()
+                .AddPaymentMethod();
         }
     }
 }

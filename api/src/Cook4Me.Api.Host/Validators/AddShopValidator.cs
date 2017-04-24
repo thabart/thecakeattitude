@@ -17,7 +17,10 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,26 +39,30 @@ namespace Cook4Me.Api.Host.Validators
             Message = message;
         }
 
-        public AddShopValidationResult(Category category)
+        public AddShopValidationResult(Category category, Map map)
         {
             IsValid = true;
             Category = category;
+            Map = map;
         }
 
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
         public Category Category { get; private set; }
+        public Map Map { get; private set; }
     }
 
     public class AddShopValidator : IAddShopValidator
     {
         private readonly ICategoryRepository _categoryRepository;
         private readonly IShopRepository _shopRepository;
+        private readonly IMapRepository _mapRepository;
 
-        public AddShopValidator(ICategoryRepository categoryRepository, IShopRepository shopRepository)
+        public AddShopValidator(ICategoryRepository categoryRepository, IShopRepository shopRepository, IMapRepository mapRepository)
         {
             _categoryRepository = categoryRepository;
             _shopRepository = shopRepository;
+            _mapRepository = mapRepository;
         }
 
         public async Task<AddShopValidationResult> Validate(Shop shop, string subject)
@@ -70,24 +77,49 @@ namespace Cook4Me.Api.Host.Validators
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            // Check category.
+            // 1. Check category.
             var category = await _categoryRepository.Get(shop.CategoryId);
             if (category == null)
             {
                 return new AddShopValidationResult(ErrorDescriptions.TheCategoryDoesntExist);
             }
 
-            // Check the user doesn't already have a shop on the same category.
+            // 2. Check map
+            var map = await _mapRepository.Get(shop.MapName);
+            if (map == null)
+            {
+                return new AddShopValidationResult(ErrorDescriptions.TheMapDoesntExist);
+            }
+
+            // 3. Check place id exists.
+            if (!File.Exists(map.PartialMapUrl))
+            {
+                return new AddShopValidationResult(ErrorDescriptions.TheMapFileDoesntExist);
+            }
+
+            using (var stream = File.OpenText(map.PartialMapUrl))
+            {
+                using (var reader = new JsonTextReader(stream))
+                {
+                    var obj = JObject.Load(reader);
+                    if (obj.SelectToken(@"$..layers[?(@.name == 'Npcs')].objects[?(@.name == '" + shop.PlaceId + "')]") == null)
+                    {
+                        return new AddShopValidationResult(ErrorDescriptions.ThePlaceDoesntExist);
+                    }
+                }
+            }
+
+            // 4. Check the user doesn't already have a shop on the same category.
             if ((await _shopRepository.Search(new SearchShopsParameter
             {
                 CategoryId = shop.CategoryId,
-                Subject = subject   
+                Subject = subject
             })).Any())
             {
                 return new AddShopValidationResult(ErrorDescriptions.TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory);
             }
 
-            // Check mandatory parameters.
+            // 5. Check mandatory parameters.
             if (!IsValid(shop.Name, 1, 15))
             {
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Shop.Name, 5, 15));
@@ -103,7 +135,32 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Place));
             }
 
-            return new AddShopValidationResult(category);
+            if (!IsValid(shop.StreetAddress))
+            {
+                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.StreetAddress));
+            }
+
+            if (!IsValid(shop.PostalCode))
+            {
+                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.PostalCode));
+            }
+
+            if (!IsValid(shop.Locality))
+            {
+                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Locality));
+            }
+
+            if (!IsValid(shop.Country))
+            {
+                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Country));
+            }
+
+            if (shop.Payments == null || shop.Payments.Any())
+            {
+                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Payments));
+            }
+
+            return new AddShopValidationResult(category, map);
         }
 
         private static bool IsValid(string value, int min, int max)

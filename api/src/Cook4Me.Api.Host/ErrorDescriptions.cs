@@ -22,7 +22,11 @@ namespace Cook4Me.Api.Host
         public const string TheShopCannotBeAdded = "an error occured while trying to add the shop";
         public const string TheUserCannotBeAdded = "an error occured while trying to add the user";
         public const string TheUserCannotBeUpdated = "an error occured while trying to update the user";
+        public const string ThePlaceDoesntExist = "the place doesn't exist";
         public const string TheCategoryDoesntExist = "the category doesn't exist";
+        public const string TheMapDoesntExist = "the map doesn't exist";
+        public const string TheMapFileDoesntExist = "the map file doesn't exist";
+        public const string ThePaymentMethodDoesntExist = "the payment method doesn't exist";
         public const string TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory = "you already have a shop on this category";
         public const string TheParameterIsMandatory = "the parameter {0} is mandatory";
         public const string TheParameterIsMandatoryAndShouldContainsBetween = "the parameter {0} is mandatory and should contains between {1} characters and {2}";

@@ -67,7 +67,17 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             // 2. Check the request.
-            var addShopParameter = _requestBuilder.GetAddShop(obj);
+            Shop addShopParameter = null;
+            try
+            {
+                addShopParameter = _requestBuilder.GetAddShop(obj);
+            }
+            catch (ArgumentException ex)
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ex.Message);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
             var validationResult = await _addShopValidator.Validate(addShopParameter, subject);
             if (!validationResult.IsValid)
             {
@@ -82,7 +92,7 @@ namespace Cook4Me.Api.Host.Controllers
             addShopParameter.ShopRelativePath = GetRelativeShopPath(addShopParameter.Id);
             addShopParameter.UndergroundRelativePath = GetRelativeUndergroundPath(addShopParameter.Id);
             // 3. Add the files.
-            if (!AddShopMap(addShopParameter, validationResult.Category))
+            if (!AddShopMap(addShopParameter, validationResult.Map))
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeAdded);
                 return this.BuildResponse(error, HttpStatusCode.InternalServerError);
@@ -151,15 +161,15 @@ namespace Cook4Me.Api.Host.Controllers
             return new OkObjectResult(_halResponseBuilder.Build());
         }
 
-        private bool AddShopMap(Shop shop, Category category)
+        private bool AddShopMap(Shop shop, Map map)
         {
-            if (!System.IO.File.Exists("./Assets/shop.json") || !System.IO.File.Exists("./Assets/underground.json"))
+            if (!System.IO.File.Exists(Constants.Assets.PartialShop) || !System.IO.File.Exists(Constants.Assets.PartialUnderground))
             {
                 return false;
             }
 
-            var shopLines = System.IO.File.ReadAllLines("./Assets/shop.json");
-            var undergroundLines = System.IO.File.ReadAllLines("./Assets/underground.json");
+            var shopLines = System.IO.File.ReadAllLines(Constants.Assets.PartialShop);
+            var undergroundLines = System.IO.File.ReadAllLines(Constants.Assets.PartialUnderground);
             var shopPath = Path.Combine(_env.WebRootPath, shop.ShopRelativePath);
             var undergroundPath = Path.Combine(_env.WebRootPath, shop.UndergroundRelativePath);
             var shopFile = System.IO.File.Create(shopPath);
@@ -168,8 +178,7 @@ namespace Cook4Me.Api.Host.Controllers
             {
                 foreach (var shopLine in shopLines)
                 {
-                    // TODO : Refactor this solution ! 
-                    // shopWriter.WriteLine(shopLine.Replace("<map_name>", category.MapName).Replace("<warp_entry>", "shopentry_" + shop.Id).Replace("<underground_name>", "underground_" + shop.Id));
+                    shopWriter.WriteLine(shopLine.Replace("<map_name>", map.MapName).Replace("<warp_entry>", "shopentry_" + shop.Id).Replace("<underground_name>", "underground_" + shop.Id));
                 }
             }
 

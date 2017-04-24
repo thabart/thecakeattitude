@@ -133,7 +133,7 @@ class DescriptionForm extends Component {
         profile_image: this.state.pictureImage,
         map_name: this.state.mapNameSelected,
         category_id: this.state.subCategoryIdSelected,
-        place_id: this.state.place
+        place: this.state.place
       };
 
       this.props.onNext(json);

@@ -14,7 +14,6 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.EF.Mappings;
 using System;
 using System.Collections.Generic;
 
@@ -28,6 +27,8 @@ namespace Cook4Me.Api.EF.Models
         public string Description { get; set; }
         public string CategoryId { get; set; }
         public string BannerImage { get; set; }
+        public string ProfileImage { get; set; }
+        public string MapName { get; set; }
         public string Picture { get; set; }
         public string StreetAddress { get; set; }
         public string PostalCode { get; set; }
@@ -41,5 +42,7 @@ namespace Cook4Me.Api.EF.Models
         public virtual Category Category { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<ShopTag> ShopTags { get; set; }
+        public virtual ICollection<PaymentMethod> PaymentMethods { get; set; }
+        public virtual Map Map { get; set; }
     }
 }

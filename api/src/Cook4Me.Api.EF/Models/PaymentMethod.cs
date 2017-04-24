@@ -14,19 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
 namespace Cook4Me.Api.EF.Models
 {
-    public class Map
+    public class PaymentMethod
     {
-        public string MapName { get; set; }
-        public string CategoryId { get; set; }
-        public string OverviewName { get; set; }
-        public string PartialMapUrl { get; set; }
-        public string PartialOverviewUrl { get; set; }
-        public bool IsMain { get; set; }
-        public virtual Category Category { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
+        public string Id { get; set; }
+        public int Method { get; set; }
+        public string Iban { get; set; }
+        public string ShopId { get; set; }
+        public virtual Shop Shop { get; set; }
     }
 }

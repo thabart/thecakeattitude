@@ -47,6 +47,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleIdentityServer.Host",
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SimpleIdentityServer.Logging", "simpleidserver\SimpleIdentityServer\src\SimpleIdentityServer.Logging\SimpleIdentityServer.Logging.xproj", "{797FB01A-3748-4FDF-B031-D7A1F8498142}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Cook4Me.Api.Host.Tests", "tests\Cook4Me.Api.Host.Tests\Cook4Me.Api.Host.Tests.xproj", "{5BFB5BE7-382B-4D54-86EA-6424E7449A37}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{797FB01A-3748-4FDF-B031-D7A1F8498142}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{797FB01A-3748-4FDF-B031-D7A1F8498142}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{797FB01A-3748-4FDF-B031-D7A1F8498142}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BFB5BE7-382B-4D54-86EA-6424E7449A37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BFB5BE7-382B-4D54-86EA-6424E7449A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BFB5BE7-382B-4D54-86EA-6424E7449A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BFB5BE7-382B-4D54-86EA-6424E7449A37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,5 +149,6 @@ Global
 		{57EC2310-910A-4F76-8A61-C8600D66BD94} = {3707FE29-5164-4FB4-88B8-D51E8C938884}
 		{B4113D9B-6488-49FE-BA96-E08BD919E066} = {3707FE29-5164-4FB4-88B8-D51E8C938884}
 		{797FB01A-3748-4FDF-B031-D7A1F8498142} = {3707FE29-5164-4FB4-88B8-D51E8C938884}
+		{5BFB5BE7-382B-4D54-86EA-6424E7449A37} = {60AA4249-EEF6-451D-B10A-96E4EAE4DE86}
 	EndGlobalSection
 EndGlobal

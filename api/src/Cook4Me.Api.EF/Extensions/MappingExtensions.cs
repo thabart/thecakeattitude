@@ -37,23 +37,47 @@ namespace Cook4Me.Api.EF.Extensions
                 category = shop.Category.ToDomain();
             }
 
+            var tags = new List<string>();
+            if (shop.ShopTags != null && shop.ShopTags.Any())
+            {
+                tags = shop.ShopTags.Select(s => s.TagName).ToList();
+            }
+
+            var payments = new List<Domain.PaymentMethod>();
+            if (shop.PaymentMethods != null && shop.PaymentMethods.Any())
+            {
+                payments = shop.PaymentMethods.Select(p => p.ToDomain()).ToList();
+            }
+
+            Domain.Map map = null;
+            if (shop.Map != null)
+            {
+                map = shop.Map.ToDomain();
+            }
+
             return new Domain.Shop
             {
                 Id = shop.Id,
                 Subject = shop.Subject,
                 Name = shop.Name,
                 Description = shop.Description,
+                Tags = tags,
+                BannerImage = shop.BannerImage,
+                ProfileImage = shop.ProfileImage,
+                MapName = shop.MapName,
                 CategoryId = shop.CategoryId,
+                PlaceId = shop.PlaceId,
                 StreetAddress = shop.StreetAddress,
                 PostalCode = shop.PostalCode,
                 Locality = shop.Locality,
                 Country = shop.Country,
-                PlaceId = shop.PlaceId,
+                Payments = payments,
                 ShopRelativePath = shop.ShopRelativePath,
                 UndergroundRelativePath = shop.UndergroundRelativePath,
+                Category = category,
+                Map = map,
                 CreateDateTime = shop.CreateDateTime,
-                UpdateDateTime = shop.UpdateDateTime,
-                Category = category
+                UpdateDateTime = shop.UpdateDateTime
             };
         }
 
@@ -64,18 +88,38 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(shop));
             }
 
+            var tags = new List<ShopTag>();
+            if (shop.Tags != null && shop.Tags.Any())
+            {
+                tags = shop.Tags.Select(s => new ShopTag
+                {
+                    TagName = s
+                }).ToList();
+            }
+
+            var payments = new List<PaymentMethod>();
+            if (shop.Payments != null && shop.Payments.Any())
+            {
+                payments = shop.Payments.Select(p => p.ToModel()).ToList();
+            }
+
             return new Shop
             {
                 Id = shop.Id,
                 Subject = shop.Subject,
                 Name = shop.Name,
                 Description = shop.Description,
+                ShopTags = tags,
+                BannerImage = shop.BannerImage,
+                ProfileImage = shop.ProfileImage,
+                MapName = shop.MapName,
                 CategoryId = shop.CategoryId,
+                PlaceId = shop.PlaceId,
                 StreetAddress = shop.StreetAddress,
                 PostalCode = shop.PostalCode,
                 Locality = shop.Locality,
                 Country = shop.Country,
-                PlaceId = shop.PlaceId,
+                PaymentMethods = payments,
                 ShopRelativePath = shop.ShopRelativePath,
                 UndergroundRelativePath = shop.UndergroundRelativePath,
                 CreateDateTime = shop.CreateDateTime,
@@ -239,6 +283,34 @@ namespace Cook4Me.Api.EF.Extensions
             {
                 Name = tag.Name,
                 Description = tag.Description
+            };
+        }
+
+        public static Domain.PaymentMethod ToDomain(this PaymentMethod paymentMethod)
+        {
+            if (paymentMethod == null)
+            {
+                throw new ArgumentNullException(nameof(paymentMethod));
+            }
+
+            return new Domain.PaymentMethod
+            {
+                Iban = paymentMethod.Iban,
+                Method = (Domain.PaymentMethods)paymentMethod.Method
+            };
+        }
+
+        public static PaymentMethod ToModel(this Domain.PaymentMethod paymentMethod)
+        {
+            if (paymentMethod == null)
+            {
+                throw new ArgumentNullException(nameof(paymentMethod));
+            }
+
+            return new PaymentMethod
+            {
+                Iban = paymentMethod.Iban,
+                Method = (int)paymentMethod.Method
             };
         }
     }

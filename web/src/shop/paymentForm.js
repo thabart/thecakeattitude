@@ -10,12 +10,16 @@ class PaymentForm extends Component {
     this.confirm = this.confirm.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
-      currentItem: null
+      currentItem: null,
+      activateCash: false,
+      activateBankTransfer: false,
+      activatePaypal: false
     };
   }
   activate(itemName) {
+    var self = this;
     this.setState({
-      currentItem: itemName
+      [itemName]: !self.state[itemName]
     });
   }
   confirm() {
@@ -26,33 +30,32 @@ class PaymentForm extends Component {
       return;
     }
 
-    var json = {};
-    switch(currentItem) {
-      case "activateCash":
-        json['payment_method'] = "cash";
-      break;
-      case "activateBankTransfer":
-        if (!this.state.firstIban || !this.state.secondIban || !this.state.thirdIban || !this.state.fourthIban) {
-          self.props.onError('The IBAN should bee filled in');
-          return;
-        }
-
-        var iban = this.state.firstIban + this.state.secondIban + this.state.thirdIban + this.state.fourthIban;
-        var regex = new RegExp("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}");
-        if (!regex.test(iban)) {
-          self.props.onError('The IBAN is not valid');
-          return;
-        }
-
-        json['payment_method'] = "bank_transfer";
-        json['iban'] = iban;
-      break;
-      case "activatePaypal":
-        json['payment_method'] = 'paypal';
-      break;
+    var arr = [];
+    if (this.state.activateCash) {
+      arr.push({method: 'cash'});
     }
 
-    self.props.onConfirm(json);
+    if (this.state.activateBankTransfer) {
+      if (!this.state.firstIban || !this.state.secondIban || !this.state.thirdIban || !this.state.fourthIban) {
+        self.props.onError('The IBAN should bee filled in');
+        return;
+      }
+
+      var iban = this.state.firstIban + this.state.secondIban + this.state.thirdIban + this.state.fourthIban;
+      var regex = new RegExp("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}");
+      if (!regex.test(iban)) {
+        self.props.onError('The IBAN is not valid');
+        return;
+      }
+
+      arr.push({method: 'bank_transfer', 'iban': iban});
+    }
+
+    if (this.state.activatePaypal) {
+      arr.push({method: 'paypal'});
+    }
+
+    self.props.onConfirm({ payments: arr });
   }
   handleInputChange(e) {
     const target = e.target;
@@ -69,13 +72,14 @@ class PaymentForm extends Component {
     return (
       <div>
         <section className="col-md-12 section">
+          <p>Choose one or more payment method(s)</p>
           <div className="list-group">
-            <a href="#" className={this.state.currentItem === 'activateCash' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateCash"); }}>
+            <a href="#" className={this.state.activateCash ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateCash"); }}>
               <div className="form-group">
                 <i className="fa fa-money"></i> <label>Cash</label>
               </div>
             </a>
-            <a href="#" className={this.state.currentItem === 'activateBankTransfer' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateBankTransfer"); }}>
+            <a href="#" className={this.state.activateBankTransfer ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateBankTransfer"); }}>
               <div className="form-group">
                 <i className="fa fa-credit-card-alt"></i> <label>Bank transfer</label>
                 <p>Please insert your IBAN</p>
@@ -95,7 +99,7 @@ class PaymentForm extends Component {
                 </div>
               </div>
             </a>
-            <a href="#" className={this.state.currentItem === 'activatePaypal' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activatePaypal"); }}>
+            <a href="#" className={this.state.activatePaypal ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activatePaypal"); }}>
               <div className="form-group">
               <i className="fa fa-paypal"></i> <label>Paypal</label>
               </div>

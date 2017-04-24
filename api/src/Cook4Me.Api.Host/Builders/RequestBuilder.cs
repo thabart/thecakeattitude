@@ -19,6 +19,7 @@ using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Host.Extensions;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -28,6 +29,7 @@ namespace Cook4Me.Api.Host.Builders
         Shop GetAddShop(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
+        PaymentMethod GetPaymentMethod(JObject jObj);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -40,15 +42,30 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var result = new Shop();
-            result.Name = jObj.Value<string>(Constants.DtoNames.Shop.Name);
+            result.Name = jObj.Value<string>(Constants.DtoNames.Shop.Name); // General information
             result.Description = jObj.Value<string>(Constants.DtoNames.Shop.Description);
+            result.Tags = jObj.Values<string>(Constants.DtoNames.Shop.Tags);
+            result.BannerImage = jObj.Value<string>(Constants.DtoNames.Shop.BannerImage);
+            result.ProfileImage = jObj.Value<string>(Constants.DtoNames.Shop.ProfileImage);
+            result.MapName = jObj.Value<string>(Constants.DtoNames.Shop.MapName);
             result.CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId);
-            result.StreetAddress = jObj.Value<string>(Constants.DtoNames.Shop.StreetAddress);
+            result.PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place);
+            result.StreetAddress = jObj.Value<string>(Constants.DtoNames.Shop.StreetAddress); // Street address
             result.PostalCode = jObj.Value<string>(Constants.DtoNames.Shop.PostalCode);
             result.Locality = jObj.Value<string>(Constants.DtoNames.Shop.Locality);
             result.Country = jObj.Value<string>(Constants.DtoNames.Shop.Country);
-            // result.Tags = jObj.Value<string>(Constants.DtoNames.Shop.Tags);
-            result.PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place);
+            var paymentMethods = new List<PaymentMethod>();
+            var payments = jObj[Constants.DtoNames.Shop.Payments];
+            JArray arr = null;
+            if (payments != null && (arr = payments as JArray) != null)
+            {
+                foreach(var payment in payments)
+                {
+                    paymentMethods.Add(GetPaymentMethod(payment as JObject));
+                }
+            }
+
+            result.Payments = paymentMethods;
             return result;
         }
 
@@ -101,6 +118,40 @@ namespace Cook4Me.Api.Host.Builders
                 Name = jObj.Value<string>(Constants.DtoNames.Tag.Name)
             };
             return result;
+        }
+
+        public PaymentMethod GetPaymentMethod(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            PaymentMethods? methodEnum = null;
+            var method = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Method);
+            if (string.Equals(method, "cash", StringComparison.CurrentCultureIgnoreCase))
+            {
+                methodEnum = PaymentMethods.Cash;
+            }
+            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase))
+            {
+                methodEnum = PaymentMethods.BankTransfer;
+            }
+            else if (string.Equals(method, "paypal", StringComparison.CurrentCultureIgnoreCase))
+            {
+                methodEnum = PaymentMethods.PayPal;
+            }
+
+            if (methodEnum == null)
+            {
+                throw new ArgumentException(ErrorDescriptions.ThePaymentMethodDoesntExist);
+            }
+
+            return new PaymentMethod
+            {
+                Method = methodEnum.Value,
+                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
+            };
         }
     }
 }

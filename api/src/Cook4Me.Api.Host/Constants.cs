@@ -18,6 +18,12 @@ namespace Cook4Me.Api.Host
 {
     internal static class Constants
     {
+        public static class Assets
+        {
+            public const string PartialShop = "./Assets/shop.json";
+            public const string PartialUnderground = "./Assets/underground.json";
+        }
+
         public static class RouteNames
         {
             public const string Products = "products";
@@ -41,23 +47,31 @@ namespace Cook4Me.Api.Host
                 // General information.
                 public const string Name = "name";
                 public const string Description = "description";
+                public const string Tags = "tags";
+                public const string BannerImage = "banner_image";
+                public const string ProfileImage = "profile_image";
+                public const string MapName = "map_name";
                 public const string CategoryId = "category_id";
+                public const string Place = "place";
                 // Address
                 public const string StreetAddress = "street_address";
                 public const string PostalCode = "postal_code";
                 public const string Locality = "locality";
                 public const string Country = "country";
-                // Tags
-                public const string Tags = "tags";
                 // Payment
-                public const string Payment = "payment";
+                public const string Payments = "payments";
                 // Tilemap information
-                public const string Place = "place";
                 public const string ShopPath = "shop_path";
                 public const string UndergroundPath = "underground_path";
                 // Other information
                 public const string CreateDateTime = "create_datetime";
                 public const string UpdateDateTime = "update_datetime";
+            }
+
+            public static class PaymentMethod
+            {
+                public const string Method = "method";
+                public const string Iban = "iban";
             }
 
             public static class Seller

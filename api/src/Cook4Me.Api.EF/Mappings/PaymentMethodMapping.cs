@@ -14,19 +14,25 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.EF.Mappings
 {
-    public class Map
+    internal static class PaymentMethodMapping
     {
-        public string MapName { get; set; }
-        public string CategoryId { get; set; }
-        public string OverviewName { get; set; }
-        public string PartialMapUrl { get; set; }
-        public string PartialOverviewUrl { get; set; }
-        public bool IsMain { get; set; }
-        public virtual Category Category { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
+        public static ModelBuilder AddPaymentMethod(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+            modelBuilder.Entity<PaymentMethod>()
+                .ToTable("paymentMethods")
+                .HasKey(s => s.Id);
+            return modelBuilder;
+        }
     }
 }

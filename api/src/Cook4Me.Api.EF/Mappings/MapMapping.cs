@@ -32,6 +32,10 @@ namespace Cook4Me.Api.EF.Mappings
             modelBuilder.Entity<Map>()
                 .ToTable("maps")
                 .HasKey(m => m.MapName);
+            modelBuilder.Entity<Map>()
+                .HasMany(s => s.Shops)
+                .WithOne(s => s.Map)
+                .HasForeignKey(s => s.MapName);
             return modelBuilder;
         }
     }
