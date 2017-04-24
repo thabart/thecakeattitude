@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
-import { CategoryService, TagService } from '../services';
+import { CategoryService, TagService, ShopsService, OpenIdService, SessionService } from '../services';
 import TagsInput from 'react-tagsinput';
 import Game from '../game/game';
 import Constants from '../../Constants';
@@ -94,9 +94,9 @@ class DescriptionForm extends Component {
     });
   }
   validate() {
-    var self = this;
-    var valid = self.state.valid;
-    var isValid = true;
+    var self = this,
+      valid = self.state.valid,
+      isValid = true;
     // Check name
     if (!self.state.name || self.state.name.length < 1 || self.state.name.length > 15) {
       valid.isNameInvalid = true;
@@ -121,24 +121,43 @@ class DescriptionForm extends Component {
       valid.isPlaceInvalid = false;
     }
 
+
     this.setState({
       valid: valid
     });
 
-    if (isValid) {
-      var json = {
-        name : this.state.name,
-        description: this.state.description,
-        tags: this.state.tags,
-        banner_image: this.state.bannerImage,
-        profile_image: this.state.pictureImage,
-        map_name: this.state.mapNameSelected,
-        category_id: this.state.subCategoryIdSelected,
-        place: this.state.place
-      };
-
-      this.props.onNext(json);
+    if (!isValid) {
+      return;
     }
+
+    // Check that no shop has been added to the selected category.
+    self.props.onLoading(true);
+    OpenIdService.getUserInfo(SessionService.getSession().access_token).then(function(userInfo) {
+        ShopsService.search({
+          category_id: self.state.subCategoryIdSelected,
+          subject: userInfo.sub
+        }).then(function() {
+          self.props.onLoading(false);
+          self.props.onError('you already have a shop on this category');
+        }).catch(function(e) {
+          var json = {
+            name : self.state.name,
+            description: self.state.description,
+            tags: self.state.tags,
+            banner_image: self.state.bannerImage,
+            profile_image: self.state.pictureImage,
+            map_name: self.state.mapNameSelected,
+            category_id: self.state.subCategoryIdSelected,
+            place: self.state.place
+          };
+
+          self.props.onLoading(false);
+          self.props.onNext(json);
+        });
+    }).catch(function() {
+        self.props.onLoading(false);
+        self.props.onError('the subject cannot be retrieved');
+    });
   }
   selectCategory(e) {
     this.displaySubCategory(e.target.value);

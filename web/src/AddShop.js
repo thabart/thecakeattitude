@@ -29,6 +29,10 @@ class AddShop extends Component {
   }
   toggle(tab, json) {
     var self = this;
+    if (json) {
+      self.data[self.state.activeTab] = json;
+    }
+
     if (self.state.activeTab !== tab) {
       self.setState({
         activeTab: tab
@@ -37,10 +41,6 @@ class AddShop extends Component {
 
     if (tab === '2') {
       self.refs.addressForm.display();
-    }
-
-    if (json) {
-      self.data[self.state.activeTab] = json;
     }
   }
   displayError(msg) {
@@ -109,7 +109,7 @@ class AddShop extends Component {
         <TabContent activeTab={this.state.activeTab} className="progressbar-content">
           <div className={this.state.isLoading ? 'loading': 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
           <TabPane tabId='1' className={this.state.isLoading ? 'hidden': ''}>
-            <DescriptionForm onNext={(json) => { this.toggle('2', json); }}/>
+            <DescriptionForm onNext={(json) => { this.toggle('2', json); }} onLoading={(l) => {this.loading(l); }} onError={(msg) => { this.displayError(msg); }}/>
           </TabPane>
           <TabPane tabId='2' className={this.state.isLoading ? 'hidden': ''}>
             <AddressForm ref="addressForm" onPrevious={() => { this.toggle('1'); }} onNext={(json) => { this.toggle('3', json); }} onLoading={(l) => {this.loading(l); }} onWarning={(msg) => { this.displayWarning(msg); }} onError={(msg) => { this.displayError(msg); }}/>
