@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu, NavLink,  Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { Link, Redirect } from 'react-router-dom';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu,  Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { NavLink, Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import Promise from 'bluebird';
 import classnames from 'classnames';
@@ -19,6 +19,7 @@ class Header extends Component {
     this.disconnect = this.disconnect.bind(this);
     this.state = {
       user: null,
+      activeItem: null,
       isMenuOpen: false,
       isAccountOpen: false,
       isAuthenticateOpened: false,
@@ -168,17 +169,17 @@ class Header extends Component {
       <div>
         <Navbar color="faded" light toggleable>
             <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
-            <NavbarBrand href="/">Application name</NavbarBrand>
+            <NavbarBrand href="/">ShopInGame</NavbarBrand>
             <Collapse isOpen={this.state.isMenuOpen} navbar>
               <Nav className="mr-auto" navbar>
                 <NavItem>
-                  <Link to="/" className="nav-link">Map</Link>
+                  <NavLink to="/home" className="nav-link" activeClassName="active-menu-item">Map</NavLink>
                 </NavItem>
                 <NavItem>
-                  <Link to="/sellers" className="nav-link">Sellers</Link>
+                  <NavLink to="/sellers" className="nav-link"  activeClassName="active-menu-item">Sellers</NavLink>
                 </NavItem>
                 {
-                  (this.state.isLoggedIn) ? <NavItem><Link to="/addshop" className="nav-link">Add shop</Link></NavItem> : ''
+                  (this.state.isLoggedIn) ? <NavItem><NavLink to="/addshop" className="nav-link"  activeClassName="active-menu-item">Add shop</NavLink></NavItem> : ''
                 }
               </Nav>
               <Nav className={(this.state.isConnectHidden ? 'hidden' : 'ml-auto')} navbar>

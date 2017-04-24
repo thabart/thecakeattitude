@@ -57,8 +57,9 @@ class App extends Component {
           <Header />
           <div>
             <Route exact path="/" component={Map}  />
-            <Route exact path="/sellers" component={Sellers}  />
-            <Route exact path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddShop />))} />
+            <Route path="/home" component={Map}  />
+            <Route path="/sellers" component={Sellers}  />
+            <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddShop />))} />
           </div>
         </div>
       </Router>

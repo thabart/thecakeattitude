@@ -12,3 +12,8 @@
   width: 24px;
   height:24px;
 }
+
+a.active-menu-item {
+  background-color: #efecec !important;
+  color: rgba(0, 0, 0, 0.9) !important;
+}

@@ -16,7 +16,8 @@ class PaymentForm extends Component {
       activatePaypal: false
     };
   }
-  activate(itemName) {
+  activate(itemName, e) {
+    e.preventDefault();
     var self = this;
     this.setState({
       [itemName]: !self.state[itemName]
@@ -73,12 +74,14 @@ class PaymentForm extends Component {
         <section className="col-md-12 section">
           <p><i className="fa fa-exclamation-circle"></i> Choose one or more payment method(s)</p>
           <div className="list-group">
-            <a href="#" className={this.state.activateCash ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateCash"); }}>
+            <a href="#" className={this.state.activateCash ? 'list-group-item list-group-item-action active-payment' : 'list-group-item list-group-item-action'} onClick={(e) => { this.activate("activateCash", e); }}>
+              {this.state.activateCash ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
               <div className="form-group">
                 <i className="fa fa-money"></i> <label>Cash</label>
               </div>
             </a>
-            <a href="#" className={this.state.activateBankTransfer ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateBankTransfer"); }}>
+            <a href="#" className={this.state.activateBankTransfer ? 'list-group-item list-group-item-action active-payment' : 'list-group-item list-group-item-action'} onClick={(e) => { this.activate("activateBankTransfer", e); }}>
+              {this.state.activateBankTransfer ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
               <div className="form-group">
                 <i className="fa fa-credit-card-alt"></i> <label>Bank transfer</label>
                 <p>Please insert your IBAN</p>
@@ -98,7 +101,8 @@ class PaymentForm extends Component {
                 </div>
               </div>
             </a>
-            <a href="#" className={this.state.activatePaypal ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activatePaypal"); }}>
+            <a href="#" className={this.state.activatePaypal ? 'list-group-item list-group-item-action active-payment' : 'list-group-item list-group-item-action'} onClick={(e) => { this.activate("activatePaypal", e); }}>
+              {this.state.activatePaypal ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
               <div className="form-group">
               <i className="fa fa-paypal"></i> <label>Paypal</label>
               </div>
