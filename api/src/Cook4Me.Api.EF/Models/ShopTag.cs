@@ -18,6 +18,7 @@ namespace Cook4Me.Api.EF.Models
 {
     public class ShopTag
     {
+        public string Id { get; set; }
         public string ShopId { get; set; }
         public string TagName { get; set; }
         public virtual Shop Shop { get; set; }

@@ -20,6 +20,7 @@ using Cook4Me.Api.Host.Extensions;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -44,7 +45,18 @@ namespace Cook4Me.Api.Host.Builders
             var result = new Shop();
             result.Name = jObj.Value<string>(Constants.DtoNames.Shop.Name); // General information
             result.Description = jObj.Value<string>(Constants.DtoNames.Shop.Description);
-            result.Tags = jObj.Values<string>(Constants.DtoNames.Shop.Tags);
+            var tags = jObj.GetValue(Constants.DtoNames.Shop.Tags);
+            JArray firstArr = null;
+            var ts = new List<string>();
+            if (tags != null && (firstArr = tags as JArray) != null)
+            {
+                foreach(var tag in tags)
+                {
+                    ts.Add(tag.ToString());
+                }
+            }
+
+            result.Tags = ts;
             result.BannerImage = jObj.Value<string>(Constants.DtoNames.Shop.BannerImage);
             result.ProfileImage = jObj.Value<string>(Constants.DtoNames.Shop.ProfileImage);
             result.MapName = jObj.Value<string>(Constants.DtoNames.Shop.MapName);
@@ -149,6 +161,7 @@ namespace Cook4Me.Api.Host.Builders
 
             return new PaymentMethod
             {
+                Id = Guid.NewGuid().ToString(),
                 Method = methodEnum.Value,
                 Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
             };

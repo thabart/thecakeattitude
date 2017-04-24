@@ -31,7 +31,7 @@ namespace Cook4Me.Api.EF.Mappings
 
             modelBuilder.Entity<ShopTag>()
                 .ToTable("shoptags")
-                .HasKey(s => s.TagName);
+                .HasKey(s => s.Id);
             return modelBuilder;
         }
     }

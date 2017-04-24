@@ -87,16 +87,7 @@ namespace Cook4Me.Api.EF.Extensions
             {
                 throw new ArgumentNullException(nameof(shop));
             }
-
-            var tags = new List<ShopTag>();
-            if (shop.Tags != null && shop.Tags.Any())
-            {
-                tags = shop.Tags.Select(s => new ShopTag
-                {
-                    TagName = s
-                }).ToList();
-            }
-
+            
             var payments = new List<PaymentMethod>();
             if (shop.Payments != null && shop.Payments.Any())
             {
@@ -109,7 +100,6 @@ namespace Cook4Me.Api.EF.Extensions
                 Subject = shop.Subject,
                 Name = shop.Name,
                 Description = shop.Description,
-                ShopTags = tags,
                 BannerImage = shop.BannerImage,
                 ProfileImage = shop.ProfileImage,
                 MapName = shop.MapName,
@@ -309,6 +299,7 @@ namespace Cook4Me.Api.EF.Extensions
 
             return new PaymentMethod
             {
+                Id = paymentMethod.Id,
                 Iban = paymentMethod.Iban,
                 Method = (int)paymentMethod.Method
             };
