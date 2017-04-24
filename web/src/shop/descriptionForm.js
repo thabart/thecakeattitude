@@ -347,7 +347,7 @@ class DescriptionForm extends Component {
               <Tooltip placement="right" target="bannerImageTooltip" isOpen={this.state.tooltip.toggleBannerImage} toggle={() => { this.toggleTooltip('toggleBannerImage'); }}>
                 Banner image displayed on your profile
               </Tooltip>
-              <div><input type='file' onChange={(e) => this.uploadBannerImage(e)} /></div>
+              <div><input type='file' accept='image/*' onChange={(e) => this.uploadBannerImage(e)} /></div>
               {bannerImagePreview}
             </div>
             <div className='form-group col-md-12'>
@@ -355,7 +355,7 @@ class DescriptionForm extends Component {
               <Tooltip placement="right" target="profileImageTooltip" isOpen={this.state.tooltip.toggleProfileImage} toggle={() => { this.toggleTooltip('toggleProfileImage'); }}>
                 Profile's picture
               </Tooltip>
-              <div><input type='file' onChange={(e) => this.uploadPictureImage(e)} /></div>
+              <div><input type='file' accept='image/*' onChange={(e) => this.uploadPictureImage(e)} /></div>
               {pictureImagePreview}
             </div>
           </div>
