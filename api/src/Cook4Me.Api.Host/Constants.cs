@@ -58,6 +58,10 @@ namespace Cook4Me.Api.Host
                 public const string PostalCode = "postal_code";
                 public const string Locality = "locality";
                 public const string Country = "country";
+                public const string Location = "location";
+                public const string GooglePlaceId = "google_place_id";
+                public const string Latitude = "lat";
+                public const string Longitude = "lng";
                 // Payment
                 public const string Payments = "payments";
                 // Tilemap information

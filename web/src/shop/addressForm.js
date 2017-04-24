@@ -99,6 +99,7 @@ class AddressForm extends Component {
     this.next = this.next.bind(this);
     this.state = {
       zoom: 12,
+      placeId: null,
       center: null,
       bounds: null,
       centerContent: null,
@@ -152,7 +153,8 @@ class AddressForm extends Component {
         center: location,
         isAddressCorrect: true,
         currentLocation: location,
-        address: adr
+        address: adr,
+        placeId: firstPlace.place_id
       });
       self.props.onLoading(false);
       if (!adr.postal_code || !adr.locality || !adr.country || !adr.street_address) {
@@ -175,8 +177,11 @@ class AddressForm extends Component {
       street_address: this.state.address.street_address,
       postal_code: this.state.address.postal_code,
       locality: this.state.address.locality,
-      country: this.state.address.country
+      country: this.state.address.country,
+      location: this.state.currentLocation,
+      google_place_id: this.state.placeId
     };
+
     this.props.onNext(json);
   }
   display() {
@@ -270,7 +275,8 @@ class AddressForm extends Component {
             center: location,
             currentLocation: location,
             address: adr,
-            isAddressCorrect: true
+            isAddressCorrect: true,
+            placeId: result.place_id
           });
           self.props.onLoading(false);
         }).fail(function() {

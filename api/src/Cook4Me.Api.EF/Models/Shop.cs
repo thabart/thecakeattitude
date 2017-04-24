@@ -37,6 +37,9 @@ namespace Cook4Me.Api.EF.Models
         public string PlaceId { get; set; }
         public string ShopRelativePath { get; set; }
         public string UndergroundRelativePath { get; set; }
+        public string GooglePlaceId { get; set; }
+        public string Longitude { get; set; }
+        public string Latitude { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public virtual Category Category { get; set; }

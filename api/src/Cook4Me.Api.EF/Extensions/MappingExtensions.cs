@@ -77,7 +77,10 @@ namespace Cook4Me.Api.EF.Extensions
                 Category = category,
                 Map = map,
                 CreateDateTime = shop.CreateDateTime,
-                UpdateDateTime = shop.UpdateDateTime
+                UpdateDateTime = shop.UpdateDateTime,
+                GooglePlaceId = shop.GooglePlaceId,
+                Latitude = shop.Latitude,
+                Longitude = shop.Longitude
             };
         }
 
@@ -113,7 +116,10 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopRelativePath = shop.ShopRelativePath,
                 UndergroundRelativePath = shop.UndergroundRelativePath,
                 CreateDateTime = shop.CreateDateTime,
-                UpdateDateTime = shop.UpdateDateTime
+                UpdateDateTime = shop.UpdateDateTime,
+                GooglePlaceId = shop.GooglePlaceId,
+                Latitude = shop.Latitude,
+                Longitude = shop.Longitude
             };
         }
 
