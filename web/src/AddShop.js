@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
 import { TabContent, TabPane, Alert } from 'reactstrap';
+import { withRouter } from 'react-router';
 import Constants from '../Constants';
 import { DescriptionForm, ContactInfoForm, PaymentForm, AddressForm } from './shop';
 import { ShopsService } from './services';
@@ -82,10 +83,15 @@ class AddShop extends Component {
     self.loading(true);
     ShopsService.add(content).then(function() {
       self.loading(false);
-      console.log('bingo');
+      self.props.history.push('/');
     }).catch(function(e) {
       self.loading(false);
-      console.log(e);
+      var json = e.responseJSON;
+      if (json && json.error_description) {
+        self.displayError(json.error_description);
+      } else {
+        self.displayError('an error occured while trying to add the shop');
+      }
     });
   }
   render() {
@@ -129,4 +135,4 @@ class AddShop extends Component {
   }
 }
 
-export default AddShop;
+export default withRouter(AddShop);

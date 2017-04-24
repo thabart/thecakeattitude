@@ -112,7 +112,6 @@ namespace Cook4Me.Api.Host.Validators
             }
 
             // 4. Check the user doesn't already have a shop on the same category.
-            /*
             if ((await _shopRepository.Search(new SearchShopsParameter
             {
                 CategoryId = shop.CategoryId,
@@ -120,7 +119,7 @@ namespace Cook4Me.Api.Host.Validators
             })).Any())
             {
                 return new AddShopValidationResult(ErrorDescriptions.TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory);
-            }*/
+            }
 
             // 5. Check mandatory parameters.
             if (!IsValid(shop.Name, 1, 15))
