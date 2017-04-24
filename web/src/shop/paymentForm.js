@@ -26,8 +26,11 @@ class PaymentForm extends Component {
       return;
     }
 
-    console.log(currentItem);
+    var json = {};
     switch(currentItem) {
+      case "activateCash":
+        json['payment_method'] = "cash";
+      break;
       case "activateBankTransfer":
         if (!this.state.firstIban || !this.state.secondIban || !this.state.thirdIban || !this.state.fourthIban) {
           self.props.onError('The IBAN should bee filled in');
@@ -38,11 +41,18 @@ class PaymentForm extends Component {
         var regex = new RegExp("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}");
         if (!regex.test(iban)) {
           self.props.onError('The IBAN is not valid');
+          return;
         }
+
+        json['payment_method'] = "bank_transfer";
+        json['iban'] = iban;
+      break;
+      case "activatePaypal":
+        json['payment_method'] = 'paypal';
       break;
     }
 
-    console.log(iban);
+    self.props.onConfirm(json);
   }
   handleInputChange(e) {
     const target = e.target;

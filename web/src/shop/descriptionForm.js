@@ -33,6 +33,8 @@ class DescriptionForm extends Component {
       subCategories: [],
       maps: [],
       tags: [],
+      subCategoryIdSelected: null,
+      mapNameSelected: null,
       tooltip: {
         toggleName : false,
         toggleDescription: false,
@@ -116,7 +118,6 @@ class DescriptionForm extends Component {
       isValid = false;
     } else {
       valid.isPlaceInvalid = false;
-
     }
 
     this.setState({
@@ -124,7 +125,18 @@ class DescriptionForm extends Component {
     });
 
     if (isValid) {
-      this.props.onNext();
+      var json = {
+        name : this.state.name,
+        description: this.state.description,
+        tags: this.state.tags,
+        banner_image: this.state.bannerImage,
+        profile_image: this.state.pictureImage,
+        map_name: this.state.mapNameSelected,
+        category_id: this.state.subCategoryIdSelected,
+        place_id: this.state.place
+      };
+
+      this.props.onNext(json);
     }
   }
   selectCategory(e) {
@@ -139,19 +151,23 @@ class DescriptionForm extends Component {
   displayMap(mapHref) {
     var self = this;
     $.get(Constants.apiUrl + mapHref).then(function(map) {
-      self.refs.game.loadMap(map['_embedded']);
+      var m = map['_embedded'];
+      self.refs.game.loadMap(m);
       self.state.place = null;
       self.setState({
-        place: self.state.place
+        place: self.state.place,
+        mapNameSelected: m.map_name
       });
     });
   }
   displayMaps(categoryId) {
     var self = this;
     $.get(Constants.apiUrl + categoryId).then(function(r) {
+      var category = r['_embedded'];
       var maps = r['_links']['maps'];
       self.setState({
-        maps: maps
+        maps: maps,
+        subCategoryIdSelected: category.id
       });
 
       if (!maps) {
@@ -159,7 +175,7 @@ class DescriptionForm extends Component {
       }
 
       var mainMap = maps[0];
-      self.displayMap(mainMap .href);
+      self.displayMap(mainMap.href);
     });
   }
   displaySubCategory(categoryId) {

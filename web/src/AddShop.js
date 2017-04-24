@@ -13,21 +13,32 @@ class AddShop extends Component {
     this.displayError = this.displayError.bind(this);
     this.toggleWarning = this.toggleWarning.bind(this);
     this.toggleError = this.toggleError.bind(this);
+    this.save = this.save.bind(this);
     this._googleMap = null;
     this._searchBox = null;
+    this.data = {};
     this.state = {
-      activeTab: '2',
+      activeTab: '1',
       errorMessage: null,
       warningMessage: null,
       isAddressCorrect: false,
       isLoading: false
     };
   }
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
+  toggle(tab, json) {
+    var self = this;
+    if (self.state.activeTab !== tab) {
+      self.setState({
         activeTab: tab
       });
+    }
+
+    if (tab === '2') {
+      self.refs.addressForm.display();
+    }
+
+    if (json) {
+      self.data[self.state.activeTab] = json;
     }
   }
   displayError(msg) {
@@ -55,6 +66,19 @@ class AddShop extends Component {
       warningMessage: null
     });
   }
+  save(json) {
+    var content = json;
+    if (!this.data || !this.data['1'] || !this.data['2']) {
+      this.displayError('The request cannot be saved because the information are not complete');
+      return;
+    }
+
+    for(var key in this.data) {
+      $.extend(content, this.data[key]);
+    }
+
+    console.log(content);
+  }
   render() {
     return (
       <div className="container">
@@ -70,10 +94,10 @@ class AddShop extends Component {
         <TabContent activeTab={this.state.activeTab} className="progressbar-content">
           <div className={this.state.isLoading ? 'loading': 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
           <TabPane tabId='1' className={this.state.isLoading ? 'hidden': ''}>
-            <DescriptionForm onNext={() => { this.toggle('2'); }}/>
+            <DescriptionForm onNext={(json) => { this.toggle('2', json); }}/>
           </TabPane>
           <TabPane tabId='2' className={this.state.isLoading ? 'hidden': ''}>
-            <AddressForm onPrevious={() => { this.toggle('1'); }} onNext={() => { this.toggle('3'); }} onLoading={(l) => {this.loading(l); }} onWarning={(msg) => { this.displayWarning(msg); }} onError={(msg) => { this.displayError(msg); }}/>
+            <AddressForm ref="addressForm" onPrevious={() => { this.toggle('1'); }} onNext={(json) => { this.toggle('3', json); }} onLoading={(l) => {this.loading(l); }} onWarning={(msg) => { this.displayWarning(msg); }} onError={(msg) => { this.displayError(msg); }}/>
           </TabPane>
           <TabPane tabId='3' className={this.state.isLoading ? 'hidden': ''}>
             <ContactInfoForm onError={(msg) => { this.displayError(msg); }} onPrevious={() => { this.toggle('2'); }} onNext={() => { this.toggle('4'); }}/>
@@ -88,7 +112,7 @@ class AddShop extends Component {
             </section>
           </TabPane>
           <TabPane tabId='5' className={this.state.isLoading ? 'hidden': ''}>
-            <PaymentForm onError={(msg) => { this.displayError(msg); }}  onPrevious={() => { this.toggle('4'); }} />
+            <PaymentForm onError={(msg) => { this.displayError(msg); }}  onPrevious={() => { this.toggle('4'); }} onConfirm={ (json) => { this.save(json); }} />
           </TabPane>
         </TabContent>
       </div>

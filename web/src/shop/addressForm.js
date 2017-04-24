@@ -112,12 +112,7 @@ class AddressForm extends Component {
     }
   }
   onMapLoad(map) {
-    var self = this;
     this._googleMap = map;
-    setTimeout(function() {
-      const mapInstance = self._googleMap.context[MAP];
-      window.google.maps.event.trigger(mapInstance, 'resize');
-    }, 1000);
   }
   onSearchBoxCreated(searchBox) {
     this._searchBox = searchBox;
@@ -176,9 +171,23 @@ class AddressForm extends Component {
     this.props.onPrevious();
   }
   next() {
-    this.props.onNext();
+    var json = {
+      street_address: this.state.address.street_address,
+      postal_code: this.state.address.postal_code,
+      locality: this.state.address.locality,
+      country: this.state.address.country
+    };
+    this.props.onNext(json);
+  }
+  display() {
+    var self = this;
+    setTimeout(function() {
+      const mapInstance = self._googleMap.context[MAP];
+      window.google.maps.event.trigger(mapInstance, 'resize');
+    }, 1000);
   }
   render() {
+    var self = this;
     if (this.state.isContactInfoHidden) {
       return (<section className="col-md-12 section">Loading ...</section>)
     }
