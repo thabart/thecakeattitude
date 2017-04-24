@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
-import CategoryService from '../services/Category';
+import { CategoryService, TagService } from '../services';
+import TagsInput from 'react-tagsinput';
 import Game from '../game/game';
 import Constants from '../../Constants';
+import './descriptionForm.css';
+import 'react-tagsinput/react-tagsinput.css';
 import $ from 'jquery';
 
 class DescriptionForm extends Component {
@@ -17,6 +20,7 @@ class DescriptionForm extends Component {
     this.selectSubCategory = this.selectSubCategory.bind(this);
     this.selectMap = this.selectMap.bind(this);
     this.onHouseSelected = this.onHouseSelected.bind(this);
+    this.handleTags = this.handleTags.bind(this);
     this.state = {
       name: null,
       description: null,
@@ -28,13 +32,16 @@ class DescriptionForm extends Component {
       categories: [],
       subCategories: [],
       maps: [],
+      tags: [],
       tooltip: {
         toggleName : false,
         toggleDescription: false,
         toggleChoosePlace: false,
         toggleErrorName: false,
         toggleErrorDescription : false,
-        toggleErrorPlace: false
+        toggleErrorPlace: false,
+        toggleProfileImage: false,
+        toggleBannerImage: false
       },
       valid: {
         isNameInvalid : false,
@@ -193,6 +200,31 @@ class DescriptionForm extends Component {
 
     return result;
   }
+  handleTags(tags) {
+    this.setState({
+      tags: tags
+    });
+    this.hidePopup();
+  }
+  displayLoading() {
+    var ul = $(this.popup).find('ul');
+    $(ul).empty();
+    $(ul).append('<li>Loading ...</li>');
+    $(this.popup).show();
+  }
+  displayTags(tags) {
+    var ul = $(this.popup).find('ul');
+    var self = this;
+    $(ul).empty();
+    tags.forEach(function(tag) {
+      $(self.popup).find('ul').append('<li>'+tag.name+'</li>');
+    });
+  }
+  hidePopup() {
+    var ul = $(this.popup).find('ul');
+    $(ul).empty();
+    $(this.popup).hide();
+  }
   render() {
     var bannerImagePreview,
       pictureImagePreview,
@@ -247,6 +279,10 @@ class DescriptionForm extends Component {
                {descriptionError}
               <textarea className='form-control' name='description' onChange={this.handleInputChange}></textarea>
             </div>
+            <div className="form-group col-md-12">
+              <p><i className="fa fa-exclamation-triangle"></i> Add some tags to enrich the description of your shop</p>
+              <TagsInput ref="shopTags" value={this.state.tags} onChange={this.handleTags} />
+            </div>
             <div className='row'>
               <div className='col-md-6'>
                 <div className='form-group'>
@@ -268,12 +304,18 @@ class DescriptionForm extends Component {
               </div>
             </div>
             <div className='form-group col-md-12'>
-              <label className='control-label'>Banner image</label>
+              <label className='control-label'>Banner image</label> <i className="fa fa-exclamation-circle" id="bannerImageTooltip"></i>
+              <Tooltip placement="right" target="bannerImageTooltip" isOpen={this.state.tooltip.toggleBannerImage} toggle={() => { this.toggleTooltip('toggleBannerImage'); }}>
+                Banner image displayed on your profile
+              </Tooltip>
               <div><input type='file' onChange={(e) => this.uploadBannerImage(e)} /></div>
               {bannerImagePreview}
             </div>
             <div className='form-group col-md-12'>
-              <label className='control-label'>Picture</label>
+              <label className='control-label'>Profile picture</label> <i className="fa fa-exclamation-circle" id="profileImageTooltip"></i>
+              <Tooltip placement="right" target="profileImageTooltip" isOpen={this.state.tooltip.toggleProfileImage} toggle={() => { this.toggleTooltip('toggleProfileImage'); }}>
+                Profile's picture
+              </Tooltip>
               <div><input type='file' onChange={(e) => this.uploadPictureImage(e)} /></div>
               {pictureImagePreview}
             </div>
@@ -296,6 +338,10 @@ class DescriptionForm extends Component {
   }
   componentDidMount() {
     var self = this;
+    var input = this.refs.shopTags.refs.input;
+    var container = this.refs.shopTags.refs.div;
+    var paddingLeft = 5,
+      paddingTop = 5;
     self.setState({
       isCategoryLoading: true,
       isSubCategoryLoading: true
@@ -316,6 +362,42 @@ class DescriptionForm extends Component {
       self.setState({
         isCategoryLoading: false,
         isSubCategoryLoading: false
+      });
+    });
+    self.popup = $("<div class='popup' style='position: absolute;display: none;'><ul></ul></div>");
+    $(document.body).append(self.popup);
+    $(input).on('input', function() {
+      $(self.popup).width($(container).width() + 5);
+      $(self.popup).css('left', $(container).offset().left);
+      $(self.popup).css('top', $(container).offset().top + $(container).height());
+      if (!this.value || this.value === "") {
+        self.hidePopup();
+        return;
+      }
+
+      self.displayLoading();
+      TagService.search({ name: this.value }).then(function(r) {
+        var embedded = r['_embedded'];
+        if (!embedded) {
+          self.hidePopup();
+          return;
+        }
+
+        if (!(embedded instanceof Array)) {
+          embedded = [embedded];
+        }
+
+        self.displayTags(embedded);
+        self.popup.find('li').click(function() {
+          var tags = self.state.tags;
+          tags.push($(this).html());
+          self.setState({
+            tags: tags
+          });
+          self.hidePopup();
+        });
+      }).catch(function() {
+        self.hidePopup();
       });
     });
   }

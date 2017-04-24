@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import ReactDom from 'react-dom';
-import { TabContent, TabPane } from 'reactstrap';
+import { TabContent, TabPane, Alert } from 'reactstrap';
 import { withGoogleMap, GoogleMap, InfoWindow, Circle, Marker, Tooltip } from 'react-google-maps';
 import Constants from '../Constants';
 import SearchBox from 'react-google-maps/lib/places/SearchBox'
 import { MAP } from 'react-google-maps/lib/constants';
-import { DescriptionForm, ContactInfoForm, TagsForm, PaymentForm } from './shop';
+import { DescriptionForm, ContactInfoForm, PaymentForm } from './shop';
 import $ from 'jquery';
 import './AddShop.css';
 
@@ -97,11 +97,13 @@ class AddShop extends Component {
     this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
     this.onPlacesChanged = this.onPlacesChanged.bind(this);
     this.displayError = this.displayError.bind(this);
+    this.toggleWarning = this.toggleWarning.bind(this);
+    this.toggleError = this.toggleError.bind(this);
     this._googleMap = null;
     this._searchBox = null;
     this.state = {
       zoom: 12,
-      activeTab: '1',
+      activeTab: '5',
       center: null,
       centerContent: null,
       bounds: null,
@@ -205,6 +207,16 @@ class AddShop extends Component {
       isLoading: isLoading
     });
   }
+  toggleError() {
+    this.setState({
+      errorMessage: null
+    });
+  }
+  toggleWarning() {
+    this.setState({
+      warningMessage: null
+    });
+  }
   render() {
     return (
       <div className="container">
@@ -212,12 +224,11 @@ class AddShop extends Component {
           <li className={(parseInt(this.state.activeTab) >= 1) ?'active' : ''}>Description</li>
           <li className={(parseInt(this.state.activeTab) >= 2) ?'active' : ''}>Address</li>
           <li className={(parseInt(this.state.activeTab) >= 3) ?'active' : ''}>Contact</li>
-          <li className={(parseInt(this.state.activeTab) >= 4) ?'active' : ''}>Tags</li>
-          <li className={(parseInt(this.state.activeTab) >= 5) ?'active' : ''}>Products</li>
-          <li className={(parseInt(this.state.activeTab) >= 6) ?'active' : ''}>Payment</li>
+          <li className={(parseInt(this.state.activeTab) >= 4) ?'active' : ''}>Products</li>
+          <li className={(parseInt(this.state.activeTab) >= 5) ?'active' : ''}>Payment</li>
         </ul>
-        <div className={this.state.errorMessage === null ? 'hidden' : 'alert alert-danger'}>{this.state.errorMessage}</div>
-        <div className={this.state.warningMessage === null ? 'hidden' : 'alert alert-warning'}>{this.state.warningMessage}</div>
+        <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+        <Alert color="warning" isOpen={this.state.warningMessage !== null} toggle={this.toggleWarning}>{this.state.warningMessage}</Alert>
         <TabContent activeTab={this.state.activeTab} className="progressbar-content">
           <div className={this.state.isLoading ? 'loading': 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
           <TabPane tabId='1' className={this.state.isLoading ? 'hidden': ''}>
@@ -261,19 +272,16 @@ class AddShop extends Component {
             <ContactInfoForm onError={(msg) => { this.displayError(msg); }} onPrevious={() => { this.toggle('2'); }} onNext={() => { this.toggle('4'); }}/>
           </TabPane>
           <TabPane tabId='4' className={this.state.isLoading ? 'hidden': ''}>
-            <TagsForm onError={(msg) => { this.displayError(msg); }} onPrevious={() => { this.toggle('3'); }} onNext={() => { this.toggle('5'); }}/>
-          </TabPane>
-          <TabPane tabId='5' className={this.state.isLoading ? 'hidden': ''}>
             <section className="col-md-12 section">
               <button type='button' className='btn btn-success'><span className='fa fa-plus glyphicon-align-left'></span> Add product</button>
             </section>
             <section className="col-md-12 sub-section">
-    					<button className="btn btn-primary previous" onClick={() => { this.toggle('4'); }}>Previous</button>
-      				<button className="btn btn-primary next" onClick={() => { this.toggle('6'); }}>Next</button>
+    					<button className="btn btn-primary previous" onClick={() => { this.toggle('3'); }}>Previous</button>
+      				<button className="btn btn-primary next" onClick={() => { this.toggle('5'); }}>Next</button>
             </section>
           </TabPane>
-          <TabPane tabId='6' className={this.state.isLoading ? 'hidden': ''}>
-            <PaymentForm  onPrevious={() => { this.toggle('5'); }} />
+          <TabPane tabId='5' className={this.state.isLoading ? 'hidden': ''}>
+            <PaymentForm onError={(msg) => { this.displayError(msg); }}  onPrevious={() => { this.toggle('4'); }} />
           </TabPane>
         </TabContent>
       </div>

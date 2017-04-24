@@ -6,9 +6,51 @@ class PaymentForm extends Component {
   constructor(props) {
     super(props);
     this.previous = this.previous.bind(this);
+    this.activate = this.activate.bind(this);
+    this.confirm = this.confirm.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.state = {
+      currentItem: null
+    };
   }
-  handleRib() {
-    // regex : ^[A-Z]{2}[0-9]{2}([0-9]{4}){3}
+  activate(itemName) {
+    this.setState({
+      currentItem: itemName
+    });
+  }
+  confirm() {
+    var self = this;
+    var currentItem = this.state.currentItem;
+    if (!currentItem || currentItem === '') {
+      self.props.onError('A payment method should be selected');
+      return;
+    }
+
+    console.log(currentItem);
+    switch(currentItem) {
+      case "activateBankTransfer":
+        if (!this.state.firstIban || !this.state.secondIban || !this.state.thirdIban || !this.state.fourthIban) {
+          self.props.onError('The IBAN should bee filled in');
+          return;
+        }
+
+        var iban = this.state.firstIban + this.state.secondIban + this.state.thirdIban + this.state.fourthIban;
+        var regex = new RegExp("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}");
+        if (!regex.test(iban)) {
+          self.props.onError('The IBAN is not valid');
+        }
+      break;
+    }
+
+    console.log(iban);
+  }
+  handleInputChange(e) {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
   }
   previous() {
     this.props.onPrevious();
@@ -17,24 +59,42 @@ class PaymentForm extends Component {
     return (
       <div>
         <section className="col-md-12 section">
-          <div className='input-group'><span className='input-group-addon'><input type='radio' /></span><span className='form-control'>Card</span></div>
-          <div className='input-group'><span className='input-group-addon'><input type='radio' /></span><span className='form-control'>Cash</span></div>
-          <div className="row payment-choice">
-            <div className="col-md-1 radio">
-              <input type='radio' />
-            </div>
-            <div className="col-md-11">
+          <div className="list-group">
+            <a href="#" className={this.state.currentItem === 'activateCash' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateCash"); }}>
+              <div className="form-group">
+                <i className="fa fa-money"></i> <label>Cash</label>
+              </div>
+            </a>
+            <a href="#" className={this.state.currentItem === 'activateBankTransfer' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activateBankTransfer"); }}>
               <div className="form-group">
                 <i className="fa fa-credit-card-alt"></i> <label>Bank transfer</label>
-                <Input placeholder="BE__ ____ ____ ____" />
+                <p>Please insert your IBAN</p>
+                <div className="row">
+                  <div className="col-md-3">
+                    <input type="text" className="form-control" maxLength="4" placeholder="BE__" name="firstIban" onChange={this.handleInputChange} />
+                  </div>
+                  <div className="col-md-3">
+                    <input type="text" className="form-control" maxLength="4" placeholder="0000" name="secondIban"  onChange={this.handleInputChange} />
+                  </div>
+                  <div className="col-md-3">
+                    <input type="text" className="form-control" maxLength="4" placeholder="0000" name="thirdIban"  onChange={this.handleInputChange} />
+                  </div>
+                  <div className="col-md-3">
+                    <input type="text" className="form-control" maxLength="4" placeholder="0000" name="fourthIban"  onChange={this.handleInputChange} />
+                  </div>
+                </div>
               </div>
-            </div>
+            </a>
+            <a href="#" className={this.state.currentItem === 'activatePaypal' ? 'list-group-item list-group-item-action active' : 'list-group-item list-group-item-action'} onClick={() => { this.activate("activatePaypal"); }}>
+              <div className="form-group">
+              <i className="fa fa-paypal"></i> <label>Paypal</label>
+              </div>
+            </a>
           </div>
-          <div className='input-group'><span className='input-group-addon'><input type='radio' /></span><span className='form-control'>Paypal</span></div>
         </section>
         <section className="col-md-12 sub-section">
-          <button className="btn btn-primary previous" onClick={this.onPrevious}>Previous</button>
-          <button className="btn btn-success confirm">Confirm</button>
+          <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
+          <button className="btn btn-success confirm" onClick={this.confirm}>Confirm</button>
         </section>
       </div>
     )
