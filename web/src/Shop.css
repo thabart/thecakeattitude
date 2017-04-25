@@ -1,0 +1,60 @@
+.cover {
+	position: relative;
+	height: 220px;
+}
+
+.cover-banner {
+	overflow: hidden;
+}
+
+.cover .profile-img {
+	position: absolute;
+	bottom: -10px;
+	left: 10px;
+	width: 150px;
+	height: 150px;
+}
+
+.cover .profile-information {
+	position: absolute;
+	left: 170px;
+	top: 75px;
+	color: white;
+}
+
+.section {
+	margin-top: 20px;
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+}
+
+.section,
+.sub-section {
+  background-color: white;
+}
+
+.section-description {
+	padding: 20px;
+}
+
+.sub-section {
+	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+	border-top: 1px solid #f1f0f0;
+}
+
+.product {
+	height: 10rem;
+	padding: 1rem;
+	text-align: center;
+	border: 1px solid rgba(0,0,0,0.13);
+	overflow: hidden;
+}
+
+.product img {
+	margin: auto;
+	width: 100px;
+}
+
+.products .product {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}

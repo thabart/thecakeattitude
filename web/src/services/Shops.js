@@ -5,6 +5,7 @@ import Session from './Session';
 import $ from 'jquery';
 
 module.exports = {
+  // Search shops
   search: function(content) {
     return new Promise(function(resolve, reject) {
       $.ajax(Constants.apiUrl + '/shops/.search', {
@@ -18,6 +19,7 @@ module.exports = {
       });
     });
   },
+  // Add shop
   add: function(content) {
     var accessToken = Session.getSession().access_token;
     return new Promise(function(resolve, reject) {
@@ -29,6 +31,16 @@ module.exports = {
         },
         data: JSON.stringify(content)
       }).then(function(r) {
+        resolve(r);
+      }).fail(function(e) {
+        reject(e);
+      });
+    });
+  },
+  // Get shop
+  get: function(id) {
+    return new Promise(function(resolve, reject) {
+      $.get(Constants.apiUrl + '/shops/'+id).then(function(r) {
         resolve(r);
       }).fail(function(e) {
         reject(e);

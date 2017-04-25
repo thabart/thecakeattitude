@@ -93,6 +93,24 @@ namespace Cook4Me.Api.EF.Repositories
                 .Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
 
+        public async Task<Shop> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var shop = await _context.Shops.Include(c => c.Category)
+                .Include(c => c.PaymentMethods)
+                .Include(c => c.ShopTags).FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
+            if (shop == null)
+            {
+                return null;
+            }
+
+            return shop.ToDomain();
+        }
+
         public async Task<IEnumerable<Shop>> Search(SearchShopsParameter parameter)
         {
             if (parameter == null)

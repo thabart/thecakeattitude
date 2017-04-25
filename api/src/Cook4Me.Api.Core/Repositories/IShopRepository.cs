@@ -25,6 +25,7 @@ namespace Cook4Me.Api.Core.Repositories
     {
         Task<bool> Add(Shop shop);
         Task<IEnumerable<Shop>> Get();
+        Task<Shop> Get(string id);
         Task<IEnumerable<Shop>> Search(SearchShopsParameter parameter);
     }
 }

@@ -4,8 +4,9 @@ import Header from './Header';
 import Map from './Map';
 import Sellers from './Sellers';
 import AddShop from './AddShop';
-import OpenIdService from './services/OpenId';
-import SessionService from './services/Session';
+import Shop from './Shop';
+import { OpenIdService, SessionService } from './services';
+import Error from './Error';
 import createBrowserHistory  from 'history/createBrowserHistory';
 import './App.css';
 var history = createBrowserHistory();
@@ -59,7 +60,9 @@ class App extends Component {
             <Route exact path="/" component={Map}  />
             <Route path="/home" component={Map}  />
             <Route path="/sellers" component={Sellers}  />
+            <Route path="/shops/:id" component={Shop} />
             <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddShop />))} />
+            <Route path="/error/:type" component={Error} />
           </div>
         </div>
       </Router>

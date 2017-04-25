@@ -161,6 +161,25 @@ namespace Cook4Me.Api.Host.Controllers
             return new OkObjectResult(_halResponseBuilder.Build());
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetShop(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var shop = await _repository.Get(id);
+            if (shop == null)
+            {
+                return new NotFoundResult();
+            }
+            
+            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops + "/" + id));
+            AddShop(_halResponseBuilder, _responseBuilder, shop);
+            return new OkObjectResult(_halResponseBuilder.Build());
+        }
+
         private bool AddShopMap(Shop shop, Map map)
         {
             if (!System.IO.File.Exists(Constants.Assets.PartialShop) || !System.IO.File.Exists(Constants.Assets.PartialUnderground))

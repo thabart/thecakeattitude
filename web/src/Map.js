@@ -72,7 +72,7 @@ class Map extends Component {
     if (!map) {
       return;
     }
-    
+
     var mapInstance = self._googleMap.context[MAP];
     var div = mapInstance.getDiv();
     $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>Search</h3></div></div></div>");
@@ -88,10 +88,14 @@ class Map extends Component {
   }
   refreshMap() {
     var self = this;
+    var bounds = self._googleMap.getBounds();
+    if (!bounds) {
+      return;
+    }
+    
     self.setState({
       isSearching: true
     });
-    var bounds = self._googleMap.getBounds();
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
     var northEast = {
