@@ -41,10 +41,12 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IHostingEnvironment _env;
         private readonly IAddShopValidator _addShopValidator;
         private readonly IHalResponseBuilder _halResponseBuilder;
+        private readonly ICommentRepository _commentRepository;
 
         public ShopsController(
             IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder,
-            IHostingEnvironment env, IAddShopValidator addShopValidator, IHalResponseBuilder halResponseBuilder)
+            IHostingEnvironment env, IAddShopValidator addShopValidator, IHalResponseBuilder halResponseBuilder,
+            ICommentRepository commentRepository)
         {
             _repository = repository;
             _requestBuilder = requestBuilder;
@@ -52,6 +54,7 @@ namespace Cook4Me.Api.Host.Controllers
             _env = env;
             _addShopValidator = addShopValidator;
             _halResponseBuilder = halResponseBuilder;
+            _commentRepository = commentRepository;
         }
 
         [HttpPost]
@@ -178,6 +181,12 @@ namespace Cook4Me.Api.Host.Controllers
             _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops + "/" + id));
             AddShop(_halResponseBuilder, _responseBuilder, shop);
             return new OkObjectResult(_halResponseBuilder.Build());
+        }
+
+        [HttpPost(Constants.RouteNames.Comments)]
+        public async Task<IActionResult> AddComment([FromBody] JObject jObj)
+        {
+            return null;
         }
 
         private bool AddShopMap(Shop shop, Map map)

@@ -32,6 +32,7 @@ namespace Cook4Me.Api.Host.Builders
         SearchTagsParameter GetSearchTags(JObject jObj);
         PaymentMethod GetPaymentMethod(JObject jObj);
         Location GetLocation(JObject jObj);
+        Comment GetComment(JObject jObj);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -200,6 +201,11 @@ namespace Cook4Me.Api.Host.Builders
                 Latitude = jObj.Value<float>(Constants.DtoNames.Location.Latitude),
                 Longitude = jObj.Value<float>(Constants.DtoNames.Location.Longitude)
             };
+        }
+
+        public Comment GetComment(JObject jObj)
+        {
+            throw new NotImplementedException();
         }
     }
 }

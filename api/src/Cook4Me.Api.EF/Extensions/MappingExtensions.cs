@@ -310,5 +310,43 @@ namespace Cook4Me.Api.EF.Extensions
                 Method = (int)paymentMethod.Method
             };
         }
+
+        public static Domain.Comment ToDomain(this Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            return new Domain.Comment
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+                Score = comment.Score,
+                Subject = comment.Subject,
+                ShopId = comment.ShopId,
+                UpdateDateTime = comment.UpdateDateTime,
+                CreateDateTime = comment.CreateDateTime
+            };
+        }
+
+        public static Comment ToModel(this Domain.Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            return new Comment
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+                Score = comment.Score,
+                Subject = comment.Subject,
+                ShopId = comment.ShopId,
+                UpdateDateTime = comment.UpdateDateTime,
+                CreateDateTime = comment.CreateDateTime
+            };
+        }
     }
 }

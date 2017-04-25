@@ -20,30 +20,18 @@ using System;
 
 namespace Cook4Me.Api.EF.Mappings
 {
-    internal static class ShopMapping
+    internal static class CommentMapping
     {
-        public static ModelBuilder AddShopMapping(this ModelBuilder modelBuilder)
+        public static ModelBuilder AddComment(this ModelBuilder modelBuilder)
         {
             if (modelBuilder == null)
             {
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
 
-            modelBuilder.Entity<Shop>()
-                .ToTable("shops")
-                .HasKey(p => p.Id);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.ShopTags)
-                .WithOne(t => t.Shop)
-                .HasForeignKey(t => t.ShopId);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.PaymentMethods)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.Comments)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
+            modelBuilder.Entity<Comment>()
+                .ToTable("comments")
+                .HasKey(s => s.Id);
             return modelBuilder;
         }
     }
