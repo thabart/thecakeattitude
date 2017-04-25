@@ -108,14 +108,7 @@ namespace Cook4Me.Api.OpenId.Controllers
                 throw new ArgumentNullException(nameof(id));
             }
 
-            // 1. Get the subject.
-            var subjectResult = await GetSubject();
-            if (!subjectResult.IsValid)
-            {
-                return subjectResult.Error;
-            }
-
-            // 2. Get the user.
+            // 1. Get the user.
             var user = await _resourceOwnerRepository.GetAsync(id);
             if (user == null)
             {
@@ -124,7 +117,8 @@ namespace Cook4Me.Api.OpenId.Controllers
 
             var jObj = new JObject();
             jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email));
-            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber));
+            jObj.Add(Constants.Claims.HomePhoneNumber, TryGetValue(user.Claims, Constants.Claims.HomePhoneNumber));
+            jObj.Add(Constants.Claims.MobilePhoneNumber, TryGetValue(user.Claims, Constants.Claims.MobilePhoneNumber));
             return new OkObjectResult(jObj);
         }
 

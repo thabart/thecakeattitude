@@ -106,7 +106,7 @@ class AddShop extends Component {
         </ul>
         <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
         <Alert color="warning" isOpen={this.state.warningMessage !== null} toggle={this.toggleWarning}>{this.state.warningMessage}</Alert>
-        <TabContent activeTab={this.state.activeTab} className="progressbar-content">
+        <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
           <div className={this.state.isLoading ? 'loading': 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
           <TabPane tabId='1' className={this.state.isLoading ? 'hidden': ''}>
             <DescriptionForm onNext={(json) => { this.toggle('2', json); }} onLoading={(l) => {this.loading(l); }} onError={(msg) => { this.displayError(msg); }}/>

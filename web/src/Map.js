@@ -10,12 +10,12 @@ import $ from 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
 
 const currentLocationOpts = {
-  url: 'images/current-location.png',
+  url: '/images/current-location.png',
   scaledSize: new window.google.maps.Size(20, 20)
 };
 
 const shopOpts = {
-  url : 'images/shop-pin.png',
+  url : '/images/shop-pin.png',
   scaledSize: new window.google.maps.Size(34, 38)
 };
 
@@ -92,7 +92,7 @@ class Map extends Component {
     if (!bounds) {
       return;
     }
-    
+
     self.setState({
       isSearching: true
     });

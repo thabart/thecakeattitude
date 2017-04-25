@@ -46,5 +46,15 @@ module.exports = {
         reject(e);
       });
     });
+  },
+  // Get public claims
+  getPublicClaims: function(subject) {
+    return new Promise(function(resolve, reject) {
+      $.get(Constants.openIdUrl + '/users/' + subject + '/public').then(function(r) {
+        resolve(r);
+      }).fail(function(e) {
+        reject(e);
+      })
+    });
   }
 };

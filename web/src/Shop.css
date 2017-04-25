@@ -1,3 +1,11 @@
+.shop-section {
+		margin-top: 20px;
+}
+
+.shop-section-padding {
+	padding: 20px;
+}
+
 .cover {
 	position: relative;
 	height: 220px;
@@ -22,23 +30,17 @@
 	color: white;
 }
 
-.section {
-	margin-top: 20px;
-	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
+.contact {
+	text-align: center;
 }
 
-.section,
-.sub-section {
-  background-color: white;
+.contact .fa {
+	font-size: 40pt;
 }
 
-.section-description {
-	padding: 20px;
-}
-
-.sub-section {
-	box-shadow: 0 1px 2px 0 rgba(0,0,0,0.13);
-	border-top: 1px solid #f1f0f0;
+.map {
+	height: 300px !important;
+	width: 300px !important;
 }
 
 .product {
