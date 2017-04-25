@@ -80,8 +80,8 @@ namespace Cook4Me.Api.Host.Builders
             var location = jObj[Constants.DtoNames.Shop.Location];
             if (location != null)
             {
-                result.Latitude = location.Value<string>(Constants.DtoNames.Shop.Latitude);
-                result.Longitude = location.Value<string>(Constants.DtoNames.Shop.Longitude);
+                result.Latitude = location.Value<float>(Constants.DtoNames.Shop.Latitude);
+                result.Longitude = location.Value<float>(Constants.DtoNames.Shop.Longitude);
             }
 
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);

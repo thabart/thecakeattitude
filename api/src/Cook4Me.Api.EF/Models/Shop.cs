@@ -29,7 +29,6 @@ namespace Cook4Me.Api.EF.Models
         public string BannerImage { get; set; }
         public string ProfileImage { get; set; }
         public string MapName { get; set; }
-        public string Picture { get; set; }
         public string StreetAddress { get; set; }
         public string PostalCode { get; set; }
         public string Locality { get; set; }
@@ -38,8 +37,8 @@ namespace Cook4Me.Api.EF.Models
         public string ShopRelativePath { get; set; }
         public string UndergroundRelativePath { get; set; }
         public string GooglePlaceId { get; set; }
-        public string Longitude { get; set; }
-        public string Latitude { get; set; }
+        public float Longitude { get; set; }
+        public float Latitude { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public virtual Category Category { get; set; }

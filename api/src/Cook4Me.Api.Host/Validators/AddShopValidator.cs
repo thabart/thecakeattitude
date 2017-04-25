@@ -142,16 +142,6 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.GooglePlaceId));
             }
 
-            if (!IsValidFloat(shop.Latitude))
-            {
-                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Latitude));
-            }
-
-            if (!IsValidFloat(shop.Longitude))
-            {
-                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Longitude));
-            }
-
             if (!IsValid(shop.StreetAddress))
             {
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.StreetAddress));
@@ -188,17 +178,6 @@ namespace Cook4Me.Api.Host.Validators
         private static bool IsValid(string value)
         {
             return !string.IsNullOrWhiteSpace(value);
-        }
-
-        private static bool IsValidFloat(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                return false;
-            }
-
-            float f;
-            return float.TryParse(value, out f);
         }
     }
 }

@@ -3,6 +3,7 @@ import TrendingSellers from './widgets/trendingSellers';
 import BestDeals from './widgets/bestDeals';
 import PublicAnnouncements from './widgets/publicAnnouncements';
 import { withGoogleMap, GoogleMap, Circle, InfoWindow } from 'react-google-maps';
+import { MAP } from 'react-google-maps/lib/constants';
 import './Map.css';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
@@ -10,8 +11,11 @@ import 'jquery-ui/ui/widgets/sortable';
 const GettingStartedGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
-    defaultZoom={12}
     center={props.center}
+    onDragStart={props.onDragStart}
+    onDragEnd={props.onDragEnd}
+    onZoomChanged={props.onZoomChanged}
+    defaultZoom={12}
   >
     {props.center && <InfoWindow position={props.center}>
         <div>{props.centerContent}</div>
@@ -33,10 +37,34 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
 class Map extends Component {
   constructor(props) {
     super(props);
+    this.onMapLoad = this.onMapLoad.bind(this);
+    this.onDragStart = this.onDragStart.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
+    this.onZoomChanged = this.onZoomChanged.bind(this);
     this.state = {
       center : null,
-      centerContent: null
+      centerContent: null,
+      isDragging: false
     };
+  }
+  onMapLoad(map) {
+    this._googleMap = map;
+    var mapInstance = this._googleMap.context[MAP];
+    var div = mapInstance.getDiv();
+    $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>Search</h3></div></div></div>")
+  }
+  onDragStart() {
+    this.setState({
+      isDragging: true
+    });
+  }
+  onDragEnd() {
+    this.setState({
+      isDragging: false
+    });
+  }
+  onZoomChanged() {
+    console.log('zoom changed');
   }
   render() {
     return (
@@ -45,12 +73,16 @@ class Map extends Component {
   				<input type="text" className="form-control col-5"/>
   				<input type="submit" className="btn btn-default" value="Search"></input>
   			</form>
-        <div className="row">
+        <div className={this.state.isDragging ? 'row pending-search' : 'row'}>
           <div className="col-md-6">
             <div id="map" className="col-md-12">
               <GettingStartedGoogleMap
                 center={this.state.center}
                 centerContent={this.state.centerContent}
+                onMapLoad={this.onMapLoad}
+                onDragStart={this.onDragStart}
+                onDragEnd={this.onDragEnd}
+                onZoomChanged={this.onZoomChanged}
                 containerElement={
                   <div style={{ height: `100%` }} />
                 }
