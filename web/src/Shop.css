@@ -1,0 +1,68 @@
+.shop-section {
+		margin-top: 20px;
+}
+
+.shop-section-padding {
+	padding: 20px;
+}
+
+.cover {
+	position: relative;
+	height: 220px;
+}
+
+.cover-banner {
+	overflow: hidden;
+}
+
+.cover .profile-img {
+	position: absolute;
+	bottom: -10px;
+	left: 10px;
+	width: 150px;
+	height: 150px;
+}
+
+.cover .profile-information {
+	position: absolute;
+	left: 170px;
+	top: 75px;
+	color: white;
+}
+
+.cover .menu {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+
+.contact {
+	text-align: center;
+}
+
+.contact .fa {
+	font-size: 40pt;
+}
+
+.map {
+	height: 300px !important;
+	width: 300px !important;
+}
+
+.product {
+	height: 10rem;
+	padding: 1rem;
+	text-align: center;
+	border: 1px solid rgba(0,0,0,0.13);
+	overflow: hidden;
+}
+
+.product img {
+	margin: auto;
+	width: 100px;
+}
+
+.products .product {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
