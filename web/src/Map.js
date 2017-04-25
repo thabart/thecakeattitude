@@ -3,7 +3,7 @@ import TrendingSellers from './widgets/trendingSellers';
 import BestDeals from './widgets/bestDeals';
 import { ShopsService } from './services';
 import PublicAnnouncements from './widgets/publicAnnouncements';
-import { withGoogleMap, GoogleMap, Circle, InfoWindow } from 'react-google-maps';
+import { withGoogleMap, GoogleMap, Circle, InfoWindow, Marker } from 'react-google-maps';
 import { MAP } from 'react-google-maps/lib/constants';
 import './Map.css';
 import $ from 'jquery';
@@ -18,20 +18,15 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
     onZoomChanged={props.onZoomChanged}
     defaultZoom={12}
   >
-    {props.center && <InfoWindow position={props.center}>
-        <div>{props.centerContent}</div>
-    </InfoWindow>}
-    <Circle
-        center={props.center}
-        radius={200}
-        options={{
-          fillColor: `red`,
-          fillOpacity: 0.20,
-          strokeColor: `red`,
-          strokeOpacity: 1,
-          strokeWeight: 1,
-        }}
-      />
+  {props.markers && props.markers.map((marker, index) => {
+    return (
+        <Marker
+          key={index}
+          icon='/images/shop-pin.png'
+          position={marker.location}
+        />
+      );
+    })}
   </GoogleMap>
 ));
 
@@ -45,14 +40,21 @@ class Map extends Component {
     this.state = {
       center : null,
       centerContent: null,
-      isDragging: false
+      isDragging: false,
+      isSearching: false,
+      shops: []
     };
   }
   onMapLoad(map) {
-    this._googleMap = map;
-    var mapInstance = this._googleMap.context[MAP];
+    var self = this;
+    self._googleMap = map;
+    var mapInstance = self._googleMap.context[MAP];
     var div = mapInstance.getDiv();
-    $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>Search</h3></div></div></div>")
+    $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>Search</h3></div></div></div>");
+    $(div).append("<div class='searching-overlay'><div class='searching-message'><i class='fa fa-spinner fa-spin'></i></div></div>");
+    setTimeout(function() {
+      self.refreshMap();
+    }, 1000);
   }
   onDragStart() {
     this.setState({
@@ -60,7 +62,11 @@ class Map extends Component {
     });
   }
   refreshMap() {
-    var bounds = this._googleMap.getBounds();
+    var self = this;
+    self.setState({
+      isSearching: true
+    });
+    var bounds = self._googleMap.getBounds();
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
     var northEast = {
@@ -76,8 +82,24 @@ class Map extends Component {
       sw: southWest
     };
     ShopsService.search(json).then(function(r) {
-      console.log(r);
-    }).catch(function() { });
+      var embedded = r['_embedded'];
+      if (!(embedded instanceof Array)) {
+        embedded = [embedded];
+      }
+        var shops = [];
+      embedded.forEach(function(shop) {
+        shops.push({ location: shop.location });
+      });
+      self.setState({
+        shops: shops,
+        isSearching: false
+      });
+    }).catch(function() {
+      self.setState({
+        shops: [],
+        isSearching: false
+      });
+    });
   }
   onDragEnd() {
     this.setState({
@@ -86,16 +108,23 @@ class Map extends Component {
     this.refreshMap();
   }
   onZoomChanged() {
-    console.log('zoom changed');
+    this.refreshMap();
   }
   render() {
+    var cl = "row";
+    if (this.state.isSearching) {
+      cl = "row searching";
+    } else if (this.state.isDragging) {
+      cl = "row pending-search";
+    }
+
     return (
       <div>
         <form className="row justify-content-center search">
   				<input type="text" className="form-control col-5"/>
   				<input type="submit" className="btn btn-default" value="Search"></input>
   			</form>
-        <div className={this.state.isDragging ? 'row pending-search' : 'row'}>
+        <div className={cl}>
           <div className="col-md-6">
             <div id="map" className="col-md-12">
               <GettingStartedGoogleMap
@@ -105,6 +134,7 @@ class Map extends Component {
                 onDragStart={this.onDragStart}
                 onDragEnd={this.onDragEnd}
                 onZoomChanged={this.onZoomChanged}
+                markers={this.state.shops}
                 containerElement={
                   <div style={{ height: `100%` }} />
                 }

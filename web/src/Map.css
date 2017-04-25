@@ -16,13 +16,12 @@
   min-height: 500px;
 }
 
-.pending-search .search-circle-overlay {
+.pending-search .search-circle-overlay, .searching .searching-overlay {
   visibility: visible;
-  transition-delay: 0s;
   opacity: 1;
 }
 
-.search-circle-overlay {
+.search-circle-overlay, .searching-overlay {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -32,7 +31,10 @@
   overflow: hidden;
   pointer-events: none;
   visibility: hidden;
-  transition: visibility 0s linear 0.25s, transform 0.25s ease-in-out 0s, opacity 0.25s ease-in-out 0s;
+}
+
+.searching-overlay {
+  background: rgba(0,0,0,0.5);
 }
 
 .search-circle-overlay .searching-circle {
@@ -42,11 +44,15 @@
   left: 12.5%;
 }
 
-.search-circle-overlay .searching-message {
+.search-circle-overlay .searching-message, .searching-overlay .searching-message {
   width: 100%;
   text-align: center;
   position: absolute;
   top: 50%;
+}
+
+.searching-overlay .searching-message {
+  color: white;
 }
 
 .searching-circle:after {    content: "";
