@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 import TrendingSellers from './widgets/trendingSellers';
 import BestDeals from './widgets/bestDeals';
 import { ShopsService } from './services';
@@ -42,7 +43,10 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
           onClick={onClick}
         >
           {marker.showInfo && (<InfoWindow onCloseClick={onCloseClick}>
-            <strong>{marker.name}</strong>
+            <div>
+              <strong>{marker.name}</strong><br />
+              <NavLink to={"/shops/" + marker.id }>View profile</NavLink>
+            </div>
           </InfoWindow>)}
         </Marker>
       );
@@ -60,7 +64,7 @@ class Map extends Component {
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onCloseClick = this.onCloseClick.bind(this);
     this.state = {
-      center : null,
+      center : { lat: 50.8503, lng: 4.3517 },
       isDragging: false,
       isSearching: false,
       shops: []
@@ -117,7 +121,7 @@ class Map extends Component {
       }
         var shops = [];
       embedded.forEach(function(shop) {
-        shops.push({ location: shop.location, name: shop.name, showInfo: false });
+        shops.push({ location: shop.location, name: shop.name, showInfo: false, id: shop.id });
       });
       self.setState({
         shops: shops,
