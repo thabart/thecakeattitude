@@ -16,10 +16,17 @@
 
 namespace Cook4Me.Api.Core.Parameters
 {
+    public class Location
+    {
+        public float Latitude { get; set; }
+        public float Longitude { get; set; }
+    }
     public class SearchShopsParameter
     {
         public string PlaceId { get; set; }
         public string CategoryId { get; set; }
         public string Subject { get; set; }
+        public Location NorthEast { get; set; }
+        public Location SouthWest { get; set; }
     }
 }

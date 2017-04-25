@@ -60,8 +60,6 @@ namespace Cook4Me.Api.Host
                 public const string Country = "country";
                 public const string Location = "location";
                 public const string GooglePlaceId = "google_place_id";
-                public const string Latitude = "lat";
-                public const string Longitude = "lng";
                 // Payment
                 public const string Payments = "payments";
                 // Tilemap information
@@ -70,6 +68,12 @@ namespace Cook4Me.Api.Host
                 // Other information
                 public const string CreateDateTime = "create_datetime";
                 public const string UpdateDateTime = "update_datetime";
+            }
+
+            public static class Location
+            {
+                public const string Latitude = "lat";
+                public const string Longitude = "lng";
             }
 
             public static class PaymentMethod
@@ -125,6 +129,8 @@ namespace Cook4Me.Api.Host
             public static class SearchShop
             {
                 public const string Subject = "subject";
+                public const string NorthEast = "ne";
+                public const string SouthWest = "sw";
             }
 
             public static class Error

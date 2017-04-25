@@ -66,8 +66,8 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Locality, shop.Locality);
             result.Add(Constants.DtoNames.Shop.Country, shop.Country);
             var location = new JObject();
-            location.Add(Constants.DtoNames.Shop.Latitude, shop.Latitude);
-            location.Add(Constants.DtoNames.Shop.Longitude, shop.Longitude);
+            location.Add(Constants.DtoNames.Location.Latitude, shop.Latitude);
+            location.Add(Constants.DtoNames.Location.Longitude, shop.Longitude);
             result.Add(Constants.DtoNames.Shop.Location, location);
             result.Add(Constants.DtoNames.Shop.GooglePlaceId, shop.GooglePlaceId);
             var payments = new JArray(); // Payments

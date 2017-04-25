@@ -31,6 +31,7 @@ namespace Cook4Me.Api.Host.Builders
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         PaymentMethod GetPaymentMethod(JObject jObj);
+        Location GetLocation(JObject jObj);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -80,8 +81,8 @@ namespace Cook4Me.Api.Host.Builders
             var location = jObj[Constants.DtoNames.Shop.Location];
             if (location != null)
             {
-                result.Latitude = location.Value<float>(Constants.DtoNames.Shop.Latitude);
-                result.Longitude = location.Value<float>(Constants.DtoNames.Shop.Longitude);
+                result.Latitude = location.Value<float>(Constants.DtoNames.Location.Latitude);
+                result.Longitude = location.Value<float>(Constants.DtoNames.Location.Longitude);
             }
 
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
@@ -117,11 +118,23 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentNullException(nameof(jObj));
             }
 
+            Location northEastLocation = null,
+                southWestLocation = null;
+            var neLocation = jObj[Constants.DtoNames.SearchShop.NorthEast];
+            var swLocation = jObj[Constants.DtoNames.SearchShop.SouthWest];
+            if (neLocation != null && swLocation != null)
+            {
+                northEastLocation = GetLocation(neLocation as JObject);
+                southWestLocation = GetLocation(swLocation as JObject);
+            }
+
             var result = new SearchShopsParameter
             {
                 CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId),
                 PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place),
-                Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject)
+                Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject),
+                NorthEast = northEastLocation,
+                SouthWest = southWestLocation
             };
             return result;
         }
@@ -172,6 +185,20 @@ namespace Cook4Me.Api.Host.Builders
                 Id = Guid.NewGuid().ToString(),
                 Method = methodEnum.Value,
                 Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
+            };
+        }
+
+        public Location GetLocation(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new Location
+            {
+                Latitude = jObj.Value<float>(Constants.DtoNames.Location.Latitude),
+                Longitude = jObj.Value<float>(Constants.DtoNames.Location.Longitude)
             };
         }
     }

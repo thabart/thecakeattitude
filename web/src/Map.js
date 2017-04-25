@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TrendingSellers from './widgets/trendingSellers';
 import BestDeals from './widgets/bestDeals';
+import { ShopsService } from './services';
 import PublicAnnouncements from './widgets/publicAnnouncements';
 import { withGoogleMap, GoogleMap, Circle, InfoWindow } from 'react-google-maps';
 import { MAP } from 'react-google-maps/lib/constants';
@@ -58,10 +59,31 @@ class Map extends Component {
       isDragging: true
     });
   }
+  refreshMap() {
+    var bounds = this._googleMap.getBounds();
+    var ne = bounds.getNorthEast();
+    var sw = bounds.getSouthWest();
+    var northEast = {
+      lat : ne.lat(),
+      lng: ne.lng()
+    };
+    var southWest = {
+      lat: sw.lat(),
+      lng: sw.lng()
+    };
+    var json = {
+      ne: northEast,
+      sw: southWest
+    };
+    ShopsService.search(json).then(function(r) {
+      console.log(r);
+    }).catch(function() { });
+  }
   onDragEnd() {
     this.setState({
       isDragging: false
     });
+    this.refreshMap();
   }
   onZoomChanged() {
     console.log('zoom changed');
