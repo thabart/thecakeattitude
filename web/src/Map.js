@@ -9,6 +9,16 @@ import './Map.css';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
 
+const currentLocationOpts = {
+  url: 'images/current-location.png',
+  scaledSize: new window.google.maps.Size(20, 20)
+};
+
+const shopOpts = {
+  url : 'images/shop-pin.png',
+  scaledSize: new window.google.maps.Size(34, 38)
+};
+
 const GettingStartedGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
@@ -18,13 +28,23 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
     onZoomChanged={props.onZoomChanged}
     defaultZoom={12}
   >
+  <Marker
+    icon={currentLocationOpts}
+    position={props.center} />
   {props.markers && props.markers.map((marker, index) => {
+    var onClick = () => props.onMarkerClick(marker);
+    var onCloseClick = () => props.onCloseClick(marker);
     return (
         <Marker
           key={index}
-          icon='/images/shop-pin.png'
+          icon={shopOpts}
           position={marker.location}
-        />
+          onClick={onClick}
+        >
+          {marker.showInfo && (<InfoWindow onCloseClick={onCloseClick}>
+            <strong>{marker.name}</strong>
+          </InfoWindow>)}
+        </Marker>
       );
     })}
   </GoogleMap>
@@ -37,9 +57,10 @@ class Map extends Component {
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onZoomChanged = this.onZoomChanged.bind(this);
+    this.onMarkerClick = this.onMarkerClick.bind(this);
+    this.onCloseClick = this.onCloseClick.bind(this);
     this.state = {
       center : null,
-      centerContent: null,
       isDragging: false,
       isSearching: false,
       shops: []
@@ -48,6 +69,10 @@ class Map extends Component {
   onMapLoad(map) {
     var self = this;
     self._googleMap = map;
+    if (!map) {
+      return;
+    }
+    
     var mapInstance = self._googleMap.context[MAP];
     var div = mapInstance.getDiv();
     $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>Search</h3></div></div></div>");
@@ -88,7 +113,7 @@ class Map extends Component {
       }
         var shops = [];
       embedded.forEach(function(shop) {
-        shops.push({ location: shop.location });
+        shops.push({ location: shop.location, name: shop.name, showInfo: false });
       });
       self.setState({
         shops: shops,
@@ -110,6 +135,34 @@ class Map extends Component {
   onZoomChanged() {
     this.refreshMap();
   }
+  onMarkerClick(marker) {
+    this.setState({
+      shops: this.state.shops.map(shop => {
+        if (shop === marker) {
+          return {
+            ...marker,
+            showInfo: true
+          };
+        }
+
+        return marker;
+      })
+    });
+  }
+  onCloseClick(marker) {
+    this.setState({
+      shops: this.state.shops.map(shop => {
+        if (shop === marker) {
+          return {
+            ...marker,
+            showInfo: false
+          };
+        }
+
+        return marker;
+      })
+    });
+  }
   render() {
     var cl = "row";
     if (this.state.isSearching) {
@@ -129,11 +182,12 @@ class Map extends Component {
             <div id="map" className="col-md-12">
               <GettingStartedGoogleMap
                 center={this.state.center}
-                centerContent={this.state.centerContent}
                 onMapLoad={this.onMapLoad}
                 onDragStart={this.onDragStart}
                 onDragEnd={this.onDragEnd}
                 onZoomChanged={this.onZoomChanged}
+                onMarkerClick={this.onMarkerClick}
+                onCloseClick={this.onCloseClick}
                 markers={this.state.shops}
                 containerElement={
                   <div style={{ height: `100%` }} />
@@ -178,8 +232,7 @@ class Map extends Component {
           center: {
             lat: position.coords.latitude,
             lng: position.coords.longitude
-          },
-          centerContent: 'Current location'
+          }
         });
       });
     } else {
