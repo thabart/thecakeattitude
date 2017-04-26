@@ -5,6 +5,7 @@ import MapService from './Map';
 import ShopsService from './Shops';
 import UserService from './User';
 import TagService from './Tag';
+import CommentsService from './Comments';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -13,3 +14,4 @@ exports.MapService = MapService;
 exports.ShopsService = ShopsService;
 exports.UserService = UserService;
 exports.TagService = TagService;
+exports.CommentsService = CommentsService;

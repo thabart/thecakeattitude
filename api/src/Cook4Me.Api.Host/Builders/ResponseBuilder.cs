@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Host.Dtos;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
@@ -30,6 +31,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetMap(Map map);
         JObject GetTag(Tag tag);
         JObject GetComment(Comment comment);
+        JObject GetRatingSummary(ShopRatingSummary summary);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -90,7 +92,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Payments, payments);
             result.Add(Constants.DtoNames.Shop.ShopPath, shop.ShopRelativePath); // Game
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
-            result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime);
+            result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime); // Other informations
             result.Add(Constants.DtoNames.Shop.UpdateDateTime, shop.UpdateDateTime);
             return result;
         }
@@ -182,6 +184,21 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
             jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
+            jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
+            return jObj;
+        }
+
+        public JObject GetRatingSummary(ShopRatingSummary summary)
+        {
+            if (summary == null)
+            {
+                throw new ArgumentNullException(nameof(summary));
+            }
+            
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.RatingSummary.AverageStore, summary.AverageScore);
+            jObj.Add(Constants.DtoNames.RatingSummary.NbComments, summary.NbComments);
             return jObj;
         }
     }

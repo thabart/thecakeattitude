@@ -37,6 +37,7 @@ namespace Cook4Me.Api.Host
             public const string Tags = "tags";
             public const string Comments = "comments";
             public const string Me = "me";
+            public const string Rating = "{id}/rating";
         }
 
         public static class DtoNames
@@ -78,6 +79,14 @@ namespace Cook4Me.Api.Host
                 public const string Score = "score";
                 public const string ShopId = "shop_id";
                 public const string Subject = "subject";
+                public const string CreateDatetime = "create_datetime";
+                public const string UpdateDatetime = "update_datetime";
+            }
+
+            public static class RatingSummary
+            {
+                public const string NbComments = "nb_comments";
+                public const string AverageStore = "average_score";
             }
 
             public static class Location

@@ -46,5 +46,15 @@ module.exports = {
         reject(e);
       });
     });
+  },
+  // Get rating
+  getRating: function(id) {
+    return new Promise(function(resolve, reject) {
+      $.get(Constants.apiUrl + '/shops/'+id+'/rating').then(function(r) {
+        resolve(r);
+      }).fail(function(e) {
+        reject(e);
+      });
+    });
   }
 };

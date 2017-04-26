@@ -36,6 +36,23 @@
 	left: 10px;
 }
 
+.react-rater a {
+	color: #ccc !important;
+	font-size: 21pt;
+}
+
+.react-rater a.will-be-active {
+  color: #ffdd99 !important;
+}
+
+.react-rater a.is-active {
+  color: #fc6 !important;
+}
+
+.react-rater a.is-active-half:before {
+	color: #fc6 !important;
+}
+
 .contact {
 	text-align: center;
 }

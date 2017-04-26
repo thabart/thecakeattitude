@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { ShopsService, UserService } from './services';
+import { ShopsService, UserService, CommentsService } from './services';
 import { withRouter } from 'react-router';
 import { MAP } from 'react-google-maps/lib/constants';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import Promise from 'bluebird';
 import { ShopProfile, ShopProducts } from './shopProfile';
+import Promise from 'bluebird';
+import Rater from 'react-rater';
 import './Shop.css';
+import 'react-rater/lib/react-rater.css';
 
 class Shop extends Component {
   constructor(props) {
@@ -16,7 +18,10 @@ class Shop extends Component {
       isLoading: true,
       location: {},
       user: null,
-      shop: null
+      shop: null,
+      averageScore: null,
+      scores: null,
+      nbComments: 0
     };
   }
   navigateProfile(e) {
@@ -48,6 +53,8 @@ class Shop extends Component {
       profileImage = "/images/profile-picture.png";
     }
 
+    console.log(this.state.averageScore);
+
     return (<div className="container">
       <section className="row white-section shop-section cover">
         <div className="cover-banner">
@@ -56,6 +63,7 @@ class Shop extends Component {
         <img src={profileImage} className="img-thumbnail profile-img" width="200" height="200" />
         <div className="profile-information">
           <h1>{this.state.shop.name}</h1>
+          {this.state.nbComments > 0 ? (<div><Rater total={5} rating={this.state.averageScore} interactive={false} /><span> {this.state.nbComments} comments</span></div>) : '' }
         </div>
         <ul className="nav nav-pills menu">
           <li className="nav-item">
@@ -74,15 +82,52 @@ class Shop extends Component {
     var shopId = self.props.match.params.id;
     ShopsService.get(shopId).then(function(r) {
       var shop = r['_embedded'];
-      UserService.getPublicClaims(shop.subject).then(function(user) {
+      Promise.all([UserService.getPublicClaims(shop.subject), CommentsService.search({ shop_id: shopId })]).then(function(r) {
+        var user = r[0],
+         commentsResult = r[1],
+         comments = commentsResult['_embedded'],
+         average = null,
+         scores = null,
+         nbComments = 0;
+
+        if (comments) {
+          if (!(comments instanceof Array)) {
+            comments = [comments];
+          }
+
+          var total = 0;
+          scores = {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 0,
+            "5": 0
+          };
+          comments.forEach(function(comment) {
+            total += comment.score;
+            scores[""+comment.score+""] += 1;
+          });
+
+          var average = Math.round((total / comments.length) * 1000) / 1000;
+          nbComments = comments.length;
+        }
+
         self.setState({
           isLoading: false,
           shop: shop,
-          user: user
+          user: user,
+          averageScore: average,
+          scores: scores,
+          nbComments: nbComments
         });
-      }).catch(function(e) {
+      }).catch(function() {
         self.props.history.push('/error/internal');
       });
+      /*
+      UserService.getPublicClaims(shop.subject).then(function(user) {
+      }).catch(function(e) {
+      });*/
     }).catch(function(e) {
       self.props.history.push('/error/404');
     });

@@ -38,6 +38,7 @@ namespace Cook4Me.Api.Core.Models
         public string GooglePlaceId { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
+        public double? AverageScore { get; set; }
         public IEnumerable<PaymentMethod> Payments { get; set; }
         public string ShopRelativePath { get; set; }
         public string UndergroundRelativePath { get; set; }

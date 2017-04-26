@@ -88,7 +88,7 @@ namespace Cook4Me.Api.EF.Repositories
                 comments = comments.Where(c => c.Subject == parameter.Subject);
             }
 
-            return await comments.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await comments.OrderByDescending(c => c.UpdateDateTime).Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
     }
 }

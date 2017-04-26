@@ -147,7 +147,7 @@ namespace Cook4Me.Api.Host.Extensions
             {
                 new Comment
                 {
-                    Content = "comment",
+                    Content = "comment1",
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _shopId,
                     CreateDateTime = DateTime.UtcNow,
@@ -157,7 +157,17 @@ namespace Cook4Me.Api.Host.Extensions
                 },
                 new Comment
                 {
-                    Content = "comment",
+                    Content = "comment2",
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _shopId,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    Subject = "administrator",
+                    Score = 3
+                },
+                new Comment
+                {
+                    Content = "comment3",
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _shopId,
                     CreateDateTime = DateTime.UtcNow,
