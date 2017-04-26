@@ -156,10 +156,6 @@ class Shop extends Component {
       }).catch(function() {
         self.props.history.push('/error/internal');
       });
-      /*
-      UserService.getPublicClaims(shop.subject).then(function(user) {
-      }).catch(function(e) {
-      });*/
     }).catch(function(e) {
       self.props.history.push('/error/404');
     });
