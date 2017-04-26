@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ShopsService, UserService, CommentsService } from './services';
+import { Tooltip, Progress } from 'reactstrap';
 import { withRouter } from 'react-router';
 import { MAP } from 'react-google-maps/lib/constants';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
@@ -14,6 +15,7 @@ class Shop extends Component {
     super(props);
     this.navigateProfile = this.navigateProfile.bind(this);
     this.navigateShops = this.navigateShops.bind(this);
+    this.toggle = this.toggle.bind(this);
     this.state = {
       isLoading: true,
       location: {},
@@ -21,7 +23,8 @@ class Shop extends Component {
       shop: null,
       averageScore: null,
       scores: null,
-      nbComments: 0
+      nbComments: 0,
+      isRatingOpened: true
     };
   }
   navigateProfile(e) {
@@ -31,6 +34,11 @@ class Shop extends Component {
   navigateShops(e) {
     e.preventDefault();
     this.props.history.push('/shops/' + this.state.shop.id + '/products');
+  }
+  toggle() {
+    this.setState({
+      isRatingOpened: !this.state.isRatingOpened
+    });
   }
   render() {
     if (this.state.isLoading) {
@@ -53,7 +61,17 @@ class Shop extends Component {
       profileImage = "/images/profile-picture.png";
     }
 
-    console.log(this.state.averageScore);
+    var ratingSummary = [];
+    if (this.state.nbComments > 0) {
+      for (var score = 5; score >= 1; score--) {
+        var nb = this.state.scores[score];
+        ratingSummary.push((<li className="row">
+          <div className="col-md-4"><Rater total={5} rating={score} interactive={false} /></div>
+          <div className="col-md-6"><Progress value="20" /></div>
+          <div className="col-md-2">{nb}</div>
+        </li>));
+      }
+    }
 
     return (<div className="container">
       <section className="row white-section shop-section cover">
@@ -63,7 +81,15 @@ class Shop extends Component {
         <img src={profileImage} className="img-thumbnail profile-img" width="200" height="200" />
         <div className="profile-information">
           <h1>{this.state.shop.name}</h1>
-          {this.state.nbComments > 0 ? (<div><Rater total={5} rating={this.state.averageScore} interactive={false} /><span> {this.state.nbComments} comments</span></div>) : '' }
+          {this.state.nbComments > 0 ? (
+            <div>
+              <span id="rating"><Rater total={5} rating={this.state.averageScore} interactive={false} /> {this.state.nbComments} comments</span>
+              <Tooltip placement='bottom' className="ratingPopup" isOpen={this.state.isRatingOpened} target="rating" toggle={this.toggle}>
+                <ul>
+                  {ratingSummary}
+                </ul>
+              </Tooltip>
+            </div>) : '' }
         </div>
         <ul className="nav nav-pills menu">
           <li className="nav-item">
@@ -97,7 +123,6 @@ class Shop extends Component {
 
           var total = 0;
           scores = {
-            "0": 0,
             "1": 0,
             "2": 0,
             "3": 0,

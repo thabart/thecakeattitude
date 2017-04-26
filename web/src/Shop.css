@@ -2,6 +2,25 @@
 		margin-top: 20px;
 }
 
+.ratingPopup {
+  background-color: white !important;
+	color: black !important;
+	padding: 5px !important;
+	width: 300px !important;
+	max-width: 300px !important;
+	text-align: inherit !important;
+}
+
+.ratingPopup:before {
+	border-bottom-color: white !important;
+}
+
+.ratingPopup ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
 .shop-section-padding {
 	padding: 20px;
 }
@@ -36,9 +55,12 @@
 	left: 10px;
 }
 
+#rating .react-rater a {
+	font-size: 21pt;
+}
+
 .react-rater a {
 	color: #ccc !important;
-	font-size: 21pt;
 }
 
 .react-rater a.will-be-active {
