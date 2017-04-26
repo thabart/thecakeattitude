@@ -42,11 +42,12 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IAddShopValidator _addShopValidator;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly ICommentRepository _commentRepository;
+        private readonly IAddCommentValidator _addCommentValidator;
 
         public ShopsController(
             IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder,
             IHostingEnvironment env, IAddShopValidator addShopValidator, IHalResponseBuilder halResponseBuilder,
-            ICommentRepository commentRepository)
+            ICommentRepository commentRepository, IAddCommentValidator addCommentValidator)
         {
             _repository = repository;
             _requestBuilder = requestBuilder;
@@ -55,6 +56,7 @@ namespace Cook4Me.Api.Host.Controllers
             _addShopValidator = addShopValidator;
             _halResponseBuilder = halResponseBuilder;
             _commentRepository = commentRepository;
+            _addCommentValidator = addCommentValidator;
         }
 
         [HttpPost]
@@ -184,9 +186,28 @@ namespace Cook4Me.Api.Host.Controllers
         }
 
         [HttpPost(Constants.RouteNames.Comments)]
+        [Authorize("Connected")]
         public async Task<IActionResult> AddComment([FromBody] JObject jObj)
         {
-            return null;
+            var comment = _requestBuilder.GetComment(jObj);
+            comment.CreateDateTime = DateTime.UtcNow;
+            comment.UpdateDateTime = DateTime.UtcNow;
+            comment.Id = Guid.NewGuid().ToString();
+            var validationResult = await _addCommentValidator.Validate(comment);
+            if (!validationResult.IsValid)
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            if (!await _commentRepository.Add(comment))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheCommentCannotBeInserted);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            var obj = new { id = comment.Id };
+            return new OkObjectResult(obj);
         }
 
         private bool AddShopMap(Shop shop, Map map)

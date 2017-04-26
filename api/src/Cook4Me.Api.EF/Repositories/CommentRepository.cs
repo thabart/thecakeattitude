@@ -15,9 +15,13 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.EF.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -38,9 +42,53 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            _context.Comments.Add(comment.ToModel());
-            await _context.SaveChangesAsync().ConfigureAwait(false);
-            return true;
+            try
+            {
+                _context.Comments.Add(comment.ToModel());
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<Comment> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(false);
+            if (comment == null)
+            {
+                return null;
+            }
+
+            return comment.ToDomain();
+        }
+
+        public async Task<IEnumerable<Comment>> Search(SearchCommentsParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.Comment> comments = _context.Comments;
+            if (!string.IsNullOrWhiteSpace(parameter.ShopId))
+            {
+                comments = comments.Where(c => c.ShopId == parameter.ShopId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                comments = comments.Where(c => c.Subject == parameter.Subject);
+            }
+
+            return await comments.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
     }
 }

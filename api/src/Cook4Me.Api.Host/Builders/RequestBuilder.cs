@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
         PaymentMethod GetPaymentMethod(JObject jObj);
         Location GetLocation(JObject jObj);
         Comment GetComment(JObject jObj);
+        SearchCommentsParameter GetSearchComment(JObject jObj);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -205,7 +206,31 @@ namespace Cook4Me.Api.Host.Builders
 
         public Comment GetComment(JObject jObj)
         {
-            throw new NotImplementedException();
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new Comment
+            {
+                Content = jObj.Value<string>(Constants.DtoNames.Comment.Content),
+                Score = jObj.Value<int>(Constants.DtoNames.Comment.Score),
+                ShopId = jObj.Value<string>(Constants.DtoNames.Comment.ShopId)
+            };
+        }
+
+        public SearchCommentsParameter GetSearchComment(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new SearchCommentsParameter
+            {
+                ShopId = jObj.Value<string>(Constants.DtoNames.Comment.ShopId),
+                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject)
+            };
         }
     }
 }

@@ -25,6 +25,7 @@ namespace Cook4Me.Api.Host.Extensions
     {
         private static string _shoesCategoryId = Guid.NewGuid().ToString();
         private static string _bakeryCategoryId = Guid.NewGuid().ToString();
+        private static string _shopId = Guid.NewGuid().ToString();
 
         public static void EnsureSeedData(this CookDbContext context)
         {
@@ -36,6 +37,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertCategories(context);
             InsertTags(context);
             InsertShops(context);
+            InsertComments(context);
             context.SaveChanges();
         }
 
@@ -120,7 +122,7 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     new Shop
                     {
-                        Id = Guid.NewGuid().ToString(),
+                        Id = _shopId,
                         Subject = "administrator",
                         Name = "shop",
                         Description = "description",
@@ -137,6 +139,33 @@ namespace Cook4Me.Api.Host.Extensions
                     }
                 });
             }
+        }
+
+        private static void InsertComments(CookDbContext context)
+        {
+            context.Comments.AddRange(new[]
+            {
+                new Comment
+                {
+                    Content = "comment",
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _shopId,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    Subject = "administrator",
+                    Score = 5                    
+                },
+                new Comment
+                {
+                    Content = "comment",
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _shopId,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    Subject = "administrator",
+                    Score = 3
+                }
+            });
         }
     }
 }

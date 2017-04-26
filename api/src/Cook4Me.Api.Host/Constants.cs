@@ -77,6 +77,7 @@ namespace Cook4Me.Api.Host
                 public const string Content = "content";
                 public const string Score = "score";
                 public const string ShopId = "shop_id";
+                public const string Subject = "subject";
             }
 
             public static class Location

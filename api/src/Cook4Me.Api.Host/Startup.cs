@@ -106,6 +106,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
             services.AddTransient<IAddShopValidator, AddShopValidator>();
+            services.AddTransient<IAddCommentValidator, AddCommentValidator>();
         }
     }
 }
