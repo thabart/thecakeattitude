@@ -24,7 +24,7 @@ class Shop extends Component {
       averageScore: null,
       scores: null,
       nbComments: 0,
-      isRatingOpened: true
+      isRatingOpened: false
     };
   }
   navigateProfile(e) {
@@ -48,6 +48,7 @@ class Shop extends Component {
     var bannerImage = this.state.shop.banner_image;
     var profileImage = this.state.shop.profile_image;
     var action = this.props.match.params.action;
+    var self = this;
     var content = (<ShopProfile  user={this.state.user} shop={this.state.shop} />);
     if (action === "products") {
       content = (<ShopProducts  user={this.state.user} shop={this.state.shop} />);
@@ -62,12 +63,18 @@ class Shop extends Component {
     }
 
     var ratingSummary = [];
-    if (this.state.nbComments > 0) {
+    if (self.state.nbComments > 0) {
       for (var score = 5; score >= 1; score--) {
-        var nb = this.state.scores[score];
+        var nb = self.state.scores[score];
+        var n = 0;
+        if (nb > 0) {
+          n = (nb / self.state.nbComments) * 100;
+        }
+
+        n = Math.round(n);
         ratingSummary.push((<li className="row">
           <div className="col-md-4"><Rater total={5} rating={score} interactive={false} /></div>
-          <div className="col-md-6"><Progress value="20" /></div>
+          <div className="col-md-6"><Progress value={n} /></div>
           <div className="col-md-2">{nb}</div>
         </li>));
       }
@@ -81,7 +88,7 @@ class Shop extends Component {
         <img src={profileImage} className="img-thumbnail profile-img" width="200" height="200" />
         <div className="profile-information">
           <h1>{this.state.shop.name}</h1>
-          {this.state.nbComments > 0 ? (
+          { this.state.nbComments > 0 ? (
             <div>
               <span id="rating"><Rater total={5} rating={this.state.averageScore} interactive={false} /> {this.state.nbComments} comments</span>
               <Tooltip placement='bottom' className="ratingPopup" isOpen={this.state.isRatingOpened} target="rating" toggle={this.toggle}>
