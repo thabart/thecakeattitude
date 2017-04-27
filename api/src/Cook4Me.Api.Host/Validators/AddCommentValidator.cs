@@ -80,7 +80,7 @@ namespace Cook4Me.Api.Host.Validators
                     ShopId = comment.ShopId,
                     Subject = comment.Subject
                 });
-                if (comments.Any())
+                if (comments.TotalResults > 0)
                 {
                     return new AddCommentValidationResult(ErrorDescriptions.TheCommentAlreadyExists);
                 }

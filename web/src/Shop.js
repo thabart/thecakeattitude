@@ -153,7 +153,7 @@ class Shop extends Component {
           scores: scores,
           nbComments: nbComments
         });
-      }).catch(function() {
+      }).catch(function(e) {
         self.props.history.push('/error/internal');
       });
     }).catch(function(e) {

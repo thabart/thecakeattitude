@@ -17,10 +17,10 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -70,7 +70,7 @@ namespace Cook4Me.Api.EF.Repositories
             return comment.ToDomain();
         }
 
-        public async Task<IEnumerable<Comment>> Search(SearchCommentsParameter parameter)
+        public async Task<SearchCommentsResult> Search(SearchCommentsParameter parameter)
         {
             if (parameter == null)
             {
@@ -88,7 +88,17 @@ namespace Cook4Me.Api.EF.Repositories
                 comments = comments.Where(c => c.Subject == parameter.Subject);
             }
 
-            return await comments.OrderByDescending(c => c.UpdateDateTime).Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            var result = new SearchCommentsResult
+            {
+                TotalResults = await comments.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            comments = comments
+                .OrderByDescending(c => c.UpdateDateTime)
+                .Skip(parameter.StartIndex).Take(parameter.Count);
+            result.Content = await comments.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return result;
         }
     }
 }

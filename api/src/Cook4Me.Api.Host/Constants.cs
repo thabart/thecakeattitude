@@ -72,6 +72,13 @@ namespace Cook4Me.Api.Host
                 public const string UpdateDateTime = "update_datetime";
             }
 
+            public static class Paginate
+            {
+                public const string StartIndex = "start_index";
+                public const string Length = "length";
+                public const string Count = "count";
+            }
+
             public static class Comment
             {
                 public const string Id = "id";

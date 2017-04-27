@@ -16,7 +16,7 @@
 
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Results;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Core.Repositories
@@ -25,6 +25,6 @@ namespace Cook4Me.Api.Core.Repositories
     {
         Task<Comment> Get(string id);
         Task<bool> Add(Comment comment);
-        Task<IEnumerable<Comment>> Search(SearchCommentsParameter parameter);
+        Task<SearchCommentsResult> Search(SearchCommentsParameter parameter);
     }
 }

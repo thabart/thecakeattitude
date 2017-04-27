@@ -225,14 +225,14 @@ namespace Cook4Me.Api.Host.Controllers
                 return new NotFoundResult();
             }
 
-            var comments = await _commentRepository.Search(new SearchCommentsParameter
+            var searchResult = await _commentRepository.Search(new SearchCommentsParameter
             {
                 ShopId = shop.Id
             });
 
             var result = new ShopRatingSummary
             {
-                NbComments = comments.Count()
+                NbComments = searchResult.TotalResults
             };
             if (result.NbComments == 0)
             {
@@ -240,13 +240,13 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             int totalScore = 0;
-            var nbComments = comments.Count();
-            foreach (var comment in comments)
+            var nbComments = result.NbComments;
+            foreach (var comment in searchResult.Content)
             {
                 totalScore += comment.Score;
             }
 
-            result.AverageScore = Math.Round((double)totalScore / (double)comments.Count(), 3);
+            result.AverageScore = Math.Round((double)totalScore / (double)searchResult.TotalResults, 3);
             return new OkObjectResult(_responseBuilder.GetRatingSummary(result));
         }
 

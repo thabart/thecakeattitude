@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Host.Extensions;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace Cook4Me.Api.Host.Builders
         Location GetLocation(JObject jObj);
         Comment GetComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(JObject jObj);
+        SearchCommentsParameter GetSearchComment(IQueryCollection query);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -229,8 +231,57 @@ namespace Cook4Me.Api.Host.Builders
             return new SearchCommentsParameter
             {
                 ShopId = jObj.Value<string>(Constants.DtoNames.Comment.ShopId),
-                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject)
+                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
+                Count = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
             };
+        }
+
+        public SearchCommentsParameter GetSearchComment(IQueryCollection query)
+        {
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            var result = new SearchCommentsParameter();
+            foreach(var key in query.Keys)
+            {
+                TrySetStr((r) => result.ShopId = r, key, Constants.DtoNames.Comment.ShopId, query);
+                TrySetStr((r) => result.Subject = r, key, Constants.DtoNames.Comment.Subject, query);
+                TrySetInt((r) => result.StartIndex = r <= 0 ? result.StartIndex : r, key, Constants.DtoNames.Paginate.StartIndex, query);
+                TrySetInt((r) => result.Count = r <= 0 ? result.Count : r, key, Constants.DtoNames.Paginate.Count, query);
+            }
+
+            return result;
+        }
+
+        private static void TrySetStr(Action<string> setParameterCallback, string key, string value, IQueryCollection query)
+        {
+            if (key.Equals(value, StringComparison.CurrentCultureIgnoreCase))
+            {
+                setParameterCallback(query[key].ToString());
+            }
+        }
+
+        private static void TrySetInt(Action<int> setParameterCallback, string key, string value, IQueryCollection query)
+        {
+            if (key.Equals(value, StringComparison.CurrentCultureIgnoreCase))
+            {
+                int number = GetInt(query[key].ToString(), key);
+                setParameterCallback(number);
+            }
+        }
+
+        private static int GetInt(string value, string name)
+        {
+            int number;
+            if (!int.TryParse(value, out number))
+            {
+                throw new InvalidOperationException($"the parameter {name} is not valid");
+            }
+
+            return number;
         }
     }
 }

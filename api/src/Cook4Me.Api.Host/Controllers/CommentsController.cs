@@ -59,15 +59,27 @@ namespace Cook4Me.Api.Host.Controllers
             return new OkObjectResult(_halResponseBuilder.Build());
         }
 
-        [HttpPost(Constants.RouteNames.Search)]
-        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        [HttpGet(Constants.RouteNames.Search)]
+        public async Task<IActionResult> Search()
         {
-            var parameter = _requestBuilder.GetSearchComment(jObj);
-            var comments = await _repository.Search(parameter);
-            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Comments + "/" + Constants.RouteNames.Search));
-            foreach (var comment in comments)
+            var parameter = _requestBuilder.GetSearchComment(Request.Query);
+            var searchResult = await _repository.Search(parameter);
+            _halResponseBuilder.AddLinks(l => l.AddSelf(GetCommentLink(parameter.StartIndex, parameter.Count)));
+            if (searchResult != null && searchResult.Content != null)
             {
-                AddComment(_halResponseBuilder, _responseBuilder, comment);
+                var comments = searchResult.Content;
+                foreach (var comment in comments)
+                {
+                    AddComment(_halResponseBuilder, _responseBuilder, comment);
+                }
+
+                double r = (double)searchResult.TotalResults / (double)parameter.Count;
+                var nbPages = Math.Ceiling(r);
+                nbPages = nbPages == 0 ? 1 : nbPages;
+                for (var page = 1; page <= nbPages; page++)
+                {
+                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetCommentLink((page - 1) * parameter.Count, parameter.Count), page.ToString())));
+                }
             }
             
             return new OkObjectResult(_halResponseBuilder.Build());
@@ -78,6 +90,12 @@ namespace Cook4Me.Api.Host.Controllers
             _halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetComment(comment),
                 (l) => l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + comment.ShopId))
                     .AddSelf(Constants.RouteNames.Comments + "/" + comment.Id)));
+        }
+
+        private static string GetCommentLink(int startIndex, int count)
+        {
+            return "/" + Constants.RouteNames.Comments + "/" + Constants.RouteNames.Search +
+                "?" + Constants.DtoNames.Paginate.StartIndex + "=" + startIndex + "&" + Constants.DtoNames.Paginate.Count + "=" + count;
         }
     }
 }

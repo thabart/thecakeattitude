@@ -6,12 +6,9 @@ import $ from 'jquery';
 module.exports = {
   // Search comments
   search: function(content) {
+    var param = $.param(content);
     return new Promise(function(resolve, reject) {
-      $.ajax(Constants.apiUrl + '/comments/.search', {
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(content)
-      }).then(function(r) {
+      $.get(Constants.apiUrl + '/comments/.search?'+param).then(function(r) {
         resolve(r);
       }).fail(function(e) {
         reject(e);

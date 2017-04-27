@@ -7,6 +7,7 @@ import moment from 'moment';
 import Rater from 'react-rater';
 import Constants from '../../Constants';
 import './profile.css';
+import $ from 'jquery';
 
 const shopOpts = {
   url : '/images/shop-pin.png',
@@ -31,15 +32,74 @@ class ShopProfile extends Component {
   constructor(props) {
     super(props);
     this.onMapLoad = this.onMapLoad.bind(this);
+    this.navigateComment = this.navigateComment.bind(this);
     this.state = {
-      comments: []
+      comments: [],
+      navigations: [],
+      isCommentsLoading: false
     };
   }
   onMapLoad(map) {
     this._googleMap = map;
   }
+  navigateComment(e, href) {
+    e.preventDefault();
+    var self = this;
+    self.setState({
+      isCommentsLoading: true
+    })
+    $.get(Constants.apiUrl + href).then(function(obj) {
+      self.displayComments(obj);
+    });
+  }
+  displayComments(obj) {
+    var comments = obj['_embedded'],
+      navigations = obj['_links']['navigation'],
+      self = this;
+    if (!(comments instanceof Array)) {
+      comments = [ comments ];
+    }
+
+    var subjects = [];
+    comments.forEach(function(comment) {
+      if (subjects.indexOf(comment.subject) === -1) {
+        subjects.push(comment.subject);
+      }
+    });
+
+    var getUserInfos = [];
+    subjects.forEach(function(subject) {
+      getUserInfos.push(UserService.getPublicClaims(subject));
+    });
+
+    Promise.all(getUserInfos).then(function(users) {
+      comments.forEach(function(comment) {
+        var user = null;
+        users.forEach(function(u) {
+          if (u.sub == comment.subject) {
+            user = u;
+            return;
+          }
+        });
+
+        comment.user = user;
+      });
+
+      self.setState({
+        comments: comments,
+        navigations: navigations,
+        isCommentsLoading: false
+      });
+    }).catch(function(e) {
+      self.setState({
+        isCommentsLoading: false
+      });
+    });
+  }
   render() {
-    var comments = [];
+    var comments = [],
+      navigations = [],
+      self = this;
     if (this.state.comments) {
       this.state.comments.forEach(function(comment) {
         var date = moment(comment.update_datetime).format('LLL');
@@ -67,6 +127,12 @@ class ShopProfile extends Component {
             </div>
           </div>
         </div>));
+      });
+    }
+
+    if (this.state.navigations) {
+      this.state.navigations.forEach(function(nav) {
+        navigations.push((<li className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigateComment(e, nav.href); }}>{nav.name}</a></li>));
       });
     }
 
@@ -110,11 +176,21 @@ class ShopProfile extends Component {
       </section>
       <section className="row white-section shop-section shop-section-padding">
         <h5 className="col-md-12">Comments</h5>
-        <div className="col-md-12">
-            <div className="row">
-              {comments}
+        {this.state.isCommentsLoading ?
+          (<div className="col-md-12"><i className='fa fa-spinner fa-spin'></i></div>) :
+          (<div className="col-md-12">
+            <div className="col-md-12">
+              <ul className="pagination">
+                {navigations}
+              </ul>
             </div>
-        </div>
+            <div className="col-md-12">
+                <div className="row">
+                  {comments}
+                </div>
+            </div>
+          </div>)
+        }
       </section>
       <section className="row section white-section shop-section  shop-section-padding">
         <h5>Best deals</h5>
@@ -123,44 +199,15 @@ class ShopProfile extends Component {
   }
   componentWillMount() {
     var self = this;
-    CommentsService.search({ shop_id: this.props.shop.id }).then(function(obj) {
-      var comments = obj['_embedded'];
-      if (!(comments instanceof Array)) {
-        comments = [ comments ];
-      }
-
-      var subjects = [];
-      comments.forEach(function(comment) {
-        if (subjects.indexOf(comment.subject) === -1) {
-          subjects.push(comment.subject);
-        }
-      });
-
-      var getUserInfos = [];
-      subjects.forEach(function(subject) {
-        getUserInfos.push(UserService.getPublicClaims(subject));
-      });
-
-      Promise.all(getUserInfos).then(function(users) {
-        comments.forEach(function(comment) {
-          var user = null;
-          users.forEach(function(u) {
-            if (u.sub == comment.subject) {
-              user = u;
-              return;
-            }
-          });
-
-          comment.user = user;
-        });
-
-        self.setState({
-          comments: comments
-        });
-      }).catch(function() {
-
-      });
+    self.setState({
+      isCommentsLoading: true
+    });
+    CommentsService.search({ shop_id: this.props.shop.id, count: 4 }).then(function(obj) {
+      self.displayComments(obj);
     }).catch(function() {
+      self.setState({
+        isCommentsLoading: false
+      });
     });
   }
 }
