@@ -100,5 +100,36 @@ namespace Cook4Me.Api.EF.Repositories
             result.Content = await comments.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
             return result;
         }
+
+        public async Task<bool> Remove(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        transaction.Commit();
+                        return false;
+                    }
+
+                    _context.Comments.Remove(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
     }
 }

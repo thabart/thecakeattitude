@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tooltip, Alert } from 'reactstrap';
+import { Tooltip, Alert, Modal, ModalHeader, ModalFooter, Button } from 'reactstrap';
 import { CommentsService, UserService, SessionService, ShopsService } from '../services';
 import Promise from 'bluebird';
 import moment from 'moment';
@@ -16,6 +16,9 @@ class Comment extends Component {
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.toggleError = this.toggleError.bind(this);
+    this.displayRemoveComment = this.displayRemoveComment.bind(this);
+    this.toggleRemoveComment = this.toggleRemoveComment.bind(this);
+    this.removeComment = this.removeComment.bind(this);
     this.state = {
       comments: [],
       navigations: [],
@@ -25,6 +28,7 @@ class Comment extends Component {
       isAuthenticated: false,
       errorMessage: null,
       isAddingComment: false,
+      isRemoveCommentOpened: false,
       tooltip: {
         isScoreInvalid: false,
         isContentInvalid: false
@@ -35,11 +39,30 @@ class Comment extends Component {
       }
     };
   }
+  // Toggle remove modal window
+  toggleRemoveComment() {
+    var self = this;
+    this.setState({
+      isRemoveCommentOpened: !self.state.isRemoveCommentOpened
+    });
+  }
   // Toggle the error
   toggleError() {
     this.setState({
       errorMessage: null
     });
+  }
+  // Remove the comment
+  displayRemoveComment(id) {
+    this.setState({
+      isRemoveCommentOpened: true,
+      currentComment: id
+    })
+  }
+  // Remove the selected comment
+  removeComment() {
+    
+    console.log(this.state.currentComment);
   }
   // Handle all input change which occures in the view.
   handleInputChange(e) {
@@ -232,6 +255,7 @@ class Comment extends Component {
         }
 
         comments.push((<div className="col-md-6">
+          <div className="close-comment"><i className="fa fa-times" onClick={() => { self.displayRemoveComment(comment.id); }}></i></div>
           <div className="comment">
             <div className="row header">
               <div className="col-md-3">
@@ -295,6 +319,13 @@ class Comment extends Component {
             </div>
           </div>)
         }
+        <Modal isOpen={this.state.isRemoveCommentOpened}>
+          <ModalHeader toggle={this.toggleRemoveComment}>Do-you want to remove the comment ?</ModalHeader>
+          <ModalFooter>
+            <Button color='success' onClick={this.removeComment}>Yes</Button>
+            <Button color='danger' onClick={this.toggleRemoveComment}>No</Button>
+          </ModalFooter>
+        </Modal>
       </section>);
   }
   // Execute after the render

@@ -24,5 +24,9 @@ module.exports = {
         reject(e);
       });
     });
+  },
+  // Remove the comment.
+  remove: function(id) {
+
   }
 };

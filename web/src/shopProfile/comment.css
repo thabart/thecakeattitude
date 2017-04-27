@@ -9,6 +9,13 @@
   font-size: 11pt;
 }
 
+.close-comment {
+  position: absolute;
+  right: 30px;
+  top: 5px;
+  cursor: pointer;
+}
+
 .comment .content {
   overflow-wrap: break-word;
 }

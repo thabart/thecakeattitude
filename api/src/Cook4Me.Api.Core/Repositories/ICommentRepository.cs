@@ -25,6 +25,7 @@ namespace Cook4Me.Api.Core.Repositories
     {
         Task<Comment> Get(string id);
         Task<bool> Add(Comment comment);
+        Task<bool> Remove(string id);
         Task<SearchCommentsResult> Search(SearchCommentsParameter parameter);
     }
 }

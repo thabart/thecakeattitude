@@ -30,6 +30,7 @@ namespace Cook4Me.Api.Host
         public const string TheCommentAlreadyExists = "a comment has already been written by the user";
         public const string TheCommentCannotBeInserted = "an error occured when trying to add the comment";
         public const string ThePaymentMethodDoesntExist = "the payment method doesn't exist";
+        public const string TheCommentCannotBeRemoved = "an error occured while trying to remove the comment";
         public const string TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory = "you already have a shop on this category";
         public const string TheParameterIsMandatory = "the parameter {0} is mandatory";
         public const string TheParameterIsMandatoryAndShouldContainsBetween = "the parameter {0} is mandatory and should contains between {1} characters and {2}";
