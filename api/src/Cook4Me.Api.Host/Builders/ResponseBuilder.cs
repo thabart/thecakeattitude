@@ -184,6 +184,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
             jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
+            jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
             jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
             return jObj;

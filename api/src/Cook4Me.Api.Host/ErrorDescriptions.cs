@@ -34,6 +34,6 @@ namespace Cook4Me.Api.Host
         public const string TheParameterIsMandatory = "the parameter {0} is mandatory";
         public const string TheParameterIsMandatoryAndShouldContainsBetween = "the parameter {0} is mandatory and should contains between {1} characters and {2}";
         public const string TheParameterLengthCannotExceedNbCharacters = "the parameter {0} length cannot exceed {1} characters";
-        public const string TheScoreMustBeBetween = "the score must be between 0 and 5";
+        public const string TheScoreMustBeBetween = "the score must be between 1 and 5";
     }
 }

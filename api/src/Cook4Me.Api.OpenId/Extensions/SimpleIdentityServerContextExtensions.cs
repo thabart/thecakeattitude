@@ -455,6 +455,57 @@ namespace Cook4Me.Api.OpenId.Extensions
                         },
                         Password = ComputeHash("password"),
                         IsLocalAccount = true
+                    },
+                    new ResourceOwner
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Claims = new List<ResourceOwnerClaim>
+                        {
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject,
+                                Value = "laetitia"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name,
+                                Value = "Laetitia Buyse"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture,
+                                Value = "/img/laetitia.jpg"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Address,
+                                Value = "{ street_address: '223 avenue des croix du feu', locality: 'Belgium', postal_code: '1020', country: 'BE' }"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email,
+                                Value = "laetitiabuyse@hotmail.fr"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = Constants.Claims.MobilePhoneNumber,
+                                Value = "0485350536"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = Constants.Claims.HomePhoneNumber,
+                                Value = "0485350536"
+                            }
+                        },
+                        Password = ComputeHash("password"),
+                        IsLocalAccount = true
                     }
                 });
             }

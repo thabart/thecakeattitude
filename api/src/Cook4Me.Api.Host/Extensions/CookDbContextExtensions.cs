@@ -147,7 +147,7 @@ namespace Cook4Me.Api.Host.Extensions
             {
                 new Comment
                 {
-                    Content = "comment1",
+                    Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _shopId,
                     CreateDateTime = DateTime.UtcNow,
@@ -157,7 +157,7 @@ namespace Cook4Me.Api.Host.Extensions
                 },
                 new Comment
                 {
-                    Content = "comment2",
+                    Content = "comment2comment2comment2comment2comment2comment2comment2comment2comment2comment2comment2",
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _shopId,
                     CreateDateTime = DateTime.UtcNow,
@@ -167,13 +167,33 @@ namespace Cook4Me.Api.Host.Extensions
                 },
                 new Comment
                 {
-                    Content = "comment3",
+                    Content = "comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3",
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _shopId,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "administrator",
                     Score = 3
+                },
+                new Comment
+                {
+                    Content = "comment4     comment4comment4comment4comment4comment4comment4comment4",
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _shopId,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    Subject = "laetitia",
+                    Score = 1
+                },
+                new Comment
+                {
+                    Content = "comment5",
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _shopId,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    Subject = "laetitia",
+                    Score = 4
                 }
             });
         }

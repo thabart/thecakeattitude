@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { MAP } from 'react-google-maps/lib/constants';
-import { CommentsService } from '../services';
+import { CommentsService, UserService } from '../services';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import Promise from 'bluebird';
+import moment from 'moment';
+import Rater from 'react-rater';
+import Constants from '../../Constants';
 import './profile.css';
 
 const shopOpts = {
@@ -39,18 +42,29 @@ class ShopProfile extends Component {
     var comments = [];
     if (this.state.comments) {
       this.state.comments.forEach(function(comment) {
-        console.log(comment);
-        comments.push((<div className="col-md-4">
+        var date = moment(comment.update_datetime).format('LLL');
+        var picture = comment.user.picture;
+        if (!picture) {
+          picture = "/images/profile-picture.png";
+        } else {
+          picture = Constants.openIdUrl + picture;
+        }
+
+        comments.push((<div className="col-md-6">
           <div className="comment">
-            <div>
+            <div className="row header">
               <div className="col-md-3">
-                {comment.update_datetime}
+                <img src={picture} className="rounded-circle" width="60" height="60" />
               </div>
               <div className="col-md-9">
-
+                <b>{comment.user.name}</b><br />
+                {date}<br />
+                <Rater total={5} rating={comment.score} interactive={false} /> Score : {comment.score}
               </div>
             </div>
-            <p>{comment.content}</p>
+            <div className="content">
+              <p>{comment.content}</p>
+            </div>
           </div>
         </div>));
       });
@@ -96,8 +110,10 @@ class ShopProfile extends Component {
       </section>
       <section className="row white-section shop-section shop-section-padding">
         <h5 className="col-md-12">Comments</h5>
-        <div className="row">
-            {comments}
+        <div className="col-md-12">
+            <div className="row">
+              {comments}
+            </div>
         </div>
       </section>
       <section className="row section white-section shop-section  shop-section-padding">
@@ -113,11 +129,38 @@ class ShopProfile extends Component {
         comments = [ comments ];
       }
 
-      self.setState({
-        comments: comments
+      var subjects = [];
+      comments.forEach(function(comment) {
+        if (subjects.indexOf(comment.subject) === -1) {
+          subjects.push(comment.subject);
+        }
+      });
+
+      var getUserInfos = [];
+      subjects.forEach(function(subject) {
+        getUserInfos.push(UserService.getPublicClaims(subject));
+      });
+
+      Promise.all(getUserInfos).then(function(users) {
+        comments.forEach(function(comment) {
+          var user = null;
+          users.forEach(function(u) {
+            if (u.sub == comment.subject) {
+              user = u;
+              return;
+            }
+          });
+
+          comment.user = user;
+        });
+
+        self.setState({
+          comments: comments
+        });
+      }).catch(function() {
+
       });
     }).catch(function() {
-
     });
   }
 }

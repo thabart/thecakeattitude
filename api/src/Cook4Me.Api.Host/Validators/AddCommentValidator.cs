@@ -93,7 +93,7 @@ namespace Cook4Me.Api.Host.Validators
             }
 
             // Check score.
-            if (comment.Score < 0 || comment.Score > 5)
+            if (comment.Score < 1 || comment.Score > 5)
             {
                 return new AddCommentValidationResult(ErrorDescriptions.TheScoreMustBeBetween);
             }

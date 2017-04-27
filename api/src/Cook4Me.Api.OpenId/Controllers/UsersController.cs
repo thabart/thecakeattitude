@@ -116,7 +116,10 @@ namespace Cook4Me.Api.OpenId.Controllers
             }
 
             var jObj = new JObject();
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject));
             jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email));
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture));
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name));
             jObj.Add(Constants.Claims.HomePhoneNumber, TryGetValue(user.Claims, Constants.Claims.HomePhoneNumber));
             jObj.Add(Constants.Claims.MobilePhoneNumber, TryGetValue(user.Claims, Constants.Claims.MobilePhoneNumber));
             return new OkObjectResult(jObj);
