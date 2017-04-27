@@ -1,0 +1,14 @@
+.comment {
+  border: 1px solid #e8ebe9;
+  border-radius: 3px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.comment .header {
+  font-size: 11pt;
+}
+
+.comment .content {
+  overflow-wrap: break-word;
+}

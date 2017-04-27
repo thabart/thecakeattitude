@@ -154,7 +154,8 @@ class Shop extends Component {
           nbComments: nbComments
         });
       }).catch(function(e) {
-        self.props.history.push('/error/internal');
+        // self.props.history.push('/error/internal');
+        console.log(e);
       });
     }).catch(function(e) {
       self.props.history.push('/error/404');
