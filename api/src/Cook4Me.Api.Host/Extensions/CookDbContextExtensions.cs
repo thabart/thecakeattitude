@@ -37,7 +37,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertCategories(context);
             InsertTags(context);
             InsertShops(context);
-            InsertComments(context);
+            // InsertComments(context);
             context.SaveChanges();
         }
 

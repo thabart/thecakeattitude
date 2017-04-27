@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Tooltip } from 'reactstrap';
+import { Tooltip, Alert } from 'reactstrap';
 import { CommentsService, UserService, SessionService, ShopsService } from '../services';
 import Promise from 'bluebird';
 import moment from 'moment';
@@ -15,24 +15,31 @@ class Comment extends Component {
     this.addComment = this.addComment.bind(this);
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.toggleError = this.toggleError.bind(this);
     this.state = {
       comments: [],
       navigations: [],
       isCommentsLoading: false,
       comment: '',
-      rating: 0,
-      isContentInvalid: false,
-      isRatingInvalid: false,
+      score: 0,
       isAuthenticated: false,
+      errorMessage: null,
+      isAddingComment: false,
       tooltip: {
-        isRatingInvalid: false,
+        isScoreInvalid: false,
         isContentInvalid: false
       },
       valid: {
-        isRatingInvalid: false,
+        isScoreInvalid: false,
         isContentInvalid: false
       }
     };
+  }
+  // Toggle the error
+  toggleError() {
+    this.setState({
+      errorMessage: null
+    });
   }
   // Handle all input change which occures in the view.
   handleInputChange(e) {
@@ -72,15 +79,31 @@ class Comment extends Component {
       self.displayComments(obj);
     });
   }
+  // Refresh comments
+  refreshComments() {
+    var self = this;
+    self.setState({
+      isCommentsLoading: true,
+      isAuthenticated: SessionService.isLoggedIn()
+    });
+    CommentsService.search({ shop_id: this.props.shop.id, count: 4 }).then(function(obj) {
+      self.displayComments(obj);
+    }).catch(function() {
+      self.setState({
+        isCommentsLoading: false,
+        isAuthenticated: SessionService.isLoggedIn()
+      });
+    });
+  }
   // Add a comment
   addComment() {
     var self = this,
       isContentInvalid  = false,
-      isRatingInvalid = false,
+      isScoreInvalid = false,
       isValid = true;
     // 1. Check rating exists
-    if (self.state.rating === 0) {
-      isRatingInvalid = true;
+    if (self.state.score === 0) {
+      isScoreInvalid = true;
       isValid = false;
     }
 
@@ -94,7 +117,7 @@ class Comment extends Component {
       self.setState({
         valid: {
           isContentInvalid: isContentInvalid,
-          isRatingInvalid: isRatingInvalid
+          isScoreInvalid: isScoreInvalid
         }
       });
       return;
@@ -103,18 +126,32 @@ class Comment extends Component {
     self.setState({
       valid: {
         isContentInvalid: isContentInvalid,
-        isRatingInvalid: isRatingInvalid
-      }
+        isScoreInvalid: isScoreInvalid
+      },
+      isAddingComment: true
     });
+
     var json = {
       content: self.state.comment,
-      score: self.state.rating,
+      score: self.state.score,
       shop_id: self.props.shop.id
     };
-    ShopsService.addComment(json).then(function() {
-
+    ShopsService.addComment(json).then(function(e) {
+      self.setState({
+        isAddingComment: false
+      });
+      self.refreshComments();
     }).catch(function(error) {
+      var json = error.responseJSON;
+      var errorMessage = "an error occured while trying to add the comment";
+      if (json) {
+        errorMessage = json.error_description;
+      }
 
+      self.setState({
+        errorMessage: errorMessage,
+        isAddingComment: false
+      });
     });
   }
   // Build error tooltip
@@ -179,15 +216,18 @@ class Comment extends Component {
     var comments = [],
       navigations = [],
       self = this;
-    var ratingError = self.buildErrorTooltip('isRatingInvalid', 'Rating is mandatory');
+    var scoreError = self.buildErrorTooltip('isScoreInvalid', 'Score is mandatory');
     var commentError = self.buildErrorTooltip('isContentInvalid', 'Should contains 0 to 255 characters');
     if (this.state.comments) {
       this.state.comments.forEach(function(comment) {
         var date = moment(comment.update_datetime).format('LLL');
         var picture = comment.user.picture;
-        if (!picture) {
+        if (!picture)
+        {
           picture = "/images/profile-picture.png";
-        } else {
+        }
+        else
+        {
           picture = Constants.openIdUrl + picture;
         }
 
@@ -199,7 +239,7 @@ class Comment extends Component {
               </div>
               <div className="col-md-9">
                 <b>{comment.user.name}</b><br />
-                {date}<br />
+                {date} <br />
                 <Rater total={5} rating={comment.score} interactive={false} /> Score : {comment.score}
               </div>
             </div>
@@ -217,12 +257,13 @@ class Comment extends Component {
       });
     }
 
-    console.log(this.state.isAuthenticated);
     return (
       <section className="row white-section shop-section shop-section-padding">
         <h5 className="col-md-12">Comments</h5>
+        <div className="col-md-12"><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>
         {this.state.isCommentsLoading ?
           (<div className="col-md-12"><i className='fa fa-spinner fa-spin'></i></div>) :
+          comments.length == 0 ? (<span>No comment</span>) :
           (<div className="col-md-12">
             <div className="col-md-12">
               <ul className="pagination">
@@ -239,15 +280,18 @@ class Comment extends Component {
         {this.state.isAuthenticated &&
           (<div className="col-md-12">
             <div className="form-group">
-              <label>Score</label>
-              <Rater total={5} name="rating"  onClick={this.handleInputChange} /> {ratingError}
+              <label>Score</label> {scoreError}
+              <Rater total={5} name="score" onClick={this.handleInputChange} />
             </div>
             <div className="form-group">
-              {commentError}
+              <label>Comment</label> {commentError}
               <textarea className="form-control" placeholder="Your comment ..." name="comment" onChange={this.handleInputChange}/>
             </div>
             <div className="form-group">
-              <button className="btn btn-default" onClick={this.addComment}>Add</button>
+              {!this.state.isAddingComment ?
+                (<button className="btn btn-primary" onClick={this.addComment}>Add</button>) :
+                (<button className="btn btn-primary previous" disabled><i className='fa fa-spinner fa-spin'></i> Processing update ...</button>)
+              }
             </div>
           </div>)
         }
@@ -255,19 +299,7 @@ class Comment extends Component {
   }
   // Execute after the render
   componentWillMount() {
-    var self = this;
-    self.setState({
-      isCommentsLoading: true,
-      isAuthenticated: SessionService.isLoggedIn()
-    });
-    CommentsService.search({ shop_id: this.props.shop.id, count: 4 }).then(function(obj) {
-      self.displayComments(obj);
-    }).catch(function() {
-      self.setState({
-        isCommentsLoading: false,
-        isAuthenticated: SessionService.isLoggedIn()
-      });
-    });
+    this.refreshComments();
   }
 }
 
