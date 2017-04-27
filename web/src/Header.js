@@ -59,6 +59,7 @@ class Header extends Component {
           isLoggedIn : true
         });
     });
+    self.props.history.push('/');
   }
   // Authenticate with login and password
   authenticate(e) {

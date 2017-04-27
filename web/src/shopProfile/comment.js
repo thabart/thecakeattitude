@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
-import { CommentsService, UserService } from '../services';
+import { CommentsService, UserService, SessionService, ShopsService } from '../services';
 import Promise from 'bluebird';
 import moment from 'moment';
 import Rater from 'react-rater';
@@ -23,6 +23,7 @@ class Comment extends Component {
       rating: 0,
       isContentInvalid: false,
       isRatingInvalid: false,
+      isAuthenticated: false,
       tooltip: {
         isRatingInvalid: false,
         isContentInvalid: false
@@ -33,6 +34,7 @@ class Comment extends Component {
       }
     };
   }
+  // Handle all input change which occures in the view.
   handleInputChange(e) {
     const target = e.target;
     var value = null,
@@ -51,6 +53,7 @@ class Comment extends Component {
       [name]: value
     });
   }
+  // Toggle the tooltip
   toggleTooltip(name) {
     var tooltip = this.state.tooltip;
     tooltip[name] = !tooltip[name];
@@ -58,6 +61,7 @@ class Comment extends Component {
       tooltip: tooltip
     });
   }
+  // Navigate between comments
   navigateComment(e, href) {
     e.preventDefault();
     var self = this;
@@ -68,6 +72,7 @@ class Comment extends Component {
       self.displayComments(obj);
     });
   }
+  // Add a comment
   addComment() {
     var self = this,
       isContentInvalid  = false,
@@ -101,7 +106,18 @@ class Comment extends Component {
         isRatingInvalid: isRatingInvalid
       }
     });
+    var json = {
+      content: self.state.comment,
+      score: self.state.rating,
+      shop_id: self.props.shop.id
+    };
+    ShopsService.addComment(json).then(function() {
+
+    }).catch(function(error) {
+
+    });
   }
+  // Build error tooltip
   buildErrorTooltip(validName, description) {
     var result;
     if (this.state.valid[validName]) {
@@ -113,6 +129,7 @@ class Comment extends Component {
 
     return result;
   }
+  // Display comments
   displayComments(obj) {
     var comments = obj['_embedded'],
       navigations = obj['_links']['navigation'],
@@ -157,6 +174,7 @@ class Comment extends Component {
       });
     });
   }
+  // Render the view
   render() {
     var comments = [],
       navigations = [],
@@ -199,6 +217,7 @@ class Comment extends Component {
       });
     }
 
+    console.log(this.state.isAuthenticated);
     return (
       <section className="row white-section shop-section shop-section-padding">
         <h5 className="col-md-12">Comments</h5>
@@ -217,31 +236,36 @@ class Comment extends Component {
             </div>
           </div>)
         }
-        <div className="col-md-12">
-          <div className="form-group">
-            <label>Score</label>
-            <Rater total={5} name="rating"  onClick={this.handleInputChange} /> {ratingError}
-          </div>
-          <div className="form-group">
-            {commentError}
-            <textarea className="form-control" placeholder="Your comment ..." name="comment" onChange={this.handleInputChange}/>
-          </div>
-          <div className="form-group">
-            <button className="btn btn-default" onClick={this.addComment}>Add</button>
-          </div>
-        </div>
+        {this.state.isAuthenticated &&
+          (<div className="col-md-12">
+            <div className="form-group">
+              <label>Score</label>
+              <Rater total={5} name="rating"  onClick={this.handleInputChange} /> {ratingError}
+            </div>
+            <div className="form-group">
+              {commentError}
+              <textarea className="form-control" placeholder="Your comment ..." name="comment" onChange={this.handleInputChange}/>
+            </div>
+            <div className="form-group">
+              <button className="btn btn-default" onClick={this.addComment}>Add</button>
+            </div>
+          </div>)
+        }
       </section>);
   }
+  // Execute after the render
   componentWillMount() {
     var self = this;
     self.setState({
-      isCommentsLoading: true
+      isCommentsLoading: true,
+      isAuthenticated: SessionService.isLoggedIn()
     });
     CommentsService.search({ shop_id: this.props.shop.id, count: 4 }).then(function(obj) {
       self.displayComments(obj);
     }).catch(function() {
       self.setState({
-        isCommentsLoading: false
+        isCommentsLoading: false,
+        isAuthenticated: SessionService.isLoggedIn()
       });
     });
   }

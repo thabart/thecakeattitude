@@ -15,6 +15,8 @@ module.exports = {
     sessionStorage.removeItem(sessionName);
   },
   isLoggedIn: function() {
+    var session = this.getSession();
+    console.log('coucou');
     return this.getSession() !== null && this.getSession();
   }
 };

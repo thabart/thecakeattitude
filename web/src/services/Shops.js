@@ -56,5 +56,23 @@ module.exports = {
         reject(e);
       });
     });
+  },
+  // Add comment
+  addComment: function(content) {
+    var accessToken = Session.getSession().access_token;
+    return new Promise(function(resolve, reject) {
+      $.ajax(Constants.apiUrl + '/shops/comments', {
+        method: 'POST',
+        contentType: 'application/json',
+        headers: {
+          'Authorization': 'Bearer '+accessToken
+        },
+        data: JSON.stringify(content)
+      }).then(function(r) {
+        resolve(r);
+      }).fail(function(e) {
+        reject(e);
+      });
+    });
   }
 };

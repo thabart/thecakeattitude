@@ -194,6 +194,7 @@ namespace Cook4Me.Api.Host.Controllers
             comment.CreateDateTime = DateTime.UtcNow;
             comment.UpdateDateTime = DateTime.UtcNow;
             comment.Id = Guid.NewGuid().ToString();
+            comment.Subject = User.GetSubject();
             var validationResult = await _addCommentValidator.Validate(comment);
             if (!validationResult.IsValid)
             {
