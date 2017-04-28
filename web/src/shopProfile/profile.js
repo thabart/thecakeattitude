@@ -30,10 +30,14 @@ const GettingStartedGoogleMap = withGoogleMap(props => {
 class ShopProfile extends Component {
   constructor(props) {
     super(props);
+    this.refreshScore = this.refreshScore.bind(this);
     this.onMapLoad = this.onMapLoad.bind(this);
   }
   onMapLoad(map) {
     this._googleMap = map;
+  }
+  refreshScore() {
+    this.props.onRefreshScore();
   }
   render() {
     var self = this;
@@ -75,7 +79,7 @@ class ShopProfile extends Component {
           </GettingStartedGoogleMap>
         </div>
       </section>
-      <Comment shop={self.props.shop}/>
+      <Comment shop={self.props.shop} onRefreshScore={this.refreshScore}/>
       <section className="row section white-section shop-section shop-section-padding">
         <h5>Best deals</h5>
       </section>

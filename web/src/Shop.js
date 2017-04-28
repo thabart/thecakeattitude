@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { ShopsService, UserService, CommentsService } from './services';
-import { Tooltip, Progress } from 'reactstrap';
+import { Tooltip, Progress, Alert } from 'reactstrap';
 import { withRouter } from 'react-router';
 import { MAP } from 'react-google-maps/lib/constants';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
@@ -16,40 +16,95 @@ class Shop extends Component {
     this.navigateProfile = this.navigateProfile.bind(this);
     this.navigateShops = this.navigateShops.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.refreshScore = this.refreshScore.bind(this);
+    this.toggleError = this.toggleError.bind(this);
     this.state = {
-      isLoading: true,
+      isLoading: false,
       location: {},
       user: null,
       shop: null,
       averageScore: null,
       scores: null,
       nbComments: 0,
-      isRatingOpened: false
+      isRatingOpened: false,
+      errorMessage : null
     };
   }
+  // Toggle the error
+  toggleError() {
+    this.setState({
+      errorMessage : null
+    });
+  }
+  // Navigate to the profile
   navigateProfile(e) {
     e.preventDefault();
     this.props.history.push('/shops/' + this.state.shop.id);
   }
+  // Navigate to the shops
   navigateShops(e) {
     e.preventDefault();
     this.props.history.push('/shops/' + this.state.shop.id + '/products');
   }
+  // Toggle score window
   toggle() {
     this.setState({
       isRatingOpened: !this.state.isRatingOpened
     });
   }
+  // Update the score
+  refreshScore() {
+    var self = this;
+    CommentsService.search({ shop_id: this.state.shop.id }).then(function(commentsResult) {
+      var comments = commentsResult['_embedded'],
+       average = null,
+       scores = null,
+       nbComments = 0;
+
+      if (comments) {
+        if (!(comments instanceof Array)) {
+          comments = [comments];
+        }
+
+        var total = 0;
+        scores = {
+          "1": 0,
+          "2": 0,
+          "3": 0,
+          "4": 0,
+          "5": 0
+        };
+        comments.forEach(function(comment) {
+          total += comment.score;
+          scores[""+comment.score+""] += 1;
+        });
+
+        var average = Math.round((total / comments.length) * 1000) / 1000;
+        nbComments = comments.length;
+      }
+
+      self.setState({
+        averageScore: average,
+        scores: scores,
+        nbComments: nbComments
+      });
+    });
+  }
+  // Render the component
   render() {
     if (this.state.isLoading) {
-      return (<div>Loading ...</div>);
+      return (<div className="container">Loading ...</div>);
+    }
+
+    if (this.state.errorMessage !== null) {
+      return (<div className="container"><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>);
     }
 
     var bannerImage = this.state.shop.banner_image;
     var profileImage = this.state.shop.profile_image;
     var action = this.props.match.params.action;
     var self = this;
-    var content = (<ShopProfile  user={this.state.user} shop={this.state.shop} />);
+    var content = (<ShopProfile  user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} />);
     if (action === "products") {
       content = (<ShopProducts  user={this.state.user} shop={this.state.shop} />);
     }
@@ -110,55 +165,34 @@ class Shop extends Component {
       {content}
     </div>);
   }
+  // Execute after the render
   componentWillMount() {
     var self = this;
     var shopId = self.props.match.params.id;
+    self.setState({
+      isLoading: true
+    });
     ShopsService.get(shopId).then(function(r) {
       var shop = r['_embedded'];
-      Promise.all([UserService.getPublicClaims(shop.subject), CommentsService.search({ shop_id: shopId })]).then(function(r) {
-        var user = r[0],
-         commentsResult = r[1],
-         comments = commentsResult['_embedded'],
-         average = null,
-         scores = null,
-         nbComments = 0;
-
-        if (comments) {
-          if (!(comments instanceof Array)) {
-            comments = [comments];
-          }
-
-          var total = 0;
-          scores = {
-            "1": 0,
-            "2": 0,
-            "3": 0,
-            "4": 0,
-            "5": 0
-          };
-          comments.forEach(function(comment) {
-            total += comment.score;
-            scores[""+comment.score+""] += 1;
-          });
-
-          var average = Math.round((total / comments.length) * 1000) / 1000;
-          nbComments = comments.length;
-        }
-
+      UserService.getPublicClaims(shop.subject).then(function(user) {
         self.setState({
           isLoading: false,
           shop: shop,
-          user: user,
-          averageScore: average,
-          scores: scores,
-          nbComments: nbComments
+          user: user
         });
-      }).catch(function(e) {
-        // self.props.history.push('/error/internal');
-        console.log(e);
+        self.refreshScore();
       });
     }).catch(function(e) {
-      self.props.history.push('/error/404');
+      var json = e.responseJSON;
+      var error = "an error occured while trying to retrieve the shop";
+      if (json && json.error_description) {
+        error = json.error_description;
+      }
+
+      self.setState({
+        errorMessage: error,
+        isLoading: false
+      });
     });
   }
 }

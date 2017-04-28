@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Tooltip, Alert, Modal, ModalHeader, ModalFooter, Button } from 'reactstrap';
-import { CommentsService, UserService, SessionService, ShopsService } from '../services';
+import { CommentsService, UserService, SessionService, ShopsService, OpenIdService } from '../services';
+import { withRouter } from 'react-router';
 import Promise from 'bluebird';
 import moment from 'moment';
 import Rater from 'react-rater';
@@ -26,6 +27,7 @@ class Comment extends Component {
       comment: '',
       score: 0,
       isAuthenticated: false,
+      subject: null,
       errorMessage: null,
       isAddingComment: false,
       isRemoveCommentOpened: false,
@@ -61,8 +63,24 @@ class Comment extends Component {
   }
   // Remove the selected comment
   removeComment() {
-    
-    console.log(this.state.currentComment);
+    var self = this;
+    self.setState({
+      isRemoveCommentOpened: false
+    });
+    CommentsService.remove(this.state.currentComment).then(function() {
+      self.refreshComments();
+      self.props.onRefreshScore();
+    }).catch(function(e) {
+      var json = e.responseJSON;
+      var error = "an error occured while trying to remove the comment";
+      if (json) {
+        error = json.error_description;
+      }
+
+      self.setState({
+        errorMessage: error
+      });
+    });
   }
   // Handle all input change which occures in the view.
   handleInputChange(e) {
@@ -106,15 +124,13 @@ class Comment extends Component {
   refreshComments() {
     var self = this;
     self.setState({
-      isCommentsLoading: true,
-      isAuthenticated: SessionService.isLoggedIn()
+      isCommentsLoading: true
     });
     CommentsService.search({ shop_id: this.props.shop.id, count: 4 }).then(function(obj) {
       self.displayComments(obj);
     }).catch(function() {
       self.setState({
-        isCommentsLoading: false,
-        isAuthenticated: SessionService.isLoggedIn()
+        isCommentsLoading: false
       });
     });
   }
@@ -164,6 +180,7 @@ class Comment extends Component {
         isAddingComment: false
       });
       self.refreshComments();
+      self.props.onRefreshScore();
     }).catch(function(error) {
       var json = error.responseJSON;
       var errorMessage = "an error occured while trying to add the comment";
@@ -255,7 +272,7 @@ class Comment extends Component {
         }
 
         comments.push((<div className="col-md-6">
-          <div className="close-comment"><i className="fa fa-times" onClick={() => { self.displayRemoveComment(comment.id); }}></i></div>
+          {comment.subject === self.state.subject && <div className="close-comment"><i className="fa fa-times" onClick={() => { self.displayRemoveComment(comment.id); }}></i></div> }
           <div className="comment">
             <div className="row header">
               <div className="col-md-3">
@@ -330,9 +347,27 @@ class Comment extends Component {
   }
   // Execute after the render
   componentWillMount() {
-    this.refreshComments();
+    var self = this;
+    var session = SessionService.getSession();
+    if (session || session !== null) {
+      OpenIdService.introspect(session.access_token).then(function(introspect) {
+        if (introspect && introspect.active) {
+          self.setState({
+            isAuthenticated: true,
+            subject: introspect.sub
+          });
+        }
+        else {
+          SessionService.remove();
+        }
+      }).catch(function() {
+        SessionService.remove();
+        return;
+      });
+    }
+
+    self.refreshComments();
   }
 }
 
-
-export default Comment;
+export default withRouter(Comment);
