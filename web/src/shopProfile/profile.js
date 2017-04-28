@@ -3,7 +3,6 @@ import { MAP } from 'react-google-maps/lib/constants';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import Promise from 'bluebird';
 import moment from 'moment';
-import Rater from 'react-rater';
 import Comment from './comment';
 import './profile.css';
 import $ from 'jquery';

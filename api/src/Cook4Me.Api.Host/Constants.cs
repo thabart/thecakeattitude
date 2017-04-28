@@ -72,6 +72,7 @@ namespace Cook4Me.Api.Host
                 public const string UpdateDateTime = "update_datetime";
                 public const string AverageScore = "average_score";
                 public const string NbComments = "nb_comments";
+                public const string TotalScore = "total_score";
             }
 
             public static class Paginate

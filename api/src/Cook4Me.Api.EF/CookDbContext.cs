@@ -37,7 +37,6 @@ namespace Cook4Me.Api.EF
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.AddCategory()
-                .AddUserMapping()
                 .AddShopMapping()
                 .AddMapMapping()
                 .AddTagMapping()

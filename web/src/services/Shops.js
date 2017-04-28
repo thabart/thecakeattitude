@@ -47,16 +47,6 @@ module.exports = {
       });
     });
   },
-  // Get rating
-  getRating: function(id) {
-    return new Promise(function(resolve, reject) {
-      $.get(Constants.apiUrl + '/shops/'+id+'/rating').then(function(r) {
-        resolve(r);
-      }).fail(function(e) {
-        reject(e);
-      });
-    });
-  },
   // Add comment
   addComment: function(content) {
     var accessToken = Session.getSession().access_token;

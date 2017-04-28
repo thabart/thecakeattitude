@@ -24,6 +24,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Cook4Me.Api.Core.Parameters;
 using System.Linq.Expressions;
+using Cook4Me.Api.Core.Results;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -91,6 +92,7 @@ namespace Cook4Me.Api.EF.Repositories
             return await _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
+                .Include(c => c.Comments)
                 .Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
 
@@ -103,7 +105,8 @@ namespace Cook4Me.Api.EF.Repositories
 
             var shop = await _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
-                .Include(c => c.ShopTags).FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
+                .Include(c => c.ShopTags)
+                .Include(c => c.Comments).FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
             if (shop == null)
             {
                 return null;
@@ -112,7 +115,7 @@ namespace Cook4Me.Api.EF.Repositories
             return shop.ToDomain();
         }
 
-        public async Task<IEnumerable<Shop>> Search(SearchShopsParameter parameter)
+        public async Task<SearchShopsResult> Search(SearchShopsParameter parameter)
         {
             if (parameter == null)
             {
@@ -150,24 +153,23 @@ namespace Cook4Me.Api.EF.Repositories
                     shops = Order(orderBy, "update_datetime", s => s.UpdateDateTime, shops);
                     shops = Order(orderBy, "create_datetime", s => s.UpdateDateTime, shops);
                     shops = Order(orderBy, "nb_comments", s => s.Comments.Count(), shops);
+                    shops = Order(orderBy, "total_score", s => s.TotalScore, shops);
+                    shops = Order(orderBy, "average_score", s => s.AverageScore, shops);
                 }
             }
 
-            var result = await shops.Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
-            if (parameter.OrderBy != null)
+            var result = new SearchShopsResult
             {
-                var averageScore = parameter.OrderBy.FirstOrDefault(o => string.Equals(o.Target, "average_score", StringComparison.CurrentCultureIgnoreCase));
-                if (averageScore != null)
-                {
-                    if (averageScore.Method == OrderByMethods.Ascending)
-                    {
-                        return result.OrderBy(s => s.AverageScore);
-                    }
+                TotalResults = await shops.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
 
-                    return result.OrderByDescending(s => s.AverageScore);
-                }
+            if (parameter.IsPagingEnabled)
+            {
+                shops = shops.Skip(parameter.StartIndex).Take(parameter.Count);
             }
 
+            result.Content = await shops.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
             return result;
         }
 
@@ -184,6 +186,53 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             return shops;
+        }
+
+        public async Task<bool> Update(Shop shop)
+        {
+            if (shop == null)
+            {
+                throw new ArgumentNullException(nameof(shop));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Shops.FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        return false;
+                    }
+
+                    record.BannerImage = shop.BannerImage;
+                    record.CategoryId = shop.CategoryId;
+                    record.Country = shop.Country;
+                    record.Description = shop.Description;
+                    record.GooglePlaceId = shop.GooglePlaceId;
+                    record.Latitude = shop.Latitude;
+                    record.Locality = shop.Locality;
+                    record.Longitude = shop.Longitude;
+                    record.MapName = shop.MapName;
+                    record.Name = shop.Name;
+                    record.PostalCode = shop.PostalCode;
+                    record.ProfileImage = shop.ProfileImage;
+                    record.ShopRelativePath = shop.ShopRelativePath;
+                    record.StreetAddress = shop.StreetAddress;
+                    record.Subject = shop.Subject;
+                    record.TotalScore = shop.TotalScore;
+                    record.AverageScore = shop.AverageScore;
+                    record.UpdateDateTime = shop.UpdateDateTime;
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
     }
 }

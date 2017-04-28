@@ -26,7 +26,6 @@ namespace Cook4Me.Api.EF.Extensions
     {
         public static Domain.Shop ToDomain(this Shop shop)
         {
-            double? averageScore = null;
             if (shop == null)
             {
                 throw new ArgumentNullException(nameof(shop));
@@ -54,11 +53,6 @@ namespace Cook4Me.Api.EF.Extensions
             if (shop.Map != null)
             {
                 map = shop.Map.ToDomain();
-            }
-
-            if (shop.Comments != null && shop.Comments.Any())
-            {
-                averageScore = (double)shop.Comments.Sum(c => c.Score) / (double)shop.Comments.Count();
             }
 
             var nbComments = 0;
@@ -93,8 +87,9 @@ namespace Cook4Me.Api.EF.Extensions
                 GooglePlaceId = shop.GooglePlaceId,
                 Latitude = shop.Latitude,
                 Longitude = shop.Longitude,
-                AverageScore = averageScore,
-                NbComments = nbComments
+                NbComments = nbComments,
+                TotalScore = shop.TotalScore,
+                AverageScore = shop.AverageScore
             };
         }
 
@@ -133,49 +128,8 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = shop.UpdateDateTime,
                 GooglePlaceId = shop.GooglePlaceId,
                 Latitude = shop.Latitude,
-                Longitude = shop.Longitude
-            };
-        }
-
-        public static Domain.User ToDomain(this User user)
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            return new Domain.User
-            {
-                City = user.City,
-                Email = user.Email,
-                Id = user.Id,
-                IsSeller = user.IsSeller,
-                PhoneNumber = user.PhoneNumber,
-                PostalCode = user.PostalCode,
-                Pseudo = user.Pseudo,
-                StreetAddress = user.StreetAddress,
-                StreetNumber = user.StreetNumber
-            };
-        }
-
-        public static User ToModel(this Domain.User user)
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            return new User
-            {
-                City = user.City,
-                Email = user.Email,
-                Id = user.Id,
-                IsSeller = user.IsSeller,
-                PhoneNumber = user.PhoneNumber,
-                PostalCode = user.PostalCode,
-                Pseudo = user.Pseudo,
-                StreetAddress = user.StreetAddress,
-                StreetNumber = user.StreetNumber
+                Longitude = shop.Longitude,
+                TotalScore = shop.TotalScore
             };
         }
 

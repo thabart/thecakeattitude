@@ -18,7 +18,6 @@ using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
-using Cook4Me.Api.Host.Dtos;
 using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Authorization;
@@ -146,17 +145,26 @@ namespace Cook4Me.Api.Host.Controllers
         [HttpPost(Constants.RouteNames.Search)]
         public async Task<IActionResult> Search([FromBody] JObject jObj)
         {
+            var href = "/" + Constants.RouteNames.Shops + "/" + Constants.RouteNames.Search;
             var request = _requestBuilder.GetSearchShops(jObj);
-            var shops = await _repository.Search(request);
-            if (!shops.Any())
+            var searchResult = await _repository.Search(request);
+            if (searchResult.Content == null || !searchResult.Content.Any())
             {
                 return new NotFoundResult();
             }
             
-            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops + "/" + Constants.RouteNames.Search));
-            foreach(var shop in shops)
+            _halResponseBuilder.AddLinks(l => l.AddSelf(href));
+            foreach(var shop in searchResult.Content)
             {
                 AddShop(_halResponseBuilder, _responseBuilder, shop);
+            }
+            
+            double r = (double)searchResult.TotalResults / (double)request.Count;
+            var nbPages = Math.Ceiling(r);
+            nbPages = nbPages == 0 ? 1 : nbPages;
+            for (var page = 1; page <= nbPages; page++)
+            {
+                _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(href, page.ToString())));
             }
 
             return new OkObjectResult(_halResponseBuilder.Build());
@@ -178,7 +186,7 @@ namespace Cook4Me.Api.Host.Controllers
                 Subject = subject
             });
             _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops+"/"+Constants.RouteNames.Me));
-            foreach (var shop in shops)
+            foreach (var shop in shops.Content)
             {
                 AddShop(_halResponseBuilder, _responseBuilder, shop);
             }
@@ -202,6 +210,16 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
+            if (validationResult.Shop != null)
+            {
+                validationResult.Shop.AddComment(comment);
+                if (!await _repository.Update(validationResult.Shop))
+                {
+                    var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeUpdated);
+                    return this.BuildResponse(error, HttpStatusCode.BadRequest);
+                }
+            }
+
             if (!await _commentRepository.Add(comment))
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheCommentCannotBeInserted);
@@ -210,45 +228,6 @@ namespace Cook4Me.Api.Host.Controllers
 
             var obj = new { id = comment.Id };
             return new OkObjectResult(obj);
-        }
-
-        [HttpGet(Constants.RouteNames.Rating)]
-        public async Task<IActionResult> GetRating(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            var shop = await _repository.Get(id);
-            if (shop == null)
-            {
-                return new NotFoundResult();
-            }
-
-            var searchResult = await _commentRepository.Search(new SearchCommentsParameter
-            {
-                ShopId = shop.Id
-            });
-
-            var result = new ShopRatingSummary
-            {
-                NbComments = searchResult.TotalResults
-            };
-            if (result.NbComments == 0)
-            {
-                return new OkObjectResult(_responseBuilder.GetRatingSummary(result));
-            }
-
-            int totalScore = 0;
-            var nbComments = result.NbComments;
-            foreach (var comment in searchResult.Content)
-            {
-                totalScore += comment.Score;
-            }
-
-            result.AverageScore = Math.Round((double)totalScore / (double)searchResult.TotalResults, 3);
-            return new OkObjectResult(_responseBuilder.GetRatingSummary(result));
         }
 
         private bool AddShopMap(Shop shop, Map map)

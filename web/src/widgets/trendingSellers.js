@@ -1,46 +1,121 @@
 import React, { Component } from 'react';
 import { ShopsService } from '../services';
 import Widget from '../components/widget';
+import Rater from 'react-rater';
 import $ from 'jquery';
+import './trendingSellers.css';
 
 class TrendingSellers extends Component {
   constructor(props) {
     super(props);
+    this.navigate = this.navigate.bind(this);
     this.state = {
       errorMessage: null,
-      shops: []
+      isLoading: false,
+      shops: [],
+      navigation: []
     };
+  }
+  // Navigate
+  navigate(e, name) {
+    e.preventDefault();
+    var startIndex = name - 1;
+    var request = $.extend({}, this.request, {
+      start_index: startIndex
+    });
+    this.display(request);
   }
   // Refresh the view
   refresh(json) {
-    var self = this;
-    var rec = $.extend({}, json, {
+    var request = $.extend({}, json, {
       orders: [
-        { target: "nb_comments", method: "desc" }
-      ]
+        { target: "total_score", method: "desc" }
+      ],
+      count: 5
     });
+    this.request = request;
+    this.display(request);
+  }
+  // Display the list
+  display(request) {
+    var self = this;
+    self.setState({
+      isLoading: true
+    });
+    ShopsService.search(request).then(function(r) {
+      var shops = r['_embedded'],
+        navigation = r['_links']['navigation'];
+      if (!(shops instanceof Array))
+      {
+        shops = [shops];
+      }
 
-    ShopsService.search(rec).then(function(r) {
+      if (!(navigation instanceof Array)) {
+        navigation = [navigation];
+      }
+
       self.setState({
-        shops: r['_embedded']
+        shops: shops,
+        navigation: navigation,
+        isLoading: false
       });
     }).catch(function() {
       self.setState({
-        shops: []
+        shops: [],
+        navigation: [],
+        isLoading: false
       });
     });
   }
   // Render the view
   render() {
-    var content = [];
+    var content = [],
+      navigations = [],
+      self = this,
+      title = "Trending shops";
+    if (this.state.isLoading) {
+      return (
+        <Widget title={title}>
+          <i className='fa fa-spinner fa-spin'></i>
+        </Widget>);
+    }
     if (this.state.shops && this.state.shops.length > 0) {
       this.state.shops.forEach(function(shop) {
-        content.push((<a href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding">{shop.name}</a>));
+        var profileImage = shop.profile_image;
+        if (!profileImage) {
+          profileImage = "/images/profile-picture.png";
+        }
+
+        content.push((
+          <a href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding">
+            <div className="d-flex w-100">
+              <img src={profileImage} className="img-thumbnail rounded float-left shop-picture" />
+              <div className="d-flex flex-column">
+                <div className="mb-1">{shop.name}</div>
+                <p className="mb-1">
+                  <Rater total={5} rating={shop.average_score} interactive={false} /><i>Comments : {shop.nb_comments}</i>
+                </p>
+              </div>
+            </div>
+          </a>));
+      });
+    }
+
+    if (this.state.navigation && this.state.navigation.length > 0) {
+      this.state.navigation.forEach(function(nav) {
+        navigations.push((
+          <li className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigate(e, nav.name); }} >{nav.name}</a></li>
+        ));
       });
     }
 
     return (
-      <Widget title="Trending sellers">
+      <Widget title={title}>
+        {navigations.length > 0 && (
+            <ul className="pagination">
+              {navigations}
+            </ul>
+        )}
         {content.length == 0
           ? (<span>No shops</span>) :
           (<ul className="list-group list-group-flush">

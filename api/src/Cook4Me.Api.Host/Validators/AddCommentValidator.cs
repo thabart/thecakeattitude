@@ -33,9 +33,10 @@ namespace Cook4Me.Api.Host.Validators
 
     public class AddCommentValidationResult
     {
-        public AddCommentValidationResult()
+        public AddCommentValidationResult(Shop shop)
         {
             IsValid = true;
+            Shop = shop;
         }
 
         public AddCommentValidationResult(string message)
@@ -46,6 +47,7 @@ namespace Cook4Me.Api.Host.Validators
 
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
+        public Shop Shop { get; private set; }
     }
 
     internal class AddCommentValidator : IAddCommentValidator
@@ -66,10 +68,11 @@ namespace Cook4Me.Api.Host.Validators
                 throw new ArgumentNullException(nameof(comment));
             }
 
+            Shop shop = null;
             // Check shop exists && 1 comment.
             if (!string.IsNullOrWhiteSpace(comment.ShopId))
             {
-                var shop = await _shopRepository.Get(comment.ShopId);
+                shop = await _shopRepository.Get(comment.ShopId);
                 if (shop == null)
                 {
                     return new AddCommentValidationResult(ErrorDescriptions.TheShopDoesntExist);
@@ -98,7 +101,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddCommentValidationResult(ErrorDescriptions.TheScoreMustBeBetween);
             }
 
-            return new AddCommentValidationResult();
+            return new AddCommentValidationResult(shop);
         }
     }
 }

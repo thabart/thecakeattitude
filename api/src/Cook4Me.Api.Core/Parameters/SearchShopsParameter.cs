@@ -26,11 +26,21 @@ namespace Cook4Me.Api.Core.Parameters
 
     public class SearchShopsParameter
     {
+        public SearchShopsParameter()
+        {
+            IsPagingEnabled = true;
+            StartIndex = 0;
+            Count = 100;
+        }
+
         public string PlaceId { get; set; }
         public string CategoryId { get; set; }
         public string Subject { get; set; }
         public Location NorthEast { get; set; }
         public Location SouthWest { get; set; }
         public IEnumerable<OrderBy> OrderBy { get; set; }
+        public int StartIndex { get; set; }
+        public int Count { get; set; }
+        public bool IsPagingEnabled { get; set; }
     }
 }

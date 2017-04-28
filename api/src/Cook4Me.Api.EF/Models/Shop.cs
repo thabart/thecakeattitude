@@ -41,6 +41,8 @@ namespace Cook4Me.Api.EF.Models
         public float Latitude { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
+        public int TotalScore { get; set; }
+        public double AverageScore { get; set; }
         public virtual Category Category { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<ShopTag> ShopTags { get; set; }

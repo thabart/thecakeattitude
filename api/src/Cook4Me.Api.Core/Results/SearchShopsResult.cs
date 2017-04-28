@@ -15,14 +15,14 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Results
 {
-    public interface IUserRepository
+    public class SearchShopsResult
     {
-        Task<User> Get(string id);
-        Task<bool> Add(User user);
-        Task<bool> Update(User user);
+        public int TotalResults { get; set; }
+        public int StartIndex { get; set; }
+        public IEnumerable<Shop> Content { get; set; }
     }
 }

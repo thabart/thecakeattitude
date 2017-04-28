@@ -16,18 +16,15 @@
 
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Host.Extensions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
-        User GetUser(JObject jObj);
         Shop GetAddShop(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
@@ -95,27 +92,6 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
-        public User GetUser(JObject jObj)
-        {
-            if (jObj == null)
-            {
-                throw new ArgumentNullException(nameof(jObj));
-            }
-
-            var result = new User
-            {
-                Pseudo = jObj.TryGetString(Constants.DtoNames.User.Pseudo),
-                StreetAddress = jObj.TryGetString(Constants.DtoNames.User.StreetAddress),
-                StreetNumber = jObj.TryGetString(Constants.DtoNames.User.StreetNumber),
-                PostalCode = jObj.TryGetString(Constants.DtoNames.User.PostalCode),
-                City = jObj.TryGetString(Constants.DtoNames.User.City),
-                Email = jObj.TryGetString(Constants.DtoNames.User.Email),
-                PhoneNumber = jObj.TryGetString(Constants.DtoNames.User.PhoneNumber),
-                IsSeller = jObj.TryGetBoolean(Constants.DtoNames.User.IsSeller)
-            };
-            return result;
-        }
-
         public SearchShopsParameter GetSearchShops(JObject jObj)
         {
             if (jObj == null)
@@ -154,8 +130,15 @@ namespace Cook4Me.Api.Host.Builders
                 Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject),
                 NorthEast = northEastLocation,
                 SouthWest = southWestLocation,
-                OrderBy = orderBy
+                OrderBy = orderBy,
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
             };
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
             return result;
         }
 

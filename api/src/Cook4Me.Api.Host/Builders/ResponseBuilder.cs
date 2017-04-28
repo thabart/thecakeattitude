@@ -26,7 +26,6 @@ namespace Cook4Me.Api.Host.Builders
     {
         JObject GetShop(Shop shop);
         JObject GetError(string errorCode, string errorDescription);
-        JObject GetUser(User user);
         JObject GetCategory(Category category);
         JObject GetMap(Map map);
         JObject GetTag(Tag tag);
@@ -95,10 +94,8 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime); // Other informations
             result.Add(Constants.DtoNames.Shop.UpdateDateTime, shop.UpdateDateTime);
             result.Add(Constants.DtoNames.Shop.NbComments, shop.NbComments);
-            if (shop.AverageScore != null)
-            {
-                result.Add(Constants.DtoNames.Shop.AverageScore, shop.AverageScore);
-            }
+            result.Add(Constants.DtoNames.Shop.AverageScore, shop.AverageScore);
+            result.Add(Constants.DtoNames.Shop.TotalScore, shop.TotalScore);
 
             return result;
         }
@@ -118,25 +115,6 @@ namespace Cook4Me.Api.Host.Builders
             var result = new JObject();
             result.Add(Constants.DtoNames.Error.Code, errorCode);
             result.Add(Constants.DtoNames.Error.Description, errorDescription);
-            return result;
-        }
-
-        public JObject GetUser(User user)
-        {
-            if (user == null)
-            {
-                throw new ArgumentNullException(nameof(user));
-            }
-
-            var result = new JObject();
-            result.Add(Constants.DtoNames.User.City, user.City);
-            result.Add(Constants.DtoNames.User.Email, user.Email);
-            result.Add(Constants.DtoNames.User.IsSeller, user.IsSeller);
-            result.Add(Constants.DtoNames.User.PhoneNumber, user.PhoneNumber);
-            result.Add(Constants.DtoNames.User.PostalCode, user.PostalCode);
-            result.Add(Constants.DtoNames.User.Pseudo, user.Pseudo);
-            result.Add(Constants.DtoNames.User.StreetAddress, user.StreetAddress);
-            result.Add(Constants.DtoNames.User.StreetNumber, user.StreetNumber);
             return result;
         }
 

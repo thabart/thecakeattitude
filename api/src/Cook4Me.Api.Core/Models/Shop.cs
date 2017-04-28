@@ -38,8 +38,6 @@ namespace Cook4Me.Api.Core.Models
         public string GooglePlaceId { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
-        public double? AverageScore { get; set; }
-        public double NbComments { get; set; }
         public IEnumerable<PaymentMethod> Payments { get; set; }
         public string ShopRelativePath { get; set; }
         public string UndergroundRelativePath { get; set; }
@@ -47,5 +45,22 @@ namespace Cook4Me.Api.Core.Models
         public Map Map { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
+        public int TotalScore { get; set; }
+        public double AverageScore { get; set; }
+        public double NbComments { get; set; }
+        public void AddComment(Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            TotalScore += comment.Score;
+            NbComments++;
+            if (NbComments != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)NbComments), 3);
+            }
+        }
     }
 }

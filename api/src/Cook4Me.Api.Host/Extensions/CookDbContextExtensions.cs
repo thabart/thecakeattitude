@@ -136,7 +136,9 @@ namespace Cook4Me.Api.Host.Extensions
                         PlaceId = "place3",
                         GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
                         Longitude = 4.3630615F,
-                        Latitude = 50.8939195F
+                        Latitude = 50.8939195F,
+                        TotalScore = 16,
+                        AverageScore = 3.2
                     },
                     new Shop
                     {
@@ -153,7 +155,9 @@ namespace Cook4Me.Api.Host.Extensions
                         PlaceId = "place4",
                         GooglePlaceId = "EjVBdmVudWUgZGVzIENyb2l4IGR1IEZldSAyMjgsIDEwMjAgQnJ1eGVsbGVzLCBCZWxnaXF1ZQ",
                         Longitude = 4.3677565F,
-                        Latitude = 50.8919259F
+                        Latitude = 50.8919259F,
+                        TotalScore = 4,
+                        AverageScore = 4
                     }
                 });
             }

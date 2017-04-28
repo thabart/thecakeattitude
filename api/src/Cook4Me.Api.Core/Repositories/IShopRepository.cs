@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Results;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,6 +27,7 @@ namespace Cook4Me.Api.Core.Repositories
         Task<bool> Add(Shop shop);
         Task<IEnumerable<Shop>> Get();
         Task<Shop> Get(string id);
-        Task<IEnumerable<Shop>> Search(SearchShopsParameter parameter);
+        Task<SearchShopsResult> Search(SearchShopsParameter parameter);
+        Task<bool> Update(Shop shop);
     }
 }
