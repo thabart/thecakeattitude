@@ -25,7 +25,8 @@ namespace Cook4Me.Api.Host.Extensions
     {
         private static string _shoesCategoryId = Guid.NewGuid().ToString();
         private static string _bakeryCategoryId = Guid.NewGuid().ToString();
-        private static string _shopId = Guid.NewGuid().ToString();
+        private static string _firstShopId = Guid.NewGuid().ToString();
+        private static string _secondShopId = Guid.NewGuid().ToString();
 
         public static void EnsureSeedData(this CookDbContext context)
         {
@@ -37,7 +38,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertCategories(context);
             InsertTags(context);
             InsertShops(context);
-            // InsertComments(context);
+            InsertComments(context);
             context.SaveChanges();
         }
 
@@ -122,20 +123,37 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     new Shop
                     {
-                        Id = _shopId,
+                        Id = _firstShopId,
                         Subject = "administrator",
                         Name = "shop",
-                        Description = "description",
+                        Description = "description 1",
                         CategoryId = _shoesCategoryId,
                         MapName = "first_shoes_map",
-                        StreetAddress = "street adr",
-                        PostalCode = "postal code",
-                        Locality = "locality",
-                        Country = "country",
+                        StreetAddress = "street adr 1",
+                        PostalCode = "postal code 1",
+                        Locality = "locality 1",
+                        Country = "country 1",
                         PlaceId = "place3",
                         GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
                         Longitude = 4.3630615F,
                         Latitude = 50.8939195F
+                    },
+                    new Shop
+                    {
+                        Id = _secondShopId,
+                        Subject = "laetitia",
+                        Name = "shop",
+                        Description = "description 2",
+                        CategoryId = _shoesCategoryId,
+                        MapName = "first_shoes_map",
+                        StreetAddress = "street adr 2",
+                        PostalCode = "postal code 2",
+                        Locality = "locality 2",
+                        Country = "country 2",
+                        PlaceId = "place4",
+                        GooglePlaceId = "EjVBdmVudWUgZGVzIENyb2l4IGR1IEZldSAyMjgsIDEwMjAgQnJ1eGVsbGVzLCBCZWxnaXF1ZQ",
+                        Longitude = 4.3677565F,
+                        Latitude = 50.8919259F
                     }
                 });
             }
@@ -149,7 +167,7 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
                     Id = Guid.NewGuid().ToString(),
-                    ShopId = _shopId,
+                    ShopId = _firstShopId,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "administrator",
@@ -159,7 +177,7 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     Content = "comment2comment2comment2comment2comment2comment2comment2comment2comment2comment2comment2",
                     Id = Guid.NewGuid().ToString(),
-                    ShopId = _shopId,
+                    ShopId = _firstShopId,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "administrator",
@@ -169,7 +187,7 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     Content = "comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3comment3",
                     Id = Guid.NewGuid().ToString(),
-                    ShopId = _shopId,
+                    ShopId = _firstShopId,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "administrator",
@@ -179,7 +197,7 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     Content = "comment4     comment4comment4comment4comment4comment4comment4comment4",
                     Id = Guid.NewGuid().ToString(),
-                    ShopId = _shopId,
+                    ShopId = _firstShopId,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "laetitia",
@@ -189,7 +207,17 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     Content = "comment5",
                     Id = Guid.NewGuid().ToString(),
-                    ShopId = _shopId,
+                    ShopId = _firstShopId,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    Subject = "laetitia",
+                    Score = 4
+                },
+                new Comment
+                {
+                    Content = "comment1",
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _secondShopId,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "laetitia",

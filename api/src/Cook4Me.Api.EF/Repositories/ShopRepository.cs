@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Cook4Me.Api.Core.Parameters;
+using System.Linq.Expressions;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -120,7 +121,8 @@ namespace Cook4Me.Api.EF.Repositories
 
             IQueryable<Models.Shop> shops = _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
-                .Include(c => c.ShopTags);
+                .Include(c => c.ShopTags)
+                .Include(c => c.Comments);
             if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
             {
                 shops = shops.Where(s => s.CategoryId == parameter.CategoryId);
@@ -141,7 +143,47 @@ namespace Cook4Me.Api.EF.Repositories
                 shops = shops.Where(s => s.Latitude >= parameter.SouthWest.Latitude && s.Latitude <= parameter.NorthEast.Latitude && s.Longitude >= parameter.SouthWest.Longitude && s.Longitude <= parameter.NorthEast.Longitude);
             }
 
-            return await shops.Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
+            if (parameter.OrderBy != null)
+            {
+                foreach(var orderBy in parameter.OrderBy)
+                {
+                    shops = Order(orderBy, "update_datetime", s => s.UpdateDateTime, shops);
+                    shops = Order(orderBy, "create_datetime", s => s.UpdateDateTime, shops);
+                    shops = Order(orderBy, "nb_comments", s => s.Comments.Count(), shops);
+                }
+            }
+
+            var result = await shops.Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
+            if (parameter.OrderBy != null)
+            {
+                var averageScore = parameter.OrderBy.FirstOrDefault(o => string.Equals(o.Target, "average_score", StringComparison.CurrentCultureIgnoreCase));
+                if (averageScore != null)
+                {
+                    if (averageScore.Method == OrderByMethods.Ascending)
+                    {
+                        return result.OrderBy(s => s.AverageScore);
+                    }
+
+                    return result.OrderByDescending(s => s.AverageScore);
+                }
+            }
+
+            return result;
+        }
+
+        private static IQueryable<Models.Shop> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Shop, TKey>> keySelector, IQueryable<Models.Shop> shops)
+        {
+            if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (orderBy.Method == OrderByMethods.Ascending)
+                {
+                   return shops.OrderBy(keySelector);
+                }
+
+                return  shops.OrderByDescending(keySelector);
+            }
+
+            return shops;
         }
     }
 }

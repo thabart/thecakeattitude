@@ -14,23 +14,22 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
 namespace Cook4Me.Api.Core.Parameters
 {
-    public class Location
+    public enum OrderByMethods
     {
-        public float Latitude { get; set; }
-        public float Longitude { get; set; }
+        Ascending,
+        Descending
     }
 
-    public class SearchShopsParameter
+    public class OrderBy
     {
-        public string PlaceId { get; set; }
-        public string CategoryId { get; set; }
-        public string Subject { get; set; }
-        public Location NorthEast { get; set; }
-        public Location SouthWest { get; set; }
-        public IEnumerable<OrderBy> OrderBy { get; set; }
+        public OrderBy()
+        {
+            Method = OrderByMethods.Ascending;
+        }
+
+        public string Target { get; set; }
+        public OrderByMethods Method { get; set; }
     }
 }

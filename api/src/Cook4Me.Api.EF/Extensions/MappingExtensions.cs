@@ -26,6 +26,7 @@ namespace Cook4Me.Api.EF.Extensions
     {
         public static Domain.Shop ToDomain(this Shop shop)
         {
+            double? averageScore = null;
             if (shop == null)
             {
                 throw new ArgumentNullException(nameof(shop));
@@ -55,6 +56,17 @@ namespace Cook4Me.Api.EF.Extensions
                 map = shop.Map.ToDomain();
             }
 
+            if (shop.Comments != null && shop.Comments.Any())
+            {
+                averageScore = (double)shop.Comments.Sum(c => c.Score) / (double)shop.Comments.Count();
+            }
+
+            var nbComments = 0;
+            if (shop.Comments != null)
+            {
+                nbComments = shop.Comments.Count();
+            }
+
             return new Domain.Shop
             {
                 Id = shop.Id,
@@ -80,7 +92,9 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = shop.UpdateDateTime,
                 GooglePlaceId = shop.GooglePlaceId,
                 Latitude = shop.Latitude,
-                Longitude = shop.Longitude
+                Longitude = shop.Longitude,
+                AverageScore = averageScore,
+                NbComments = nbComments
             };
         }
 

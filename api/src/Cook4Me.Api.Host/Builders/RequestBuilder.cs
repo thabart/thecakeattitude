@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Host.Builders
         Comment GetComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(IQueryCollection query);
+        OrderBy GetOrderBy(JObject jObj);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -131,6 +132,20 @@ namespace Cook4Me.Api.Host.Builders
                 northEastLocation = GetLocation(neLocation as JObject);
                 southWestLocation = GetLocation(swLocation as JObject);
             }
+            
+            var orderBy = new List<OrderBy>();
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchShop.Orders);
+            if (ordersObj != null)
+            {
+                var orders = ordersObj as JArray;
+                if (orders != null)
+                {
+                    foreach (var order in orders)
+                    {
+                        orderBy.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
 
             var result = new SearchShopsParameter
             {
@@ -138,7 +153,8 @@ namespace Cook4Me.Api.Host.Builders
                 PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place),
                 Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject),
                 NorthEast = northEastLocation,
-                SouthWest = southWestLocation
+                SouthWest = southWestLocation,
+                OrderBy = orderBy
             };
             return result;
         }
@@ -254,6 +270,27 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             return result;
+        }
+
+        public OrderBy GetOrderBy(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var method = OrderByMethods.Ascending;
+            var orderByMethod = jObj.Value<string>(Constants.DtoNames.OrderBy.Method);
+            if (string.Equals(orderByMethod, "desc", StringComparison.CurrentCultureIgnoreCase))
+            {
+                method = OrderByMethods.Descending;
+            }
+
+            return new OrderBy
+            {
+                Target = jObj.Value<string>(Constants.DtoNames.OrderBy.Target),
+                Method = method
+            };
         }
 
         private static void TrySetStr(Action<string> setParameterCallback, string key, string value, IQueryCollection query)

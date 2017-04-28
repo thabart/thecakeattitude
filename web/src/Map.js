@@ -70,6 +70,7 @@ class Map extends Component {
       shops: []
     };
   }
+  // Call when the google map is initialized
   onMapLoad(map) {
     var self = this;
     self._googleMap = map;
@@ -85,11 +86,54 @@ class Map extends Component {
       self.refreshMap();
     }, 1000);
   }
+  // Drag start
   onDragStart() {
     this.setState({
       isDragging: true
     });
   }
+  // Drag end
+  onDragEnd() {
+    this.setState({
+      isDragging: false
+    });
+    this.refreshMap();
+  }
+  // Zoom on map
+  onZoomChanged() {
+    this.refreshMap();
+  }
+  // Click on marker
+  onMarkerClick(marker) {
+    this.setState({
+      shops: this.state.shops.map(shop => {
+        if (shop === marker) {
+          return {
+            ...marker,
+            showInfo: true
+          };
+        }
+
+        return marker;
+      })
+    });
+  }
+  // Close the marker
+  onCloseClick(marker) {
+    this.setState({
+      shops: this.state.shops.map(shop => {
+        if (shop === marker) {
+          return {
+            ...marker,
+            showInfo: false
+          };
+        }
+
+        return marker;
+      })
+    });
+  }
+  // Refresh the map
   refreshMap() {
     var self = this;
     var bounds = self._googleMap.getBounds();
@@ -114,6 +158,7 @@ class Map extends Component {
       ne: northEast,
       sw: southWest
     };
+    self.refs.trendingSellers.refresh(json);
     ShopsService.search(json).then(function(r) {
       var embedded = r['_embedded'];
       if (!(embedded instanceof Array)) {
@@ -134,43 +179,7 @@ class Map extends Component {
       });
     });
   }
-  onDragEnd() {
-    this.setState({
-      isDragging: false
-    });
-    this.refreshMap();
-  }
-  onZoomChanged() {
-    this.refreshMap();
-  }
-  onMarkerClick(marker) {
-    this.setState({
-      shops: this.state.shops.map(shop => {
-        if (shop === marker) {
-          return {
-            ...marker,
-            showInfo: true
-          };
-        }
-
-        return marker;
-      })
-    });
-  }
-  onCloseClick(marker) {
-    this.setState({
-      shops: this.state.shops.map(shop => {
-        if (shop === marker) {
-          return {
-            ...marker,
-            showInfo: false
-          };
-        }
-
-        return marker;
-      })
-    });
-  }
+  // Render the view
   render() {
     var cl = "row";
     if (this.state.isSearching) {
@@ -209,7 +218,7 @@ class Map extends Component {
           <div className="col-md-6">
             <ul className="row list-unstyled" ref={(elt) => {this.widgetContainer = elt; }}>
               <li className="col-md-5 cell widget">
-                <TrendingSellers />
+                <TrendingSellers ref="trendingSellers"/>
               </li>
               <li className="col-md-5 cell widget">
                 <BestDeals />

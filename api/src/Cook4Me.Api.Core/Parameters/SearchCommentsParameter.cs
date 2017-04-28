@@ -22,11 +22,13 @@ namespace Cook4Me.Api.Core.Parameters
         {
             StartIndex = 0;
             Count = 100;
+            IsPagingEnabled = true;
         }
 
         public string ShopId { get; set; }
         public string Subject { get; set; }
         public int StartIndex { get; set; }
         public int Count { get; set; }
+        public bool IsPagingEnabled { get; set; }
     }
 }

@@ -94,6 +94,12 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
             result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime); // Other informations
             result.Add(Constants.DtoNames.Shop.UpdateDateTime, shop.UpdateDateTime);
+            result.Add(Constants.DtoNames.Shop.NbComments, shop.NbComments);
+            if (shop.AverageScore != null)
+            {
+                result.Add(Constants.DtoNames.Shop.AverageScore, shop.AverageScore);
+            }
+
             return result;
         }
 

@@ -80,7 +80,7 @@ namespace Cook4Me.Api.EF.Repositories
             IQueryable<Models.Comment> comments = _context.Comments;
             if (!string.IsNullOrWhiteSpace(parameter.ShopId))
             {
-                comments = comments.Where(c => c.ShopId == parameter.ShopId);
+                comments = comments.Where(c => parameter.ShopId == c.ShopId);
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.Subject))
@@ -95,8 +95,12 @@ namespace Cook4Me.Api.EF.Repositories
             };
 
             comments = comments
-                .OrderByDescending(c => c.UpdateDateTime)
-                .Skip(parameter.StartIndex).Take(parameter.Count);
+                .OrderByDescending(c => c.UpdateDateTime);
+            if (parameter.IsPagingEnabled)
+            {
+                comments = comments.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+                
             result.Content = await comments.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
             return result;
         }

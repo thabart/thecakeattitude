@@ -70,6 +70,8 @@ namespace Cook4Me.Api.Host
                 // Other information
                 public const string CreateDateTime = "create_datetime";
                 public const string UpdateDateTime = "update_datetime";
+                public const string AverageScore = "average_score";
+                public const string NbComments = "nb_comments";
             }
 
             public static class Paginate
@@ -157,6 +159,13 @@ namespace Cook4Me.Api.Host
                 public const string Subject = "subject";
                 public const string NorthEast = "ne";
                 public const string SouthWest = "sw";
+                public const string Orders = "orders";
+            }
+
+            public static class OrderBy
+            {
+                public const string Target = "target";
+                public const string Method = "method";
             }
 
             public static class Error
