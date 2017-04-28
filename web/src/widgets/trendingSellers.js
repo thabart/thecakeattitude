@@ -91,8 +91,7 @@ class TrendingSellers extends Component {
         if (!profileImage) {
           profileImage = "/images/profile-picture.png";
         }
-
-        console.log(shop.average_score);
+        
         content.push((
           <a href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding" onClick={(e) => { self.navigateShop(e, shop.id); }}>
             <div className="d-flex w-100">
