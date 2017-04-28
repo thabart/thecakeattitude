@@ -27,6 +27,8 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _bakeryCategoryId = Guid.NewGuid().ToString();
         private static string _firstShopId = Guid.NewGuid().ToString();
         private static string _secondShopId = Guid.NewGuid().ToString();
+        private static string _ecoTagName = "eco";
+        private static string _secondHandTagName = "second hand";
 
         public static void EnsureSeedData(this CookDbContext context)
         {
@@ -39,6 +41,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertTags(context);
             InsertShops(context);
             InsertComments(context);
+            InsertShopTags(context);
             context.SaveChanges();
         }
 
@@ -103,12 +106,12 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     new Tag
                     {
-                        Name = "eco",
+                        Name = _ecoTagName,
                         Description = "ecologique"
                     },
                     new Tag
                     {
-                        Name = "second hand",
+                        Name = _secondHandTagName,
                         Description = "second hand"
                     }
                 });
@@ -125,7 +128,7 @@ namespace Cook4Me.Api.Host.Extensions
                     {
                         Id = _firstShopId,
                         Subject = "administrator",
-                        Name = "shop",
+                        Name = "shop 1",
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
                         MapName = "first_shoes_map",
@@ -144,7 +147,7 @@ namespace Cook4Me.Api.Host.Extensions
                     {
                         Id = _secondShopId,
                         Subject = "laetitia",
-                        Name = "shop",
+                        Name = "shop 2",
                         Description = "description 2",
                         CategoryId = _shoesCategoryId,
                         MapName = "first_shoes_map",
@@ -226,6 +229,31 @@ namespace Cook4Me.Api.Host.Extensions
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "laetitia",
                     Score = 4
+                }
+            });
+        }
+
+        private static void InsertShopTags(CookDbContext context)
+        {
+            context.ShopTags.AddRange(new[]
+            {
+                new ShopTag
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _firstShopId,
+                    TagName = _ecoTagName
+                },
+                new ShopTag
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _firstShopId,
+                    TagName = _secondHandTagName
+                },
+                new ShopTag
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _secondShopId,
+                    TagName = _ecoTagName
                 }
             });
         }

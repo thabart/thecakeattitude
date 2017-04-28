@@ -9,6 +9,7 @@ class TrendingSellers extends Component {
   constructor(props) {
     super(props);
     this.navigate = this.navigate.bind(this);
+    this.navigateShop = this.navigateShop.bind(this);
     this.state = {
       errorMessage: null,
       isLoading: false,
@@ -16,7 +17,7 @@ class TrendingSellers extends Component {
       navigation: []
     };
   }
-  // Navigate
+  // Navigate through the pages
   navigate(e, name) {
     e.preventDefault();
     var startIndex = name - 1;
@@ -24,6 +25,11 @@ class TrendingSellers extends Component {
       start_index: startIndex
     });
     this.display(request);
+  }
+  // Navigate to the shop
+  navigateShop(e, shopId) {
+    e.preventDefault();
+    this.props.history.push('/shops/'+shopId);
   }
   // Refresh the view
   refresh(json) {
@@ -86,8 +92,9 @@ class TrendingSellers extends Component {
           profileImage = "/images/profile-picture.png";
         }
 
+        console.log(shop.average_score);
         content.push((
-          <a href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding">
+          <a href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding" onClick={(e) => { self.navigateShop(e, shop.id); }}>
             <div className="d-flex w-100">
               <img src={profileImage} className="img-thumbnail rounded float-left shop-picture" />
               <div className="d-flex flex-column">

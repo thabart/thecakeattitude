@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import TrendingSellers from './widgets/trendingSellers';
+import { withRouter } from 'react-router';
 import BestDeals from './widgets/bestDeals';
 import { ShopsService } from './services';
 import PublicAnnouncements from './widgets/publicAnnouncements';
@@ -218,7 +219,7 @@ class Map extends Component {
           <div className="col-md-6">
             <ul className="row list-unstyled" ref={(elt) => {this.widgetContainer = elt; }}>
               <li className="col-md-5 cell widget">
-                <TrendingSellers ref="trendingSellers"/>
+                <TrendingSellers ref="trendingSellers" history={this.props.history}/>
               </li>
               <li className="col-md-5 cell widget">
                 <BestDeals />
@@ -258,4 +259,5 @@ class Map extends Component {
   }
 }
 
-export default Map;
+
+export default withRouter(Map);

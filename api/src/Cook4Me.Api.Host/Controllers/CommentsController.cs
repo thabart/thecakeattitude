@@ -20,7 +20,6 @@ using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -31,16 +30,21 @@ namespace Cook4Me.Api.Host.Controllers
     public class CommentsController : Controller
     {
         private readonly ICommentRepository _repository;
+        private readonly IShopRepository _shopRepository;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
 
-        public CommentsController(ICommentRepository repository, IResponseBuilder responseBuilder, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder)
+        public CommentsController(
+            ICommentRepository repository, IResponseBuilder responseBuilder, 
+            IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder,
+            IShopRepository shopRepository)
         {
             _repository = repository;
             _responseBuilder = responseBuilder;
             _halResponseBuilder = halResponseBuilder;
             _requestBuilder = requestBuilder;
+            _shopRepository = shopRepository;
         }
 
         [HttpGet("{id}")]
@@ -101,6 +105,17 @@ namespace Cook4Me.Api.Host.Controllers
             if (comment == null)
             {
                 return new NotFoundResult();
+            }
+
+            var shop = await _shopRepository.Get(comment.ShopId);
+            if (shop != null)
+            {
+                shop.RemoveComment(comment);
+                if (!await _shopRepository.Update(shop))
+                {
+                    var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeUpdated);
+                    return this.BuildResponse(error, HttpStatusCode.BadRequest);
+                }
             }
 
             var subject = User.GetSubject();

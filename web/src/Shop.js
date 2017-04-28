@@ -23,7 +23,6 @@ class Shop extends Component {
       location: {},
       user: null,
       shop: null,
-      averageScore: null,
       scores: null,
       nbComments: 0,
       isRatingOpened: false,
@@ -84,10 +83,10 @@ class Shop extends Component {
       }
 
       self.setState({
-        averageScore: average,
         scores: scores,
         nbComments: nbComments
       });
+      self.refs.rater.onRate(average);
     });
   }
   // Render the component
@@ -104,6 +103,7 @@ class Shop extends Component {
     var profileImage = this.state.shop.profile_image;
     var action = this.props.match.params.action;
     var self = this;
+    var tags = [];
     var content = (<ShopProfile  user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} />);
     if (action === "products") {
       content = (<ShopProducts  user={this.state.user} shop={this.state.shop} />);
@@ -135,6 +135,12 @@ class Shop extends Component {
       }
     }
 
+    if (self.state.shop.tags && self.state.shop.tags.length > 0) {
+      self.state.shop.tags.forEach(function(tag) {
+        tags.push((<li>{tag}</li>));
+      });
+    }
+
     return (<div className="container">
       <section className="row white-section shop-section cover">
         <div className="cover-banner">
@@ -145,12 +151,17 @@ class Shop extends Component {
           <h1>{this.state.shop.name}</h1>
           { this.state.nbComments > 0 ? (
             <div>
-              <span id="rating"><Rater total={5} rating={this.state.averageScore} interactive={false} /> {this.state.nbComments} comments</span>
+              <span id="rating"><Rater total={5} ref="rater" interactive={false} /> {this.state.nbComments} comments</span>
               <Tooltip placement='bottom' className="ratingPopup" isOpen={this.state.isRatingOpened} target="rating" toggle={this.toggle}>
                 <ul>
                   {ratingSummary}
                 </ul>
               </Tooltip>
+              {tags.length > 0 && (
+                <ul className="shop-tags">
+                  {tags}
+                </ul>)
+              }
             </div>) : '' }
         </div>
         <ul className="nav nav-pills menu">

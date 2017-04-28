@@ -48,6 +48,7 @@ namespace Cook4Me.Api.Core.Models
         public int TotalScore { get; set; }
         public double AverageScore { get; set; }
         public double NbComments { get; set; }
+
         public void AddComment(Comment comment)
         {
             if (comment == null)
@@ -60,6 +61,24 @@ namespace Cook4Me.Api.Core.Models
             if (NbComments != 0)
             {
                 AverageScore = Math.Round(((double)TotalScore / (double)NbComments), 3);
+            }
+        }
+
+        public void RemoveComment(Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            TotalScore -= comment.Score;
+            NbComments--;
+            if (NbComments != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)NbComments), 3);
+            } else
+            {
+                AverageScore = 0;
             }
         }
     }
