@@ -4,7 +4,7 @@ import { Tooltip, Progress, Alert } from 'reactstrap';
 import { withRouter } from 'react-router';
 import { MAP } from 'react-google-maps/lib/constants';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
-import { ShopProfile, ShopProducts } from './shopProfile';
+import { ShopProfile, ShopProducts, ShopServices } from './shopProfile';
 import Promise from 'bluebird';
 import Rater from 'react-rater';
 import './Shop.css';
@@ -15,6 +15,7 @@ class Shop extends Component {
     super(props);
     this.navigateProfile = this.navigateProfile.bind(this);
     this.navigateShops = this.navigateShops.bind(this);
+    this.navigateServices = this.navigateServices.bind(this);
     this.toggle = this.toggle.bind(this);
     this.refreshScore = this.refreshScore.bind(this);
     this.toggleError = this.toggleError.bind(this);
@@ -44,6 +45,11 @@ class Shop extends Component {
   navigateShops(e) {
     e.preventDefault();
     this.props.history.push('/shops/' + this.state.shop.id + '/products');
+  }
+  // Navigate to the services.
+  navigateServices(e) {
+    e.preventDefault();
+    this.props.history.push('/shops/' + this.state.shop.id + '/services');
   }
   // Toggle score window
   toggle() {
@@ -107,6 +113,8 @@ class Shop extends Component {
     var content = (<ShopProfile  user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} />);
     if (action === "products") {
       content = (<ShopProducts  user={this.state.user} shop={this.state.shop} />);
+    } else if (action === "services") {
+      content = (<ShopServices user={this.state.user} shop={this.state.shop} /> );
     }
 
     if (!bannerImage) {
@@ -166,10 +174,13 @@ class Shop extends Component {
         </div>
         <ul className="nav nav-pills menu">
           <li className="nav-item">
-            <a href="#" className={action !== 'products' ? 'nav-link active' : 'nav-link'} onClick={(e) => { this.navigateProfile(e); }}>Profile</a>
+            <a href="#" className={action !== 'products' && action !== 'services' ? 'nav-link active' : 'nav-link'} onClick={(e) => { this.navigateProfile(e); }}>Profile</a>
           </li>
           <li className="nav-item">
             <a href="#" className={action === 'products' ? 'nav-link active' : 'nav-link'} onClick={(e) => { this.navigateShops(e); }}>Products</a>
+          </li>
+          <li className="nav-item">
+            <a href="#" className={action === 'services' ? 'nav-link active': 'nav-link' } onClick={(e) => {this.navigateServices(e); }}>Services</a>
           </li>
         </ul>
       </section>

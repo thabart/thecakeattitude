@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Slider, { Range } from 'rc-slider';
 import Rater from 'react-rater';
 import 'rc-slider/assets/index.css';
-import './product.css';
+import './products.css';
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -36,7 +36,10 @@ class ShopProducts extends Component {
               <div className="form-group">
                 <button className="btn btn-default">Search</button>
               </div>
-              <div className="form-group">
+              <div className="form-group filter">
+                <input type="checkbox" /> Best deals
+              </div>
+              <div className="form-group filter">
                 <label>Price</label>
                 <Range min={minPrice} max={maxPrice} defaultValue={[minPrice,maxPrice]} onChange={this.changePrice} />
                 <div className="row">
@@ -46,7 +49,7 @@ class ShopProducts extends Component {
                   <span className="col-md-4">Max €</span><input type="text" className="form-control  col-md-6" value={this.state.maxPrice}/>
                 </div>
               </div>
-              <div className="form-group">
+              <div className="form-group filter">
                 <label>Size</label>
                 <ul className="list-unstyled">
                   <li>
@@ -63,7 +66,7 @@ class ShopProducts extends Component {
                   </li>
                 </ul>
               </div>
-              <div className="form-group">
+              <div className="form-group filter">
                 <label>Colors</label>
                 <ul className="list-unstyled">
                   <li>
@@ -92,6 +95,9 @@ class ShopProducts extends Component {
                 <section className="row product-item">
                   <div className="col-md-3">
                     <img src="/images/jean.jpg" className="rounded" width="140" height="140"/>
+                    <div className="best-deals">
+                      <img src="/images/hot_deals.png" width="60" />
+                    </div>
                   </div>
                   <div className="col-md-5">
                     <h3>Jean</h3>
@@ -113,9 +119,12 @@ class ShopProducts extends Component {
                     <button className="btn btn-success">BUY</button>
                   </div>
                 </section>
-                <section className="row product-item">
+                <section className="row product-item is-best-deals">
                   <div className="col-md-3">
                     <img src="/images/jean.jpg" className="rounded" width="140" height="140"/>
+                    <div className="best-deals">
+                      <img src="/images/hot_deals.png" width="60" />
+                    </div>
                   </div>
                   <div className="col-md-5">
                     <h3>Jean</h3>

@@ -2,6 +2,15 @@
 		margin-top: 20px;
 }
 
+.product-item {
+  padding-top: 10px;
+  border-bottom: 1px solid #f1f0f0;
+}
+
+.price {
+  color: #FF6600;
+}
+
 ul.shop-tags {
 	list-style-type: none;
 	padding: 0;
