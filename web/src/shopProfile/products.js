@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import './product.css';
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -44,9 +45,50 @@ class ShopProducts extends Component {
                   <span className="col-md-4">Max €</span><input type="text" className="form-control  col-md-6" value={this.state.maxPrice}/>
                 </div>
               </div>
+              <div className="form-group">
+                <label>Size</label>
+                <ul className="list-unstyled">
+                  <li>
+                    <input type="checkbox" />
+                    <label>XXL</label>
+                  </li>
+                  <li>
+                    <input type="checkbox" />
+                    <label>XL</label>
+                  </li>
+                  <li>
+                    <input type="checkbox" />
+                    <label>L</label>
+                  </li>
+                </ul>
+              </div>
+              <div className="form-group">
+                <label>Colors</label>
+                <ul className="list-unstyled">
+                  <li>
+                    <input type="checkbox" />
+                    <label>Red</label>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div className="col-md-9">
-
+            <div className="col-md-8">
+              <ul className="nav nav-pills">
+                <li className="nav-item">
+                  <a className="nav-link" href="#">Women</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">Men</a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="#">Kids</a>
+                </li>
+              </ul>
+              <div>
+                <section>
+                  
+                </section>
+              </div>
             </div>
           </div>
         </section>
