@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Slider, { Range } from 'rc-slider';
+import Rater from 'react-rater';
 import 'rc-slider/assets/index.css';
 import './product.css';
 
@@ -75,6 +76,9 @@ class ShopProducts extends Component {
             <div className="col-md-8">
               <ul className="nav nav-pills">
                 <li className="nav-item">
+                  <a className="nav-link" href="#">All</a>
+                </li>
+                <li className="nav-item">
                   <a className="nav-link" href="#">Women</a>
                 </li>
                 <li className="nav-item">
@@ -85,8 +89,53 @@ class ShopProducts extends Component {
                 </li>
               </ul>
               <div>
-                <section>
-                  
+                <section className="row product-item">
+                  <div className="col-md-3">
+                    <img src="/images/jean.jpg" className="rounded" width="140" height="140"/>
+                  </div>
+                  <div className="col-md-5">
+                    <h3>Jean</h3>
+                    <Rater total={5} interactive={false} />
+                    <p>
+                      Description
+                    </p>
+                  </div>
+                  <div className="col-md-4">
+                    <h4 className="price">€ 223</h4>
+                    <ul>
+                      <li>
+                        Color red
+                      </li>
+                      <li>
+                        Size XXL
+                      </li>
+                    </ul>
+                    <button className="btn btn-success">BUY</button>
+                  </div>
+                </section>
+                <section className="row product-item">
+                  <div className="col-md-3">
+                    <img src="/images/jean.jpg" className="rounded" width="140" height="140"/>
+                  </div>
+                  <div className="col-md-5">
+                    <h3>Jean</h3>
+                    <Rater total={5} interactive={false} />
+                    <p>
+                      Description
+                    </p>
+                  </div>
+                  <div className="col-md-4">
+                    <h4 className="price">€ 223</h4>
+                    <ul className="">
+                      <li>
+                        Color red
+                      </li>
+                      <li>
+                        Size XXL
+                      </li>
+                    </ul>
+                    <button className="btn btn-success">BUY</button>
+                  </div>
                 </section>
               </div>
             </div>
