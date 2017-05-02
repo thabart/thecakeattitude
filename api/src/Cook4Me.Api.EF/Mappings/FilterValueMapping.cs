@@ -14,21 +14,25 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.EF.Mappings
 {
-    public class Comment
+    internal static class FilterValueMapping
     {
-        public string Id { get; set; }
-        public string Subject { get; set; }
-        public string Content { get; set; }
-        public int Score { get; set;}
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public string ShopId { get; set; }
-        public string ProductId { get; set; }
-        public virtual Shop Shop { get; set; }
-        public virtual Product Product { get; set; }
+        public static ModelBuilder AddFilterValue(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+            modelBuilder.Entity<FilterValue>()
+                .ToTable("filterValues")
+                .HasKey(s => s.Id);
+            return modelBuilder;
+        }
     }
 }

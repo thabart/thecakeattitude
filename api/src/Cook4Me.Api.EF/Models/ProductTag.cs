@@ -14,21 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System;
-
 namespace Cook4Me.Api.EF.Models
 {
-    public class Comment
+    public class ProductTag
     {
         public string Id { get; set; }
-        public string Subject { get; set; }
-        public string Content { get; set; }
-        public int Score { get; set;}
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public string ShopId { get; set; }
         public string ProductId { get; set; }
-        public virtual Shop Shop { get; set; }
+        public string TagName { get; set; }
         public virtual Product Product { get; set; }
+        public virtual Tag Tag { get; set; }
     }
 }

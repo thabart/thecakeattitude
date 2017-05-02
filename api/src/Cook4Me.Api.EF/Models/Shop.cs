@@ -49,5 +49,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual ICollection<PaymentMethod> PaymentMethods { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual Map Map { get; set; }
+        public virtual ICollection<Filter> Filters { get; set; }
     }
 }

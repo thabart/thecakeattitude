@@ -20,34 +20,26 @@ using System;
 
 namespace Cook4Me.Api.EF.Mappings
 {
-    internal static class ShopMapping
+    internal static class FilterMapping
     {
-        public static ModelBuilder AddShopMapping(this ModelBuilder modelBuilder)
+        public static ModelBuilder AddFilter(this ModelBuilder modelBuilder)
         {
             if (modelBuilder == null)
             {
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
 
-            modelBuilder.Entity<Shop>()
-                .ToTable("shops")
-                .HasKey(p => p.Id);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.ShopTags)
-                .WithOne(t => t.Shop)
-                .HasForeignKey(t => t.ShopId);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.PaymentMethods)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.Comments)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.Filters)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
+            modelBuilder.Entity<Filter>()
+                .ToTable("filters")
+                .HasKey(s => s.Id);
+            modelBuilder.Entity<Filter>()
+                .HasMany(s => s.Values)
+                .WithOne(s => s.Filter)
+                .HasForeignKey(s => s.FilterId);
+            modelBuilder.Entity<Filter>()
+                .HasMany(s => s.ProductFilters)
+                .WithOne(s => s.Filter)
+                .HasForeignKey(s => s.FilterId);
             return modelBuilder;
         }
     }

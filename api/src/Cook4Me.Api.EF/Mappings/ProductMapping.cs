@@ -20,34 +20,34 @@ using System;
 
 namespace Cook4Me.Api.EF.Mappings
 {
-    internal static class ShopMapping
+    internal static class ProductMapping
     {
-        public static ModelBuilder AddShopMapping(this ModelBuilder modelBuilder)
+        public static ModelBuilder AddProduct(this ModelBuilder modelBuilder)
         {
             if (modelBuilder == null)
             {
                 throw new ArgumentNullException(nameof(modelBuilder));
             }
 
-            modelBuilder.Entity<Shop>()
-                .ToTable("shops")
-                .HasKey(p => p.Id);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.ShopTags)
-                .WithOne(t => t.Shop)
-                .HasForeignKey(t => t.ShopId);
-            modelBuilder.Entity<Shop>()
-                .HasMany(s => s.PaymentMethods)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
-            modelBuilder.Entity<Shop>()
+            modelBuilder.Entity<Product>()
+                .ToTable("products")
+                .HasKey(s => s.Id);
+            modelBuilder.Entity<Product>()
+                .HasMany(s => s.Images)
+                .WithOne(s => s.Product)
+                .HasForeignKey(s => s.ProductId);
+            modelBuilder.Entity<Product>()
                 .HasMany(s => s.Comments)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
-            modelBuilder.Entity<Shop>()
+                .WithOne(s => s.Product)
+                .HasForeignKey(s => s.ProductId);
+            modelBuilder.Entity<Product>()
+                .HasMany(s => s.Tags)
+                .WithOne(s => s.Product)
+                .HasForeignKey(s => s.ProductId);
+            modelBuilder.Entity<Product>()
                 .HasMany(s => s.Filters)
-                .WithOne(s => s.Shop)
-                .HasForeignKey(s => s.ShopId);
+                .WithOne(s => s.Product)
+                .HasForeignKey(s => s.ProductId);
             return modelBuilder;
         }
     }

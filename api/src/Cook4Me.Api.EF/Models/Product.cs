@@ -15,20 +15,25 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.EF.Models
 {
-    public class Comment
+    public class Product
     {
         public string Id { get; set; }
-        public string Subject { get; set; }
-        public string Content { get; set; }
-        public int Score { get; set;}
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string CategoryId { get; set; }
+        public double Price { get; set; }
+        public string UnitOfMeasure { get; set; }
+        public double Quantity { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public string ShopId { get; set; }
-        public string ProductId { get; set; }
-        public virtual Shop Shop { get; set; }
-        public virtual Product Product { get; set; }
+        public virtual ProductCategory Category { get; set; }
+        public virtual ICollection<ProductImage> Images { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<ProductTag> Tags { get; set; }
+        public virtual ICollection<ProductFilter> Filters { get; set; }
     }
 }
