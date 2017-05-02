@@ -6,6 +6,8 @@ import { ProductsService } from '../services';
 import Constants from '../../Constants';
 import 'rc-slider/assets/index.css';
 import './products.css';
+import $ from 'jquery';
+import Promise from 'bluebird';
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -20,7 +22,8 @@ class ShopProducts extends Component {
       maxPrice : maxPrice,
       errorMessage: null,
       isLoading: false,
-      products : []
+      products : [],
+      filters: []
     };
   }
   // Toggle the error
@@ -46,7 +49,8 @@ class ShopProducts extends Component {
       return (<div><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>);
     }
 
-    var products = [];
+    var products = [],
+      filters = [];
     if (this.state.products) {
       this.state.products.forEach(function(product) {
         var imageUrl = "#"; // Set default url
@@ -78,6 +82,19 @@ class ShopProducts extends Component {
       });
     }
 
+    if (this.state.filters) {
+      this.state.filters.forEach(function(filter) {
+        var lst = [];
+        if (filter.values) {
+          filter.values.forEach(function(value) {
+            lst.push((<li><input type="checkbox" /><label>{value.name}</label></li>))
+          });
+        }
+
+        filters.push((<div className="form-group filter"><label>{filter.name}</label><ul className="list-unstyled">{lst}</ul></div>))
+      });
+    }
+
     return (<div>
         <section className="row white-section shop-section shop-section-padding">
           <div className="row col-md-12">
@@ -102,32 +119,7 @@ class ShopProducts extends Component {
                   <span className="col-md-4">Max €</span><input type="text" className="form-control  col-md-6" value={this.state.maxPrice}/>
                 </div>
               </div>
-              <div className="form-group filter">
-                <label>Size</label>
-                <ul className="list-unstyled">
-                  <li>
-                    <input type="checkbox" />
-                    <label>XXL</label>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <label>XL</label>
-                  </li>
-                  <li>
-                    <input type="checkbox" />
-                    <label>L</label>
-                  </li>
-                </ul>
-              </div>
-              <div className="form-group filter">
-                <label>Colors</label>
-                <ul className="list-unstyled">
-                  <li>
-                    <input type="checkbox" />
-                    <label>Red</label>
-                  </li>
-                </ul>
-              </div>
+              {filters}
             </div>
             <div className="col-md-8">
               <ul className="nav nav-pills">
@@ -156,20 +148,50 @@ class ShopProducts extends Component {
   componentWillMount() {
     var self = this;
     var shopId = this.props.shop.id;
+    var filters = this.props.shop['_links']['filters'];
     self.setState({
       isLoading: true
     });
-    ProductsService.search({shop_id : shopId}).then(function(products) {
-      var embedded = products['_embedded'];
-      if (!(embedded instanceof Array)) {
-        embedded = [embedded];
-      }
+    var promises = [];
+    if (filters && filters.length > 0) {
+      filters.forEach(function(filter) {
+        promises.push(
+            new Promise(function(resolve, reject) {
+              $.get(Constants.apiUrl + filter.href).then(function(r) {
+                resolve(r);
+              }).fail(function(e) {
+                reject(e);
+              });
+            })
+        )
+      });
+    }
+
+    promises.push( ProductsService.search({shop_id : shopId}) );
+    Promise.all(promises).then(function(result) {
+      var indice = 0,
+        filters = [],
+        products = [];
+      result.forEach(function(record) {
+        if (indice !== result.length - 1) {
+          filters.push(record['_embedded']);
+        }
+        else {
+          products = record['_embedded'];
+          if (!(products instanceof Array)) {
+            products = [products];
+          }
+        }
+
+        indice++;
+      });
 
       self.setState({
         isLoading: false,
-        products: embedded
+        products: products,
+        filters: filters
       });
-    }).catch(function() {
+    }).catch(function(e) {
       self.setState({
         isLoading: false,
         errorMessage: 'an error occured while trying to retrieve the products'

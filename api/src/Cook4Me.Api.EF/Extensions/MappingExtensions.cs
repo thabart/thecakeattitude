@@ -61,6 +61,13 @@ namespace Cook4Me.Api.EF.Extensions
                 nbComments = shop.Comments.Count();
             }
 
+            var filters = new List<Domain.Filter>();
+            if (shop.Filters != null)
+            {
+                filters = shop.Filters.Select(s => s.ToDomain()).ToList();
+            }
+
+
             return new Domain.Shop
             {
                 Id = shop.Id,
@@ -89,7 +96,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Longitude = shop.Longitude,
                 NbComments = nbComments,
                 TotalScore = shop.TotalScore,
-                AverageScore = shop.AverageScore
+                AverageScore = shop.AverageScore,
+                Filters = filters
             };
         }
 
@@ -372,6 +380,42 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopId = product.ShopId,
                 UnitOfMeasure = product.UnitOfMeasure,
                 Name = product.Name
+            };
+        }
+
+        public static Domain.Filter ToDomain(this Filter filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            var values = new List<Domain.FilterValue>();
+            if (filter.Values != null && filter.Values.Any())
+            {
+                values = filter.Values.Select(v => v.ToDomain()).ToList();
+            }
+
+            return new Domain.Filter
+            {
+                Id = filter.Id,
+                Name = filter.Name,
+                ShopId = filter.ShopId,
+                Values = values
+            };
+        }
+
+        public static Domain.FilterValue ToDomain(this FilterValue filterValue)
+        {
+            if (filterValue == null)
+            {
+                throw new ArgumentNullException(nameof(filterValue));
+            }
+
+            return new Domain.FilterValue
+            {
+                Id = filterValue.Id,
+                Name = filterValue.Content
             };
         }
     }

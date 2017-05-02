@@ -35,6 +35,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<ShopTag> ShopTags { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+        public virtual DbSet<Filter> Filters { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

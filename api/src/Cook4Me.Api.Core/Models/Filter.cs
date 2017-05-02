@@ -16,14 +16,19 @@
 
 using System.Collections.Generic;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Models
 {
+    public class FilterValue
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+    }
+
     public class Filter
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public string ShopId { get; set; }
-        public virtual ICollection<FilterValue> Values { get; set; }
-        public virtual Shop Shop { get; set; }
+        public IEnumerable<FilterValue> Values { get; set; }
     }
 }

@@ -15,6 +15,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.EF.Models
 {
@@ -26,5 +27,6 @@ namespace Cook4Me.Api.EF.Models
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public virtual Filter Filter { get; set; }
+        public virtual ICollection<ProductFilter> ProductFilters { get; set; }
     }
 }

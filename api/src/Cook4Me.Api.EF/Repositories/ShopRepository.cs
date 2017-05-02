@@ -93,6 +93,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
                 .Include(c => c.Comments)
+                .Include(c => c.Filters)
                 .Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
         }
 
@@ -106,7 +107,8 @@ namespace Cook4Me.Api.EF.Repositories
             var shop = await _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
-                .Include(c => c.Comments).FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
+                .Include(c => c.Comments)
+                .Include(c => c.Filters).FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
             if (shop == null)
             {
                 return null;
@@ -125,7 +127,8 @@ namespace Cook4Me.Api.EF.Repositories
             IQueryable<Models.Shop> shops = _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
-                .Include(c => c.Comments);
+                .Include(c => c.Comments)
+                .Include(c => c.Filters);
             if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
             {
                 shops = shops.Where(s => s.CategoryId == parameter.CategoryId);

@@ -32,6 +32,10 @@ namespace Cook4Me.Api.EF.Mappings
             modelBuilder.Entity<FilterValue>()
                 .ToTable("filterValues")
                 .HasKey(s => s.Id);
+            modelBuilder.Entity<FilterValue>()
+                .HasMany(s => s.ProductFilters)
+                .WithOne(s => s.FilterValue)
+                .HasForeignKey(s => s.FilterValueId);
             return modelBuilder;
         }
     }

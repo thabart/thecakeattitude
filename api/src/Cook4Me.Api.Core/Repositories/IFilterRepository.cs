@@ -14,16 +14,13 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Models;
+using System.Threading.Tasks;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Repositories
 {
-    public class Filter
+    public interface IFilterRepository
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string ShopId { get; set; }
-        public virtual ICollection<FilterValue> Values { get; set; }
-        public virtual Shop Shop { get; set; }
+        Task<Filter> Get(string id);
     }
 }

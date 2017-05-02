@@ -32,6 +32,8 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetComment(Comment comment);
         JObject GetRatingSummary(ShopRatingSummary summary);
         JObject GetProduct(Product product);
+        JObject GetFilter(Filter filter);
+        JObject GetFilterValue(FilterValue filterValue);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -228,6 +230,42 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.Product.Images, arr);
             }
 
+            return jObj;
+        }
+
+        public JObject GetFilter(Filter filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Filter.Id, filter.Id);
+            jObj.Add(Constants.DtoNames.Filter.Name, filter.Name);
+            var values = new JArray();
+            if (filter.Values != null && filter.Values.Any())
+            {
+                foreach(var value in filter.Values)
+                {
+                    values.Add(GetFilterValue(value));
+                }
+            }
+
+            jObj.Add(Constants.DtoNames.Filter.Values, values);
+            return jObj;
+        }
+
+        public JObject GetFilterValue(FilterValue filterValue)
+        {
+            if (filterValue == null)
+            {
+                throw new ArgumentNullException(nameof(filterValue));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.FilterValue.Id, filterValue.Id);
+            jObj.Add(Constants.DtoNames.FilterValue.Name, filterValue.Name);
             return jObj;
         }
     }

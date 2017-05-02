@@ -20,8 +20,8 @@ namespace Cook4Me.Api.EF.Models
     {
         public string Id { get; set; }
         public string ProductId { get; set; }
-        public string FilterId { get; set; }
+        public string FilterValueId { get; set; }
         public virtual Product Product { get; set; }
-        public virtual Filter Filter { get; set; }
+        public virtual FilterValue FilterValue { get; set; }
     }
 }

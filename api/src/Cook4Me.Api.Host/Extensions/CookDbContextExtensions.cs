@@ -31,6 +31,9 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _secondHandTagName = "second hand";
         private static string _womenProductCategory = Guid.NewGuid().ToString();
         private static string _jeanProductId = Guid.NewGuid().ToString();
+        private static string _colorFilterId = Guid.NewGuid().ToString();
+        private static string _redColorFilterId = Guid.NewGuid().ToString();
+        private static string _blueColorFilterId = Guid.NewGuid().ToString();
 
         public static void EnsureSeedData(this CookDbContext context)
         {
@@ -42,6 +45,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertCategories(context);
             InsertTags(context);
             InsertShops(context);
+            InsertFilters(context);
             InsertComments(context);
             InsertShopTags(context);
             InsertProductCategories(context);
@@ -168,6 +172,36 @@ namespace Cook4Me.Api.Host.Extensions
                     }
                 });
             }
+        }
+
+        private static void InsertFilters(CookDbContext context)
+        {
+            context.Filters.AddRange(new[]
+            {
+                new Filter
+                {
+                    Id = _colorFilterId,
+                    Name = "Colors",
+                    ShopId = _firstShopId,
+                    Values = new []
+                    {
+                        new FilterValue
+                        {
+                            Id = _redColorFilterId,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Content = "Red"
+                        },
+                        new FilterValue
+                        {
+                            Id = _blueColorFilterId,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Content = "Blue"
+                        }
+                    }
+                }
+            });
         }
 
         private static void InsertComments(CookDbContext context)
@@ -308,6 +342,14 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             TagName = _ecoTagName
+                        }
+                    },
+                    Filters = new []
+                    {
+                        new ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = _redColorFilterId
                         }
                     }
                 }

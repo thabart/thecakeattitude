@@ -275,8 +275,17 @@ namespace Cook4Me.Api.Host.Controllers
         private void AddShop(IHalResponseBuilder halResponseBuilder, IResponseBuilder responseBuilder, Shop shop)
         {
             _halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetShop(shop), 
-                (l) => l.AddOtherItem("category", new Dtos.Link("/" + Constants.RouteNames.Categories + "/" + shop.CategoryId, shop.Category.Name))
-                    .AddSelf(Constants.RouteNames.Shops + "/" + shop.Id)));
+                (l) =>
+                {
+                    l.AddOtherItem("category", new Dtos.Link("/" + Constants.RouteNames.Categories + "/" + shop.CategoryId, shop.Category.Name)).AddSelf(Constants.RouteNames.Shops + "/" + shop.Id);
+                    if (shop.Filters != null && shop.Filters.Any())
+                    {
+                        foreach(var filter in shop.Filters)
+                        {
+                            l.AddOtherItem("filters", new Dtos.Link("/" + Constants.RouteNames.Filers + "/" + filter.Id, filter.Name));
+                        }
+                    }
+                }));
         }
     }
 }

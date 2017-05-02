@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Host
             public const string Search = ".search";
             public const string Tags = "tags";
             public const string Comments = "comments";
+            public const string Filers = "filters";
             public const string Me = "me";
         }
 
@@ -124,6 +125,19 @@ namespace Cook4Me.Api.Host
             {
                 public const string Method = "method";
                 public const string Iban = "iban";
+            }
+
+            public static class Filter
+            {
+                public const string Name = "name";
+                public const string Id = "id";
+                public const string Values = "values";
+            }
+
+            public static class FilterValue
+            {
+                public const string Id = "id";
+                public const string Name = "name";
             }
 
             public static class Seller
