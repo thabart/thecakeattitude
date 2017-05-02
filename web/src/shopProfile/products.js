@@ -50,12 +50,20 @@ class ShopProducts extends Component {
     }
 
     var products = [],
-      filters = [];
+      filters = [],
+      productCategories = [(<li className="nav-item"><a className="nav-link" href="#">All</a></li>)];
     if (this.state.products) {
       this.state.products.forEach(function(product) {
         var imageUrl = "#"; // Set default url
         if (product.images && product.images.length > 0) {
           imageUrl = Constants.apiUrl + product.images[0];
+        }
+
+        var filters = [];
+        if (product.filters) {
+          product.filters.forEach(function(filter) {
+            filters.push((<li>{filter.name} : {filter.content}</li>));
+          });
         }
 
         products.push((<section className="row product-item">
@@ -75,6 +83,7 @@ class ShopProducts extends Component {
           <div className="col-md-4">
             <h4 className="price">€ {product.price}</h4>
             <ul>
+              {filters}
             </ul>
             <button className="btn btn-success">BUY</button>
           </div>
@@ -87,12 +96,23 @@ class ShopProducts extends Component {
         var lst = [];
         if (filter.values) {
           filter.values.forEach(function(value) {
-            lst.push((<li><input type="checkbox" /><label>{value.name}</label></li>))
+            lst.push((<li><input type="checkbox" /><label>{value.content}</label></li>))
           });
         }
 
         filters.push((<div className="form-group filter"><label>{filter.name}</label><ul className="list-unstyled">{lst}</ul></div>))
       });
+    }
+
+    if (this.props.shop['_links'] && this.props.shop['_links']['productCategories']) {
+        var arr = this.props.shop['_links']['productCategories'];
+        if (!(arr instanceof Array)) {
+          arr = [arr];
+        }
+
+        arr.forEach(function(cat) {
+          productCategories.push((<li className="nav-item"><a className="nav-link" href="#">{cat.name}</a></li>))
+        });
     }
 
     return (<div>
@@ -123,18 +143,7 @@ class ShopProducts extends Component {
             </div>
             <div className="col-md-8">
               <ul className="nav nav-pills">
-                <li className="nav-item">
-                  <a className="nav-link" href="#">All</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">Women</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">Men</a>
-                </li>
-                <li className="nav-item">
-                  <a className="nav-link" href="#">Kids</a>
-                </li>
+                {productCategories}
               </ul>
               <div>
                 {products.length === 0 ? (<span>No products</span>) : products}
@@ -192,6 +201,7 @@ class ShopProducts extends Component {
         filters: filters
       });
     }).catch(function(e) {
+      console.log(e);
       self.setState({
         isLoading: false,
         errorMessage: 'an error occured while trying to retrieve the products'

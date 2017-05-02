@@ -34,5 +34,6 @@ namespace Cook4Me.Api.Core.Models
         public ProductCategory Category { get; set; }
         public IEnumerable<string> PartialImagesUrl { get; set; }
         public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<ProductFilter> FilterValues { get; set; }
     }
 }

@@ -51,5 +51,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual Map Map { get; set; }
         public virtual ICollection<Filter> Filters { get; set; }
         public virtual ICollection<Product> Products { get; set; }
+        public virtual ICollection<ProductCategory> ProductCategories { get; set; }
     }
 }

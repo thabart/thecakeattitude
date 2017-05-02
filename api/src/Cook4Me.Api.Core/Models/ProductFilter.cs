@@ -14,21 +14,13 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
 namespace Cook4Me.Api.Core.Models
 {
-    public class FilterValue
+    public class ProductFilter
     {
-        public string Id { get; set; }
-        public string Content { get; set; }
-    }
-
-    public class Filter
-    {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string ShopId { get; set; }
-        public IEnumerable<FilterValue> Values { get; set; }
+        public string FilterId { get; set; }
+        public string FilterName { get; set; }
+        public string FilterValueId { get; set; }
+        public string FilterValueContent { get; set; }
     }
 }

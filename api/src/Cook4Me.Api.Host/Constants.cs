@@ -96,6 +96,7 @@ namespace Cook4Me.Api.Host
                 public const string UpdateDateTime = "update_datetime";
                 public const string Tags = "tags";
                 public const string Images = "images";
+                public const string Filters = "filters";
             }
 
             public static class Comment
@@ -134,10 +135,18 @@ namespace Cook4Me.Api.Host
                 public const string Values = "values";
             }
 
+            public static class ProductFilter
+            {
+                public const string FilterId = "filter_id";
+                public const string ValueId = "value_id";
+                public const string Name = "name";
+                public const string Content = "content";
+            }
+
             public static class FilterValue
             {
                 public const string Id = "id";
-                public const string Name = "name";
+                public const string Content = "content";
             }
 
             public static class Seller

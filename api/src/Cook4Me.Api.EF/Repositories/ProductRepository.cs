@@ -41,7 +41,10 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Product> products = _context.Products.Include(p => p.Images).Include(p => p.Tags);
+            IQueryable<Models.Product> products = _context.Products
+                .Include(p => p.Images)
+                .Include(p => p.Tags)
+                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter);
             if (!string.IsNullOrWhiteSpace(parameter.ShopId))
             {
                 products = products.Where(p => p.ShopId == parameter.ShopId);

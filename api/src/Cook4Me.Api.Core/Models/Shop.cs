@@ -49,6 +49,7 @@ namespace Cook4Me.Api.Core.Models
         public double AverageScore { get; set; }
         public double NbComments { get; set; }
         public IEnumerable<Filter> Filters { get; set; }
+        public IEnumerable<ProductCategory> ProductCategories { get; set; }
 
         public void AddComment(Comment comment)
         {

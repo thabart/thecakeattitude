@@ -306,7 +306,8 @@ namespace Cook4Me.Api.Host.Extensions
                     Name = "Women",
                     Description = "Women",
                     CreateDateTime = DateTime.UtcNow,
-                    UpdateDateTime = DateTime.UtcNow
+                    UpdateDateTime = DateTime.UtcNow,
+                    ShopId = _firstShopId
                 }
             });
         }

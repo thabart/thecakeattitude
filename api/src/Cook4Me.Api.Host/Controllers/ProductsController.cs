@@ -20,6 +20,7 @@ using Cook4Me.Api.Host.Builders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -75,8 +76,10 @@ namespace Cook4Me.Api.Host.Controllers
         private void AddProduct(IHalResponseBuilder halResponseBuilder, IResponseBuilder responseBuilder, Product product)
         {
             _halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetProduct(product),
-                (l) => l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + product.ShopId))
-                    .AddSelf(Constants.RouteNames.Products + "/" + product.Id)));
+                (l) =>
+                {
+                    l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + product.ShopId)).AddSelf(Constants.RouteNames.Products + "/" + product.Id);
+                }));
         }
 
         private static string GetProductLink(int startIndex, int count, IQueryCollection query)

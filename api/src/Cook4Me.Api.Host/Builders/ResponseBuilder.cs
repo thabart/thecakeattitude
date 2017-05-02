@@ -230,6 +230,33 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.Product.Images, arr);
             }
 
+            if (product.FilterValues != null && product.FilterValues.Any())
+            {
+                JArray arr = new JArray();
+                foreach (var filterValue in product.FilterValues)
+                {
+                    arr.Add(GetProductFilter(filterValue));
+                }
+
+                jObj.Add(Constants.DtoNames.Product.Filters, arr);
+            }
+
+            return jObj;
+        }
+
+        public JObject GetProductFilter(ProductFilter productFilter)
+        {
+            if (productFilter == null)
+            {
+                throw new ArgumentNullException(nameof(productFilter));
+            }
+
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.ProductFilter.FilterId, productFilter.FilterId);
+            jObj.Add(Constants.DtoNames.ProductFilter.ValueId, productFilter.FilterValueId);
+            jObj.Add(Constants.DtoNames.ProductFilter.Name, productFilter.FilterName);
+            jObj.Add(Constants.DtoNames.ProductFilter.Content, productFilter.FilterValueContent);
             return jObj;
         }
 
@@ -265,7 +292,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.FilterValue.Id, filterValue.Id);
-            jObj.Add(Constants.DtoNames.FilterValue.Name, filterValue.Name);
+            jObj.Add(Constants.DtoNames.FilterValue.Content, filterValue.Content);
             return jObj;
         }
     }

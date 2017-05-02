@@ -67,6 +67,11 @@ namespace Cook4Me.Api.EF.Extensions
                 filters = shop.Filters.Select(s => s.ToDomain()).ToList();
             }
 
+            var productCategories = new List<Domain.ProductCategory>();
+            if (shop.ProductCategories != null)
+            {
+                productCategories = shop.ProductCategories.Select(s => s.ToDomain()).ToList();
+            }
 
             return new Domain.Shop
             {
@@ -97,7 +102,8 @@ namespace Cook4Me.Api.EF.Extensions
                 NbComments = nbComments,
                 TotalScore = shop.TotalScore,
                 AverageScore = shop.AverageScore,
-                Filters = filters
+                Filters = filters,
+                ProductCategories = productCategories
             };
         }
 
@@ -344,6 +350,12 @@ namespace Cook4Me.Api.EF.Extensions
                 tags = product.Tags.Select(t => t.TagName);
             }
 
+            IEnumerable<Domain.ProductFilter> filterValues = new List<Domain.ProductFilter>();
+            if (product.Filters != null)
+            {
+                filterValues = product.Filters.Select(f => f.ToDomain());
+            }
+
             return new Domain.Product
             {
                 Id = product.Id,
@@ -357,7 +369,8 @@ namespace Cook4Me.Api.EF.Extensions
                 UnitOfMeasure = product.UnitOfMeasure,
                 Name = product.Name,
                 PartialImagesUrl = images,
-                Tags = tags
+                Tags = tags,
+                FilterValues = filterValues
             };
         }
 
@@ -415,7 +428,43 @@ namespace Cook4Me.Api.EF.Extensions
             return new Domain.FilterValue
             {
                 Id = filterValue.Id,
-                Name = filterValue.Content
+                Content = filterValue.Content
+            };
+        }
+
+        public static Domain.ProductFilter ToDomain(this ProductFilter filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            if (filter.FilterValue == null || filter.FilterValue.Filter == null)
+            {
+                return null;
+            }
+
+            return new Domain.ProductFilter
+            {
+                FilterId = filter.FilterValue.Filter.Id,
+                FilterName = filter.FilterValue.Filter.Name,
+                FilterValueContent = filter.FilterValue.Content,
+                FilterValueId = filter.FilterValue.Id
+            };
+        }
+
+        public static Domain.ProductCategory ToDomain(this ProductCategory productCategory)
+        {
+            if (productCategory == null)
+            {
+                throw new ArgumentNullException(nameof(productCategory));
+            }
+
+            return new Domain.ProductCategory
+            {
+                Id = productCategory.Id,
+                Description = productCategory.Description,
+                Name = productCategory.Name
             };
         }
     }

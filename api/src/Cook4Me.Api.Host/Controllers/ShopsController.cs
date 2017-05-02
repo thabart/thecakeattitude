@@ -285,6 +285,14 @@ namespace Cook4Me.Api.Host.Controllers
                             l.AddOtherItem("filters", new Dtos.Link("/" + Constants.RouteNames.Filers + "/" + filter.Id, filter.Name));
                         }
                     }
+
+                    if (shop.ProductCategories != null && shop.ProductCategories.Any())
+                    {
+                        foreach(var productCategory in shop.ProductCategories)
+                        {
+                            l.AddOtherItem("productCategories", new Dtos.Link("/" + Constants.RouteNames.Filers + "/" + productCategory.Id, productCategory.Name));
+                        }
+                    }
                 }));
         }
     }
