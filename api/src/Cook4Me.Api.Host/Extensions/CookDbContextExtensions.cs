@@ -299,7 +299,7 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.png"
+                            PartialPath = "/products/jean.jpg"
                         }
                     },
                     Tags = new []

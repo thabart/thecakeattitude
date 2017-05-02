@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Slider, { Range } from 'rc-slider';
+import { Alert } from 'reactstrap';
 import Rater from 'react-rater';
+import { ProductsService } from '../services';
+import Constants from '../../Constants';
 import 'rc-slider/assets/index.css';
 import './products.css';
 
@@ -11,10 +14,20 @@ class ShopProducts extends Component {
   constructor(props) {
     super(props);
     this.changePrice = this.changePrice.bind(this);
+    this.toggleError = this.toggleError.bind(this);
     this.state = {
       minPrice: minPrice,
-      maxPrice : maxPrice
+      maxPrice : maxPrice,
+      errorMessage: null,
+      isLoading: false,
+      products : []
     };
+  }
+  // Toggle the error
+  toggleError() {
+    this.setState({
+      errorMessage: null
+    });
   }
   // Change the Price
   changePrice(p) {
@@ -25,6 +38,46 @@ class ShopProducts extends Component {
   }
   // Render the component
   render() {
+    if (this.state.isLoading) {
+      return (<div>Loading ...</div>);
+    }
+
+    if (this.state.errorMessage && this.state.errorMessage !== null) {
+      return (<div><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>);
+    }
+
+    var products = [];
+    if (this.state.products) {
+      this.state.products.forEach(function(product) {
+        var imageUrl = "#"; // Set default url
+        if (product.images && product.images.length > 0) {
+          imageUrl = Constants.apiUrl + product.images[0];
+        }
+
+        products.push((<section className="row product-item">
+          <div className="col-md-3">
+            <img src={imageUrl} className="rounded" width="140" height="140"/>
+            <div className="best-deals">
+              <img src="/images/hot_deals.png" width="60" />
+            </div>
+          </div>
+          <div className="col-md-5">
+            <h3>{product.name}</h3>
+            <Rater total={5} interactive={false} />
+            <p>
+              {product.description}
+            </p>
+          </div>
+          <div className="col-md-4">
+            <h4 className="price">€ {product.price}</h4>
+            <ul>
+            </ul>
+            <button className="btn btn-success">BUY</button>
+          </div>
+        </section>));
+      });
+    }
+
     return (<div>
         <section className="row white-section shop-section shop-section-padding">
           <div className="row col-md-12">
@@ -92,65 +145,36 @@ class ShopProducts extends Component {
                 </li>
               </ul>
               <div>
-                <section className="row product-item">
-                  <div className="col-md-3">
-                    <img src="/images/jean.jpg" className="rounded" width="140" height="140"/>
-                    <div className="best-deals">
-                      <img src="/images/hot_deals.png" width="60" />
-                    </div>
-                  </div>
-                  <div className="col-md-5">
-                    <h3>Jean</h3>
-                    <Rater total={5} interactive={false} />
-                    <p>
-                      Description
-                    </p>
-                  </div>
-                  <div className="col-md-4">
-                    <h4 className="price">€ 223</h4>
-                    <ul>
-                      <li>
-                        Color red
-                      </li>
-                      <li>
-                        Size XXL
-                      </li>
-                    </ul>
-                    <button className="btn btn-success">BUY</button>
-                  </div>
-                </section>
-                <section className="row product-item is-best-deals">
-                  <div className="col-md-3">
-                    <img src="/images/jean.jpg" className="rounded" width="140" height="140"/>
-                    <div className="best-deals">
-                      <img src="/images/hot_deals.png" width="60" />
-                    </div>
-                  </div>
-                  <div className="col-md-5">
-                    <h3>Jean</h3>
-                    <Rater total={5} interactive={false} />
-                    <p>
-                      Description
-                    </p>
-                  </div>
-                  <div className="col-md-4">
-                    <h4 className="price">€ 223</h4>
-                    <ul className="">
-                      <li>
-                        Color red
-                      </li>
-                      <li>
-                        Size XXL
-                      </li>
-                    </ul>
-                    <button className="btn btn-success">BUY</button>
-                  </div>
-                </section>
+                {products.length === 0 ? (<span>No products</span>) : products}
               </div>
             </div>
           </div>
         </section>
       </div>);
+  }
+  // Execute after the render
+  componentWillMount() {
+    var self = this;
+    var shopId = this.props.shop.id;
+    self.setState({
+      isLoading: true
+    });
+    ProductsService.search({shop_id : shopId}).then(function(products) {
+      var embedded = products['_embedded'];
+      if (!(embedded instanceof Array)) {
+        embedded = [embedded];
+      }
+
+      self.setState({
+        isLoading: false,
+        products: embedded
+      });
+    }).catch(function() {
+      self.setState({
+        isLoading: false,
+        errorMessage: 'an error occured while trying to retrieve the products'
+      });
+    });
   }
 }
 
