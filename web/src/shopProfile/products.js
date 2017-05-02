@@ -11,12 +11,14 @@ import Promise from 'bluebird';
 
 const minPrice = 1;
 const maxPrice = 30000;
+const filterJson = {filters: []};
 
 class ShopProducts extends Component {
   constructor(props) {
     super(props);
     this.changePrice = this.changePrice.bind(this);
     this.toggleError = this.toggleError.bind(this);
+    this.filter = this.filter.bind(this);
     this.state = {
       minPrice: minPrice,
       maxPrice : maxPrice,
@@ -25,6 +27,32 @@ class ShopProducts extends Component {
       products : [],
       filters: []
     };
+  }
+  // Filter the products
+  filter(e, filterId, filterValue) {
+    var filter = null;
+    var indice = -1;
+    if (!$(e.target).is(':checked'))
+    {
+      filterJson.filters.forEach(function(f, e) {
+        if (f.id === filterId) {
+          filter = f;
+          indice = e;
+        }
+      });
+
+      if (indice > -1) {
+        filterJson.filters.splice(indice, 1);
+      }
+    }
+    else {
+      filterJson.filters.push({
+        id: filterId,
+        value: filterValue
+      });
+    }
+
+    ProductsService.postSearch(filterJson);
   }
   // Toggle the error
   toggleError() {
@@ -51,7 +79,8 @@ class ShopProducts extends Component {
 
     var products = [],
       filters = [],
-      productCategories = [(<li className="nav-item"><a className="nav-link" href="#">All</a></li>)];
+      productCategories = [(<li className="nav-item"><a className="nav-link" href="#">All</a></li>)],
+      self = this;
     if (this.state.products) {
       this.state.products.forEach(function(product) {
         var imageUrl = "#"; // Set default url
@@ -96,7 +125,7 @@ class ShopProducts extends Component {
         var lst = [];
         if (filter.values) {
           filter.values.forEach(function(value) {
-            lst.push((<li><input type="checkbox" /><label>{value.content}</label></li>))
+            lst.push((<li><input type="checkbox" onClick={(e) => { self.filter(e, filter.id, value.content); }} /><label>{value.content}</label></li>))
           });
         }
 
@@ -194,14 +223,13 @@ class ShopProducts extends Component {
 
         indice++;
       });
-
+      filterJson['shop_id'] = shopId;
       self.setState({
         isLoading: false,
         products: products,
         filters: filters
       });
     }).catch(function(e) {
-      console.log(e);
       self.setState({
         isLoading: false,
         errorMessage: 'an error occured while trying to retrieve the products'

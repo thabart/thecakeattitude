@@ -15,10 +15,12 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Text;
@@ -51,6 +53,18 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Search()
         {
             var parameter = _requestBuilder.GetSearchProducts(Request.Query);
+            return await Search(parameter);
+        }
+        
+        [HttpPost(Constants.RouteNames.Search)]
+        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        {
+            var parameter = _requestBuilder.GetSearchProducts(jObj);
+            return await Search(parameter);
+        }
+
+        private async Task<IActionResult> Search(SearchProductsParameter parameter)
+        {
             var searchResult = await _repository.Search(parameter);
             _halResponseBuilder.AddLinks(l => l.AddSelf(GetProductLink(parameter.StartIndex, parameter.Count, Request.Query)));
             if (searchResult != null && searchResult.Content != null)

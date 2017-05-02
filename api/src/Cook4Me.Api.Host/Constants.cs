@@ -133,6 +133,7 @@ namespace Cook4Me.Api.Host
                 public const string Name = "name";
                 public const string Id = "id";
                 public const string Values = "values";
+                public const string Value = "value";
             }
 
             public static class ProductFilter
@@ -199,6 +200,11 @@ namespace Cook4Me.Api.Host
                 public const string NorthEast = "ne";
                 public const string SouthWest = "sw";
                 public const string Orders = "orders";
+            }
+
+            public static class SearchProduct
+            {
+                public const string Filters = "filters";
             }
 
             public static class OrderBy

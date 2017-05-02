@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
         Comment GetComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(IQueryCollection query);
+        SearchProductsParameter GetSearchProducts(JObject jObj);
         SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
     }
@@ -256,6 +257,35 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
+
+        public SearchProductsParameter GetSearchProducts(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var filters = new List<Core.Parameters.Filter>();
+            var arr = jObj.SelectToken(Constants.DtoNames.SearchProduct.Filters) as JArray;
+            if (arr != null)
+            {
+                foreach(var record in arr)
+                {
+                    filters.Add(GetFilter(record as JObject));
+                }
+            }
+
+            var result = new SearchProductsParameter
+            {
+                ShopId = jObj.Value<string>(Constants.DtoNames.Product.ShopId),
+                IsPagingEnabled = true,
+                Count = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
+                Filters = filters
+            };
+            return result;
+        }
+
         public SearchProductsParameter GetSearchProducts(IQueryCollection query)
         {
             if (query == null)
@@ -292,6 +322,20 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Target = jObj.Value<string>(Constants.DtoNames.OrderBy.Target),
                 Method = method
+            };
+        }
+
+        public Core.Parameters.Filter GetFilter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new Core.Parameters.Filter
+            {
+                Id = jObj.Value<string>(Constants.DtoNames.Filter.Id),
+                Value = jObj.Value<string>(Constants.DtoNames.Filter.Value)
             };
         }
 

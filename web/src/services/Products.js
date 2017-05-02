@@ -14,5 +14,19 @@ module.exports = {
         reject(e);
       });
     });
+  },
+  // POST: Search products
+  postSearch: function(content) {
+    return new Promise(function(resolve, reject) {
+      $.ajax(Constants.apiUrl + '/products/.search', {
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(content)
+      }).then(function(r) {
+        resolve(r);
+      }).fail(function(e) {
+        reject(e);
+      });
+    });
   }
 };

@@ -14,8 +14,16 @@
 // limitations under the License.
 #endregion
 
+using System.Collections.Generic;
+
 namespace Cook4Me.Api.Core.Parameters
 {
+    public class Filter
+    {
+        public string Id { get; set; }
+        public string Value { get; set; }
+    }
+
     public class SearchProductsParameter
     {
         public SearchProductsParameter()
@@ -26,8 +34,10 @@ namespace Cook4Me.Api.Core.Parameters
         }
 
         public string ShopId { get; set; }
+        public IEnumerable<Filter> Filters { get; set; }
         public int StartIndex { get; set; }
         public int Count { get; set; }
         public bool IsPagingEnabled { get; set; }
+
     }
 }
