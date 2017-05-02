@@ -31,6 +31,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetTag(Tag tag);
         JObject GetComment(Comment comment);
         JObject GetRatingSummary(ShopRatingSummary summary);
+        JObject GetProduct(Product product);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -184,6 +185,49 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.RatingSummary.AverageStore, summary.AverageScore);
             jObj.Add(Constants.DtoNames.RatingSummary.NbComments, summary.NbComments);
+            return jObj;
+        }
+
+        public JObject GetProduct(Product product)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Product.Id, product.Id);
+            jObj.Add(Constants.DtoNames.Product.Name, product.Name);
+            jObj.Add(Constants.DtoNames.Product.Description, product.Description);
+            jObj.Add(Constants.DtoNames.Product.CategoryId, product.CategoryId);
+            jObj.Add(Constants.DtoNames.Product.Price, product.Price);
+            jObj.Add(Constants.DtoNames.Product.UnitOfMeasure, product.UnitOfMeasure);
+            jObj.Add(Constants.DtoNames.Product.Quantity, product.Quantity);
+            jObj.Add(Constants.DtoNames.Product.ShopId, product.ShopId);
+            jObj.Add(Constants.DtoNames.Product.CreateDateTime, product.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Product.UpdateDateTime, product.UpdateDateTime);
+            if (product.Tags != null && product.Tags.Any())
+            {
+                JArray arr = new JArray();
+                foreach (var tag in product.Tags)
+                {
+                    arr.Add(tag);
+                }
+
+                jObj.Add(Constants.DtoNames.Product.Tags, arr);
+            }
+
+            if (product.PartialImagesUrl != null && product.PartialImagesUrl.Any())
+            {
+                JArray arr = new JArray();
+                foreach (var image in product.PartialImagesUrl)
+                {
+                    arr.Add(image);
+                }
+
+                jObj.Add(Constants.DtoNames.Product.Images, arr);
+            }
+
             return jObj;
         }
     }

@@ -29,6 +29,8 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _secondShopId = Guid.NewGuid().ToString();
         private static string _ecoTagName = "eco";
         private static string _secondHandTagName = "second hand";
+        private static string _womenProductCategory = Guid.NewGuid().ToString();
+        private static string _jeanProductId = Guid.NewGuid().ToString();
 
         public static void EnsureSeedData(this CookDbContext context)
         {
@@ -42,6 +44,8 @@ namespace Cook4Me.Api.Host.Extensions
             InsertShops(context);
             InsertComments(context);
             InsertShopTags(context);
+            InsertProductCategories(context);
+            InsertProducts(context);
             context.SaveChanges();
         }
 
@@ -254,6 +258,58 @@ namespace Cook4Me.Api.Host.Extensions
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _secondShopId,
                     TagName = _ecoTagName
+                }
+            });
+        }
+
+        private static void InsertProductCategories(CookDbContext context)
+        {
+            context.ProductCategories.AddRange(new[]
+            {
+                new ProductCategory
+                {
+                    Id = _womenProductCategory,
+                    Name = "Women",
+                    Description = "Women",
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow
+                }
+            });
+        }
+
+        private static void InsertProducts(CookDbContext context)
+        {
+            context.Products.AddRange(new[]
+            {
+                new Product
+                {
+                    Id = _jeanProductId,
+                    Name = "Jean",
+                    ShopId = _firstShopId,
+                    Description = "Jean",
+                    CategoryId = _womenProductCategory,
+                    Price = 200,
+                    UnitOfMeasure = "piece",
+                    Quantity = 1,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    AvailableInStock = 2000,
+                    Images = new []
+                    {
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.png"
+                        }
+                    },
+                    Tags = new []
+                    {
+                        new ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    }
                 }
             });
         }

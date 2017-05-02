@@ -316,5 +316,63 @@ namespace Cook4Me.Api.EF.Extensions
                 CreateDateTime = comment.CreateDateTime
             };
         }
+
+        public static Domain.Product ToDomain(this Product product)
+        {
+            if(product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            IEnumerable<string> images = new List<string>();
+            if (product.Images != null)
+            {
+                images = product.Images.Select(i => i.PartialPath);
+            }
+
+            IEnumerable<string> tags = new List<string>();
+            if (product.Tags != null)
+            {
+                tags = product.Tags.Select(t => t.TagName);
+            }
+
+            return new Domain.Product
+            {
+                Id = product.Id,
+                CategoryId = product.CategoryId,
+                Description = product.Description,
+                CreateDateTime = product.CreateDateTime,
+                UpdateDateTime = product.UpdateDateTime,
+                Quantity = product.Quantity,
+                Price = product.Price,
+                ShopId = product.ShopId,
+                UnitOfMeasure = product.UnitOfMeasure,
+                Name = product.Name,
+                PartialImagesUrl = images,
+                Tags = tags
+            };
+        }
+
+        public static Product ToModel(this Domain.Product product)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            return new Product
+            {
+                Id = product.Id,
+                CategoryId = product.CategoryId,
+                Description = product.Description,
+                CreateDateTime = product.CreateDateTime,
+                UpdateDateTime = product.UpdateDateTime,
+                Quantity = product.Quantity,
+                Price = product.Price,
+                ShopId = product.ShopId,
+                UnitOfMeasure = product.UnitOfMeasure,
+                Name = product.Name
+            };
+        }
     }
 }

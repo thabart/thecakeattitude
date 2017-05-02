@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Models
 {
     public class Product
     {
@@ -28,15 +28,11 @@ namespace Cook4Me.Api.EF.Models
         public double Price { get; set; }
         public string UnitOfMeasure { get; set; }
         public double Quantity { get; set; }
-        public double AvailableInStock { get; set; }
+        public string ShopId { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public string ShopId { get; set; }
-        public virtual ProductCategory Category { get; set; }
-        public virtual ICollection<ProductImage> Images { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<ProductTag> Tags { get; set; }
-        public virtual ICollection<ProductFilter> Filters { get; set; }
-        public virtual Shop Shop { get; set; }
+        public ProductCategory Category { get; set; }
+        public IEnumerable<string> PartialImagesUrl { get; set; }
+        public IEnumerable<string> Tags { get; set; }
     }
 }

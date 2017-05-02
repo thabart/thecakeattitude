@@ -37,7 +37,6 @@ namespace Cook4Me.Api.Host
             public const string Tags = "tags";
             public const string Comments = "comments";
             public const string Me = "me";
-            public const string Rating = "{id}/rating";
         }
 
         public static class DtoNames
@@ -80,6 +79,22 @@ namespace Cook4Me.Api.Host
                 public const string StartIndex = "start_index";
                 public const string Length = "length";
                 public const string Count = "count";
+            }
+
+            public static class Product
+            {
+                public const string Id = "id";
+                public const string Name = "name";
+                public const string Description = "description";
+                public const string CategoryId = "category_id";
+                public const string Price = "price";
+                public const string UnitOfMeasure = "unit_of_measure";
+                public const string Quantity = "quantity";
+                public const string ShopId = "shop_id";
+                public const string CreateDateTime = "create_datetime";
+                public const string UpdateDateTime = "update_datetime";
+                public const string Tags = "tags";
+                public const string Images = "images";
             }
 
             public static class Comment

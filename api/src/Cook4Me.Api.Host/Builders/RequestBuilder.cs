@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
         Comment GetComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(IQueryCollection query);
+        SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
     }
 
@@ -248,6 +249,24 @@ namespace Cook4Me.Api.Host.Builders
             {
                 TrySetStr((r) => result.ShopId = r, key, Constants.DtoNames.Comment.ShopId, query);
                 TrySetStr((r) => result.Subject = r, key, Constants.DtoNames.Comment.Subject, query);
+                TrySetInt((r) => result.StartIndex = r <= 0 ? result.StartIndex : r, key, Constants.DtoNames.Paginate.StartIndex, query);
+                TrySetInt((r) => result.Count = r <= 0 ? result.Count : r, key, Constants.DtoNames.Paginate.Count, query);
+            }
+
+            return result;
+        }
+
+        public SearchProductsParameter GetSearchProducts(IQueryCollection query)
+        {
+            if (query == null)
+            {
+                throw new ArgumentNullException(nameof(query));
+            }
+
+            var result = new SearchProductsParameter();
+            foreach (var key in query.Keys)
+            {
+                TrySetStr((r) => result.ShopId = r, key, Constants.DtoNames.Product.ShopId, query);
                 TrySetInt((r) => result.StartIndex = r <= 0 ? result.StartIndex : r, key, Constants.DtoNames.Paginate.StartIndex, query);
                 TrySetInt((r) => result.Count = r <= 0 ? result.Count : r, key, Constants.DtoNames.Paginate.Count, query);
             }
