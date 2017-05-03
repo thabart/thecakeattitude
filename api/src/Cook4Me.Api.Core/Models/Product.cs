@@ -26,6 +26,7 @@ namespace Cook4Me.Api.Core.Models
         public string Description { get; set; }
         public string CategoryId { get; set; }
         public double Price { get; set; }
+        public double NewPrice { get; set; }
         public string UnitOfMeasure { get; set; }
         public double Quantity { get; set; }
         public string ShopId { get; set; }

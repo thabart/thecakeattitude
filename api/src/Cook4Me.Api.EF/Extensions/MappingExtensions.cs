@@ -371,6 +371,7 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = product.UpdateDateTime,
                 Quantity = product.Quantity,
                 Price = product.Price,
+                NewPrice = product.NewPrice,
                 ShopId = product.ShopId,
                 UnitOfMeasure = product.UnitOfMeasure,
                 Name = product.Name,

@@ -21,6 +21,7 @@ using Cook4Me.Api.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -92,8 +93,10 @@ namespace Cook4Me.Api.EF.Repositories
                 TotalResults = await products.CountAsync().ConfigureAwait(false),
                 StartIndex = parameter.StartIndex
             };
-            products = products
-                .OrderByDescending(c => c.UpdateDateTime);
+
+            products = Order(parameter.Order, "update_datetime", s => s.UpdateDateTime, products);
+            products = Order(parameter.Order, "create_datetime", s => s.CreateDateTime, products);
+            products = Order(parameter.Order, "price", s => s.NewPrice, products);
             if (parameter.IsPagingEnabled)
             {
                 products = products.Skip(parameter.StartIndex).Take(parameter.Count);
@@ -101,6 +104,21 @@ namespace Cook4Me.Api.EF.Repositories
 
             result.Content = await products.Select(p => p.ToDomain()).ToListAsync().ConfigureAwait(false);
             return result;
+        }
+
+        private static IQueryable<Models.Product> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Product, TKey>> keySelector, IQueryable<Models.Product> products)
+        {
+            if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (orderBy.Method == OrderByMethods.Ascending)
+                {
+                    return products.OrderBy(keySelector);
+                }
+
+                return products.OrderByDescending(keySelector);
+            }
+
+            return products;
         }
     }
 }

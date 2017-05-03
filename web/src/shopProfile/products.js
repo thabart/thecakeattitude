@@ -12,7 +12,7 @@ import Promise from 'bluebird';
 const minPrice = 1;
 const maxPrice = 30000;
 const defaultCount = 3;
-const filterJson = {start_index : 0, count: defaultCount, min_price: minPrice, max_price: maxPrice, filters: []};
+const filterJson = { order : { target: 'update_datetime', method: 'desc' }, start_index : 0, count: defaultCount, min_price: minPrice, max_price: maxPrice, filters: []};
 
 class ShopProducts extends Component {
   constructor(props) {
@@ -28,6 +28,7 @@ class ShopProducts extends Component {
     this.search = this.search.bind(this);
     this.handleBestDeals = this.handleBestDeals.bind(this);
     this.selectCategory = this.selectCategory.bind(this);
+    this.changeOrder = this.changeOrder.bind(this);
     this.state = {
       minPrice: minPrice,
       maxPrice : maxPrice,
@@ -182,6 +183,13 @@ class ShopProducts extends Component {
     filterJson['start_index'] = (page - 1) * defaultCount;
     this.updateProducts();
   }
+  // Change the order
+  changeOrder(e) {
+    var selected = $(e.target).find(':selected');
+    filterJson.order['target'] = $(selected).data('target');
+    filterJson.order['method'] = $(selected).data('method');
+    this.updateProducts();
+  }
   // Render the component
   render() {
     if (this.state.isLoading) {
@@ -226,12 +234,7 @@ class ShopProducts extends Component {
           promotion = null;
         if (product.promotions && product.promotions.length > 0) {
           promotion = product.promotions[0];
-          switch(promotion.type)
-          {
-            case "percentage":
-              newPrice = product.price - (product.price * promotion.discount) / 100;
-            break;
-          }
+          newPrice = product.new_price;
         }
 
         products.push((<section className={newPrice == null ? "row product-item" : "row product-item is-best-deals"}>
@@ -322,24 +325,31 @@ class ShopProducts extends Component {
               </div>
               {filters}
             </div>
-            <div className="col-md-8">
+            <div className="col-md-9">
               <Alert color="danger" isOpen={this.state.productErrorMessage !== null} toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
-              { this.state.isProductsLoading ? (<div className="col-md-8"><i className='fa fa-spinner fa-spin'></i></div>) :(
+
                   <div className="col-md-12">
                     <ul className="nav nav-pills">
                       {productCategories}
                     </ul>
+                    <div className="col-md-4 offset-md-8">
+                      <label>Filter by</label>
+                      <select className="form-control" onChange={(e) => { this.changeOrder(e); }}>
+                        <option data-target="update_datetime" data-method="desc">Latest</option>
+                        <option data-target="price" data-method="asc">Price (asc)</option>
+                        <option data-target="price" data-method="desc">Price (desc)</option>
+                      </select>
+                    </div>
+                    { this.state.isProductsLoading ? (<div className="col-md-8"><i className='fa fa-spinner fa-spin'></i></div>) : (
                     <div>
                       {products.length === 0 ? (<span>No products</span>) : products}
                     </div>
+                    )}
+                    {pagination.length > 0 && (<ul className="pagination">
+                      {pagination}
+                    </ul>)}
                   </div>
-                )
-              }
-              {pagination.length > 0 && (<ul className="pagination">
-                {pagination}
-              </ul>)}
             </div>
-
           </div>
         </section>
       </div>);

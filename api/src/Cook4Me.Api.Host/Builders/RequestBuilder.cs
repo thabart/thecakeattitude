@@ -289,6 +289,13 @@ namespace Cook4Me.Api.Host.Builders
                 };
             }
 
+            var orderObj = jObj.GetValue(Constants.DtoNames.SearchProduct.Order);
+            OrderBy order = null;
+            if (orderObj != null)
+            {
+                order = GetOrderBy(orderObj as JObject);
+            }
+
             var result = new SearchProductsParameter
             {
                 ShopId = jObj.Value<string>(Constants.DtoNames.Product.ShopId),
@@ -297,7 +304,8 @@ namespace Cook4Me.Api.Host.Builders
                 Filters = filters,
                 FilterPrice = filterPrice,
                 ProductName = jObj.Value<string>(Constants.DtoNames.Product.Name),
-                CategoryId = jObj.Value<string>(Constants.DtoNames.Product.CategoryId)
+                CategoryId = jObj.Value<string>(Constants.DtoNames.Product.CategoryId),
+                Order = order
             };
 
             bool containsValidPromotion = false;

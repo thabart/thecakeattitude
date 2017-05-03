@@ -190,6 +190,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Product.Description, product.Description);
             jObj.Add(Constants.DtoNames.Product.CategoryId, product.CategoryId);
             jObj.Add(Constants.DtoNames.Product.Price, product.Price);
+            jObj.Add(Constants.DtoNames.Product.NewPrice, product.NewPrice);
             jObj.Add(Constants.DtoNames.Product.UnitOfMeasure, product.UnitOfMeasure);
             jObj.Add(Constants.DtoNames.Product.Quantity, product.Quantity);
             jObj.Add(Constants.DtoNames.Product.ShopId, product.ShopId);

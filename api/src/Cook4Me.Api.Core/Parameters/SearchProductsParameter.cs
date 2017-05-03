@@ -37,6 +37,11 @@ namespace Cook4Me.Api.Core.Parameters
             StartIndex = 0;
             Count = 100;
             IsPagingEnabled = true;
+            Order = new OrderBy
+            {
+                Method = OrderByMethods.Descending,
+                Target = "update_datetime"
+            };
         }
 
         public string ShopId { get; set; }
@@ -48,5 +53,6 @@ namespace Cook4Me.Api.Core.Parameters
         public int StartIndex { get; set; }
         public int Count { get; set; }
         public bool IsPagingEnabled { get; set; }
+        public OrderBy Order { get; set; }
     }
 }
