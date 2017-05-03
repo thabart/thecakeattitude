@@ -31,6 +31,7 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _secondHandTagName = "second hand";
         private static string _womenProductCategory = Guid.NewGuid().ToString();
         private static string _jeanProductId = Guid.NewGuid().ToString();
+        private static string _blueJeanProductId = Guid.NewGuid().ToString();
         private static string _colorFilterId = Guid.NewGuid().ToString();
         private static string _redColorFilterId = Guid.NewGuid().ToString();
         private static string _blueColorFilterId = Guid.NewGuid().ToString();
@@ -351,6 +352,49 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             FilterValueId = _redColorFilterId
+                        },
+                        new ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = _blueColorFilterId
+                        }
+                    }
+                },
+                new Product
+                {
+                    Id = _blueJeanProductId,
+                    Name = "Jean",
+                    ShopId = _firstShopId,
+                    Description = "Jean",
+                    CategoryId = _womenProductCategory,
+                    Price = 200,
+                    UnitOfMeasure = "piece",
+                    Quantity = 1,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    AvailableInStock = 2000,
+                    Images = new []
+                    {
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        }
+                    },
+                    Tags = new []
+                    {
+                        new ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    },
+                    Filters = new []
+                    {
+                        new ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = _blueColorFilterId
                         }
                     }
                 }

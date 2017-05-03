@@ -275,14 +275,20 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
             var result = new SearchProductsParameter
             {
                 ShopId = jObj.Value<string>(Constants.DtoNames.Product.ShopId),
                 IsPagingEnabled = true,
-                Count = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
-                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 Filters = filters
             };
+
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
             return result;
         }
 

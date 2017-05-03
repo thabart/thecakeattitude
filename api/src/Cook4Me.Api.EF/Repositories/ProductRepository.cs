@@ -50,6 +50,14 @@ namespace Cook4Me.Api.EF.Repositories
                 products = products.Where(p => p.ShopId == parameter.ShopId);
             }
 
+            if (parameter.Filters != null)
+            {
+                foreach(var filter in parameter.Filters)
+                {
+                    products = products.Where(p => p.Filters.Any(f => f.FilterValue.Content == filter.Value && f.FilterValue.FilterId == filter.Id));
+                }
+            }
+
             var result = new SearchProductsResult();
             products = products
                 .OrderByDescending(c => c.UpdateDateTime);

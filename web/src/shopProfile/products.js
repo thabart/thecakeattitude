@@ -19,19 +19,23 @@ class ShopProducts extends Component {
     this.changePrice = this.changePrice.bind(this);
     this.toggleError = this.toggleError.bind(this);
     this.filter = this.filter.bind(this);
+    this.toggleProductError = this.toggleProductError.bind(this);
     this.state = {
       minPrice: minPrice,
       maxPrice : maxPrice,
       errorMessage: null,
       isLoading: false,
       products : [],
-      filters: []
+      filters: [],
+      isProductsLoading: false,
+      productErrorMessage: null
     };
   }
   // Filter the products
   filter(e, filterId, filterValue) {
-    var filter = null;
-    var indice = -1;
+    var filter = null,
+      indice = -1,
+      self = this;
     if (!$(e.target).is(':checked'))
     {
       filterJson.filters.forEach(function(f, e) {
@@ -52,7 +56,31 @@ class ShopProducts extends Component {
       });
     }
 
-    ProductsService.postSearch(filterJson);
+    self.setState({
+      isProductsLoading: true
+    });
+    ProductsService.postSearch(filterJson).then(function(record) {
+      var products = record['_embedded'];
+      if (!(products instanceof Array)) {
+        products = [products];
+      }
+
+      self.setState({
+        isProductsLoading: false,
+        products: products
+      });
+    }).catch(function() {
+      self.setState({
+        isProductsLoading: false,
+        productErrorMessage: 'an error occured while trying to filter the products'
+      });
+    });
+  }
+  // Toggle product error message
+  toggleProductError() {
+    this.setState({
+      productErrorMessage: null
+    });
   }
   // Toggle the error
   toggleError() {
@@ -171,13 +199,20 @@ class ShopProducts extends Component {
               {filters}
             </div>
             <div className="col-md-8">
-              <ul className="nav nav-pills">
-                {productCategories}
-              </ul>
-              <div>
-                {products.length === 0 ? (<span>No products</span>) : products}
-              </div>
+              <Alert color="danger" isOpen={this.state.productErrorMessage !== null} toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
+              { this.state.isProductsLoading ? (<div className="col-md-8"><i className='fa fa-spinner fa-spin'></i></div>) :(
+                  <div className="col-md-8">
+                    <ul className="nav nav-pills">
+                      {productCategories}
+                    </ul>
+                    <div>
+                      {products.length === 0 ? (<span>No products</span>) : products}
+                    </div>
+                  </div>
+                )
+              }
             </div>
+
           </div>
         </section>
       </div>);
