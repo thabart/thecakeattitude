@@ -27,6 +27,7 @@ class ShopProducts extends Component {
     this.changePage = this.changePage.bind(this);
     this.search = this.search.bind(this);
     this.handleBestDeals = this.handleBestDeals.bind(this);
+    this.selectCategory = this.selectCategory.bind(this);
     this.state = {
       minPrice: minPrice,
       maxPrice : maxPrice,
@@ -38,7 +39,8 @@ class ShopProducts extends Component {
       isProductsLoading: false,
       productErrorMessage: null,
       productName: null,
-      bestDeals: false
+      bestDeals: false,
+      activeCategory: null
     };
   }
   // Search
@@ -158,6 +160,15 @@ class ShopProducts extends Component {
 
     this.updateProducts();
   }
+  // Select the category
+  selectCategory(e, id) {
+    e.preventDefault();
+    filterJson['category_id'] = id;
+    this.setState({
+      activeCategory: id
+    });
+    this.updateProducts();
+  }
   // Execute when the price is changed
   priceChange() {
     filterJson['min_price'] = this.state.minPrice;
@@ -183,7 +194,7 @@ class ShopProducts extends Component {
 
     var products = [],
       filters = [],
-      productCategories = [(<li className="nav-item"><a className="nav-link" href="#">All</a></li>)],
+      productCategories = [(<li className="nav-item"><a className={this.state.activeCategory == null ? "nav-link active" : "nav-link"} href="#" onClick={(e) => { this.selectCategory(e, null); }}>All</a></li>)],
       pagination = [],
       self = this;
     if (this.state.products) {
@@ -279,7 +290,9 @@ class ShopProducts extends Component {
         }
 
         arr.forEach(function(cat) {
-          productCategories.push((<li className="nav-item"><a className="nav-link" href="#">{cat.name}</a></li>))
+          var splitted = cat.href.split('/');
+          var catId = splitted[splitted.length - 1];
+          productCategories.push((<li className="nav-item"><a className={self.state.activeCategory == catId ? "nav-link active" : "nav-link"} href="#" onClick={(e) => { self.selectCategory(e, catId); }}>{cat.name}</a></li>))
         });
     }
 
