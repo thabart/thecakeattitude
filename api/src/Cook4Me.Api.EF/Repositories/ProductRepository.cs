@@ -58,7 +58,16 @@ namespace Cook4Me.Api.EF.Repositories
                 }
             }
 
-            var result = new SearchProductsResult();
+            if (parameter.FilterPrice != null)
+            {
+                products = products.Where(p => p.Price >= parameter.FilterPrice.Min && p.Price <= parameter.FilterPrice.Max);
+            }
+
+            var result = new SearchProductsResult
+            {
+                TotalResults = await products.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
             products = products
                 .OrderByDescending(c => c.UpdateDateTime);
             if (parameter.IsPagingEnabled)

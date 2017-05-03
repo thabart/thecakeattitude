@@ -49,13 +49,6 @@ namespace Cook4Me.Api.Host.Controllers
             _shopRepository = shopRepository;
         }
 
-        [HttpGet(Constants.RouteNames.Search)]
-        public async Task<IActionResult> Search()
-        {
-            var parameter = _requestBuilder.GetSearchProducts(Request.Query);
-            return await Search(parameter);
-        }
-        
         [HttpPost(Constants.RouteNames.Search)]
         public async Task<IActionResult> Search([FromBody] JObject jObj)
         {
@@ -66,7 +59,7 @@ namespace Cook4Me.Api.Host.Controllers
         private async Task<IActionResult> Search(SearchProductsParameter parameter)
         {
             var searchResult = await _repository.Search(parameter);
-            _halResponseBuilder.AddLinks(l => l.AddSelf(GetProductLink(parameter.StartIndex, parameter.Count, Request.Query)));
+            _halResponseBuilder.AddLinks(l => l.AddSelf(GetProductLink()));
             if (searchResult != null && searchResult.Content != null)
             {
                 var comments = searchResult.Content;
@@ -80,7 +73,7 @@ namespace Cook4Me.Api.Host.Controllers
                 nbPages = nbPages == 0 ? 1 : nbPages;
                 for (var page = 1; page <= nbPages; page++)
                 {
-                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetProductLink((page - 1) * parameter.Count, parameter.Count, Request.Query), page.ToString())));
+                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetProductLink(), page.ToString())));
                 }
             }
 
@@ -96,24 +89,9 @@ namespace Cook4Me.Api.Host.Controllers
                 }));
         }
 
-        private static string GetProductLink(int startIndex, int count, IQueryCollection query)
+        private static string GetProductLink()
         {
-            var builder = new StringBuilder();
-            builder.Append($"?{Constants.DtoNames.Paginate.StartIndex}={startIndex}");
-            builder.Append($"&{Constants.DtoNames.Paginate.Count}={count}");
-            foreach (var kvp in query)
-            {
-                if (kvp.Key == Constants.DtoNames.Paginate.StartIndex ||
-                    kvp.Key == Constants.DtoNames.Paginate.Count)
-                {
-                    continue;
-                }
-
-                builder.Append($"&{kvp.Key}={kvp.Value}");
-            }
-
-            return "/" + Constants.RouteNames.Products + "/" + Constants.RouteNames.Search +
-                builder.ToString();
+            return "/" + Constants.RouteNames.Products + "/" + Constants.RouteNames.Search;
         }
     }
 }

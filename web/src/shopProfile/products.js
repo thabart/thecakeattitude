@@ -11,7 +11,8 @@ import Promise from 'bluebird';
 
 const minPrice = 1;
 const maxPrice = 30000;
-const filterJson = {filters: []};
+const defaultCount = 1;
+const filterJson = {start_index : 0, count: defaultCount, min_price: minPrice, max_price: maxPrice, filters: []};
 
 class ShopProducts extends Component {
   constructor(props) {
@@ -20,6 +21,9 @@ class ShopProducts extends Component {
     this.toggleError = this.toggleError.bind(this);
     this.filter = this.filter.bind(this);
     this.toggleProductError = this.toggleProductError.bind(this);
+    this.priceChange = this.priceChange.bind(this);
+    this.handlePriceChange = this.handlePriceChange.bind(this);
+    this.changePage = this.changePage.bind(this);
     this.state = {
       minPrice: minPrice,
       maxPrice : maxPrice,
@@ -27,6 +31,7 @@ class ShopProducts extends Component {
       isLoading: false,
       products : [],
       filters: [],
+      pagination: [],
       isProductsLoading: false,
       productErrorMessage: null
     };
@@ -56,18 +61,26 @@ class ShopProducts extends Component {
       });
     }
 
+    filterJson['start_index'] = 0;
+    this.updateProducts();
+  }
+  // Update products
+  updateProducts() {
+    var self = this;
     self.setState({
       isProductsLoading: true
     });
-    ProductsService.postSearch(filterJson).then(function(record) {
+    ProductsService.search(filterJson).then(function(record) {
       var products = record['_embedded'];
+      var pagination = record['_links'].navigation;
       if (!(products instanceof Array)) {
         products = [products];
       }
 
       self.setState({
         isProductsLoading: false,
-        products: products
+        products: products,
+        pagination: pagination
       });
     }).catch(function() {
       self.setState({
@@ -75,6 +88,7 @@ class ShopProducts extends Component {
         productErrorMessage: 'an error occured while trying to filter the products'
       });
     });
+
   }
   // Toggle product error message
   toggleProductError() {
@@ -95,6 +109,38 @@ class ShopProducts extends Component {
       maxPrice: p[1]
     });
   }
+  // Handle price change
+  handlePriceChange(e) {
+    const target = e.target;
+    const name = target.name;
+    if (!target.value || target.value === "") {
+      return;
+    }
+    this.state[name] = target.value;
+    this.setState({
+      [name]: target.value
+    });
+    if (name === 'minPrice') {
+      this.refs.priceRange.state.bounds[0] = target.value;
+    } else {
+        this.refs.priceRange.state.bounds[1] = target.value;
+    }
+
+    this.priceChange();
+  }
+  // Execute when the price is changed
+  priceChange() {
+    filterJson['min_price'] = this.state.minPrice;
+    filterJson['max_price'] = this.state.maxPrice;
+    filterJson['start_index'] = 0;
+    this.updateProducts();
+  }
+  // Change page
+  changePage(e, page) {
+    e.preventDefault();
+    filterJson['start_index'] = (page - 1) * defaultCount;
+    this.updateProducts();
+  }
   // Render the component
   render() {
     if (this.state.isLoading) {
@@ -108,6 +154,7 @@ class ShopProducts extends Component {
     var products = [],
       filters = [],
       productCategories = [(<li className="nav-item"><a className="nav-link" href="#">All</a></li>)],
+      pagination = [],
       self = this;
     if (this.state.products) {
       this.state.products.forEach(function(product) {
@@ -118,9 +165,20 @@ class ShopProducts extends Component {
 
         var filters = [];
         if (product.filters) {
+          var groupedFilters = {};
           product.filters.forEach(function(filter) {
-            filters.push((<li>{filter.name} : {filter.content}</li>));
+            var record = groupedFilters[filter.filter_id];
+            if (!record) {
+              groupedFilters[filter.filter_id] = { label: filter.name, content : [ filter.content ] };
+            } else {
+              record.content.push(filter.content);
+            }
           });
+
+          for (var groupedFilter in groupedFilters) {
+            var o = groupedFilters[groupedFilter];
+            filters.push((<li>{o.label} : {o.content.join(',')}</li>));
+          }
         }
 
         products.push((<section className="row product-item">
@@ -161,6 +219,12 @@ class ShopProducts extends Component {
       });
     }
 
+    if (this.state.pagination && this.state.pagination.length > 1) {
+      this.state.pagination.forEach(function(page) {
+        pagination.push((<li className="page-item"><a className="page-link" href="#" onClick={(e) => { self.changePage(e, page.name); }}>{page.name}</a></li>))
+      });
+    }
+
     if (this.props.shop['_links'] && this.props.shop['_links']['productCategories']) {
         var arr = this.props.shop['_links']['productCategories'];
         if (!(arr instanceof Array)) {
@@ -177,7 +241,7 @@ class ShopProducts extends Component {
           <div className="row col-md-12">
             <div className="col-md-3">
               <div className="form-group">
-                <label>Product's name</label>
+                <label>Product name</label>
                 <input type="text" className="form-control" />
               </div>
               <div className="form-group">
@@ -188,12 +252,12 @@ class ShopProducts extends Component {
               </div>
               <div className="form-group filter">
                 <label>Price</label>
-                <Range min={minPrice} max={maxPrice} defaultValue={[minPrice,maxPrice]} onChange={this.changePrice} />
+                <Range min={minPrice} ref="priceRange" max={maxPrice} defaultValue={[minPrice,maxPrice]} onChange={this.changePrice} onAfterChange={this.priceChange} />
                 <div className="row">
-                  <span className="col-md-4">Min €</span><input type="text" className="form-control col-md-6" value={this.state.minPrice} />
+                  <span className="col-md-4">Min €</span><input type="text" name="minPrice" className="form-control col-md-6" onChange={this.handlePriceChange} value={this.state.minPrice} />
                 </div>
                 <div className="row">
-                  <span className="col-md-4">Max €</span><input type="text" className="form-control  col-md-6" value={this.state.maxPrice}/>
+                  <span className="col-md-4">Max €</span><input type="text" name="maxPrice" className="form-control col-md-6" onChange={this.handlePriceChange} value={this.state.maxPrice} />
                 </div>
               </div>
               {filters}
@@ -201,7 +265,7 @@ class ShopProducts extends Component {
             <div className="col-md-8">
               <Alert color="danger" isOpen={this.state.productErrorMessage !== null} toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
               { this.state.isProductsLoading ? (<div className="col-md-8"><i className='fa fa-spinner fa-spin'></i></div>) :(
-                  <div className="col-md-8">
+                  <div className="col-md-12">
                     <ul className="nav nav-pills">
                       {productCategories}
                     </ul>
@@ -211,6 +275,9 @@ class ShopProducts extends Component {
                   </div>
                 )
               }
+              {pagination.length > 0 && (<ul className="pagination">
+                {pagination}
+              </ul>)}
             </div>
 
           </div>
@@ -240,30 +307,17 @@ class ShopProducts extends Component {
       });
     }
 
-    promises.push( ProductsService.search({shop_id : shopId}) );
+    filterJson['shop_id'] = shopId;
     Promise.all(promises).then(function(result) {
-      var indice = 0,
-        filters = [],
-        products = [];
+      var filters = [];
       result.forEach(function(record) {
-        if (indice !== result.length - 1) {
-          filters.push(record['_embedded']);
-        }
-        else {
-          products = record['_embedded'];
-          if (!(products instanceof Array)) {
-            products = [products];
-          }
-        }
-
-        indice++;
+        filters.push(record['_embedded']);
       });
-      filterJson['shop_id'] = shopId;
       self.setState({
         isLoading: false,
-        products: products,
         filters: filters
       });
+      self.updateProducts();
     }).catch(function(e) {
       self.setState({
         isLoading: false,

@@ -276,12 +276,25 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            var minPrice = jObj.Value<double>(Constants.DtoNames.SearchProduct.MinPrice);
+            var maxPrice = jObj.Value<double>(Constants.DtoNames.SearchProduct.MaxPrice);
+            FilterPrice filterPrice = null;
+            if (minPrice != default(double) && maxPrice != default(double))
+            {
+                filterPrice = new FilterPrice
+                {
+                    Min = minPrice,
+                    Max = maxPrice
+                };
+            } 
+
             var result = new SearchProductsParameter
             {
                 ShopId = jObj.Value<string>(Constants.DtoNames.Product.ShopId),
                 IsPagingEnabled = true,
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
-                Filters = filters
+                Filters = filters,
+                FilterPrice = filterPrice
             };
 
             if (count > 0)

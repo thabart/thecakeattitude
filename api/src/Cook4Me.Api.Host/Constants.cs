@@ -205,6 +205,8 @@ namespace Cook4Me.Api.Host
             public static class SearchProduct
             {
                 public const string Filters = "filters";
+                public const string MinPrice = "min_price";
+                public const string MaxPrice = "max_price";
             }
 
             public static class OrderBy

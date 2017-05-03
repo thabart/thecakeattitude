@@ -24,6 +24,12 @@ namespace Cook4Me.Api.Core.Parameters
         public string Value { get; set; }
     }
 
+    public class FilterPrice
+    {
+        public double Min { get; set; }
+        public double Max { get; set; }
+    }
+
     public class SearchProductsParameter
     {
         public SearchProductsParameter()
@@ -38,6 +44,6 @@ namespace Cook4Me.Api.Core.Parameters
         public int StartIndex { get; set; }
         public int Count { get; set; }
         public bool IsPagingEnabled { get; set; }
-
+        public FilterPrice FilterPrice { get; set; }
     }
 }
