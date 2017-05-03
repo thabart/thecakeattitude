@@ -45,6 +45,7 @@ namespace Cook4Me.Api.EF.Repositories
             IQueryable<Models.Product> products = _context.Products
                 .Include(p => p.Images)
                 .Include(p => p.Tags)
+                .Include(p => p.Shop)
                 .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter)
                 .Include(p => p.Promotions);
             if (!string.IsNullOrWhiteSpace(parameter.ShopId))
@@ -63,6 +64,11 @@ namespace Cook4Me.Api.EF.Repositories
                 {
                     products = products.Where(p => !p.Promotions.Any(pm => pm.Code == null && pm.ExpirationDateTime > currentDate));
                 }                
+            }
+
+            if (parameter.NorthEast != null && parameter.SouthWest != null)
+            {
+                products = products.Where(p => p.Shop.Latitude >= parameter.SouthWest.Latitude && p.Shop.Latitude <= parameter.NorthEast.Latitude && p.Shop.Longitude >= parameter.SouthWest.Longitude && p.Shop.Longitude <= parameter.NorthEast.Longitude);
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.ProductName))
@@ -93,10 +99,17 @@ namespace Cook4Me.Api.EF.Repositories
                 TotalResults = await products.CountAsync().ConfigureAwait(false),
                 StartIndex = parameter.StartIndex
             };
+            
+            if (parameter.Orders != null)
+            {
+                foreach (var order in parameter.Orders)
+                {
+                    products = Order(order, "update_datetime", s => s.UpdateDateTime, products);
+                    products = Order(order, "create_datetime", s => s.CreateDateTime, products);
+                    products = Order(order, "price", s => s.NewPrice, products);
+                }
+            }
 
-            products = Order(parameter.Order, "update_datetime", s => s.UpdateDateTime, products);
-            products = Order(parameter.Order, "create_datetime", s => s.CreateDateTime, products);
-            products = Order(parameter.Order, "price", s => s.NewPrice, products);
             if (parameter.IsPagingEnabled)
             {
                 products = products.Skip(parameter.StartIndex).Take(parameter.Count);

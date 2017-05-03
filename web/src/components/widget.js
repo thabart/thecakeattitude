@@ -59,7 +59,7 @@ class Widget extends Component {
               <i className="fa fa-times" onClick={this.toggleClose}></i>
             </div>
           </div>
-          <div className="collapse show" ref={(elt) => {this.body = elt; }}>
+          <div className="collapse show widget-body" ref={(elt) => {this.body = elt; }}>
             {this.props.children}
           </div>
         </div>

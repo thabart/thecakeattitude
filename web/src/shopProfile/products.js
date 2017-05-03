@@ -12,7 +12,7 @@ import Promise from 'bluebird';
 const minPrice = 1;
 const maxPrice = 30000;
 const defaultCount = 3;
-const filterJson = { order : { target: 'update_datetime', method: 'desc' }, start_index : 0, count: defaultCount, min_price: minPrice, max_price: maxPrice, filters: []};
+const filterJson = { orders : [ { target: 'update_datetime', method: 'desc' } ], start_index : 0, count: defaultCount, min_price: minPrice, max_price: maxPrice, filters: []};
 
 class ShopProducts extends Component {
   constructor(props) {
@@ -186,8 +186,11 @@ class ShopProducts extends Component {
   // Change the order
   changeOrder(e) {
     var selected = $(e.target).find(':selected');
-    filterJson.order['target'] = $(selected).data('target');
-    filterJson.order['method'] = $(selected).data('method');
+    var obj = {
+      target: $(selected).data('target'),
+      method: $(selected).data('method')
+    };
+    filterJson.orders = [obj];
     this.updateProducts();
   }
   // Render the component

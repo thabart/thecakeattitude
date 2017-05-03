@@ -3,7 +3,6 @@ import { ShopsService } from '../services';
 import Widget from '../components/widget';
 import Rater from 'react-rater';
 import $ from 'jquery';
-import './trendingSellers.css';
 
 class TrendingSellers extends Component {
   constructor(props) {
@@ -91,11 +90,11 @@ class TrendingSellers extends Component {
         if (!profileImage) {
           profileImage = "/images/profile-picture.png";
         }
-        
+
         content.push((
           <a href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding" onClick={(e) => { self.navigateShop(e, shop.id); }}>
             <div className="d-flex w-100">
-              <img src={profileImage} className="img-thumbnail rounded float-left shop-picture" />
+              <img src={profileImage} className="img-thumbnail rounded float-left picture" />
               <div className="d-flex flex-column">
                 <div className="mb-1">{shop.name}</div>
                 <p className="mb-1">

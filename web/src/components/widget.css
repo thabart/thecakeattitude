@@ -6,3 +6,8 @@
 .widget-header .fa:hover {
 	background-color: #d9d9de;
 }
+
+.widget-body .picture {
+	 width: 60px !important;
+	 height: 60px !important;
+}

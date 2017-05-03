@@ -160,6 +160,7 @@ class Map extends Component {
       sw: southWest
     };
     self.refs.trendingSellers.refresh(json);
+    self.refs.bestDeals.refresh(json);
     ShopsService.search(json).then(function(r) {
       var embedded = r['_embedded'];
       if (!(embedded instanceof Array)) {
@@ -222,7 +223,7 @@ class Map extends Component {
                 <TrendingSellers ref="trendingSellers" history={this.props.history}/>
               </li>
               <li className="col-md-5 cell widget">
-                <BestDeals />
+                <BestDeals ref="bestDeals" history={this.props.history}/>
               </li>
               <li className="col-md-10 cell widget">
                 <PublicAnnouncements />

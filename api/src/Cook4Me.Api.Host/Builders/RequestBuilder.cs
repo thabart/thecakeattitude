@@ -289,11 +289,27 @@ namespace Cook4Me.Api.Host.Builders
                 };
             }
 
-            var orderObj = jObj.GetValue(Constants.DtoNames.SearchProduct.Order);
-            OrderBy order = null;
-            if (orderObj != null)
+            var orderBy = new List<OrderBy>();
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchProduct.Orders);
+            if (ordersObj != null)
             {
-                order = GetOrderBy(orderObj as JObject);
+                var orders = ordersObj as JArray;
+                if (orders != null)
+                {
+                    foreach (var order in orders)
+                    {
+                        orderBy.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
+
+            Location northEastLocation = null, southWestLocation = null;
+            var neLocation = jObj[Constants.DtoNames.SearchShop.NorthEast];
+            var swLocation = jObj[Constants.DtoNames.SearchShop.SouthWest];
+            if (neLocation != null && swLocation != null)
+            {
+                northEastLocation = GetLocation(neLocation as JObject);
+                southWestLocation = GetLocation(swLocation as JObject);
             }
 
             var result = new SearchProductsParameter
@@ -305,7 +321,9 @@ namespace Cook4Me.Api.Host.Builders
                 FilterPrice = filterPrice,
                 ProductName = jObj.Value<string>(Constants.DtoNames.Product.Name),
                 CategoryId = jObj.Value<string>(Constants.DtoNames.Product.CategoryId),
-                Order = order
+                Orders = orderBy,
+                NorthEast = northEastLocation,
+                SouthWest = southWestLocation
             };
 
             bool containsValidPromotion = false;
