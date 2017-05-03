@@ -4,6 +4,7 @@ import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import Promise from 'bluebird';
 import moment from 'moment';
 import Comment from './comment';
+import BestDeals from './bestDeals';
 import './profile.css';
 import $ from 'jquery';
 
@@ -79,9 +80,7 @@ class ShopProfile extends Component {
         </div>
       </section>
       <Comment shop={self.props.shop} onRefreshScore={this.refreshScore}/>
-      <section className="row section white-section shop-section shop-section-padding">
-        <h5>Best deals</h5>
-      </section>
+      <BestDeals shop={self.props.shop} />
     </div>);
   }
 }

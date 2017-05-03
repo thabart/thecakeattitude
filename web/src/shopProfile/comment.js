@@ -273,7 +273,7 @@ class Comment extends Component {
 
         comments.push((<div className="col-md-6">
           {comment.subject === self.state.subject && <div className="close-comment"><i className="fa fa-times" onClick={() => { self.displayRemoveComment(comment.id); }}></i></div> }
-          <div className="comment">
+          <div className="element">
             <div className="row header">
               <div className="col-md-3">
                 <img src={picture} className="rounded-circle" width="60" height="60" />
@@ -292,7 +292,7 @@ class Comment extends Component {
       });
     }
 
-    if (this.state.navigations) {
+    if (this.state.navigations && this.state.navigations.length > 1) {
       this.state.navigations.forEach(function(nav) {
         navigations.push((<li className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigateComment(e, nav.href); }}>{nav.name}</a></li>));
       });

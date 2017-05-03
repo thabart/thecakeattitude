@@ -31,7 +31,7 @@ class BestDeals extends Component {
       orders: [
         { target: "update_datetime", method: "desc" }
       ],
-      count: 1,
+      count: 5,
       contains_valid_promotions: true
     });
     this.request = request;
