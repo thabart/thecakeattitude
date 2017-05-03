@@ -15,7 +15,6 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Host.Dtos;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
