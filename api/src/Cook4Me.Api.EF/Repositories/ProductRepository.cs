@@ -91,7 +91,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (parameter.FilterPrice != null)
             {
-                products = products.Where(p => p.Price >= parameter.FilterPrice.Min && p.Price <= parameter.FilterPrice.Max);
+                products = products.Where(p => p.NewPrice >= parameter.FilterPrice.Min && p.NewPrice <= parameter.FilterPrice.Max);
             }
 
             var result = new SearchProductsResult
