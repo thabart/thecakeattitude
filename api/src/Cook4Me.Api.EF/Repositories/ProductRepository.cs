@@ -44,10 +44,34 @@ namespace Cook4Me.Api.EF.Repositories
             IQueryable<Models.Product> products = _context.Products
                 .Include(p => p.Images)
                 .Include(p => p.Tags)
-                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter);
+                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter)
+                .Include(p => p.Promotions);
             if (!string.IsNullOrWhiteSpace(parameter.ShopId))
             {
                 products = products.Where(p => p.ShopId == parameter.ShopId);
+            }
+
+            if (parameter.ContainsActivePromotion != null)
+            {
+                var currentDate = DateTime.UtcNow;
+                if (parameter.ContainsActivePromotion.Value)
+                {
+                    products = products.Where(p => p.Promotions.Any(pm => pm.Code == null && pm.ExpirationDateTime > currentDate));
+                }
+                else
+                {
+                    products = products.Where(p => !p.Promotions.Any(pm => pm.Code == null && pm.ExpirationDateTime > currentDate));
+                }                
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.ProductName))
+            {
+                products = products.Where(p => p.Name.ToLowerInvariant().Contains(parameter.ProductName.ToLowerInvariant()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
+            {
+                products = products.Where(p => p.CategoryId == parameter.CategoryId);
             }
 
             if (parameter.Filters != null)

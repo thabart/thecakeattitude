@@ -30,10 +30,10 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetMap(Map map);
         JObject GetTag(Tag tag);
         JObject GetComment(Comment comment);
-        JObject GetRatingSummary(ShopRatingSummary summary);
         JObject GetProduct(Product product);
         JObject GetFilter(Filter filter);
         JObject GetFilterValue(FilterValue filterValue);
+        JObject GetPromotion(ProductPromotion promotion);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -177,19 +177,6 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetRatingSummary(ShopRatingSummary summary)
-        {
-            if (summary == null)
-            {
-                throw new ArgumentNullException(nameof(summary));
-            }
-            
-            var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.RatingSummary.AverageStore, summary.AverageScore);
-            jObj.Add(Constants.DtoNames.RatingSummary.NbComments, summary.NbComments);
-            return jObj;
-        }
-
         public JObject GetProduct(Product product)
         {
             if (product == null)
@@ -239,6 +226,17 @@ namespace Cook4Me.Api.Host.Builders
                 }
 
                 jObj.Add(Constants.DtoNames.Product.Filters, arr);
+            }
+
+            if (product.Promotions != null && product.Promotions.Any())
+            {
+                JArray arr = new JArray();
+                foreach(var promotion in product.Promotions)
+                {
+                    arr.Add(GetPromotion(promotion));
+                }
+
+                jObj.Add(Constants.DtoNames.Product.Promotions, arr);
             }
 
             return jObj;
@@ -293,6 +291,30 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.FilterValue.Id, filterValue.Id);
             jObj.Add(Constants.DtoNames.FilterValue.Content, filterValue.Content);
+            return jObj;
+        }
+
+        public JObject GetPromotion(ProductPromotion promotion)
+        {
+            if (promotion == null)
+            {
+                throw new ArgumentNullException(nameof(promotion));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Promotion.Id, promotion.Id);
+            jObj.Add(Constants.DtoNames.Promotion.ProductId, promotion.ProductId);
+            jObj.Add(Constants.DtoNames.Promotion.Discount, promotion.Discount);
+            var type = promotion.Type == PromotionTypes.Percentage ? "percentage" : "reduction";
+            jObj.Add(Constants.DtoNames.Promotion.Type, type);
+            if (!string.IsNullOrWhiteSpace(promotion.Code))
+            {
+                jObj.Add(Constants.DtoNames.Promotion.Code, promotion.Code);
+            }
+
+            jObj.Add(Constants.DtoNames.Promotion.CreateDateTime, promotion.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Promotion.UpdateDateTime, promotion.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.Promotion.ExpirationDateTime, promotion.ExpirationDateTime);
             return jObj;
         }
     }

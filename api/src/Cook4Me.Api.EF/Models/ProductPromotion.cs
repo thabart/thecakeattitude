@@ -14,11 +14,20 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.Host.Dtos
+using System;
+
+namespace Cook4Me.Api.EF.Models
 {
-    public class ShopRatingSummary
+    public class ProductPromotion
     {
-        public double AverageScore { get; set; }
-        public int NbComments { get; set; }
+        public string Id { get; set; }
+        public string ProductId { get; set; }
+        public double Discount { get; set; }
+        public int Type { get; set; }
+        public string Code { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
+        public DateTime ExpirationDateTime { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

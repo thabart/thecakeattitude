@@ -97,6 +97,7 @@ namespace Cook4Me.Api.Host
                 public const string Tags = "tags";
                 public const string Images = "images";
                 public const string Filters = "filters";
+                public const string Promotions = "promotions";
             }
 
             public static class Comment
@@ -148,6 +149,18 @@ namespace Cook4Me.Api.Host
             {
                 public const string Id = "id";
                 public const string Content = "content";
+            }
+
+            public static class Promotion
+            {
+                public const string Id = "id";
+                public const string ProductId = "product_id";
+                public const string Discount = "discount";
+                public const string Type = "type";
+                public const string Code = "code";
+                public const string UpdateDateTime = "update_datetime";
+                public const string CreateDateTime = "create_datetime";
+                public const string ExpirationDateTime = "expiration_datetime";
             }
 
             public static class Seller
@@ -207,6 +220,7 @@ namespace Cook4Me.Api.Host
                 public const string Filters = "filters";
                 public const string MinPrice = "min_price";
                 public const string MaxPrice = "max_price";
+                public const string ContainsValidPromotions = "contains_valid_promotions";
             }
 
             public static class OrderBy

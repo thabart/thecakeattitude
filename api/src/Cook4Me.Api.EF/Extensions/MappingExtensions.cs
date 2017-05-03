@@ -356,6 +356,12 @@ namespace Cook4Me.Api.EF.Extensions
                 filterValues = product.Filters.Select(f => f.ToDomain());
             }
 
+            IEnumerable<Domain.ProductPromotion> promotions = new List<Domain.ProductPromotion>();
+            if (product.Promotions != null)
+            {
+                promotions = product.Promotions.Where(p => !string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToDomain());
+            }
+
             return new Domain.Product
             {
                 Id = product.Id,
@@ -370,7 +376,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Name = product.Name,
                 PartialImagesUrl = images,
                 Tags = tags,
-                FilterValues = filterValues
+                FilterValues = filterValues,
+                Promotions = promotions
             };
         }
 
@@ -465,6 +472,26 @@ namespace Cook4Me.Api.EF.Extensions
                 Id = productCategory.Id,
                 Description = productCategory.Description,
                 Name = productCategory.Name
+            };
+        }
+
+        public static Domain.ProductPromotion ToDomain(this ProductPromotion productPromotion)
+        {
+            if (productPromotion == null)
+            {
+                throw new ArgumentNullException(nameof(productPromotion));
+            }
+
+            return new Domain.ProductPromotion
+            {
+                Id = productPromotion.Id,
+                Code = productPromotion.Code,
+                Discount = productPromotion.Discount,
+                ProductId = productPromotion.ProductId,
+                Type = (Domain.PromotionTypes)productPromotion.Type,
+                CreateDateTime = productPromotion.CreateDateTime,
+                ExpirationDateTime = productPromotion.ExpirationDateTime,
+                UpdateDateTime = productPromotion.UpdateDateTime
             };
         }
     }

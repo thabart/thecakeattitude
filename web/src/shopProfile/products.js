@@ -23,7 +23,10 @@ class ShopProducts extends Component {
     this.toggleProductError = this.toggleProductError.bind(this);
     this.priceChange = this.priceChange.bind(this);
     this.handlePriceChange = this.handlePriceChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.changePage = this.changePage.bind(this);
+    this.search = this.search.bind(this);
+    this.handleBestDeals = this.handleBestDeals.bind(this);
     this.state = {
       minPrice: minPrice,
       maxPrice : maxPrice,
@@ -33,8 +36,15 @@ class ShopProducts extends Component {
       filters: [],
       pagination: [],
       isProductsLoading: false,
-      productErrorMessage: null
+      productErrorMessage: null,
+      productName: null,
+      bestDeals: false
     };
+  }
+  // Search
+  search() {
+    filterJson['name'] = this.state.productName;
+    this.updateProducts();
   }
   // Filter the products
   filter(e, filterId, filterValue) {
@@ -109,6 +119,15 @@ class ShopProducts extends Component {
       maxPrice: p[1]
     });
   }
+  // Handle input change
+  handleInputChange(e) {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
+  }
   // Handle price change
   handlePriceChange(e) {
     const target = e.target;
@@ -127,6 +146,17 @@ class ShopProducts extends Component {
     }
 
     this.priceChange();
+  }
+  // Handle best deals
+  handleBestDeals(e) {
+    var isChecked = $(e.target).is(':checked');
+    if (isChecked) {
+      filterJson['contains_valid_promotions'] = true;
+    } else {
+      filterJson['contains_valid_promotions'] = '';
+    }
+
+    this.updateProducts();
   }
   // Execute when the price is changed
   priceChange() {
@@ -242,13 +272,13 @@ class ShopProducts extends Component {
             <div className="col-md-3">
               <div className="form-group">
                 <label>Product name</label>
-                <input type="text" className="form-control" />
+                <input type="text" className="form-control" name="productName" onChange={this.handleInputChange} />
               </div>
               <div className="form-group">
-                <button className="btn btn-default">Search</button>
+                <button className="btn btn-default" onClick={this.search}>Search</button>
               </div>
               <div className="form-group filter">
-                <input type="checkbox" /> Best deals
+                <input type="checkbox" onClick={this.handleBestDeals}/> Best deals
               </div>
               <div className="form-group filter">
                 <label>Price</label>

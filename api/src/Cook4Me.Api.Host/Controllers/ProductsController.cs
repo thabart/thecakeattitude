@@ -18,12 +18,9 @@ using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers

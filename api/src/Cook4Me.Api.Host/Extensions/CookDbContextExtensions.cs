@@ -33,8 +33,14 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _jeanProductId = Guid.NewGuid().ToString();
         private static string _blueJeanProductId = Guid.NewGuid().ToString();
         private static string _colorFilterId = Guid.NewGuid().ToString();
+        private static string _sizeFilterId = Guid.NewGuid().ToString();
         private static string _redColorFilterId = Guid.NewGuid().ToString();
         private static string _blueColorFilterId = Guid.NewGuid().ToString();
+        private static string _smallSizeFilterId = Guid.NewGuid().ToString();
+        private static string _mediumSizeFilterId = Guid.NewGuid().ToString();
+        private static string _largeSizeFilterId = Guid.NewGuid().ToString();
+        private static string _smallShoesId = Guid.NewGuid().ToString();
+        private static string _mixtShoesId = Guid.NewGuid().ToString();
 
         public static void EnsureSeedData(this CookDbContext context)
         {
@@ -51,6 +57,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertShopTags(context);
             InsertProductCategories(context);
             InsertProducts(context);
+            InsertPromotions(context);
             context.SaveChanges();
         }
 
@@ -199,6 +206,36 @@ namespace Cook4Me.Api.Host.Extensions
                             CreateDateTime = DateTime.UtcNow,
                             UpdateDateTime = DateTime.UtcNow,
                             Content = "Blue"
+                        }
+                    }
+                },
+                new Filter
+                {
+                    Id = _sizeFilterId,
+                    Name = "Size",
+                    ShopId = _firstShopId,
+                    Values = new []
+                    {
+                        new FilterValue
+                        {
+                            Id = _smallSizeFilterId,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Content = "Small"
+                        },
+                        new FilterValue
+                        {
+                            Id = _mediumSizeFilterId,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Content = "Medium"
+                        },
+                        new FilterValue
+                        {
+                            Id = _largeSizeFilterId,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Content = "Large"
                         }
                     }
                 }
@@ -397,6 +434,119 @@ namespace Cook4Me.Api.Host.Extensions
                             FilterValueId = _blueColorFilterId
                         }
                     }
+                },
+                new Product
+                {
+                    Id = _smallShoesId,
+                    Name = "Small shoes",
+                    ShopId = _firstShopId,
+                    Description = "Small shoes",
+                    CategoryId = _womenProductCategory,
+                    Price = 250,
+                    UnitOfMeasure = "piece",
+                    Quantity = 1,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    AvailableInStock = 3000,
+                    Images = new []
+                    {
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        }
+                    },
+                    Tags = new []
+                    {
+                        new ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    },
+                    Filters = new []
+                    {
+                        new ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = _smallSizeFilterId
+                        }
+                    }
+                },
+                new Product
+                {
+                    Id = _mixtShoesId,
+                    Name = "Mixt shoes",
+                    ShopId = _firstShopId,
+                    Description = "Mixt shoes",
+                    CategoryId = _womenProductCategory,
+                    Price = 250,
+                    UnitOfMeasure = "piece",
+                    Quantity = 1,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    AvailableInStock = 3000,
+                    Images = new []
+                    {
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        }
+                    },
+                    Tags = new []
+                    {
+                        new ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    },
+                    Filters = new []
+                    {
+                        new ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = _smallSizeFilterId
+                        },
+                        new ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = _mediumSizeFilterId
+                        },
+                        new ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = _largeSizeFilterId
+                        }
+                    }
+                }
+            });
+        }
+
+        private static void InsertPromotions(CookDbContext context)
+        {
+            context.Promotions.AddRange(new[]
+            {
+                new ProductPromotion
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ProductId = _blueJeanProductId,
+                    Type = (int)Core.Models.PromotionTypes.Percentage,
+                    Discount = 20,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    ExpirationDateTime = DateTime.UtcNow.AddDays(2)                  
+                },
+                new ProductPromotion
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ProductId = _smallShoesId,
+                    Type = (int)Core.Models.PromotionTypes.Percentage,
+                    Discount = 60,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    ExpirationDateTime = DateTime.UtcNow.AddDays(2)
                 }
             });
         }

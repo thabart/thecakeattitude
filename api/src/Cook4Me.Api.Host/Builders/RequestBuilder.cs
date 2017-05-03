@@ -278,6 +278,7 @@ namespace Cook4Me.Api.Host.Builders
             var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
             var minPrice = jObj.Value<double>(Constants.DtoNames.SearchProduct.MinPrice);
             var maxPrice = jObj.Value<double>(Constants.DtoNames.SearchProduct.MaxPrice);
+            var containsValidPromotionStr = jObj.Value<string>(Constants.DtoNames.SearchProduct.ContainsValidPromotions);
             FilterPrice filterPrice = null;
             if (minPrice != default(double) && maxPrice != default(double))
             {
@@ -286,7 +287,7 @@ namespace Cook4Me.Api.Host.Builders
                     Min = minPrice,
                     Max = maxPrice
                 };
-            } 
+            }
 
             var result = new SearchProductsParameter
             {
@@ -294,8 +295,16 @@ namespace Cook4Me.Api.Host.Builders
                 IsPagingEnabled = true,
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 Filters = filters,
-                FilterPrice = filterPrice
+                FilterPrice = filterPrice,
+                ProductName = jObj.Value<string>(Constants.DtoNames.Product.Name),
+                CategoryId = jObj.Value<string>(Constants.DtoNames.Product.CategoryId)
             };
+
+            bool containsValidPromotion = false;
+            if (bool.TryParse(containsValidPromotionStr, out containsValidPromotion))
+            {
+                result.ContainsActivePromotion = containsValidPromotion;
+            }
 
             if (count > 0)
             {
