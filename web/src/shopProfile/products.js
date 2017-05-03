@@ -11,7 +11,7 @@ import Promise from 'bluebird';
 
 const minPrice = 1;
 const maxPrice = 30000;
-const defaultCount = 1;
+const defaultCount = 3;
 const filterJson = {start_index : 0, count: defaultCount, min_price: minPrice, max_price: maxPrice, filters: []};
 
 class ShopProducts extends Component {
@@ -211,7 +211,19 @@ class ShopProducts extends Component {
           }
         }
 
-        products.push((<section className="row product-item">
+        var newPrice = null,
+          promotion = null;
+        if (product.promotions && product.promotions.length > 0) {
+          promotion = product.promotions[0];
+          switch(promotion.type)
+          {
+            case "percentage":
+              newPrice = product.price - (product.price * promotion.discount) / 100;
+            break;
+          }
+        }
+
+        products.push((<section className={newPrice == null ? "row product-item" : "row product-item is-best-deals"}>
           <div className="col-md-3">
             <img src={imageUrl} className="rounded" width="140" height="140"/>
             <div className="best-deals">
@@ -226,7 +238,12 @@ class ShopProducts extends Component {
             </p>
           </div>
           <div className="col-md-4">
-            <h4 className="price">€ {product.price}</h4>
+            {newPrice == null ? (<h4 className="price">€ {product.price}</h4>) : (
+              <div>
+                  <h4 className="price inline"><strike>€ {product.price}</strike></h4> (<i>-{promotion.discount}%</i>)
+                  <h4 className="price"> € {newPrice}</h4>
+              </div>
+            )}
             <ul>
               {filters}
             </ul>

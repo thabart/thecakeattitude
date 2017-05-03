@@ -359,7 +359,7 @@ namespace Cook4Me.Api.EF.Extensions
             IEnumerable<Domain.ProductPromotion> promotions = new List<Domain.ProductPromotion>();
             if (product.Promotions != null)
             {
-                promotions = product.Promotions.Where(p => !string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToDomain());
+                promotions = product.Promotions.Where(p => string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToDomain());
             }
 
             return new Domain.Product
