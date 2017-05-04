@@ -14,9 +14,10 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.Core.Handlers
+namespace Cook4Me.Api.Core.Bus
 {
-    public class ShopHandler
+    public class Event : Message
     {
+        public int Version;
     }
 }

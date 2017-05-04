@@ -14,10 +14,10 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
-using Microsoft.AspNetCore.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -29,7 +29,7 @@ namespace Cook4Me.Api.Host.Validators
 {
     public interface IAddShopValidator
     {
-        Task<AddShopValidationResult> Validate(Shop shop, string subject); 
+        Task<AddShopValidationResult> Validate(AddShopCommand shop, string subject); 
     }
 
     public class AddShopValidationResult
@@ -66,7 +66,7 @@ namespace Cook4Me.Api.Host.Validators
             _mapRepository = mapRepository;
         }
 
-        public async Task<AddShopValidationResult> Validate(Shop shop, string subject)
+        public async Task<AddShopValidationResult> Validate(AddShopCommand shop, string subject)
         {
             if (shop == null)
             {
@@ -117,7 +117,7 @@ namespace Cook4Me.Api.Host.Validators
                 CategoryId = shop.CategoryId,
                 Subject = subject
             });
-            if (searchResult.Content == null || !searchResult.Content.Any())
+            if (searchResult.Content != null && searchResult.Content.Any())
             {
                 return new AddShopValidationResult(ErrorDescriptions.TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory);
             }
@@ -163,7 +163,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Country));
             }
 
-            if (shop.Payments == null || !shop.Payments.Any())
+            if (shop.PaymentMethods == null || !shop.PaymentMethods.Any())
             {
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Payments));
             }

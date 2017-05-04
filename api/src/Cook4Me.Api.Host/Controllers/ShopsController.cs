@@ -19,6 +19,7 @@ using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Operations;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -43,11 +44,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly ICommentRepository _commentRepository;
         private readonly IAddCommentValidator _addCommentValidator;
+        private readonly IAddShopOperation _addShopOperation;
 
         public ShopsController(
             IShopRepository repository, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder,
             IHostingEnvironment env, IAddShopValidator addShopValidator, IHalResponseBuilder halResponseBuilder,
-            ICommentRepository commentRepository, IAddCommentValidator addCommentValidator)
+            ICommentRepository commentRepository, IAddCommentValidator addCommentValidator,
+            IAddShopOperation addShopOperation)
         {
             _repository = repository;
             _requestBuilder = requestBuilder;
@@ -57,6 +60,7 @@ namespace Cook4Me.Api.Host.Controllers
             _halResponseBuilder = halResponseBuilder;
             _commentRepository = commentRepository;
             _addCommentValidator = addCommentValidator;
+            _addShopOperation = addShopOperation;
         }
 
         [HttpGet]
@@ -96,7 +100,6 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> AddShop([FromBody] JObject obj)
         {
-            // 1. Try to retrieve the subject.
             var subject = User.GetSubject();
             if (string.IsNullOrEmpty(subject))
             {
@@ -104,42 +107,7 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            // 2. Check the request.
-            Shop addShopParameter = null;
-            try
-            {
-                addShopParameter = _requestBuilder.GetAddShop(obj);
-            }
-            catch (ArgumentException ex)
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Request, ex.Message);
-                return this.BuildResponse(error, HttpStatusCode.BadRequest);
-            }
-
-            var validationResult = await _addShopValidator.Validate(addShopParameter, subject);
-            if (!validationResult.IsValid)
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
-                return this.BuildResponse(error, HttpStatusCode.BadRequest);
-            }
-
-            addShopParameter.Id = Guid.NewGuid().ToString();
-            addShopParameter.CreateDateTime = DateTime.UtcNow;
-            addShopParameter.UpdateDateTime = DateTime.UtcNow;
-            addShopParameter.Subject = subject;
-            addShopParameter.ShopRelativePath = GetRelativeShopPath(addShopParameter.Id);
-            addShopParameter.UndergroundRelativePath = GetRelativeUndergroundPath(addShopParameter.Id);
-            // 3. Add the files.
-            if (!AddShopMap(addShopParameter, validationResult.Map))
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeAdded);
-                return this.BuildResponse(error, HttpStatusCode.InternalServerError);
-            }
-
-            // 4. Persist the shop.
-            var res = new { id = addShopParameter.Id, shop_path = addShopParameter.ShopRelativePath, underground_path = addShopParameter.UndergroundRelativePath };
-            await _repository.Add(addShopParameter);
-            return new OkObjectResult(res);
+            return await _addShopOperation.Execute(obj, subject);
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -228,48 +196,6 @@ namespace Cook4Me.Api.Host.Controllers
 
             var obj = new { id = comment.Id };
             return new OkObjectResult(obj);
-        }
-
-        private bool AddShopMap(Shop shop, Map map)
-        {
-            if (!System.IO.File.Exists(Constants.Assets.PartialShop) || !System.IO.File.Exists(Constants.Assets.PartialUnderground))
-            {
-                return false;
-            }
-
-            var shopLines = System.IO.File.ReadAllLines(Constants.Assets.PartialShop);
-            var undergroundLines = System.IO.File.ReadAllLines(Constants.Assets.PartialUnderground);
-            var shopPath = Path.Combine(_env.WebRootPath, shop.ShopRelativePath);
-            var undergroundPath = Path.Combine(_env.WebRootPath, shop.UndergroundRelativePath);
-            var shopFile = System.IO.File.Create(shopPath);
-            var undergroundFile = System.IO.File.Create(undergroundPath);
-            using (var shopWriter = new StreamWriter(shopFile))
-            {
-                foreach (var shopLine in shopLines)
-                {
-                    shopWriter.WriteLine(shopLine.Replace("<map_name>", map.MapName).Replace("<warp_entry>", "shopentry_" + shop.Id).Replace("<underground_name>", "underground_" + shop.Id));
-                }
-            }
-
-            using (var undergroundWriter = new StreamWriter(undergroundFile))
-            {
-                foreach(var undergroundLine in undergroundLines)
-                {
-                    undergroundWriter.WriteLine(undergroundLine.Replace("<map_name>", "shop_" + shop.Id));
-                }
-            }
-
-            return true;
-        }
-
-        private static string GetRelativeShopPath(string id)
-        {
-            return @"shops/" + id + "_shop.json";
-        }
-
-        private static string GetRelativeUndergroundPath(string id)
-        {
-            return @"shops/" + id + "_underground.json";
         }
 
         private void AddShop(IHalResponseBuilder halResponseBuilder, IResponseBuilder responseBuilder, Shop shop)

@@ -17,7 +17,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.NewFolder
+namespace Cook4Me.Api.Core.Aggregates
 {
     public class ShopAggregate
     {
@@ -25,7 +25,6 @@ namespace Cook4Me.Api.Core.NewFolder
         public string Subject { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public IEnumerable<string> Tags { get; set; }
         public string BannerImage { get; set; }
         public string ProfileImage { get; set; }
         public string MapName { get; set; }
@@ -45,5 +44,7 @@ namespace Cook4Me.Api.Core.NewFolder
         public int TotalScore { get; set; }
         public double AverageScore { get; set; }
         public double NbComments { get; set; }
+        public IEnumerable<string> TagNames { get; set; }
+        public IEnumerable<ShopPaymentMethod> ShopPaymentMethods { get; set; }
     }
 }

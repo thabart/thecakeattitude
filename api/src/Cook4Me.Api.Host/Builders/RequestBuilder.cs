@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Microsoft.AspNetCore.Http;
@@ -25,10 +26,10 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
-        Shop GetAddShop(JObject jObj);
+        AddShopCommand GetAddShop(JObject jObj);
+        AddPaymentInformation GetPaymentMethod(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
-        PaymentMethod GetPaymentMethod(JObject jObj);
         Location GetLocation(JObject jObj);
         Comment GetComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(JObject jObj);
@@ -40,14 +41,14 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
-        public Shop GetAddShop(JObject jObj)
+        public AddShopCommand GetAddShop(JObject jObj)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            var result = new Shop();
+            var result = new AddShopCommand();
             result.Name = jObj.Value<string>(Constants.DtoNames.Shop.Name); // General information
             result.Description = jObj.Value<string>(Constants.DtoNames.Shop.Description);
             var tags = jObj.GetValue(Constants.DtoNames.Shop.Tags);
@@ -61,7 +62,7 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
-            result.Tags = ts;
+            result.TagNames = ts;
             result.BannerImage = jObj.Value<string>(Constants.DtoNames.Shop.BannerImage);
             result.ProfileImage = jObj.Value<string>(Constants.DtoNames.Shop.ProfileImage);
             result.MapName = jObj.Value<string>(Constants.DtoNames.Shop.MapName);
@@ -71,7 +72,7 @@ namespace Cook4Me.Api.Host.Builders
             result.PostalCode = jObj.Value<string>(Constants.DtoNames.Shop.PostalCode);
             result.Locality = jObj.Value<string>(Constants.DtoNames.Shop.Locality);
             result.Country = jObj.Value<string>(Constants.DtoNames.Shop.Country);
-            var paymentMethods = new List<PaymentMethod>();
+            var paymentMethods = new List<AddPaymentInformation>();
             var payments = jObj[Constants.DtoNames.Shop.Payments];
             JArray arr = null;
             if (payments != null && (arr = payments as JArray) != null)
@@ -90,7 +91,7 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
-            result.Payments = paymentMethods;
+            result.PaymentMethods = paymentMethods;
             return result;
         }
 
@@ -158,7 +159,7 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
-        public PaymentMethod GetPaymentMethod(JObject jObj)
+        public AddPaymentInformation GetPaymentMethod(JObject jObj)
         {
             if (jObj == null)
             {
@@ -185,10 +186,10 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentException(ErrorDescriptions.ThePaymentMethodDoesntExist);
             }
 
-            return new PaymentMethod
+            return new AddPaymentInformation
             {
                 Id = Guid.NewGuid().ToString(),
-                Method = methodEnum.Value,
+                Method = (AddPaymentInformationMethods)methodEnum.Value,
                 Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
             };
         }

@@ -14,30 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Commands;
+using Cook4Me.Api.Core.Bus;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Cook4Me.Api.Core
+namespace Cook4Me.Api.Handlers
 {
-    public interface Handles<T>
-    {
-        void Handle(T message);
-    }
-
-    public interface ICommandSender
-    {
-        void Send<T>(T command) where T : Command;
-
-    }
-
-    public interface IEventPublisher
-    {
-        void Publish<T>(T @event) where T : Event;
-    }
-
-    internal class FakeBus
+    internal class FakeBus : IEventPublisher, ICommandSender
     {
         private readonly Dictionary<Type, List<Action<Message>>> _routes = new Dictionary<Type, List<Action<Message>>>();
 

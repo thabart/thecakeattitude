@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.EF.Models;
 using System;
 using System.Collections.Generic;
@@ -104,6 +105,51 @@ namespace Cook4Me.Api.EF.Extensions
                 AverageScore = shop.AverageScore,
                 Filters = filters,
                 ProductCategories = productCategories
+            };
+        }
+
+        public static Shop ToModel(this ShopAggregate shop)
+        {
+            if (shop == null)
+            {
+                throw new ArgumentNullException(nameof(shop));
+            }
+
+            var paymentMethods = new List<PaymentMethod>();
+            if (shop.ShopPaymentMethods != null)
+            {
+                paymentMethods = shop.ShopPaymentMethods.Select(s => new PaymentMethod
+                {
+                    Id = s.Id,
+                    Iban = s.Iban,
+                    Method = (int)s.Method
+                }).ToList();
+            }
+
+            return new Shop
+            {
+                Id = shop.Id,
+                Subject = shop.Subject,
+                Name = shop.Name,
+                Description = shop.Description,
+                BannerImage = shop.BannerImage,
+                ProfileImage = shop.ProfileImage,
+                MapName = shop.MapName,
+                CategoryId = shop.CategoryId,
+                PlaceId = shop.PlaceId,
+                StreetAddress = shop.StreetAddress,
+                PostalCode = shop.PostalCode,
+                Locality = shop.Locality,
+                Country = shop.Country,
+                ShopRelativePath = shop.ShopRelativePath,
+                UndergroundRelativePath = shop.UndergroundRelativePath,
+                CreateDateTime = shop.CreateDateTime,
+                UpdateDateTime = shop.UpdateDateTime,
+                GooglePlaceId = shop.GooglePlaceId,
+                Latitude = shop.Latitude,
+                Longitude = shop.Longitude,
+                TotalScore = shop.TotalScore,
+                PaymentMethods = paymentMethods
             };
         }
 

@@ -14,9 +14,10 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.Core.Commands
+namespace Cook4Me.Api.Core.Bus
 {
-    public class Command : Message
+    public interface ICommandSender
     {
+        void Send<T>(T command) where T : Command;
     }
 }

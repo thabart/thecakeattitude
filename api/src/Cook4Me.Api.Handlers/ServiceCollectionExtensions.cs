@@ -14,16 +14,17 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Operations.Shop;
+using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Commands.Shop;
+using Cook4Me.Api.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Runtime;
 
-namespace Cook4Me.Api.Core
+namespace Cook4Me.Api.Handlers
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCoreDependencies(this IServiceCollection serviceCollection)
+        public static IServiceCollection AddHandlers(this IServiceCollection serviceCollection)
         {
             if (serviceCollection == null)
             {
@@ -31,9 +32,11 @@ namespace Cook4Me.Api.Core
             }
 
             var bus = new FakeBus();
-            serviceCollection.AddTransient<IAddShopOperation, AddShopOperation>();
             serviceCollection.AddSingleton(typeof(IEventPublisher), bus);
             serviceCollection.AddSingleton(typeof(ICommandSender), bus);
+            var provider = serviceCollection.BuildServiceProvider();
+            var handler = new ShopHandler(provider.GetService<IShopRepository>());
+            bus.RegisterHandler<AddShopCommand>(handler.Handle);
             return serviceCollection;
         }
     }

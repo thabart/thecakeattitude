@@ -14,17 +14,18 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Cook4Me.Api.Core.Parameters;
 using System.Linq.Expressions;
-using Cook4Me.Api.Core.Results;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -37,15 +38,15 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public async Task<bool> Add(Shop shop)
+        public async Task<bool> Add(ShopAggregate shop)
         {
             try
             {
                 var record = shop.ToModel();
                 var tags = new List<Models.ShopTag>();
-                if (shop.Tags != null && shop.Tags.Any())
+                if (shop.TagNames != null && shop.TagNames.Any())
                 {
-                    var tagNames = shop.Tags;
+                    var tagNames = shop.TagNames;
                     var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
                     foreach(var connectedTag in connectedTags)
                     {

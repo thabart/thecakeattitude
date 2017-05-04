@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.EF;
+using Cook4Me.Api.Handlers;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Helpers;
@@ -103,14 +104,15 @@ namespace Cook4Me.Api.Host
 
         private static void RegisterDependencies(IServiceCollection services)
         {
-            services.AddCookForMeStoreInMemory();
+            services.AddCookForMeStoreInMemory()
+                .AddHandlers();
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
             services.AddTransient<IAddShopValidator, AddShopValidator>();
             services.AddTransient<IAddCommentValidator, AddCommentValidator>();
-            services.AddTransient<IAddShopOperation, AddShopOperation>();
             services.AddTransient<IControllerHelper, ControllerHelper>();
+            services.AddTransient<IAddShopOperation, AddShopOperation>();
         }
     }
 }
