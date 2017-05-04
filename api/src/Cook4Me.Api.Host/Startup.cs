@@ -14,12 +14,16 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.EF;
 using Cook4Me.Api.Handlers;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
 using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Helpers;
+using Cook4Me.Api.Host.Hubs;
 using Cook4Me.Api.Host.Operations.Shop;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Builder;
@@ -58,6 +62,11 @@ namespace Cook4Me.Api.Host
             {
                 opts.AddPolicy("Connected", policy => policy.RequireAssertion((ctx) => ctx.User != null && ctx.User.Identity != null && ctx.User.Identity.IsAuthenticated));
             });
+            // 4. Add signal-r
+            services.AddSignalR(options =>
+            {
+                options.Hubs.EnableDetailedErrors = true;
+            });
             // 4. Add other dependencies.
             RegisterDependencies(services);
         }
@@ -93,6 +102,10 @@ namespace Cook4Me.Api.Host
                 simpleIdentityServerContext.EnsureSeedData();
             }
 
+            // 7. Launch Signal-R
+            app.UseSignalR<RawConnection>("/raw-connection");
+            app.UseSignalR();
+
             // 7. Launch ASP.NET MVC
             app.UseMvc(routes =>
             {
@@ -111,6 +124,10 @@ namespace Cook4Me.Api.Host
         {
             services.AddCookForMeStoreInMemory()
                 .AddHandlers();
+            var provider = services.BuildServiceProvider();
+            var bus = provider.GetService<IBus>();
+            var shopEventsHandler = new ShopEventsHandler();
+            bus.RegisterHandler<ShopAddedEvent>(shopEventsHandler.Handle);
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();

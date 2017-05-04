@@ -22,7 +22,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    internal class FakeBus : IEventPublisher, ICommandSender
+    internal class FakeBus : IEventPublisher, ICommandSender, IBus
     {
         private readonly Dictionary<Type, List<Action<Message>>> _routes = new Dictionary<Type, List<Action<Message>>>();
 

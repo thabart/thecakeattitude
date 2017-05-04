@@ -8,6 +8,7 @@ import Shop from './Shop';
 import { OpenIdService, SessionService } from './services';
 import Error from './Error';
 import createBrowserHistory  from 'history/createBrowserHistory';
+import signalr from 'react-native-signalr';
 import './App.css';
 var history = createBrowserHistory();
 
@@ -20,6 +21,8 @@ class App extends Component {
     };
   }
   componentWillMount() {
+    console.log(signalr);
+    const connection = signalr.hubConnection('http://localhost:5000');
     var self = this;
     var session = SessionService.getSession();
     if (!session || session == null) {
