@@ -14,12 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Bus
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public interface Handles<T>
+    public class ShopFilter
     {
-        Task Handle(T message);
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<ShopFilterValue> Values { get; set; }
     }
 }

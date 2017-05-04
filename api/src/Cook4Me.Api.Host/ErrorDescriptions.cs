@@ -27,6 +27,7 @@ namespace Cook4Me.Api.Host
         public const string TheMapDoesntExist = "the map doesn't exist";
         public const string TheMapFileDoesntExist = "the map file doesn't exist";
         public const string TheShopDoesntExist = "the shop doesn't exist";
+        public const string TheCommentDoesntExist = "the comment doesn't exist";
         public const string TheCommentAlreadyExists = "a comment has already been written by the user";
         public const string TheCommentCannotBeInserted = "an error occured when trying to add the comment";
         public const string TheShopCannotBeUpdated = "an error occured when trying to update the shop";
@@ -37,5 +38,6 @@ namespace Cook4Me.Api.Host
         public const string TheParameterIsMandatoryAndShouldContainsBetween = "the parameter {0} is mandatory and should contains between {1} characters and {2}";
         public const string TheParameterLengthCannotExceedNbCharacters = "the parameter {0} length cannot exceed {1} characters";
         public const string TheScoreMustBeBetween = "the score must be between 1 and 5";
+        public const string TheCommentCannotBeRemovedByYou = "the comment cannot be removed by you";
     }
 }

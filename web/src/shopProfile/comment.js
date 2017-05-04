@@ -67,7 +67,7 @@ class Comment extends Component {
     self.setState({
       isRemoveCommentOpened: false
     });
-    CommentsService.remove(this.state.currentComment).then(function() {
+    ShopsService.removeComment(this.props.shop.id, this.state.currentComment).then(function() {
       self.refreshComments();
       self.props.onRefreshScore();
     }).catch(function(e) {

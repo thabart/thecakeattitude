@@ -8,7 +8,7 @@
     "projectUrl": ""
   },
   "dependencies": {
-    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0"
+    "Microsoft.AspNet.Mvc.Core": "6.0.0-rc1-final"
   },
   "tools": {
     "Microsoft.EntityFrameworkCore.Tools": {

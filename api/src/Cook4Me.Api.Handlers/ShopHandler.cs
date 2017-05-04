@@ -16,15 +16,16 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
-using System.Linq;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ShopHandler : Handles<AddShopCommand>
+    public class ShopHandler : Handles<AddShopCommand>, Handles<AddShopCommentCommand>, Handles<RemoveShopCommentCommand>
     {
         private readonly IShopRepository _shopRepository;
 
@@ -33,8 +34,13 @@ namespace Cook4Me.Api.Handlers
             _shopRepository = shopRepository;
         }
 
-        public void Handle(AddShopCommand message)
+        public async Task Handle(AddShopCommand message)
         {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
             IEnumerable<ShopPaymentMethod> paymentMethods = null;
             if (message.PaymentMethods != null)
             {
@@ -71,7 +77,56 @@ namespace Cook4Me.Api.Handlers
                 ShopPaymentMethods = paymentMethods,
                 TagNames = message.TagNames
             };
-            _shopRepository.Add(aggregate);
+            await _shopRepository.Add(aggregate);
+        }
+
+        public async Task Handle(AddShopCommentCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var record = await _shopRepository.Get(message.ShopId);
+            if (record == null)
+            {
+                return;
+            }
+
+            var shopComment = new ShopComment
+            {
+                Id = message.Id,
+                Content = message.Content,
+                Score = message.Score,
+                Subject = message.Subject,
+                CreateDateTime = message.CreateDateTime,
+                UpdateDateTime = message.UpdateDateTime
+            };
+            record.AddComment(shopComment);
+            await _shopRepository.Update(record);
+        }
+
+        public async Task Handle(RemoveShopCommentCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var record = await _shopRepository.Get(message.ShopId);
+            if (record == null)
+            {
+                return;
+            }
+
+            var shopComment = record.Comments == null ? null : record.Comments.FirstOrDefault(f => f.Id == message.CommentId);
+            if (shopComment == null)
+            {
+                return;
+            }
+
+            record.RemoveComment(shopComment);
+            await _shopRepository.Update(record);
         }
     }
 }

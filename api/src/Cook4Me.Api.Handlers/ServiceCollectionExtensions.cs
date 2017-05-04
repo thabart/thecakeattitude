@@ -37,6 +37,8 @@ namespace Cook4Me.Api.Handlers
             var provider = serviceCollection.BuildServiceProvider();
             var handler = new ShopHandler(provider.GetService<IShopRepository>());
             bus.RegisterHandler<AddShopCommand>(handler.Handle);
+            bus.RegisterHandler<AddShopCommentCommand>(handler.Handle);
+            bus.RegisterHandler<RemoveShopCommentCommand>(handler.Handle);
             return serviceCollection;
         }
     }

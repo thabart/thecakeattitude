@@ -14,12 +14,19 @@
 // limitations under the License.
 #endregion
 
-using System.Threading.Tasks;
+using Cook4Me.Api.Core.Bus;
+using System;
 
-namespace Cook4Me.Api.Core.Bus
+namespace Cook4Me.Api.Core.Commands.Shop
 {
-    public interface Handles<T>
+    public class AddShopCommentCommand : Command
     {
-        Task Handle(T message);
+        public string Id { get; set; }
+        public string ShopId { get; set; }
+        public string Subject { get; set; }
+        public string Content { get; set; }
+        public int Score { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
     }
 }

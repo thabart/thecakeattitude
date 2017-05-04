@@ -17,9 +17,10 @@
 using Cook4Me.Api.EF;
 using Cook4Me.Api.Handlers;
 using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Enrichers;
 using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Helpers;
-using Cook4Me.Api.Host.Operations;
+using Cook4Me.Api.Host.Operations.Shop;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -96,6 +97,10 @@ namespace Cook4Me.Api.Host
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
+                    name: "addComment",
+                    template: $"{Constants.RouteNames.Shops}/{Constants.RouteNames.RemoveShopComment}",
+                    defaults: new { controller = "Home", action = "Index" });
+                routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",
                     defaults: new { controller = "Home", action = "Index" });
@@ -111,8 +116,16 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
             services.AddTransient<IAddShopValidator, AddShopValidator>();
             services.AddTransient<IAddCommentValidator, AddCommentValidator>();
+            services.AddTransient<IRemoveShopCommentValidator, RemoveShopCommentValidator>();
             services.AddTransient<IControllerHelper, ControllerHelper>();
             services.AddTransient<IAddShopOperation, AddShopOperation>();
+            services.AddTransient<IAddShopCommentOperation, AddShopCommentOperation>();
+            services.AddTransient<IGetShopOperation, GetShopOperation>();
+            services.AddTransient<IGetShopsOperation, GetShopsOperation>();
+            services.AddTransient<ISearchShopsOperation, SearchShopsOperation>();
+            services.AddTransient<IGetMineShopsOperation, GetMineShopsOperation>();
+            services.AddTransient<IRemoveShopCommentOperation, RemoveShopCommentOperation>();
+            services.AddTransient<IShopEnricher, ShopEnricher>();
         }
     }
 }

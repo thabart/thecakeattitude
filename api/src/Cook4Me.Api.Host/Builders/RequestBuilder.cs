@@ -28,10 +28,10 @@ namespace Cook4Me.Api.Host.Builders
     {
         AddShopCommand GetAddShop(JObject jObj);
         AddPaymentInformation GetPaymentMethod(JObject jObj);
+        AddShopCommentCommand GetAddShopComment(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         Location GetLocation(JObject jObj);
-        Comment GetComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(JObject jObj);
         SearchCommentsParameter GetSearchComment(IQueryCollection query);
         SearchProductsParameter GetSearchProducts(JObject jObj);
@@ -208,14 +208,14 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
-        public Comment GetComment(JObject jObj)
+        public AddShopCommentCommand GetAddShopComment(JObject jObj)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            return new Comment
+            return new AddShopCommentCommand
             {
                 Content = jObj.Value<string>(Constants.DtoNames.Comment.Content),
                 Score = jObj.Value<int>(Constants.DtoNames.Comment.Score),

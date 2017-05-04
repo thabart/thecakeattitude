@@ -16,11 +16,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cook4Me.Api.Core.Aggregates
 {
     public class ShopAggregate
     {
+        public ShopAggregate()
+        {
+            Comments = new List<ShopComment>();
+        }
+
         public string Id { get; set; }
         public string Subject { get; set; }
         public string Name { get; set; }
@@ -43,8 +49,45 @@ namespace Cook4Me.Api.Core.Aggregates
         public DateTime UpdateDateTime { get; set; }
         public int TotalScore { get; set; }
         public double AverageScore { get; set; }
-        public double NbComments { get; set; }
+        public ShopCategory ShopCategory { get; set; }
         public IEnumerable<string> TagNames { get; set; }
         public IEnumerable<ShopPaymentMethod> ShopPaymentMethods { get; set; }
+        public ICollection<ShopComment> Comments { get; set; }
+        public ICollection<ShopFilter> ShopFilters { get; set; }
+        public ICollection<ShopProductCategory> ProductCategories { get; set; }
+
+        public void AddComment(ShopComment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            Comments.Add(comment);
+            TotalScore += comment.Score;
+            if (Comments.Count() != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)Comments.Count()), 3);
+            }
+        }
+
+        public void RemoveComment(ShopComment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            Comments.Remove(comment);
+            TotalScore -= comment.Score;
+            if (Comments.Count() != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)Comments.Count()), 3);
+            }
+            else
+            {
+                AverageScore = 0;
+            }
+        }
     }
 }

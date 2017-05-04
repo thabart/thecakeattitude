@@ -17,11 +17,8 @@
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
-using Cook4Me.Api.Host.Extensions;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
@@ -90,47 +87,6 @@ namespace Cook4Me.Api.Host.Controllers
             }
             
             return new OkObjectResult(_halResponseBuilder.Build());
-        }
-
-        [HttpDelete("{id}")]
-        [Authorize("Connected")]
-        public async Task<IActionResult> Remove(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            var comment = await _repository.Get(id);
-            if (comment == null)
-            {
-                return new NotFoundResult();
-            }
-
-            var shop = await _shopRepository.Get(comment.ShopId);
-            if (shop != null)
-            {
-                shop.RemoveComment(comment);
-                if (!await _shopRepository.Update(shop))
-                {
-                    var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeUpdated);
-                    return this.BuildResponse(error, HttpStatusCode.BadRequest);
-                }
-            }
-
-            var subject = User.GetSubject();
-            if (comment.Subject != subject)
-            {
-                return new StatusCodeResult((int)HttpStatusCode.Unauthorized);
-            }
-
-            if (!await _repository.Remove(id))
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheCommentCannotBeRemoved);
-                return this.BuildResponse(error, HttpStatusCode.BadRequest);
-            }
-
-            return new OkResult();
         }
 
         private void AddComment(IHalResponseBuilder halResponseBuilder, IResponseBuilder responseBuilder, Comment comment)

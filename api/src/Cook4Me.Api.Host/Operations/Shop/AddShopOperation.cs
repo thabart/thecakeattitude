@@ -28,7 +28,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace Cook4Me.Api.Host.Operations
+namespace Cook4Me.Api.Host.Operations.Shop
 {
     public interface IAddShopOperation
     {

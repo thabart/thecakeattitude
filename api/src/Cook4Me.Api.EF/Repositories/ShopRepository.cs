@@ -15,7 +15,6 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
@@ -88,7 +87,7 @@ namespace Cook4Me.Api.EF.Repositories
             }
         }
 
-        public async Task<IEnumerable<Shop>> Get()
+        public async Task<IEnumerable<ShopAggregate>> Get()
         {
             return await _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
@@ -96,10 +95,10 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.Comments)
                 .Include(c => c.Filters)
                 .Include(c => c.ProductCategories)
-                .Select(s => s.ToDomain()).ToListAsync().ConfigureAwait(false);
+                .Select(s => s.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<Shop> Get(string id)
+        public async Task<ShopAggregate> Get(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -118,7 +117,93 @@ namespace Cook4Me.Api.EF.Repositories
                 return null;
             }
 
-            return shop.ToDomain();
+            return shop.ToAggregate();
+        }
+
+        public async Task<bool> Update(ShopAggregate shop)
+        {
+            if (shop == null)
+            {
+                throw new ArgumentNullException(nameof(shop));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Shops.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        return false;
+                    }
+
+                    record.BannerImage = shop.BannerImage;
+                    record.CategoryId = shop.CategoryId;
+                    record.Country = shop.Country;
+                    record.Description = shop.Description;
+                    record.GooglePlaceId = shop.GooglePlaceId;
+                    record.Latitude = shop.Latitude;
+                    record.Locality = shop.Locality;
+                    record.Longitude = shop.Longitude;
+                    record.MapName = shop.MapName;
+                    record.Name = shop.Name;
+                    record.PostalCode = shop.PostalCode;
+                    record.ProfileImage = shop.ProfileImage;
+                    record.ShopRelativePath = shop.ShopRelativePath;
+                    record.StreetAddress = shop.StreetAddress;
+                    record.Subject = shop.Subject;
+                    record.TotalScore = shop.TotalScore;
+                    record.AverageScore = shop.AverageScore;
+                    record.UpdateDateTime = shop.UpdateDateTime;
+                    var comments = shop.Comments == null ? new List<ShopComment>() : shop.Comments;
+                    var commentIds = comments.Select(c => c.Id);
+                    // Update the comments
+                    if (record.Comments != null)
+                    {
+                        var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
+                        var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
+                        var existingCommentIds = record.Comments.Select(c => c.Id);
+                        var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
+                        foreach(var commentToUpdate in commentsToUpdate)
+                        {
+                            var comment = comments.First(c => c.Id == commentToUpdate.Id);
+                            commentToUpdate.Score = comment.Score;
+                            commentToUpdate.Subject = comment.Subject;
+                            commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
+                            commentToUpdate.Content = comment.Content;
+                        }
+
+                        foreach(var commentToRemove in commentsToRemove)
+                        {
+                            _context.Comments.Remove(commentToRemove);
+                        }
+
+                        foreach(var commentToAdd in commentsToAdd)
+                        {
+                            var rec = new Models.Comment
+                            {
+                                Id = commentToAdd.Id,
+                                Content = commentToAdd.Content,
+                                Score = commentToAdd.Score,
+                                CreateDateTime = commentToAdd.CreateDateTime,
+                                ShopId = shop.Id,
+                                UpdateDateTime = commentToAdd.UpdateDateTime,
+                                Subject = commentToAdd.Subject
+                            };
+                            _context.Comments.Add(rec);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
         public async Task<SearchShopsResult> Search(SearchShopsParameter parameter)
@@ -177,7 +262,7 @@ namespace Cook4Me.Api.EF.Repositories
                 shops = shops.Skip(parameter.StartIndex).Take(parameter.Count);
             }
 
-            result.Content = await shops.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            result.Content = await shops.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
         }
 
@@ -194,53 +279,6 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             return shops;
-        }
-
-        public async Task<bool> Update(Shop shop)
-        {
-            if (shop == null)
-            {
-                throw new ArgumentNullException(nameof(shop));
-            }
-
-            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
-            {
-                try
-                {
-                    var record = await _context.Shops.FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
-                    if (record == null)
-                    {
-                        return false;
-                    }
-
-                    record.BannerImage = shop.BannerImage;
-                    record.CategoryId = shop.CategoryId;
-                    record.Country = shop.Country;
-                    record.Description = shop.Description;
-                    record.GooglePlaceId = shop.GooglePlaceId;
-                    record.Latitude = shop.Latitude;
-                    record.Locality = shop.Locality;
-                    record.Longitude = shop.Longitude;
-                    record.MapName = shop.MapName;
-                    record.Name = shop.Name;
-                    record.PostalCode = shop.PostalCode;
-                    record.ProfileImage = shop.ProfileImage;
-                    record.ShopRelativePath = shop.ShopRelativePath;
-                    record.StreetAddress = shop.StreetAddress;
-                    record.Subject = shop.Subject;
-                    record.TotalScore = shop.TotalScore;
-                    record.AverageScore = shop.AverageScore;
-                    record.UpdateDateTime = shop.UpdateDateTime;
-                    await _context.SaveChangesAsync().ConfigureAwait(false);
-                    transaction.Commit();
-                    return true;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    return false;
-                }
-            }
-        }
+        }        
     }
 }

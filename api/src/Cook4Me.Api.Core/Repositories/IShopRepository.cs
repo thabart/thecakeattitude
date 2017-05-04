@@ -15,7 +15,6 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Results;
 using System.Collections.Generic;
@@ -26,9 +25,9 @@ namespace Cook4Me.Api.Core.Repositories
     public interface IShopRepository
     {
         Task<bool> Add(ShopAggregate shop);
-        Task<IEnumerable<Shop>> Get();
-        Task<Shop> Get(string id);
+        Task<IEnumerable<ShopAggregate>> Get();
+        Task<ShopAggregate> Get(string id);
         Task<SearchShopsResult> Search(SearchShopsParameter parameter);
-        Task<bool> Update(Shop shop);
+        Task<bool> Update(ShopAggregate shop);
     }
 }

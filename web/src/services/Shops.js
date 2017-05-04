@@ -64,5 +64,25 @@ module.exports = {
         reject(e);
       });
     });
+  },
+  // Remove the comment
+  removeComment: function(id, commentId) {
+      return new Promise(function(resolve, reject) {
+        var session = Session.getSession();
+        if (!session || !session.access_token) {
+          reject();
+        }
+
+        $.ajax(Constants.apiUrl + '/shops/'+id+'/comments/'+commentId, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': 'Bearer '+session.access_token
+          },
+        }).then(function() {
+          resolve();
+        }).catch(function(e) {
+          reject(e);
+        });
+      });
   }
 };

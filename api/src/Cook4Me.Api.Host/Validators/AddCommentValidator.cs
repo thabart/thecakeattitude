@@ -14,13 +14,12 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System;
-using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Parameters;
-using System.Linq;
+using Cook4Me.Api.Core.Repositories;
+using System;
+using System.Threading.Tasks;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,15 +27,14 @@ namespace Cook4Me.Api.Host.Validators
 {
     public interface IAddCommentValidator
     {
-        Task<AddCommentValidationResult> Validate(Comment comment);
+        Task<AddCommentValidationResult> Validate(AddShopCommentCommand comment);
     }
 
     public class AddCommentValidationResult
     {
-        public AddCommentValidationResult(Shop shop)
+        public AddCommentValidationResult()
         {
             IsValid = true;
-            Shop = shop;
         }
 
         public AddCommentValidationResult(string message)
@@ -47,7 +45,6 @@ namespace Cook4Me.Api.Host.Validators
 
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
-        public Shop Shop { get; private set; }
     }
 
     internal class AddCommentValidator : IAddCommentValidator
@@ -61,14 +58,14 @@ namespace Cook4Me.Api.Host.Validators
             _commentRepository = commentRepository;
         }
 
-        public async Task<AddCommentValidationResult> Validate(Comment comment)
+        public async Task<AddCommentValidationResult> Validate(AddShopCommentCommand comment)
         {
             if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
             }
 
-            Shop shop = null;
+            ShopAggregate shop = null;
             // Check shop exists && 1 comment.
             if (!string.IsNullOrWhiteSpace(comment.ShopId))
             {
@@ -101,7 +98,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddCommentValidationResult(ErrorDescriptions.TheScoreMustBeBetween);
             }
 
-            return new AddCommentValidationResult(shop);
+            return new AddCommentValidationResult();
         }
     }
 }

@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -23,7 +24,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
-        JObject GetShop(Shop shop);
+        JObject GetShop(ShopAggregate shop);
         JObject GetError(string errorCode, string errorDescription);
         JObject GetCategory(Category category);
         JObject GetMap(Map map);
@@ -37,11 +38,17 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
-        public JObject GetShop(Shop shop)
+        public JObject GetShop(ShopAggregate shop)
         {
             if (shop == null)
             {
                 throw new ArgumentNullException(nameof(shop));
+            }
+
+            var nbComments = 0;
+            if (shop.Comments != null)
+            {
+                nbComments = shop.Comments.Count();
             }
 
             var result = new JObject();
@@ -49,10 +56,10 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Subject, shop.Subject); // General information
             result.Add(Constants.DtoNames.Shop.Name, shop.Name);
             result.Add(Constants.DtoNames.Shop.Description, shop.Description);
-            if (shop.Tags != null && shop.Tags.Any())
+            if (shop.TagNames != null && shop.TagNames.Any())
             {
                 JArray arr = new JArray();
-                foreach(var tag in shop.Tags)
+                foreach(var tag in shop.TagNames)
                 {
                     arr.Add(tag);
                 }
@@ -75,9 +82,9 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Location, location);
             result.Add(Constants.DtoNames.Shop.GooglePlaceId, shop.GooglePlaceId);
             var payments = new JArray(); // Payments
-            if (shop.Payments != null && shop.Payments.Any())
+            if (shop.ShopPaymentMethods != null && shop.ShopPaymentMethods.Any())
             {
-                foreach(var record in shop.Payments)
+                foreach(var record in shop.ShopPaymentMethods)
                 {
                     var payment = new JObject();
                     payment.Add(Constants.DtoNames.PaymentMethod.Method, Enum.GetName(typeof(PaymentMethods), record.Method));
@@ -95,10 +102,9 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
             result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime); // Other informations
             result.Add(Constants.DtoNames.Shop.UpdateDateTime, shop.UpdateDateTime);
-            result.Add(Constants.DtoNames.Shop.NbComments, shop.NbComments);
+            result.Add(Constants.DtoNames.Shop.NbComments, nbComments);
             result.Add(Constants.DtoNames.Shop.AverageScore, shop.AverageScore);
             result.Add(Constants.DtoNames.Shop.TotalScore, shop.TotalScore);
-
             return result;
         }
 

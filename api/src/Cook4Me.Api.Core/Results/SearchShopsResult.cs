@@ -14,7 +14,7 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Aggregates;
 using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Results
@@ -23,6 +23,6 @@ namespace Cook4Me.Api.Core.Results
     {
         public int TotalResults { get; set; }
         public int StartIndex { get; set; }
-        public IEnumerable<Shop> Content { get; set; }
+        public IEnumerable<ShopAggregate> Content { get; set; }
     }
 }

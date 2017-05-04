@@ -108,6 +108,114 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
+        public static ShopAggregate ToAggregate(this Shop shop)
+        {
+            if (shop == null)
+            {
+                throw new ArgumentNullException(nameof(shop));
+            }
+
+            ShopCategory shopCategory = null;
+            var tagNames = new List<string>();
+            var paymentMethods = new List<ShopPaymentMethod>();
+            var comments = new List<ShopComment>();
+            var filters = new List<ShopFilter>();
+            var productCategories = new List<ShopProductCategory>();
+            if (shop.Category != null)
+            {
+                shopCategory = new ShopCategory
+                {
+                    Id = shop.Category.Id,
+                    Name = shop.Category.Name,
+                    Description = shop.Category.Description
+                };
+            }
+
+            if (shop.ShopTags != null)
+            {
+                tagNames = shop.ShopTags.Select(t => t.TagName).ToList();
+            }
+
+            if (shop.PaymentMethods != null)
+            {
+                paymentMethods = shop.PaymentMethods.Select(s => new ShopPaymentMethod
+                {
+                    Id = s.Id,
+                    Iban = s.Iban,
+                    Method = (ShopPaymentMethods)s.Method
+                }).ToList();
+            }
+
+            if (shop.Comments != null)
+            {
+                comments = shop.Comments.Select(c => new ShopComment
+                {
+                    Id = c.Id,
+                    Content = c.Content,
+                    CreateDateTime = c.CreateDateTime,
+                    Subject = c.Subject,
+                    UpdateDateTime = c.UpdateDateTime,
+                    Score = c.Score
+                }).ToList();
+            }
+
+            if (shop.Filters != null)
+            {
+                filters = shop.Filters.Select(f => new ShopFilter
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    Values = f.Values == null ? new List<ShopFilterValue>() : f.Values.Select(v => new ShopFilterValue
+                    {
+                        Id = v.Id,
+                        Content = v.Content
+                    })
+                }).ToList();
+            }
+
+            if (shop.ProductCategories != null)
+            {
+                productCategories = shop.ProductCategories.Select(c => new ShopProductCategory
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Description = c.Description
+                }).ToList();
+            }
+
+            return new ShopAggregate
+            {
+                Id = shop.Id,
+                Subject = shop.Subject,
+                Name = shop.Name,
+                Description = shop.Description,
+                BannerImage = shop.BannerImage,
+                ProfileImage = shop.ProfileImage,
+                MapName = shop.MapName,
+                CategoryId = shop.CategoryId,
+                PlaceId = shop.PlaceId,
+                StreetAddress = shop.StreetAddress,
+                PostalCode = shop.PostalCode,
+                Locality = shop.Locality,
+                Country = shop.Country,
+                ShopRelativePath = shop.ShopRelativePath,
+                UndergroundRelativePath = shop.UndergroundRelativePath,
+                CreateDateTime = shop.CreateDateTime,
+                UpdateDateTime = shop.UpdateDateTime,
+                GooglePlaceId = shop.GooglePlaceId,
+                Latitude = shop.Latitude,
+                Longitude = shop.Longitude,
+                TotalScore = shop.TotalScore,
+                AverageScore = shop.AverageScore,
+                ShopCategory = shopCategory,
+                TagNames = tagNames,
+                ShopPaymentMethods = paymentMethods,
+                Comments = comments,
+                ShopFilters = filters,
+                ProductCategories = productCategories
+            };
+        }
+
         public static Shop ToModel(this ShopAggregate shop)
         {
             if (shop == null)

@@ -25,25 +25,5 @@ module.exports = {
         reject(e);
       });
     });
-  },
-  // Remove the comment.
-  remove: function(id) {
-    return new Promise(function(resolve, reject) {
-      var session = SessionService.getSession();
-      if (!session || !session.access_token) {
-        reject();
-      }
-
-      $.ajax(Constants.apiUrl + '/comments/'+id, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': 'Bearer '+session.access_token
-        },
-      }).then(function() {
-        resolve();
-      }).catch(function(e) {
-        reject(e);
-      });
-    });
   }
 };
