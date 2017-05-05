@@ -15,10 +15,12 @@
 #endregion
 
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Hubs;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Hubs
 {
+    [HubName("notifier")]
     public class Notifier : Hub
     {
     }

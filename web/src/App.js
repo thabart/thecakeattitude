@@ -8,8 +8,10 @@ import Shop from './Shop';
 import { OpenIdService, SessionService } from './services';
 import Error from './Error';
 import createBrowserHistory  from 'history/createBrowserHistory';
-import signalr from 'react-native-signalr';
 import './App.css';
+import $ from 'jquery';
+import 'ms-signalr-client';
+
 var history = createBrowserHistory();
 
 class App extends Component {
@@ -21,8 +23,12 @@ class App extends Component {
     };
   }
   componentWillMount() {
-    console.log(signalr);
-    const connection = signalr.hubConnection('http://localhost:5000');
+    var connection = $.hubConnection("http://localhost:5000");
+    var proxy = connection.createHubProxy("notifier");
+    connection.start({ jsonp: false })
+      .done(function(){ console.log('Now connected, connection ID=' + connection.id); })
+      .fail(function(){ console.log('Could not connect'); });
+
     var self = this;
     var session = SessionService.getSession();
     if (!session || session == null) {
