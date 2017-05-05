@@ -17,7 +17,9 @@
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
+using Cook4Me.Api.Host.Hubs;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;

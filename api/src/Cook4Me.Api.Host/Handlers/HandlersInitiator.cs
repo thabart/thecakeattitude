@@ -16,32 +16,40 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.Shop;
-using Cook4Me.Api.Host.Hubs;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
 using System;
-using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Handlers
 {
-    public class ShopEventsHandler : Handles<ShopAddedEvent>
+    public interface IHandlersInitiator
     {
-        private readonly IConnectionManager _connectionManager;
+        void Init();
+    }
 
-        public ShopEventsHandler(IConnectionManager connectionManager)
+    public class HandlersInitiator : IHandlersInitiator
+    {
+        private static  bool _isInitiated = false;
+        private static object obj = new Object();
+        private readonly ShopEventsHandler _shopEventsHandler;
+        private readonly IBus _bus;
+
+        public HandlersInitiator(ShopEventsHandler shopEventsHandler, IBus bus)
         {
-            _connectionManager = connectionManager;
+            _shopEventsHandler = shopEventsHandler;
+            _bus = bus;
         }
 
-        public Task Handle(ShopAddedEvent message)
+        public void Init()
         {
-            var notifier = _connectionManager.GetHubContext<Notifier>();
-            if (message == null)
+            lock (obj)
             {
-                throw new ArgumentNullException(nameof(message));
-            }
+                if (_isInitiated)
+                {
+                    return;
+                }
 
-            notifier.Clients.All.shopAdded(message);
-            return Task.FromResult(0);
+                _bus.RegisterHandler<ShopAddedEvent>(_shopEventsHandler.Handle);
+                _isInitiated = true;
+            }
         }
     }
 }

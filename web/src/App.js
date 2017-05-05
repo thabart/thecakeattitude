@@ -25,8 +25,13 @@ class App extends Component {
   componentWillMount() {
     var connection = $.hubConnection("http://localhost:5000");
     var proxy = connection.createHubProxy("notifier");
+    proxy.on('shopAdded', function(message) {
+        console.log(message);
+    });
     connection.start({ jsonp: false })
-      .done(function(){ console.log('Now connected, connection ID=' + connection.id); })
+      .done(function(){
+        console.log('Now connected, connection ID=' + connection.id);
+      })
       .fail(function(){ console.log('Could not connect'); });
 
     var self = this;

@@ -14,8 +14,6 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.EF;
 using Cook4Me.Api.Handlers;
 using Cook4Me.Api.Host.Builders;
@@ -85,26 +83,25 @@ namespace Cook4Me.Api.Host
             app.UseCors("AllowAll");
             // 3. Use static files
             app.UseStaticFiles();
-            // 4. Launch Signal-R
-            app.UseSignalR<RawConnection>("/raw-connection");
-            app.UseSignalR();
-            // 5. Authenticate the request with OAUTH2.0 introspection endpoint.
+            // 4. Authenticate the request with OAUTH2.0 introspection endpoint.
             app.UseAuthenticationWithIntrospection(new Oauth2IntrospectionOptions
             {
                 InstrospectionEndPoint = introspectUrl,
                 ClientId = clientId,
                 ClientSecret = clientSecret
             });
-            // 6. Use static files
+            // 5. Use static files
             app.UseStaticFiles();
-            // 7. Migrate the data.
+            // 6. Migrate the data.
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var simpleIdentityServerContext = serviceScope.ServiceProvider.GetService<CookDbContext>();
                 simpleIdentityServerContext.Database.EnsureCreated();
                 simpleIdentityServerContext.EnsureSeedData();
             }
-
+            // 7. Launch Signal-R
+            app.UseSignalR<RawConnection>("/raw-connection");
+            app.UseSignalR();
             // 8. Launch ASP.NET MVC
             app.UseMvc(routes =>
             {
@@ -123,10 +120,6 @@ namespace Cook4Me.Api.Host
         {
             services.AddCookForMeStoreInMemory()
                 .AddHandlers();
-            var provider = services.BuildServiceProvider();
-            var bus = provider.GetService<IBus>();
-            var shopEventsHandler = new ShopEventsHandler();
-            bus.RegisterHandler<ShopAddedEvent>(shopEventsHandler.Handle);
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
@@ -139,9 +132,16 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetShopOperation, GetShopOperation>();
             services.AddTransient<IGetShopsOperation, GetShopsOperation>();
             services.AddTransient<ISearchShopsOperation, SearchShopsOperation>();
+            services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<IGetMineShopsOperation, GetMineShopsOperation>();
             services.AddTransient<IRemoveShopCommentOperation, RemoveShopCommentOperation>();
-            services.AddTransient<IShopEnricher, ShopEnricher>();
+            services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
+            services.AddSingleton<ShopEventsHandler>();
+            /*
+            var searchOperation = new SearchShopsOperation(provider.GetService<IShopRepository>(), provider.GetService<IRequestBuilder>(),
+                provider.GetService<IHalResponseBuilder>(), provider.GetService<IShopEnricher>(),
+                provider);
+            services.AddSingleton<ISearchShopsOperation>(searchOperation);*/
         }
     }
 }

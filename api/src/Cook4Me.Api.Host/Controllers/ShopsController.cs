@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Operations.Shop;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ using System.Threading.Tasks;
 namespace Cook4Me.Api.Host.Controllers
 {
     [Route(Constants.RouteNames.Shops)]
-    public class ShopsController : Controller
+    public class ShopsController : BaseController
     {
         private readonly IResponseBuilder _responseBuilder;
         private readonly IAddShopOperation _addShopOperation;
@@ -40,7 +41,7 @@ namespace Cook4Me.Api.Host.Controllers
 
         public ShopsController(IResponseBuilder responseBuilder, IAddShopOperation addShopOperation, IAddShopCommentOperation addShopCommentOperation,
             IGetShopOperation getShopOperation, IGetShopsOperation getShopsOperation, ISearchShopsOperation searchShopsOperation,
-            IGetMineShopsOperation getMineShopsOperation, IRemoveShopCommentOperation removeShopCommentOperation)
+            IGetMineShopsOperation getMineShopsOperation, IRemoveShopCommentOperation removeShopCommentOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _responseBuilder = responseBuilder;
             _addShopOperation = addShopOperation;
