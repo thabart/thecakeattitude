@@ -19,6 +19,17 @@ module.exports = {
       });
     });
   },
+  // Search comments
+  searchComments: function(shopId, content) {
+    var param = $.param(content);
+    return new Promise(function(resolve, reject) {
+      $.get(Constants.apiUrl + '/shops/' + shopId + '/comments?'+param).then(function(r) {
+        resolve(r);
+      }).fail(function(e) {
+        reject(e);
+      });
+    });
+  },
   // Add shop
   add: function(content) {
     var accessToken = Session.getSession().access_token;

@@ -29,5 +29,6 @@ namespace Cook4Me.Api.Core.Repositories
         Task<ShopAggregate> Get(string id);
         Task<SearchShopsResult> Search(SearchShopsParameter parameter);
         Task<bool> Update(ShopAggregate shop);
+        Task<SearchShopCommentsResult> SearchComments(SearchShopCommentsParameter parameter);
     }
 }

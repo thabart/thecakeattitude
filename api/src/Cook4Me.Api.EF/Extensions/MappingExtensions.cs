@@ -447,6 +447,24 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
+        public static ShopComment ToAggregate(this Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            return new ShopComment
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+                Score = comment.Score,
+                Subject = comment.Subject,
+                UpdateDateTime = comment.UpdateDateTime,
+                CreateDateTime = comment.CreateDateTime
+            };
+        }
+
         public static Domain.Comment ToDomain(this Comment comment)
         {
             if (comment == null)

@@ -38,10 +38,12 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly ISearchShopsOperation _searchShopsOperation;
         private readonly IGetMineShopsOperation _getMineShopsOperation;
         private readonly IRemoveShopCommentOperation _removeShopCommentOperation;
+        private readonly ISearchShopCommentsOperation _searchShopCommentsOperation;
 
         public ShopsController(IResponseBuilder responseBuilder, IAddShopOperation addShopOperation, IAddShopCommentOperation addShopCommentOperation,
             IGetShopOperation getShopOperation, IGetShopsOperation getShopsOperation, ISearchShopsOperation searchShopsOperation,
-            IGetMineShopsOperation getMineShopsOperation, IRemoveShopCommentOperation removeShopCommentOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IGetMineShopsOperation getMineShopsOperation, IRemoveShopCommentOperation removeShopCommentOperation, ISearchShopCommentsOperation searchShopCommentsOperation,
+            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _responseBuilder = responseBuilder;
             _addShopOperation = addShopOperation;
@@ -51,6 +53,7 @@ namespace Cook4Me.Api.Host.Controllers
             _searchShopsOperation = searchShopsOperation;
             _getMineShopsOperation = getMineShopsOperation;
             _removeShopCommentOperation = removeShopCommentOperation;
+            _searchShopCommentsOperation = searchShopCommentsOperation;
         }
 
         [HttpGet]
@@ -104,6 +107,12 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> AddComment([FromBody] JObject jObj)
         {
             return await _addShopCommentOperation.Execute(jObj, User.GetSubject());
+        }
+
+        [HttpGet(Constants.RouteNames.SearchShopsComment)]
+        public async Task<IActionResult> SearchComments(string id)
+        {
+            return await _searchShopCommentsOperation.Execute(id, Request.Query);
         }
 
         [HttpDelete(Constants.RouteNames.RemoveShopComment)]

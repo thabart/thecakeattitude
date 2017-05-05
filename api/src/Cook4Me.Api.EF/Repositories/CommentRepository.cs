@@ -15,13 +15,10 @@
 #endregion
 
 using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
-using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -68,41 +65,6 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             return comment.ToDomain();
-        }
-
-        public async Task<SearchCommentsResult> Search(SearchCommentsParameter parameter)
-        {
-            if (parameter == null)
-            {
-                throw new ArgumentNullException(nameof(parameter));
-            }
-
-            IQueryable<Models.Comment> comments = _context.Comments;
-            if (!string.IsNullOrWhiteSpace(parameter.ShopId))
-            {
-                comments = comments.Where(c => parameter.ShopId == c.ShopId);
-            }
-
-            if (!string.IsNullOrWhiteSpace(parameter.Subject))
-            {
-                comments = comments.Where(c => c.Subject == parameter.Subject);
-            }
-
-            var result = new SearchCommentsResult
-            {
-                TotalResults = await comments.CountAsync().ConfigureAwait(false),
-                StartIndex = parameter.StartIndex
-            };
-
-            comments = comments
-                .OrderByDescending(c => c.UpdateDateTime);
-            if (parameter.IsPagingEnabled)
-            {
-                comments = comments.Skip(parameter.StartIndex).Take(parameter.Count);
-            }
-                
-            result.Content = await comments.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
-            return result;
         }
 
         public async Task<bool> Remove(string id)

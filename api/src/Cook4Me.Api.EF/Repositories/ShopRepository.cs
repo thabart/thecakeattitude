@@ -266,6 +266,41 @@ namespace Cook4Me.Api.EF.Repositories
             return result;
         }
 
+        public async Task<SearchShopCommentsResult> SearchComments(SearchShopCommentsParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.Comment> comments = _context.Comments;
+            if (!string.IsNullOrWhiteSpace(parameter.ShopId))
+            {
+                comments = comments.Where(c => parameter.ShopId == c.ShopId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                comments = comments.Where(c => c.Subject == parameter.Subject);
+            }
+
+            var result = new SearchShopCommentsResult
+            {
+                TotalResults = await comments.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            comments = comments
+                .OrderByDescending(c => c.UpdateDateTime);
+            if (parameter.IsPagingEnabled)
+            {
+                comments = comments.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await comments.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
+        }
+
         private static IQueryable<Models.Shop> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Shop, TKey>> keySelector, IQueryable<Models.Shop> shops)
         {
             if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
@@ -279,6 +314,6 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             return shops;
-        }        
+        }
     }
 }

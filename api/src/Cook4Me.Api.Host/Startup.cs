@@ -132,9 +132,11 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetShopOperation, GetShopOperation>();
             services.AddTransient<IGetShopsOperation, GetShopsOperation>();
             services.AddTransient<ISearchShopsOperation, SearchShopsOperation>();
-            services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<IGetMineShopsOperation, GetMineShopsOperation>();
             services.AddTransient<IRemoveShopCommentOperation, RemoveShopCommentOperation>();
+            services.AddTransient<ISearchShopCommentsOperation, SearchShopCommentsOperation>();
+            services.AddTransient<IShopEnricher, ShopEnricher>();
+            services.AddTransient<ICommentEnricher, CommentEnricher>();
             services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
             services.AddSingleton<ShopEventsHandler>();
             /*

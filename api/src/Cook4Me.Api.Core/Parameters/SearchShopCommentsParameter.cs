@@ -14,15 +14,21 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
-using System.Collections.Generic;
-
-namespace Cook4Me.Api.Core.Results
+namespace Cook4Me.Api.Core.Parameters
 {
-    public class SearchCommentsResult
+    public class SearchShopCommentsParameter
     {
-        public int TotalResults { get; set; }
+        public SearchShopCommentsParameter()
+        {
+            StartIndex = 0;
+            Count = 100;
+            IsPagingEnabled = true;
+        }
+
+        public string ShopId { get; set; }
+        public string Subject { get; set; }
         public int StartIndex { get; set; }
-        public IEnumerable<Comment> Content { get; set; }
+        public int Count { get; set; }
+        public bool IsPagingEnabled { get; set; }
     }
 }

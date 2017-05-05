@@ -32,8 +32,7 @@ namespace Cook4Me.Api.Host.Builders
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         Location GetLocation(JObject jObj);
-        SearchCommentsParameter GetSearchComment(JObject jObj);
-        SearchCommentsParameter GetSearchComment(IQueryCollection query);
+        SearchShopCommentsParameter GetSearchShopComments(IQueryCollection query);
         SearchProductsParameter GetSearchProducts(JObject jObj);
         SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
@@ -223,14 +222,14 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
-        public SearchCommentsParameter GetSearchComment(JObject jObj)
+        public SearchShopCommentsParameter GetSearchComment(JObject jObj)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            return new SearchCommentsParameter
+            return new SearchShopCommentsParameter
             {
                 ShopId = jObj.Value<string>(Constants.DtoNames.Comment.ShopId),
                 Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
@@ -239,17 +238,16 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
-        public SearchCommentsParameter GetSearchComment(IQueryCollection query)
+        public SearchShopCommentsParameter GetSearchShopComments(IQueryCollection query)
         {
             if (query == null)
             {
                 throw new ArgumentNullException(nameof(query));
             }
 
-            var result = new SearchCommentsParameter();
+            var result = new SearchShopCommentsParameter();
             foreach(var key in query.Keys)
             {
-                TrySetStr((r) => result.ShopId = r, key, Constants.DtoNames.Comment.ShopId, query);
                 TrySetStr((r) => result.Subject = r, key, Constants.DtoNames.Comment.Subject, query);
                 TrySetInt((r) => result.StartIndex = r <= 0 ? result.StartIndex : r, key, Constants.DtoNames.Paginate.StartIndex, query);
                 TrySetInt((r) => result.Count = r <= 0 ? result.Count : r, key, Constants.DtoNames.Paginate.Count, query);

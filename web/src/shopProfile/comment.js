@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip, Alert, Modal, ModalHeader, ModalFooter, Button } from 'reactstrap';
-import { CommentsService, UserService, SessionService, ShopsService, OpenIdService } from '../services';
+import { UserService, SessionService, ShopsService, OpenIdService } from '../services';
 import { withRouter } from 'react-router';
 import Promise from 'bluebird';
 import moment from 'moment';
@@ -127,7 +127,7 @@ class Comment extends Component {
     self.setState({
       isCommentsLoading: true
     });
-    CommentsService.search({ shop_id: this.props.shop.id, count: 4 }).then(function(obj) {
+    ShopsService.searchComments(this.props.shop.id, { count: 4 }).then(function(obj) {
       self.displayComments(obj);
     }).catch(function() {
       self.setState({

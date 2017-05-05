@@ -75,7 +75,7 @@ namespace Cook4Me.Api.Host.Validators
                     return new AddCommentValidationResult(ErrorDescriptions.TheShopDoesntExist);
                 }
 
-                var comments = await _commentRepository.Search(new SearchCommentsParameter
+                var comments = await _shopRepository.SearchComments(new SearchShopCommentsParameter
                 {
                     ShopId = comment.ShopId,
                     Subject = comment.Subject

@@ -31,7 +31,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetCategory(Category category);
         JObject GetMap(Map map);
         JObject GetTag(Tag tag);
-        JObject GetComment(Comment comment);
+        JObject GetShopComment(ShopComment comment);
         JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
         JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment);
         JObject GetProduct(Product product);
@@ -185,7 +185,7 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetComment(Comment comment)
+        public JObject GetShopComment(ShopComment comment)
         {
             if (comment == null)
             {
@@ -196,7 +196,6 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.Content, comment.Content);
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
-            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
             jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
