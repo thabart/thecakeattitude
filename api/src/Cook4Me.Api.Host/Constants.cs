@@ -30,6 +30,7 @@ namespace Cook4Me.Api.Host
             public const string Shops = "shops";
             public const string Users = "users";
             public const string Categories = "categories";
+            public const string Configuration = ".well-known/configuration";
             public const string Maps = "maps";
             public const string Parents = "parents";
             public const string Claims = "claims";

@@ -22,7 +22,9 @@ using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Hubs;
+using Cook4Me.Api.Host.Operations.Product;
 using Cook4Me.Api.Host.Operations.Shop;
+using Cook4Me.Api.Host.Operations.Tag;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -135,15 +137,15 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetMineShopsOperation, GetMineShopsOperation>();
             services.AddTransient<IRemoveShopCommentOperation, RemoveShopCommentOperation>();
             services.AddTransient<ISearchShopCommentsOperation, SearchShopCommentsOperation>();
+            services.AddTransient<ISearchProductsOperation, SearchProductsOperation>();
+            services.AddTransient<ISearchTagsOperation, SearchTagsOperation>();
+            services.AddTransient<IGetAllTagsOperation, GetAllTagsOperation>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<ICommentEnricher, CommentEnricher>();
+            services.AddTransient<IProductEnricher, ProductEnricher>();
+            services.AddTransient<ITagEnricher, TagEnricher>();
             services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
             services.AddSingleton<ShopEventsHandler>();
-            /*
-            var searchOperation = new SearchShopsOperation(provider.GetService<IShopRepository>(), provider.GetService<IRequestBuilder>(),
-                provider.GetService<IHalResponseBuilder>(), provider.GetService<IShopEnricher>(),
-                provider);
-            services.AddSingleton<ISearchShopsOperation>(searchOperation);*/
         }
     }
 }

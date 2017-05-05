@@ -546,7 +546,7 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     Id = Guid.NewGuid().ToString(),
                     ProductId = _blueJeanProductId,
-                    Type = (int)Core.Models.PromotionTypes.Percentage,
+                    Type = (int)Core.Aggregates.PromotionTypes.Percentage,
                     Discount = 20,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
@@ -556,7 +556,7 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     Id = Guid.NewGuid().ToString(),
                     ProductId = _smallShoesId,
-                    Type = (int)Core.Models.PromotionTypes.Percentage,
+                    Type = (int)Core.Aggregates.PromotionTypes.Percentage,
                     Discount = 60,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,

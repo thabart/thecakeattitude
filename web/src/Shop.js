@@ -60,7 +60,7 @@ class Shop extends Component {
   // Update the score
   refreshScore() {
     var self = this;
-    CommentsService.search({ shop_id: this.state.shop.id }).then(function(commentsResult) {
+    ShopsService.searchComments(this.state.shop.id, {}).then(function(commentsResult) {
       var comments = commentsResult['_embedded'],
        average = null,
        scores = null,

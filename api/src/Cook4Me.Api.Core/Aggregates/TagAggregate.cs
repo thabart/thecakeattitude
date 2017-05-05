@@ -14,13 +14,11 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.Core.Models
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public class ProductFilter
+    public class TagAggregate
     {
-        public string FilterId { get; set; }
-        public string FilterName { get; set; }
-        public string FilterValueId { get; set; }
-        public string FilterValueContent { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

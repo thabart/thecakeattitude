@@ -25,89 +25,6 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
-        public static Domain.Shop ToDomain(this Shop shop)
-        {
-            if (shop == null)
-            {
-                throw new ArgumentNullException(nameof(shop));
-            }
-
-            Domain.Category category = null;
-            if (shop.Category != null)
-            {
-                category = shop.Category.ToDomain();
-            }
-
-            var tags = new List<string>();
-            if (shop.ShopTags != null && shop.ShopTags.Any())
-            {
-                tags = shop.ShopTags.Select(s => s.TagName).ToList();
-            }
-
-            var payments = new List<Domain.PaymentMethod>();
-            if (shop.PaymentMethods != null && shop.PaymentMethods.Any())
-            {
-                payments = shop.PaymentMethods.Select(p => p.ToDomain()).ToList();
-            }
-
-            Domain.Map map = null;
-            if (shop.Map != null)
-            {
-                map = shop.Map.ToDomain();
-            }
-
-            var nbComments = 0;
-            if (shop.Comments != null)
-            {
-                nbComments = shop.Comments.Count();
-            }
-
-            var filters = new List<Domain.Filter>();
-            if (shop.Filters != null)
-            {
-                filters = shop.Filters.Select(s => s.ToDomain()).ToList();
-            }
-
-            var productCategories = new List<Domain.ProductCategory>();
-            if (shop.ProductCategories != null)
-            {
-                productCategories = shop.ProductCategories.Select(s => s.ToDomain()).ToList();
-            }
-
-            return new Domain.Shop
-            {
-                Id = shop.Id,
-                Subject = shop.Subject,
-                Name = shop.Name,
-                Description = shop.Description,
-                Tags = tags,
-                BannerImage = shop.BannerImage,
-                ProfileImage = shop.ProfileImage,
-                MapName = shop.MapName,
-                CategoryId = shop.CategoryId,
-                PlaceId = shop.PlaceId,
-                StreetAddress = shop.StreetAddress,
-                PostalCode = shop.PostalCode,
-                Locality = shop.Locality,
-                Country = shop.Country,
-                Payments = payments,
-                ShopRelativePath = shop.ShopRelativePath,
-                UndergroundRelativePath = shop.UndergroundRelativePath,
-                Category = category,
-                Map = map,
-                CreateDateTime = shop.CreateDateTime,
-                UpdateDateTime = shop.UpdateDateTime,
-                GooglePlaceId = shop.GooglePlaceId,
-                Latitude = shop.Latitude,
-                Longitude = shop.Longitude,
-                NbComments = nbComments,
-                TotalScore = shop.TotalScore,
-                AverageScore = shop.AverageScore,
-                Filters = filters,
-                ProductCategories = productCategories
-            };
-        }
-
         public static ShopAggregate ToAggregate(this Shop shop)
         {
             if (shop == null)
@@ -260,47 +177,7 @@ namespace Cook4Me.Api.EF.Extensions
                 PaymentMethods = paymentMethods
             };
         }
-
-        public static Shop ToModel(this Domain.Shop shop)
-        {
-            if (shop == null)
-            {
-                throw new ArgumentNullException(nameof(shop));
-            }
-            
-            var payments = new List<PaymentMethod>();
-            if (shop.Payments != null && shop.Payments.Any())
-            {
-                payments = shop.Payments.Select(p => p.ToModel()).ToList();
-            }
-
-            return new Shop
-            {
-                Id = shop.Id,
-                Subject = shop.Subject,
-                Name = shop.Name,
-                Description = shop.Description,
-                BannerImage = shop.BannerImage,
-                ProfileImage = shop.ProfileImage,
-                MapName = shop.MapName,
-                CategoryId = shop.CategoryId,
-                PlaceId = shop.PlaceId,
-                StreetAddress = shop.StreetAddress,
-                PostalCode = shop.PostalCode,
-                Locality = shop.Locality,
-                Country = shop.Country,
-                PaymentMethods = payments,
-                ShopRelativePath = shop.ShopRelativePath,
-                UndergroundRelativePath = shop.UndergroundRelativePath,
-                CreateDateTime = shop.CreateDateTime,
-                UpdateDateTime = shop.UpdateDateTime,
-                GooglePlaceId = shop.GooglePlaceId,
-                Latitude = shop.Latitude,
-                Longitude = shop.Longitude,
-                TotalScore = shop.TotalScore
-            };
-        }
-
+        
         public static Domain.Category ToDomain(this Category category)
         {
             if (category == null)
@@ -390,21 +267,21 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Domain.Tag ToDomain(this Tag tag)
+        public static TagAggregate ToAggregate(this Tag tag)
         {
             if (tag == null)
             {
                 throw new ArgumentNullException(nameof(tag));
             }
 
-            return new Domain.Tag
+            return new TagAggregate
             {
                 Name = tag.Name,
                 Description = tag.Description
             };
         }
 
-        public static Tag ToModel(this Domain.Tag tag)
+        public static Tag ToModel(this TagAggregate tag)
         {
             if (tag == null)
             {
@@ -503,7 +380,7 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Domain.Product ToDomain(this Product product)
+        public static ProductAggregate ToAggregate(this Product product)
         {
             if(product == null)
             {
@@ -522,19 +399,19 @@ namespace Cook4Me.Api.EF.Extensions
                 tags = product.Tags.Select(t => t.TagName);
             }
 
-            IEnumerable<Domain.ProductFilter> filterValues = new List<Domain.ProductFilter>();
+            IEnumerable<ProductAggregateFilter> filterValues = new List<ProductAggregateFilter>();
             if (product.Filters != null)
             {
-                filterValues = product.Filters.Select(f => f.ToDomain());
+                filterValues = product.Filters.Select(f => f.ToAggregate());
             }
 
-            IEnumerable<Domain.ProductPromotion> promotions = new List<Domain.ProductPromotion>();
+            IEnumerable<ProductAggregatePromotion> promotions = new List<ProductAggregatePromotion>();
             if (product.Promotions != null)
             {
-                promotions = product.Promotions.Where(p => string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToDomain());
+                promotions = product.Promotions.Where(p => string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToAggregate());
             }
 
-            return new Domain.Product
+            return new ProductAggregate
             {
                 Id = product.Id,
                 CategoryId = product.CategoryId,
@@ -549,12 +426,12 @@ namespace Cook4Me.Api.EF.Extensions
                 Name = product.Name,
                 PartialImagesUrl = images,
                 Tags = tags,
-                FilterValues = filterValues,
+                Filters = filterValues,
                 Promotions = promotions
             };
         }
 
-        public static Product ToModel(this Domain.Product product)
+        public static Product ToModel(this ProductAggregate product)
         {
             if (product == null)
             {
@@ -612,7 +489,7 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Domain.ProductFilter ToDomain(this ProductFilter filter)
+        public static ProductAggregateFilter ToAggregate(this ProductFilter filter)
         {
             if (filter == null)
             {
@@ -624,7 +501,7 @@ namespace Cook4Me.Api.EF.Extensions
                 return null;
             }
 
-            return new Domain.ProductFilter
+            return new ProductAggregateFilter
             {
                 FilterId = filter.FilterValue.Filter.Id,
                 FilterName = filter.FilterValue.Filter.Name,
@@ -633,14 +510,14 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Domain.ProductCategory ToDomain(this ProductCategory productCategory)
+        public static ProductAggregateCategory ToAggregate(this ProductCategory productCategory)
         {
             if (productCategory == null)
             {
                 throw new ArgumentNullException(nameof(productCategory));
             }
 
-            return new Domain.ProductCategory
+            return new ProductAggregateCategory
             {
                 Id = productCategory.Id,
                 Description = productCategory.Description,
@@ -648,20 +525,20 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Domain.ProductPromotion ToDomain(this ProductPromotion productPromotion)
+        public static ProductAggregatePromotion ToAggregate(this ProductPromotion productPromotion)
         {
             if (productPromotion == null)
             {
                 throw new ArgumentNullException(nameof(productPromotion));
             }
 
-            return new Domain.ProductPromotion
+            return new ProductAggregatePromotion
             {
                 Id = productPromotion.Id,
                 Code = productPromotion.Code,
                 Discount = productPromotion.Discount,
                 ProductId = productPromotion.ProductId,
-                Type = (Domain.PromotionTypes)productPromotion.Type,
+                Type = (PromotionTypes)productPromotion.Type,
                 CreateDateTime = productPromotion.CreateDateTime,
                 ExpirationDateTime = productPromotion.ExpirationDateTime,
                 UpdateDateTime = productPromotion.UpdateDateTime

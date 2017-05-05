@@ -14,7 +14,7 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.EF.Extensions;
@@ -35,12 +35,12 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Tag>> GetAll()
+        public async Task<IEnumerable<TagAggregate>> GetAll()
         {
-            return await _context.Tags.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await _context.Tags.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Tag>> Search(SearchTagsParameter parameter)
+        public async Task<IEnumerable<TagAggregate>> Search(SearchTagsParameter parameter)
         {
             if (parameter == null)
             {
@@ -48,7 +48,7 @@ namespace Cook4Me.Api.EF.Repositories
             }
             
             var tags = _context.Tags.Where(c => c.Name.ToLower().Contains(parameter.Name.ToLower()));
-            return await tags.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await tags.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
     }
 }

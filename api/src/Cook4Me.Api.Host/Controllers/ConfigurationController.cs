@@ -14,25 +14,16 @@
 // limitations under the License.
 #endregion
 
-using System;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Cook4Me.Api.Core.Models
+namespace Cook4Me.Api.Host.Controllers
 {
-    public enum PromotionTypes
+    [Route(Constants.RouteNames.Categories)]
+    public class ConfigurationController : Controller
     {
-        Percentage,
-        Reduction
-    }
-
-    public class ProductPromotion
-    {
-        public string Id { get; set; }
-        public string ProductId { get; set; }
-        public double Discount { get; set; }
-        public PromotionTypes Type { get; set; }
-        public string Code { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public DateTime ExpirationDateTime { get; set; }
+        public IActionResult Get()
+        {
+            return null;
+        }
     }
 }

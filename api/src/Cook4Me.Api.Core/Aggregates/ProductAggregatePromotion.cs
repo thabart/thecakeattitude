@@ -15,27 +15,24 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Models
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public class Product
+    public enum PromotionTypes
+    {
+        Percentage,
+        Reduction
+    }
+
+    public class ProductAggregatePromotion
     {
         public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string CategoryId { get; set; }
-        public double Price { get; set; }
-        public double NewPrice { get; set; }
-        public string UnitOfMeasure { get; set; }
-        public double Quantity { get; set; }
-        public string ShopId { get; set; }
+        public string ProductId { get; set; }
+        public double Discount { get; set; }
+        public PromotionTypes Type { get; set; }
+        public string Code { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public ProductCategory Category { get; set; }
-        public IEnumerable<string> PartialImagesUrl { get; set; }
-        public IEnumerable<string> Tags { get; set; }
-        public IEnumerable<ProductFilter> FilterValues { get; set; }
-        public IEnumerable<ProductPromotion> Promotions { get; set; }
+        public DateTime ExpirationDateTime { get; set; }
     }
 }

@@ -115,7 +115,7 @@ namespace Cook4Me.Api.EF.Repositories
                 products = products.Skip(parameter.StartIndex).Take(parameter.Count);
             }
 
-            result.Content = await products.Select(p => p.ToDomain()).ToListAsync().ConfigureAwait(false);
+            result.Content = await products.Select(p => p.ToAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
         }
 

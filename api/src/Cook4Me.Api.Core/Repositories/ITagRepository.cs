@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace Cook4Me.Api.Core.Repositories
 {
     public interface ITagRepository
     {
-        Task<IEnumerable<Tag>> GetAll();
-        Task<IEnumerable<Tag>> Search(SearchTagsParameter parameter);
+        Task<IEnumerable<TagAggregate>> GetAll();
+        Task<IEnumerable<TagAggregate>> Search(SearchTagsParameter parameter);
     }
 }

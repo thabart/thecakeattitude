@@ -14,10 +14,10 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Validators;
-using Microsoft.AspNetCore.Hosting;
 using Moq;
 using System;
 using System.Threading.Tasks;
@@ -40,7 +40,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
 
             // ACTS & ASSERTS
             Assert.ThrowsAsync<ArgumentNullException>(() => _validator.Validate(null, null));
-            Assert.ThrowsAsync<ArgumentNullException>(() => _validator.Validate(new Shop(), null));
+            Assert.ThrowsAsync<ArgumentNullException>(() => _validator.Validate(new AddShopCommand(), null));
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
             _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult((Category)null));
 
             // ACT
-            var result = await _validator.Validate(new Shop(), "subject");
+            var result = await _validator.Validate(new AddShopCommand(), "subject");
 
             // ASSERT
             Assert.False(result.IsValid);
@@ -67,7 +67,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
             _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult((Map)null));
 
             // ACT
-            var result = await _validator.Validate(new Shop(), "subject");
+            var result = await _validator.Validate(new AddShopCommand(), "subject");
 
             // ASSERT
             Assert.False(result.IsValid);
@@ -86,7 +86,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
             }));
 
             // ACT
-            var result = await _validator.Validate(new Shop(), "subject");
+            var result = await _validator.Validate(new AddShopCommand(), "subject");
 
             // ASSERT
             Assert.False(result.IsValid);
@@ -106,7 +106,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
             }));
 
             // ACT
-            var result = await _validator.Validate(new Shop
+            var result = await _validator.Validate(new AddShopCommand
             {
                 PlaceId = "invalid_place_id"
             }, "subject");

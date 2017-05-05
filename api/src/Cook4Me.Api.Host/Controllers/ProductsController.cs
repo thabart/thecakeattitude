@@ -14,81 +14,29 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Repositories;
-using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Handlers;
+using Cook4Me.Api.Host.Operations.Product;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
 {
     [Route(Constants.RouteNames.Products)]
-    public class ProductsController : Controller
+    public class ProductsController : BaseController
     {
-        private readonly IProductRepository _repository;
-        private readonly IShopRepository _shopRepository;
-        private readonly IResponseBuilder _responseBuilder;
-        private readonly IHalResponseBuilder _halResponseBuilder;
-        private readonly IRequestBuilder _requestBuilder;
+        private readonly ISearchProductsOperation _searchProductsOperation;
 
         public ProductsController(
-            IProductRepository repository, IResponseBuilder responseBuilder,
-            IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder,
-            IShopRepository shopRepository)
+            ISearchProductsOperation searchProductsOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
-            _repository = repository;
-            _responseBuilder = responseBuilder;
-            _halResponseBuilder = halResponseBuilder;
-            _requestBuilder = requestBuilder;
-            _shopRepository = shopRepository;
+            _searchProductsOperation = searchProductsOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
         public async Task<IActionResult> Search([FromBody] JObject jObj)
         {
-            var parameter = _requestBuilder.GetSearchProducts(jObj);
-            return await Search(parameter);
-        }
-
-        private async Task<IActionResult> Search(SearchProductsParameter parameter)
-        {
-            var searchResult = await _repository.Search(parameter);
-            _halResponseBuilder.AddLinks(l => l.AddSelf(GetProductLink()));
-            if (searchResult != null && searchResult.Content != null)
-            {
-                var comments = searchResult.Content;
-                foreach (var comment in comments)
-                {
-                    AddProduct(_halResponseBuilder, _responseBuilder, comment);
-                }
-
-                double r = (double)searchResult.TotalResults / (double)parameter.Count;
-                var nbPages = Math.Ceiling(r);
-                nbPages = nbPages == 0 ? 1 : nbPages;
-                for (var page = 1; page <= nbPages; page++)
-                {
-                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetProductLink(), page.ToString())));
-                }
-            }
-
-            return new OkObjectResult(_halResponseBuilder.Build());
-        }
-
-        private void AddProduct(IHalResponseBuilder halResponseBuilder, IResponseBuilder responseBuilder, Product product)
-        {
-            _halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetProduct(product),
-                (l) =>
-                {
-                    l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + product.ShopId)).AddSelf(Constants.RouteNames.Products + "/" + product.Id);
-                }));
-        }
-
-        private static string GetProductLink()
-        {
-            return "/" + Constants.RouteNames.Products + "/" + Constants.RouteNames.Search;
+            return await _searchProductsOperation.Execute(jObj);
         }
     }
 }

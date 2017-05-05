@@ -14,67 +14,36 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Core.Repositories;
-using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Handlers;
+using Cook4Me.Api.Host.Operations.Tag;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
 {
     [Route(Constants.RouteNames.Tags)]
-    public class TagsController : Controller
+    public class TagsController : BaseController
     {
-        private readonly ITagRepository _repository;
-        private readonly IResponseBuilder _responseBuilder;
-        private readonly IHalResponseBuilder _halResponseBuilder;
-        private readonly IRequestBuilder _requestBuilder;
+        private readonly ISearchTagsOperation _searchTagsOperation;
+        private readonly IGetAllTagsOperation _getAllTagsOperation;
 
-        public TagsController(ITagRepository repository, IResponseBuilder responseBuilder, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder)
+        public TagsController(ISearchTagsOperation searchTagsOperation, IGetAllTagsOperation getAllTagsOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
-            _repository = repository;
-            _responseBuilder = responseBuilder;
-            _halResponseBuilder = halResponseBuilder;
-            _requestBuilder = requestBuilder;
+            _searchTagsOperation = searchTagsOperation;
+            _getAllTagsOperation = getAllTagsOperation;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var tags = await _repository.GetAll();
-            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Tags));
-            foreach (var category in tags)
-            {
-                AddTag(_halResponseBuilder, _responseBuilder, category);
-            }
-
-            return new OkObjectResult(_halResponseBuilder.Build());
+            return await _getAllTagsOperation.Execute();
         }
 
         [HttpPost(Constants.RouteNames.Search)]
         public async Task<IActionResult> Search([FromBody] JObject jObj)
         {
-            var request = _requestBuilder.GetSearchTags(jObj);
-            var tags = await _repository.Search(request);
-            if (!tags.Any())
-            {
-                return new NotFoundResult();
-            }
-
-            _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Tags + "/" + Constants.RouteNames.Search));
-            foreach (var tag in tags)
-            {
-                AddTag(_halResponseBuilder, _responseBuilder, tag);
-            }
-
-            return new OkObjectResult(_halResponseBuilder.Build());
-        }
-
-        private void AddTag(IHalResponseBuilder halResponseBuilder, IResponseBuilder responseBuilder, Tag tag)
-        {
-            halResponseBuilder.AddEmbedded(e => e.AddObject(responseBuilder.GetTag(tag), (l) => l.AddSelf(@"/" + Constants.RouteNames.Tags + "/" + tag.Name)));
+            return await _searchTagsOperation.Execute(jObj);
         }
     }
 }

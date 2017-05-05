@@ -30,14 +30,14 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetError(string errorCode, string errorDescription);
         JObject GetCategory(Category category);
         JObject GetMap(Map map);
-        JObject GetTag(Tag tag);
+        JObject GetTag(TagAggregate tag);
         JObject GetShopComment(ShopComment comment);
         JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
         JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment);
-        JObject GetProduct(Product product);
+        JObject GetProduct(ProductAggregate product);
         JObject GetFilter(Filter filter);
         JObject GetFilterValue(FilterValue filterValue);
-        JObject GetPromotion(ProductPromotion promotion);
+        JObject GetPromotion(ProductAggregatePromotion promotion);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -172,7 +172,7 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetTag(Tag tag)
+        public JObject GetTag(TagAggregate tag)
         {
             if (tag == null)
             {
@@ -233,7 +233,7 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetProduct(Product product)
+        public JObject GetProduct(ProductAggregate product)
         {
             if (product == null)
             {
@@ -274,10 +274,10 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.Product.Images, arr);
             }
 
-            if (product.FilterValues != null && product.FilterValues.Any())
+            if (product.Filters != null && product.Filters.Any())
             {
                 JArray arr = new JArray();
-                foreach (var filterValue in product.FilterValues)
+                foreach (var filterValue in product.Filters)
                 {
                     arr.Add(GetProductFilter(filterValue));
                 }
@@ -299,7 +299,7 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetProductFilter(ProductFilter productFilter)
+        public JObject GetProductFilter(ProductAggregateFilter productFilter)
         {
             if (productFilter == null)
             {
@@ -351,7 +351,7 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetPromotion(ProductPromotion promotion)
+        public JObject GetPromotion(ProductAggregatePromotion promotion)
         {
             if (promotion == null)
             {
