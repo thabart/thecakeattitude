@@ -8,6 +8,7 @@ import Rater from 'react-rater';
 import Constants from '../../Constants';
 import './comment.css';
 import $ from 'jquery';
+import AppDispatcher from '../appDispatcher';
 
 class Comment extends Component {
   constructor(props) {
@@ -179,8 +180,6 @@ class Comment extends Component {
       self.setState({
         isAddingComment: false
       });
-      self.refreshComments();
-      self.props.onRefreshScore();
     }).catch(function(error) {
       var json = error.responseJSON;
       var errorMessage = "an error occured while trying to add the comment";
@@ -348,6 +347,18 @@ class Comment extends Component {
   // Execute after the render
   componentWillMount() {
     var self = this;
+    // Refresh the comments.
+    AppDispatcher.register(function(payload) {
+      switch(payload.actionName) {
+        case 'new-comment':
+        case 'remove-comment':
+          if (payload && payload.data && payload.data.shop_id == self.props.shop.id) {
+            self.refreshComments();
+            self.props.onRefreshScore();
+          }
+        break;
+      }
+    });
     var session = SessionService.getSession();
     if (session || session !== null) {
       OpenIdService.introspect(session.access_token).then(function(introspect) {

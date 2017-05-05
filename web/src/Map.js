@@ -10,7 +10,6 @@ import { MAP } from 'react-google-maps/lib/constants';
 import './Map.css';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
-import { MapStore } from './stores';
 import AppDispatcher from './appDispatcher';
 
 const currentLocationOpts = {
@@ -108,36 +107,32 @@ class Map extends Component {
   }
   // Click on marker
   onMarkerClick(marker) {
-    var shops = MapStore.getShops().map(shop => {
-      if (shop === marker) {
-        return {
-          ...marker,
-          showInfo: true
-        };
-      }
+    this.setState({
+      shops: this.state.shops.map(shop => {
+        if (shop === marker) {
+          return {
+            ...marker,
+            showInfo: true
+          };
+        }
 
-      return marker;
-    });
-    AppDispatcher.dispatch({
-      actionName: 'set-shops',
-      data: shops
+        return marker;
+      })
     });
   }
   // Close the marker
   onCloseClick(marker) {
-    var shops = MapStore.getShops().map(shop => {
-      if (shop === marker) {
-        return {
-          ...marker,
-          showInfo: false
-        };
-      }
+    this.setState({
+      shops: this.state.shops.map(shop => {
+        if (shop === marker) {
+          return {
+            ...marker,
+            showInfo: false
+          };
+        }
 
-      return marker;
-    });
-    AppDispatcher.dispatch({
-      actionName: 'set-shops',
-      data: shops
+        return marker;
+      })
     });
   }
   // Refresh the map
@@ -176,20 +171,14 @@ class Map extends Component {
       embedded.forEach(function(shop) {
         shops.push({ location: shop.location, name: shop.name, showInfo: false, id: shop.id });
       });
-      AppDispatcher.dispatch({
-        actionName: 'set-shops',
-        data: shops
-      });
       self.setState({
-        isSearching: false
+        isSearching: false,
+        shops: shops
       });
     }).catch(function() {
-      AppDispatcher.dispatch({
-        actionName: 'set-shops',
-        data: []
-      });
       self.setState({
-        isSearching: false
+        isSearching: false,
+        shops: []
       });
     });
   }
@@ -249,10 +238,14 @@ class Map extends Component {
   componentDidMount() {
     var self = this;
     // Refresh the map when a new shop arrived.
-    MapStore.addChangeHandler(function() {
-      self.setState({
-        shops: MapStore.getShops()
-      });
+    AppDispatcher.register(function(payload) {
+      switch(payload.actionName) {
+        case 'new-shop':
+          var shops = self.state.shops;
+          shops.push(payload.data);
+          self.setState(shops);
+        break;
+      }
     });
     // Can reorder all the widgets.
     $(this.widgetContainer).sortable({

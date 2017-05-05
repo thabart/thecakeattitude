@@ -32,6 +32,8 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetMap(Map map);
         JObject GetTag(Tag tag);
         JObject GetComment(Comment comment);
+        JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
+        JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment);
         JObject GetProduct(Product product);
         JObject GetFilter(Filter filter);
         JObject GetFilterValue(FilterValue filterValue);
@@ -198,6 +200,37 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
             jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
+            return jObj;
+        }
+
+        public JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Comment.Content, comment.Content);
+            jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
+            jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
+            jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
+            return jObj;
+        }
+
+        public JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             return jObj;
         }
 

@@ -3,6 +3,7 @@ import { ShopsService } from '../services';
 import Widget from '../components/widget';
 import Rater from 'react-rater';
 import $ from 'jquery';
+import AppDispatcher from '../appDispatcher';
 
 class TrendingSellers extends Component {
   constructor(props) {
@@ -129,6 +130,22 @@ class TrendingSellers extends Component {
         }
       </Widget>
     );
+  }
+  // Execute after the render
+  componentWillMount() {
+    var self = this;
+    AppDispatcher.register(function(payload) {
+      switch(payload.actionName) {
+        case 'new-shop':
+        case 'new-comment':
+        case 'remove-comment':
+          var request = $.extend({}, self.request, {
+            start_index: 0
+          });
+          self.refresh(request);
+        break;
+      }
+    });
   }
 }
 

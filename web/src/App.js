@@ -27,9 +27,20 @@ class App extends Component {
     var connection = $.hubConnection("http://localhost:5000");
     var proxy = connection.createHubProxy("notifier");
     proxy.on('shopAdded', function(message) {
-      console.log(message);
       AppDispatcher.dispatch({
         actionName: 'new-shop',
+        data: message
+      });
+    });
+    proxy.on('shopCommentAdded', function(message) {
+      AppDispatcher.dispatch({
+        actionName: 'new-comment',
+        data: message
+      });
+    });
+    proxy.on('shopCommentRemoved', function(message) {
+      AppDispatcher.dispatch({
+        actionName: 'remove-comment',
         data: message
       });
     });
