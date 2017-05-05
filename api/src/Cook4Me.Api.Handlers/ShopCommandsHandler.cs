@@ -83,7 +83,10 @@ namespace Cook4Me.Api.Handlers
             await _shopRepository.Add(aggregate);
             _eventPublisher.Publish(new ShopAddedEvent
             {
-                ShopId = message.Id
+                ShopId = message.Id,
+                Name = message.Name,
+                Longitude = message.Longitude,
+                Latitude = message.Latitude
             });
         }
 

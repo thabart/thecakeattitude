@@ -11,6 +11,7 @@ import createBrowserHistory  from 'history/createBrowserHistory';
 import './App.css';
 import $ from 'jquery';
 import 'ms-signalr-client';
+import AppDispatcher from './appDispatcher';
 
 var history = createBrowserHistory();
 
@@ -26,7 +27,11 @@ class App extends Component {
     var connection = $.hubConnection("http://localhost:5000");
     var proxy = connection.createHubProxy("notifier");
     proxy.on('shopAdded', function(message) {
-        console.log(message);
+      console.log(message);
+      AppDispatcher.dispatch({
+        actionName: 'new-shop',
+        data: message
+      });
     });
     connection.start({ jsonp: false })
       .done(function(){

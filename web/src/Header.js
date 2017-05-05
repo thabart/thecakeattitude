@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu,  Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-import { NavLink, Redirect } from 'react-router-dom';
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavDropdown, DropdownToggle, DropdownItem, DropdownMenu,  Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import Promise from 'bluebird';
-import classnames from 'classnames';
 import OpenIdService from './services/OpenId';
 import AuthenticateService from './services/Authenticate';
 import SessionService from './services/Session';
@@ -31,8 +30,10 @@ class Header extends Component {
     };
   }
   toggle(name) {
-    this.state[name] = !this.state[name];
-    this.setState(this.state);
+    var value = !this.state[name];
+    this.setState({
+      [name]: value
+    });
   }
   handleInputChange(e) {
     const target = e.target;
@@ -103,7 +104,7 @@ class Header extends Component {
         if (accessToken) {
           AuthenticateService.authenticate(accessToken).then(function() {
             clearInterval(interval);
-            w.close();http://localhost:3000/#
+            w.close();
             self.handeAuthenticationSuccess();
           }).catch(function() {
             self.handleAuthenticationError();
@@ -114,7 +115,6 @@ class Header extends Component {
   }
   // Disconnect
   disconnect() {
-    this.state.isLoggedIn = false;
     this.setState({
       isLoggedIn : false
     });
@@ -123,9 +123,8 @@ class Header extends Component {
   }
   // Display the user information.
   displayUser(isLoggedIn, user) {
-    this.state.isLoggedIn = isLoggedIn;
     this.setState({
-      isLoggedIn: this.state.isLoggedIn,
+      isLoggedIn: isLoggedIn,
       user: user
     });
   }

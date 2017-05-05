@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.Shop;
+using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Hubs;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using System;
@@ -26,10 +27,12 @@ namespace Cook4Me.Api.Host.Handlers
     public class ShopEventsHandler : Handles<ShopAddedEvent>
     {
         private readonly IConnectionManager _connectionManager;
+        private readonly IResponseBuilder _responseBuilder;
 
-        public ShopEventsHandler(IConnectionManager connectionManager)
+        public ShopEventsHandler(IConnectionManager connectionManager, IResponseBuilder responseBuilder)
         {
             _connectionManager = connectionManager;
+            _responseBuilder = responseBuilder;
         }
 
         public Task Handle(ShopAddedEvent message)
@@ -40,7 +43,7 @@ namespace Cook4Me.Api.Host.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
 
-            notifier.Clients.All.shopAdded(message);
+            notifier.Clients.All.shopAdded(_responseBuilder.GetShopAddedEvent(message));
             return Task.FromResult(0);
         }
     }

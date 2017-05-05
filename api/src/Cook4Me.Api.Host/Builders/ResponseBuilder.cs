@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.Core.Models;
 using Newtonsoft.Json.Linq;
 using System;
@@ -25,6 +26,7 @@ namespace Cook4Me.Api.Host.Builders
     public interface IResponseBuilder
     {
         JObject GetShop(ShopAggregate shop);
+        JObject GetShopAddedEvent(ShopAddedEvent evt);
         JObject GetError(string errorCode, string errorDescription);
         JObject GetCategory(Category category);
         JObject GetMap(Map map);
@@ -108,6 +110,23 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
+        public JObject GetShopAddedEvent(ShopAddedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            var location = new JObject();
+            location.Add(Constants.DtoNames.Location.Latitude, evt.Latitude);
+            location.Add(Constants.DtoNames.Location.Longitude, evt.Longitude);
+            result.Add(Constants.DtoNames.Shop.Id, evt.ShopId);
+            result.Add(Constants.DtoNames.Shop.Location, location);
+            result.Add(Constants.DtoNames.Shop.Name, evt.Name);
+            return result;
+        }
+        
         public JObject GetError(string errorCode, string errorDescription)
         {
             if (string.IsNullOrWhiteSpace(errorCode))

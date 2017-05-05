@@ -92,14 +92,14 @@ class TrendingSellers extends Component {
         }
 
         content.push((
-          <a href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding" onClick={(e) => { self.navigateShop(e, shop.id); }}>
+          <a key={shop.id} href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding" onClick={(e) => { self.navigateShop(e, shop.id); }}>
             <div className="d-flex w-100">
               <img src={profileImage} className="img-thumbnail rounded float-left picture" />
               <div className="d-flex flex-column">
                 <div className="mb-1">{shop.name}</div>
-                <p className="mb-1">
+                <div className="mb-1">
                   <Rater total={5} rating={shop.average_score} interactive={false} /><i>Comments : {shop.nb_comments}</i>
-                </p>
+                </div>
               </div>
             </div>
           </a>));
@@ -109,7 +109,7 @@ class TrendingSellers extends Component {
     if (this.state.navigation && this.state.navigation.length > 0) {
       this.state.navigation.forEach(function(nav) {
         navigations.push((
-          <li className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigate(e, nav.name); }} >{nav.name}</a></li>
+          <li key={nav.name} className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigate(e, nav.name); }} >{nav.name}</a></li>
         ));
       });
     }
