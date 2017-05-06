@@ -15,17 +15,16 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Core.Repositories
 {
-    public interface IMapRepository
+    public interface IShopCategoryRepository
     {
-        Task<IEnumerable<ShopMap>> GetAll();
-        Task<ShopMap> Get(string id);
-        Task<IEnumerable<ShopMap>> Search(SearchMapsParameter parameter);
+        Task<IEnumerable<ShopCategoryAggregate>> GetAll();
+        Task<ShopCategoryAggregate> Get(string id);
+        Task<IEnumerable<ShopCategoryAggregate>> Search(SearchCategoriesParameter parameter);
     }
 }

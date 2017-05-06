@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
@@ -27,7 +28,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
 {
     public class AddShopValidatorFixture
     {
-        private Mock<ICategoryRepository> _categoryRepositoryStub;
+        private Mock<IShopCategoryRepository> _categoryRepositoryStub;
         private Mock<IShopRepository> _shopRepositoryStub;
         private Mock<IMapRepository> _mapRepositoryStub;
         private IAddShopValidator _validator;
@@ -48,7 +49,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
         {
             // ARRANGE
             InitializeFakeObjects();
-            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult((Category)null));
+            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult((ShopCategoryAggregate)null));
 
             // ACT
             var result = await _validator.Validate(new AddShopCommand(), "subject");
@@ -63,8 +64,8 @@ namespace Cook4Me.Api.Host.Tests.Validators
         {
             // ARRANGE
             InitializeFakeObjects();
-            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Category()));
-            _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult((Map)null));
+            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new ShopCategoryAggregate()));
+            _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult((ShopMap)null));
 
             // ACT
             var result = await _validator.Validate(new AddShopCommand(), "subject");
@@ -79,8 +80,8 @@ namespace Cook4Me.Api.Host.Tests.Validators
         {
             // ARRANGE
             InitializeFakeObjects();
-            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Category()));
-            _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Map
+            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new ShopCategoryAggregate()));
+            _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new ShopMap
             {
                 PartialMapUrl = "/map2.json"
             }));
@@ -99,8 +100,8 @@ namespace Cook4Me.Api.Host.Tests.Validators
         {
             // ARRANGE
             InitializeFakeObjects();
-            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Category()));
-            _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new Map
+            _categoryRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new ShopCategoryAggregate()));
+            _mapRepositoryStub.Setup(c => c.Get(It.IsAny<string>())).Returns(Task.FromResult(new ShopMap
             {
                 PartialMapUrl = "/map.json"
             }));
@@ -118,7 +119,7 @@ namespace Cook4Me.Api.Host.Tests.Validators
 
         private void InitializeFakeObjects()
         {
-            _categoryRepositoryStub = new Mock<ICategoryRepository>();
+            _categoryRepositoryStub = new Mock<IShopCategoryRepository>();
             _shopRepositoryStub = new Mock<IShopRepository>();
             _mapRepositoryStub = new Mock<IMapRepository>();
             _validator = new AddShopValidator(_categoryRepositoryStub.Object, _shopRepositoryStub.Object, _mapRepositoryStub.Object);

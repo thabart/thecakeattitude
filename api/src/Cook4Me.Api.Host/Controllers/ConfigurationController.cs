@@ -14,16 +14,25 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Host.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace Cook4Me.Api.Host.Controllers
 {
-    [Route(Constants.RouteNames.Categories)]
+    [Route(Constants.RouteNames.Configuration)]
     public class ConfigurationController : Controller
     {
+        [HttpGet]
         public IActionResult Get()
         {
-            return null;
+            var issuer = Request.GetAbsoluteUriWithVirtualPath();
+            var jObj = new JObject();
+            jObj.Add("products_endpoint", issuer + "/" + Constants.RouteNames.Products);
+            jObj.Add("shops_endpoint", issuer + "/" + Constants.RouteNames.Shops);
+            jObj.Add("tags_endpoint", issuer + "/" + Constants.RouteNames.Tags);
+            jObj.Add("shopcategories_endpoint", issuer + "/" + Constants.RouteNames.ShopCategories);
+            return new OkObjectResult(jObj);
         }
     }
 }

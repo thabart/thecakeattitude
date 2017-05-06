@@ -39,7 +39,7 @@ namespace Cook4Me.Api.Host.Enrichers
             halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetShop(shop),
                 (l) =>
                 {
-                    l.AddOtherItem("category", new Dtos.Link("/" + Constants.RouteNames.Categories + "/" + shop.CategoryId, shop.ShopCategory.Name)).AddSelf(Constants.RouteNames.Shops + "/" + shop.Id);
+                    l.AddOtherItem("category", new Dtos.Link("/" + Constants.RouteNames.ShopCategories + "/" + shop.CategoryId, shop.ShopCategory.Name)).AddSelf(Constants.RouteNames.Shops + "/" + shop.Id);
                     if (shop.ShopFilters != null && shop.ShopFilters.Any())
                     {
                         foreach (var filter in shop.ShopFilters)

@@ -28,8 +28,8 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetShop(ShopAggregate shop);
         JObject GetShopAddedEvent(ShopAddedEvent evt);
         JObject GetError(string errorCode, string errorDescription);
-        JObject GetCategory(Category category);
-        JObject GetMap(Map map);
+        JObject GetShopCategory(ShopCategoryAggregate category);
+        JObject GetMap(ShopMap map);
         JObject GetTag(TagAggregate tag);
         JObject GetShopComment(ShopComment comment);
         JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
@@ -147,7 +147,7 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
-        public JObject GetCategory(Category category)
+        public JObject GetShopCategory(ShopCategoryAggregate category)
         {
             if (category == null)
             {
@@ -158,11 +158,42 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Category.Id, category.Id);
             jObj.Add(Constants.DtoNames.Category.Name, category.Name);
             jObj.Add(Constants.DtoNames.Category.Description, category.Description);
+            if (category.Children != null && category.Children.Any())
+            {
+                var arr = new JArray();
+                foreach(var child in category.Children)
+                {
+                    var subObj = new JObject();
+                    subObj.Add(Constants.DtoNames.Category.Id, child.Id);
+                    subObj.Add(Constants.DtoNames.Category.Name, child.Name);
+                    subObj.Add(Constants.DtoNames.Category.Description, child.Description);
+                    arr.Add(subObj);
+                }
+
+                jObj.Add(Constants.DtoNames.Category.Children, arr);
+            }
+
+            if (category.Maps != null && category.Maps.Any())
+            {
+                var arr = new JArray();
+                foreach(var map in category.Maps)
+                {
+                    arr.Add(GetMap(map));
+                }
+
+                jObj.Add(Constants.DtoNames.Category.Maps, arr);
+            }
+
             return jObj;
         }
 
-        public JObject GetMap(Map map)
+        public JObject GetMap(ShopMap map)
         {
+            if (map == null)
+            {
+                throw new ArgumentNullException(nameof(map));
+            }
+
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Map.MapName, map.MapName);
             jObj.Add(Constants.DtoNames.Map.MapPartialUrl, map.PartialMapUrl);

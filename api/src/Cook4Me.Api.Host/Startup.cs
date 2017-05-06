@@ -24,6 +24,7 @@ using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Hubs;
 using Cook4Me.Api.Host.Operations.Product;
 using Cook4Me.Api.Host.Operations.Shop;
+using Cook4Me.Api.Host.Operations.ShopCategory;
 using Cook4Me.Api.Host.Operations.Tag;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Builder;
@@ -140,10 +141,14 @@ namespace Cook4Me.Api.Host
             services.AddTransient<ISearchProductsOperation, SearchProductsOperation>();
             services.AddTransient<ISearchTagsOperation, SearchTagsOperation>();
             services.AddTransient<IGetAllTagsOperation, GetAllTagsOperation>();
+            services.AddTransient<IGetAllShopCategoriesOperation, GetAllShopCategoriesOperation>();
+            services.AddTransient<IGetShopCategoryOperation, GetShopCategoryOperation>();
+            services.AddTransient<IGetParentShopCategoriesOperation, GetParentShopCategoriesOperation>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<ICommentEnricher, CommentEnricher>();
             services.AddTransient<IProductEnricher, ProductEnricher>();
             services.AddTransient<ITagEnricher, TagEnricher>();
+            services.AddTransient<IShopCategoryEnricher, ShopCategoryEnricher>();
             services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
             services.AddSingleton<ShopEventsHandler>();
         }

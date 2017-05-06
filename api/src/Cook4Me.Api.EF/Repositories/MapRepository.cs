@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
@@ -35,7 +36,7 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public async Task<Map> Get(string id)
+        public async Task<ShopMap> Get(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -48,15 +49,15 @@ namespace Cook4Me.Api.EF.Repositories
                 return null;
             }
 
-            return result.ToDomain();
+            return result.ToAggregate();
         }
 
-        public async Task<IEnumerable<Map>> GetAll()
+        public async Task<IEnumerable<ShopMap>> GetAll()
         {
-            return await _context.Maps.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await _context.Maps.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Map>> Search(SearchMapsParameter parameter)
+        public async Task<IEnumerable<ShopMap>> Search(SearchMapsParameter parameter)
         {
             if (parameter == null)
             {
@@ -65,7 +66,7 @@ namespace Cook4Me.Api.EF.Repositories
 
 
             var maps = _context.Maps.Where(c => c.CategoryId == parameter.CategoryId);
-            return await maps.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await maps.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
     }
 }

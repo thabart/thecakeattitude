@@ -14,8 +14,8 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Shop;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Newtonsoft.Json;
@@ -40,7 +40,7 @@ namespace Cook4Me.Api.Host.Validators
             Message = message;
         }
 
-        public AddShopValidationResult(Category category, Map map)
+        public AddShopValidationResult(ShopCategoryAggregate category, ShopMap map)
         {
             IsValid = true;
             Category = category;
@@ -49,17 +49,17 @@ namespace Cook4Me.Api.Host.Validators
 
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
-        public Category Category { get; private set; }
-        public Map Map { get; private set; }
+        public ShopCategoryAggregate Category { get; private set; }
+        public ShopMap Map { get; private set; }
     }
 
     public class AddShopValidator : IAddShopValidator
     {
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IShopCategoryRepository _categoryRepository;
         private readonly IShopRepository _shopRepository;
         private readonly IMapRepository _mapRepository;
 
-        public AddShopValidator(ICategoryRepository categoryRepository, IShopRepository shopRepository, IMapRepository mapRepository)
+        public AddShopValidator(IShopCategoryRepository categoryRepository, IShopRepository shopRepository, IMapRepository mapRepository)
         {
             _categoryRepository = categoryRepository;
             _shopRepository = shopRepository;

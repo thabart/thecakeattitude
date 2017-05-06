@@ -14,18 +14,23 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Core.Parameters;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Host.Extensions
 {
-    public interface IMapRepository
+    internal static class HttpRequestExtensions
     {
-        Task<IEnumerable<ShopMap>> GetAll();
-        Task<ShopMap> Get(string id);
-        Task<IEnumerable<ShopMap>> Search(SearchMapsParameter parameter);
+        public static string GetAbsoluteUriWithVirtualPath(this HttpRequest requestMessage)
+        {
+            var host = requestMessage.Host.Value;
+            var http = "http://";
+            if (requestMessage.IsHttps)
+            {
+                http = "https://";
+            }
+
+            var relativePath = requestMessage.PathBase.Value;
+            return http + host + relativePath;
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace Cook4Me.Api.Host
             public const string Products = "products";
             public const string Shops = "shops";
             public const string Users = "users";
-            public const string Categories = "categories";
+            public const string ShopCategories = "shopcategories";
             public const string Configuration = ".well-known/configuration";
             public const string Maps = "maps";
             public const string Parents = "parents";
@@ -182,6 +182,7 @@ namespace Cook4Me.Api.Host
                 public const string ParentId = "parent_id";
                 public const string MainMap = "main_map";
                 public const string Maps = "maps";
+                public const string Children = "children";
             }
 
             public static class Map

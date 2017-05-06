@@ -14,18 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Models;
-using Cook4Me.Api.Core.Parameters;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public interface IMapRepository
+    public class ShopMap
     {
-        Task<IEnumerable<ShopMap>> GetAll();
-        Task<ShopMap> Get(string id);
-        Task<IEnumerable<ShopMap>> Search(SearchMapsParameter parameter);
+        public string MapName { get; set; }
+        public string CategoryId { get; set; }
+        public string OverviewName { get; set; }
+        public string PartialMapUrl { get; set; }
+        public string PartialOverviewUrl { get; set; }
+        public bool IsMain { get; set; }
     }
 }

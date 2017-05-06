@@ -14,28 +14,28 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Models;
+using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Cook4Me.Api.Core.Parameters;
-using System;
 
 namespace Cook4Me.Api.EF.Repositories
 {
-    internal class CategoryRepository : ICategoryRepository
+    internal class ShopCategoryRepository : IShopCategoryRepository
     {
         private readonly CookDbContext _context;
 
-        public CategoryRepository(CookDbContext context)
+        public ShopCategoryRepository(CookDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Category> Get(string id)
+        public async Task<ShopCategoryAggregate> Get(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
@@ -48,15 +48,15 @@ namespace Cook4Me.Api.EF.Repositories
                 return null;
             }
 
-            return result.ToDomain();
+            return result.ToAggregate();
         }
 
-        public async Task<IEnumerable<Category>> GetAll()
+        public async Task<IEnumerable<ShopCategoryAggregate>> GetAll()
         {
-            return await _context.Categories.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await _context.Categories.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<Category>> Search(SearchCategoriesParameter parameter)
+        public async Task<IEnumerable<ShopCategoryAggregate>> Search(SearchCategoriesParameter parameter)
         {
             if (parameter == null)
             {
@@ -64,7 +64,7 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             var categories = _context.Categories.Where(c => c.ParentId == parameter.ParentId);
-            return await categories.Select(c => c.ToDomain()).ToListAsync().ConfigureAwait(false);
+            return await categories.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
     }
 }

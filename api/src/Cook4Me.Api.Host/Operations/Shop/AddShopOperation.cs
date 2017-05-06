@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Models;
@@ -105,7 +106,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
             return new OkObjectResult(res);
         }
 
-        private bool AddShopMap(AddShopCommand shop, Map map)
+        private bool AddShopMap(AddShopCommand shop, ShopMap map)
         {
             if (!File.Exists(Constants.Assets.PartialShop) || !System.IO.File.Exists(Constants.Assets.PartialUnderground))
             {

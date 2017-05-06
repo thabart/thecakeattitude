@@ -178,26 +178,26 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
         
-        public static Domain.Category ToDomain(this Category category)
+        public static ShopCategoryAggregate ToAggregate(this Category category)
         {
             if (category == null)
             {
                 throw new ArgumentNullException(nameof(category));
             }
 
-            IEnumerable<Domain.Category> children = null;
+            IEnumerable<ShopCategoryAggregate> children = null;
             if (category.Children != null && category.Children.Any())
             {
-                children = category.Children.Select(c => c.ToDomain());
+                children = category.Children.Select(c => c.ToAggregate());
             }
 
-            IEnumerable<Domain.Map> maps = null;
+            IEnumerable<ShopMap> maps = null;
             if (category.Maps != null && category.Maps.Any())
             {
-                maps = category.Maps.Select(m => m.ToDomain());
+                maps = category.Maps.Select(m => m.ToAggregate());
             }
 
-            return new Domain.Category
+            return new ShopCategoryAggregate
             {
                 Id = category.Id,
                 Description = category.Description,
@@ -208,7 +208,7 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Category ToModel(this Domain.Category category)
+        public static Category ToModel(this ShopCategoryAggregate category)
         {
             if (category == null)
             {
@@ -231,14 +231,14 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Domain.Map ToDomain(this Map map)
+        public static ShopMap ToAggregate(this Map map)
         {
             if (map == null)
             {
                 throw new ArgumentNullException(nameof(map));
             }
 
-            return new Domain.Map
+            return new ShopMap
             {
                 CategoryId = map.CategoryId,
                 MapName = map.MapName,
@@ -249,7 +249,7 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Map ToModel(this Domain.Map map)
+        public static Map ToModel(this ShopMap map)
         {
             if (map == null)
             {
