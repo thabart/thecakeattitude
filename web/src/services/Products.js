@@ -1,6 +1,7 @@
 import request from 'request';
 import Constants from '../../Constants';
 import Promise from 'bluebird';
+import ConfigurationService from './Configuration';
 import $ from 'jquery';
 
 module.exports = {
@@ -15,6 +16,18 @@ module.exports = {
         resolve(r);
       }).fail(function(e) {
         reject(e);
+      });
+    });
+  },
+  // Get product
+  get: function(id) {
+    return new Promise(function(resolve, reject) {
+      ConfigurationService.get().then(function(configuration) {
+        $.get(configuration.products_endpoint + '/' + id).then(function(r) {
+          resolve(r);
+        }).fail(function(e) {
+          reject(e);
+        });
       });
     });
   }

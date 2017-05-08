@@ -2,25 +2,13 @@
 		margin-top: 20px;
 }
 
+.shop-tags {
+	padding: 0;
+}
+
 .product-item {
   padding-top: 10px;
   border-bottom: 1px solid #f1f0f0;
-}
-
-ul.shop-tags {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
-}
-
-ul.shop-tags li {
-	display: inline-block;
-	border: 1px solid white;
-	border-radius: 5px;
-	padding: 5px;
-	font-style: italic;
-	font-size: 10pt;
-	margin-right: 5px;
 }
 
 .ratingPopup {

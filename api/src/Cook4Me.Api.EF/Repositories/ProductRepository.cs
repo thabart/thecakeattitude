@@ -23,6 +23,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Cook4Me.Api.Core.Aggregates;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -119,6 +120,30 @@ namespace Cook4Me.Api.EF.Repositories
             result.Content = await products.Select(p => p.ToAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
         }
+
+        public async Task<ProductAggregate> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            IQueryable<Models.Product> products = _context.Products
+                .Include(p => p.Images)
+                .Include(p => p.Tags)
+                .Include(p => p.Shop)
+                .Include(p => p.Comments)
+                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter)
+                .Include(p => p.Promotions);
+            var result = await products.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToAggregate();
+        }
+
 
         private static IQueryable<Models.Product> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Product, TKey>> keySelector, IQueryable<Models.Product> products)
         {

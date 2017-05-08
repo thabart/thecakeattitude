@@ -414,6 +414,21 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             PartialPath = "/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
                         }
                     },
                     Tags = new []
@@ -481,6 +496,16 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             PartialPath = "/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
                         }
                     },
                     Tags = new []
@@ -543,6 +568,16 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             PartialPath = "/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
                         }
                     },
                     Tags = new []
@@ -592,6 +627,11 @@ namespace Cook4Me.Api.Host.Extensions
                     AverageScore = 1,
                     Images = new []
                     {
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/products/jean.jpg"
+                        },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),

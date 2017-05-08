@@ -1,12 +1,21 @@
 import React, { Component } from 'react';
 import Constants from '../../Constants';
+import { withRouter } from 'react-router';
 import Rater from 'react-rater';
 import './productElt.css';
 
 class ProductElt extends Component {
+  constructor(props) {
+    super(props);
+    this.navigateShop = this.navigateProduct.bind(this);
+  }
+  navigateProduct(productId) {
+    this.props.history.push('/products/'+productId);
+  }
   render() {
     var imageUrl = "#",
-      product = this.props.product;
+      product = this.props.product,
+      self = this;
     // Set default url
     if (product.images && product.images.length > 0) {
       imageUrl = Constants.apiUrl + product.images[0];
@@ -37,7 +46,7 @@ class ProductElt extends Component {
       newPrice = product.new_price;
     }
 
-    return (<section className={newPrice == null ? this.props.className + " product-item" : this.props.className + " product-item is-best-deals"}>
+    return (<section className={newPrice == null ? this.props.className + " product-item" : this.props.className + " product-item is-best-deals"} onClick={(e) => { self.navigateProduct(product.id); }}>
       <div className="col-md-3">
         <img src={imageUrl} className="rounded" width="140" height="140"/>
         <div className="best-deals">
@@ -67,4 +76,4 @@ class ProductElt extends Component {
   }
 }
 
-export default ProductElt;
+export default withRouter(ProductElt);

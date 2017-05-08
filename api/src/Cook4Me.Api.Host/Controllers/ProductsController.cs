@@ -26,17 +26,25 @@ namespace Cook4Me.Api.Host.Controllers
     public class ProductsController : BaseController
     {
         private readonly ISearchProductsOperation _searchProductsOperation;
+        private readonly IGetProductOperation _getProductOperation;
 
         public ProductsController(
-            ISearchProductsOperation searchProductsOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            ISearchProductsOperation searchProductsOperation, IGetProductOperation getProductOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchProductsOperation = searchProductsOperation;
+            _getProductOperation = getProductOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
         public async Task<IActionResult> Search([FromBody] JObject jObj)
         {
             return await _searchProductsOperation.Execute(jObj);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            return await _getProductOperation.Execute(id);
         }
     }
 }

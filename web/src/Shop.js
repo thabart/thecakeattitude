@@ -166,7 +166,7 @@ class Shop extends Component {
                 </ul>
               </Tooltip>
               {tags.length > 0 && (
-                <ul className="shop-tags">
+                <ul className="tags shop-tags">
                   {tags}
                 </ul>)
               }
