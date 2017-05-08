@@ -93,7 +93,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
                 .Include(c => c.Comments)
-                .Include(c => c.Filters)
+                .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
                 .Select(s => s.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
@@ -109,7 +109,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
                 .Include(c => c.Comments)
-                .Include(c => c.Filters)
+                .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
                 .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
             if (shop == null)
@@ -217,7 +217,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
                 .Include(c => c.Comments)
-                .Include(c => c.Filters)
+                .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories);
             if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
             {

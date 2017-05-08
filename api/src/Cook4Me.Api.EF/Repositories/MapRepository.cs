@@ -15,10 +15,10 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.EF.Extensions;
+using Cook4Me.Api.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -64,8 +64,17 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
+            IQueryable<Map> maps = _context.Maps;
+            if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
+            {
+                maps = maps.Where(c => c.CategoryId == parameter.CategoryId);
+            }
 
-            var maps = _context.Maps.Where(c => c.CategoryId == parameter.CategoryId);
+            if (!string.IsNullOrWhiteSpace(parameter.MapName))
+            {
+                maps = maps.Where(c => c.MapName == parameter.MapName);
+            }
+
             return await maps.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
     }

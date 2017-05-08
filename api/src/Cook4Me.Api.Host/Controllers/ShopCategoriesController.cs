@@ -26,13 +26,15 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetAllShopCategoriesOperation _getAllShopCategoriesOperation;
         private readonly IGetParentShopCategoriesOperation _getParentShopCategoriesOperation;
         private readonly IGetShopCategoryOperation _getShopCategoryOperation;
+        private readonly IGetShopCategoryMapOperation _getShopCategoryMapOperation;
 
         public ShopCategoriesController(IGetAllShopCategoriesOperation getAllShopCategoriesOperation, IGetParentShopCategoriesOperation getParentShopCategoriesOperation,
-            IGetShopCategoryOperation getShopCategoryOperation)
+            IGetShopCategoryOperation getShopCategoryOperation, IGetShopCategoryMapOperation getShopCategoryMapOperation)
         {
             _getAllShopCategoriesOperation = getAllShopCategoriesOperation;
             _getParentShopCategoriesOperation = getParentShopCategoriesOperation;
             _getShopCategoryOperation = getShopCategoryOperation;
+            _getShopCategoryMapOperation = getShopCategoryMapOperation;
         }
 
         [HttpGet]
@@ -51,6 +53,12 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Get(string id)
         {
             return await _getShopCategoryOperation.Execute(id);
+        }
+
+        [HttpGet(Constants.RouteNames.Map)]
+        public async Task<IActionResult> GetMap(string id, string subid)
+        {
+            return await _getShopCategoryMapOperation.Execute(id, subid);
         }
     }
 }

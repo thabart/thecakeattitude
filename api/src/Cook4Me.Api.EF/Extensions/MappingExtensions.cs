@@ -19,7 +19,6 @@ using Cook4Me.Api.EF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Domain = Cook4Me.Api.Core.Models;
 
 namespace Cook4Me.Api.EF.Extensions
 {
@@ -295,35 +294,6 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Domain.PaymentMethod ToDomain(this PaymentMethod paymentMethod)
-        {
-            if (paymentMethod == null)
-            {
-                throw new ArgumentNullException(nameof(paymentMethod));
-            }
-
-            return new Domain.PaymentMethod
-            {
-                Iban = paymentMethod.Iban,
-                Method = (Domain.PaymentMethods)paymentMethod.Method
-            };
-        }
-
-        public static PaymentMethod ToModel(this Domain.PaymentMethod paymentMethod)
-        {
-            if (paymentMethod == null)
-            {
-                throw new ArgumentNullException(nameof(paymentMethod));
-            }
-
-            return new PaymentMethod
-            {
-                Id = paymentMethod.Id,
-                Iban = paymentMethod.Iban,
-                Method = (int)paymentMethod.Method
-            };
-        }
-
         public static ShopComment ToAggregate(this Comment comment)
         {
             if (comment == null)
@@ -337,44 +307,6 @@ namespace Cook4Me.Api.EF.Extensions
                 Content = comment.Content,
                 Score = comment.Score,
                 Subject = comment.Subject,
-                UpdateDateTime = comment.UpdateDateTime,
-                CreateDateTime = comment.CreateDateTime
-            };
-        }
-
-        public static Domain.Comment ToDomain(this Comment comment)
-        {
-            if (comment == null)
-            {
-                throw new ArgumentNullException(nameof(comment));
-            }
-
-            return new Domain.Comment
-            {
-                Id = comment.Id,
-                Content = comment.Content,
-                Score = comment.Score,
-                Subject = comment.Subject,
-                ShopId = comment.ShopId,
-                UpdateDateTime = comment.UpdateDateTime,
-                CreateDateTime = comment.CreateDateTime
-            };
-        }
-
-        public static Comment ToModel(this Domain.Comment comment)
-        {
-            if (comment == null)
-            {
-                throw new ArgumentNullException(nameof(comment));
-            }
-
-            return new Comment
-            {
-                Id = comment.Id,
-                Content = comment.Content,
-                Score = comment.Score,
-                Subject = comment.Subject,
-                ShopId = comment.ShopId,
                 UpdateDateTime = comment.UpdateDateTime,
                 CreateDateTime = comment.CreateDateTime
             };
@@ -450,42 +382,6 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopId = product.ShopId,
                 UnitOfMeasure = product.UnitOfMeasure,
                 Name = product.Name
-            };
-        }
-
-        public static Domain.Filter ToDomain(this Filter filter)
-        {
-            if (filter == null)
-            {
-                throw new ArgumentNullException(nameof(filter));
-            }
-
-            var values = new List<Domain.FilterValue>();
-            if (filter.Values != null && filter.Values.Any())
-            {
-                values = filter.Values.Select(v => v.ToDomain()).ToList();
-            }
-
-            return new Domain.Filter
-            {
-                Id = filter.Id,
-                Name = filter.Name,
-                ShopId = filter.ShopId,
-                Values = values
-            };
-        }
-
-        public static Domain.FilterValue ToDomain(this FilterValue filterValue)
-        {
-            if (filterValue == null)
-            {
-                throw new ArgumentNullException(nameof(filterValue));
-            }
-
-            return new Domain.FilterValue
-            {
-                Id = filterValue.Id,
-                Content = filterValue.Content
             };
         }
 

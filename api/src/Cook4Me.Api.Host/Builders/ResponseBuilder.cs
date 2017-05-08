@@ -16,7 +16,6 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Events.Shop;
-using Cook4Me.Api.Core.Models;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
@@ -26,6 +25,8 @@ namespace Cook4Me.Api.Host.Builders
     public interface IResponseBuilder
     {
         JObject GetShop(ShopAggregate shop);
+        JObject GetFilter(ShopFilter filter);
+        JObject GetFilterValue(ShopFilterValue filterValue);
         JObject GetShopAddedEvent(ShopAddedEvent evt);
         JObject GetError(string errorCode, string errorDescription);
         JObject GetShopCategory(ShopCategoryAggregate category);
@@ -35,8 +36,6 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
         JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment);
         JObject GetProduct(ProductAggregate product);
-        JObject GetFilter(Filter filter);
-        JObject GetFilterValue(FilterValue filterValue);
         JObject GetPromotion(ProductAggregatePromotion promotion);
     }
 
@@ -91,7 +90,7 @@ namespace Cook4Me.Api.Host.Builders
                 foreach(var record in shop.ShopPaymentMethods)
                 {
                     var payment = new JObject();
-                    payment.Add(Constants.DtoNames.PaymentMethod.Method, Enum.GetName(typeof(PaymentMethods), record.Method));
+                    payment.Add(Constants.DtoNames.PaymentMethod.Method, Enum.GetName(typeof(ShopPaymentMethods), record.Method));
                     if (!string.IsNullOrWhiteSpace(record.Iban))
                     {
                         payment.Add(Constants.DtoNames.PaymentMethod.Iban, record.Iban);
@@ -101,6 +100,16 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
+            var filters = new JArray(); // Filters
+            if (shop.ShopFilters != null && shop.ShopFilters.Any())
+            {
+                foreach(var filter in shop.ShopFilters)
+                {
+                    filters.Add(GetFilter(filter));
+                }
+            }
+
+            result.Add(Constants.DtoNames.Shop.Filters, filters);
             result.Add(Constants.DtoNames.Shop.Payments, payments);
             result.Add(Constants.DtoNames.Shop.ShopPath, shop.ShopRelativePath); // Game
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
@@ -110,6 +119,43 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.AverageScore, shop.AverageScore);
             result.Add(Constants.DtoNames.Shop.TotalScore, shop.TotalScore);
             return result;
+        }
+
+        public JObject GetFilter(ShopFilter filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            var obj = new JObject();
+            obj.Add(Constants.DtoNames.Filter.Id, filter.Id);
+            obj.Add(Constants.DtoNames.Filter.Name, filter.Name);
+            if (filter.Values != null && filter.Values.Any())
+            {
+                var arr = new JArray();
+                foreach(var f in filter.Values)
+                {
+                    arr.Add(GetFilterValue(f));
+                }
+
+                obj.Add(Constants.DtoNames.Filter.Values, arr);
+            }
+
+            return obj;
+        }
+
+        public JObject GetFilterValue(ShopFilterValue filterValue)
+        {
+            if (filterValue == null)
+            {
+                throw new ArgumentNullException(nameof(filterValue));
+            }
+
+            var obj = new JObject();
+            obj.Add(Constants.DtoNames.FilterValue.Id, filterValue.Id);
+            obj.Add(Constants.DtoNames.FilterValue.Content, filterValue.Content);
+            return obj;
         }
 
         public JObject GetShopAddedEvent(ShopAddedEvent evt)
@@ -343,42 +389,6 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.ProductFilter.ValueId, productFilter.FilterValueId);
             jObj.Add(Constants.DtoNames.ProductFilter.Name, productFilter.FilterName);
             jObj.Add(Constants.DtoNames.ProductFilter.Content, productFilter.FilterValueContent);
-            return jObj;
-        }
-
-        public JObject GetFilter(Filter filter)
-        {
-            if (filter == null)
-            {
-                throw new ArgumentNullException(nameof(filter));
-            }
-
-            var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.Filter.Id, filter.Id);
-            jObj.Add(Constants.DtoNames.Filter.Name, filter.Name);
-            var values = new JArray();
-            if (filter.Values != null && filter.Values.Any())
-            {
-                foreach(var value in filter.Values)
-                {
-                    values.Add(GetFilterValue(value));
-                }
-            }
-
-            jObj.Add(Constants.DtoNames.Filter.Values, values);
-            return jObj;
-        }
-
-        public JObject GetFilterValue(FilterValue filterValue)
-        {
-            if (filterValue == null)
-            {
-                throw new ArgumentNullException(nameof(filterValue));
-            }
-
-            var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.FilterValue.Id, filterValue.Id);
-            jObj.Add(Constants.DtoNames.FilterValue.Content, filterValue.Content);
             return jObj;
         }
 

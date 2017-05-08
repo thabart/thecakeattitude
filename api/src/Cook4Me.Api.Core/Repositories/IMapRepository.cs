@@ -15,7 +15,6 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using System.Collections.Generic;
 using System.Threading.Tasks;

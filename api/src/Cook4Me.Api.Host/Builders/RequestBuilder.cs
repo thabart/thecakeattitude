@@ -15,7 +15,6 @@
 #endregion
 
 using Cook4Me.Api.Core.Commands.Shop;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Parameters;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -165,19 +164,19 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            PaymentMethods? methodEnum = null;
+            AddPaymentInformationMethods? methodEnum = null;
             var method = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Method);
             if (string.Equals(method, "cash", StringComparison.CurrentCultureIgnoreCase))
             {
-                methodEnum = PaymentMethods.Cash;
+                methodEnum = AddPaymentInformationMethods.Cash;
             }
             else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase))
             {
-                methodEnum = PaymentMethods.BankTransfer;
+                methodEnum = AddPaymentInformationMethods.BankTransfer;
             }
             else if (string.Equals(method, "paypal", StringComparison.CurrentCultureIgnoreCase))
             {
-                methodEnum = PaymentMethods.PayPal;
+                methodEnum = AddPaymentInformationMethods.PayPal;
             }
 
             if (methodEnum == null)

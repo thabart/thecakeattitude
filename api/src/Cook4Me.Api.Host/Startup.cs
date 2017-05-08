@@ -109,8 +109,8 @@ namespace Cook4Me.Api.Host
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "addComment",
-                    template: $"{Constants.RouteNames.Shops}/{Constants.RouteNames.RemoveShopComment}",
+                    name: "addSub",
+                    template: "{controller}/{id}/{action}/{subid}",
                     defaults: new { controller = "Home", action = "Index" });
                 routes.MapRoute(
                     name: "default",
@@ -144,11 +144,13 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetAllShopCategoriesOperation, GetAllShopCategoriesOperation>();
             services.AddTransient<IGetShopCategoryOperation, GetShopCategoryOperation>();
             services.AddTransient<IGetParentShopCategoriesOperation, GetParentShopCategoriesOperation>();
+            services.AddTransient<IGetShopCategoryMapOperation, GetShopCategoryMapOperation>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<ICommentEnricher, CommentEnricher>();
             services.AddTransient<IProductEnricher, ProductEnricher>();
             services.AddTransient<ITagEnricher, TagEnricher>();
             services.AddTransient<IShopCategoryEnricher, ShopCategoryEnricher>();
+            services.AddTransient<IMapEnricher, MapEnricher>();
             services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
             services.AddSingleton<ShopEventsHandler>();
         }

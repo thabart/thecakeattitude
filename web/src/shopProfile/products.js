@@ -359,44 +359,19 @@ class ShopProducts extends Component {
   }
   // Execute after the render
   componentWillMount() {
-    var self = this;
-    var shopId = this.props.shop.id;
-    var filters = this.props.shop['_links']['filters'];
+    var self = this,
+      shopId = this.props.shop.id,
+      filters = this.props.shop.filters;
     self.setState({
       isLoading: true
     });
-    var promises = [];
-    if (filters && filters.length > 0) {
-      filters.forEach(function(filter) {
-        promises.push(
-            new Promise(function(resolve, reject) {
-              $.get(Constants.apiUrl + filter.href).then(function(r) {
-                resolve(r);
-              }).fail(function(e) {
-                reject(e);
-              });
-            })
-        )
-      });
-    }
 
     filterJson['shop_id'] = shopId;
-    Promise.all(promises).then(function(result) {
-      var filters = [];
-      result.forEach(function(record) {
-        filters.push(record['_embedded']);
-      });
-      self.setState({
-        isLoading: false,
-        filters: filters
-      });
-      self.updateProducts();
-    }).catch(function(e) {
-      self.setState({
-        isLoading: false,
-        errorMessage: 'an error occured while trying to retrieve the products'
-      });
+    self.setState({
+      isLoading: false,
+      filters: filters
     });
+    self.updateProducts();
   }
 }
 

@@ -1,5 +1,4 @@
-import ShopService from '../../services/Shops';
-import MapService from '../../services/Map';
+import { ShopsService, CategoryService } from '../../services';
 
 class ShopChooser extends window.Phaser.State {
   init(category, component) {
@@ -10,6 +9,7 @@ class ShopChooser extends window.Phaser.State {
     var self = this,
       overview = self.category.overview_name,
       mapName = self.category.map_name,
+      categoryId = self.category.category_id,
       lineWidth = 1,
       heightTitle = 22,
       titleRectWidth = 1,
@@ -71,9 +71,10 @@ class ShopChooser extends window.Phaser.State {
         self.game.canvas.style.cursor = "default";
       });
       text.events.onInputDown.add(function() {
-        MapService.get(warp).then(function(m) {
-          self.component.loadMap(m['_embedded']);
-          self.component.props.onLoadMap(m['_embedded'].map_name);
+        CategoryService.getMap(categoryId, warp).then(function(m) {
+          var json = m['_embedded'];
+          json['category_id'] = categoryId;
+          self.component.loadMap(json);
         });
       });
       i++;
@@ -90,7 +91,7 @@ class ShopChooser extends window.Phaser.State {
 			house.width = newWidth;
 			house.height = newHeight;
 			house.name = shop.name;
-      ShopService.search({ category_id: self.category.id, place: shop.name }).then(function() {
+      ShopsService.search({ category_id: self.category.id, place: shop.name }).then(function() {
         house.loadTexture('house', 0);
       }).catch(function(e) {
         if (e.status != 404) {

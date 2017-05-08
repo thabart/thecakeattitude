@@ -48,12 +48,10 @@ namespace Cook4Me.Api.Host.Validators
     internal class AddCommentValidator : IAddCommentValidator
     {
         private readonly IShopRepository _shopRepository;
-        private readonly ICommentRepository _commentRepository;
 
-        public AddCommentValidator(IShopRepository shopRepository, ICommentRepository commentRepository)
+        public AddCommentValidator(IShopRepository shopRepository)
         {
             _shopRepository = shopRepository;
-            _commentRepository = commentRepository;
         }
 
         public async Task<AddCommentValidationResult> Validate(AddShopCommentCommand comment)

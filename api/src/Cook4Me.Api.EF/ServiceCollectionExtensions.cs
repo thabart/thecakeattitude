@@ -86,9 +86,7 @@ namespace Cook4Me.Api.EF
             serviceCollection.AddTransient<IShopRepository, ShopRepository>();
             serviceCollection.AddTransient<IShopCategoryRepository, ShopCategoryRepository>();
             serviceCollection.AddTransient<ITagRepository, TagRepository>();
-            serviceCollection.AddTransient<ICommentRepository, CommentRepository>();
             serviceCollection.AddTransient<IProductRepository, ProductRepository>();
-            serviceCollection.AddTransient<IFilterRepository, FilterRepository>();
             serviceCollection.AddTransient<IMapRepository, MapRepository>();
         }
     }

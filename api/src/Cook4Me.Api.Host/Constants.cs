@@ -30,8 +30,8 @@ namespace Cook4Me.Api.Host
             public const string Shops = "shops";
             public const string Users = "users";
             public const string ShopCategories = "shopcategories";
+            public const string Map = "{id}/maps/{subid}";
             public const string Configuration = ".well-known/configuration";
-            public const string Maps = "maps";
             public const string Parents = "parents";
             public const string Claims = "claims";
             public const string Search = ".search";
@@ -67,6 +67,8 @@ namespace Cook4Me.Api.Host
                 public const string GooglePlaceId = "google_place_id";
                 // Payment
                 public const string Payments = "payments";
+                // Filters
+                public const string Filters = "filters";
                 // Tilemap information
                 public const string ShopPath = "shop_path";
                 public const string UndergroundPath = "underground_path";

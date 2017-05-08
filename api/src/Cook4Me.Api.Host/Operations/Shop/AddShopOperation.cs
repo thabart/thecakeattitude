@@ -17,7 +17,6 @@
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.Shop;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Validators;

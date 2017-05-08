@@ -166,18 +166,22 @@ class DescriptionForm extends Component {
     this.displayMaps(e.target.value);
   }
   selectMap(e) {
-    this.displayMap(e.target.value);
+    var target = $(e.target).find(':selected');
+    var map = {
+      map_link: $(target).data('maplink'),
+      overview_name: $(target).data('overviewname'),
+      overview_link: $(target).data('overviewlink'),
+      map_name: $(target).data('mapname')
+    };
+    this.displayMap(map);
   }
-  displayMap(mapHref) {
-    var self = this;
-    $.get(Constants.apiUrl + mapHref).then(function(map) {
-      var m = map['_embedded'];
-      self.refs.game.loadMap(m);
-      self.state.place = null;
-      self.setState({
-        place: self.state.place,
-        mapNameSelected: m.map_name
-      });
+  displayMap(map) {
+    map['category_id'] = this.state.subCategoryIdSelected;
+    this.refs.game.loadMap(map);
+    this.state.place = null;
+    this.setState({
+      place: this.state.place,
+      mapNameSelected: map.map_name
     });
   }
   changeMap(mapName) {
@@ -185,20 +189,18 @@ class DescriptionForm extends Component {
   }
   displayMaps(categoryId) {
     var self = this;
-    $.get(Constants.apiUrl + categoryId).then(function(r) {
-      var category = r['_embedded'];
-      var maps = r['_links']['maps'];
+    CategoryService.get(categoryId).then(function(r) {
+      var maps = r['_embedded']['maps'];
       self.setState({
         maps: maps,
-        subCategoryIdSelected: category.id
+        subCategoryIdSelected: categoryId
       });
 
       if (!maps) {
         return;
       }
 
-      var mainMap = maps[0];
-      self.displayMap(mainMap.href);
+      self.displayMap(maps[0]);
     });
   }
   displaySubCategory(categoryId) {
@@ -207,10 +209,10 @@ class DescriptionForm extends Component {
       isSubCategoryLoading: true
     });
     CategoryService.get(categoryId).then(function(r) {
-      var links = r['_links']['items'];
+      var children = r['_embedded']['children'];
       var subCategories = [];
-      links.forEach(function(link) {
-        subCategories.push({ id: link.href, name: link.name });
+      children.forEach(function(child) {
+        subCategories.push({ id: child.id, name: child.name });
       });
       self.setState({
         subCategories: subCategories,
@@ -295,7 +297,7 @@ class DescriptionForm extends Component {
 
     if (this.state.maps) {
       this.state.maps.forEach(function(map) {
-        maps.push(<option value={map.href}>{map.name}</option>);
+        maps.push(<option data-maplink={map.map_link} data-overviewname={map.overview_name} data-overviewlink={map.overview_link} data-mapname={map.map_name}>{map.map_name}</option>);
       });
     }
     return(
@@ -305,7 +307,7 @@ class DescriptionForm extends Component {
             <div className='form-group col-md-12'>
               <label className='control-label'>Name</label> <i className="fa fa-exclamation-circle" id="nameToolTip"></i>
               <Tooltip placement="right" target="nameToolTip" isOpen={this.state.tooltip.toggleName} toggle={() => { this.toggleTooltip('toggleName'); }}>
-                Name displayed in the shop's profile
+                Name displayed in the shop s profile
               </Tooltip>
                {nameError}
               <input type='text' className='form-control' name='name' onChange={this.handleInputChange} />
@@ -313,7 +315,7 @@ class DescriptionForm extends Component {
             <div className='form-group col-md-12'>
               <label className='control-label'>Description</label> <i className="fa fa-exclamation-circle" id="descriptionToolTip"></i>
               <Tooltip placement="right" target="descriptionToolTip" isOpen={this.state.tooltip.toggleDescription} toggle={() => { this.toggleTooltip('toggleDescription'); }}>
-                Description displayed in the shop's profile
+                Description displayed in the shop s profile
               </Tooltip>
                {descriptionError}
               <textarea className='form-control' name='description' onChange={this.handleInputChange}></textarea>
@@ -353,7 +355,7 @@ class DescriptionForm extends Component {
             <div className='form-group col-md-12'>
               <label className='control-label'>Profile picture</label> <i className="fa fa-exclamation-circle" id="profileImageTooltip"></i>
               <Tooltip placement="right" target="profileImageTooltip" isOpen={this.state.tooltip.toggleProfileImage} toggle={() => { this.toggleTooltip('toggleProfileImage'); }}>
-                Profile's picture
+                Profile s picture
               </Tooltip>
               <div><input type='file' accept='image/*' onChange={(e) => this.uploadPictureImage(e)} /></div>
               {pictureImagePreview}
