@@ -1,14 +1,3 @@
-.product-item .best-deals {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  display: none;
-}
-
-.is-best-deals .best-deals {
-  display: block;
-}
-
 .filter {
   border-top: 1px solid #f1f0f0;
 }

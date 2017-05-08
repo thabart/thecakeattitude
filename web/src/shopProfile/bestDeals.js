@@ -4,6 +4,7 @@ import { ProductsService } from '../services';
 import Rater from 'react-rater';
 import moment from 'moment';
 import Constants from '../../Constants';
+import ProductElt from './productElt';
 import $ from 'jquery';
 
 const json = { start_index: 0, count: 5, contains_valid_promotions: true };
@@ -72,31 +73,7 @@ class BestDeals extends Component {
 
     if (this.state.products && this.state.products.length > 0) {
       this.state.products.forEach(function(product) {
-        var date = moment(product.update_datetime).format('LLL');
-        var productImage = product['images'];
-        var firstPromotion = product['promotions'][0];
-        if (!productImage || productImage.length === 0) {
-          productImage = "/images/jean.jpg";
-        } else {
-          productImage = Constants.apiUrl + productImage[0];
-        }
-
-        products.push((<div className="col-md-6">
-          <div className="element">
-            <div className="row header">
-              <div className="col-md-3">
-                <img src={productImage} className="rounded-circle" width="60" height="60" />
-              </div>
-              <div className="col-md-9">
-                <h5 className="price inline"><stroke>€ {product.price}</stroke></h5> (<i>-{firstPromotion.discount}%</i>)
-                <h5 className="price">€ {product.new_price}</h5>
-                <b>{product.name}</b><br />
-                {date} <br />
-                <Rater total={5} interactive={false} />
-              </div>
-            </div>
-          </div>
-        </div>));
+        products.push((<ProductElt className="col-md-6 row" product={product} />));
       });
     }
 

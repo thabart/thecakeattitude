@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import Slider, { Range } from 'rc-slider';
 import { Alert } from 'reactstrap';
-import Rater from 'react-rater';
 import { ProductsService } from '../services';
 import Constants from '../../Constants';
 import 'rc-slider/assets/index.css';
 import './products.css';
+import ProductElt from './productElt';
 import $ from 'jquery';
 import Promise from 'bluebird';
 
@@ -210,63 +210,7 @@ class ShopProducts extends Component {
       self = this;
     if (this.state.products) {
       this.state.products.forEach(function(product) {
-        var imageUrl = "#"; // Set default url
-        if (product.images && product.images.length > 0) {
-          imageUrl = Constants.apiUrl + product.images[0];
-        }
-
-        var filters = [];
-        if (product.filters) {
-          var groupedFilters = {};
-          product.filters.forEach(function(filter) {
-            var record = groupedFilters[filter.filter_id];
-            if (!record) {
-              groupedFilters[filter.filter_id] = { label: filter.name, content : [ filter.content ] };
-            } else {
-              record.content.push(filter.content);
-            }
-          });
-
-          for (var groupedFilter in groupedFilters) {
-            var o = groupedFilters[groupedFilter];
-            filters.push((<li>{o.label} : {o.content.join(',')}</li>));
-          }
-        }
-
-        var newPrice = null,
-          promotion = null;
-        if (product.promotions && product.promotions.length > 0) {
-          promotion = product.promotions[0];
-          newPrice = product.new_price;
-        }
-
-        products.push((<section className={newPrice == null ? "row product-item" : "row product-item is-best-deals"}>
-          <div className="col-md-3">
-            <img src={imageUrl} className="rounded" width="140" height="140"/>
-            <div className="best-deals">
-              <img src="/images/hot_deals.png" width="60" />
-            </div>
-          </div>
-          <div className="col-md-5">
-            <h3>{product.name}</h3>
-            <Rater total={5} interactive={false} />
-            <p>
-              {product.description}
-            </p>
-          </div>
-          <div className="col-md-4">
-            {newPrice == null ? (<h4 className="price">€ {product.price}</h4>) : (
-              <div>
-                  <h4 className="price inline"><strike>€ {product.price}</strike></h4> (<i>-{promotion.discount}%</i>)
-                  <h4 className="price"> € {newPrice}</h4>
-              </div>
-            )}
-            <ul>
-              {filters}
-            </ul>
-            <button className="btn btn-success">BUY</button>
-          </div>
-        </section>));
+        products.push((<ProductElt product={product} className="row product-item" />));
       });
     }
 
@@ -330,7 +274,6 @@ class ShopProducts extends Component {
             </div>
             <div className="col-md-9">
               <Alert color="danger" isOpen={this.state.productErrorMessage !== null} toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
-
                   <div className="col-md-12">
                     <ul className="nav nav-pills">
                       {productCategories}

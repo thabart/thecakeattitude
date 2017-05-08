@@ -69,6 +69,8 @@ namespace Cook4Me.Api.Host
                 public const string Payments = "payments";
                 // Filters
                 public const string Filters = "filters";
+                // Comments
+                public const string Comments = "comments";
                 // Tilemap information
                 public const string ShopPath = "shop_path";
                 public const string UndergroundPath = "underground_path";
@@ -106,6 +108,8 @@ namespace Cook4Me.Api.Host
                 public const string Promotions = "promotions";
                 public const string AverageScore = "average_score";
                 public const string TotalScore = "total_score";
+                public const string Comments = "comments";
+                public const string NbComments = "nb_comments";
             }
 
             public static class Comment
