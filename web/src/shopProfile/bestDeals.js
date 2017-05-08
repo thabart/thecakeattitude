@@ -6,7 +6,7 @@ import moment from 'moment';
 import Constants from '../../Constants';
 import $ from 'jquery';
 
-const json = { start_index: 0, count: 1, contains_valid_promotions: true };
+const json = { start_index: 0, count: 5, contains_valid_promotions: true };
 
 class BestDeals extends Component {
   constructor(props) {

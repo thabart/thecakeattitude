@@ -17,6 +17,7 @@
 using Cook4Me.Api.EF;
 using Cook4Me.Api.EF.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Cook4Me.Api.Host.Extensions
@@ -158,7 +159,26 @@ namespace Cook4Me.Api.Host.Extensions
                         Longitude = 4.3630615F,
                         Latitude = 50.8939195F,
                         TotalScore = 16,
-                        AverageScore = 3.2
+                        AverageScore = 3.2,
+                        PaymentMethods = new List<PaymentMethod>
+                        {
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 0
+                            },
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 1,
+                                Iban = "BE400000000000000"
+                            },
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 2
+                            }
+                        }
                     },
                     new Shop
                     {
@@ -177,7 +197,15 @@ namespace Cook4Me.Api.Host.Extensions
                         Longitude = 4.3677565F,
                         Latitude = 50.8919259F,
                         TotalScore = 4,
-                        AverageScore = 4
+                        AverageScore = 4,
+                        PaymentMethods = new List<PaymentMethod>
+                        {
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 0
+                            }
+                        }
                     }
                 });
             }

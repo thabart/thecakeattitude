@@ -40,11 +40,53 @@ class ShopProfile extends Component {
     this.props.onRefreshScore();
   }
   render() {
-    var self = this;
+    var self = this,
+      payments = self.props.shop.payments,
+      paymentsInner = [];
+    if (!payments || payments.length === 0) {
+      paymentsInner.push((<span className="col-md-12">No payment</span>));
+    } else {
+      payments.forEach(function(payment) {
+        switch(payment.method) {
+          case "Cash":
+            paymentsInner.push((
+              <div className="col-md-3 contact">
+                <i className="fa fa-money fa-3"></i><br/>
+                <label>Cash</label>
+              </div>
+            ));
+          break;
+          case "BankTransfer":
+            paymentsInner.push((
+              <div className="col-md-3 contact">
+                <i className="fa fa-credit-card fa-3"></i><br/>
+                <label>Bank transfer</label><br />
+                <label>IBAN : <i>{payment.iban}</i></label>
+              </div>
+            ));
+          break;
+          case "PayPal":
+            paymentsInner.push((
+              <div className="col-md-3 contact">
+                <i className="fa fa-paypal fa-3"></i><br/>
+                <label>Paypal</label>
+              </div>
+            ));
+          break;
+        }
+      });
+    }
+
     return ( <div>
       <section className="row white-section shop-section shop-section-padding">
         <h5 className="col-md-12">Description</h5>
         <p className="col-md-12">{this.props.shop.description}</p>
+      </section>
+      <section className="row white-section sub-section shop-section-padding">
+        <h5 className="col-md-12">Payment methods</h5>
+        <div className="row col-md-12">
+          {paymentsInner}
+        </div>
       </section>
       <section className="row white-section sub-section shop-section-padding">
         <h5 className="col-md-12">Contact information</h5>
