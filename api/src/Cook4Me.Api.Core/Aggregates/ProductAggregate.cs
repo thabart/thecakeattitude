@@ -30,6 +30,8 @@ namespace Cook4Me.Api.Core.Aggregates
         public string UnitOfMeasure { get; set; }
         public double Quantity { get; set; }
         public string ShopId { get; set; }
+        public int TotalScore { get; set; }
+        public double AverageScore { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public IEnumerable<string> Tags { get; set; }
@@ -37,5 +39,6 @@ namespace Cook4Me.Api.Core.Aggregates
         public ProductAggregateCategory Category { get; set; }
         public IEnumerable<ProductAggregateFilter> Filters { get; set; }
         public IEnumerable<ProductAggregatePromotion> Promotions { get; set; }
+        public IEnumerable<ProductComment> Comments { get; set; }
     }
 }

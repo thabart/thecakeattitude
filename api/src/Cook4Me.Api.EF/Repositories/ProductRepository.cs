@@ -46,6 +46,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Images)
                 .Include(p => p.Tags)
                 .Include(p => p.Shop)
+                .Include(p => p.Comments)
                 .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter)
                 .Include(p => p.Promotions);
             if (!string.IsNullOrWhiteSpace(parameter.ShopId))

@@ -312,6 +312,24 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
+        public static ProductComment ToAggregateProduct(this Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            return new ProductComment
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+                Score = comment.Score,
+                Subject = comment.Subject,
+                UpdateDateTime = comment.UpdateDateTime,
+                CreateDateTime = comment.CreateDateTime
+            };
+        }
+
         public static ProductAggregate ToAggregate(this Product product)
         {
             if(product == null)
@@ -343,6 +361,12 @@ namespace Cook4Me.Api.EF.Extensions
                 promotions = product.Promotions.Where(p => string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToAggregate());
             }
 
+            IEnumerable<ProductComment> comments = new List<ProductComment>();
+            if (product.Comments != null)
+            {
+                comments = product.Comments.Select(c => c.ToAggregateProduct());
+            }
+
             return new ProductAggregate
             {
                 Id = product.Id,
@@ -359,7 +383,10 @@ namespace Cook4Me.Api.EF.Extensions
                 PartialImagesUrl = images,
                 Tags = tags,
                 Filters = filterValues,
-                Promotions = promotions
+                Promotions = promotions,
+                AverageScore = product.AverageScore,
+                TotalScore = product.TotalScore,
+                Comments = comments
             };
         }
 

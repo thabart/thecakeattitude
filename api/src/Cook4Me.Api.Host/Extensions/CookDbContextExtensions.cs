@@ -406,6 +406,8 @@ namespace Cook4Me.Api.Host.Extensions
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     AvailableInStock = 2000,
+                    TotalScore = 5,
+                    AverageScore = 2.5,
                     Images = new []
                     {
                         new ProductImage
@@ -434,6 +436,27 @@ namespace Cook4Me.Api.Host.Extensions
                             Id = Guid.NewGuid().ToString(),
                             FilterValueId = _blueColorFilterId
                         }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "first-comment-product",
+                            Score = 0,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
+                        },
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "second-comment-product",
+                            Score = 5,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
+                        }
                     }
                 },
                 new Product
@@ -450,6 +473,8 @@ namespace Cook4Me.Api.Host.Extensions
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     AvailableInStock = 2000,
+                    TotalScore = 2,
+                    AverageScore = 1,
                     Images = new []
                     {
                         new ProductImage
@@ -473,6 +498,27 @@ namespace Cook4Me.Api.Host.Extensions
                             Id = Guid.NewGuid().ToString(),
                             FilterValueId = _blueColorFilterId
                         }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "first-comment-product",
+                            Score = 0,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
+                        },
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "second-comment-product",
+                            Score = 2,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
+                        }
                     }
                 },
                 new Product
@@ -489,6 +535,8 @@ namespace Cook4Me.Api.Host.Extensions
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     AvailableInStock = 3000,
+                    TotalScore = 5,
+                    AverageScore = 5,
                     Images = new []
                     {
                         new ProductImage
@@ -512,6 +560,18 @@ namespace Cook4Me.Api.Host.Extensions
                             Id = Guid.NewGuid().ToString(),
                             FilterValueId = _smallSizeFilterId
                         }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "first-comment-product",
+                            Score = 5,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
+                        }
                     }
                 },
                 new Product
@@ -528,6 +588,8 @@ namespace Cook4Me.Api.Host.Extensions
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     AvailableInStock = 3000,
+                    TotalScore = 1,
+                    AverageScore = 1,
                     Images = new []
                     {
                         new ProductImage
@@ -560,6 +622,18 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             FilterValueId = _largeSizeFilterId
+                        }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "first-comment-product",
+                            Score = 1,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
                         }
                     }
                 }

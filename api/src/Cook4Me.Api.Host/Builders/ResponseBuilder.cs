@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetMap(ShopMap map);
         JObject GetTag(TagAggregate tag);
         JObject GetShopComment(ShopComment comment);
+        JObject GetProductComment(ProductComment productComment);
         JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
         JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment);
         JObject GetProduct(ProductAggregate product);
@@ -279,6 +280,23 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
+        public JObject GetProductComment(ProductComment productComment)
+        {
+            if (productComment == null)
+            {
+                throw new ArgumentNullException(nameof(productComment));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Comment.Content, productComment.Content);
+            jObj.Add(Constants.DtoNames.Comment.Id, productComment.Id);
+            jObj.Add(Constants.DtoNames.Comment.Score, productComment.Score);
+            jObj.Add(Constants.DtoNames.Comment.Subject, productComment.Subject);
+            jObj.Add(Constants.DtoNames.Comment.CreateDatetime, productComment.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, productComment.UpdateDateTime);
+            return jObj;
+        }
+
         public JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment)
         {
             if (comment == null)
@@ -327,6 +345,8 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Product.UnitOfMeasure, product.UnitOfMeasure);
             jObj.Add(Constants.DtoNames.Product.Quantity, product.Quantity);
             jObj.Add(Constants.DtoNames.Product.ShopId, product.ShopId);
+            jObj.Add(Constants.DtoNames.Product.AverageScore, product.AverageScore);
+            jObj.Add(Constants.DtoNames.Product.TotalScore, product.TotalScore);
             jObj.Add(Constants.DtoNames.Product.CreateDateTime, product.CreateDateTime);
             jObj.Add(Constants.DtoNames.Product.UpdateDateTime, product.UpdateDateTime);
             if (product.Tags != null && product.Tags.Any())

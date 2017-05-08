@@ -104,6 +104,8 @@ namespace Cook4Me.Api.Host
                 public const string Images = "images";
                 public const string Filters = "filters";
                 public const string Promotions = "promotions";
+                public const string AverageScore = "average_score";
+                public const string TotalScore = "total_score";
             }
 
             public static class Comment
