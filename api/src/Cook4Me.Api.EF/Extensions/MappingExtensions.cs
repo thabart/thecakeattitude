@@ -312,6 +312,24 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
+        public static ProductComment ToProductCommentAggregate(this Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            return new ProductComment
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+                Score = comment.Score,
+                Subject = comment.Subject,
+                UpdateDateTime = comment.UpdateDateTime,
+                CreateDateTime = comment.CreateDateTime
+            };
+        }
+
         public static ProductComment ToAggregateProduct(this Comment comment)
         {
             if (comment == null)

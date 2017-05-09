@@ -144,6 +144,41 @@ namespace Cook4Me.Api.EF.Repositories
             return result.ToAggregate();
         }
 
+        public async Task<SearchProductCommentsResult> Search(SearchProductCommentsParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+
+            IQueryable<Models.Comment> comments = _context.Comments;
+            if (!string.IsNullOrWhiteSpace(parameter.ProductId))
+            {
+                comments = comments.Where(c => parameter.ProductId == c.ProductId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                comments = comments.Where(c => c.Subject == parameter.Subject);
+            }
+
+            var result = new SearchProductCommentsResult
+            {
+                TotalResults = await comments.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            comments = comments
+                .OrderByDescending(c => c.UpdateDateTime);
+            if (parameter.IsPagingEnabled)
+            {
+                comments = comments.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await comments.Select(c => c.ToProductCommentAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
+        }
 
         private static IQueryable<Models.Product> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Product, TKey>> keySelector, IQueryable<Models.Product> products)
         {

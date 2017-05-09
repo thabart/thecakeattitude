@@ -2,6 +2,7 @@ import request from 'request';
 import Constants from '../../Constants';
 import Promise from 'bluebird';
 import Session from './Session';
+import ConfigurationService from './Configuration';
 import $ from 'jquery';
 
 module.exports = {
@@ -21,12 +22,17 @@ module.exports = {
   },
   // Search comments
   searchComments: function(shopId, content) {
-    var param = $.param(content);
     return new Promise(function(resolve, reject) {
-      $.get(Constants.apiUrl + '/shops/' + shopId + '/comments?'+param).then(function(r) {
-        resolve(r);
-      }).fail(function(e) {
-        reject(e);
+      ConfigurationService.get().then(function(configuration) {
+        $.ajax(configuration.shops_endpoint + '/' + shopId + '/comments', {
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(content)
+        }).then(function(r) {
+          resolve(r);
+        }).fail(function(e) {
+          reject(e);
+        });
       });
     });
   },

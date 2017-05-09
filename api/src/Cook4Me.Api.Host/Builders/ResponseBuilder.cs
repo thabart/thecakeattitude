@@ -400,17 +400,6 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.Product.Promotions, arr);
             }
 
-            if (product.Comments != null && product.Comments.Any())
-            {
-                var comments = new JArray(); // Comments
-                foreach (var comment in product.Comments)
-                {
-                    comments.Add(GetProductComment(comment));
-                }
-
-                jObj.Add(Constants.DtoNames.Product.Comments, comments);
-            }
-
             return jObj;
         }
 

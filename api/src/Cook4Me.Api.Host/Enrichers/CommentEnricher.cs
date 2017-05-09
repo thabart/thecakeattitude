@@ -23,6 +23,7 @@ namespace Cook4Me.Api.Host.Enrichers
     public interface ICommentEnricher
     {
         void Enrich(IHalResponseBuilder halResponseBuilder, ShopComment shopComment, string shopId);
+        void Enrich(IHalResponseBuilder halResponseBuilder, ProductComment productComment, string productId);
     }
 
     internal class CommentEnricher : ICommentEnricher
@@ -47,8 +48,23 @@ namespace Cook4Me.Api.Host.Enrichers
             }
 
             halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetShopComment(shopComment),
-                (l) => l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + shopId))
-                    .AddSelf(Constants.RouteNames.Comments + "/" + shopComment.Id)));
+                (l) => l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + shopId))));
+        }
+
+        public void Enrich(IHalResponseBuilder halResponseBuilder, ProductComment productComment, string productId)
+        {
+            if (halResponseBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(halResponseBuilder));
+            }
+
+            if (productComment == null)
+            {
+                throw new ArgumentNullException(nameof(productComment));
+            }
+
+            halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetProductComment(productComment),
+                (l) => l.AddOtherItem("product", new Dtos.Link("/" + Constants.RouteNames.Products + "/" + productId))));
         }
     }
 }

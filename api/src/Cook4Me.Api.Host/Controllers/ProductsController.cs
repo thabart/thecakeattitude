@@ -27,12 +27,15 @@ namespace Cook4Me.Api.Host.Controllers
     {
         private readonly ISearchProductsOperation _searchProductsOperation;
         private readonly IGetProductOperation _getProductOperation;
+        private readonly ISearchProductCommentsOperation _searchProductCommentsOperation;
 
         public ProductsController(
-            ISearchProductsOperation searchProductsOperation, IGetProductOperation getProductOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            ISearchProductsOperation searchProductsOperation, IGetProductOperation getProductOperation,
+            ISearchProductCommentsOperation searchProductCommentsOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchProductsOperation = searchProductsOperation;
             _getProductOperation = getProductOperation;
+            _searchProductCommentsOperation = searchProductCommentsOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -45,6 +48,12 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Get(string id)
         {
             return await _getProductOperation.Execute(id);
+        }
+
+        [HttpPost(Constants.RouteNames.SearchProductComment)]
+        public async Task<IActionResult> SearchComments(string id, [FromBody] JObject jObj)
+        {
+            return await _searchProductCommentsOperation.Execute(id, jObj);
         }
     }
 }

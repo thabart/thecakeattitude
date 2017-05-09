@@ -31,7 +31,8 @@ namespace Cook4Me.Api.Host.Builders
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         Location GetLocation(JObject jObj);
-        SearchShopCommentsParameter GetSearchShopComments(IQueryCollection query);
+        SearchShopCommentsParameter GetSearchShopComments(JObject jObj);
+        SearchProductCommentsParameter GetSearchProductComments(JObject jObj);
         SearchProductsParameter GetSearchProducts(JObject jObj);
         SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
@@ -237,20 +238,36 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
-        public SearchShopCommentsParameter GetSearchShopComments(IQueryCollection query)
+        public SearchShopCommentsParameter GetSearchShopComments(JObject jObj)
         {
-            if (query == null)
+            if (jObj == null)
             {
-                throw new ArgumentNullException(nameof(query));
+                throw new ArgumentNullException(nameof(jObj));
             }
 
-            var result = new SearchShopCommentsParameter();
-            foreach(var key in query.Keys)
+            var result = new SearchShopCommentsParameter
             {
-                TrySetStr((r) => result.Subject = r, key, Constants.DtoNames.Comment.Subject, query);
-                TrySetInt((r) => result.StartIndex = r <= 0 ? result.StartIndex : r, key, Constants.DtoNames.Paginate.StartIndex, query);
-                TrySetInt((r) => result.Count = r <= 0 ? result.Count : r, key, Constants.DtoNames.Paginate.Count, query);
+                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
+                Count = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+            };
+
+            return result;
+        }
+
+        public SearchProductCommentsParameter GetSearchProductComments(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
             }
+            
+            var result = new SearchProductCommentsParameter
+            {
+                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
+                Count = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+            };
 
             return result;
         }

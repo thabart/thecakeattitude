@@ -47,10 +47,10 @@ namespace Cook4Me.Api.Host.Handlers
                     return;
                 }
 
-                _bus.RegisterHandler<ShopAddedEvent>(_shopEventsHandler.Handle);
-                _bus.RegisterHandler<ShopCommentAddedEvent>(_shopEventsHandler.Handle);
-                _bus.RegisterHandler<ShopCommentRemovedEvent>(_shopEventsHandler.Handle);
-                _isInitiated = true;
+                // _bus.RegisterHandler<ShopAddedEvent>(_shopEventsHandler.Handle);
+                // _bus.RegisterHandler<ShopCommentAddedEvent>(_shopEventsHandler.Handle);
+                // _bus.RegisterHandler<ShopCommentRemovedEvent>(_shopEventsHandler.Handle);
+                // _isInitiated = true;
             }
         }
     }

@@ -38,6 +38,7 @@ namespace Cook4Me.Api.Host
 {
     public class Startup
     {
+        private static bool _isInitialized = false;
         public IConfigurationRoot Configuration { get; set; }
         
         public Startup(IHostingEnvironment env)
@@ -96,12 +97,17 @@ namespace Cook4Me.Api.Host
             // 5. Use static files
             app.UseStaticFiles();
             // 6. Migrate the data.
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            if (!_isInitialized)
             {
-                var simpleIdentityServerContext = serviceScope.ServiceProvider.GetService<CookDbContext>();
-                simpleIdentityServerContext.Database.EnsureCreated();
-                simpleIdentityServerContext.EnsureSeedData();
+                using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var simpleIdentityServerContext = serviceScope.ServiceProvider.GetService<CookDbContext>();
+                    simpleIdentityServerContext.Database.EnsureCreated();
+                    simpleIdentityServerContext.EnsureSeedData();
+                    _isInitialized = true;
+                }
             }
+
             // 7. Launch Signal-R
             app.UseSignalR<RawConnection>("/raw-connection");
             app.UseSignalR();
@@ -146,6 +152,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetParentShopCategoriesOperation, GetParentShopCategoriesOperation>();
             services.AddTransient<IGetShopCategoryMapOperation, GetShopCategoryMapOperation>();
             services.AddTransient<IGetProductOperation, GetProductOperation>();
+            services.AddTransient<ISearchProductCommentsOperation, SearchProductCommentsOperation>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<ICommentEnricher, CommentEnricher>();
             services.AddTransient<IProductEnricher, ProductEnricher>();

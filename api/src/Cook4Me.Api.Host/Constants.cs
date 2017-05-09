@@ -38,6 +38,7 @@ namespace Cook4Me.Api.Host
             public const string Tags = "tags";
             public const string Comments = "comments";
             public const string SearchShopsComment = "{id}/comments";
+            public const string SearchProductComment = "{id}/comments";
             public const string RemoveShopComment = "{id}/comments/{subid}";
             public const string Filers = "filters";
             public const string Me = "me";

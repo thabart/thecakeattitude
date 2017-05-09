@@ -14,42 +14,43 @@
 // limitations under the License.
 #endregion
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System;
-using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
+using Cook4Me.Api.Host.Handlers;
+using Cook4Me.Api.Host.Operations.Product;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Threading.Tasks;
 
-namespace Cook4Me.Api.Host.Operations.Shop
+namespace Cook4Me.Api.Host.Operations.Product
 {
-    public interface ISearchShopCommentsOperation
+    public interface ISearchProductCommentsOperation
     {
-        Task<IActionResult> Execute(string shopId, JObject jObj);
+        Task<IActionResult> Execute(string productId, JObject query);
     }
 
-    internal class SearchShopCommentsOperation : ISearchShopCommentsOperation
+    internal class SearchProductCommentsOperation : ISearchProductCommentsOperation
     {
         private readonly IRequestBuilder _requestBuilder;
         private readonly IHalResponseBuilder _halResponseBuilder;
-        private readonly IShopRepository _shopRepository;
+        private readonly IProductRepository _productRepository;
         private readonly ICommentEnricher _commentEnricher;
 
-        public SearchShopCommentsOperation(IRequestBuilder requestBuilder, IHalResponseBuilder halResponseBuilder, IShopRepository shopRepository, ICommentEnricher commentEnricher)
+        public SearchProductCommentsOperation(IRequestBuilder requestBuilder, IHalResponseBuilder halResponseBuilder, IProductRepository productRepository, ICommentEnricher commentEnricher)
         {
             _requestBuilder = requestBuilder;
             _halResponseBuilder = halResponseBuilder;
-            _shopRepository = shopRepository;
+            _productRepository = productRepository;
             _commentEnricher = commentEnricher;
         }
 
-        public async Task<IActionResult> Execute(string shopId, JObject jObj)
+        public async Task<IActionResult> Execute(string productId, JObject jObj)
         {
-            if (string.IsNullOrWhiteSpace(shopId))
+            if (string.IsNullOrWhiteSpace(productId))
             {
-                throw new ArgumentNullException(nameof(shopId));
+                throw new ArgumentNullException(nameof(productId));
             }
 
             if (jObj == null)
@@ -57,16 +58,16 @@ namespace Cook4Me.Api.Host.Operations.Shop
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            var parameter = _requestBuilder.GetSearchShopComments(jObj);
-            parameter.ShopId = shopId;
-            var searchResult = await _shopRepository.SearchComments(parameter);
-            _halResponseBuilder.AddLinks(l => l.AddSelf(GetCommentLink(shopId)));
+            var parameter = _requestBuilder.GetSearchProductComments(jObj);
+            parameter.ProductId = productId;
+            var searchResult = await _productRepository.Search(parameter);
+            _halResponseBuilder.AddLinks(l => l.AddSelf(GetCommentLink(productId)));
             if (searchResult != null && searchResult.Content != null)
             {
                 var comments = searchResult.Content;
                 foreach (var comment in comments)
                 {
-                    _commentEnricher.Enrich(_halResponseBuilder, comment, parameter.ShopId);
+                    _commentEnricher.Enrich(_halResponseBuilder, comment, parameter.ProductId);
                 }
 
                 double r = (double)searchResult.TotalResults / (double)parameter.Count;
@@ -74,16 +75,16 @@ namespace Cook4Me.Api.Host.Operations.Shop
                 nbPages = nbPages == 0 ? 1 : nbPages;
                 for (var page = 1; page <= nbPages; page++)
                 {
-                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetCommentLink(shopId), page.ToString())));
+                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetCommentLink(productId), page.ToString())));
                 }
             }
 
             return new OkObjectResult(_halResponseBuilder.Build());
         }
 
-        private static string GetCommentLink(string shopId)
+        private static string GetCommentLink(string productId)
         {
-            return "/" + Constants.RouteNames.Shops + "/" + Constants.RouteNames.SearchProductComment.Replace("{id}", shopId);
+            return "/" + Constants.RouteNames.Products + "/" + Constants.RouteNames.SearchProductComment.Replace("{id}", productId);
         }
     }
 }

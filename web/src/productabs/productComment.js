@@ -10,6 +10,8 @@ import './productComment.css';
 import $ from 'jquery';
 import AppDispatcher from '../appDispatcher';
 
+let searchCommentsJson = { count: 1, start_index: 0 };
+
 class ProductComment extends Component {
   constructor(props) {
     super(props);
@@ -113,17 +115,10 @@ class ProductComment extends Component {
     });
   }
   // Navigate between comments
-  navigateComment(e, href) {
-    /*
+  navigateComment(e, name) {
     e.preventDefault();
-    var self = this;
-    self.setState({
-      isCommentsLoading: true
-    })
-    $.get(Constants.apiUrl + href).then(function(obj) {
-      self.displayComments(obj);
-    });
-    */
+    searchCommentsJson['start_index'] = (name - 1) * searchCommentsJson.count;
+    this.refreshComments();
   }
   // Refresh comments
   refreshComments() {
@@ -131,14 +126,13 @@ class ProductComment extends Component {
     self.setState({
       isCommentsLoading: true
     });
-    /*
-    ProductsService.searchComments(this.props.shop.id, { count: 4 }).then(function(obj) {
+    ProductsService.searchComments(this.props.product.id, searchCommentsJson).then(function(obj) {
       self.displayComments(obj);
     }).catch(function() {
       self.setState({
         isCommentsLoading: false
       });
-    });*/
+    });
   }
   // Add a comment
   addComment() {
@@ -214,7 +208,6 @@ class ProductComment extends Component {
   }
   // Display comments
   displayComments(obj) {
-    /*
     var comments = obj['_embedded'],
       navigations = obj['_links']['navigation'],
       self = this;
@@ -257,7 +250,6 @@ class ProductComment extends Component {
         isCommentsLoading: false
       });
     });
-    */
   }
   // Render the view
   render() {
@@ -302,7 +294,7 @@ class ProductComment extends Component {
 
     if (this.state.navigations && this.state.navigations.length > 1) {
       this.state.navigations.forEach(function(nav) {
-        navigations.push((<li className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigateComment(e, nav.href); }}>{nav.name}</a></li>));
+        navigations.push((<li className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigateComment(e, nav.name); }}>{nav.name}</a></li>));
       });
     }
 
