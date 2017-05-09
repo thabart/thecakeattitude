@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
@@ -26,6 +27,7 @@ namespace Cook4Me.Api.Host.Validators
     public interface IAddCommentValidator
     {
         Task<AddCommentValidationResult> Validate(AddShopCommentCommand comment);
+        Task<AddCommentValidationResult> Validate(AddProductCommentCommand command);
     }
 
     public class AddCommentValidationResult
@@ -48,10 +50,12 @@ namespace Cook4Me.Api.Host.Validators
     internal class AddCommentValidator : IAddCommentValidator
     {
         private readonly IShopRepository _shopRepository;
+        private readonly IProductRepository _productRepository;
 
-        public AddCommentValidator(IShopRepository shopRepository)
+        public AddCommentValidator(IShopRepository shopRepository, IProductRepository productRepository)
         {
             _shopRepository = shopRepository;
+            _productRepository = productRepository;
         }
 
         public async Task<AddCommentValidationResult> Validate(AddShopCommentCommand comment)
@@ -59,6 +63,12 @@ namespace Cook4Me.Api.Host.Validators
             if (comment == null)
             {
                 throw new ArgumentNullException(nameof(comment));
+            }
+
+            var validationResult = Validate(comment.ShopId, comment.Content, comment.Score, Constants.DtoNames.Comment.ShopId);
+            if (!validationResult.IsValid)
+            {
+                return validationResult;
             }
 
             ShopAggregate shop = null;
@@ -90,6 +100,66 @@ namespace Cook4Me.Api.Host.Validators
 
             // Check score.
             if (comment.Score < 1 || comment.Score > 5)
+            {
+                return new AddCommentValidationResult(ErrorDescriptions.TheScoreMustBeBetween);
+            }
+
+            return new AddCommentValidationResult();
+        }
+
+        public async Task<AddCommentValidationResult> Validate(AddProductCommentCommand comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            var validationResult = Validate(comment.ProductId, comment.Content, comment.Score, Constants.DtoNames.Comment.ProductId);
+            if (!validationResult.IsValid)
+            {
+                return validationResult;
+            }
+
+            ProductAggregate product = null;
+            // Check shop exists && 1 comment.
+            if (!string.IsNullOrWhiteSpace(comment.ProductId))
+            {
+                product = await _productRepository.Get(comment.ProductId);
+                if (product == null)
+                {
+                    return new AddCommentValidationResult(ErrorDescriptions.TheShopDoesntExist);
+                }
+
+                var comments = await _productRepository.Search(new SearchProductCommentsParameter
+                {
+                    ProductId = comment.ProductId,
+                    Subject = comment.Subject
+                });
+                if (comments.TotalResults > 0)
+                {
+                    return new AddCommentValidationResult(ErrorDescriptions.TheCommentAlreadyExists);
+                }
+            }
+
+            return new AddCommentValidationResult();
+        }
+
+        private static AddCommentValidationResult Validate(string id, string content, int score, string name)
+        {
+            // Check id exists.
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return new AddCommentValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, name));
+            }
+
+            // Check content size.
+            if (!string.IsNullOrWhiteSpace(content) && content.Length > 255)
+            {
+                return new AddCommentValidationResult(string.Format(ErrorDescriptions.TheParameterLengthCannotExceedNbCharacters, Constants.DtoNames.Comment.Content, "255"));
+            }
+
+            // Check score.
+            if (score < 1 || score > 5)
             {
                 return new AddCommentValidationResult(ErrorDescriptions.TheScoreMustBeBetween);
             }

@@ -83,7 +83,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
 
         private static string GetCommentLink(string shopId)
         {
-            return "/" + Constants.RouteNames.Shops + "/" + Constants.RouteNames.SearchProductComment.Replace("{id}", shopId);
+            return "/" + Constants.RouteNames.Shops + "/" + Constants.RouteNames.SearchComments.Replace("{id}", shopId);
         }
     }
 }

@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Parameters;
 using Microsoft.AspNetCore.Http;
@@ -28,6 +29,7 @@ namespace Cook4Me.Api.Host.Builders
         AddShopCommand GetAddShop(JObject jObj);
         AddPaymentInformation GetPaymentMethod(JObject jObj);
         AddShopCommentCommand GetAddShopComment(JObject jObj);
+        AddProductCommentCommand GetAddProductComment(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         Location GetLocation(JObject jObj);
@@ -222,19 +224,18 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
-        public SearchShopCommentsParameter GetSearchComment(JObject jObj)
+        public AddProductCommentCommand GetAddProductComment(JObject jObj)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            return new SearchShopCommentsParameter
+            return new AddProductCommentCommand
             {
-                ShopId = jObj.Value<string>(Constants.DtoNames.Comment.ShopId),
-                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
-                Count = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
-                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+                Content = jObj.Value<string>(Constants.DtoNames.Comment.Content),
+                Score = jObj.Value<int>(Constants.DtoNames.Comment.Score),
+                ProductId = jObj.Value<string>(Constants.DtoNames.Comment.ProductId)
             };
         }
 

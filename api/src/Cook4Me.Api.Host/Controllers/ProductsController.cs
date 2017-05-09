@@ -14,8 +14,12 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Product;
+using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Operations.Product;
+using Cook4Me.Api.Host.Operations.Shop;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
@@ -28,14 +32,19 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly ISearchProductsOperation _searchProductsOperation;
         private readonly IGetProductOperation _getProductOperation;
         private readonly ISearchProductCommentsOperation _searchProductCommentsOperation;
+        private readonly IAddProductCommentOperation _addProductCommentOperation;
+        private readonly IRemoveProductCommentOperation _removeProductCommentOperation;
 
         public ProductsController(
             ISearchProductsOperation searchProductsOperation, IGetProductOperation getProductOperation,
-            ISearchProductCommentsOperation searchProductCommentsOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            ISearchProductCommentsOperation searchProductCommentsOperation, IAddProductCommentOperation addProductCommentOperation,
+            IRemoveProductCommentOperation removeProductCommentOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchProductsOperation = searchProductsOperation;
             _getProductOperation = getProductOperation;
             _searchProductCommentsOperation = searchProductCommentsOperation;
+            _addProductCommentOperation = addProductCommentOperation;
+            _removeProductCommentOperation = removeProductCommentOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -50,7 +59,26 @@ namespace Cook4Me.Api.Host.Controllers
             return await _getProductOperation.Execute(id);
         }
 
-        [HttpPost(Constants.RouteNames.SearchProductComment)]
+        [HttpPost(Constants.RouteNames.Comments)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> AddComment([FromBody] JObject jObj)
+        {
+            return await _addProductCommentOperation.Execute(jObj, User.GetSubject());
+        }
+
+        [HttpDelete(Constants.RouteNames.RemoveComment)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> RemoveComment(string id, string subid)
+        {
+            return await _removeProductCommentOperation.Execute(new RemoveProductCommentCommand
+            {
+                CommentId = subid,
+                Subject = User.GetSubject(),
+                ProductId = id
+            });
+        }
+
+        [HttpPost(Constants.RouteNames.SearchComments)]
         public async Task<IActionResult> SearchComments(string id, [FromBody] JObject jObj)
         {
             return await _searchProductCommentsOperation.Execute(id, jObj);

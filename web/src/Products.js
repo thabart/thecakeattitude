@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Alert } from 'reactstrap';
 import Rater from 'react-rater';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { withRouter } from 'react-router';
 import Constants from '../Constants';
 import Magnify from 'react-magnify';
 import 'react-magnify/lib/react-magnify.css'
@@ -16,13 +17,38 @@ class Products extends Component {
     super(props);
     this.toggleError = this.toggleError.bind(this);
     this.changeImage = this.changeImage.bind(this);
-    this.toggle = this.toggle.bind(this);
+    this.refresh = this.refresh.bind(this);
+    this.navigateGeneral = this.navigateGeneral.bind(this);
+    this.navigateComments = this.navigateComments.bind(this);
     this.state = {
       isLoading: false,
       errorMessage : null,
       currentImageIndice: 0,
-      activeTab: '1'
+      product: null
     };
+  }
+  refresh() {
+    var self = this;
+    self.setState({
+      isLoading: true
+    });
+    ProductsService.get(this.props.match.params.id).then(function(r) {
+      self.setState({
+        isLoading: false,
+        product: r['_embedded']
+      });
+    }).catch(function(e) {
+      var json = e.responseJSON;
+      var error = "an error occured while trying to retrieve the product";
+      if (json && json.error_description) {
+        error = json.error_description;
+      }
+
+      self.setState({
+        errorMessage: error,
+        isLoading: false
+      });
+    });
   }
   toggleError() {
     this.setState({
@@ -36,12 +62,11 @@ class Products extends Component {
       currentImageIndice: indice
     });
   }
-  toggle(tab) {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab
-      });
-    }
+  navigateGeneral(e) {
+    this.props.history.push('/products/' + this.state.product.id);
+  }
+  navigateComments(e) {
+    this.props.history.push('/products/' + this.state.product.id + '/comments');
   }
   render() {
     if (this.state.isLoading) {
@@ -57,10 +82,19 @@ class Products extends Component {
       tags = [],
       images = [],
       currentImageSrc = null,
-      self = this;
+      self = this,
+      action = this.props.match.params.action,
+      content = null;
     if (this.state.product.promotions && this.state.product.promotions.length > 0) {
       promotion = this.state.product.promotions[0];
       newPrice = this.state.product.new_price;
+    }
+
+    if (action === "comments") {
+      content = (<ProductComment product={self.state.product} onRefreshScore={self.refresh} />);
+    } else {
+      content = (<DescriptionTab product={self.state.product} />);
+      action = "general";
     }
 
     if (this.state.product.tags && this.state.product.tags.length > 0) {
@@ -126,29 +160,24 @@ class Products extends Component {
                 <Nav tabs className="col-md-12">
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: this.state.activeTab === '1' })}
-                      onClick={() => { this.toggle('1'); }}
+                      className={classnames({ active: action === 'general' })}
+                      onClick={() => { this.navigateGeneral(); }}
                     >
                       General
                     </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      className={classnames({ active: this.state.activeTab === '2' })}
-                      onClick={() => { this.toggle('2'); }}
+                      className={classnames({ active: action === 'comments' })}
+                      onClick={() => { this.navigateComments(); }}
                     >
                       Comments
                     </NavLink>
                   </NavItem>
                 </Nav>
-                <TabContent activeTab={this.state.activeTab} className="col-md-12">
-                  <TabPane tabId="1">
-                    <DescriptionTab product={this.state.product} />
-                  </TabPane>
-                  <TabPane tabId="2">
-                    <ProductComment product={this.state.product} />
-                  </TabPane>
-                </TabContent>
+                <div className="col-md-12">
+                  {content}
+                </div>
               </section>
             </div>
             <div className="col-md-4">
@@ -166,29 +195,8 @@ class Products extends Component {
     );
   }
   componentWillMount() {
-    var productId = this.props.match.params.id,
-      self = this;
-    self.setState({
-      isLoading: true
-    });
-    ProductsService.get(productId).then(function(r) {
-      self.setState({
-        isLoading: false,
-        product: r['_embedded']
-      });
-    }).catch(function(e) {
-      var json = e.responseJSON;
-      var error = "an error occured while trying to retrieve the product";
-      if (json && json.error_description) {
-        error = json.error_description;
-      }
-
-      self.setState({
-        errorMessage: error,
-        isLoading: false
-      });
-    });
+    this.refresh();
   }
 }
 
-export default Products;
+export default withRouter(Products);

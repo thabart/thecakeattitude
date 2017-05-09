@@ -379,10 +379,10 @@ namespace Cook4Me.Api.EF.Extensions
                 promotions = product.Promotions.Where(p => string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToAggregate());
             }
 
-            IEnumerable<ProductComment> comments = new List<ProductComment>();
+            ICollection<ProductComment> comments = new List<ProductComment>();
             if (product.Comments != null)
             {
-                comments = product.Comments.Select(c => c.ToAggregateProduct());
+                comments = product.Comments.Select(c => c.ToAggregateProduct()).ToList();
             }
 
             return new ProductAggregate

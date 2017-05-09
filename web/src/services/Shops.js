@@ -1,5 +1,4 @@
 import request from 'request';
-import Constants from '../../Constants';
 import Promise from 'bluebird';
 import Session from './Session';
 import ConfigurationService from './Configuration';
@@ -9,14 +8,16 @@ module.exports = {
   // Search shops
   search: function(content) {
     return new Promise(function(resolve, reject) {
-      $.ajax(Constants.apiUrl + '/shops/.search', {
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(content)
-      }).then(function(r) {
-        resolve(r);
-      }).fail(function(e) {
-        reject(e);
+      ConfigurationService.get().then(function(configuration) {
+        $.ajax(configuration.shops_endpoint + '/.search', {
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(content)
+        }).then(function(r) {
+          resolve(r);
+        }).fail(function(e) {
+          reject(e);
+        });
       });
     });
   },
@@ -40,27 +41,31 @@ module.exports = {
   add: function(content) {
     var accessToken = Session.getSession().access_token;
     return new Promise(function(resolve, reject) {
-      $.ajax(Constants.apiUrl + '/shops', {
-        method: 'POST',
-        contentType: 'application/json',
-        headers: {
-          'Authorization': 'Bearer '+accessToken
-        },
-        data: JSON.stringify(content)
-      }).then(function(r) {
-        resolve(r);
-      }).fail(function(e) {
-        reject(e);
+      ConfigurationService.get().then(function(configuration) {
+        $.ajax(configuration.shops_endpoint, {
+          method: 'POST',
+          contentType: 'application/json',
+          headers: {
+            'Authorization': 'Bearer '+accessToken
+          },
+          data: JSON.stringify(content)
+        }).then(function(r) {
+          resolve(r);
+        }).fail(function(e) {
+          reject(e);
+        });
       });
     });
   },
   // Get shop
   get: function(id) {
     return new Promise(function(resolve, reject) {
-      $.get(Constants.apiUrl + '/shops/'+id).then(function(r) {
-        resolve(r);
-      }).fail(function(e) {
-        reject(e);
+      ConfigurationService.get().then(function(configuration) {
+        $.get(configuration.shops_endpoint + '/'+id).then(function(r) {
+          resolve(r);
+        }).fail(function(e) {
+          reject(e);
+        });
       });
     });
   },
@@ -68,17 +73,19 @@ module.exports = {
   addComment: function(content) {
     var accessToken = Session.getSession().access_token;
     return new Promise(function(resolve, reject) {
-      $.ajax(Constants.apiUrl + '/shops/comments', {
-        method: 'POST',
-        contentType: 'application/json',
-        headers: {
-          'Authorization': 'Bearer '+accessToken
-        },
-        data: JSON.stringify(content)
-      }).then(function(r) {
-        resolve(r);
-      }).fail(function(e) {
-        reject(e);
+      ConfigurationService.get().then(function(configuration) {
+        $.ajax(configuration.shops_endpoint + '/comments', {
+          method: 'POST',
+          contentType: 'application/json',
+          headers: {
+            'Authorization': 'Bearer '+accessToken
+          },
+          data: JSON.stringify(content)
+        }).then(function(r) {
+          resolve(r);
+        }).fail(function(e) {
+          reject(e);
+        });
       });
     });
   },
@@ -90,15 +97,17 @@ module.exports = {
           reject();
         }
 
-        $.ajax(Constants.apiUrl + '/shops/'+id+'/comments/'+commentId, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': 'Bearer '+session.access_token
-          },
-        }).then(function() {
-          resolve();
-        }).catch(function(e) {
-          reject(e);
+        ConfigurationService.get().then(function(configuration) {
+          $.ajax(configuration.shops_endpoint + '/' + id + '/comments/'+commentId, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': 'Bearer '+session.access_token
+            },
+          }).then(function() {
+            resolve();
+          }).catch(function(e) {
+            reject(e);
+          });
         });
       });
   }

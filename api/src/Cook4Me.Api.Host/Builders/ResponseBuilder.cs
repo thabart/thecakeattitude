@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Shop;
 using Newtonsoft.Json.Linq;
 using System;
@@ -36,6 +37,8 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetProductComment(ProductComment productComment);
         JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
         JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment);
+        JObject GetProductCommentAddedEvent(ProductCommentAddedEvent comment);
+        JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetProduct(ProductAggregate product);
         JObject GetPromotion(ProductAggregatePromotion promotion);
     }
@@ -315,6 +318,24 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
+        public JObject GetProductCommentAddedEvent(ProductCommentAddedEvent comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Comment.Content, comment.Content);
+            jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
+            jObj.Add(Constants.DtoNames.Comment.ProductId, comment.ProductId);
+            jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
+            jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
+            return jObj;
+        }
+
         public JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment)
         {
             if (comment == null)
@@ -325,6 +346,18 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
+            return jObj;
+        }
+        public JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.ProductId, comment.ProductId);
             return jObj;
         }
 

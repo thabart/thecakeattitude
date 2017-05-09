@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cook4Me.Api.Core.Aggregates
 {
@@ -34,11 +35,45 @@ namespace Cook4Me.Api.Core.Aggregates
         public double AverageScore { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
+        public ProductAggregateCategory Category { get; set; }
         public IEnumerable<string> Tags { get; set; }
         public IEnumerable<string> PartialImagesUrl { get; set; }
-        public ProductAggregateCategory Category { get; set; }
         public IEnumerable<ProductAggregateFilter> Filters { get; set; }
         public IEnumerable<ProductAggregatePromotion> Promotions { get; set; }
-        public IEnumerable<ProductComment> Comments { get; set; }
+        public ICollection<ProductComment> Comments { get; set; }
+
+        public void AddComment(ProductComment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            Comments.Add(comment);
+            TotalScore += comment.Score;
+            if (Comments.Count() != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)Comments.Count()), 3);
+            }
+        }
+
+        public void RemoveComment(ProductComment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            Comments.Remove(comment);
+            TotalScore -= comment.Score;
+            if (Comments.Count() != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)Comments.Count()), 3);
+            }
+            else
+            {
+                AverageScore = 0;
+            }
+        }
     }
 }

@@ -135,6 +135,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IAddShopValidator, AddShopValidator>();
             services.AddTransient<IAddCommentValidator, AddCommentValidator>();
             services.AddTransient<IRemoveShopCommentValidator, RemoveShopCommentValidator>();
+            services.AddTransient<IRemoveProductCommentValidator, RemoveProductCommentValidator>();
             services.AddTransient<IControllerHelper, ControllerHelper>();
             services.AddTransient<IAddShopOperation, AddShopOperation>();
             services.AddTransient<IAddShopCommentOperation, AddShopCommentOperation>();
@@ -153,6 +154,8 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetShopCategoryMapOperation, GetShopCategoryMapOperation>();
             services.AddTransient<IGetProductOperation, GetProductOperation>();
             services.AddTransient<ISearchProductCommentsOperation, SearchProductCommentsOperation>();
+            services.AddTransient<IAddProductCommentOperation, AddProductCommentOperation>();
+            services.AddTransient<IRemoveProductCommentOperation, RemoveProductCommentOperation>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<IProductCommentEnricher, ProductCommentEnricher>();
             services.AddTransient<IShopCommentEnricher, ShopCommentEnricher>();
@@ -162,6 +165,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IMapEnricher, MapEnricher>();
             services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
             services.AddSingleton<ShopEventsHandler>();
+            services.AddSingleton<ProductEventsHandler>();
         }
     }
 }

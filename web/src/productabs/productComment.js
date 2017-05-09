@@ -10,7 +10,7 @@ import './productComment.css';
 import $ from 'jquery';
 import AppDispatcher from '../appDispatcher';
 
-let searchCommentsJson = { count: 1, start_index: 0 };
+let searchCommentsJson = { count: 4, start_index: 0 };
 
 class ProductComment extends Component {
   constructor(props) {
@@ -66,12 +66,11 @@ class ProductComment extends Component {
   }
   // Remove the selected comment
   removeComment() {
-    /*
     var self = this;
     self.setState({
       isRemoveCommentOpened: false
     });
-    ShopsService.removeComment(this.props.shop.id, this.state.currentComment).then(function() {
+    ProductsService.removeComment(this.props.product.id, this.state.currentComment).then(function() {
       self.refreshComments();
       self.props.onRefreshScore();
     }).catch(function(e) {
@@ -85,7 +84,6 @@ class ProductComment extends Component {
         errorMessage: error
       });
     });
-    */
   }
   // Handle all input change which occures in the view.
   handleInputChange(e) {
@@ -136,7 +134,6 @@ class ProductComment extends Component {
   }
   // Add a comment
   addComment() {
-    /*
     var self = this,
       isContentInvalid  = false,
       isScoreInvalid = false,
@@ -174,9 +171,9 @@ class ProductComment extends Component {
     var json = {
       content: self.state.comment,
       score: self.state.score,
-      shop_id: self.props.shop.id
+      product_id: self.props.product.id
     };
-    ShopsService.addComment(json).then(function(e) {
+    ProductsService.addComment(json).then(function(e) {
       self.setState({
         isAddingComment: false
       });
@@ -192,7 +189,6 @@ class ProductComment extends Component {
         isAddingComment: false
       });
     });
-    */
   }
   // Build error tooltip
   buildErrorTooltip(validName, description) {
@@ -271,7 +267,7 @@ class ProductComment extends Component {
           picture = Constants.openIdUrl + picture;
         }
 
-        comments.push((<div className="col-md-6">
+        comments.push((<div className="col-md-12">
           {comment.subject === self.state.subject && <div className="close-comment"><i className="fa fa-times" onClick={() => { self.displayRemoveComment(comment.id); }}></i></div> }
           <div className="element">
             <div className="row header">
@@ -349,19 +345,17 @@ class ProductComment extends Component {
   componentWillMount() {
     var self = this;
     // Refresh the comments.
-    /*
     AppDispatcher.register(function(payload) {
       switch(payload.actionName) {
-        case 'new-comment':
-        case 'remove-comment':
-          if (payload && payload.data && payload.data.shop_id == self.props.shop.id) {
+        case 'new-product-comment':
+        case 'remove-product-comment':
+          if (payload && payload.data && payload.data.product_id == self.props.product.id) {
             self.refreshComments();
             self.props.onRefreshScore();
           }
         break;
       }
     });
-    */
     var session = SessionService.getSession();
     if (session || session !== null) {
       OpenIdService.introspect(session.access_token).then(function(introspect) {

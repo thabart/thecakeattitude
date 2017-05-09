@@ -27,6 +27,7 @@ namespace Cook4Me.Api.Host
         public const string TheMapDoesntExist = "the map doesn't exist";
         public const string TheMapFileDoesntExist = "the map file doesn't exist";
         public const string TheShopDoesntExist = "the shop doesn't exist";
+        public const string TheProductDoesntExist = "the product doesn't exist";
         public const string TheCommentDoesntExist = "the comment doesn't exist";
         public const string TheCommentAlreadyExists = "a comment has already been written by the user";
         public const string TheCommentCannotBeInserted = "an error occured when trying to add the comment";

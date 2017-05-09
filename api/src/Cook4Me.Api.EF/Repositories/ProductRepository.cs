@@ -14,16 +14,17 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Cook4Me.Api.Core.Aggregates;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -178,6 +179,85 @@ namespace Cook4Me.Api.EF.Repositories
 
             result.Content = await comments.Select(c => c.ToProductCommentAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
+        }
+
+        public async Task<bool> Update(ProductAggregate productAggregate)
+        {
+            if (productAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(productAggregate));
+            }
+            
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Products.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == productAggregate.Id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        return false;
+                    }
+
+                    record.AverageScore = productAggregate.AverageScore;
+                    record.CategoryId = productAggregate.CategoryId;
+                    record.Description = productAggregate.Description;
+                    record.Name = productAggregate.Name;
+                    record.NewPrice = productAggregate.NewPrice;
+                    record.Price = productAggregate.Price;
+                    record.Quantity = productAggregate.Quantity;
+                    record.ShopId = productAggregate.ShopId;
+                    record.TotalScore = productAggregate.TotalScore;
+                    record.UnitOfMeasure = productAggregate.UnitOfMeasure;
+                    record.UpdateDateTime = productAggregate.UpdateDateTime;
+                    var comments = productAggregate.Comments == null ? new List<ProductComment>() : productAggregate.Comments;
+                    var commentIds = comments.Select(c => c.Id);
+                    // Update the comments
+                    if (record.Comments != null)
+                    {
+                        var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
+                        var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
+                        var existingCommentIds = record.Comments.Select(c => c.Id);
+                        var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
+                        foreach (var commentToUpdate in commentsToUpdate)
+                        {
+                            var comment = comments.First(c => c.Id == commentToUpdate.Id);
+                            commentToUpdate.Score = comment.Score;
+                            commentToUpdate.Subject = comment.Subject;
+                            commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
+                            commentToUpdate.Content = comment.Content;
+                        }
+
+                        foreach (var commentToRemove in commentsToRemove)
+                        {
+                            _context.Comments.Remove(commentToRemove);
+                        }
+
+                        foreach (var commentToAdd in commentsToAdd)
+                        {
+                            var rec = new Models.Comment
+                            {
+                                Id = commentToAdd.Id,
+                                Content = commentToAdd.Content,
+                                Score = commentToAdd.Score,
+                                CreateDateTime = commentToAdd.CreateDateTime,
+                                ProductId = productAggregate.Id,
+                                UpdateDateTime = commentToAdd.UpdateDateTime,
+                                Subject = commentToAdd.Subject
+                            };
+                            _context.Comments.Add(rec);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
         private static IQueryable<Models.Product> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Product, TKey>> keySelector, IQueryable<Models.Product> products)

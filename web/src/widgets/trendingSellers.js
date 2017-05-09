@@ -137,8 +137,8 @@ class TrendingSellers extends Component {
     AppDispatcher.register(function(payload) {
       switch(payload.actionName) {
         case 'new-shop':
-        case 'new-comment':
-        case 'remove-comment':
+        case 'new-shop-comment':
+        case 'remove-shop-comment':
           var request = $.extend({}, self.request, {
             start_index: 0
           });

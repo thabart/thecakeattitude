@@ -35,13 +35,25 @@ class App extends Component {
     });
     proxy.on('shopCommentAdded', function(message) {
       AppDispatcher.dispatch({
-        actionName: 'new-comment',
+        actionName: 'new-shop-comment',
         data: message
       });
     });
     proxy.on('shopCommentRemoved', function(message) {
       AppDispatcher.dispatch({
-        actionName: 'remove-comment',
+        actionName: 'remove-shop-comment',
+        data: message
+      });
+    });
+    proxy.on('productCommentAdded', function(message) {
+      AppDispatcher.dispatch({
+        actionName: 'new-product-comment',
+        data: message
+      });
+    });
+    proxy.on('productCommentRemoved', function(message) {
+      AppDispatcher.dispatch({
+        actionName: 'remove-product-comment',
         data: message
       });
     });
@@ -91,7 +103,7 @@ class App extends Component {
             <Route path="/home" component={Map}  />
             <Route path="/sellers" component={Sellers}  />
             <Route path="/shops/:id/:action?" component={Shop} />
-            <Route path="/products/:id" component={Products} />
+            <Route path="/products/:id/:action?" component={Products} />
             <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddShop />))} />
             <Route path="/error/:type" component={Error} />
           </div>

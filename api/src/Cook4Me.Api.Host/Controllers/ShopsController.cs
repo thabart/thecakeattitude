@@ -109,13 +109,13 @@ namespace Cook4Me.Api.Host.Controllers
             return await _addShopCommentOperation.Execute(jObj, User.GetSubject());
         }
 
-        [HttpPost(Constants.RouteNames.SearchShopsComment)]
+        [HttpPost(Constants.RouteNames.SearchComments)]
         public async Task<IActionResult> SearchComments(string id, [FromBody] JObject jObj)
         {
             return await _searchShopCommentsOperation.Execute(id, jObj);
         }
 
-        [HttpDelete(Constants.RouteNames.RemoveShopComment)]
+        [HttpDelete(Constants.RouteNames.RemoveComment)]
         [Authorize("Connected")]
         public async Task<IActionResult> RemoveComment(string id, string subid)
         {

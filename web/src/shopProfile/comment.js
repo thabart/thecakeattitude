@@ -347,8 +347,8 @@ class Comment extends Component {
     // Refresh the comments.
     AppDispatcher.register(function(payload) {
       switch(payload.actionName) {
-        case 'new-comment':
-        case 'remove-comment':
+        case 'new-shop-comment':
+        case 'remove-shop-comment':
           if (payload && payload.data && payload.data.shop_id == self.props.shop.id) {
             self.refreshComments();
             self.props.onRefreshScore();
