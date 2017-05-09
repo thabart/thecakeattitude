@@ -35,9 +35,9 @@ namespace Cook4Me.Api.Host.Operations.Shop
         private readonly IRequestBuilder _requestBuilder;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IShopRepository _shopRepository;
-        private readonly ICommentEnricher _commentEnricher;
+        private readonly IShopCommentEnricher _commentEnricher;
 
-        public SearchShopCommentsOperation(IRequestBuilder requestBuilder, IHalResponseBuilder halResponseBuilder, IShopRepository shopRepository, ICommentEnricher commentEnricher)
+        public SearchShopCommentsOperation(IRequestBuilder requestBuilder, IHalResponseBuilder halResponseBuilder, IShopRepository shopRepository, IShopCommentEnricher commentEnricher)
         {
             _requestBuilder = requestBuilder;
             _halResponseBuilder = halResponseBuilder;

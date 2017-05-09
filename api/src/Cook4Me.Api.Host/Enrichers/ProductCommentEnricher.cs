@@ -20,35 +20,18 @@ using System;
 
 namespace Cook4Me.Api.Host.Enrichers
 {
-    public interface ICommentEnricher
+    public interface IProductCommentEnricher
     {
-        void Enrich(IHalResponseBuilder halResponseBuilder, ShopComment shopComment, string shopId);
         void Enrich(IHalResponseBuilder halResponseBuilder, ProductComment productComment, string productId);
     }
 
-    internal class CommentEnricher : ICommentEnricher
+    internal class ProductCommentEnricher : IProductCommentEnricher
     {
         private readonly IResponseBuilder _responseBuilder;
 
-        public CommentEnricher(IResponseBuilder responseBuilder)
+        public ProductCommentEnricher(IResponseBuilder responseBuilder)
         {
             _responseBuilder = responseBuilder;
-        }
-
-        public void Enrich(IHalResponseBuilder halResponseBuilder, ShopComment shopComment, string shopId)
-        {
-            if (halResponseBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(halResponseBuilder));
-            }
-
-            if (shopComment == null)
-            {
-                throw new ArgumentNullException(nameof(shopComment));
-            }
-
-            halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetShopComment(shopComment),
-                (l) => l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + shopId))));
         }
 
         public void Enrich(IHalResponseBuilder halResponseBuilder, ProductComment productComment, string productId)

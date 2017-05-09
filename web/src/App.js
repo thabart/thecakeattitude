@@ -25,7 +25,6 @@ class App extends Component {
     };
   }
   componentWillMount() {
-    /*
     var connection = $.hubConnection("http://localhost:5000");
     var proxy = connection.createHubProxy("notifier");
     proxy.on('shopAdded', function(message) {
@@ -51,7 +50,6 @@ class App extends Component {
         console.log('Now connected, connection ID=' + connection.id);
       })
       .fail(function(){ console.log('Could not connect'); });
-      */
     var self = this;
     var session = SessionService.getSession();
     if (!session || session == null) {

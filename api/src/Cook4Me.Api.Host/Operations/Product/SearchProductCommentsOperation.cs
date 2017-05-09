@@ -36,9 +36,9 @@ namespace Cook4Me.Api.Host.Operations.Product
         private readonly IRequestBuilder _requestBuilder;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IProductRepository _productRepository;
-        private readonly ICommentEnricher _commentEnricher;
+        private readonly IProductCommentEnricher _commentEnricher;
 
-        public SearchProductCommentsOperation(IRequestBuilder requestBuilder, IHalResponseBuilder halResponseBuilder, IProductRepository productRepository, ICommentEnricher commentEnricher)
+        public SearchProductCommentsOperation(IRequestBuilder requestBuilder, IHalResponseBuilder halResponseBuilder, IProductRepository productRepository, IProductCommentEnricher commentEnricher)
         {
             _requestBuilder = requestBuilder;
             _halResponseBuilder = halResponseBuilder;

@@ -154,7 +154,8 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetProductOperation, GetProductOperation>();
             services.AddTransient<ISearchProductCommentsOperation, SearchProductCommentsOperation>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
-            services.AddTransient<ICommentEnricher, CommentEnricher>();
+            services.AddTransient<IProductCommentEnricher, ProductCommentEnricher>();
+            services.AddTransient<IShopCommentEnricher, ShopCommentEnricher>();
             services.AddTransient<IProductEnricher, ProductEnricher>();
             services.AddTransient<ITagEnricher, TagEnricher>();
             services.AddTransient<IShopCategoryEnricher, ShopCategoryEnricher>();
