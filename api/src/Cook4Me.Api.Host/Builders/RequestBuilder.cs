@@ -248,9 +248,13 @@ namespace Cook4Me.Api.Host.Builders
             var result = new SearchShopCommentsParameter
             {
                 Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
-                Count = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
             };
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
 
             return result;
         }
@@ -265,9 +269,13 @@ namespace Cook4Me.Api.Host.Builders
             var result = new SearchProductCommentsParameter
             {
                 Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
-                Count = jObj.Value<int>(Constants.DtoNames.Paginate.Count),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
             };
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
 
             return result;
         }
