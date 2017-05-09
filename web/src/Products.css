@@ -3,6 +3,17 @@
   overflow: hidden;
 }
 
+.product-section .best-deals {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  display: none;
+}
+
+.product-section .is-best-deals .best-deals {
+  display: block;
+}
+
 .product-section .tags li {
   border: 1px solid #f1f0f0;
   color: gray;
@@ -53,7 +64,7 @@
   height: 50px;
 }
 
-.product-section .image-big img {
+.product-section .image-big  {
   width: 433px;
   height: 433px;
 }

@@ -1,0 +1,6 @@
+.close-comment {
+  position: absolute;
+  right: 30px;
+  top: 5px;
+  cursor: pointer;
+}

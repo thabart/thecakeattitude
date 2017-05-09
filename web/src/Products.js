@@ -1,20 +1,27 @@
 import React, { Component } from 'react';
 import { Alert } from 'reactstrap';
 import Rater from 'react-rater';
-import './Products.css';
+import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import Constants from '../Constants';
+import Magnify from 'react-magnify';
+import 'react-magnify/lib/react-magnify.css'
 import { ProductsService } from './services';
+import { DescriptionTab, ProductComment } from './productabs';
 import $ from 'jquery';
+import './Products.css';
+import classnames from 'classnames';
 
 class Products extends Component {
   constructor(props) {
     super(props);
     this.toggleError = this.toggleError.bind(this);
     this.changeImage = this.changeImage.bind(this);
+    this.toggle = this.toggle.bind(this);
     this.state = {
       isLoading: false,
       errorMessage : null,
-      currentImageIndice: 0
+      currentImageIndice: 0,
+      activeTab: '1'
     };
   }
   toggleError() {
@@ -28,6 +35,13 @@ class Products extends Component {
     this.setState({
       currentImageIndice: indice
     });
+  }
+  toggle(tab) {
+    if (this.state.activeTab !== tab) {
+      this.setState({
+        activeTab: tab
+      });
+    }
   }
   render() {
     if (this.state.isLoading) {
@@ -97,16 +111,44 @@ class Products extends Component {
                   <ul className="col-md-3 image-lst">
                     {images}
                   </ul>
-                  <div className="col-md-9 image-big">
-                    <img src={currentImageSrc} />
+                  <div className={newPrice == null ? "col-md-9" : "col-md-9 is-best-deals"}>
+                    <Magnify style={{
+                      width:'433px',
+                      height: '433px'
+                    }} src={currentImageSrc}></Magnify>
+                    <div className="best-deals">
+                      <img src="/images/hot_deals.png" width="120" />
+                    </div>
                   </div>
                 </section>)
               }
               <section className="row">
-                <h5 className="col-md-12">Description</h5>
-                <p className="col-md-12">
-                  {this.state.product.description}
-                </p>
+                <Nav tabs className="col-md-12">
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.activeTab === '1' })}
+                      onClick={() => { this.toggle('1'); }}
+                    >
+                      General
+                    </NavLink>
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({ active: this.state.activeTab === '2' })}
+                      onClick={() => { this.toggle('2'); }}
+                    >
+                      Comments
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <TabContent activeTab={this.state.activeTab} className="col-md-12">
+                  <TabPane tabId="1">
+                    <DescriptionTab product={this.state.product} />
+                  </TabPane>
+                  <TabPane tabId="2">
+                    <ProductComment product={this.state.product} />
+                  </TabPane>
+                </TabContent>
               </section>
             </div>
             <div className="col-md-4">
