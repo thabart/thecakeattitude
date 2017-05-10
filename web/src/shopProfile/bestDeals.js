@@ -6,6 +6,7 @@ import moment from 'moment';
 import Constants from '../../Constants';
 import ProductElt from './productElt';
 import $ from 'jquery';
+import AppDispatcher from '../appDispatcher';
 
 const json = { start_index: 0, count: 5, contains_valid_promotions: true };
 
@@ -108,7 +109,19 @@ class BestDeals extends Component {
   }
   // Execute after the render
   componentWillMount() {
-    var shopId = this.props.shop.id;
+    var shopId = this.props.shop.id,
+      self = this;
+    AppDispatcher.register(function(payload) {
+      switch(payload.actionName) {
+        case 'new-product-comment':
+        case 'remove-product-comment':
+          json = $.extend({}, json, {
+            start_index: 0
+          });
+          self.displayBestDeals();
+        break;
+      }
+    });
     json['shop_id'] = shopId;
     this.displayBestDeals();
   }

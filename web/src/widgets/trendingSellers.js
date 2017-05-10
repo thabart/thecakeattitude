@@ -85,6 +85,7 @@ class TrendingSellers extends Component {
           <i className='fa fa-spinner fa-spin'></i>
         </Widget>);
     }
+
     if (this.state.shops && this.state.shops.length > 0) {
       this.state.shops.forEach(function(shop) {
         var profileImage = shop.profile_image;
@@ -107,7 +108,7 @@ class TrendingSellers extends Component {
       });
     }
 
-    if (this.state.navigation && this.state.navigation.length > 0) {
+    if (this.state.navigation && this.state.navigation.length > 1) {
       this.state.navigation.forEach(function(nav) {
         navigations.push((
           <li key={nav.name} className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigate(e, nav.name); }} >{nav.name}</a></li>

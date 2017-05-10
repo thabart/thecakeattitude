@@ -8,6 +8,7 @@ import './products.css';
 import ProductElt from './productElt';
 import $ from 'jquery';
 import Promise from 'bluebird';
+import AppDispatcher from '../appDispatcher';
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -305,10 +306,20 @@ class ShopProducts extends Component {
     var self = this,
       shopId = this.props.shop.id,
       filters = this.props.shop.filters;
+    AppDispatcher.register(function(payload) {
+      switch(payload.actionName) {
+        case 'new-product-comment':
+        case 'remove-product-comment':
+          filterJson = $.extend({}, filterJson, {
+            start_index: 0
+          });
+          self.updateProducts();
+        break;
+      }
+    });
     self.setState({
       isLoading: true
     });
-
     filterJson['shop_id'] = shopId;
     self.setState({
       isLoading: false,
