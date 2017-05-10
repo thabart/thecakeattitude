@@ -60,7 +60,8 @@ namespace Cook4Me.Api.Host.Extensions
             InsertProductCategories(context);
             InsertProducts(context);
             InsertPromotions(context);
-            // InsertServices(context);
+            InsertDays(context);
+            InsertServices(context);
             context.SaveChanges();
         }
 
@@ -704,6 +705,63 @@ namespace Cook4Me.Api.Host.Extensions
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     ExpirationDateTime = DateTime.UtcNow.AddDays(2)
+                }
+            });
+        }
+
+        private static void InsertDays(CookDbContext context)
+        {
+            context.ServiceDays.AddRange(new[]
+            {
+                new ServiceDay
+                {
+                    Id = "0",
+                    Name = "Sunday"
+                },
+                new ServiceDay
+                {
+                    Id = "1",
+                    Name = "Monday"
+                },
+                new ServiceDay
+                {
+                    Id = "2",
+                    Name = "Tuesday"
+                }
+            });
+        }
+
+        private static void InsertServices(CookDbContext context)
+        {
+            context.Services.AddRange(new[]
+            {
+                new Service
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "first-service",
+                    ShopId = _firstShopId,
+                    Price = 200,
+                    Occurrence = new ServiceOccurrence
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Days = new List<ServiceOccurrenceDay>
+                        {
+                            new ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = "0"
+                            },
+                            new ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = "2"
+                            }
+                        },
+                        StartDate = DateTime.UtcNow.AddDays(-10),
+                        EndDate = DateTime.UtcNow.AddDays(10)
+                    },
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow
                 }
             });
         }

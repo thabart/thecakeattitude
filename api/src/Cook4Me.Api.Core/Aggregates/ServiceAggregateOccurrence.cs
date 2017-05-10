@@ -17,21 +17,16 @@
 using System;
 using System.Collections.Generic;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public class Service
+    public class ServiceAggregateOccurrence
     {
         public string Id { get; set; }
-        public string ShopId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public double Price { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public virtual Shop Shop { get; set; }
-        public virtual ServiceOccurrence Occurrence { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<ServiceImage> Images { get; set; }
-        public virtual ICollection<ServiceTag> Tags { get; set; }
+        public string ServiceId { get; set; }
+        public IEnumerable<DayOfWeek> Days { get; set; }
+        public TimeSpan StartTime { get; set; }
+        public TimeSpan EndTime { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

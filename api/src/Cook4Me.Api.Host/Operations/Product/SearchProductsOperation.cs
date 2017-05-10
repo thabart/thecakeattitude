@@ -32,19 +32,17 @@ namespace Cook4Me.Api.Host.Operations.Product
     internal class SearchProductsOperation : ISearchProductsOperation
     {
         private readonly IProductRepository _repository;
-        private readonly IShopRepository _shopRepository;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
         private readonly IProductEnricher _productEnricher;
 
         public SearchProductsOperation(
-            IProductRepository repository, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder,
-            IShopRepository shopRepository, IProductEnricher productEnricher)
+            IProductRepository repository, IHalResponseBuilder halResponseBuilder,
+            IRequestBuilder requestBuilder, IProductEnricher productEnricher)
         {
             _repository = repository;
             _halResponseBuilder = halResponseBuilder;
             _requestBuilder = requestBuilder;
-            _shopRepository = shopRepository;
             _productEnricher = productEnricher;
         }
 

@@ -23,6 +23,7 @@ using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Hubs;
 using Cook4Me.Api.Host.Operations.Product;
+using Cook4Me.Api.Host.Operations.Services;
 using Cook4Me.Api.Host.Operations.Shop;
 using Cook4Me.Api.Host.Operations.ShopCategory;
 using Cook4Me.Api.Host.Operations.Tag;
@@ -156,6 +157,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<ISearchProductCommentsOperation, SearchProductCommentsOperation>();
             services.AddTransient<IAddProductCommentOperation, AddProductCommentOperation>();
             services.AddTransient<IRemoveProductCommentOperation, RemoveProductCommentOperation>();
+            services.AddTransient<ISearchServicesOperation, SearchServicesOperation>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<IProductCommentEnricher, ProductCommentEnricher>();
             services.AddTransient<IShopCommentEnricher, ShopCommentEnricher>();

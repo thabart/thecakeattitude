@@ -14,15 +14,25 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.EF.Mappings
 {
-    public class Tag
+    internal static class ServiceTagMapping
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public virtual ICollection<ShopTag> ShopTags { get; set; }
-        public virtual ICollection<ServiceTag> ServiceTags { get; set; }
+        public static ModelBuilder AddServiceTag(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+            modelBuilder.Entity<ServiceTag>()
+                .ToTable("serviceTags")
+                .HasKey(s => s.Id);
+            return modelBuilder;
+        }
     }
 }

@@ -15,23 +15,26 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Parameters
 {
-    public class Service
+    public class SearchServiceParameter
     {
-        public string Id { get; set; }
+        public SearchServiceParameter()
+        {
+            StartIndex = 0;
+            Count = 100;
+            IsPagingEnabled = true;
+        }
+
+        public DateTime? FromDateTime { get; set; }
+        public DateTime? ToDateTime { get; set; }
         public string ShopId { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public double Price { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public virtual Shop Shop { get; set; }
-        public virtual ServiceOccurrence Occurrence { get; set; }
-        public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<ServiceImage> Images { get; set; }
-        public virtual ICollection<ServiceTag> Tags { get; set; }
+        public Location NorthEast { get; set; }
+        public Location SouthWest { get; set; }
+        public bool IsPagingEnabled { get; set; }
+        public int StartIndex { get; set; }
+        public int Count { get; set; }
     }
 }

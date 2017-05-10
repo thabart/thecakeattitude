@@ -15,6 +15,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.EF.Models
 {
@@ -22,12 +23,11 @@ namespace Cook4Me.Api.EF.Models
     {
         public string Id { get; set; }
         public string ServiceId { get; set; }
-        public string Days { get; set; }
-        public int NbMaxOccurences { get; set; }
         public TimeSpan StartTime { get; set; }
         public TimeSpan EndTime { get; set; }
-        public DateTime StartDateTime { get; set; }
-        public DateTime EndDateTime { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public virtual Service Service { get; set; }
+        public virtual ICollection<ServiceOccurrenceDay> Days { get; set; }
     }
 }

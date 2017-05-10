@@ -485,5 +485,67 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = productPromotion.UpdateDateTime
             };
         }
+
+        public static ServiceAggregate ToAggregate(this Service service)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            ServiceAggregateOccurrence occurrence = null;
+            if (service.Occurrence != null)
+            {
+                occurrence = service.Occurrence.ToAggregate();
+            }
+
+            IEnumerable<string> images = null;
+            if (service.Images != null)
+            {
+                images = service.Images.Select(i => i.PartialPath);
+            }
+
+            IEnumerable<string> tags = null;
+            if (service.Tags != null)
+            {
+                tags = service.Tags.Select(t => t.TagName);
+            }
+
+            return new ServiceAggregate
+            {
+                Description = service.Description,
+                Id = service.Id,
+                Name = service.Name,
+                Occurrence = occurrence,
+                PartialImagesUrl = images,
+                Price = service.Price,
+                ShopId = service.ShopId,
+                Tags = tags
+            };
+        }
+
+        public static ServiceAggregateOccurrence ToAggregate(this ServiceOccurrence occurrence)
+        {
+            if (occurrence == null)
+            {
+                throw new ArgumentNullException(nameof(occurrence));
+            }
+
+            IEnumerable<DayOfWeek> days = null;
+            if (occurrence.Days != null)
+            {
+                days = occurrence.Days.Select(d => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d.DayId));
+            }
+            return new ServiceAggregateOccurrence
+            {
+                Id = occurrence.Id,
+                Days = days,
+                ServiceId = occurrence.ServiceId,
+                StartDate = occurrence.StartDate,
+                EndDate = occurrence.EndDate,
+                StartTime = occurrence.StartTime,
+                EndTime = occurrence.EndTime
+            };
+        }
     }
 }

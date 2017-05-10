@@ -32,6 +32,10 @@ namespace Cook4Me.Api.EF.Mappings
             modelBuilder.Entity<ServiceOccurrence>()
                 .ToTable("serviceOccurrences")
                 .HasKey(s => s.Id);
+            modelBuilder.Entity<ServiceOccurrence>()
+                .HasMany(s => s.Days)
+                .WithOne(s => s.ServiceOccurrence)
+                .HasForeignKey(s => s.ServiceOccurrenceId);
             return modelBuilder;
         }
     }

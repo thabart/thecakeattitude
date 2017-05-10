@@ -14,15 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Results;
+using System.Threading.Tasks;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Repositories
 {
-    public class Tag
+    public interface IServiceRepository
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public virtual ICollection<ShopTag> ShopTags { get; set; }
-        public virtual ICollection<ServiceTag> ServiceTags { get; set; }
+        Task<SearchServiceResult> Search(SearchServiceParameter parameter);
     }
 }

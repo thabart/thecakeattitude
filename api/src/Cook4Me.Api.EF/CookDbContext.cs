@@ -38,6 +38,9 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<Filter> Filters { get; set; }
         public virtual DbSet<ProductPromotion> Promotions { get; set; }
         public virtual DbSet<Service> Services { get; set; }
+        public virtual DbSet<ServiceOccurrence> ServiceOccurrences { get; set; }
+        public virtual DbSet<ServiceOccurrenceDay> ServiceOccurrenceDays { get; set; }
+        public virtual DbSet<ServiceDay> ServiceDays { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -58,7 +61,11 @@ namespace Cook4Me.Api.EF
                 .AddProductTag()
                 .AddProductPromotion()
                 .AddService()
-                .AddServiceImage();
+                .AddServiceImage()
+                .AddServiceTag()
+                .AddServiceOccurrence()
+                .AddServiceOccurrenceDay()
+                .AddServiceAddDayMapping();
         }
     }
 }
