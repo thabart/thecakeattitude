@@ -6,14 +6,6 @@ import Constants from '../../Constants';
 import $ from 'jquery';
 import AppDispatcher from '../appDispatcher';
 
-let bestDealsJson = {
-  orders: [
-    { target: "update_datetime", method: "desc" }
-  ],
-  count: 5,
-  contains_valid_promotions: true
-};
-
 class BestDeals extends Component {
   constructor(props) {
     super(props);
@@ -42,16 +34,23 @@ class BestDeals extends Component {
   }
   // Refresh
   refresh(json) {
-    bestDealsJson = $.extend({}, json, bestDealsJson);
-    this.display();
+    var request = $.extend({}, json, {
+      orders: [
+        { target: "update_datetime", method: "desc" }
+      ],
+      count: 5,
+      contains_valid_promotions: true
+    });
+    this.request = request;
+    this.display(request);
   }
   // Display the list
-  display() {
+  display(request) {
     var self = this;
     self.setState({
       isLoading: true
     });
-    ProductsService.search(bestDealsJson).then(function(r) {
+    ProductsService.search(request).then(function(r) {
       var products = r['_embedded'],
         navigation = r['_links']['navigation'];
       if (!(products instanceof Array))
@@ -145,10 +144,10 @@ class BestDeals extends Component {
       switch(payload.actionName) {
         case 'new-product-comment':
         case 'remove-product-comment':
-          bestDealsJson = $.extend({}, bestDealsJson, {
+          var request = $.extend({}, self.request, {
             start_index: 0
           });
-          self.display();
+          self.display(request);
         break;
       }
     });

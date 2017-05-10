@@ -71,7 +71,8 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (parameter.NorthEast != null && parameter.SouthWest != null)
             {
-                products = products.Where(p => p.Shop.Latitude >= parameter.SouthWest.Latitude && p.Shop.Latitude <= parameter.NorthEast.Latitude && p.Shop.Longitude >= parameter.SouthWest.Longitude && p.Shop.Longitude <= parameter.NorthEast.Longitude);
+                products = products.Where(p => p.Shop.Latitude >= parameter.SouthWest.Latitude && p.Shop.Latitude <= parameter.NorthEast.Latitude
+                    && p.Shop.Longitude >= parameter.SouthWest.Longitude && p.Shop.Longitude <= parameter.NorthEast.Longitude);
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.ProductName))
