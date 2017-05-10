@@ -1,66 +1,67 @@
-.placeholder{
-  background: #f0f0f0;
-	border:1px dashed #ddd;
+.placeholder {
+    background: #f0f0f0;
+    border: 1px dashed #ddd;
 }
 
 .widget {
-  padding-top: 10px;
+    padding-top: 10px;
 }
 
 .search {
-  padding: 10px 0 10px 0;
+    padding: 10px 0 10px 0;
 }
 
 #map {
-  height: 100%;
-  min-height: 500px;
+    height: 100%;
+    min-height: 500px;
 }
 
 .pending-search .search-circle-overlay, .searching .searching-overlay {
-  visibility: visible;
-  opacity: 1;
+    visibility: visible;
+    opacity: 1;
 }
 
 .search-circle-overlay, .searching-overlay {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  overflow: hidden;
-  pointer-events: none;
-  visibility: hidden;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
 }
 
 .searching-overlay {
-  background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .search-circle-overlay .searching-circle {
-  position: relative;
-  width: 75%;
-  height: 100%;
-  left: 12.5%;
+    position: relative;
+    width: 75%;
+    height: 100%;
+    left: 12.5%;
 }
 
 .search-circle-overlay .searching-message, .searching-overlay .searching-message {
-  width: 100%;
-  text-align: center;
-  position: absolute;
-  top: 50%;
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
 }
 
 .searching-overlay .searching-message {
-  color: white;
+    color: white;
 }
 
-.searching-circle:after {    content: "";
+.searching-circle:after {
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     bottom: 0;
     right: 0;
     border-radius: 100%;
-    box-shadow: 0px 0px 0px 256px rgba(0,0,0,0.35)
+    box-shadow: 0px 0px 0px 256px rgba(0, 0, 0, 0.35)
 }

@@ -1,74 +1,74 @@
 .product-section {
-  padding: 10px;
-  overflow: hidden;
+    padding: 10px;
+    overflow: hidden;
 }
 
 .product-section .best-deals {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
 }
 
 .product-section .is-best-deals .best-deals {
-  display: block;
+    display: block;
 }
 
 .product-section .tags li {
-  border: 1px solid #f1f0f0;
-  color: gray;
+    border: 1px solid #f1f0f0;
+    color: gray;
 }
 
 .product-section .title {
-  float: left;
-  display: block;
+    float: left;
+    display: block;
 }
 
 .product-section .rating {
-  margin: 7px 0 0;
+    margin: 7px 0 0;
 }
 
 .product-section .rating .stars {
-  border-right: 1px solid #CCC;
-  padding: 0px 8px 0px 8px;
-  float: left;
+    border-right: 1px solid #CCC;
+    padding: 0px 8px 0px 8px;
+    float: left;
 }
 
 .product-section .rating .comments {
-  padding-left: 8px;
+    padding-left: 8px;
 }
 
 .product-section .imgs {
-  padding-top: 20px;
+    padding-top: 20px;
 }
 
 .product-section .image-lst {
-  list-style-type: none;
-  margin: 0;
+    list-style-type: none;
+    margin: 0;
 }
 
 .product-section .image-lst a {
-  height: 57px;
-  width: 57px;
-  border: 1px solid #eee;
-  display: block;
-  margin-bottom: 20px;
+    height: 57px;
+    width: 57px;
+    border: 1px solid #eee;
+    display: block;
+    margin-bottom: 20px;
 }
 
 .product-section .image-lst .active {
-  border-bottom: 3px solid #43A357;
+    border-bottom: 3px solid #43A357;
 }
 
 .product-section .image-lst img {
-  width: 50px;
-  height: 50px;
+    width: 50px;
+    height: 50px;
 }
 
-.product-section .image-big  {
-  width: 433px;
-  height: 433px;
+.product-section .image-big {
+    width: 433px;
+    height: 433px;
 }
 
 .product-section .new-price {
-  padding-left: 5px;
+    padding-left: 5px;
 }

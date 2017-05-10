@@ -1,116 +1,116 @@
 .shop-section {
-		margin-top: 20px;
+    margin-top: 20px;
 }
 
 .shop-tags {
-	padding: 0;
+    padding: 0;
 }
 
 .product-item {
-  padding-top: 10px;
-  border-bottom: 1px solid #f1f0f0;
+    padding-top: 10px;
+    border-bottom: 1px solid #f1f0f0;
 }
 
 .ratingPopup {
-  background-color: white !important;
-	color: black !important;
-	padding: 5px !important;
-	width: 300px !important;
-	max-width: 300px !important;
-	text-align: inherit !important;
+    background-color: white !important;
+    color: black !important;
+    padding: 5px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+    text-align: inherit !important;
 }
 
 .ratingPopup:before {
-	border-bottom-color: white !important;
+    border-bottom-color: white !important;
 }
 
 .ratingPopup ul {
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .shop-section-padding {
-	padding: 20px;
+    padding: 20px;
 }
 
 .cover {
-	position: relative;
-	height: 220px;
+    position: relative;
+    height: 220px;
 }
 
 .cover-banner {
-	overflow: hidden;
+    overflow: hidden;
 }
 
 .cover .profile-img {
-	position: absolute;
-	bottom: -10px;
-	left: 10px;
-	width: 150px;
-	height: 150px;
+    position: absolute;
+    bottom: -10px;
+    left: 10px;
+    width: 150px;
+    height: 150px;
 }
 
 .cover .profile-information {
-	position: absolute;
-	left: 170px;
-	top: 75px;
-	color: white;
+    position: absolute;
+    left: 170px;
+    top: 75px;
+    color: white;
 }
 
 .cover .menu {
-	position: absolute;
-	top: 10px;
-	left: 10px;
+    position: absolute;
+    top: 10px;
+    left: 10px;
 }
 
 #rating .react-rater a {
-	font-size: 21pt;
+    font-size: 21pt;
 }
 
 .react-rater a {
-	color: #ccc !important;
+    color: #ccc !important;
 }
 
 .react-rater a.will-be-active {
-  color: #ffdd99 !important;
+    color: #ffdd99 !important;
 }
 
 .react-rater a.is-active {
-  color: #fc6 !important;
+    color: #fc6 !important;
 }
 
 .react-rater a.is-active-half:before {
-	color: #fc6 !important;
+    color: #fc6 !important;
 }
 
 .contact {
-	text-align: center;
+    text-align: center;
 }
 
 .contact .fa {
-	font-size: 40pt;
+    font-size: 40pt;
 }
 
 .map {
-	height: 300px !important;
-	width: 300px !important;
+    height: 300px !important;
+    width: 300px !important;
 }
 
 .product {
-	height: 10rem;
-	padding: 1rem;
-	text-align: center;
-	border: 1px solid rgba(0,0,0,0.13);
-	overflow: hidden;
+    height: 10rem;
+    padding: 1rem;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.13);
+    overflow: hidden;
 }
 
 .product img {
-	margin: auto;
-	width: 100px;
+    margin: auto;
+    width: 100px;
 }
 
 .products .product {
-	margin-right: 10px;
-	margin-bottom: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
 }

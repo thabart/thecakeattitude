@@ -23,9 +23,14 @@
     "react-tagsinput": "^3.16.1",
     "reactstrap": "^4.5.0",
     "request": "^2.81.0",
-    "signalr": "^2.2.1"
+    "signalr": "^2.2.1",
+    "jquery": "latest",
+    "react-router": "latest",
+    "classnames": "latest"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "flux": "^3.1.2",
     "react-scripts": "0.9.5"
   },

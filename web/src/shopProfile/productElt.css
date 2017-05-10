@@ -1,14 +1,14 @@
 .product-item .best-deals {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  display: none;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: none;
 }
 
 .product-item {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .is-best-deals .best-deals {
-  display: block;
+    display: block;
 }

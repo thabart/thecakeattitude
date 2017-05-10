@@ -1,14 +1,14 @@
 .element {
-  border: 1px solid #e8ebe9;
-  border-radius: 3px;
-  padding: 25px;
-  margin-bottom: 20px;
+    border: 1px solid #e8ebe9;
+    border-radius: 3px;
+    padding: 25px;
+    margin-bottom: 20px;
 }
 
 .element .header {
-  font-size: 11pt;
+    font-size: 11pt;
 }
 
 .element .content {
-  overflow-wrap: break-word;
+    overflow-wrap: break-word;
 }

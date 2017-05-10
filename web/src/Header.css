@@ -1,19 +1,19 @@
 .separator {
-  text-align: center;
-  color: gray;
+    text-align: center;
+    color: gray;
 }
 
 .loading {
-  text-align: center;
+    text-align: center;
 }
 
 .loading .fa-spinner {
-  font-size:24px;
-  width: 24px;
-  height:24px;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
 }
 
 a.active-menu-item {
-  background-color: #efecec !important;
-  color: rgba(0, 0, 0, 0.9) !important;
+    background-color: #efecec !important;
+    color: rgba(0, 0, 0, 0.9) !important;
 }
