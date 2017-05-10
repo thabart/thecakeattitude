@@ -1,0 +1,13 @@
+.menu-service {
+  height: 20px;
+}
+
+.menu-service .options {
+  position: absolute;
+  right: 10px;
+}
+
+.menu-service .options i {
+  cursor: pointer;
+  padding-right: 10px;
+}

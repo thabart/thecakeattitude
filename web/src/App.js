@@ -102,7 +102,7 @@ class App extends Component {
             <Route exact path="/" component={Map}  />
             <Route path="/home" component={Map}  />
             <Route path="/sellers" component={Sellers}  />
-            <Route path="/shops/:id/:action?" component={Shop} />
+            <Route path="/shops/:id/:action?/:subaction?" component={Shop} />
             <Route path="/products/:id/:action?" component={Products} />
             <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddShop />))} />
             <Route path="/error/:type" component={Error} />

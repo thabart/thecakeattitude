@@ -37,6 +37,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
         public virtual DbSet<Filter> Filters { get; set; }
         public virtual DbSet<ProductPromotion> Promotions { get; set; }
+        public virtual DbSet<Service> Services { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -55,7 +56,9 @@ namespace Cook4Me.Api.EF
                 .AddProductImage()
                 .AddProduct()
                 .AddProductTag()
-                .AddProductPromotion();
+                .AddProductPromotion()
+                .AddService()
+                .AddServiceImage();
         }
     }
 }

@@ -60,6 +60,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertProductCategories(context);
             InsertProducts(context);
             InsertPromotions(context);
+            // InsertServices(context);
             context.SaveChanges();
         }
 
