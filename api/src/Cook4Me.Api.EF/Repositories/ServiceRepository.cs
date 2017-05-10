@@ -78,28 +78,28 @@ namespace Cook4Me.Api.EF.Repositories
                 var tmp = toDate - fromDate;
                 var nbDays = tmp.Days;
                 var days = new List<string>();
-                if (toDay + nbDays <= 6)
+                if (fromDay + nbDays <= 6)
                 {
-                    for (var i = toDay; i <= toDay + nbDays; i++)
+                    for (var i = fromDay; i <= fromDay + nbDays; i++)
                     {
                         days.Add(i.ToString());
                     }
                 }
                 else
                 {
-                    for(var i = toDay; i <= 6; i++)
+                    for(var i = fromDay; i <= 6; i++)
                     {
                         nbDays--;
                         days.Add(i.ToString());
                     }
 
-                    var diff = toDay - nbDays;
+                    var diff = fromDay - nbDays;
                     if (diff < 0)
                     {
-                        diff = toDay;
+                        diff = fromDay;
                     }
 
-                    for (var i = 0; i < toDay; i++)
+                    for (var i = 0; i < fromDay; i++)
                     {
                         days.Add(i.ToString());
                     }
