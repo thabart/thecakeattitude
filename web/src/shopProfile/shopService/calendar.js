@@ -18,11 +18,23 @@ var myEvts = [
 ];
 
 class Calendar extends Component {
+  constructor(props) {
+    super(props);
+    this.onNavigate = this.onNavigate.bind(this);
+    this.onView = this.onView.bind(this);
+  }
+  onNavigate(e, p) {
+    console.log(e);
+  }
+  onView(v) {
+    console.log(v);
+  }
   render() {
-    console.log(myEvts);
     return (<div className="shop-service-calendar">
-      <BigCalendar
+      <BigCalendar ref="calendar"
             events={myEvts}
+            onNavigate={this.onNavigate}
+            onView={this.onView}
           />
       </div>);
   }

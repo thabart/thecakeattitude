@@ -40,6 +40,10 @@ namespace Cook4Me.Api.EF.Mappings
                 .HasMany(s => s.Images)
                 .WithOne(c => c.Service)
                 .HasForeignKey(s => s.ServiceId);
+            modelBuilder.Entity<Service>()
+                .HasOne(s => s.Occurrence)
+                .WithOne(c => c.Service)
+                .HasForeignKey<ServiceOccurrence>(s => s.ServiceId);
             return modelBuilder;
         }
     }

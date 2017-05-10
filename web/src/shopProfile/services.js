@@ -23,13 +23,14 @@ class ShopServices extends Component {
       content = (<Calendar />);
     } else {
       content = (<List />);
+      action = "list";
     }
 
     return (<section className="row white-section shop-section shop-section-padding">
       <div className="row col-md-12 menu-service">
         <div className="options">
-          <i className="fa fa-list" onClick={self.openList}></i>
-          <i className="fa fa-calendar" onClick={self.openCalendar}></i>
+          <i className={action === 'list' ? "fa fa-list active" : "fa fa-list"} onClick={self.openList}></i>
+          <i className={action === 'calendar' ? "fa fa-calendar active" : "fa fa-calendar"} onClick={self.openCalendar}></i>
         </div>
       </div>
       {content}
