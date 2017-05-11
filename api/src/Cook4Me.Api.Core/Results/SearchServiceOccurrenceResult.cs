@@ -14,15 +14,28 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
+using System;
 using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Results
 {
-    public class SearchServiceResult
+    public class ServiceResultLine
+    {
+        public string Id { get; set; }
+        public string ShopId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public double Price { get; set; }
+        public DateTime StartDateTime { get; set; }
+        public DateTime EndDateTime { get; set; }
+        public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<string> PartialImagesUrl { get; set; }
+    }
+
+    public class SearchServiceOccurrenceResult
     {
         public int TotalResults { get; set; }
         public int StartIndex { get; set; }
-        public IEnumerable<ServiceAggregate> Content { get; set; }
+        public IEnumerable<ServiceResultLine> Content { get; set; }
     }
 }

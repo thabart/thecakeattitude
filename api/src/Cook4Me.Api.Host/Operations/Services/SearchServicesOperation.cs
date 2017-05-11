@@ -14,36 +14,36 @@
 // limitations under the License.
 #endregion
 
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
-using System;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using System;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Services
 {
-    public interface ISearchServiceOccurrencesOperation
+    public interface ISearchServicesOperation
     {
         Task<IActionResult> Execute(JObject jObj);
     }
 
-    internal class SearchServiceOccurrencesOperation : ISearchServiceOccurrencesOperation
+    internal class SearchServicesOperation : ISearchServicesOperation
     {
         private readonly IServiceRepository _repository;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
-        private readonly IServiceOccurrenceEnricher _serviceOccurrenceEnricher;
+        private readonly IServiceEnricher _serviceEnricher;
 
-        public SearchServiceOccurrencesOperation(
-            IServiceRepository repository, IHalResponseBuilder halResponseBuilder, 
-            IRequestBuilder requestBuilder, IServiceOccurrenceEnricher serviceOccurrenceEnricher)
+        public SearchServicesOperation(
+            IServiceRepository repository, IHalResponseBuilder halResponseBuilder,
+            IRequestBuilder requestBuilder, IServiceEnricher serviceEnricher)
         {
             _repository = repository;
             _halResponseBuilder = halResponseBuilder;
             _requestBuilder = requestBuilder;
-            _serviceOccurrenceEnricher = serviceOccurrenceEnricher;
+            _serviceEnricher = serviceEnricher;
         }
 
         public async Task<IActionResult> Execute(JObject jObj)
@@ -52,16 +52,16 @@ namespace Cook4Me.Api.Host.Operations.Services
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
-            
-            var parameter = _requestBuilder.GetSearchServiceOccurrences(jObj);
+
+            var parameter = _requestBuilder.GetSearchServices(jObj);
             var searchResult = await _repository.Search(parameter);
             _halResponseBuilder.AddLinks(l => l.AddSelf(GetServicesLink()));
             if (searchResult != null && searchResult.Content != null)
             {
-                var products = searchResult.Content;
-                foreach (var product in products)
+                var services = searchResult.Content;
+                foreach (var service in services)
                 {
-                    _serviceOccurrenceEnricher.Enrich(_halResponseBuilder, product);
+                    _serviceEnricher.Enrich(_halResponseBuilder, service);
                 }
 
                 double r = (double)searchResult.TotalResults / (double)parameter.Count;
@@ -78,7 +78,7 @@ namespace Cook4Me.Api.Host.Operations.Services
 
         private static string GetServicesLink()
         {
-            return "/" + Constants.RouteNames.Services + "/" + Constants.RouteNames.SearchOccurrences;
+            return "/" + Constants.RouteNames.Services + "/" + Constants.RouteNames.Search;
         }
     }
 }

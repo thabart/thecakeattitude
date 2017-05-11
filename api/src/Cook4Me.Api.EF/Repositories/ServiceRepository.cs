@@ -35,7 +35,56 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public async Task<SearchServiceResult> Search(SearchServiceOccurrenceParameter parameter)
+        public async Task<SearchServiceResult> Search(SearchServiceParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.Service> services = _context.Services
+                .Include(p => p.Images)
+                .Include(p => p.Tags)
+                .Include(p => p.Shop)
+                .Include(p => p.Comments);
+            if (!string.IsNullOrWhiteSpace(parameter.ShopId))
+            {
+                services = services.Where(p => p.ShopId == parameter.ShopId);
+            }
+
+            if (parameter.NorthEast != null && parameter.SouthWest != null)
+            {
+                services = services.Where(p => p.Shop.Latitude >= parameter.SouthWest.Latitude && p.Shop.Latitude <= parameter.NorthEast.Latitude
+                    && p.Shop.Longitude >= parameter.SouthWest.Longitude && p.Shop.Longitude <= parameter.NorthEast.Longitude);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Name))
+            {
+                services = services.Where(p => p.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
+            }
+
+            if (parameter.FromDateTime != null && parameter.ToDateTime != null)
+            {
+                services = services.Where(p => p.Occurrence != null && p.Occurrence.StartDate < parameter.ToDateTime);
+            }
+
+            services.OrderByDescending(s => s.UpdateDateTime);
+            var result = new SearchServiceResult
+            {
+                TotalResults = await services.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            if (parameter.IsPagingEnabled)
+            {
+                services = services.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await services.Select(s => s.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task<SearchServiceOccurrenceResult> Search(SearchServiceOccurrenceParameter parameter)
         {
             if (parameter == null)
             {
@@ -132,7 +181,7 @@ namespace Cook4Me.Api.EF.Repositories
                 remainingDays -= 7;
             }
 
-            var result = new SearchServiceResult
+            var result = new SearchServiceOccurrenceResult
             {
                 TotalResults = lines.Count(),
                 StartIndex = parameter.StartIndex

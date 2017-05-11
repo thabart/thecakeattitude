@@ -22,6 +22,7 @@ namespace Cook4Me.Api.Core.Repositories
 {
     public interface IServiceRepository
     {
-        Task<SearchServiceResult> Search(SearchServiceOccurrenceParameter parameter);
+        Task<SearchServiceOccurrenceResult> Search(SearchServiceOccurrenceParameter parameter);
+        Task<SearchServiceResult> Search(SearchServiceParameter parameter);
     }
 }

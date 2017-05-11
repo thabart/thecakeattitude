@@ -117,18 +117,21 @@ namespace Cook4Me.Api.Host
 
             public static class Service
             {
+                public const string Id = "id";
                 public const string ShopId = "shop_id";
                 public const string Name = "name";
                 public const string Description = "description";
                 public const string Price = "price";
                 public const string Images = "images";
                 public const string Tags = "tags";
+                public const string Occurrence = "occurrence";
             }
 
             public static class ServiceOccurrence
             {
                 public const string StartDateTime = "start_datetime";
                 public const string EndDateTime = "end_datetime";
+                public const string Days = "days";
             }
 
             public static class SearchService

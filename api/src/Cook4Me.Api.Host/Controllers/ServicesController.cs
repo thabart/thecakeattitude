@@ -25,17 +25,25 @@ namespace Cook4Me.Api.Host.Controllers
     public class ServicesController : Controller
     {
         private readonly ISearchServiceOccurrencesOperation _searchServiceOccurrencesOperation;
+        private readonly ISearchServicesOperation _searchServicesOperation;
 
         public ServicesController(
-            ISearchServiceOccurrencesOperation searchServiceOccurrencesOperation)
+            ISearchServiceOccurrencesOperation searchServiceOccurrencesOperation, ISearchServicesOperation searchServicesOperation)
         {
             _searchServiceOccurrencesOperation = searchServiceOccurrencesOperation;
+            _searchServicesOperation = searchServicesOperation;
         }
 
         [HttpPost(Constants.RouteNames.SearchOccurrences)]
         public async Task<IActionResult> SearchOccurrences([FromBody] JObject jObj)
         {
             return await _searchServiceOccurrencesOperation.Execute(jObj);
+        }
+
+        [HttpPost(Constants.RouteNames.Search)]
+        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        {
+            return await _searchServicesOperation.Execute(jObj);
         }
     }
 }

@@ -42,6 +42,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetProduct(ProductAggregate product);
         JObject GetPromotion(ProductAggregatePromotion promotion);
+        JObject GetService(ServiceAggregate service);
         JObject GetServiceOccurrence(ServiceResultLine service);
     }
 
@@ -478,6 +479,49 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
+        public JObject GetService(ServiceAggregate service)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Service.Id, service.Id);
+            jObj.Add(Constants.DtoNames.Service.Name, service.Name);
+            jObj.Add(Constants.DtoNames.Service.ShopId, service.ShopId);
+            jObj.Add(Constants.DtoNames.Service.Description, service.Description);
+            jObj.Add(Constants.DtoNames.Service.Price, service.Price);
+            if (service.PartialImagesUrl != null)
+            {
+                var arr = new JArray();
+                foreach (var url in service.PartialImagesUrl)
+                {
+                    arr.Add(url);
+                }
+
+                jObj.Add(Constants.DtoNames.Service.Images, arr);
+            }
+
+            if (service.Tags != null)
+            {
+                var arr = new JArray();
+                foreach (var tag in service.Tags)
+                {
+                    arr.Add(tag);
+                }
+
+                jObj.Add(Constants.DtoNames.Service.Tags, arr);
+            }
+
+            if (service.Occurrence != null)
+            {
+                jObj.Add(Constants.DtoNames.Service.Occurrence, GetServiceOccurrence(service.Occurrence));
+            }
+
+            return jObj;
+        }
+
         public JObject GetServiceOccurrence(ServiceResultLine service)
         {
             if (service == null)
@@ -486,6 +530,7 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Service.Id, service.Id);
             jObj.Add(Constants.DtoNames.Service.Name, service.Name);
             jObj.Add(Constants.DtoNames.Service.ShopId, service.ShopId);
             jObj.Add(Constants.DtoNames.Service.Description, service.Description);
@@ -512,6 +557,30 @@ namespace Cook4Me.Api.Host.Builders
                 }
 
                 jObj.Add(Constants.DtoNames.Service.Tags, arr);
+            }
+
+            return jObj;
+        }
+
+        public JObject GetServiceOccurrence(ServiceAggregateOccurrence aggregate)
+        {
+            if (aggregate == null)
+            {
+                throw new ArgumentNullException(nameof(aggregate));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.ServiceOccurrence.StartDateTime, aggregate.StartDate);
+            jObj.Add(Constants.DtoNames.ServiceOccurrence.EndDateTime, aggregate.EndDate);
+            if (aggregate.Days != null)
+            {
+                var arr = new JArray();
+                foreach(var day in aggregate.Days)
+                {
+                    arr.Add(((int)day).ToString());
+                }
+
+                jObj.Add(Constants.DtoNames.ServiceOccurrence.Days, arr);
             }
 
             return jObj;

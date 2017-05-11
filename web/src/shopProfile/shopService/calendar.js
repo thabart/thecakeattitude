@@ -23,7 +23,7 @@ class Calendar extends Component {
   onNavigate(e) {
     var start = moment(e).startOf('month').format(),
       end = moment(e).endOf('month').format();
-    this.request = { from_datetime: start, to_datetime: end };
+    this.request = { from_datetime: start, to_datetime: end, shop_id: this.props.shop.id };
     this.refresh();
   }
   toggleError() {
@@ -33,7 +33,7 @@ class Calendar extends Component {
   }
   refresh() {
     var self = this;
-    ShopServices.search(self.request).then(function(r) {
+    ShopServices.searchOccurrences(self.request).then(function(r) {
       var embedded = r['_embedded'];
       var evts = [];
       embedded.forEach(function(e) {
@@ -69,7 +69,7 @@ class Calendar extends Component {
   componentWillMount() {
     var start = moment().startOf('month').format(),
       end = moment().endOf('month').format();
-    this.request = { from_datetime: start, to_datetime: end };
+    this.request = { from_datetime: start, to_datetime: end, shop_id: this.props.shop.id };
     this.refresh();
   }
 }

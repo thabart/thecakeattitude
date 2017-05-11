@@ -20,9 +20,9 @@ class ShopServices extends Component {
       content = null,
       self = this;
     if (action === "calendar") {
-      content = (<Calendar />);
+      content = (<Calendar shop={this.props.shop} />);
     } else {
-      content = (<List />);
+      content = (<List shop={this.props.shop} />);
       action = "list";
     }
 
