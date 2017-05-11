@@ -15,6 +15,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Parameters
 {
@@ -36,5 +37,6 @@ namespace Cook4Me.Api.Core.Parameters
         public bool IsPagingEnabled { get; set; }
         public int StartIndex { get; set; }
         public int Count { get; set; }
+        public IEnumerable<OrderBy> Orders { get; set; }
     }
 }

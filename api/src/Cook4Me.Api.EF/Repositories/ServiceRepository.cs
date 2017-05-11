@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -46,6 +47,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Images)
                 .Include(p => p.Tags)
                 .Include(p => p.Shop)
+                .Include(p => p.Occurrence).ThenInclude(o => o.Days)
                 .Include(p => p.Comments);
             if (!string.IsNullOrWhiteSpace(parameter.ShopId))
             {
@@ -66,6 +68,17 @@ namespace Cook4Me.Api.EF.Repositories
             if (parameter.FromDateTime != null && parameter.ToDateTime != null)
             {
                 services = services.Where(p => p.Occurrence != null && p.Occurrence.StartDate < parameter.ToDateTime);
+            }
+
+            if (parameter.Orders != null)
+            {
+                foreach (var order in parameter.Orders)
+                {
+                    services = Order(order, "update_datetime", s => s.UpdateDateTime, services);
+                    services = Order(order, "create_datetime", s => s.CreateDateTime, services);
+                    services = Order(order, "average_score", s => s.AverageScore, services);
+                    services = Order(order, "price", s => s.NewPrice, services);
+                }
             }
 
             services.OrderByDescending(s => s.UpdateDateTime);
@@ -195,6 +208,21 @@ namespace Cook4Me.Api.EF.Repositories
             lines = lines.OrderBy(l => l.StartDateTime).ToList();
             result.Content = lines;
             return result;
+        }
+
+        private static IQueryable<Models.Service> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Service, TKey>> keySelector, IQueryable<Models.Service> products)
+        {
+            if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (orderBy.Method == OrderByMethods.Ascending)
+                {
+                    return products.OrderBy(keySelector);
+                }
+
+                return products.OrderByDescending(keySelector);
+            }
+
+            return products;
         }
     }
 }

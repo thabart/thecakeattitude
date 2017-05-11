@@ -492,6 +492,9 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Service.ShopId, service.ShopId);
             jObj.Add(Constants.DtoNames.Service.Description, service.Description);
             jObj.Add(Constants.DtoNames.Service.Price, service.Price);
+            jObj.Add(Constants.DtoNames.Service.NewPrice, service.NewPrice);
+            jObj.Add(Constants.DtoNames.Service.AverageScore, service.AverageScore);
+            jObj.Add(Constants.DtoNames.Service.TotalScore, service.TotalScore);
             if (service.PartialImagesUrl != null)
             {
                 var arr = new JArray();
@@ -535,6 +538,9 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Service.ShopId, service.ShopId);
             jObj.Add(Constants.DtoNames.Service.Description, service.Description);
             jObj.Add(Constants.DtoNames.Service.Price, service.Price);
+            jObj.Add(Constants.DtoNames.Service.AverageScore, service.AverageScore);
+            jObj.Add(Constants.DtoNames.Service.TotalScore, service.TotalScore);
+            jObj.Add(Constants.DtoNames.Service.NewPrice, service.NewPrice);
             jObj.Add(Constants.DtoNames.ServiceOccurrence.StartDateTime, service.StartDateTime);
             jObj.Add(Constants.DtoNames.ServiceOccurrence.EndDateTime, service.EndDateTime);
             if (service.PartialImagesUrl != null)

@@ -741,6 +741,9 @@ namespace Cook4Me.Api.Host.Extensions
                     Name = "first-service",
                     ShopId = _firstShopId,
                     Price = 200,
+                    AverageScore = 2.5,
+                    TotalScore = 5,
+                    NewPrice = 200,
                     Occurrence = new ServiceOccurrence
                     {
                         Id = Guid.NewGuid().ToString(),
@@ -771,6 +774,9 @@ namespace Cook4Me.Api.Host.Extensions
                     Name = "second-service",
                     ShopId = _firstShopId,
                     Price = 300,
+                    AverageScore = 5,
+                    TotalScore = 5,
+                    NewPrice = 300,
                     Occurrence = new ServiceOccurrence
                     {
                         Id = Guid.NewGuid().ToString(),

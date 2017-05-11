@@ -520,6 +520,9 @@ namespace Cook4Me.Api.EF.Extensions
                 Price = service.Price,
                 ShopId = service.ShopId,
                 Tags = tags,
+                AverageScore = service.AverageScore,
+                TotalScore = service.TotalScore,
+                NewPrice = service.NewPrice,
                 StartDateTime = dateTime.Add(serviceOccurrence.StartTime),
                 EndDateTime = dateTime.Add(serviceOccurrence.EndTime)
             };
@@ -559,7 +562,10 @@ namespace Cook4Me.Api.EF.Extensions
                 PartialImagesUrl = images,
                 Price = service.Price,
                 ShopId = service.ShopId,
-                Tags = tags
+                Tags = tags,
+                AverageScore = service.AverageScore,
+                TotalScore = service.TotalScore,
+                NewPrice = service.NewPrice
             };
         }
 

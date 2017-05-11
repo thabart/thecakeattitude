@@ -427,13 +427,28 @@ namespace Cook4Me.Api.Host.Builders
                 southWestLocation = GetLocation(swLocation as JObject);
             }
 
+            var orders = new List<OrderBy>();
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchService.Orders);
+            if (ordersObj != null)
+            {
+                var arr = ordersObj as JArray;
+                if (arr != null)
+                {
+                    foreach (var order in arr)
+                    {
+                        orders.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
+
             var fromDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.FromDateTime);
             var toDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.ToDateTime);
             var result = new SearchServiceParameter
             {
                 Name = jObj.Value<string>(Constants.DtoNames.Service.Name),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
-                ShopId = jObj.Value<string>(Constants.DtoNames.Service.ShopId)
+                ShopId = jObj.Value<string>(Constants.DtoNames.Service.ShopId),
+                Orders = orders
             };
 
             if (fromDateTime != null && !fromDateTime.Equals(default(DateTime)))

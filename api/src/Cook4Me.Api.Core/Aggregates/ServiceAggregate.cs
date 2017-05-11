@@ -25,6 +25,9 @@ namespace Cook4Me.Api.Core.Aggregates
         public string Name { get; set; }
         public string Description { get; set; }
         public double Price { get; set; }
+        public double NewPrice { get; set; }
+        public int TotalScore { get; set; }
+        public double AverageScore { get; set; }
         public ServiceAggregateOccurrence Occurrence { get; set; }
         public IEnumerable<string> Tags { get; set; }
         public IEnumerable<string> PartialImagesUrl { get; set; }

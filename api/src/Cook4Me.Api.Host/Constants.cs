@@ -122,9 +122,12 @@ namespace Cook4Me.Api.Host
                 public const string Name = "name";
                 public const string Description = "description";
                 public const string Price = "price";
+                public const string NewPrice = "new_price";
                 public const string Images = "images";
                 public const string Tags = "tags";
                 public const string Occurrence = "occurrence";
+                public const string AverageScore = "average_score";
+                public const string TotalScore = "total_score";
             }
 
             public static class ServiceOccurrence
@@ -140,6 +143,7 @@ namespace Cook4Me.Api.Host
                 public const string ToDateTime = "to_datetime";
                 public const string NorthEast = "ne";
                 public const string SouthWest = "sw";
+                public const string Orders = "orders";
             }
 
             public static class Comment
