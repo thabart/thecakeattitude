@@ -3,6 +3,7 @@ import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './calendar.css';
+import { ShopServices } from '../../services';
 
 BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)
@@ -37,6 +38,12 @@ class Calendar extends Component {
             onView={this.onView}
           />
       </div>);
+  }
+  componentWillMount() {
+    var start = moment().startOf('week'),
+      end = moment().endOf('week');
+    console.log(start);
+    console.log(end);
   }
 }
 

@@ -30,6 +30,7 @@ namespace Cook4Me.Api.Host.Controllers
             var jObj = new JObject();
             jObj.Add("products_endpoint", issuer + "/" + Constants.RouteNames.Products);
             jObj.Add("shops_endpoint", issuer + "/" + Constants.RouteNames.Shops);
+            jObj.Add("services_endpoint", issuer + "/" + Constants.RouteNames.Services);
             jObj.Add("tags_endpoint", issuer + "/" + Constants.RouteNames.Tags);
             jObj.Add("shopcategories_endpoint", issuer + "/" + Constants.RouteNames.ShopCategories);
             return new OkObjectResult(jObj);

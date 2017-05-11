@@ -758,7 +758,9 @@ namespace Cook4Me.Api.Host.Extensions
                             }
                         },
                         StartDate = DateTime.UtcNow.AddDays(-10),
-                        EndDate = DateTime.UtcNow.AddDays(10)
+                        EndDate = DateTime.UtcNow.AddDays(10),
+                        StartTime = new TimeSpan(4, 0, 0),
+                        EndTime = new TimeSpan(17, 0, 0)
                     },
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow

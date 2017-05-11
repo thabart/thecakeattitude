@@ -36,7 +36,7 @@ namespace Cook4Me.Api.Host.Builders
         SearchShopCommentsParameter GetSearchShopComments(JObject jObj);
         SearchProductCommentsParameter GetSearchProductComments(JObject jObj);
         SearchProductsParameter GetSearchProducts(JObject jObj);
-        SearchServiceParameter GetSearchServices(JObject jObj);
+        SearchServiceOccurrenceParameter GetSearchServices(JObject jObj);
         SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
     }
@@ -365,7 +365,7 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
-        public SearchServiceParameter GetSearchServices(JObject jObj)
+        public SearchServiceOccurrenceParameter GetSearchServices(JObject jObj)
         {
             if (jObj == null)
             {
@@ -384,7 +384,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var fromDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.FromDateTime);
             var toDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.ToDateTime);
-            var result = new SearchServiceParameter
+            var result = new SearchServiceOccurrenceParameter
             {
                 Name = jObj.Value<string>(Constants.DtoNames.Service.Name),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)

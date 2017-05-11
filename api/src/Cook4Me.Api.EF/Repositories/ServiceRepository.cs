@@ -35,14 +35,8 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public async Task<SearchServiceResult> Search(SearchServiceParameter parameter)
+        public async Task<SearchServiceResult> Search(SearchServiceOccurrenceParameter parameter)
         {
-            if (parameter == null)
-            {
-                throw new ArgumentNullException(nameof(parameter));
-            }
-
-
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
@@ -69,58 +63,85 @@ namespace Cook4Me.Api.EF.Repositories
                 services = services.Where(p => p.ServiceOccurrence.Service.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
             }
 
-            if (parameter.FromDateTime != null && parameter.ToDateTime != null)
+            var lines = new List<ServiceResultLine>();
+            var fromDay = (int)parameter.FromDateTime.DayOfWeek;
+            var toDay = (int)parameter.ToDateTime.DayOfWeek;
+            var fromDate = parameter.FromDateTime.Date;
+            var toDate = parameter.ToDateTime.Date;
+            var tmp = toDate - fromDate;
+            var totalDays = tmp.Days;
+            var nbDays = tmp.Days;
+            var days = new List<string>();
+            if (fromDay + nbDays <= 6)
             {
-                var fromDay = (int)parameter.FromDateTime.Value.DayOfWeek;
-                var toDay = (int)parameter.ToDateTime.Value.DayOfWeek;
-                var fromDate = parameter.FromDateTime.Value.Date;
-                var toDate = parameter.ToDateTime.Value.Date;
-                var tmp = toDate - fromDate;
-                var nbDays = tmp.Days;
-                var days = new List<string>();
-                if (fromDay + nbDays <= 6)
+                for (var i = fromDay; i <= fromDay + nbDays; i++)
                 {
-                    for (var i = fromDay; i <= fromDay + nbDays; i++)
-                    {
-                        days.Add(i.ToString());
-                    }
+                    days.Add(i.ToString());
                 }
-                else
+            }
+            else
+            {
+                for(var i = fromDay; i <= 6; i++)
                 {
-                    for(var i = fromDay; i <= 6; i++)
-                    {
-                        nbDays--;
-                        days.Add(i.ToString());
-                    }
-
-                    var diff = fromDay - nbDays;
-                    if (diff < 0)
-                    {
-                        diff = fromDay;
-                    }
-
-                    for (var i = 0; i < fromDay; i++)
-                    {
-                        days.Add(i.ToString());
-                    }
+                    nbDays--;
+                    days.Add(i.ToString());
                 }
 
-                
-                services = services.Where(p => fromDate >= p.ServiceOccurrence.StartDate && toDate <= p.ServiceOccurrence.EndDate && days.Contains(p.DayId));
+                var diff = fromDay - nbDays;
+                if (diff < 0)
+                {
+                    diff = fromDay;
+                }
+
+                for (var i = 0; i < fromDay; i++)
+                {
+                    days.Add(i.ToString());
+                }
+            }
+
+            
+            var occurrences = await services
+                .Where(p => p.ServiceOccurrence.StartDate < toDate && days.Contains(p.DayId))
+                .ToListAsync().ConfigureAwait(false);
+            var nbWeeks = Math.Ceiling((decimal)totalDays / (decimal)7);
+            var remainingDays = totalDays;
+            for (var i = 0; i < nbWeeks; i++)
+            {
+                var fromDateTime = fromDate.AddDays(i * 7);
+                var max = (remainingDays < 7) ? remainingDays : 6;
+                var mapping = new Dictionary<string, DateTime>();
+                var nextDateTime = fromDate.AddDays(i * 7 + max + 1);
+                for (var y = 0; y <= max; y++)
+                {
+                    var newDateTime = fromDate.AddDays(i * 7 + y);
+                    mapping.Add(((int)newDateTime.DayOfWeek).ToString(), newDateTime);
+                }
+
+                foreach (var occurrence in occurrences)
+                {
+                    if (!mapping.Keys.Contains(occurrence.DayId) || nextDateTime < occurrence.ServiceOccurrence.StartDate)
+                    {
+                        continue;
+                    }
+
+                    lines.Add(occurrence.ServiceOccurrence.Service.ToAggregate(occurrence.ServiceOccurrence, mapping[occurrence.DayId]));
+                }
+
+                remainingDays -= 7;
             }
 
             var result = new SearchServiceResult
             {
-                TotalResults = await services.CountAsync().ConfigureAwait(false),
+                TotalResults = lines.Count(),
                 StartIndex = parameter.StartIndex
             };
 
             if (parameter.IsPagingEnabled)
             {
-                services = services.Skip(parameter.StartIndex).Take(parameter.Count);
+                lines = lines.Skip(parameter.StartIndex).Take(parameter.Count).ToList();
             }
 
-            result.Content = await services.Select(p => p.ServiceOccurrence.Service.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            result.Content = lines;
             return result;
         }
     }

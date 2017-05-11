@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Models;
 using System;
 using System.Collections.Generic;
@@ -483,6 +484,44 @@ namespace Cook4Me.Api.EF.Extensions
                 CreateDateTime = productPromotion.CreateDateTime,
                 ExpirationDateTime = productPromotion.ExpirationDateTime,
                 UpdateDateTime = productPromotion.UpdateDateTime
+            };
+        }
+
+        public static ServiceResultLine ToAggregate(this Service service, ServiceOccurrence serviceOccurrence, DateTime dateTime)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            if (serviceOccurrence == null)
+            {
+                throw new ArgumentNullException(nameof(serviceOccurrence));
+            }
+
+            IEnumerable<string> images = null;
+            if (service.Images != null)
+            {
+                images = service.Images.Select(i => i.PartialPath);
+            }
+
+            IEnumerable<string> tags = null;
+            if (service.Tags != null)
+            {
+                tags = service.Tags.Select(t => t.TagName);
+            }
+
+            return new ServiceResultLine
+            {
+                Description = service.Description,
+                Id = service.Id,
+                Name = service.Name,
+                PartialImagesUrl = images,
+                Price = service.Price,
+                ShopId = service.ShopId,
+                Tags = tags,
+                StartDateTime = dateTime.Add(serviceOccurrence.StartTime),
+                EndDateTime = dateTime.Add(serviceOccurrence.EndTime)
             };
         }
 

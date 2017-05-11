@@ -18,17 +18,19 @@ using System;
 
 namespace Cook4Me.Api.Core.Parameters
 {
-    public class SearchServiceParameter
+    public class SearchServiceOccurrenceParameter
     {
-        public SearchServiceParameter()
+        public SearchServiceOccurrenceParameter()
         {
             StartIndex = 0;
             Count = 100;
             IsPagingEnabled = true;
+            FromDateTime = DateTime.UtcNow.AddDays(-5);
+            ToDateTime = DateTime.UtcNow;
         }
 
-        public DateTime? FromDateTime { get; set; }
-        public DateTime? ToDateTime { get; set; }
+        public DateTime FromDateTime { get; set; }
+        public DateTime ToDateTime { get; set; }
         public string ShopId { get; set; }
         public string Name { get; set; }
         public Location NorthEast { get; set; }

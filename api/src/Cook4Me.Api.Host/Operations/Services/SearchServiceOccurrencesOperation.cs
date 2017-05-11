@@ -20,25 +20,30 @@ using System.Threading.Tasks;
 using System;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Enrichers;
 
 namespace Cook4Me.Api.Host.Operations.Services
 {
-    public interface ISearchServicesOperation
+    public interface ISearchServiceOccurrencesOperation
     {
         Task<IActionResult> Execute(JObject jObj);
     }
 
-    internal class SearchServicesOperation : ISearchServicesOperation
+    internal class SearchServiceOccurrencesOperation : ISearchServiceOccurrencesOperation
     {
         private readonly IServiceRepository _repository;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
+        private readonly IServiceOccurrenceEnricher _serviceOccurrenceEnricher;
 
-        public SearchServicesOperation(IServiceRepository repository, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder)
+        public SearchServiceOccurrencesOperation(
+            IServiceRepository repository, IHalResponseBuilder halResponseBuilder, 
+            IRequestBuilder requestBuilder, IServiceOccurrenceEnricher serviceOccurrenceEnricher)
         {
             _repository = repository;
             _halResponseBuilder = halResponseBuilder;
             _requestBuilder = requestBuilder;
+            _serviceOccurrenceEnricher = serviceOccurrenceEnricher;
         }
 
         public async Task<IActionResult> Execute(JObject jObj)
@@ -50,7 +55,30 @@ namespace Cook4Me.Api.Host.Operations.Services
             
             var parameter = _requestBuilder.GetSearchServices(jObj);
             var searchResult = await _repository.Search(parameter);
-            return null;
+            _halResponseBuilder.AddLinks(l => l.AddSelf(GetServicesLink()));
+            if (searchResult != null && searchResult.Content != null)
+            {
+                var products = searchResult.Content;
+                foreach (var product in products)
+                {
+                    _serviceOccurrenceEnricher.Enrich(_halResponseBuilder, product);
+                }
+
+                double r = (double)searchResult.TotalResults / (double)parameter.Count;
+                var nbPages = Math.Ceiling(r);
+                nbPages = nbPages == 0 ? 1 : nbPages;
+                for (var page = 1; page <= nbPages; page++)
+                {
+                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetServicesLink(), page.ToString())));
+                }
+            }
+
+            return new OkObjectResult(_halResponseBuilder.Build());
+        }
+
+        private static string GetServicesLink()
+        {
+            return "/" + Constants.RouteNames.Services + "/" + Constants.RouteNames.SearchOccurrences;
         }
     }
 }

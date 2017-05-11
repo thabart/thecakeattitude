@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Shop;
+using Cook4Me.Api.Core.Results;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
@@ -41,6 +42,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetProduct(ProductAggregate product);
         JObject GetPromotion(ProductAggregatePromotion promotion);
+        JObject GetServiceOccurrence(ServiceResultLine service);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -473,6 +475,45 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Promotion.CreateDateTime, promotion.CreateDateTime);
             jObj.Add(Constants.DtoNames.Promotion.UpdateDateTime, promotion.UpdateDateTime);
             jObj.Add(Constants.DtoNames.Promotion.ExpirationDateTime, promotion.ExpirationDateTime);
+            return jObj;
+        }
+
+        public JObject GetServiceOccurrence(ServiceResultLine service)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Service.Name, service.Name);
+            jObj.Add(Constants.DtoNames.Service.ShopId, service.ShopId);
+            jObj.Add(Constants.DtoNames.Service.Description, service.Description);
+            jObj.Add(Constants.DtoNames.Service.Price, service.Price);
+            jObj.Add(Constants.DtoNames.ServiceOccurrence.StartDateTime, service.StartDateTime);
+            jObj.Add(Constants.DtoNames.ServiceOccurrence.EndDateTime, service.EndDateTime);
+            if (service.PartialImagesUrl != null)
+            {
+                var arr = new JArray();
+                foreach (var url in service.PartialImagesUrl)
+                {
+                    arr.Add(url);
+                }
+
+                jObj.Add(Constants.DtoNames.Service.Images, arr);
+            }
+
+            if (service.Tags != null)
+            {
+                var arr = new JArray();
+                foreach(var tag in service.Tags)
+                {
+                    arr.Add(tag);
+                }
+
+                jObj.Add(Constants.DtoNames.Service.Tags, arr);
+            }
+
             return jObj;
         }
     }

@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Host
             public const string Parents = "parents";
             public const string Claims = "claims";
             public const string Search = ".search";
+            public const string SearchOccurrences = "occurrences/.search";
             public const string Tags = "tags";
             public const string Comments = "comments";
             public const string SearchShopsComment = "{id}/comments";
@@ -118,6 +119,16 @@ namespace Cook4Me.Api.Host
             {
                 public const string ShopId = "shop_id";
                 public const string Name = "name";
+                public const string Description = "description";
+                public const string Price = "price";
+                public const string Images = "images";
+                public const string Tags = "tags";
+            }
+
+            public static class ServiceOccurrence
+            {
+                public const string StartDateTime = "start_datetime";
+                public const string EndDateTime = "end_datetime";
             }
 
             public static class SearchService
