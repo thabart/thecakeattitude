@@ -7,6 +7,9 @@ import Rater from 'react-rater';
 import moment from 'moment';
 import { ShopServices } from '../../services';
 import Constants from '../../../Constants';
+import $ from 'jquery';
+
+let countServices = 1;
 
 class List extends Component {
   constructor(props) {
@@ -14,13 +17,30 @@ class List extends Component {
     this.handleChangeStart = this.handleChangeStart.bind(this);
     this.handleChangeEnd = this.handleChangeEnd.bind(this);
     this.toggleError = this.toggleError.bind(this);
+    this.changePage = this.changePage.bind(this);
+    this.search = this.search.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
       startDate: moment().subtract(10, 'days'),
       endDate: moment(),
       errorMessage: null,
       services: [],
-      pagination: []
+      pagination: [],
+      serviceName: null
     };
+    this.request = {
+      from_datetime: this.state.startDate.format(),
+      to_datetime: this.state.endDate.format(),
+      count: countServices
+    };
+  }
+  handleInputChange(e) {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
   }
   toggleError() {
     this.setState({
@@ -60,6 +80,21 @@ class List extends Component {
         errorMessage: 'An error occured while trying to retrieve the services'
       });
     });
+  }
+  changePage(e, name) {
+    e.preventDefault();
+    this.request = $.extend({}, this.request, {
+      start_index: countServices * (name - 1)
+    });
+    this.refresh();
+  }
+  search() {
+    this.request = $.extend({}, this.request, {
+      name: this.state.serviceName,
+      from_datetime: this.state.startDate.format(),
+      to_datetime: this.state.endDate.format()
+    });
+    this.refresh();
   }
   render() {
     var services = [],
@@ -104,10 +139,7 @@ class List extends Component {
               <div className="col-md-3">
                 <div className="form-group">
                   <label>Service s name</label>
-                  <input type="text" className="form-control" />
-                </div>
-                <div className="form-group">
-                  <button className="btn btn-default">Search</button>
+                  <input type="text" className="form-control" name='serviceName' onChange={this.handleInputChange} />
                 </div>
                 <div className="form-group">
                   <label>Period</label>
@@ -129,6 +161,9 @@ class List extends Component {
                         placeholderText="End date"
                     />
                 </div>
+                <div className="form-group">
+                  <button className="btn btn-default" onClick={this.search}>Search</button>
+                </div>
               </div>
               <div className="col-md-9">
                 { this.state.isLoading ? (<i className='fa fa-spinner fa-spin'></i>) :  (
@@ -145,7 +180,9 @@ class List extends Component {
     );
   }
   componentWillMount() {
-    this.request = { shop_id: this.props.shop.id, start_datetime: this.state.startDate.format(), end_datetime: this.state.endDate.format(), count: 1 };
+    this.request = $.extend({}, this.request, {
+       shop_id: this.props.shop.id
+     });
     this.refresh();
   }
 }
