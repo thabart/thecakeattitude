@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './descriptionTab.css';
 
 class DescriptionTab extends Component {
   constructor(props) {
@@ -25,7 +24,7 @@ class DescriptionTab extends Component {
     }
 
     return (
-      <div className="row description-tab">
+      <div className="row">
         <h5 className="col-md-12 title">Description</h5>
         <p className="col-md-12">
           {this.props.product.description}

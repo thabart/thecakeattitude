@@ -15,6 +15,7 @@ class Calendar extends Component {
     super(props);
     this.onNavigate = this.onNavigate.bind(this);
     this.toggleError = this.toggleError.bind(this);
+    this.onSelectEvent = this.onSelectEvent.bind(this);
     this.state = {
       errorMessage: null,
       events : []
@@ -25,6 +26,9 @@ class Calendar extends Component {
       end = moment(e).endOf('month').format();
     this.request = { from_datetime: start, to_datetime: end, shop_id: this.props.shop.id };
     this.refresh();
+  }
+  onSelectEvent(obj) {
+    this.props.history.push('/services/'+obj.id);
   }
   toggleError() {
     this.setState({
@@ -41,7 +45,8 @@ class Calendar extends Component {
           start: new Date(e.start_datetime),
           end: new Date(e.end_datetime),
           desc: e.description,
-          title: e.name
+          title: e.name,
+          id: e.id
         });
       });
       self.setState({
@@ -61,6 +66,7 @@ class Calendar extends Component {
                 events={this.state.events}
                 onNavigate={this.onNavigate}
                 defaultDate={this.defaultDate}
+                onSelectEvent={this.onSelectEvent}
               />
         </div>
       </div>

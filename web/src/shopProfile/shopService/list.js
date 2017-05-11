@@ -30,6 +30,7 @@ class List extends Component {
     this.search = this.search.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.changeOrder = this.changeOrder.bind(this);
+    this.navigateToService = this.navigateToService.bind(this);
     this.state = {
       startDate: moment().subtract(10, 'days'),
       endDate: moment(),
@@ -52,6 +53,9 @@ class List extends Component {
     this.setState({
       [name]: value
     });
+  }
+  navigateToService(id) {
+    this.props.history.push('/services/'+id);
   }
   toggleError() {
     this.setState({
@@ -144,7 +148,7 @@ class List extends Component {
           </p>)
         }
 
-        services.push((<section className="row product-item" key={service.id}>
+        services.push((<section className="row product-item" key={service.id} onClick={() => { self.navigateToService(service.id); }}>
           <div className="col-md-3">
             <img src={image} className="rounded" width="140" height="140"/>
           </div>
@@ -174,33 +178,35 @@ class List extends Component {
             { this.state.errorMessage !== null && (<div className="row col-md-12"><Alert color="danger col-md-12" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>) }
             <div className="row col-md-12">
               <div className="col-md-3">
-                <div className="form-group">
-                  <label>Service s name</label>
-                  <input type="text" className="form-control" name='serviceName' onChange={this.handleInputChange} />
-                </div>
-                <div className="form-group">
-                  <label>Period</label>
-                  <DatePicker
-                        selected={this.state.startDate}
-                        selectsStart
-                        startDate={this.state.startDate}
-                        endDate={this.state.endDate}
-                        onChange={this.handleChangeStart}
-                        className="form-control"
-                        placeholderText="Start date"
-                    />
-                  <DatePicker selected={this.state.endDate}
-                        selectsEnd
-                        startDate={this.state.startDate}
-                        endDate={this.state.endDate}
-                        onChange={this.handleChangeEnd}
-                        className="form-control"
-                        placeholderText="End date"
-                    />
-                </div>
-                <div className="form-group">
-                  <button className="btn btn-default" onClick={this.search}>Search</button>
-                </div>
+                <form onSubmit={(e) => { e.preventDefault(); this.search(); }}>
+                  <div className="form-group">
+                    <label>Service s name</label>
+                    <input type="text" className="form-control" name='serviceName' onChange={this.handleInputChange} />
+                  </div>
+                  <div className="form-group">
+                    <label>Period</label>
+                    <DatePicker
+                          selected={this.state.startDate}
+                          selectsStart
+                          startDate={this.state.startDate}
+                          endDate={this.state.endDate}
+                          onChange={this.handleChangeStart}
+                          className="form-control"
+                          placeholderText="Start date"
+                      />
+                    <DatePicker selected={this.state.endDate}
+                          selectsEnd
+                          startDate={this.state.startDate}
+                          endDate={this.state.endDate}
+                          onChange={this.handleChangeEnd}
+                          className="form-control"
+                          placeholderText="End date"
+                      />
+                  </div>
+                  <div className="form-group">
+                    <button className="btn btn-default" onClick={this.search}>Search</button>
+                  </div>
+                </form>
               </div>
               <div className="col-md-9">
                 <div className="col-md-12">

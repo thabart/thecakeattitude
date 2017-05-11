@@ -251,13 +251,15 @@ class ShopProducts extends Component {
         <section className="row white-section shop-section shop-section-padding">
           <div className="row col-md-12">
             <div className="col-md-3">
-              <div className="form-group">
-                <label>Product name</label>
-                <input type="text" className="form-control" name="productName" onChange={this.handleInputChange} />
-              </div>
-              <div className="form-group">
-                <button className="btn btn-default" onClick={this.search}>Search</button>
-              </div>
+              <form onSubmit={(e) => { e.preventDefault(); this.search(); }}>
+                <div className="form-group">
+                  <label>Product name</label>
+                  <input type="text" className="form-control" name="productName" onChange={this.handleInputChange} />
+                </div>
+                <div className="form-group">
+                  <button className="btn btn-default" onClick={this.search}>Search</button>
+                </div>
+              </form>
               <div className="form-group filter">
                 <input type="checkbox" onClick={this.handleBestDeals}/> Best deals
               </div>

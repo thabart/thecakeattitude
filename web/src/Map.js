@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import TrendingSellers from './widgets/trendingSellers';
+import ShopServices from './widgets/shopServices';
 import { withRouter } from 'react-router';
 import BestDeals from './widgets/bestDeals';
 import { ShopsService } from './services';
@@ -228,6 +229,9 @@ class Map extends Component {
               </li>
               <li className="col-md-10 cell widget">
                 <PublicAnnouncements />
+              </li>
+              <li className="col-md-5 cell widget">
+                <ShopServices />
               </li>
             </ul>
           </div>

@@ -141,8 +141,8 @@ class Products extends Component {
                 }
               </div>
               {images.length > 0 && (
-                <section className="row imgs">
-                  <ul className="col-md-3 image-lst">
+                <div className="row medium-padding-top">
+                  <ul className="col-md-3 no-style no-margin image-selector">
                     {images}
                   </ul>
                   <div className={newPrice == null ? "col-md-9" : "col-md-9 is-best-deals"}>
@@ -154,9 +154,9 @@ class Products extends Component {
                       <img src="/images/hot_deals.png" width="120" />
                     </div>
                   </div>
-                </section>)
+                </div>)
               }
-              <section className="row">
+              <div className="row">
                 <Nav tabs className="col-md-12">
                   <NavItem>
                     <NavLink
@@ -178,7 +178,7 @@ class Products extends Component {
                 <div className="col-md-12">
                   {content}
                 </div>
-              </section>
+              </div>
             </div>
             <div className="col-md-4">
               {newPrice == null ? (<h4 className="price">€ {this.state.product.price}</h4>) : (
