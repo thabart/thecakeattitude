@@ -9,7 +9,7 @@ module.exports = {
   search: function(content) {
     return new Promise(function(resolve, reject) {
       ConfigurationService.get().then(function(configuration) {
-        $.ajax(configuration.services_endpoint +'/.search', {
+        $.ajax(configuration.services_endpoint +'/occurrences/.search', {
           method: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(content)

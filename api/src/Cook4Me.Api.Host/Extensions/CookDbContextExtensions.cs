@@ -764,6 +764,36 @@ namespace Cook4Me.Api.Host.Extensions
                     },
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow
+                },
+                new Service
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "second-service",
+                    ShopId = _firstShopId,
+                    Price = 300,
+                    Occurrence = new ServiceOccurrence
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Days = new List<ServiceOccurrenceDay>
+                        {
+                            new ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = "0"
+                            },
+                            new ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = "1"
+                            }
+                        },
+                        StartDate = DateTime.UtcNow.AddDays(-30),
+                        EndDate = DateTime.UtcNow.AddDays(30),
+                        StartTime = new TimeSpan(1, 0, 0),
+                        EndTime = new TimeSpan(2, 0, 0)
+                    },
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow
                 }
             });
         }

@@ -119,7 +119,9 @@ namespace Cook4Me.Api.EF.Repositories
 
                 foreach (var occurrence in occurrences)
                 {
-                    if (!mapping.Keys.Contains(occurrence.DayId) || nextDateTime < occurrence.ServiceOccurrence.StartDate)
+                    if (!mapping.Keys.Contains(occurrence.DayId) 
+                        || nextDateTime < occurrence.ServiceOccurrence.StartDate
+                        || fromDateTime > occurrence.ServiceOccurrence.EndDate)
                     {
                         continue;
                     }
@@ -141,6 +143,7 @@ namespace Cook4Me.Api.EF.Repositories
                 lines = lines.Skip(parameter.StartIndex).Take(parameter.Count).ToList();
             }
 
+            lines = lines.OrderBy(l => l.StartDateTime).ToList();
             result.Content = lines;
             return result;
         }
