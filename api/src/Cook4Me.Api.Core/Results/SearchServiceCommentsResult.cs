@@ -15,18 +15,14 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Results
 {
-    public interface IServiceRepository
+    public class SearchServiceCommentsResult
     {
-        Task<SearchServiceOccurrenceResult> Search(SearchServiceOccurrenceParameter parameter);
-        Task<SearchServiceResult> Search(SearchServiceParameter parameter);
-        Task<ServiceAggregate> Get(string id);
-        Task<SearchServiceCommentsResult> Search(SearchServiceCommentParameter parameter);
-        Task<bool> Update(ServiceAggregate service);
+        public int TotalResults { get; set; }
+        public int StartIndex { get; set; }
+        public IEnumerable<ServiceComment> Content { get; set; }
     }
 }

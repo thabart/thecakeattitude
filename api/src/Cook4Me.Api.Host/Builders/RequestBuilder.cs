@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Commands.Product;
+using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Parameters;
 using Microsoft.AspNetCore.Http;
@@ -30,11 +31,13 @@ namespace Cook4Me.Api.Host.Builders
         AddPaymentInformation GetPaymentMethod(JObject jObj);
         AddShopCommentCommand GetAddShopComment(JObject jObj);
         AddProductCommentCommand GetAddProductComment(JObject jObj);
+        AddServiceCommentCommand GetAddServiceComment(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         Location GetLocation(JObject jObj);
         SearchShopCommentsParameter GetSearchShopComments(JObject jObj);
         SearchProductCommentsParameter GetSearchProductComments(JObject jObj);
+        SearchServiceCommentParameter GetSearchServiceComments(JObject jObj);
         SearchProductsParameter GetSearchProducts(JObject jObj);
         SearchServiceParameter GetSearchServices(JObject jObj);
         SearchServiceOccurrenceParameter GetSearchServiceOccurrences(JObject jObj);
@@ -241,6 +244,21 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
+        public AddServiceCommentCommand GetAddServiceComment(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new AddServiceCommentCommand
+            {
+                Content = jObj.Value<string>(Constants.DtoNames.Comment.Content),
+                Score = jObj.Value<int>(Constants.DtoNames.Comment.Score),
+                ServiceId = jObj.Value<string>(Constants.DtoNames.Comment.ServiceId)
+            };
+        }
+
         public SearchShopCommentsParameter GetSearchShopComments(JObject jObj)
         {
             if (jObj == null)
@@ -270,6 +288,27 @@ namespace Cook4Me.Api.Host.Builders
             }
             
             var result = new SearchProductCommentsParameter
+            {
+                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+            };
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
+        public SearchServiceCommentParameter GetSearchServiceComments(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new SearchServiceCommentParameter
             {
                 Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)

@@ -14,6 +14,8 @@
 // limitations under the License.
 #endregion
 
+using System;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Aggregates
@@ -28,8 +30,45 @@ namespace Cook4Me.Api.Core.Aggregates
         public double NewPrice { get; set; }
         public int TotalScore { get; set; }
         public double AverageScore { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
         public ServiceAggregateOccurrence Occurrence { get; set; }
         public IEnumerable<string> Tags { get; set; }
         public IEnumerable<string> PartialImagesUrl { get; set; }
+        public ICollection<ServiceComment> Comments { get; set; }
+
+        public void AddComment(ServiceComment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            Comments.Add(comment);
+            TotalScore += comment.Score;
+            if (Comments.Count() != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)Comments.Count()), 3);
+            }
+        }
+
+        public void RemoveComment(ServiceComment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            Comments.Remove(comment);
+            TotalScore -= comment.Score;
+            if (Comments.Count() != 0)
+            {
+                AverageScore = Math.Round(((double)TotalScore / (double)Comments.Count()), 3);
+            }
+            else
+            {
+                AverageScore = 0;
+            }
+        }
     }
 }

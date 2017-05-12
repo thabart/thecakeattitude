@@ -6,7 +6,7 @@ import Sellers from './Sellers';
 import AddShop from './AddShop';
 import Shop from './Shop';
 import Products from './Products';
-import ShopServices from './ShopServices';
+import Services from './Services';
 import { OpenIdService, SessionService } from './services';
 import Error from './Error';
 import createBrowserHistory  from 'history/createBrowserHistory';
@@ -105,7 +105,7 @@ class App extends Component {
             <Route path="/sellers" component={Sellers}  />
             <Route path="/shops/:id/:action?/:subaction?" component={Shop} />
             <Route path="/products/:id/:action?" component={Products} />
-            <Route path="/services/:id/:action?" component={ShopServices} />
+            <Route path="/services/:id/:action?" component={Services} />
             <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddShop />))} />
             <Route path="/error/:type" component={Error} />
           </div>

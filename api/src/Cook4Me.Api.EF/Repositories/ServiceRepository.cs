@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
@@ -34,6 +35,28 @@ namespace Cook4Me.Api.EF.Repositories
         public ServiceRepository(CookDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<ServiceAggregate> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var record = await _context.Services
+                .Include(p => p.Images)
+                .Include(p => p.Tags)
+                .Include(p => p.Shop)
+                .Include(p => p.Occurrence).ThenInclude(o => o.Days)
+                .Include(p => p.Comments)
+                .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
+            if (record == null)
+            {
+                return null;
+            }
+
+            return record.ToAggregate();
         }
 
         public async Task<SearchServiceResult> Search(SearchServiceParameter parameter)
@@ -208,6 +231,118 @@ namespace Cook4Me.Api.EF.Repositories
             lines = lines.OrderBy(l => l.StartDateTime).ToList();
             result.Content = lines;
             return result;
+        }
+
+        public async Task<SearchServiceCommentsResult> Search(SearchServiceCommentParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+
+            IQueryable<Models.Comment> comments = _context.Comments;
+            if (!string.IsNullOrWhiteSpace(parameter.ServiceId))
+            {
+                comments = comments.Where(c => parameter.ServiceId == c.ServiceId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                comments = comments.Where(c => c.Subject == parameter.Subject);
+            }
+
+            var result = new SearchServiceCommentsResult
+            {
+                TotalResults = await comments.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            comments = comments
+                .OrderByDescending(c => c.UpdateDateTime);
+            if (parameter.IsPagingEnabled)
+            {
+                comments = comments.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await comments.Select(c => c.ToAggregateService()).ToListAsync().ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task<bool> Update(ServiceAggregate serviceAggregate)
+        {
+            if (serviceAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(serviceAggregate));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Services.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == serviceAggregate.Id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        return false;
+                    }
+
+                    record.AverageScore = serviceAggregate.AverageScore;
+                    record.Description = serviceAggregate.Description;
+                    record.Name = serviceAggregate.Name;
+                    record.NewPrice = serviceAggregate.NewPrice;
+                    record.Price = serviceAggregate.Price;
+                    record.ShopId = serviceAggregate.ShopId;
+                    record.TotalScore = serviceAggregate.TotalScore;
+                    record.UpdateDateTime = serviceAggregate.UpdateDateTime;
+                    var comments = serviceAggregate.Comments == null ? new List<ServiceComment>() : serviceAggregate.Comments;
+                    var commentIds = comments.Select(c => c.Id);
+                    // Update the comments
+                    if (record.Comments != null)
+                    {
+                        var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
+                        var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
+                        var existingCommentIds = record.Comments.Select(c => c.Id);
+                        var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
+                        foreach (var commentToUpdate in commentsToUpdate)
+                        {
+                            var comment = comments.First(c => c.Id == commentToUpdate.Id);
+                            commentToUpdate.Score = comment.Score;
+                            commentToUpdate.Subject = comment.Subject;
+                            commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
+                            commentToUpdate.Content = comment.Content;
+                        }
+
+                        foreach (var commentToRemove in commentsToRemove)
+                        {
+                            _context.Comments.Remove(commentToRemove);
+                        }
+
+                        foreach (var commentToAdd in commentsToAdd)
+                        {
+                            var rec = new Models.Comment
+                            {
+                                Id = commentToAdd.Id,
+                                Content = commentToAdd.Content,
+                                Score = commentToAdd.Score,
+                                CreateDateTime = commentToAdd.CreateDateTime,
+                                ServiceId = serviceAggregate.Id,
+                                UpdateDateTime = commentToAdd.UpdateDateTime,
+                                Subject = commentToAdd.Subject
+                            };
+                            _context.Comments.Add(rec);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
         private static IQueryable<Models.Service> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Service, TKey>> keySelector, IQueryable<Models.Service> products)

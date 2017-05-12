@@ -766,7 +766,50 @@ namespace Cook4Me.Api.Host.Extensions
                         EndTime = new TimeSpan(17, 0, 0)
                     },
                     CreateDateTime = DateTime.UtcNow,
-                    UpdateDateTime = DateTime.UtcNow
+                    UpdateDateTime = DateTime.UtcNow,
+                    Description = "first-description",
+                    Tags = new []
+                    {
+                        new ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        },
+                        new ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _secondHandTagName
+                        }
+                    },
+                    Images = new []
+                    {
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
+                            Id = Guid.NewGuid().ToString(),
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator",
+                            Score = 0
+                        },
+                        new Comment
+                        {
+                            Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
+                            Id = Guid.NewGuid().ToString(),
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator",
+                            Score = 5
+                        }
+                    }
                 },
                 new Service
                 {
@@ -799,7 +842,46 @@ namespace Cook4Me.Api.Host.Extensions
                         EndTime = new TimeSpan(2, 0, 0)
                     },
                     CreateDateTime = DateTime.UtcNow,
-                    UpdateDateTime = DateTime.UtcNow
+                    UpdateDateTime = DateTime.UtcNow,
+                    Description = "second-description",
+                    Tags = new []
+                    {
+                        new ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    },
+                    Images = new []
+                    {
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        },
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        },
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
+                            Id = Guid.NewGuid().ToString(),
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator",
+                            Score = 5
+                        }
+                    }
                 }
             });
         }

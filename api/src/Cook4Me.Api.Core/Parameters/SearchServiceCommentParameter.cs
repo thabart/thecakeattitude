@@ -14,19 +14,21 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
-
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Parameters
 {
-    public interface IServiceRepository
+    public class SearchServiceCommentParameter
     {
-        Task<SearchServiceOccurrenceResult> Search(SearchServiceOccurrenceParameter parameter);
-        Task<SearchServiceResult> Search(SearchServiceParameter parameter);
-        Task<ServiceAggregate> Get(string id);
-        Task<SearchServiceCommentsResult> Search(SearchServiceCommentParameter parameter);
-        Task<bool> Update(ServiceAggregate service);
+        public SearchServiceCommentParameter()
+        {
+            StartIndex = 0;
+            Count = 100;
+            IsPagingEnabled = true;
+        }
+
+        public string ServiceId { get; set; }
+        public string Subject { get; set; }
+        public int StartIndex { get; set; }
+        public int Count { get; set; }
+        public bool IsPagingEnabled { get; set; }
     }
 }
