@@ -45,12 +45,10 @@ class ShopProducts extends Component {
       activeCategory: null
     };
   }
-  // Search
   search() {
     filterJson['name'] = this.state.productName;
     this.updateProducts();
   }
-  // Filter the products
   filter(e, filterId, filterValue) {
     var filter = null,
       indice = -1,
@@ -78,7 +76,6 @@ class ShopProducts extends Component {
     filterJson['start_index'] = 0;
     this.updateProducts();
   }
-  // Update products
   updateProducts() {
     var self = this;
     self.setState({
@@ -104,26 +101,22 @@ class ShopProducts extends Component {
     });
 
   }
-  // Toggle product error message
   toggleProductError() {
     this.setState({
       productErrorMessage: null
     });
   }
-  // Toggle the error
   toggleError() {
     this.setState({
       errorMessage: null
     });
   }
-  // Change the Price
   changePrice(p) {
     this.setState({
       minPrice: p[0],
       maxPrice: p[1]
     });
   }
-  // Handle input change
   handleInputChange(e) {
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -132,7 +125,6 @@ class ShopProducts extends Component {
       [name]: value
     });
   }
-  // Handle price change
   handlePriceChange(e) {
     const target = e.target;
     const name = target.name;
@@ -151,7 +143,6 @@ class ShopProducts extends Component {
 
     this.priceChange();
   }
-  // Handle best deals
   handleBestDeals(e) {
     var isChecked = $(e.target).is(':checked');
     if (isChecked) {
@@ -162,7 +153,6 @@ class ShopProducts extends Component {
 
     this.updateProducts();
   }
-  // Select the category
   selectCategory(e, id) {
     e.preventDefault();
     filterJson['category_id'] = id;
@@ -171,20 +161,17 @@ class ShopProducts extends Component {
     });
     this.updateProducts();
   }
-  // Execute when the price is changed
   priceChange() {
     filterJson['min_price'] = this.state.minPrice;
     filterJson['max_price'] = this.state.maxPrice;
     filterJson['start_index'] = 0;
     this.updateProducts();
   }
-  // Change page
   changePage(e, page) {
     e.preventDefault();
     filterJson['start_index'] = (page - 1) * defaultCount;
     this.updateProducts();
   }
-  // Change the order
   changeOrder(e) {
     var selected = $(e.target).find(':selected');
     var obj = {

@@ -72,7 +72,9 @@ class ShopServices extends Component {
       });
     }).catch(function() {
       self.setState({
-        isLoading: false
+        isLoading: false,
+        services: [],
+        navigation: []
       });
     });
   }
@@ -103,7 +105,6 @@ class ShopServices extends Component {
           days = (<ul className="no-padding tags gray">{list}</ul>);
         }
 
-        console.log(service);
         content.push((
           <a key={service.id} href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding" onClick={(e) => { self.navigateService(e, service.id); }}>
             <div className="d-flex w-100">

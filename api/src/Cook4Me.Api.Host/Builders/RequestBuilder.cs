@@ -137,10 +137,12 @@ namespace Cook4Me.Api.Host.Builders
                 CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId),
                 PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place),
                 Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject),
+                Name = jObj.Value<string>(Constants.DtoNames.Shop.Name),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 NorthEast = northEastLocation,
                 SouthWest = southWestLocation,
                 OrderBy = orderBy,
-                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+                TagName = jObj.Value<string>(Constants.DtoNames.SearchShop.Tag)
             };
             var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
             if (count > 0)
@@ -388,7 +390,8 @@ namespace Cook4Me.Api.Host.Builders
                 CategoryId = jObj.Value<string>(Constants.DtoNames.Product.CategoryId),
                 Orders = orderBy,
                 NorthEast = northEastLocation,
-                SouthWest = southWestLocation
+                SouthWest = southWestLocation,
+                TagName = jObj.Value<string>(Constants.DtoNames.SearchShop.Tag)
             };
 
             bool containsValidPromotion = false;
@@ -489,7 +492,8 @@ namespace Cook4Me.Api.Host.Builders
                 ShopId = jObj.Value<string>(Constants.DtoNames.Service.ShopId),
                 Orders = orders,
                 NorthEast = northEastLocation,
-                SouthWest = southWestLocation
+                SouthWest = southWestLocation,
+                TagName = jObj.Value<string>(Constants.DtoNames.SearchService.Tag)
             };
 
             if (fromDateTime != null && !fromDateTime.Equals(default(DateTime)))

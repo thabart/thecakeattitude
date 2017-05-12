@@ -7,11 +7,13 @@ import BestDeals from './widgets/bestDeals';
 import { ShopsService } from './services/index';
 import PublicAnnouncements from './widgets/publicAnnouncements';
 import { withGoogleMap, GoogleMap, InfoWindow, Marker } from 'react-google-maps';
+import SearchBox from 'react-google-maps/lib/places/SearchBox'
 import { MAP } from 'react-google-maps/lib/constants';
 import './Map.css';
 import $ from 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
 import AppDispatcher from './appDispatcher';
+import Constants from '../Constants';
 
 const currentLocationOpts = {
   url: '/images/current-location.png',
@@ -23,6 +25,21 @@ const shopOpts = {
   scaledSize: new window.google.maps.Size(34, 38)
 };
 
+const INPUT_STYLE = {
+  boxSizing: `border-box`,
+  MozBoxSizing: `border-box`,
+  border: `1px solid transparent`,
+  width: `600px`,
+  height: `40px`,
+  marginTop: `10px`,
+  padding: `0 12px`,
+  borderRadius: `1px`,
+  boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+  fontSize: `14px`,
+  outline: `none`,
+  textOverflow: `ellipses`,
+};
+
 const GettingStartedGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
@@ -32,6 +49,11 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
     onZoomChanged={props.onZoomChanged}
     defaultZoom={12}
   >
+  <SearchBox
+    ref={props.onSearchBoxCreated}
+    bounds={props.bounds}
+    onPlacesChanged={props.onPlacesChanged}
+    inputPlaceholder="Enter your address" controlPosition={window.google.maps.ControlPosition.TOP_LEFT} inputStyle={INPUT_STYLE} />
   <Marker
     icon={currentLocationOpts}
     position={props.center} />
@@ -60,20 +82,43 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
 class Map extends Component {
   constructor(props) {
     super(props);
+    this._searchBox = null;
+    this._searchTarget = "name";
     this.onMapLoad = this.onMapLoad.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onZoomChanged = this.onZoomChanged.bind(this);
     this.onMarkerClick = this.onMarkerClick.bind(this);
     this.onCloseClick = this.onCloseClick.bind(this);
+    this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
+    this.onPlacesChanged = this.onPlacesChanged.bind(this);
+    this.search = this.search.bind(this);
+    this.changeFilter = this.changeFilter.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
       shops: [],
       center : { lat: 50.8503, lng: 4.3517 },
       isDragging: false,
       isSearching: false,
+      bounds: null,
+      searchValue: null
     };
   }
-  // Call when the google map is initialized
+  handleInputChange(e) {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
+  }
+  changeFilter(e) {
+    var selected = $(e.target).find(':selected');
+    this._searchTarget = $(selected).data('target');
+  }
+  search() {
+
+  }
   onMapLoad(map) {
     var self = this;
     self._googleMap = map;
@@ -89,24 +134,20 @@ class Map extends Component {
       self.refreshMap();
     }, 1000);
   }
-  // Drag start
   onDragStart() {
     this.setState({
       isDragging: true
     });
   }
-  // Drag end
   onDragEnd() {
     this.setState({
       isDragging: false
     });
     this.refreshMap();
   }
-  // Zoom on map
   onZoomChanged() {
     this.refreshMap();
   }
-  // Click on marker
   onMarkerClick(marker) {
     this.setState({
       shops: this.state.shops.map(shop => {
@@ -121,7 +162,6 @@ class Map extends Component {
       })
     });
   }
-  // Close the marker
   onCloseClick(marker) {
     this.setState({
       shops: this.state.shops.map(shop => {
@@ -136,7 +176,6 @@ class Map extends Component {
       })
     });
   }
-  // Refresh the map
   refreshMap() {
     var self = this;
     var bounds = self._googleMap.getBounds();
@@ -161,6 +200,17 @@ class Map extends Component {
       ne: northEast,
       sw: southWest
     };
+    if (this.state.searchValue && this.state.searchValue !== null && this.state.searchValue !== "") {
+      switch(this._searchTarget) {
+        case "name":
+          json['name'] = this.state.searchValue;
+        break;
+        case "tag_name":
+          json['tag'] = this.state.searchValue;
+        break;
+      }
+    }
+
     self.refs.trendingSellers.refresh(json);
     self.refs.bestDeals.refresh(json);
     self.refs.shopServices.refresh(json);
@@ -184,7 +234,23 @@ class Map extends Component {
       });
     });
   }
-  // Render the view
+  onSearchBoxCreated(searchBox) {
+    this._searchBox = searchBox;
+  }
+  onPlacesChanged() {
+    var self = this;
+    const places = this._searchBox.getPlaces();
+    if (places.length !== 1) {
+      return;
+    }
+
+    var firstPlace = places[0];
+    var location = firstPlace.geometry.location;
+    self.setState({
+      center: location
+    });
+    self.refreshMap();
+  }
   render() {
     var cl = "row";
     if (this.state.isSearching) {
@@ -195,46 +261,57 @@ class Map extends Component {
 
     return (
       <div>
-        <form className="row justify-content-center search">
-  				<input type="text" className="form-control col-5"/>
-  				<input type="submit" className="btn btn-default" value="Search"></input>
-  			</form>
-        <div className={cl}>
-          <div className="col-md-6">
-            <div id="map" className="col-md-12">
-              <GettingStartedGoogleMap
-                center={this.state.center}
-                onMapLoad={this.onMapLoad}
-                onDragStart={this.onDragStart}
-                onDragEnd={this.onDragEnd}
-                onZoomChanged={this.onZoomChanged}
-                onMarkerClick={this.onMarkerClick}
-                onCloseClick={this.onCloseClick}
-                markers={this.state.shops}
-                containerElement={
-                  <div style={{ height: `100%` }} />
-                }
-                mapElement={
-                  <div style={{ height: `100%` }} />
-                }>
-              </GettingStartedGoogleMap>
-            </div>
-          </div>
-          <div className="col-md-6">
+        <div className={cl} id="widget-container">
+          <div className="col-md-6 hidden-sm-down">
+            <form className="row" onSubmit={(e) => { e.preventDefault(); this.refreshMap(); }}>
+              <div className="col-md-3">
+                <select className="form-control" onChange={(e) => { this.changeFilter(e); }}>
+                  <option data-target="name">Name</option>
+                  <option data-target="tag_name">Tag</option>
+                </select>
+              </div>
+              <div className="col-md-7">
+                <input type="text" className="form-control" name="searchValue" onChange={this.handleInputChange} />
+              </div>
+              <div className="col-md-1">
+                <button className="btn btn-default" onClick={this.refreshMap}>Search</button>
+              </div>
+            </form>
             <ul className="row list-unstyled" ref={(elt) => {this.widgetContainer = elt; }}>
-              <li className="col-md-5 cell widget">
+              <li className="col-md-6 cell widget">
                 <TrendingSellers ref="trendingSellers" history={this.props.history}/>
               </li>
-              <li className="col-md-5 cell widget">
+              <li className="col-md-6 cell widget">
                 <BestDeals ref="bestDeals" history={this.props.history}/>
               </li>
-              <li className="col-md-10 cell widget">
+              <li className="col-md-12 cell widget">
                 <PublicAnnouncements />
               </li>
-              <li className="col-md-5 cell widget">
+              <li className="col-md-6 cell widget">
                 <ShopServices ref="shopServices" history={this.props.history} />
               </li>
             </ul>
+          </div>
+          <div className="col-md-6" id="map-container">
+            <GettingStartedGoogleMap
+              center={this.state.center}
+              onMapLoad={this.onMapLoad}
+              onDragStart={this.onDragStart}
+              onDragEnd={this.onDragEnd}
+              onZoomChanged={this.onZoomChanged}
+              onMarkerClick={this.onMarkerClick}
+              onCloseClick={this.onCloseClick}
+              markers={this.state.shops}
+              onSearchBoxCreated={this.onSearchBoxCreated}
+              onPlacesChanged={this.onPlacesChanged}
+              bounds={this.state.bounds}
+              containerElement={
+                <div style={{ height: `100%` }} />
+              }
+              mapElement={
+                <div style={{ height: `100%` }} />
+              }>
+            </GettingStartedGoogleMap>
           </div>
         </div>
       </div>

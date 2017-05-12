@@ -11,9 +11,17 @@
   padding: 10px 0 10px 0;
 }
 
-#map {
-  height: 100%;
-  min-height: 500px;
+#map-container {
+  position: fixed;
+  top: 56px;
+  bottom: 0;
+  left: auto;
+  right: 0;
+}
+
+#widget-container {
+  padding-left: 10px;
+  padding-top: 10px;
 }
 
 .pending-search .search-circle-overlay, .searching .searching-overlay {

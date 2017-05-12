@@ -109,7 +109,7 @@ class App extends Component {
 
     return (
       <Router history={history} >
-        <div>
+        <div id="app-container">
           <Header />
           <div>
             <Route exact path="/" component={Map}  />

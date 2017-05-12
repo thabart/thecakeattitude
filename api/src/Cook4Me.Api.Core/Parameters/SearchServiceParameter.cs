@@ -34,6 +34,7 @@ namespace Cook4Me.Api.Core.Parameters
         public string Name { get; set; }
         public Location NorthEast { get; set; }
         public Location SouthWest { get; set; }
+        public string TagName { get; set; }
         public bool IsPagingEnabled { get; set; }
         public int StartIndex { get; set; }
         public int Count { get; set; }

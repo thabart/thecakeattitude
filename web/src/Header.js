@@ -167,16 +167,13 @@ class Header extends Component {
   render() {
     return (
       <div>
-        <Navbar color="faded" light toggleable>
+        <Navbar color="faded" light toggleable fixed="top">
             <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
             <NavbarBrand href="/">ShopInGame</NavbarBrand>
             <Collapse isOpen={this.state.isMenuOpen} navbar>
               <Nav className="mr-auto" navbar>
                 <NavItem>
-                  <NavLink to="/home" className="nav-link" activeClassName="active-menu-item">Map</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink to="/sellers" className="nav-link"  activeClassName="active-menu-item">Sellers</NavLink>
+                  <NavLink to="/home" className="nav-link" activeClassName="active-menu-item">Explorer</NavLink>
                 </NavItem>
                 {
                   (this.state.isLoggedIn) ? <NavItem><NavLink to="/addshop" className="nav-link"  activeClassName="active-menu-item">Add shop</NavLink></NavItem> : ''

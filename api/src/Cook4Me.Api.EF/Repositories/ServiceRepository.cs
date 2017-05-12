@@ -46,7 +46,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             var record = await _context.Services
                 .Include(p => p.Images)
-                .Include(p => p.Tags)
+                .Include(p => p.Tags).ThenInclude(t => t.Tag)
                 .Include(p => p.Shop)
                 .Include(p => p.Occurrence).ThenInclude(o => o.Days)
                 .Include(p => p.Comments)
@@ -75,6 +75,11 @@ namespace Cook4Me.Api.EF.Repositories
             if (!string.IsNullOrWhiteSpace(parameter.ShopId))
             {
                 services = services.Where(p => p.ShopId == parameter.ShopId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.TagName))
+            {
+                services = services.Where(s => s.Tags != null && s.Tags.Any(t => t.TagName.ToLowerInvariant().Contains(parameter.TagName.ToLowerInvariant())));
             }
 
             if (parameter.NorthEast != null && parameter.SouthWest != null)
