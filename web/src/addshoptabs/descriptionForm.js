@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
-import { CategoryService, TagService, ShopsService, OpenIdService, SessionService } from '../services';
+import { CategoryService, TagService, ShopsService, OpenIdService, SessionService } from '../services/index';
 import TagsInput from 'react-tagsinput';
 import Game from '../game/game';
 import Constants from '../../Constants';

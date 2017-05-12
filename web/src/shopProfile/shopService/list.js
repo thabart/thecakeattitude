@@ -5,7 +5,7 @@ import { Alert } from 'reactstrap';
 import DatePicker from 'react-datepicker';
 import Rater from 'react-rater';
 import moment from 'moment';
-import { ShopServices } from '../../services';
+import { ShopServices } from '../../services/index';
 import Constants from '../../../Constants';
 import $ from 'jquery';
 

@@ -4,7 +4,7 @@ import { TabContent, TabPane, Alert } from 'reactstrap';
 import { withRouter } from 'react-router';
 import Constants from '../Constants';
 import { DescriptionForm, ContactInfoForm, PaymentForm, AddressForm } from './addshoptabs';
-import { ShopsService } from './services';
+import { ShopsService } from './services/index';
 import $ from 'jquery';
 import './AddShop.css';
 

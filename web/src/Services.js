@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Rater from 'react-rater';
 import Magnify from 'react-magnify';
 import { CommentTab, DescriptionTab } from './servicetabs';
-import { ShopServices } from './services';
+import { ShopServices } from './services/index';
 import { TabContent, TabPane, Nav, NavItem, NavLink, Alert } from 'reactstrap';
 import { withRouter } from 'react-router';
 import Constants from '../Constants';

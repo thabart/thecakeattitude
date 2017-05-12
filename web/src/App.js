@@ -7,7 +7,7 @@ import AddShop from './AddShop';
 import Shop from './Shop';
 import Products from './Products';
 import Services from './Services';
-import { OpenIdService, SessionService } from './services';
+import { OpenIdService, SessionService } from './services/index';
 import Error from './Error';
 import createBrowserHistory  from 'history/createBrowserHistory';
 import './App.css';

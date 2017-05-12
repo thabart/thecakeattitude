@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ShopsService, UserService, CommentsService } from './services';
+import { ShopsService, UserService, CommentsService } from './services/index';
 import { Tooltip, Progress, Alert } from 'reactstrap';
 import { withRouter } from 'react-router';
 import { MAP } from 'react-google-maps/lib/constants';

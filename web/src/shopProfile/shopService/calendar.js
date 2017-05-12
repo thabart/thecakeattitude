@@ -4,7 +4,7 @@ import { Alert } from 'reactstrap';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './calendar.css';
-import { ShopServices } from '../../services';
+import { ShopServices } from '../../services/index';
 
 BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)

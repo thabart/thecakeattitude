@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
-import { CategoryService, SessionService, OpenIdService, UserService } from '../services';
+import { CategoryService, SessionService, OpenIdService, UserService } from '../services/index';
 import Game from '../game/game';
 import Constants from '../../Constants';
 import $ from 'jquery';

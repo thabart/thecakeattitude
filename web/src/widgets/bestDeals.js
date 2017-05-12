@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ProductsService } from '../services';
+import { ProductsService }  from '../services/index';
 import Rater from 'react-rater';
 import Widget from '../components/widget';
 import Constants from '../../Constants';

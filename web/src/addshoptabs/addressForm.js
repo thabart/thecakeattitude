@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'reactstrap';
-import { CategoryService, SessionService, OpenIdService, UserService } from '../services';
+import { CategoryService, SessionService, OpenIdService, UserService } from '../services/index';
 import { withGoogleMap, GoogleMap, InfoWindow, Circle, Marker } from 'react-google-maps';
 import { MAP } from 'react-google-maps/lib/constants';
 import SearchBox from 'react-google-maps/lib/places/SearchBox'

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Alert } from 'reactstrap';
-import { ProductsService } from '../services';
+import { ProductsService } from '../services/index';
 import Rater from 'react-rater';
 import moment from 'moment';
 import Constants from '../../Constants';

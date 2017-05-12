@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
 import { Tooltip, Alert, Modal, ModalHeader, ModalFooter, Button } from 'reactstrap';
-import { UserService, SessionService, ProductsService, OpenIdService } from '../services/index';
+import { UserService, SessionService, OpenIdService } from '../services/index';
 import { withRouter } from 'react-router';
 import Promise from 'bluebird';
 import moment from 'moment';
 import Rater from 'react-rater';
 import Constants from '../../Constants';
-import './productComment.css';
 import $ from 'jquery';
-import AppDispatcher from '../appDispatcher';
 
-let searchCommentsJson = { count: 4, start_index: 0 };
-
-class ProductComment extends Component {
+class CommentLst extends Component {
   constructor(props) {
     super(props);
+    this.request ={ count: 4, start_index: 0 };
     this.navigateComment = this.navigateComment.bind(this);
     this.addComment = this.addComment.bind(this);
     this.toggleTooltip = this.toggleTooltip.bind(this);
@@ -44,48 +41,36 @@ class ProductComment extends Component {
       }
     };
   }
-  // Toggle remove modal window
   toggleRemoveComment() {
     var self = this;
     this.setState({
       isRemoveCommentOpened: !self.state.isRemoveCommentOpened
     });
   }
-  // Toggle the error
   toggleError() {
     this.setState({
       errorMessage: null
     });
   }
-  // Remove the comment
   displayRemoveComment(id) {
     this.setState({
       isRemoveCommentOpened: true,
       currentComment: id
     })
   }
-  // Remove the selected comment
   removeComment() {
     var self = this;
     self.setState({
       isRemoveCommentOpened: false
     });
-    ProductsService.removeComment(this.props.product.id, this.state.currentComment).then(function() {
+    self.props.removeCommentCallback(this.state.currentComment).then(function() {
       self.refreshComments();
-      self.props.onRefreshScore();
     }).catch(function(e) {
-      var json = e.responseJSON;
-      var error = "an error occured while trying to remove the comment";
-      if (json) {
-        error = json.error_description;
-      }
-
       self.setState({
-        errorMessage: error
+        errorMessage: "an error occured while trying to remove the comment"
       });
     });
   }
-  // Handle all input change which occures in the view.
   handleInputChange(e) {
     const target = e.target;
     var value = null,
@@ -104,7 +89,6 @@ class ProductComment extends Component {
       [name]: value
     });
   }
-  // Toggle the tooltip
   toggleTooltip(name) {
     var tooltip = this.state.tooltip;
     tooltip[name] = !tooltip[name];
@@ -112,19 +96,17 @@ class ProductComment extends Component {
       tooltip: tooltip
     });
   }
-  // Navigate between comments
   navigateComment(e, name) {
     e.preventDefault();
-    searchCommentsJson['start_index'] = (name - 1) * searchCommentsJson.count;
+    this.request['start_index'] = (name - 1) * this.request.count;
     this.refreshComments();
   }
-  // Refresh comments
   refreshComments() {
     var self = this;
     self.setState({
       isCommentsLoading: true
     });
-    ProductsService.searchComments(this.props.product.id, searchCommentsJson).then(function(obj) {
+    self.props.searchCommentsCallback(self.request).then(function(obj) {
       self.displayComments(obj);
     }).catch(function() {
       self.setState({
@@ -132,7 +114,6 @@ class ProductComment extends Component {
       });
     });
   }
-  // Add a comment
   addComment() {
     var self = this,
       isContentInvalid  = false,
@@ -170,27 +151,19 @@ class ProductComment extends Component {
 
     var json = {
       content: self.state.comment,
-      score: self.state.score,
-      product_id: self.props.product.id
+      score: self.state.score
     };
-    ProductsService.addComment(json).then(function(e) {
+    self.props.addCommentCallback(json).then(function(e) {
       self.setState({
         isAddingComment: false
       });
     }).catch(function(error) {
-      var json = error.responseJSON;
-      var errorMessage = "an error occured while trying to add the comment";
-      if (json) {
-        errorMessage = json.error_description;
-      }
-
       self.setState({
-        errorMessage: errorMessage,
+        errorMessage: "an error occured while trying to add the comment",
         isAddingComment: false
       });
     });
   }
-  // Build error tooltip
   buildErrorTooltip(validName, description) {
     var result;
     if (this.state.valid[validName]) {
@@ -202,7 +175,6 @@ class ProductComment extends Component {
 
     return result;
   }
-  // Display comments
   displayComments(obj) {
     var comments = obj['_embedded'],
       navigations = obj['_links']['navigation'],
@@ -247,7 +219,6 @@ class ProductComment extends Component {
       });
     });
   }
-  // Render the view
   render() {
     var comments = [],
       navigations = [],
@@ -341,21 +312,8 @@ class ProductComment extends Component {
         </Modal>
       </section>);
   }
-  // Execute after the render
   componentWillMount() {
     var self = this;
-    // Refresh the comments.
-    AppDispatcher.register(function(payload) {
-      switch(payload.actionName) {
-        case 'new-product-comment':
-        case 'remove-product-comment':
-          if (payload && payload.data && payload.data.product_id == self.props.product.id) {
-            self.refreshComments();
-            self.props.onRefreshScore();
-          }
-        break;
-      }
-    });
     var session = SessionService.getSession();
     if (session || session !== null) {
       OpenIdService.introspect(session.access_token).then(function(introspect) {
@@ -378,4 +336,4 @@ class ProductComment extends Component {
   }
 }
 
-export default withRouter(ProductComment);
+export default CommentLst;

@@ -6,7 +6,7 @@ import { withRouter } from 'react-router';
 import Constants from '../Constants';
 import Magnify from 'react-magnify';
 import 'react-magnify/lib/react-magnify.css'
-import { ProductsService } from './services';
+import { ProductsService } from './services/index';
 import { DescriptionTab, ProductComment } from './productabs';
 import $ from 'jquery';
 import './Products.css';

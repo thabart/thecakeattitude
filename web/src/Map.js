@@ -4,7 +4,7 @@ import TrendingSellers from './widgets/trendingSellers';
 import ShopServices from './widgets/shopServices';
 import { withRouter } from 'react-router';
 import BestDeals from './widgets/bestDeals';
-import { ShopsService } from './services';
+import { ShopsService } from './services/index';
 import PublicAnnouncements from './widgets/publicAnnouncements';
 import { withGoogleMap, GoogleMap, InfoWindow, Marker } from 'react-google-maps';
 import { MAP } from 'react-google-maps/lib/constants';

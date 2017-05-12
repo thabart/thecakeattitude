@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Slider, { Range } from 'rc-slider';
 import { Alert } from 'reactstrap';
-import { ProductsService } from '../services';
+import { ProductsService } from '../services/index';
 import Constants from '../../Constants';
 import 'rc-slider/assets/index.css';
 import './products.css';
