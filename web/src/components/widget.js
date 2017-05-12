@@ -54,7 +54,6 @@ class Widget extends Component {
             </div>
             <div className="p-2">
               <i className={this.state.isToggled ? "fa fa-arrow-up" : "fa fa-arrow-down"} aria-hidden="true" onClick={this.toggle}></i>
-              <i className="fa fa-search"></i>
               <i className="fa fa-arrows-alt" onClick={this.toggleFullScreen}></i>
               <i className="fa fa-times" onClick={this.toggleClose}></i>
             </div>

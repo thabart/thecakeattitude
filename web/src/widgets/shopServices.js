@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
 import Widget from '../components/widget';
 import Service  from '../services/ShopServices';
+import moment from 'moment';
 import Rater from 'react-rater';
 import $ from 'jquery';
+
+var daysMapping = {
+  "0": "Monday",
+  "1": "Tuesday",
+  "2": "Wednesday",
+  "3": "Thursday",
+  "4": "Friday",
+  "5": "Saturday",
+  "6": "Sunday"
+};
 
 class ShopServices extends Component {
   constructor(props) {
@@ -11,6 +22,14 @@ class ShopServices extends Component {
     this.state = {
       isLoading: false
     };
+  }
+  navigate(e, name) {
+    e.preventDefault();
+    var startIndex = name - 1;
+    var request = $.extend({}, this.request, {
+      start_index: startIndex
+    });
+    this.display(request);
   }
   navigateService(e, serviceId) {
     e.preventDefault();
@@ -22,6 +41,8 @@ class ShopServices extends Component {
         { target: "total_score", method : 'desc' },
         { target: "update_datetime", method: 'desc' }
       ],
+      from_datetime: moment().format(),
+      to_datetime: moment().format(),
       count: 5
     });
     this.request = request;
@@ -74,6 +95,15 @@ class ShopServices extends Component {
           image = service.images[0];
         }
 
+        var days = (<span>No occurrence</span>);
+        if (service.occurrence.days && service.occurrence.days.length > 0) {
+          var list = $.map(service.occurrence.days, function(val) {
+            return (<li>{daysMapping[val]}</li>);
+          });
+          days = (<ul className="no-padding tags gray">{list}</ul>);
+        }
+
+        console.log(service);
         content.push((
           <a key={service.id} href="#" className="list-group-item list-group-item-action flex-column align-items-start no-padding" onClick={(e) => { self.navigateService(e, service.id); }}>
             <div className="d-flex w-100">
@@ -82,6 +112,9 @@ class ShopServices extends Component {
                 <div className="mb-1">{service.name}</div>
                 <div className="mb-1">
                   <Rater total={5} rating={service.average_score} interactive={false} /><i>Comments : {service.nb_comments}</i>
+                </div>
+                <div className="mb-1">
+                  {days}
                 </div>
               </div>
             </div>
