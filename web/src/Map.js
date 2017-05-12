@@ -163,6 +163,7 @@ class Map extends Component {
     };
     self.refs.trendingSellers.refresh(json);
     self.refs.bestDeals.refresh(json);
+    self.refs.shopServices.refresh(json);
     ShopsService.search(json).then(function(r) {
       var embedded = r['_embedded'];
       if (!(embedded instanceof Array)) {
@@ -231,7 +232,7 @@ class Map extends Component {
                 <PublicAnnouncements />
               </li>
               <li className="col-md-5 cell widget">
-                <ShopServices />
+                <ShopServices ref="shopServices" history={this.props.history} />
               </li>
             </ul>
           </div>

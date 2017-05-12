@@ -487,7 +487,9 @@ namespace Cook4Me.Api.Host.Builders
                 Name = jObj.Value<string>(Constants.DtoNames.Service.Name),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 ShopId = jObj.Value<string>(Constants.DtoNames.Service.ShopId),
-                Orders = orders
+                Orders = orders,
+                NorthEast = northEastLocation,
+                SouthWest = southWestLocation
             };
 
             if (fromDateTime != null && !fromDateTime.Equals(default(DateTime)))
