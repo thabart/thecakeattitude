@@ -131,7 +131,7 @@ class Services extends Component {
               <div className="row">
                 <div className="col-md-12">
                   {tags.length > 0 && (
-                    <ul className="no-padding tags col-md-12">
+                    <ul className="no-padding tags col-md-12 gray">
                       {tags}
                     </ul>)
                   }

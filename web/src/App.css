@@ -38,6 +38,11 @@ ul.tags li {
 	margin-right: 5px;
 }
 
+ul.gray li {
+  border: 1px solid #f1f0f0;
+  color: gray;
+}
+
 ul.no-style {
   list-style-type: none;
 }

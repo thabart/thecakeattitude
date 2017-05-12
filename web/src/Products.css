@@ -14,11 +14,6 @@
   display: block;
 }
 
-.product-section .tags li {
-  border: 1px solid #f1f0f0;
-  color: gray;
-}
-
 .product-section .title {
   float: left;
   display: block;

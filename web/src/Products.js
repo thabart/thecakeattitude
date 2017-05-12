@@ -147,7 +147,7 @@ class Products extends Component {
               </div>
               <div className="row">
                 {tags.length > 0 && (
-                  <ul className="tags col-md-12">
+                  <ul className="tags col-md-12 gray">
                     {tags}
                   </ul>)
                 }

@@ -136,16 +136,17 @@ class List extends Component {
         if (service.occurrence &&  service.occurrence !== null) {
           var days = (<span>No occurrence</span>);
           if (service.occurrence.days && service.occurrence.days.length > 0) {
-            var joinedDays = $.map(service.occurrence.days, function(val) {
-              return daysMapping[val];
-            }).join(',');
-            days = joinedDays;
+            var list = $.map(service.occurrence.days, function(val) {
+              return (<li>{daysMapping[val]}</li>);
+            });
+            days = (<ul className="no-padding tags gray">{list}</ul>);
           }
-          occurrence = (<p>
-            Start : {moment(service.occurrence.start_datetime).format('LLL')}<br/>
-            End : {moment(service.occurrence.end_datetime).format('LLL')}<br/>
-            {days}
-          </p>)
+
+          occurrence = (<table>
+            <tr><td>Start</td><td>{moment(service.occurrence.start_datetime).format('LLL')}</td></tr>
+            <tr><td>End</td><td>{moment(service.occurrence.end_datetime).format('LLL')}</td></tr>
+            <tr><td colSpan="2">{days}</td></tr>
+          </table>);
         }
 
         services.push((<section className="row product-item" key={service.id} onClick={() => { self.navigateToService(service.id); }}>
