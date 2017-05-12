@@ -26,6 +26,8 @@ namespace Cook4Me.Api.Core.Events.Product
         public string Content { get; set; }
         public int Score { get; set; }
         public string Subject { get; set; }
+        public double AverageScore { get; set; }
+        public int NbComments { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
     }

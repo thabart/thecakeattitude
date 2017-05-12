@@ -18,6 +18,7 @@ class Products extends Component {
     this.toggleError = this.toggleError.bind(this);
     this.changeImage = this.changeImage.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.refreshScore = this.refreshScore.bind(this);
     this.navigateGeneral = this.navigateGeneral.bind(this);
     this.navigateComments = this.navigateComments.bind(this);
     this.state = {
@@ -26,6 +27,17 @@ class Products extends Component {
       currentImageIndice: 0,
       product: null
     };
+  }
+  refreshScore(data) {
+    var product = this.state.product;
+    product['average_score'] = data['average_score'];
+    product['nb_comments'] = data['nb_comments'];
+    this.refs.score.setState({
+      rating: product['average_score']
+    });
+    this.setState({
+      product: product
+    });
   }
   refresh() {
     var self = this;
@@ -91,7 +103,7 @@ class Products extends Component {
     }
 
     if (action === "comments") {
-      content = (<ProductComment product={self.state.product} onRefreshScore={self.refresh} />);
+      content = (<ProductComment product={self.state.product} onRefreshScore={self.refreshScore} />);
     } else {
       content = (<DescriptionTab product={self.state.product} />);
       action = "general";
@@ -126,7 +138,7 @@ class Products extends Component {
                   <h3 className="title">{this.state.product.name}</h3>
                   <div className="rating">
                     <div className="stars">
-                      <Rater total={5} rating={this.state.product.average_score} interactive={false} />
+                      <Rater total={5} ref="score" rating={this.state.product.average_score} interactive={false} />
                       <b> {this.state.product.average_score} </b>
                     </div>
                     <span className="comments">Comments({this.state.product.nb_comments})</span>

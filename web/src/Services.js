@@ -16,11 +16,24 @@ class Services extends Component {
     this.changeImage = this.changeImage.bind(this);
     this.navigateGeneral = this.navigateGeneral.bind(this);
     this.navigateComments = this.navigateComments.bind(this);
+    this.refreshScore = this.refreshScore.bind(this);
     this.state = {
       loading: false,
       errorMessage: null,
-      currentImageIndice: 0
+      currentImageIndice: 0,
+      service: null
     };
+  }
+  refreshScore(data) {
+    var service = this.state.service;
+    service['average_score'] = data['average_score'];
+    service['nb_comments'] = data['nb_comments'];
+    this.refs.score.setState({
+      rating: service['average_score']
+    });
+    this.setState({
+      service: service
+    });
   }
   changeImage(e) {
     e.preventDefault();
@@ -45,7 +58,6 @@ class Services extends Component {
         service: r['_embedded']
       });
     }).catch(function(e) {
-      console.log(e);
       self.setState({
         errorMessage: 'An error occured while trying to retrieve the service',
         isLoading: false
@@ -74,7 +86,7 @@ class Services extends Component {
       content = null,
       currentImageSrc = "/images/default-service.jpg";
     if (action === 'comments') {
-        content = (<CommentTab service={self.state.service} />);
+        content = (<CommentTab service={self.state.service} onRefreshScore={self.refreshScore} />);
     } else {
       content = (<DescriptionTab service={self.state.service} />);
       action = 'general';
@@ -109,7 +121,7 @@ class Services extends Component {
                   <h3 className="title">{self.state.service.name}</h3>
                   <div className="rating">
                     <div className="stars">
-                      <Rater total={5} rating={self.state.service.average_score} interactive={false} />
+                      <Rater total={5} ref="score" rating={self.state.service.average_score} interactive={false} />
                       <b> {self.state.service.average_score} </b>
                     </div>
                     <span className="comments">Comments({self.state.service.nb_comments})</span>

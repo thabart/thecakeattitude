@@ -340,6 +340,8 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
             jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
+            jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
         }
 
@@ -358,6 +360,8 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
             jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
+            jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
         }
 
@@ -371,10 +375,11 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
+            jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
+            jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
         }
-
-
+        
         public JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment)
         {
             if (comment == null)
@@ -385,6 +390,8 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ServiceId, comment.ServiceId);
+            jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
+            jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
         }
 
@@ -403,6 +410,8 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
             jObj.Add(Constants.DtoNames.Comment.CreateDatetime, comment.CreateDateTime);
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
+            jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
         }
 
@@ -416,6 +425,8 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ProductId, comment.ProductId);
+            jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
+            jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
         }
 

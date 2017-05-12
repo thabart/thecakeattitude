@@ -58,6 +58,18 @@ class App extends Component {
         data: message
       });
     });
+    proxy.on('serviceCommentAdded', function(message) {
+      AppDispatcher.dispatch({
+        actionName: 'new-service-comment',
+        data: message
+      });
+    });
+    proxy.on('serviceCommentRemoved', function(message) {
+      AppDispatcher.dispatch({
+        actionName: 'remove-service-comment',
+        data: message
+      });
+    });
     connection.start({ jsonp: false })
       .done(function(){
         console.log('Now connected, connection ID=' + connection.id);

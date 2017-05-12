@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { CommentLst } from '../components';
 import ShopServices from '../services/ShopServices';
+import AppDispatcher from '../appDispatcher';
 
 class Comments extends Component {
   constructor(props) {
@@ -20,23 +21,22 @@ class Comments extends Component {
     return ShopServices.addComment(comment);
   }
   render() {
-    return (<CommentLst removeCommentCallback={this.removeCommentCallback} searchCommentsCallback={this.searchCommentsCallback} addCommentCallback={this.addCommentCallback} />);
+    return (<CommentLst ref="comments" className="col-md-12" removeCommentCallback={this.removeCommentCallback} searchCommentsCallback={this.searchCommentsCallback} addCommentCallback={this.addCommentCallback} />);
   }
   componentWillMount() {
+    var self = this;
     // Refresh the comments.
-    /*
     AppDispatcher.register(function(payload) {
       switch(payload.actionName) {
-        case 'new-product-comment':
-        case 'remove-product-comment':
-          if (payload && payload.data && payload.data.product_id == self.props.product.id) {
-            self.refreshComments();
-            self.props.onRefreshScore();
+        case 'new-service-comment':
+        case 'remove-service-comment':
+          if (payload && payload.data && payload.data.service_id === self.props.service.id) {
+            self.refs.comments.refreshComments();
+            self.props.onRefreshScore(payload.data);
           }
         break;
       }
     });
-    */
   }
 }
 

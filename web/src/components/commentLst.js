@@ -7,6 +7,7 @@ import moment from 'moment';
 import Rater from 'react-rater';
 import Constants from '../../Constants';
 import $ from 'jquery';
+import './commentLst.css';
 
 class CommentLst extends Component {
   constructor(props) {
@@ -63,9 +64,7 @@ class CommentLst extends Component {
     self.setState({
       isRemoveCommentOpened: false
     });
-    self.props.removeCommentCallback(this.state.currentComment).then(function() {
-      self.refreshComments();
-    }).catch(function(e) {
+    self.props.removeCommentCallback(this.state.currentComment).catch(function(e) {
       self.setState({
         errorMessage: "an error occured while trying to remove the comment"
       });
@@ -158,8 +157,14 @@ class CommentLst extends Component {
         isAddingComment: false
       });
     }).catch(function(error) {
+      var json = error.responseJSON;
+      var errorMessage = "an error occured while trying to add the comment";
+      if (json) {
+        errorMessage = json.error_description;
+      }
+
       self.setState({
-        errorMessage: "an error occured while trying to add the comment",
+        errorMessage: errorMessage,
         isAddingComment: false
       });
     });
@@ -238,7 +243,7 @@ class CommentLst extends Component {
           picture = Constants.openIdUrl + picture;
         }
 
-        comments.push((<div className="col-md-12">
+        comments.push((<div className={self.props.className}>
           {comment.subject === self.state.subject && <div className="close-comment"><i className="fa fa-times" onClick={() => { self.displayRemoveComment(comment.id); }}></i></div> }
           <div className="element">
             <div className="row header">
