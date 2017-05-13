@@ -79,7 +79,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (!string.IsNullOrWhiteSpace(parameter.TagName))
             {
-                services = services.Where(s => s.Tags != null && s.Tags.Any(t => t.TagName.ToLowerInvariant().Contains(parameter.TagName.ToLowerInvariant())));
+                services = services.Where(s => s.Tags.Count() > 0 && s.Tags.Any(t => t.TagName.ToLowerInvariant().Contains(parameter.TagName.ToLowerInvariant())));
             }
 
             if (parameter.NorthEast != null && parameter.SouthWest != null)
