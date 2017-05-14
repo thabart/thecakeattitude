@@ -2,116 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60ae2116-c90b-4b29-bad5-cdacbb892009" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/wwwroot/services/service.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/images/default-service.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Aggregates/ServiceComment.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Commands/Service/AddServiceCommentCommand.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Commands/Service/RemoveServiceCommentCommand.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Service/ServiceCommentAddedEvent.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Service/ServiceCommentRemovedEvent.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchServiceCommentParameter.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchServiceOccurrenceParameter.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Results/SearchServiceCommentsResult.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Results/SearchServiceOccurrenceResult.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Handlers/ServiceCommandsHandler.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Enrichers/ServiceCommentEnricher.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Enrichers/ServiceEnricher.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Enrichers/ServiceOccurrenceEnricher.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Handlers/ServiceEventsHandler.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Operations/Services/AddServiceCommentOperation.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Operations/Services/GetServiceOperation.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Operations/Services/RemoveServiceCommentOperation.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Operations/Services/SearchServiceOccurrencesOperation.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Operations/Services/SearchShopCommentsOperation.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Validators/RemoveServiceCommentValidator.cs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/wwwroot/shops/29979844-3b09-4be0-bc48-a1a5feca10bb_shop.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/wwwroot/shops/29979844-3b09-4be0-bc48-a1a5feca10bb_underground.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/wwwroot/shops/52b16dac-3565-4e89-88c3-210de23e71b9_shop.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/wwwroot/shops/52b16dac-3565-4e89-88c3-210de23e71b9_underground.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Services.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/commentLst.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/services/ShopServices.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/servicetabs/comments.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/servicetabs/description.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/servicetabs/index.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/widgets/shopServices.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/App.test.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Error.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Sellers.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/addshoptabs/paymentForm.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/appDispatcher.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/game/game.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/productabs/descriptionTab.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/productabs/productComment.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/shopProfile/comment.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/shopProfile/productElt.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/shopProfile/shopService/calendar.jsx" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/shopProfile/shopService/list.jsx" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/simpleidserver" afterPath="$PROJECT_DIR$/../api/simpleidserver" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Aggregates/ServiceAggregate.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Aggregates/ServiceAggregate.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Product/ProductCommentAddedEvent.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Product/ProductCommentAddedEvent.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Product/ProductCommentRemovedEvent.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Product/ProductCommentRemovedEvent.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Shop/ShopCommentAddedEvent.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Shop/ShopCommentAddedEvent.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Shop/ShopCommentRemovedEvent.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Events/Shop/ShopCommentRemovedEvent.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchProductsParameter.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchProductsParameter.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchServiceParameter.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchServiceParameter.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchShopsParameter.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Parameters/SearchShopsParameter.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Repositories/IServiceRepository.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Core/Repositories/IServiceRepository.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Extensions/MappingExtensions.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Extensions/MappingExtensions.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Models/Service.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Models/Service.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Repositories/ProductRepository.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Repositories/ProductRepository.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Repositories/ServiceRepository.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Repositories/ServiceRepository.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Repositories/ShopRepository.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.EF/Repositories/ShopRepository.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Handlers/ProductCommandsHandler.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Handlers/ProductCommandsHandler.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Handlers/ServiceCollectionExtensions.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Handlers/ServiceCollectionExtensions.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Handlers/ShopCommandsHandler.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Handlers/ShopCommandsHandler.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Builders/RequestBuilder.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Builders/RequestBuilder.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Builders/ResponseBuilder.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Builders/ResponseBuilder.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Constants.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Constants.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Controllers/ConfigurationController.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Controllers/ConfigurationController.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Controllers/ServicesController.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Controllers/ServicesController.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Dtos/Link.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Dtos/Link.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/ErrorDescriptions.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/ErrorDescriptions.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Extensions/CookDbContextExtensions.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Extensions/CookDbContextExtensions.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Handlers/HandlersInitiator.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Handlers/HandlersInitiator.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Operations/Services/SearchServicesOperation.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Operations/Services/SearchServicesOperation.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Startup.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Startup.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Validators/AddCommentValidator.cs" afterPath="$PROJECT_DIR$/../api/src/Cook4Me.Api.Host/Validators/AddCommentValidator.cs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/Hugo.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Hugo.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Constants.js" afterPath="$PROJECT_DIR$/Constants.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AddShop.js" afterPath="$PROJECT_DIR$/src/AddShop.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.css" afterPath="$PROJECT_DIR$/src/App.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.js" afterPath="$PROJECT_DIR$/src/App.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Header.css" afterPath="$PROJECT_DIR$/src/Header.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Header.js" afterPath="$PROJECT_DIR$/src/Header.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Map.css" afterPath="$PROJECT_DIR$/src/Map.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Map.js" afterPath="$PROJECT_DIR$/src/Map.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Products.css" afterPath="$PROJECT_DIR$/src/Products.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Products.js" afterPath="$PROJECT_DIR$/src/Products.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Shop.css" afterPath="$PROJECT_DIR$/src/Shop.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Shop.js" afterPath="$PROJECT_DIR$/src/Shop.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/addshoptabs/addressForm.js" afterPath="$PROJECT_DIR$/src/addshoptabs/addressForm.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/addshoptabs/contactInfoForm.js" afterPath="$PROJECT_DIR$/src/addshoptabs/contactInfoForm.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/addshoptabs/descriptionForm.js" afterPath="$PROJECT_DIR$/src/addshoptabs/descriptionForm.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/widget.css" afterPath="$PROJECT_DIR$/src/components/widget.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/components/widget.js" afterPath="$PROJECT_DIR$/src/components/widget.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/game/states/shopchooser.js" afterPath="$PROJECT_DIR$/src/game/states/shopchooser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/productabs/descriptionTab.css" afterPath="$PROJECT_DIR$/src/productabs/descriptionTab.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/productabs/descriptionTab.js" afterPath="$PROJECT_DIR$/src/productabs/descriptionTab.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/productabs/productComment.js" afterPath="$PROJECT_DIR$/src/productabs/productComment.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/services/index.js" afterPath="$PROJECT_DIR$/src/services/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shopProfile/bestDeals.js" afterPath="$PROJECT_DIR$/src/shopProfile/bestDeals.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shopProfile/comment.js" afterPath="$PROJECT_DIR$/src/shopProfile/comment.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shopProfile/products.js" afterPath="$PROJECT_DIR$/src/shopProfile/products.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shopProfile/services.js" afterPath="$PROJECT_DIR$/src/shopProfile/services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shopProfile/shopService/calendar.css" afterPath="$PROJECT_DIR$/src/shopProfile/shopService/calendar.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shopProfile/shopService/calendar.js" afterPath="$PROJECT_DIR$/src/shopProfile/shopService/calendar.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/shopProfile/shopService/list.js" afterPath="$PROJECT_DIR$/src/shopProfile/shopService/list.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/widgets/bestDeals.js" afterPath="$PROJECT_DIR$/src/widgets/bestDeals.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/widgets/trendingSellers.js" afterPath="$PROJECT_DIR$/src/widgets/trendingSellers.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/productabs/productComment.css" afterPath="$PROJECT_DIR$/src/components/commentLst.css" />
     </list>
     <ignored path="web.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -221,8 +112,8 @@
       <file leaf-file-name="App.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1019">
-              <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+            <state relative-caret-position="392">
+              <caret line="111" column="44" selection-start-line="111" selection-start-column="44" selection-end-line="111" selection-end-column="44" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -465,12 +356,12 @@
       <workItem from="1494447415440" duration="16000" />
       <workItem from="1494668246817" duration="27545000" />
       <workItem from="1494748391674" duration="2890000" />
-      <workItem from="1494787162374" duration="7915000" />
+      <workItem from="1494787162374" duration="8063000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="42146000" />
+    <option name="totallyTimeSpent" value="42294000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
@@ -624,7 +515,7 @@
           <caret line="7" column="23" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
           <folding>
             <element signature="e#0#39#0" expanded="false" />
-            <marker date="1494669017996" expanded="true" signature="18329:18362" ph="..." />
+            <marker date="1494795436969" expanded="true" signature="18329:18362" ph="..." />
           </folding>
         </state>
       </provider>
@@ -682,6 +573,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -890,8 +782,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1019">
-          <caret line="28" column="26" selection-start-line="28" selection-start-column="26" selection-end-line="28" selection-end-column="26" />
+        <state relative-caret-position="392">
+          <caret line="111" column="44" selection-start-line="111" selection-start-column="44" selection-end-line="111" selection-end-column="44" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
