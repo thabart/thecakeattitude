@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Product;
+using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
@@ -28,6 +29,7 @@ namespace Cook4Me.Api.Host.Validators
     {
         Task<AddCommentValidationResult> Validate(AddShopCommentCommand comment);
         Task<AddCommentValidationResult> Validate(AddProductCommentCommand command);
+        Task<AddCommentValidationResult> Validate(AddServiceCommentCommand command);
     }
 
     public class AddCommentValidationResult
@@ -51,11 +53,13 @@ namespace Cook4Me.Api.Host.Validators
     {
         private readonly IShopRepository _shopRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IServiceRepository _serviceRepository;
 
-        public AddCommentValidator(IShopRepository shopRepository, IProductRepository productRepository)
+        public AddCommentValidator(IShopRepository shopRepository, IProductRepository productRepository, IServiceRepository serviceRepository)
         {
             _shopRepository = shopRepository;
             _productRepository = productRepository;
+            _serviceRepository = serviceRepository;
         }
 
         public async Task<AddCommentValidationResult> Validate(AddShopCommentCommand comment)
@@ -142,6 +146,44 @@ namespace Cook4Me.Api.Host.Validators
             }
 
             return new AddCommentValidationResult();
+        }
+
+        public async Task<AddCommentValidationResult> Validate(AddServiceCommentCommand command)
+        {
+            if (command == null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            var validationResult = Validate(command.ServiceId, command.Content, command.Score, Constants.DtoNames.Comment.ServiceId);
+            if (!validationResult.IsValid)
+            {
+                return validationResult;
+            }
+
+            ServiceAggregate service = null;
+            // Check shop exists && 1 comment.
+            if (!string.IsNullOrWhiteSpace(command.ServiceId))
+            {
+                service = await _serviceRepository.Get(command.ServiceId);
+                if (service == null)
+                {
+                    return new AddCommentValidationResult(ErrorDescriptions.TheServiceDoesntExist);
+                }
+
+                var comments = await _serviceRepository.Search(new SearchServiceCommentParameter
+                {
+                    ServiceId = service.Id,
+                    Subject = command.Subject
+                });
+                if (comments.TotalResults > 0)
+                {
+                    return new AddCommentValidationResult(ErrorDescriptions.TheCommentAlreadyExists);
+                }
+            }
+
+            return new AddCommentValidationResult();
+
         }
 
         private static AddCommentValidationResult Validate(string id, string content, int score, string name)

@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Commands.Product;
+using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Parameters;
 using Microsoft.AspNetCore.Http;
@@ -30,13 +31,16 @@ namespace Cook4Me.Api.Host.Builders
         AddPaymentInformation GetPaymentMethod(JObject jObj);
         AddShopCommentCommand GetAddShopComment(JObject jObj);
         AddProductCommentCommand GetAddProductComment(JObject jObj);
+        AddServiceCommentCommand GetAddServiceComment(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         Location GetLocation(JObject jObj);
         SearchShopCommentsParameter GetSearchShopComments(JObject jObj);
         SearchProductCommentsParameter GetSearchProductComments(JObject jObj);
+        SearchServiceCommentParameter GetSearchServiceComments(JObject jObj);
         SearchProductsParameter GetSearchProducts(JObject jObj);
         SearchServiceParameter GetSearchServices(JObject jObj);
+        SearchServiceOccurrenceParameter GetSearchServiceOccurrences(JObject jObj);
         SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
     }
@@ -133,10 +137,12 @@ namespace Cook4Me.Api.Host.Builders
                 CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId),
                 PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place),
                 Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject),
+                Name = jObj.Value<string>(Constants.DtoNames.Shop.Name),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 NorthEast = northEastLocation,
                 SouthWest = southWestLocation,
                 OrderBy = orderBy,
-                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+                TagName = jObj.Value<string>(Constants.DtoNames.SearchShop.Tag)
             };
             var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
             if (count > 0)
@@ -240,6 +246,21 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
+        public AddServiceCommentCommand GetAddServiceComment(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new AddServiceCommentCommand
+            {
+                Content = jObj.Value<string>(Constants.DtoNames.Comment.Content),
+                Score = jObj.Value<int>(Constants.DtoNames.Comment.Score),
+                ServiceId = jObj.Value<string>(Constants.DtoNames.Comment.ServiceId)
+            };
+        }
+
         public SearchShopCommentsParameter GetSearchShopComments(JObject jObj)
         {
             if (jObj == null)
@@ -269,6 +290,27 @@ namespace Cook4Me.Api.Host.Builders
             }
             
             var result = new SearchProductCommentsParameter
+            {
+                Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+            };
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
+        public SearchServiceCommentParameter GetSearchServiceComments(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new SearchServiceCommentParameter
             {
                 Subject = jObj.Value<string>(Constants.DtoNames.Comment.Subject),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
@@ -348,13 +390,58 @@ namespace Cook4Me.Api.Host.Builders
                 CategoryId = jObj.Value<string>(Constants.DtoNames.Product.CategoryId),
                 Orders = orderBy,
                 NorthEast = northEastLocation,
-                SouthWest = southWestLocation
+                SouthWest = southWestLocation,
+                TagName = jObj.Value<string>(Constants.DtoNames.SearchShop.Tag)
             };
 
             bool containsValidPromotion = false;
             if (bool.TryParse(containsValidPromotionStr, out containsValidPromotion))
             {
                 result.ContainsActivePromotion = containsValidPromotion;
+            }
+
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
+        public SearchServiceOccurrenceParameter GetSearchServiceOccurrences(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            Location northEastLocation = null, southWestLocation = null;
+            var neLocation = jObj[Constants.DtoNames.SearchService.NorthEast];
+            var swLocation = jObj[Constants.DtoNames.SearchService.SouthWest];
+            if (neLocation != null && swLocation != null)
+            {
+                northEastLocation = GetLocation(neLocation as JObject);
+                southWestLocation = GetLocation(swLocation as JObject);
+            }
+
+            var fromDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.FromDateTime);
+            var toDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.ToDateTime);
+            var result = new SearchServiceOccurrenceParameter
+            {
+                Name = jObj.Value<string>(Constants.DtoNames.Service.Name),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                ShopId = jObj.Value<string>(Constants.DtoNames.Service.ShopId)
+            };
+
+            if (fromDateTime != null && !fromDateTime.Equals(default(DateTime)))
+            {
+                result.FromDateTime = fromDateTime;
+            }
+
+            if (toDateTime != null && !toDateTime.Equals(default(DateTime)))
+            {
+                result.ToDateTime = toDateTime;
             }
 
             if (count > 0)
@@ -382,12 +469,31 @@ namespace Cook4Me.Api.Host.Builders
                 southWestLocation = GetLocation(swLocation as JObject);
             }
 
+            var orders = new List<OrderBy>();
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchService.Orders);
+            if (ordersObj != null)
+            {
+                var arr = ordersObj as JArray;
+                if (arr != null)
+                {
+                    foreach (var order in arr)
+                    {
+                        orders.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
+
             var fromDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.FromDateTime);
             var toDateTime = jObj.Value<DateTime>(Constants.DtoNames.SearchService.ToDateTime);
             var result = new SearchServiceParameter
             {
                 Name = jObj.Value<string>(Constants.DtoNames.Service.Name),
-                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                ShopId = jObj.Value<string>(Constants.DtoNames.Service.ShopId),
+                Orders = orders,
+                NorthEast = northEastLocation,
+                SouthWest = southWestLocation,
+                TagName = jObj.Value<string>(Constants.DtoNames.SearchService.Tag)
             };
 
             if (fromDateTime != null && !fromDateTime.Equals(default(DateTime)))

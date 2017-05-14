@@ -1,3 +1,7 @@
+.nav-height {
+    height: 6%;
+}
+
 .separator {
     text-align: center;
     color: gray;
@@ -11,9 +15,4 @@
     font-size: 24px;
     width: 24px;
     height: 24px;
-}
-
-a.active-menu-item {
-    background-color: #efecec !important;
-    color: rgba(0, 0, 0, 0.9) !important;
 }

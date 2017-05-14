@@ -29,6 +29,9 @@ namespace Cook4Me.Api.EF.Models
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public virtual Shop Shop { get; set; }
+        public int TotalScore { get; set; }
+        public double AverageScore { get; set; }
+        public double NewPrice { get; set; }
         public virtual ServiceOccurrence Occurrence { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<ServiceImage> Images { get; set; }

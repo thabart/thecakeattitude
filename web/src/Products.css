@@ -14,11 +14,14 @@
     display: block;
 }
 
+<<<<<<< HEAD
 .product-section .tags li {
     border: 1px solid #f1f0f0;
     color: gray;
 }
 
+=======
+>>>>>>> master
 .product-section .title {
     float: left;
     display: block;
@@ -38,6 +41,7 @@
     padding-left: 8px;
 }
 
+<<<<<<< HEAD
 .product-section .imgs {
     padding-top: 20px;
 }
@@ -69,6 +73,8 @@
     height: 433px;
 }
 
+=======
+>>>>>>> master
 .product-section .new-price {
     padding-left: 5px;
 }

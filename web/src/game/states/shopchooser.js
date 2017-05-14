@@ -1,4 +1,4 @@
-import {ShopsService, CategoryService} from "../../services";
+import {ShopsService, CategoryService} from "../../services/index";
 
 class ShopChooser extends window.Phaser.State {
     init(category, component) {

@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Host
             public const string Parents = "parents";
             public const string Claims = "claims";
             public const string Search = ".search";
+            public const string SearchOccurrences = "occurrences/.search";
             public const string Tags = "tags";
             public const string Comments = "comments";
             public const string SearchShopsComment = "{id}/comments";
@@ -116,8 +117,25 @@ namespace Cook4Me.Api.Host
 
             public static class Service
             {
+                public const string Id = "id";
                 public const string ShopId = "shop_id";
                 public const string Name = "name";
+                public const string Description = "description";
+                public const string Price = "price";
+                public const string NewPrice = "new_price";
+                public const string Images = "images";
+                public const string Tags = "tags";
+                public const string Occurrence = "occurrence";
+                public const string AverageScore = "average_score";
+                public const string TotalScore = "total_score";
+                public const string NbComments = "nb_comments";
+            }
+
+            public static class ServiceOccurrence
+            {
+                public const string StartDateTime = "start_datetime";
+                public const string EndDateTime = "end_datetime";
+                public const string Days = "days";
             }
 
             public static class SearchService
@@ -126,6 +144,8 @@ namespace Cook4Me.Api.Host
                 public const string ToDateTime = "to_datetime";
                 public const string NorthEast = "ne";
                 public const string SouthWest = "sw";
+                public const string Orders = "orders";
+                public const string Tag = "tag";
             }
 
             public static class Comment
@@ -135,9 +155,13 @@ namespace Cook4Me.Api.Host
                 public const string Score = "score";
                 public const string ShopId = "shop_id";
                 public const string ProductId = "product_id";
+                public const string ServiceId = "service_id";
                 public const string Subject = "subject";
                 public const string CreateDatetime = "create_datetime";
                 public const string UpdateDatetime = "update_datetime";
+                public const string NbComments = "nb_comments";
+                public const string TotalScore = "total_score";
+                public const string AverageScore = "average_score";
             }
 
             public static class RatingSummary
@@ -243,6 +267,7 @@ namespace Cook4Me.Api.Host
                 public const string NorthEast = "ne";
                 public const string SouthWest = "sw";
                 public const string Orders = "orders";
+                public const string Tag = "tag";
             }
 
             public static class SearchProduct

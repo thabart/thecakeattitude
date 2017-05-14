@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
@@ -22,6 +23,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -35,6 +37,28 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
+        public async Task<ServiceAggregate> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var record = await _context.Services
+                .Include(p => p.Images)
+                .Include(p => p.Tags).ThenInclude(t => t.Tag)
+                .Include(p => p.Shop)
+                .Include(p => p.Occurrence).ThenInclude(o => o.Days)
+                .Include(p => p.Comments)
+                .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
+            if (record == null)
+            {
+                return null;
+            }
+
+            return record.ToAggregate();
+        }
+
         public async Task<SearchServiceResult> Search(SearchServiceParameter parameter)
         {
             if (parameter == null)
@@ -42,7 +66,68 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
+            IQueryable<Models.Service> services = _context.Services
+                .Include(p => p.Images)
+                .Include(p => p.Tags)
+                .Include(p => p.Shop)
+                .Include(p => p.Occurrence).ThenInclude(o => o.Days)
+                .Include(p => p.Comments);
+            if (!string.IsNullOrWhiteSpace(parameter.ShopId))
+            {
+                services = services.Where(p => p.ShopId == parameter.ShopId);
+            }
 
+            if (!string.IsNullOrWhiteSpace(parameter.TagName))
+            {
+                services = services.Where(s => s.Tags != null && s.Tags.Any(t => t.TagName.ToLowerInvariant().Contains(parameter.TagName.ToLowerInvariant())));
+            }
+
+            if (parameter.NorthEast != null && parameter.SouthWest != null)
+            {
+                services = services.Where(p => p.Shop.Latitude >= parameter.SouthWest.Latitude && p.Shop.Latitude <= parameter.NorthEast.Latitude
+                    && p.Shop.Longitude >= parameter.SouthWest.Longitude && p.Shop.Longitude <= parameter.NorthEast.Longitude);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Name))
+            {
+                services = services.Where(p => p.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
+            }
+
+            if (parameter.FromDateTime != null && parameter.ToDateTime != null)
+            {
+                services = services.Where(p => p.Occurrence != null && p.Occurrence.StartDate < parameter.ToDateTime);
+            }
+
+            if (parameter.Orders != null)
+            {
+                foreach (var order in parameter.Orders)
+                {
+                    services = Order(order, "update_datetime", s => s.UpdateDateTime, services);
+                    services = Order(order, "create_datetime", s => s.CreateDateTime, services);
+                    services = Order(order, "average_score", s => s.AverageScore, services);
+                    services = Order(order, "total_score", s => s.TotalScore, services);
+                    services = Order(order, "price", s => s.NewPrice, services);
+                }
+            }
+
+            services.OrderByDescending(s => s.UpdateDateTime);
+            var result = new SearchServiceResult
+            {
+                TotalResults = await services.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            if (parameter.IsPagingEnabled)
+            {
+                services = services.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await services.Select(s => s.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task<SearchServiceOccurrenceResult> Search(SearchServiceOccurrenceParameter parameter)
+        {
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
@@ -69,59 +154,216 @@ namespace Cook4Me.Api.EF.Repositories
                 services = services.Where(p => p.ServiceOccurrence.Service.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
             }
 
-            if (parameter.FromDateTime != null && parameter.ToDateTime != null)
+            var lines = new List<ServiceResultLine>();
+            var fromDay = (int)parameter.FromDateTime.DayOfWeek;
+            var toDay = (int)parameter.ToDateTime.DayOfWeek;
+            var fromDate = parameter.FromDateTime.Date;
+            var toDate = parameter.ToDateTime.Date;
+            var tmp = toDate - fromDate;
+            var totalDays = tmp.Days;
+            var nbDays = tmp.Days;
+            var days = new List<string>();
+            if (fromDay + nbDays <= 6)
             {
-                var fromDay = (int)parameter.FromDateTime.Value.DayOfWeek;
-                var toDay = (int)parameter.ToDateTime.Value.DayOfWeek;
-                var fromDate = parameter.FromDateTime.Value.Date;
-                var toDate = parameter.ToDateTime.Value.Date;
-                var tmp = toDate - fromDate;
-                var nbDays = tmp.Days;
-                var days = new List<string>();
-                if (fromDay + nbDays <= 6)
+                for (var i = fromDay; i <= fromDay + nbDays; i++)
                 {
-                    for (var i = fromDay; i <= fromDay + nbDays; i++)
-                    {
-                        days.Add(i.ToString());
-                    }
+                    days.Add(i.ToString());
                 }
-                else
+            }
+            else
+            {
+                for(var i = fromDay; i <= 6; i++)
                 {
-                    for(var i = fromDay; i <= 6; i++)
-                    {
-                        nbDays--;
-                        days.Add(i.ToString());
-                    }
-
-                    var diff = fromDay - nbDays;
-                    if (diff < 0)
-                    {
-                        diff = fromDay;
-                    }
-
-                    for (var i = 0; i < fromDay; i++)
-                    {
-                        days.Add(i.ToString());
-                    }
+                    nbDays--;
+                    days.Add(i.ToString());
                 }
 
-                
-                services = services.Where(p => fromDate >= p.ServiceOccurrence.StartDate && toDate <= p.ServiceOccurrence.EndDate && days.Contains(p.DayId));
+                var diff = fromDay - nbDays;
+                if (diff < 0)
+                {
+                    diff = fromDay;
+                }
+
+                for (var i = 0; i < fromDay; i++)
+                {
+                    days.Add(i.ToString());
+                }
             }
 
-            var result = new SearchServiceResult
+            
+            var occurrences = await services
+                .Where(p => p.ServiceOccurrence.StartDate < toDate && days.Contains(p.DayId))
+                .ToListAsync().ConfigureAwait(false);
+            var nbWeeks = Math.Ceiling((decimal)totalDays / (decimal)7);
+            var remainingDays = totalDays;
+            for (var i = 0; i < nbWeeks; i++)
             {
-                TotalResults = await services.CountAsync().ConfigureAwait(false),
+                var fromDateTime = fromDate.AddDays(i * 7);
+                var max = (remainingDays < 7) ? remainingDays : 6;
+                var mapping = new Dictionary<string, DateTime>();
+                var nextDateTime = fromDate.AddDays(i * 7 + max + 1);
+                for (var y = 0; y <= max; y++)
+                {
+                    var newDateTime = fromDate.AddDays(i * 7 + y);
+                    mapping.Add(((int)newDateTime.DayOfWeek).ToString(), newDateTime);
+                }
+
+                foreach (var occurrence in occurrences)
+                {
+                    if (!mapping.Keys.Contains(occurrence.DayId) 
+                        || nextDateTime < occurrence.ServiceOccurrence.StartDate
+                        || fromDateTime > occurrence.ServiceOccurrence.EndDate)
+                    {
+                        continue;
+                    }
+
+                    lines.Add(occurrence.ServiceOccurrence.Service.ToAggregate(occurrence.ServiceOccurrence, mapping[occurrence.DayId]));
+                }
+
+                remainingDays -= 7;
+            }
+
+            var result = new SearchServiceOccurrenceResult
+            {
+                TotalResults = lines.Count(),
                 StartIndex = parameter.StartIndex
             };
 
             if (parameter.IsPagingEnabled)
             {
-                services = services.Skip(parameter.StartIndex).Take(parameter.Count);
+                lines = lines.Skip(parameter.StartIndex).Take(parameter.Count).ToList();
             }
 
-            result.Content = await services.Select(p => p.ServiceOccurrence.Service.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            lines = lines.OrderBy(l => l.StartDateTime).ToList();
+            result.Content = lines;
             return result;
+        }
+
+        public async Task<SearchServiceCommentsResult> Search(SearchServiceCommentParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+
+            IQueryable<Models.Comment> comments = _context.Comments;
+            if (!string.IsNullOrWhiteSpace(parameter.ServiceId))
+            {
+                comments = comments.Where(c => parameter.ServiceId == c.ServiceId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                comments = comments.Where(c => c.Subject == parameter.Subject);
+            }
+
+            var result = new SearchServiceCommentsResult
+            {
+                TotalResults = await comments.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            comments = comments
+                .OrderByDescending(c => c.UpdateDateTime);
+            if (parameter.IsPagingEnabled)
+            {
+                comments = comments.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await comments.Select(c => c.ToAggregateService()).ToListAsync().ConfigureAwait(false);
+            return result;
+        }
+
+        public async Task<bool> Update(ServiceAggregate serviceAggregate)
+        {
+            if (serviceAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(serviceAggregate));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Services.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == serviceAggregate.Id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        return false;
+                    }
+
+                    record.AverageScore = serviceAggregate.AverageScore;
+                    record.Description = serviceAggregate.Description;
+                    record.Name = serviceAggregate.Name;
+                    record.NewPrice = serviceAggregate.NewPrice;
+                    record.Price = serviceAggregate.Price;
+                    record.ShopId = serviceAggregate.ShopId;
+                    record.TotalScore = serviceAggregate.TotalScore;
+                    record.UpdateDateTime = serviceAggregate.UpdateDateTime;
+                    var comments = serviceAggregate.Comments == null ? new List<ServiceComment>() : serviceAggregate.Comments;
+                    var commentIds = comments.Select(c => c.Id);
+                    // Update the comments
+                    if (record.Comments != null)
+                    {
+                        var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
+                        var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
+                        var existingCommentIds = record.Comments.Select(c => c.Id);
+                        var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
+                        foreach (var commentToUpdate in commentsToUpdate)
+                        {
+                            var comment = comments.First(c => c.Id == commentToUpdate.Id);
+                            commentToUpdate.Score = comment.Score;
+                            commentToUpdate.Subject = comment.Subject;
+                            commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
+                            commentToUpdate.Content = comment.Content;
+                        }
+
+                        foreach (var commentToRemove in commentsToRemove)
+                        {
+                            _context.Comments.Remove(commentToRemove);
+                        }
+
+                        foreach (var commentToAdd in commentsToAdd)
+                        {
+                            var rec = new Models.Comment
+                            {
+                                Id = commentToAdd.Id,
+                                Content = commentToAdd.Content,
+                                Score = commentToAdd.Score,
+                                CreateDateTime = commentToAdd.CreateDateTime,
+                                ServiceId = serviceAggregate.Id,
+                                UpdateDateTime = commentToAdd.UpdateDateTime,
+                                Subject = commentToAdd.Subject
+                            };
+                            _context.Comments.Add(rec);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+
+        private static IQueryable<Models.Service> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Service, TKey>> keySelector, IQueryable<Models.Service> products)
+        {
+            if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (orderBy.Method == OrderByMethods.Ascending)
+                {
+                    return products.OrderBy(keySelector);
+                }
+
+                return products.OrderByDescending(keySelector);
+            }
+
+            return products;
         }
     }
 }

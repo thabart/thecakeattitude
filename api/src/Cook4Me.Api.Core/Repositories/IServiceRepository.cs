@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Results;
 using System.Threading.Tasks;
@@ -22,6 +23,10 @@ namespace Cook4Me.Api.Core.Repositories
 {
     public interface IServiceRepository
     {
+        Task<SearchServiceOccurrenceResult> Search(SearchServiceOccurrenceParameter parameter);
         Task<SearchServiceResult> Search(SearchServiceParameter parameter);
+        Task<ServiceAggregate> Get(string id);
+        Task<SearchServiceCommentsResult> Search(SearchServiceCommentParameter parameter);
+        Task<bool> Update(ServiceAggregate service);
     }
 }

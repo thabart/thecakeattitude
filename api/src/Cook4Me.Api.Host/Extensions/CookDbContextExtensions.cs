@@ -741,6 +741,9 @@ namespace Cook4Me.Api.Host.Extensions
                     Name = "first-service",
                     ShopId = _firstShopId,
                     Price = 200,
+                    AverageScore = 2.5,
+                    TotalScore = 5,
+                    NewPrice = 200,
                     Occurrence = new ServiceOccurrence
                     {
                         Id = Guid.NewGuid().ToString(),
@@ -758,10 +761,127 @@ namespace Cook4Me.Api.Host.Extensions
                             }
                         },
                         StartDate = DateTime.UtcNow.AddDays(-10),
-                        EndDate = DateTime.UtcNow.AddDays(10)
+                        EndDate = DateTime.UtcNow.AddDays(10),
+                        StartTime = new TimeSpan(4, 0, 0),
+                        EndTime = new TimeSpan(17, 0, 0)
                     },
                     CreateDateTime = DateTime.UtcNow,
-                    UpdateDateTime = DateTime.UtcNow
+                    UpdateDateTime = DateTime.UtcNow,
+                    Description = "first-description",
+                    Tags = new []
+                    {
+                        new ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        },
+                        new ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _secondHandTagName
+                        }
+                    },
+                    Images = new []
+                    {
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
+                            Id = Guid.NewGuid().ToString(),
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator",
+                            Score = 0
+                        },
+                        new Comment
+                        {
+                            Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
+                            Id = Guid.NewGuid().ToString(),
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator",
+                            Score = 5
+                        }
+                    }
+                },
+                new Service
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = "second-service",
+                    ShopId = _firstShopId,
+                    Price = 300,
+                    AverageScore = 5,
+                    TotalScore = 5,
+                    NewPrice = 300,
+                    Occurrence = new ServiceOccurrence
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Days = new List<ServiceOccurrenceDay>
+                        {
+                            new ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = "0"
+                            },
+                            new ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = "1"
+                            }
+                        },
+                        StartDate = DateTime.UtcNow.AddDays(-30),
+                        EndDate = DateTime.UtcNow.AddDays(30),
+                        StartTime = new TimeSpan(1, 0, 0),
+                        EndTime = new TimeSpan(2, 0, 0)
+                    },
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    Description = "second-description",
+                    Tags = new []
+                    {
+                        new ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    },
+                    Images = new []
+                    {
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        },
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        },
+                        new ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "/services/service.jpg"
+                        }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Content = "comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1 comment1",
+                            Id = Guid.NewGuid().ToString(),
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator",
+                            Score = 5
+                        }
+                    }
                 }
             });
         }

@@ -122,7 +122,9 @@ namespace Cook4Me.Api.Handlers
                 Score = message.Score,
                 Subject = message.Subject,
                 CreateDateTime = message.CreateDateTime,
-                UpdateDateTime = message.UpdateDateTime
+                UpdateDateTime = message.UpdateDateTime,
+                AverageScore = record.AverageScore,
+                NbComments = record.Comments == null ? 0 : record.Comments.Count()
             });
         }
 
@@ -150,7 +152,9 @@ namespace Cook4Me.Api.Handlers
             _eventPublisher.Publish(new ShopCommentRemovedEvent
             {
                 Id = message.CommentId,
-                ShopId = message.ShopId
+                ShopId = message.ShopId,
+                AverageScore = record.AverageScore,
+                NbComments = record.Comments == null ? 0 : record.Comments.Count()
             });
         }
     }

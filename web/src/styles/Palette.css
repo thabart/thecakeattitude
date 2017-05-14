@@ -1,0 +1,27 @@
+.colorPrimary {
+    background-color: #3F51B5;
+}
+
+.colorPrimaryDark {
+    background-color: #283593;
+}
+
+.colorAccent {
+    background-color: #536DFE;
+}
+
+.windowBackground {
+    background-color: #E8EAF6;
+}
+
+.textColorPrimary {
+    color: #F1F1F1;
+}
+
+.textColorSecondary {
+    color: #000000;
+}
+
+.textColorHint {
+    color: rgba(0, 0, 0, 0.6);
+}

@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.Product;
+using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
 using System;
 
@@ -32,12 +33,14 @@ namespace Cook4Me.Api.Host.Handlers
         private static object obj = new Object();
         private readonly ShopEventsHandler _shopEventsHandler;
         private readonly ProductEventsHandler _productEventsHandler;
+        private readonly ServiceEventsHandler _serviceEventsHandler;
         private readonly IBus _bus;
 
-        public HandlersInitiator(ShopEventsHandler shopEventsHandler, ProductEventsHandler productEventsHandler, IBus bus)
+        public HandlersInitiator(ShopEventsHandler shopEventsHandler, ProductEventsHandler productEventsHandler, ServiceEventsHandler serviceEventsHandler, IBus bus)
         {
             _shopEventsHandler = shopEventsHandler;
             _productEventsHandler = productEventsHandler;
+            _serviceEventsHandler = serviceEventsHandler;
             _bus = bus;
         }
 
@@ -55,6 +58,8 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<ShopCommentRemovedEvent>(_shopEventsHandler.Handle);
                 _bus.RegisterHandler<ProductCommentAddedEvent>(_productEventsHandler.Handle);
                 _bus.RegisterHandler<ProductCommentRemovedEvent>(_productEventsHandler.Handle);
+                _bus.RegisterHandler<ServiceCommentAddedEvent>(_serviceEventsHandler.Handle);
+                _bus.RegisterHandler<ServiceCommentRemovedEvent>(_serviceEventsHandler.Handle);
                 _isInitiated = true;
             }
         }

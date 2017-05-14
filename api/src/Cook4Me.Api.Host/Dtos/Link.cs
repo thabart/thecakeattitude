@@ -20,7 +20,7 @@ namespace Cook4Me.Api.Host.Dtos
     {
         public Link(string href)
         {
-
+            Href = href;
         }
 
         public Link(string href, string name)

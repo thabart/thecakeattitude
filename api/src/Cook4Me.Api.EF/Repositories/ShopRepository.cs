@@ -215,13 +215,24 @@ namespace Cook4Me.Api.EF.Repositories
 
             IQueryable<Models.Shop> shops = _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
-                .Include(c => c.ShopTags)
+                .Include(c => c.ShopTags).ThenInclude(t => t.Tag)
                 .Include(c => c.Comments)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories);
             if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
             {
                 shops = shops.Where(s => s.CategoryId == parameter.CategoryId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.TagName))
+            {
+                shops = shops.Where(s => s.ShopTags != null && s.ShopTags.Any(t => t.TagName.ToLowerInvariant().Contains(parameter.TagName.ToLowerInvariant())));
+            }
+
+            var tt = shops.ToList();
+            if (!string.IsNullOrWhiteSpace(parameter.Name))
+            {
+                shops = shops.Where(s => s.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.Subject))

@@ -7,6 +7,7 @@ import TagService from "./Tag";
 import CommentsService from "./Comments";
 import ProductsService from "./Products";
 import ConfigurationService from "./Configuration";
+import ShopServices from "./ShopServices";
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -17,3 +18,4 @@ exports.TagService = TagService;
 exports.CommentsService = CommentsService;
 exports.ProductsService = ProductsService;
 exports.ConfigurationService = ConfigurationService;
+exports.ShopServices = ShopServices;

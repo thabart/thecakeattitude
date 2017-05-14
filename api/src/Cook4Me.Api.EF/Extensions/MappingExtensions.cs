@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Models;
 using System;
 using System.Collections.Generic;
@@ -486,6 +487,47 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
+        public static ServiceResultLine ToAggregate(this Service service, ServiceOccurrence serviceOccurrence, DateTime dateTime)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            if (serviceOccurrence == null)
+            {
+                throw new ArgumentNullException(nameof(serviceOccurrence));
+            }
+
+            IEnumerable<string> images = null;
+            if (service.Images != null)
+            {
+                images = service.Images.Select(i => i.PartialPath);
+            }
+
+            IEnumerable<string> tags = null;
+            if (service.Tags != null)
+            {
+                tags = service.Tags.Select(t => t.TagName);
+            }
+
+            return new ServiceResultLine
+            {
+                Description = service.Description,
+                Id = service.Id,
+                Name = service.Name,
+                PartialImagesUrl = images,
+                Price = service.Price,
+                ShopId = service.ShopId,
+                Tags = tags,
+                AverageScore = service.AverageScore,
+                TotalScore = service.TotalScore,
+                NewPrice = service.NewPrice,
+                StartDateTime = dateTime.Add(serviceOccurrence.StartTime),
+                EndDateTime = dateTime.Add(serviceOccurrence.EndTime)
+            };
+        }
+
         public static ServiceAggregate ToAggregate(this Service service)
         {
             if (service == null)
@@ -511,6 +553,12 @@ namespace Cook4Me.Api.EF.Extensions
                 tags = service.Tags.Select(t => t.TagName);
             }
 
+            ICollection<ServiceComment> comments = null;
+            if (service.Comments != null)
+            {
+                comments = service.Comments.Select(c => c.ToAggregateService()).ToList();
+            }
+
             return new ServiceAggregate
             {
                 Description = service.Description,
@@ -520,7 +568,13 @@ namespace Cook4Me.Api.EF.Extensions
                 PartialImagesUrl = images,
                 Price = service.Price,
                 ShopId = service.ShopId,
-                Tags = tags
+                Tags = tags,
+                AverageScore = service.AverageScore,
+                TotalScore = service.TotalScore,
+                NewPrice = service.NewPrice,
+                Comments = comments,
+                CreateDateTime = service.CreateDateTime,
+                UpdateDateTime = service.UpdateDateTime
             };
         }
 
@@ -545,6 +599,24 @@ namespace Cook4Me.Api.EF.Extensions
                 EndDate = occurrence.EndDate,
                 StartTime = occurrence.StartTime,
                 EndTime = occurrence.EndTime
+            };
+        }
+
+        public static ServiceComment ToAggregateService(this Comment comment)
+        {
+            if (comment == null)
+            {
+                throw new ArgumentNullException(nameof(comment));
+            }
+
+            return new ServiceComment
+            {
+                Content = comment.Content,
+                CreateDateTime = comment.CreateDateTime,
+                Id = comment.Id,
+                Score = comment.Score,
+                Subject = comment.Subject,
+                UpdateDateTime = comment.UpdateDateTime
             };
         }
     }

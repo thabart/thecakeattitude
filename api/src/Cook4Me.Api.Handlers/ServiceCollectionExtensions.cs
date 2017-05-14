@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.Product;
+using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,11 +40,14 @@ namespace Cook4Me.Api.Handlers
             var provider = serviceCollection.BuildServiceProvider();
             var shopCommandHandler = new ShopCommandsHandler(provider.GetService<IShopRepository>(), bus);
             var productCommandHandler = new ProductCommandsHandler(provider.GetService<IProductRepository>(), bus);
+            var serviceCommandHandler = new ServiceCommandsHandler(provider.GetService<IServiceRepository>(), bus);
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddShopCommentCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<RemoveShopCommentCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddProductCommentCommand>(productCommandHandler.Handle);
             bus.RegisterHandler<RemoveProductCommentCommand>(productCommandHandler.Handle);
+            bus.RegisterHandler<AddServiceCommentCommand>(serviceCommandHandler.Handle);
+            bus.RegisterHandler<RemoveServiceCommentCommand>(serviceCommandHandler.Handle);
             return serviceCollection;
         }
     }

@@ -133,6 +133,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
+            services.AddTransient<IRemoveServiceCommentValidator, RemoveServiceCommentValidator>();
             services.AddTransient<IAddShopValidator, AddShopValidator>();
             services.AddTransient<IAddCommentValidator, AddCommentValidator>();
             services.AddTransient<IRemoveShopCommentValidator, RemoveShopCommentValidator>();
@@ -157,7 +158,13 @@ namespace Cook4Me.Api.Host
             services.AddTransient<ISearchProductCommentsOperation, SearchProductCommentsOperation>();
             services.AddTransient<IAddProductCommentOperation, AddProductCommentOperation>();
             services.AddTransient<IRemoveProductCommentOperation, RemoveProductCommentOperation>();
+            services.AddTransient<ISearchServiceOccurrencesOperation, SearchServiceOccurrencesOperation>();
             services.AddTransient<ISearchServicesOperation, SearchServicesOperation>();
+            services.AddTransient<IGetServiceOperation, GetServiceOperation>();
+            services.AddTransient<ISearchServiceCommentsOperation, SearchServiceCommentsOperation>();
+            services.AddTransient<IAddServiceCommentOperation, AddServiceCommentOperation>();
+            services.AddTransient<IRemoveServiceCommentOperation, RemoveServiceCommentOperation>();
+            services.AddTransient<IServiceCommentEnricher, ServiceCommentEnricher>();
             services.AddTransient<IShopEnricher, ShopEnricher>();
             services.AddTransient<IProductCommentEnricher, ProductCommentEnricher>();
             services.AddTransient<IShopCommentEnricher, ShopCommentEnricher>();
@@ -165,9 +172,12 @@ namespace Cook4Me.Api.Host
             services.AddTransient<ITagEnricher, TagEnricher>();
             services.AddTransient<IShopCategoryEnricher, ShopCategoryEnricher>();
             services.AddTransient<IMapEnricher, MapEnricher>();
+            services.AddTransient<IServiceOccurrenceEnricher, ServiceOccurrenceEnricher>();
+            services.AddTransient<IServiceEnricher, ServiceEnricher>();
             services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
             services.AddSingleton<ShopEventsHandler>();
             services.AddSingleton<ProductEventsHandler>();
+            services.AddSingleton<ServiceEventsHandler>();
         }
     }
 }
