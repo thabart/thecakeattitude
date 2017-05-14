@@ -14,20 +14,25 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.EF.Mappings
 {
-    public class Category
+    internal static class AnnouncementMapping
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ParentId { get; set; }
-        public virtual ICollection<Category> Children { get; set; }
-        public virtual Category Parent { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
-        public virtual ICollection<Map> Maps { get; set; }
-        public virtual ICollection<Announcement> Announcements { get; set; }
+        public static ModelBuilder AddAnnouncement(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+
+            modelBuilder.Entity<Announcement>()
+                .HasKey(a => a.Id);
+            return modelBuilder;
+        }
     }
 }
