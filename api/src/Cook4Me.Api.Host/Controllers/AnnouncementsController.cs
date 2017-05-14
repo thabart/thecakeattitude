@@ -14,20 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Cook4Me.Api.EF.Models
+// For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+
+namespace Cook4Me.Api.Host.Controllers
 {
-    public class Category
+    public class AnnouncementsController : Controller
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ParentId { get; set; }
-        public virtual ICollection<Category> Children { get; set; }
-        public virtual Category Parent { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
-        public virtual ICollection<Map> Maps { get; set; }
-        public virtual ICollection<Announcement> Announcements { get; set; }
+
     }
 }

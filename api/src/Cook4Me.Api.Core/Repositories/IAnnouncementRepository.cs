@@ -14,20 +14,18 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Results;
+using System.Threading.Tasks;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Repositories
 {
-    public class Category
+    public interface IAnnouncementRepository
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string ParentId { get; set; }
-        public virtual ICollection<Category> Children { get; set; }
-        public virtual Category Parent { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
-        public virtual ICollection<Map> Maps { get; set; }
-        public virtual ICollection<Announcement> Announcements { get; set; }
+        Task<SearchAnnouncementsResult> Search(SearchAnnouncementsParameter parameter);
+        Task<AnnouncementAggregate> Get(string id);
+        Task<bool> Add(AnnouncementAggregate record);
+        Task<bool> Update(AnnouncementAggregate record);
     }
 }
