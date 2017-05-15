@@ -7,6 +7,7 @@ import AddShop from "./AddShop";
 import Shop from "./Shop";
 import Products from "./Products";
 import Services from "./Services";
+import AddAnnouncement from './AddAnnouncement';
 import {OpenIdService, SessionService} from "./services/index";
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
@@ -125,6 +126,7 @@ class App extends Component {
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/addshop"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                        <Route path="/createAnnounce" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
                         <Route path="/error/:type" component={Error}/>
                     </div>
                 </div>

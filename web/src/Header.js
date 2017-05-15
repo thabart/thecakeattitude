@@ -211,6 +211,14 @@ class Header extends Component {
                                     ADD SHOP
                                 </NavLink> : ''
                         }
+                        {
+                            (this.state.isLoggedIn) ?
+                                <NavLink
+                                    className="nav-link bg-info text-white rounded ml-1 mr-1"
+                                    to="/addAnnounce">
+                                    ADD ANNOUNCE
+                                </NavLink> : ''
+                        }
                     </Nav>
                     <Nav className={(this.state.isConnectHidden ? 'hidden' : 'ml-auto')}>
                         {

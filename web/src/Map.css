@@ -3,6 +3,26 @@
     border: 1px dashed #ddd;
 }
 
+.addAnnouncement {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  width: 60px;
+  height: 60px;
+  background: #5bc0de;
+  border-radius: 50%;
+  color: white;
+  font-size: 30pt;
+  line-height: 60px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.addAnnouncement a,
+.addAnnouncement a:hover {
+  color: white;
+}
+
 .widget {
     padding-top: 10px;
 }
