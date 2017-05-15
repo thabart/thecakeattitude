@@ -8,6 +8,7 @@ import CommentsService from "./Comments";
 import ProductsService from "./Products";
 import ConfigurationService from "./Configuration";
 import ShopServices from "./ShopServices";
+import AnnouncementsService from './Announcement';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -19,3 +20,4 @@ exports.CommentsService = CommentsService;
 exports.ProductsService = ProductsService;
 exports.ConfigurationService = ConfigurationService;
 exports.ShopServices = ShopServices;
+exports.AnnouncementsService = AnnouncementsService;

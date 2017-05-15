@@ -2,10 +2,10 @@ import React, {Component} from "react";
 import {NavLink} from "react-router-dom";
 import TrendingSellers from "./widgets/trendingSellers";
 import ShopServices from "./widgets/shopServices";
+import PublicAnnouncements from "./widgets/publicAnnouncements";
 import {withRouter} from "react-router";
 import BestDeals from "./widgets/bestDeals";
 import {ShopsService} from "./services/index";
-import PublicAnnouncements from "./widgets/publicAnnouncements";
 import {withGoogleMap, GoogleMap, InfoWindow, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import {MAP} from "react-google-maps/lib/constants";
@@ -225,6 +225,7 @@ class Map extends Component {
         self.refs.trendingSellers.refresh(json);
         self.refs.bestDeals.refresh(json);
         self.refs.shopServices.refresh(json);
+        self.refs.publicAnnouncements.refresh(json);
         ShopsService.search(json).then(function (r) {
             var embedded = r['_embedded'];
             if (!(embedded instanceof Array)) {
@@ -309,7 +310,7 @@ class Map extends Component {
                             <ShopServices ref="shopServices" history={this.props.history}/>
                         </li>
                         <li className="col-md-12 p-1">
-                            <PublicAnnouncements />
+                            <PublicAnnouncements ref="publicAnnouncements" history={this.props.history} />
                         </li>
                     </ul>
                 </div>
