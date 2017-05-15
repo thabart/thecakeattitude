@@ -126,7 +126,7 @@ class App extends Component {
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/addshop"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
-                        <Route path="/createAnnounce" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
+                        <Route path="/addAnnounce" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
                         <Route path="/error/:type" component={Error}/>
                     </div>
                 </div>

@@ -193,65 +193,36 @@ class Header extends Component {
     render() {
         return (
             <div>
-                <Navbar light toggleable fixed="top" className="nav-height">
+                <Navbar color="faded" light toggleable fixed="top">
+                    <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
                     <NavbarBrand href="/">SHOP IN GAME</NavbarBrand>
-                    <Nav className="mr-auto">
+                    <Collapse isOpen={this.state.isMenuOpen} navbar>
+                      <Nav className="mr-auto" navbar>
                         <NavItem>
-                            <NavLink
-                                className="nav-link bg-info text-white rounded ml-1 mr-1"
-                                to="/home">
-                                EXPLORE
-                            </NavLink>
+                          <NavLink to="/home" className="nav-link" activeClassName="text-white rounded bg-info">EXPLORER</NavLink>
                         </NavItem>
                         {
-                            (this.state.isLoggedIn) ?
-                                <NavLink
-                                    className="nav-link bg-info text-white rounded ml-1 mr-1"
-                                    to="/addshop">
-                                    ADD SHOP
-                                </NavLink> : ''
+                          (this.state.isLoggedIn) ? <NavItem><NavLink to="/addshop" className="nav-link"  activeClassName="text-white rounded bg-info">ADD SHOP</NavLink></NavItem> : ''
                         }
                         {
-                            (this.state.isLoggedIn) ?
-                                <NavLink
-                                    className="nav-link bg-info text-white rounded ml-1 mr-1"
-                                    to="/addAnnounce">
-                                    ADD ANNOUNCE
-                                </NavLink> : ''
+                          (this.state.isLoggedIn) ? <NavItem><NavLink to="/addAnnounce" className="nav-link"  activeClassName="text-white rounded bg-info">ADD ANNOUNCE</NavLink></NavItem> : ''
                         }
-                    </Nav>
-                    <Nav className={(this.state.isConnectHidden ? 'hidden' : 'ml-auto')}>
+                      </Nav>
+                      <Nav className={(this.state.isConnectHidden ? 'hidden' : 'ml-auto')} navbar>
                         {
-                            (!this.state.isLoggedIn) ?
-                                <NavItem>
-                                    <a href="#"
-                                       className="nav-link bg-info text-white rounded ml-1 mr-1"
-                                       onClick={() => {
-                                           this.toggle('isAuthenticateOpened');
-                                       }}>
-                                        SIGN IN
-                                    </a>
-                                </NavItem> : ''
+                          (!this.state.isLoggedIn) ? <NavItem><a href="#" className="nav-link" onClick={() => { this.toggle('isAuthenticateOpened'); }}>Connect</a></NavItem> : ''
                         }
                         {
-                            (this.state.isLoggedIn) ?
-                                <NavDropdown
-                                    isOpen={this.state.isAccountOpened}
-                                    toggle={() => {
-                                        this.toggle('isAccountOpened');
-                                    }}
-                                >
-                                    <DropdownToggle nav caret className="bg-info text-white rounded ml-1 mr-1">
-                                        Welcome <strong>{" " + this.state.user.name}</strong>
-                                    </DropdownToggle>
-                                    <DropdownMenu>
-                                        <DropdownItem onClick={this.disconnect}>SIGN OUT</DropdownItem>
-                                    </DropdownMenu>
-                                </NavDropdown> : ''
+                          (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={() => { this.toggle('isAccountOpened'); }}>
+                            <DropdownToggle nav caret>Welcome <strong>{this.state.user.name}</strong></DropdownToggle>
+                            <DropdownMenu>
+                              <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
+                            </DropdownMenu>
+                          </NavDropdown> : ''
                         }
-                    </Nav>
+                      </Nav>
+                    </Collapse>
                 </Navbar>
-
                 {/* modal part */}
 
                 <Modal isOpen={this.state.isAuthenticateOpened}>

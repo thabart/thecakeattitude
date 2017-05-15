@@ -337,7 +337,7 @@ class Map extends Component {
                         }>
                     </GettingStartedGoogleMap>
                 </div>
-                <div className="addAnnouncement"><a href="/createAnnounce"><i className="fa fa-bullhorn"></i></a></div>
+                <div className="addAnnouncement"><a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a></div>
             </div>
         );
     }
