@@ -14,30 +14,32 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Commands.Shop;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System;
+using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
+using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Commands.Announcement;
 using Cook4Me.Api.Host.Validators;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
-namespace Cook4Me.Api.Host.Operations.Shop
+namespace Cook4Me.Api.Host.Operations.Announcement
 {
-    public interface IRemoveShopCommentOperation
+    public interface IDeleteAnnouncementOperation
     {
-        Task<IActionResult> Execute(RemoveShopCommentCommand command);
+        Task<IActionResult> Execute(RemoveAnnouncementCommand command);
     }
 
-    internal class RemoveShopCommentOperation : IRemoveShopCommentOperation
+    internal class DeleteAnnouncementOperation : IDeleteAnnouncementOperation
     {
-        private readonly IRemoveShopCommentValidator _validator;
+        private readonly IRemoveAnnouncementValidator _validator;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
         private readonly ICommandSender _commandSender;
 
-        public RemoveShopCommentOperation(IRemoveShopCommentValidator validator, IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
+        public DeleteAnnouncementOperation(
+            IRemoveAnnouncementValidator validator, IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
         {
             _validator = validator;
             _responseBuilder = responseBuilder;
@@ -45,12 +47,13 @@ namespace Cook4Me.Api.Host.Operations.Shop
             _commandSender = commandSender;
         }
 
-        public async Task<IActionResult> Execute(RemoveShopCommentCommand command)
+        public async Task<IActionResult> Execute(RemoveAnnouncementCommand command)
         {
             if (command == null)
             {
                 throw new ArgumentNullException(nameof(command));
             }
+
 
             var validationResult = await _validator.Validate(command);
             if (!validationResult.IsValid)

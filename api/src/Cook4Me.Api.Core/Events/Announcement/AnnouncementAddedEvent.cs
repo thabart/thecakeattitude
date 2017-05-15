@@ -14,19 +14,23 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
+using Cook4Me.Api.Core.Bus;
+using System;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Events.Announcement
 {
-    public interface IAnnouncementRepository
+    public class AnnouncementAddedEvent : Event
     {
-        Task<bool> Delete(string id);
-        Task<SearchAnnouncementsResult> Search(SearchAnnouncementsParameter parameter);
-        Task<AnnouncementAggregate> Get(string id);
-        Task<bool> Add(AnnouncementAggregate record);
-        Task<bool> Update(AnnouncementAggregate record);
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Subject { get; set; }
+        public string CategoryId { get; set; }
+        public string GooglePlaceId { get; set; }
+        public float Longitude { get; set; }
+        public float Latitude { get; set; }
+        public double Price { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
     }
 }

@@ -14,12 +14,64 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Handlers;
+using Cook4Me.Api.Host.Operations.Announcement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
 {
-    public class AnnouncementsController : Controller
+    [Route(Constants.RouteNames.Announcements)]
+    public class AnnouncementsController : BaseController
     {
+        private readonly ISearchAnnouncementsOperation _searchOperation;
+        private readonly IGetAnnouncementOperation _getOperation;
+        private readonly IAddAnnouncementOperation _addOperation;
+        private readonly IDeleteAnnouncementOperation _deleteOperation;
 
+        public AnnouncementsController(
+            ISearchAnnouncementsOperation searchOperation, IGetAnnouncementOperation getOperation,
+            IAddAnnouncementOperation addOperation, IDeleteAnnouncementOperation deleteOperation,
+            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+        {
+            _searchOperation = searchOperation;
+            _getOperation = getOperation;
+            _addOperation = addOperation;
+            _deleteOperation = deleteOperation;
+        }
+
+        [HttpPost(Constants.RouteNames.Search)]
+        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        {
+            return await _searchOperation.Execute(jObj);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            return await _getOperation.Execute(id);
+        }
+
+        [HttpPost(Constants.RouteNames.Comments)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> AddComment([FromBody] JObject jObj)
+        {
+            return await _addOperation.Execute(jObj, User.GetSubject());
+        }
+
+        [HttpDelete]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Remove(string id)
+        {
+            return await _deleteOperation.Execute(new RemoveAnnouncementCommand
+            {
+                Subject = User.GetSubject(),
+                AnnouncementId = id
+            });
+        }
     }
 }

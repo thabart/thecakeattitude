@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Events.Announcement;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
@@ -44,10 +45,13 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment);
         JObject GetServiceCommentAddedEvent(ServiceCommentAddedEvent comment);
+        JObject GetAnnouncementAddedEvent(AnnouncementAddedEvent evt);
+        JObject GetAnnouncementRemovedEvent(AnnouncementRemovedEvent evt);
         JObject GetProduct(ProductAggregate product);
         JObject GetPromotion(ProductAggregatePromotion promotion);
         JObject GetService(ServiceAggregate service);
         JObject GetServiceOccurrence(ServiceResultLine service);
+        JObject GetAnnouncement(AnnouncementAggregate announcement);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -415,6 +419,41 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
+        public JObject GetAnnouncementAddedEvent(AnnouncementAddedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Announcement.Description, evt.Description);
+            jObj.Add(Constants.DtoNames.Announcement.Id, evt.Id);
+            jObj.Add(Constants.DtoNames.Announcement.CategoryId, evt.CategoryId);
+            jObj.Add(Constants.DtoNames.Announcement.CreateDateTime, evt.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Announcement.GooglePlaceId, evt.GooglePlaceId);
+            var location = new JObject();
+            location.Add(Constants.DtoNames.Location.Latitude, evt.Latitude);
+            location.Add(Constants.DtoNames.Location.Longitude, evt.Longitude);
+            jObj.Add(Constants.DtoNames.Announcement.Location, location);
+            jObj.Add(Constants.DtoNames.Announcement.Name, evt.Name);
+            jObj.Add(Constants.DtoNames.Announcement.Price, evt.Price);
+            jObj.Add(Constants.DtoNames.Announcement.UpdateDateTime, evt.UpdateDateTime);
+            return jObj;
+        }
+
+        public JObject GetAnnouncementRemovedEvent(AnnouncementRemovedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Announcement.Id, evt.AnnouncementId);
+            return jObj;
+        }
+
         public JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment)
         {
             if (comment == null)
@@ -662,6 +701,46 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.ServiceOccurrence.Days, arr);
             }
 
+            return jObj;
+        }
+
+        public JObject GetAnnouncement(AnnouncementAggregate announcement)
+        {
+            if (announcement == null)
+            {
+                throw new ArgumentNullException(nameof(announcement));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Announcement.Id, announcement.Id);
+            jObj.Add(Constants.DtoNames.Announcement.Name, announcement.Name);
+            jObj.Add(Constants.DtoNames.Announcement.Description, announcement.Description);
+            jObj.Add(Constants.DtoNames.Announcement.CategoryId, announcement.CategoryId);
+            jObj.Add(Constants.DtoNames.Announcement.GooglePlaceId, announcement.GooglePlaceId);
+            jObj.Add(Constants.DtoNames.Announcement.Price, announcement.Price);
+            jObj.Add(Constants.DtoNames.Announcement.CreateDateTime, announcement.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Announcement.UpdateDateTime, announcement.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.Location.Latitude, announcement.Latitude);
+            jObj.Add(Constants.DtoNames.Location.Longitude, announcement.Longitude);
+            if (announcement.Category != null)
+            {
+                jObj.Add(Constants.DtoNames.Announcement.Category, GetCategory(announcement.Category));
+            }
+
+            return jObj;
+        }
+
+        public JObject GetCategory(AnnouncementCategory category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Category.Id, category.Id);
+            jObj.Add(Constants.DtoNames.Category.Name, category.Name);
+            jObj.Add(Constants.DtoNames.Category.Description, category.Description);
             return jObj;
         }
     }

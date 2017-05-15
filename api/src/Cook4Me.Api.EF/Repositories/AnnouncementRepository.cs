@@ -36,6 +36,31 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
+        public async Task<bool> Delete(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var record = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+            if (record == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                _context.Announcements.Remove(record);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> Add(AnnouncementAggregate aggregate)
         {
             if (aggregate == null)
@@ -122,9 +147,30 @@ namespace Cook4Me.Api.EF.Repositories
             return result;
         }
 
-        public Task<bool> Update(AnnouncementAggregate record)
+        public async Task<bool> Update(AnnouncementAggregate aggregate)
         {
-            throw new NotImplementedException();
+            if (aggregate == null)
+            {
+                throw new ArgumentNullException(nameof(aggregate));
+            }
+
+
+            var record = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == aggregate.Id);
+            if (record == null)
+            {
+                return false;
+            }
+
+            record.CategoryId = aggregate.CategoryId;
+            record.Description = aggregate.Description;
+            record.Latitude = aggregate.Latitude;
+            record.Longitude = aggregate.Longitude;
+            record.Name = aggregate.Name;
+            record.Description = aggregate.Description;
+            record.Price = aggregate.Price;
+            record.Subject = aggregate.Subject;
+            record.UpdateDateTime = aggregate.UpdateDateTime;
+            return false;
         }
 
         private static IQueryable<Models.Announcement> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Announcement, TKey>> keySelector, IQueryable<Models.Announcement> shops)

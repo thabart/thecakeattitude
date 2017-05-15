@@ -62,6 +62,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertPromotions(context);
             InsertDays(context);
             InsertServices(context);
+            InsertAnnouncements(context);
             context.SaveChanges();
         }
 
@@ -882,6 +883,26 @@ namespace Cook4Me.Api.Host.Extensions
                             Score = 5
                         }
                     }
+                }
+            });
+        }
+
+        private static void InsertAnnouncements(CookDbContext context)
+        {
+            context.Announcements.AddRange(new[]
+            {
+                new Announcement
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    CategoryId = _womenProductCategory,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
+                    Longitude = 4.3630615F,
+                    Latitude = 50.8939195F,
+                    Description = "first announcement",
+                    Name = "FA",
+                    Price = 200
                 }
             });
         }

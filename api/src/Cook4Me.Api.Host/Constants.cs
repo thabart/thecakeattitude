@@ -26,6 +26,7 @@ namespace Cook4Me.Api.Host
 
         public static class RouteNames
         {
+            public const string Announcements = "announcements";
             public const string Services = "services";
             public const string Products = "products";
             public const string Shops = "shops";
@@ -129,6 +130,20 @@ namespace Cook4Me.Api.Host
                 public const string AverageScore = "average_score";
                 public const string TotalScore = "total_score";
                 public const string NbComments = "nb_comments";
+            }
+
+            public static class Announcement
+            {
+                public const string Id = "id";
+                public const string Name = "name";
+                public const string Description = "description";
+                public const string CategoryId = "category_id";
+                public const string GooglePlaceId = "place_id";
+                public const string Price = "price";
+                public const string CreateDateTime = "create_datetime";
+                public const string UpdateDateTime = "update_datetime";
+                public const string Category = "category";
+                public const string Location = "location";
             }
 
             public static class ServiceOccurrence

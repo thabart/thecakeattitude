@@ -43,7 +43,8 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = announcement.UpdateDateTime,
                 Longitude = announcement.Longitude,
                 Latitude = announcement.Latitude,
-                Price = announcement.Price
+                Price = announcement.Price,
+                GooglePlaceId = announcement.GooglePlaceId
             };
         }
 
@@ -62,7 +63,11 @@ namespace Cook4Me.Api.EF.Extensions
                 Description = announcement.Description,
                 Name = announcement.Name,
                 Subject = announcement.Subject,
-                UpdateDateTime = announcement.UpdateDateTime
+                UpdateDateTime = announcement.UpdateDateTime,
+                Latitude = announcement.Latitude,
+                Longitude = announcement.Longitude,
+                Price = announcement.Price,
+                GooglePlaceId = announcement.GooglePlaceId
             };
         }
 

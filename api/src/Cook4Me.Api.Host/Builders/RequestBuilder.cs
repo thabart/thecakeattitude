@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Announcement;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
@@ -27,6 +28,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        AddAnnouncementCommand GetAnnouncement(JObject jObj);
         AddShopCommand GetAddShop(JObject jObj);
         AddPaymentInformation GetPaymentMethod(JObject jObj);
         AddShopCommentCommand GetAddShopComment(JObject jObj);
@@ -40,6 +42,7 @@ namespace Cook4Me.Api.Host.Builders
         SearchServiceCommentParameter GetSearchServiceComments(JObject jObj);
         SearchProductsParameter GetSearchProducts(JObject jObj);
         SearchServiceParameter GetSearchServices(JObject jObj);
+        SearchAnnouncementsParameter GetSearchAnnouncements(JObject jObj);
         SearchServiceOccurrenceParameter GetSearchServiceOccurrences(JObject jObj);
         SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
@@ -47,6 +50,32 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public AddAnnouncementCommand GetAnnouncement(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new AddAnnouncementCommand
+            {
+                Name = jObj.Value<string>(Constants.DtoNames.Announcement.Name),
+                Description = jObj.Value<string>(Constants.DtoNames.Announcement.Description),
+                CategoryId = jObj.Value<string>(Constants.DtoNames.Announcement.CategoryId),
+                GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Announcement.GooglePlaceId),
+                Price = jObj.Value<double>(Constants.DtoNames.Announcement.Price)
+            };
+
+            var location = jObj[Constants.DtoNames.Announcement.Location];
+            if (location != null)
+            {
+                result.Latitude = location.Value<float>(Constants.DtoNames.Location.Latitude);
+                result.Longitude = location.Value<float>(Constants.DtoNames.Location.Longitude);
+            }
+
+            return result;
+        }
+
         public AddShopCommand GetAddShop(JObject jObj)
         {
             if (jObj == null)
@@ -506,6 +535,55 @@ namespace Cook4Me.Api.Host.Builders
                 result.ToDateTime = toDateTime;
             }
 
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
+        public SearchAnnouncementsParameter GetSearchAnnouncements(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            Location northEastLocation = null, southWestLocation = null;
+            var neLocation = jObj[Constants.DtoNames.SearchService.NorthEast];
+            var swLocation = jObj[Constants.DtoNames.SearchService.SouthWest];
+            if (neLocation != null && swLocation != null)
+            {
+                northEastLocation = GetLocation(neLocation as JObject);
+                southWestLocation = GetLocation(swLocation as JObject);
+            }
+
+            var orders = new List<OrderBy>();
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchService.Orders);
+            if (ordersObj != null)
+            {
+                var arr = ordersObj as JArray;
+                if (arr != null)
+                {
+                    foreach (var order in arr)
+                    {
+                        orders.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
+
+            var result = new SearchAnnouncementsParameter
+            {
+                CategoryId = jObj.Value<string>(Constants.DtoNames.Announcement.CategoryId),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                Name = jObj.Value<string>(Constants.DtoNames.Announcement.Name),
+                Orders = orders,
+                NorthEast = northEastLocation,
+                SouthWest = southWestLocation
+            };
+            
             if (count > 0)
             {
                 result.Count = count;

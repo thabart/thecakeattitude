@@ -14,11 +14,12 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Bus;
 using System;
 
-namespace Cook4Me.Api.Core.Aggregates
+namespace Cook4Me.Api.Core.Commands.Announcement
 {
-    public class AnnouncementAggregate
+    public class AddAnnouncementCommand : Command
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -31,6 +32,5 @@ namespace Cook4Me.Api.Core.Aggregates
         public double Price { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public AnnouncementCategory Category { get; set; }
     }
 }
