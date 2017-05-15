@@ -2,3 +2,45 @@
     width: 60px !important;
     height: 60px !important;
 }
+
+.card .expander {
+  position: absolute;
+  left : 50%;
+  bottom: 0px;
+  border-radius: 16px;
+  padding : 0 0.625em;
+  height: 32px;
+  line-height: 32px;
+  background-color: #5bc0de;
+  box-shadow: 0 3px 16px rgba(0,0,0,0.5);
+  color: white;
+  display: none;
+  cursor: pointer;
+}
+
+.card .close-expander {
+  display: none;
+}
+
+.card .list-group-item-action .summary {
+  width: 100%;
+  position: relative;
+}
+
+.card .list-group-item-action .details {
+  width: 100%;
+}
+
+.card .list-group-item-action:hover .expander {
+  display: block;
+}
+
+.card .first-column {
+  float: left;
+}
+
+.card .last-column {
+  position: absolute !important;
+  top: 3px !important;
+  right: 3px !important;
+}

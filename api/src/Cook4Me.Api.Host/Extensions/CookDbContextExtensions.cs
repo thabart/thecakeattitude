@@ -894,7 +894,7 @@ namespace Cook4Me.Api.Host.Extensions
                 new Announcement
                 {
                     Id = Guid.NewGuid().ToString(),
-                    CategoryId = _womenProductCategory,
+                    CategoryId = _bakeryCategoryId,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
                     GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
@@ -902,6 +902,19 @@ namespace Cook4Me.Api.Host.Extensions
                     Latitude = 50.8939195F,
                     Description = "first announcement",
                     Name = "FA",
+                    Price = 200
+                },
+                new Announcement
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    CategoryId = _bakeryCategoryId,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
+                    Longitude = 4.3630615F,
+                    Latitude = 50.8939195F,
+                    Description = "second announcement",
+                    Name = "SA",
                     Price = 200
                 }
             });

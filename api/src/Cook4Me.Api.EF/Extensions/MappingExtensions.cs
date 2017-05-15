@@ -32,6 +32,12 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(announcement));
             }
 
+            AnnouncementCategory category = null;
+            if (announcement.Category != null)
+            {
+                category = announcement.Category.ToCategoryAggregate();
+            }
+
             return new AnnouncementAggregate
             {
                 Id = announcement.Id,
@@ -44,7 +50,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Longitude = announcement.Longitude,
                 Latitude = announcement.Latitude,
                 Price = announcement.Price,
-                GooglePlaceId = announcement.GooglePlaceId
+                GooglePlaceId = announcement.GooglePlaceId,
+                Category = category
             };
         }
 

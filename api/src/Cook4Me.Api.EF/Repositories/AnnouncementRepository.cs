@@ -88,7 +88,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(id));
             }
 
-            var record = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+            var record = await _context.Announcements.Include(a => a.Category).FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
             if (record == null)
             {
                 return null;
