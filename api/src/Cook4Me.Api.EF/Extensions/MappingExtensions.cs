@@ -25,6 +25,77 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static AnnouncementAggregate ToAggregate(this Announcement announcement)
+        {
+            if (announcement == null)
+            {
+                throw new ArgumentNullException(nameof(announcement));
+            }
+
+            return new AnnouncementAggregate
+            {
+                Id = announcement.Id,
+                CategoryId = announcement.CategoryId,
+                CreateDateTime = announcement.CreateDateTime,
+                Description = announcement.Description,
+                Name = announcement.Name,
+                Subject = announcement.Subject,
+                UpdateDateTime = announcement.UpdateDateTime,
+                Longitude = announcement.Longitude,
+                Latitude = announcement.Latitude,
+                Price = announcement.Price
+            };
+        }
+
+        public static Announcement ToModel(this AnnouncementAggregate announcement)
+        {
+            if (announcement == null)
+            {
+                throw new ArgumentNullException(nameof(announcement));
+            }
+
+            return new Announcement
+            {
+                Id = announcement.Id,
+                CategoryId = announcement.CategoryId,
+                CreateDateTime = announcement.CreateDateTime,
+                Description = announcement.Description,
+                Name = announcement.Name,
+                Subject = announcement.Subject,
+                UpdateDateTime = announcement.UpdateDateTime
+            };
+        }
+
+        public static AnnouncementCategory ToCategoryAggregate(this Category category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            return new AnnouncementCategory
+            {
+                Id = category.Id,
+                Description = category.Description,
+                Name = category.Name
+            };
+        }
+
+        public static Category ToModel(this AnnouncementCategory category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            return new Category
+            {
+                Id = category.Id,
+                Description = category.Description,
+                Name = category.Name
+            };
+        }
+
         public static ShopAggregate ToAggregate(this Shop shop)
         {
             if (shop == null)

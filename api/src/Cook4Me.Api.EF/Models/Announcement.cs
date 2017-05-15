@@ -25,6 +25,9 @@ namespace Cook4Me.Api.EF.Models
         public string Description { get; set; }
         public string Subject { get; set; }
         public string CategoryId { get; set; }
+        public float Longitude { get; set; }
+        public float Latitude { get; set; }
+        public double Price { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public virtual Category Category { get; set; }

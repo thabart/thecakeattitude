@@ -18,7 +18,11 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
+using Cook4Me.Api.EF.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -32,24 +36,110 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public Task<bool> Add(AnnouncementAggregate record)
+        public async Task<bool> Add(AnnouncementAggregate aggregate)
         {
-            throw new NotImplementedException();
+            if (aggregate == null)
+            {
+                throw new ArgumentNullException(nameof(aggregate));
+            }
+
+            var record = aggregate.ToModel();
+            try
+            {
+                _context.Add(record);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<AnnouncementAggregate> Get(string id)
+        public async Task<AnnouncementAggregate> Get(string id)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var record = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+            if (record == null)
+            {
+                return null;
+            }
+
+            return record.ToAggregate();
         }
 
-        public Task<SearchAnnouncementsResult> Search(SearchAnnouncementsParameter parameter)
+        public async Task<SearchAnnouncementsResult> Search(SearchAnnouncementsParameter parameter)
         {
-            throw new NotImplementedException();
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.Announcement> announcements = _context.Announcements.Include(c => c.Category);
+            if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
+            {
+                announcements = announcements.Where(s => s.CategoryId == parameter.CategoryId);
+            }
+            
+
+            if (!string.IsNullOrWhiteSpace(parameter.Name))
+            {
+                announcements = announcements.Where(s => s.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
+            }
+
+
+            if (parameter.NorthEast != null && parameter.SouthWest != null)
+            {
+                announcements = announcements.Where(s => s.Latitude >= parameter.SouthWest.Latitude && s.Latitude <= parameter.NorthEast.Latitude && s.Longitude >= parameter.SouthWest.Longitude && s.Longitude <= parameter.NorthEast.Longitude);
+            }
+            
+            if (parameter.Orders != null)
+            {
+                foreach (var orderBy in parameter.Orders)
+                {
+                    announcements = Order(orderBy, "update_datetime", s => s.UpdateDateTime, announcements);
+                    announcements = Order(orderBy, "create_datetime", s => s.UpdateDateTime, announcements);
+                    announcements = Order(orderBy, "price", s => s.Price, announcements);
+                }
+            }
+
+            var result = new SearchAnnouncementsResult
+            {
+                TotalResults = await announcements.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            if (parameter.IsPagingEnabled)
+            {
+                announcements = announcements.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await announcements.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
         }
 
         public Task<bool> Update(AnnouncementAggregate record)
         {
             throw new NotImplementedException();
+        }
+
+        private static IQueryable<Models.Announcement> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Announcement, TKey>> keySelector, IQueryable<Models.Announcement> shops)
+        {
+            if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (orderBy.Method == OrderByMethods.Ascending)
+                {
+                    return shops.OrderBy(keySelector);
+                }
+
+                return shops.OrderByDescending(keySelector);
+            }
+
+            return shops;
         }
     }
 }

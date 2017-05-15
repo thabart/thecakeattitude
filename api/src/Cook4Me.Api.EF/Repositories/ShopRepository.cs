@@ -254,7 +254,7 @@ namespace Cook4Me.Api.EF.Repositories
                 foreach(var orderBy in parameter.OrderBy)
                 {
                     shops = Order(orderBy, "update_datetime", s => s.UpdateDateTime, shops);
-                    shops = Order(orderBy, "create_datetime", s => s.UpdateDateTime, shops);
+                    shops = Order(orderBy, "create_datetime", s => s.CreateDateTime, shops);
                     shops = Order(orderBy, "nb_comments", s => s.Comments.Count(), shops);
                     shops = Order(orderBy, "total_score", s => s.TotalScore, shops);
                     shops = Order(orderBy, "average_score", s => s.AverageScore, shops);
