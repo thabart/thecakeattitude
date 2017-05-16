@@ -13,7 +13,14 @@ import "./Map.css";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
 import AppDispatcher from "./appDispatcher";
-import "./styles/Palette.css";
+import ReactGridLayout from 'react-grid-layout';
+
+var gridLayout = [
+      {i: 'a', x: 0, y: 0, w: 1, h: 1 },
+      {i: 'b', x: 1, y: 0, w: 1, h: 1 },
+      {i: 'c', x: 2, y: 0, w: 1, h: 1},
+      {i: 'd', x: 0, y: 1, w: 3, h: 1 }
+];
 
 const currentLocationOpts = {
     url: '/images/current-location.png',
@@ -239,10 +246,10 @@ class Map extends Component {
             }
         }
 
-        self.refs.trendingSellers.refresh(json);
-        self.refs.bestDeals.refresh(json);
-        self.refs.shopServices.refresh(json);
-        self.refs.publicAnnouncements.refresh(json);
+        // self.refs.trendingSellers.refresh(json);
+        // self.refs.bestDeals.refresh(json);
+        // self.refs.shopServices.refresh(json);
+        // self.refs.publicAnnouncements.refresh(json);
         ShopsService.search(json).then(function(shopsResult) {
           var shopsEmbedded = shopsResult['_embedded'];
           if (!(shopsEmbedded instanceof Array)) {
@@ -331,22 +338,18 @@ class Map extends Component {
                     </form>
 
                     {/* Widgets panel */}
-                    <ul className="row list-unstyled m-1" ref={(elt) => {
-                        this.widgetContainer = elt;
-                    }}>
-                        <li className="col-md-4 p-1">
-                            <TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/>
-                        </li>
-                        <li className="col-md-4 p-1">
-                            <BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/>
-                        </li>
-                        <li className="col-md-4 p-1">
-                            <ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/>
-                        </li>
-                        <li className="col-md-12 p-1">
-                            <PublicAnnouncements ref="publicAnnouncements" history={this.props.history} setCurrentMarker={this.setCurrentMarker} />
-                        </li>
-                    </ul>
+                    <ReactGridLayout className="layout" layouts={gridLayout} rowHeight={300} cols={3} width={1200}>
+                      {/*
+                      <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
+                      <div key={'b'}>BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
+                      <div key={'c'}><ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/></div>
+                      <div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={this.props.history} setCurrentMarker={this.setCurrentMarker} /></div>
+                      */}
+                      <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
+                      <div key={'b'}><BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
+                      <div key={'c'}><ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/></div>
+                      <div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={this.props.history} setCurrentMarker={this.setCurrentMarker} /></div>
+                    </ReactGridLayout >
                 </div>
 
                 {/* Map */}
@@ -389,7 +392,11 @@ class Map extends Component {
                     break;
             }
         });
+
+
+
         // Can reorder all the widgets.
+        /*
         $(this.widgetContainer).sortable({
             handle: '.card-header',
             opacity: 0.4,
@@ -397,6 +404,7 @@ class Map extends Component {
             forcePlaceholderSize: true,
             cursor: 'move'
         });
+        */
         // Get the current location and display it.
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
