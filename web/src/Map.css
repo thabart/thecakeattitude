@@ -93,3 +93,12 @@
     border-radius: 100%;
     box-shadow: 0px 0px 0px 256px rgba(0, 0, 0, 0.35)
 }
+
+.categories-selector .selector ul {
+  list-style: none;
+}
+
+.categories-selector .selector {
+  border: 1px solid gray;
+  border-radius: 5px;
+}

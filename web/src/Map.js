@@ -422,6 +422,26 @@ class Map extends Component {
                     <div className="form-group">
                       <input type="checkbox" /><label>Include the shops</label>
                     </div>
+                    <div className="form-group categories-selector">
+                      <label>Include categories</label>
+                      <div className="row">
+                        <div className="col-md-5 selector">
+                          <h6>Clothes</h6>
+                          <ul>
+                            <li>Shoes</li>
+                          </ul>
+                        </div>
+                        <div className="col-md-2">
+                          <button> Add </button>
+                          <button> Remove </button>
+                        </div>
+                        <div className="col-md-5 selector">
+                          <ul>
+                            <li>Hairs</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
                     <div className="form-group">
                       <button className="btn btn-default">Confirm</button>
                     </div>
