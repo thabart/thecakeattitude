@@ -17,12 +17,31 @@ import 'react-grid-layout/css/styles.css';
 import {Responsive, WidthProvider} from 'react-grid-layout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-var gridLayout = [
+function getLayoutFromLocalStorage() {
+  let ls = {};
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem('gameinshop')) || {};
+    } catch(e) {/*Ignore*/}
+  }
+
+  return ls['layouts'];
+}
+
+function saveLayout(value) {
+  if (global.localStorage) {
+    global.localStorage.setItem('gameinshop', JSON.stringify({
+      ['layouts']: value
+    }));
+  }
+}
+
+const gridLayout = getLayoutFromLocalStorage() || { lg : [
       {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true },
       {i: 'b', x: 1, y: 0, w: 1, h: 1, isResizable: true },
       {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
       {i: 'd', x: 0, y: 1, w: 3, h: 2, minW : 2, isResizable: true }
-];
+] };
 
 const currentLocationOpts = {
     url: '/images/current-location.png',
@@ -96,6 +115,7 @@ class Map extends Component {
         super(props);
         this._searchBox = null;
         this._searchTarget = "name";
+        this.onLayoutChange = this.onLayoutChange.bind(this);
         this.setCurrentMarker = this.setCurrentMarker.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
@@ -117,6 +137,10 @@ class Map extends Component {
             bounds: null,
             searchValue: null
         };
+    }
+
+    onLayoutChange(layout, layouts) {
+      saveLayout(layouts);
     }
 
     setCurrentMarker(id) {
@@ -340,7 +364,9 @@ class Map extends Component {
                     </form>
 
                     {/* Widgets panel */}
-                    <ResponsiveReactGridLayout className="layout" layouts={{lg: gridLayout}}  rowHeight={300} cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move">
+                    <ResponsiveReactGridLayout className="layout"
+                        layouts={gridLayout}  rowHeight={300} cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
+                        onLayoutChange={this.onLayoutChange}>
                       <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
                       <div key={'b'}><BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
                       <div key={'c'}><ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/></div>
