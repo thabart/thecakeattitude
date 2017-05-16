@@ -141,8 +141,7 @@ class DescriptionAnnouncement extends Component {
       category_id: this.state.subCategoryIdSelected,
       price: this.state.price
     };
-    console.log(json);
-    // this.props.onNext();
+    this.props.onNext(json);
   }
   render() {
     var categories = [],

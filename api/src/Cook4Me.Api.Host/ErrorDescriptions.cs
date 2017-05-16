@@ -43,5 +43,6 @@ namespace Cook4Me.Api.Host
         public const string TheScoreMustBeBetween = "the score must be between 1 and 5";
         public const string TheCommentCannotBeRemovedByYou = "the comment cannot be removed by you";
         public const string TheAnnouncementCannotBeRemovedByYou = "the announcement cannot be removed by you";
+        public const string ThePriceCannotBeLessThanZero = "the price cannot be less than 0";
     }
 }

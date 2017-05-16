@@ -260,8 +260,9 @@ class AddressForm extends Component {
                 </section>
                 <section className="col-md-12 sub-section">
                     <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
-                    <button className="btn btn-primary next" disabled={!this.state.isAddressCorrect}
-                            onClick={this.next}>Next
+                    <button className={this.props.nextButtonClass ? this.props.nextButtonClass : 'btn btn-primary next'} disabled={!this.state.isAddressCorrect}
+                            onClick={this.next}>
+                            {this.props.nextButtonLabel ? this.props.nextButtonLabel : 'Next'}
                     </button>
                 </section>
             </div>

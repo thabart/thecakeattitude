@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import {TabContent, TabPane, Alert} from "reactstrap";
 import {DescriptionAnnouncement} from './addannouncetabs';
 import {AddressForm} from "./addshoptabs";
+import {withRouter} from "react-router";
+import {AnnouncementsService} from './services/index';
 
 class AddAnnouncement extends Component {
   constructor(props) {
@@ -10,12 +12,46 @@ class AddAnnouncement extends Component {
     this.toggleWarning = this.toggleWarning.bind(this);
     this.toggleError = this.toggleError.bind(this);
     this.loading = this.loading.bind(this);
+    this.displayError = this.displayError.bind(this);
+    this.save = this.save.bind(this);
+    this.data = {};
     this.state = {
         activeTab: '1',
         errorMessage: null,
         warningMessage: null,
-        isLoading: false
+        isLoading: false,
+        errorMessage: null
     };
+  }
+  displayError(msg) {
+    this.setState({
+      errorMessage: msg
+    });
+  }
+  save(adr) {
+    var self = this;
+    var firstTabJson = self.data['1'];
+    var json = {
+      name: firstTabJson.name,
+      description: firstTabJson.description,
+      category_id: firstTabJson.category_id,
+      price: firstTabJson.price,
+      location: adr.location,
+      place_id: adr.google_place_id
+    };
+    self.loading(true);
+    AnnouncementsService.add(json).then(function() {
+      self.loading(false);
+      self.props.history.push('/');
+    }).catch(function(e) {
+      self.loading(false);
+      var json = e.responseJSON;
+      if (json && json.error_description) {
+          self.displayError(json.error_description);
+      } else {
+          self.displayError('an error occured while trying to add the announce');
+      }
+    });
   }
   toggle(tab, json) {
     var self = this;
@@ -72,11 +108,15 @@ class AddAnnouncement extends Component {
                       this.toggle('1');
                   }} onLoading={(l) => {
                       this.loading(l);
-                  }}/>
+                  }} onNext={(l) => {
+                    this.save(l);
+                  }}
+                  nextButtonLabel="CONFIRM"
+                  nextButtonClass="btn btn-success"/>
                 </TabPane>
             </TabContent>
         </div>);
   }
 }
 
-export default AddAnnouncement;
+export default withRouter(AddAnnouncement);

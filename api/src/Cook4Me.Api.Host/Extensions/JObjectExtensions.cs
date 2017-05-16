@@ -21,6 +21,28 @@ namespace Cook4Me.Api.Host.Extensions
 {
     internal static class JObjectExtensions
     {
+        public static double TryGetDouble(this JObject jObj, string key)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            JToken token;
+            if (!jObj.TryGetValue(key, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                return default(double);
+            }
+
+            double result;
+            if (!double.TryParse(token.ToString(), out result))
+            {
+                return default(double);
+            }
+
+            return result;
+        }
+
         public static string TryGetString(this JObject jObj, string key)
         {
             if (jObj == null)

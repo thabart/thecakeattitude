@@ -19,6 +19,7 @@ using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Host.Extensions;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
@@ -59,11 +60,11 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new AddAnnouncementCommand
             {
-                Name = jObj.Value<string>(Constants.DtoNames.Announcement.Name),
-                Description = jObj.Value<string>(Constants.DtoNames.Announcement.Description),
-                CategoryId = jObj.Value<string>(Constants.DtoNames.Announcement.CategoryId),
-                GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Announcement.GooglePlaceId),
-                Price = jObj.Value<double>(Constants.DtoNames.Announcement.Price)
+                Name = jObj.TryGetString(Constants.DtoNames.Announcement.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.Announcement.Description),
+                CategoryId = jObj.TryGetString(Constants.DtoNames.Announcement.CategoryId),
+                GooglePlaceId = jObj.TryGetString(Constants.DtoNames.Announcement.GooglePlaceId),
+                Price = jObj.TryGetDouble(Constants.DtoNames.Announcement.Price)
             };
 
             var location = jObj[Constants.DtoNames.Announcement.Location];

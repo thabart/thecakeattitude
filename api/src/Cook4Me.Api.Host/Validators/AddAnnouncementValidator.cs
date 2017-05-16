@@ -72,6 +72,11 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddAnnouncementValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Announcement.Description, 1, 255));
             }
 
+            if (command.Price < 0)
+            {
+                return new AddAnnouncementValidationResult(ErrorDescriptions.ThePriceCannotBeLessThanZero);
+            }
+
             if (!IsValid(command.GooglePlaceId))
             {
                 return new AddAnnouncementValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Announcement.GooglePlaceId));

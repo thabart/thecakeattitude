@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Widget from "../components/widget";
 import { AnnouncementsService } from '../services/index';
 import $ from 'jquery';
+import AppDispatcher from "../appDispatcher";
 
 class PublicAnnouncements extends Component {
     constructor(props) {
@@ -94,9 +95,11 @@ class PublicAnnouncements extends Component {
                     <div>{announcement.name}</div>
                     {announcement.category && announcement.category !== null && <div>Belongs to the category <b>{announcement.category.name}</b></div>}
                   </div>
-                  <div className="last-column">
-                    <h5 className="price">Proposed price € {announcement.price}</h5>
-                  </div>
+                  {announcement.price > 0 && (
+                    <div className="last-column">
+                      <h5 className="price">Proposed price € {announcement.price}</h5>
+                    </div>
+                  )}
                   <div className="expander" onClick={(e) => { self.showDetails(announcement.id, isDetailsDisplayed); }}>
                     {isDetailsDisplayed ? (<span>Close details</span>) : (<span>More details</span>)}
                   </div>
@@ -145,6 +148,17 @@ class PublicAnnouncements extends Component {
     }
     componentWillMount() {
         var self = this;
+        AppDispatcher.register(function (payload) {
+            switch (payload.actionName) {
+                case 'add-announce':
+                case 'remove-announce':
+                    var request = $.extend({}, self.request, {
+                        start_index: 0
+                    });
+                    self.refresh(request);
+                    break;
+            }
+        });
     }
 }
 

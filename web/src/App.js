@@ -72,6 +72,18 @@ class App extends Component {
                 data: message
             });
         });
+        proxy.on('announcementAdded', function(message) {
+          AppDispatcher.dispatch({
+            actionName: 'add-announce',
+            data: message
+          });
+        });
+        proxy.on('announcementRemoved', function(message) {
+          AppDispatcher.dispatch({
+            actionName: 'remove-announce',
+            data: message
+          });
+        });
         connection.start({jsonp: false})
             .done(function () {
                 console.log('Now connected, connection ID=' + connection.id);

@@ -5,7 +5,7 @@ import ShopServices from "./widgets/shopServices";
 import PublicAnnouncements from "./widgets/publicAnnouncements";
 import {withRouter} from "react-router";
 import BestDeals from "./widgets/bestDeals";
-import {ShopsService} from "./services/index";
+import {ShopsService, SessionService, AnnouncementsService} from "./services/index";
 import {withGoogleMap, GoogleMap, InfoWindow, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import {MAP} from "react-google-maps/lib/constants";
@@ -23,6 +23,11 @@ const currentLocationOpts = {
 const shopOpts = {
     url: '/images/shop-pin.png',
     scaledSize: new window.google.maps.Size(34, 38)
+};
+
+const announceOpts = {
+  url: '/images/service-pin.png',
+  scaledSize: new window.google.maps.Size(34, 38)
 };
 
 const INPUT_STYLE = {
@@ -55,28 +60,25 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
             onPlacesChanged={props.onPlacesChanged}
             inputPlaceholder="Enter your address" controlPosition={window.google.maps.ControlPosition.TOP_LEFT}
             inputStyle={INPUT_STYLE}/>
-        <Marker
-            icon={currentLocationOpts}
-            position={props.center}/>
         {props.markers && props.markers.map((marker, index) => {
             var onClick = () => props.onMarkerClick(marker);
-            var onCloseClick = () => props.onCloseClick(marker);
+            var onCloseClick = () => props.onMarkerClose(marker);
             return (
                 <Marker
                     key={index}
-                    icon={shopOpts}
+                    icon={marker.opts}
                     position={marker.location}
                     onClick={onClick}
                 >
                     {marker.showInfo && (<InfoWindow onCloseClick={onCloseClick}>
-                        <div>
-                            <strong>{marker.name}</strong><br />
-                            <NavLink to={"/shops/" + marker.id }>View profile</NavLink>
-                        </div>
+                      {marker.info}
                     </InfoWindow>)}
                 </Marker>
             );
         })}
+      <Marker
+          icon={currentLocationOpts}
+          position={props.center}/>
     </GoogleMap>
 ));
 
@@ -90,14 +92,14 @@ class Map extends Component {
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onZoomChanged = this.onZoomChanged.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
-        this.onCloseClick = this.onCloseClick.bind(this);
+        this.onMarkerClose = this.onMarkerClose.bind(this);
         this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
         this.onPlacesChanged = this.onPlacesChanged.bind(this);
         this.search = this.search.bind(this);
         this.changeFilter = this.changeFilter.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
-            shops: [],
+            markers: [],
             center: {lat: 50.8503, lng: 4.3517},
             isDragging: false,
             isSearching: false,
@@ -158,33 +160,27 @@ class Map extends Component {
     }
 
     onMarkerClick(marker) {
-        this.setState({
-            shops: this.state.shops.map(shop => {
-                if (shop === marker) {
-                    return {
-                        ...marker,
-                        showInfo: true
-                    };
-                }
-
-                return marker;
-            })
-        });
+      var markers = this.state.markers;
+      markers.forEach(function(m) {
+        if (m === marker) {
+          m.showInfo = true;
+        }
+      });
+      this.setState({
+        markers: markers
+      });
     }
 
-    onCloseClick(marker) {
-        this.setState({
-            shops: this.state.shops.map(shop => {
-                if (shop === marker) {
-                    return {
-                        ...marker,
-                        showInfo: false
-                    };
-                }
-
-                return marker;
-            })
-        });
+    onMarkerClose(marker) {
+      var markers = this.state.markers;
+      markers.forEach(function(m) {
+        if (m === marker) {
+          m.showInfo = false;
+        }
+      });
+      this.setState({
+        markers: markers
+      });
     }
 
     refreshMap() {
@@ -195,7 +191,8 @@ class Map extends Component {
         }
 
         self.setState({
-            isSearching: true
+            isSearching: true,
+            markers: []
         });
         var ne = bounds.getNorthEast();
         var sw = bounds.getSouthWest();
@@ -226,24 +223,39 @@ class Map extends Component {
         self.refs.bestDeals.refresh(json);
         self.refs.shopServices.refresh(json);
         self.refs.publicAnnouncements.refresh(json);
-        ShopsService.search(json).then(function (r) {
-            var embedded = r['_embedded'];
-            if (!(embedded instanceof Array)) {
-                embedded = [embedded];
-            }
-            var shops = [];
-            embedded.forEach(function (shop) {
-                shops.push({location: shop.location, name: shop.name, showInfo: false, id: shop.id});
-            });
-            self.setState({
-                isSearching: false,
-                shops: shops
-            });
-        }).catch(function () {
-            self.setState({
-                isSearching: false,
-                shops: []
-            });
+        ShopsService.search(json).then(function(shopsResult) {
+          var shopsEmbedded = shopsResult['_embedded'];
+          if (!(shopsEmbedded instanceof Array)) {
+              shopsEmbedded = [shopsEmbedded];
+          }
+
+          var markers = self.state.markers;
+          shopsEmbedded.forEach(function (shop) {
+            markers.push({location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: shopOpts, info: (
+              <div>
+                <strong>{shop.name}</strong><br />
+                <NavLink to={"/shops/" + shop.id }>View profile</NavLink>
+              </div>)});
+          });
+          self.setState({
+            isSearching: false,
+            markers: markers
+          });
+        });
+        AnnouncementsService.search(json).then(function(announcesResult) {
+          var announcesEmbedded = announcesResult['_embedded'];
+          if (!(announcesEmbedded instanceof Array)) {
+            announcesEmbedded = [announcesEmbedded];
+          }
+
+          var markers = self.state.markers;
+          announcesEmbedded.forEach(function (announce) {
+            markers.push({location: announce.location, name: announce.name, showInfo: false, id: announce.id, opts: announceOpts, info: (<div><strong>{announce.name}</strong></div>)});
+          });
+          self.setState({
+            isSearching: false,
+            markers: markers
+          });
         });
     }
 
@@ -274,6 +286,8 @@ class Map extends Component {
             cl = "row pending-search";
         }
 
+        var session = SessionService.getSession();
+        var isLoggedIn = session && session != null;
         return (
             <div className={cl} id="widget-container">
                 <div className="col-md-8 hidden-sm-down">
@@ -324,8 +338,8 @@ class Map extends Component {
                         onDragEnd={this.onDragEnd}
                         onZoomChanged={this.onZoomChanged}
                         onMarkerClick={this.onMarkerClick}
-                        onCloseClick={this.onCloseClick}
-                        markers={this.state.shops}
+                        onMarkerClose={this.onMarkerClose}
+                        markers={this.state.markers}
                         onSearchBoxCreated={this.onSearchBoxCreated}
                         onPlacesChanged={this.onPlacesChanged}
                         bounds={this.state.bounds}
@@ -337,7 +351,7 @@ class Map extends Component {
                         }>
                     </GettingStartedGoogleMap>
                 </div>
-                <div className="addAnnouncement"><a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a></div>
+                {isLoggedIn && (<div className="addAnnouncement"><a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a></div>)}
             </div>
         );
     }
