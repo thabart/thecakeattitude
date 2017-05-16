@@ -3,6 +3,14 @@
     height: 60px !important;
 }
 
+.card-container, .card {
+  height: 100%;
+}
+
+.card {
+  overflow-y: auto;
+}
+
 .card .expander {
   position: absolute;
   left : 50%;

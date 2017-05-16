@@ -13,13 +13,15 @@ import "./Map.css";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
 import AppDispatcher from "./appDispatcher";
-import ReactGridLayout from 'react-grid-layout';
+import 'react-grid-layout/css/styles.css';
+import {Responsive, WidthProvider} from 'react-grid-layout';
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 var gridLayout = [
-      {i: 'a', x: 0, y: 0, w: 1, h: 1 },
-      {i: 'b', x: 1, y: 0, w: 1, h: 1 },
-      {i: 'c', x: 2, y: 0, w: 1, h: 1},
-      {i: 'd', x: 0, y: 1, w: 3, h: 1 }
+      {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true },
+      {i: 'b', x: 1, y: 0, w: 1, h: 1, isResizable: true },
+      {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
+      {i: 'd', x: 0, y: 1, w: 3, h: 2, minW : 2, isResizable: true }
 ];
 
 const currentLocationOpts = {
@@ -246,10 +248,10 @@ class Map extends Component {
             }
         }
 
-        // self.refs.trendingSellers.refresh(json);
-        // self.refs.bestDeals.refresh(json);
-        // self.refs.shopServices.refresh(json);
-        // self.refs.publicAnnouncements.refresh(json);
+        self.refs.trendingSellers.refresh(json);
+        self.refs.bestDeals.refresh(json);
+        self.refs.shopServices.refresh(json);
+        self.refs.publicAnnouncements.refresh(json);
         ShopsService.search(json).then(function(shopsResult) {
           var shopsEmbedded = shopsResult['_embedded'];
           if (!(shopsEmbedded instanceof Array)) {
@@ -338,18 +340,12 @@ class Map extends Component {
                     </form>
 
                     {/* Widgets panel */}
-                    <ReactGridLayout className="layout" layouts={gridLayout} rowHeight={300} cols={3} width={1200}>
-                      {/*
-                      <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
-                      <div key={'b'}>BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
-                      <div key={'c'}><ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/></div>
-                      <div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={this.props.history} setCurrentMarker={this.setCurrentMarker} /></div>
-                      */}
+                    <ResponsiveReactGridLayout className="layout" layouts={{lg: gridLayout}}  rowHeight={300} cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move">
                       <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
                       <div key={'b'}><BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
                       <div key={'c'}><ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/></div>
                       <div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={this.props.history} setCurrentMarker={this.setCurrentMarker} /></div>
-                    </ReactGridLayout >
+                    </ResponsiveReactGridLayout >
                 </div>
 
                 {/* Map */}
