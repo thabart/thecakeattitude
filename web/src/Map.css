@@ -3,23 +3,28 @@
     border: 1px dashed #ddd;
 }
 
-.addAnnouncement {
+.options {
   position: fixed;
   bottom: 10px;
   left: 10px;
+}
+
+.options a {
+  display: inline-block;
   width: 60px;
   height: 60px;
-  background: #5bc0de;
   border-radius: 50%;
   color: white;
   font-size: 30pt;
   line-height: 60px;
   text-align: center;
   cursor: pointer;
+  margin-right: 10px;
+  background: #5bc0de;
 }
 
-.addAnnouncement a,
-.addAnnouncement a:hover {
+.options a,
+.options a:hover {
   color: white;
 }
 
@@ -87,4 +92,13 @@
     right: 0;
     border-radius: 100%;
     box-shadow: 0px 0px 0px 256px rgba(0, 0, 0, 0.35)
+}
+
+.categories-selector .selector ul {
+  list-style: none;
+}
+
+.categories-selector .selector {
+  border: 1px solid gray;
+  border-radius: 5px;
 }

@@ -3,19 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="60ae2116-c90b-4b29-bad5-cdacbb892009" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../api/simpleidserver" afterPath="$PROJECT_DIR$/../api/simpleidserver" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.gitignore" afterPath="$PROJECT_DIR$/../.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/Hugo.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Hugo.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/App.js" afterPath="$PROJECT_DIR$/src/App.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Map.css" afterPath="$PROJECT_DIR$/src/Map.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Map.js" afterPath="$PROJECT_DIR$/src/Map.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Products.css" afterPath="$PROJECT_DIR$/src/Products.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Products.js" afterPath="$PROJECT_DIR$/src/Products.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Services.js" afterPath="$PROJECT_DIR$/src/Services.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/productabs/descriptionTab.js" afterPath="$PROJECT_DIR$/src/productabs/descriptionTab.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/productabs/productComment.js" afterPath="$PROJECT_DIR$/src/productabs/productComment.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/services/Products.js" afterPath="$PROJECT_DIR$/src/services/Products.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/services/ShopServices.js" afterPath="$PROJECT_DIR$/src/services/ShopServices.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/widgets/trendingSellers.js" afterPath="$PROJECT_DIR$/src/widgets/trendingSellers.js" />
     </list>
     <ignored path="web.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,7 +25,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Products.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Products.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Products.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-3354">
@@ -58,14 +47,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Map.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Map.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Map.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1508">
-              <caret line="438" column="10" selection-start-line="438" selection-start-column="10" selection-end-line="438" selection-end-column="10" />
+            <state relative-caret-position="760">
+              <caret line="507" column="31" selection-start-line="507" selection-start-column="31" selection-end-line="507" selection-end-column="31" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
-                <marker date="1494967939053" expanded="true" signature="15829:16009" ph="{...}" />
+                <marker date="1494970955446" expanded="true" signature="17856:18036" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -210,10 +199,10 @@
         <option value="$PROJECT_DIR$/src/Products.css" />
         <option value="$PROJECT_DIR$/src/widgets/trendingSellers.js" />
         <option value="$PROJECT_DIR$/src/services/Products.js" />
-        <option value="$PROJECT_DIR$/src/Map.js" />
         <option value="$PROJECT_DIR$/src/services/ShopServices.js" />
         <option value="$PROJECT_DIR$/src/Services.js" />
         <option value="$PROJECT_DIR$/src/Products.js" />
+        <option value="$PROJECT_DIR$/src/Map.js" />
       </list>
     </option>
   </component>
@@ -474,12 +463,12 @@
       <workItem from="1494748391674" duration="2890000" />
       <workItem from="1494787162374" duration="9176000" />
       <workItem from="1494958643360" duration="18000" />
-      <workItem from="1494959151424" duration="11393000" />
+      <workItem from="1494959151424" duration="11640000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="54818000" />
+    <option name="totallyTimeSpent" value="55065000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
@@ -859,17 +848,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Map.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1508">
-          <caret line="438" column="10" selection-start-line="438" selection-start-column="10" selection-end-line="438" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-            <marker date="1494967939053" expanded="true" signature="15829:16009" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/services/Configuration.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -914,6 +892,17 @@
           <caret line="11" column="30" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Map.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="760">
+          <caret line="507" column="31" selection-start-line="507" selection-start-column="31" selection-end-line="507" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <marker date="1494970955446" expanded="true" signature="17856:18036" ph="{...}" />
           </folding>
         </state>
       </provider>
