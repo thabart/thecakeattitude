@@ -43,4 +43,10 @@
   position: absolute !important;
   top: 3px !important;
   right: 3px !important;
+  text-align: right;
+}
+
+.card .localize {
+  cursor: pointer;
+  font-size: 17pt;
 }

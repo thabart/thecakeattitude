@@ -76,9 +76,9 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
                 </Marker>
             );
         })}
-      <Marker
+      {props.currentPosition && props.currentPosition !== null && (<Marker
           icon={currentLocationOpts}
-          position={props.center}/>
+          position={props.currentPosition}/>)}
     </GoogleMap>
 ));
 
@@ -87,6 +87,7 @@ class Map extends Component {
         super(props);
         this._searchBox = null;
         this._searchTarget = "name";
+        this.setCurrentMarker = this.setCurrentMarker.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
@@ -101,11 +102,30 @@ class Map extends Component {
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
+            currentPosition: null,
             isDragging: false,
             isSearching: false,
             bounds: null,
             searchValue: null
         };
+    }
+
+    setCurrentMarker(id) {
+      var markers = this.state.markers;
+      var selectedMarker = null;
+      markers.forEach(function(marker) {
+        if (marker.id === id) {
+          selectedMarker = marker;
+          marker.showInfo = true;
+        } else {
+          marker.showInfo = false;
+        }
+      });
+
+      this.setState({
+        center: selectedMarker.location,
+        markers: markers
+      });
     }
 
     handleInputChange(e) {
@@ -315,16 +335,16 @@ class Map extends Component {
                         this.widgetContainer = elt;
                     }}>
                         <li className="col-md-4 p-1">
-                            <TrendingSellers ref="trendingSellers" history={this.props.history}/>
+                            <TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/>
                         </li>
                         <li className="col-md-4 p-1">
-                            <BestDeals ref="bestDeals" history={this.props.history}/>
+                            <BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/>
                         </li>
                         <li className="col-md-4 p-1">
-                            <ShopServices ref="shopServices" history={this.props.history}/>
+                            <ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/>
                         </li>
                         <li className="col-md-12 p-1">
-                            <PublicAnnouncements ref="publicAnnouncements" history={this.props.history} />
+                            <PublicAnnouncements ref="publicAnnouncements" history={this.props.history} setCurrentMarker={this.setCurrentMarker} />
                         </li>
                     </ul>
                 </div>
@@ -332,6 +352,7 @@ class Map extends Component {
                 {/* Map */}
                 <div className="col-md-4" id="map-container">
                     <GettingStartedGoogleMap
+                        currentPosition={this.state.currentPosition}
                         center={this.state.center}
                         onMapLoad={this.onMapLoad}
                         onDragStart={this.onDragStart}
@@ -380,6 +401,10 @@ class Map extends Component {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
                 self.setState({
+                    currentPosition: {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    },
                     center: {
                         lat: position.coords.latitude,
                         lng: position.coords.longitude

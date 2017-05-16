@@ -10,12 +10,19 @@ class TrendingSellers extends Component {
         super(props);
         this.navigate = this.navigate.bind(this);
         this.navigateShop = this.navigateShop.bind(this);
+        this.localize = this.localize.bind(this);
         this.state = {
             errorMessage: null,
             isLoading: false,
             shops: [],
             navigation: []
         };
+    }
+
+    localize(e, shop) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.setCurrentMarker(shop.id);
     }
 
     // Navigate through the pages
@@ -98,20 +105,22 @@ class TrendingSellers extends Component {
                 }
 
                 content.push((
-                    <a key={shop.id} href="#"
-                       className="list-group-item list-group-item-action flex-column align-items-start no-padding"
+                    <a key={shop.id} href="#" className="list-group-item list-group-item-action no-padding"
                        onClick={(e) => {
                            self.navigateShop(e, shop.id);
                        }}>
-                        <div className="d-flex w-100">
-                            <img src={profileImage} className="img-thumbnail rounded float-left picture"/>
-                            <div className="d-flex flex-column">
-                                <div className="mb-1">{shop.name}</div>
-                                <div className="mb-1">
-                                    <Rater total={5} rating={shop.average_score} interactive={false}/><i>Comments
-                                    : {shop.nb_comments}</i>
-                                </div>
-                            </div>
+                        <div className="first-column">
+                          <img src={profileImage} className="img-thumbnail rounded picture image-small"/>
+                        </div>
+                        <div className="second-column">
+                          <div>{shop.name}</div>
+                          <div>
+                            <Rater total={5} rating={shop.average_score} interactive={false}/><i>Comments
+                            : {shop.nb_comments}</i>
+                          </div>
+                        </div>
+                        <div className="last-column">
+                         <i className="fa fa-map-marker localize"onClick={(e) => { self.localize(e, shop); }}></i>
                         </div>
                     </a>));
             });

@@ -9,6 +9,7 @@ class PublicAnnouncements extends Component {
         super(props);
         this.navigate = this.navigate.bind(this);
         this.showDetails = this.showDetails.bind(this);
+        this.localize = this.localize.bind(this);
         this.state = {
             errorMessage: null,
             isLoading: false,
@@ -16,6 +17,11 @@ class PublicAnnouncements extends Component {
             navigation: [],
             details: {}
         };
+    }
+    localize(e, announcement) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.setCurrentMarker(announcement.id);
     }
     showDetails(id, isDetailDisplayed) {
       var details = this.state.details;
@@ -85,22 +91,23 @@ class PublicAnnouncements extends Component {
         if (self.state.announcements && self.state.announcements.length > 0) {
           self.state.announcements.forEach(function (announcement) {
             var image = "/images/default-announcement.jpg";
-            var days = (<span>No announcement</span>);
+            var days = (<span>No announces</span>);
             var isDetailsDisplayed = self.state.details[announcement.id] && self.state.details[announcement.id] !== null;
             content.push((
-              <li key={announcement.id} href="#" className="list-group-item list-group-item-action no-padding row">
+              <li key={announcement.id} className="list-group-item list-group-item-action no-padding row">
                 <div className="summary">
                   <div className="first-column"><img src={image} className="img-thumbnail rounded picture image-small"/></div>
                   <div className="second-column">
                     <div>{announcement.name}</div>
                     {announcement.category && announcement.category !== null && <div>Belongs to the category <b>{announcement.category.name}</b></div>}
                   </div>
-                  {announcement.price > 0 && (
                     <div className="last-column">
-                      <h5 className="price">Proposed price € {announcement.price}</h5>
+                      <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, announcement); }}></i>
+                      {announcement.price > 0 && (
+                        <h5 className="price">Proposed price € {announcement.price}</h5>
+                      )}
                     </div>
-                  )}
-                  <div className="expander" onClick={(e) => { self.showDetails(announcement.id, isDetailsDisplayed); }}>
+                  <div className="expander" onClick={(e) => { e.preventDefault(); self.showDetails(announcement.id, isDetailsDisplayed); }}>
                     {isDetailsDisplayed ? (<span>Close details</span>) : (<span>More details</span>)}
                   </div>
                 </div>

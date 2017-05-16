@@ -19,9 +19,16 @@ class ShopServices extends Component {
     constructor(props) {
         super(props);
         this.navigateService = this.navigateService.bind(this);
+        this.localize = this.localize.bind(this);
         this.state = {
             isLoading: false
         };
+    }
+
+    localize(e, service) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.setCurrentMarker(service.shop_id);
     }
 
     navigate(e, name) {
@@ -110,24 +117,25 @@ class ShopServices extends Component {
                 }
 
                 content.push((
-                    <a key={service.id} href="#"
-                       className="list-group-item list-group-item-action flex-column align-items-start no-padding"
+                    <a key={service.id} href="#" className="list-group-item list-group-item-action no-padding"
                        onClick={(e) => {
                            self.navigateService(e, service.id);
                        }}>
-                        <div className="d-flex w-100">
-                            <img src={image} className="img-thumbnail rounded float-left picture"/>
-                            <div className="d-flex flex-column">
-                                <div className="mb-1">{service.name}</div>
-                                <div className="mb-1">
-                                    <Rater total={5} rating={service.average_score} interactive={false}/><i>Comments
-                                    : {service.nb_comments}</i>
-                                </div>
-                                <div className="mb-1">
-                                    {days}
-                                </div>
-                            </div>
+                       <div className="first-column">
+                           <img src={image} className="img-thumbnail rounded picture image-small"/>
+                       </div>
+                       <div className="second-column">
+                        <div>{service.name}</div>
+                        <div>
+                            <Rater total={5} rating={service.average_score} interactive={false}/><i>Comments: {service.nb_comments}</i>
                         </div>
+                        <div>
+                          {days}
+                        </div>
+                       </div>
+                       <div className="last-column">
+                        <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, service); }}></i>
+                       </div>
                     </a>));
             });
         }

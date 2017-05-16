@@ -11,12 +11,19 @@ class BestDeals extends Component {
         super(props);
         this.navigate = this.navigate.bind(this);
         this.navigateProduct = this.navigateProduct.bind(this);
+        this.localize = this.localize.bind(this);
         this.state = {
             errorMessage: null,
             isLoading: false,
             products: [],
             navigation: []
         };
+    }
+
+    localize(e, product) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.props.setCurrentMarker(product.shop_id);
     }
 
     // Navigate to the product page
@@ -102,23 +109,25 @@ class BestDeals extends Component {
                 }
 
                 content.push((
-                    <a href="#"
-                       className="list-group-item list-group-item-action flex-column align-items-start no-padding"
+                    <a href="#" className="list-group-item list-group-item-action no-padding"
                        onClick={(e) => {
                            self.navigateProduct(e, product.id);
                        }}>
-                        <div className="d-flex w-100">
-                            <img src={productImage} className="img-thumbnail rounded float-left picture"/>
-                            <div className="d-flex flex-column">
-                                <div className="mb-1">{product.name}</div>
-                                <Rater total={5} rating={product.average_score} interactive={false}/>
-                                <p className="mb-1">
-                                    <h5 className="price inline"><strike>€ {product.price}</strike></h5>
-                                    (<i>-{firstPromotion.discount}%</i>)
-                                    <h5 className="price inline">€ {product.new_price}</h5>
-                                </p>
-                            </div>
-                        </div>
+                       <div className="first-column">
+                           <img src={productImage} className="img-thumbnail rounded picture image-small"/>
+                       </div>
+                       <div className="second-column">
+                           <div>{product.name}</div>
+                           <Rater total={5} rating={product.average_score} interactive={false}/>
+                           <p>
+                               <h5 className="price inline"><strike>€ {product.price}</strike></h5>
+                               (<i>-{firstPromotion.discount}%</i>)
+                               <h5 className="price inline">€ {product.new_price}</h5>
+                           </p>
+                       </div>
+                       <div className="last-column">
+                        <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, product); }}></i>
+                       </div>
                     </a>));
             });
         }
