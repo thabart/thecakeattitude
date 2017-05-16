@@ -3,23 +3,28 @@
     border: 1px dashed #ddd;
 }
 
-.addAnnouncement {
+.options {
   position: fixed;
   bottom: 10px;
   left: 10px;
+}
+
+.options a {
+  display: inline-block;
   width: 60px;
   height: 60px;
-  background: #5bc0de;
   border-radius: 50%;
   color: white;
   font-size: 30pt;
   line-height: 60px;
   text-align: center;
   cursor: pointer;
+  margin-right: 10px;
+  background: #5bc0de;
 }
 
-.addAnnouncement a,
-.addAnnouncement a:hover {
+.options a,
+.options a:hover {
   color: white;
 }
 

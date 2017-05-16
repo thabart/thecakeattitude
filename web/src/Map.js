@@ -5,6 +5,7 @@ import ShopServices from "./widgets/shopServices";
 import PublicAnnouncements from "./widgets/publicAnnouncements";
 import {withRouter} from "react-router";
 import BestDeals from "./widgets/bestDeals";
+import {Modal, ModalHeader, ModalBody} from "reactstrap";
 import {ShopsService, SessionService, AnnouncementsService} from "./services/index";
 import {withGoogleMap, GoogleMap, InfoWindow, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
@@ -115,6 +116,7 @@ class Map extends Component {
         super(props);
         this._searchBox = null;
         this._searchTarget = "name";
+        this.toggleModal = this.toggleModal.bind(this);
         this.onLayoutChange = this.onLayoutChange.bind(this);
         this.setCurrentMarker = this.setCurrentMarker.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
@@ -135,8 +137,16 @@ class Map extends Component {
             isDragging: false,
             isSearching: false,
             bounds: null,
-            searchValue: null
+            searchValue: null,
+            isFilterOpened: false
         };
+    }
+
+    toggleModal() {
+      var isFilterOpened = !this.state.isFilterOpened;
+      this.setState({
+        isFilterOpened: isFilterOpened
+      });
     }
 
     onLayoutChange(layout, layouts) {
@@ -397,7 +407,26 @@ class Map extends Component {
                         }>
                     </GettingStartedGoogleMap>
                 </div>
-                {isLoggedIn && (<div className="addAnnouncement"><a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a></div>)}
+                <div className="options">
+                  {isLoggedIn && (<a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a>)}
+                  <a href="/" onClick={(e) => { e.preventDefault(); this.toggleModal(); }}><i className="fa fa-filter"></i></a>
+                </div>
+                <Modal isOpen={this.state.isFilterOpened}>
+                  <ModalHeader toggle={() => {
+                      this.toggleModal();
+                  }}>Filter</ModalHeader>
+                  <ModalBody>
+                    <div className="form-group">
+                      <input type="checkbox" /><label>Include the announces</label>
+                    </div>
+                    <div className="form-group">
+                      <input type="checkbox" /><label>Include the shops</label>
+                    </div>
+                    <div className="form-group">
+                      <button className="btn btn-default">Confirm</button>
+                    </div>
+                  </ModalBody>
+                </Modal>
             </div>
         );
     }
@@ -415,18 +444,6 @@ class Map extends Component {
             }
         });
 
-
-
-        // Can reorder all the widgets.
-        /*
-        $(this.widgetContainer).sortable({
-            handle: '.card-header',
-            opacity: 0.4,
-            placeholder: 'placeholder',
-            forcePlaceholderSize: true,
-            cursor: 'move'
-        });
-        */
         // Get the current location and display it.
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {
