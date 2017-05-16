@@ -13,35 +13,38 @@ import "./Map.css";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
 import AppDispatcher from "./appDispatcher";
-import 'react-grid-layout/css/styles.css';
-import {Responsive, WidthProvider} from 'react-grid-layout';
+import "react-grid-layout/css/styles.css";
+import {Responsive, WidthProvider} from "react-grid-layout";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 function getLayoutFromLocalStorage() {
-  let ls = {};
-  if (global.localStorage) {
-    try {
-      ls = JSON.parse(global.localStorage.getItem('gameinshop')) || {};
-    } catch(e) {/*Ignore*/}
-  }
+    let ls = {};
+    if (global.localStorage) {
+        try {
+            ls = JSON.parse(global.localStorage.getItem('gameinshop')) || {};
+        } catch (e) {/*Ignore*/
+        }
+    }
 
-  return ls['layouts'];
+    return ls['layouts'];
 }
 
 function saveLayout(value) {
-  if (global.localStorage) {
-    global.localStorage.setItem('gameinshop', JSON.stringify({
-      ['layouts']: value
-    }));
-  }
+    if (global.localStorage) {
+        global.localStorage.setItem('gameinshop', JSON.stringify({
+            ['layouts']: value
+        }));
+    }
 }
 
-const gridLayout = getLayoutFromLocalStorage() || { lg : [
-      {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true },
-      {i: 'b', x: 1, y: 0, w: 1, h: 1, isResizable: true },
-      {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
-      {i: 'd', x: 0, y: 1, w: 3, h: 2, minW : 2, isResizable: true }
-] };
+const gridLayout = getLayoutFromLocalStorage() || {
+        lg: [
+            {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true},
+            {i: 'b', x: 1, y: 0, w: 1, h: 1, isResizable: true},
+            {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
+            {i: 'd', x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
+        ]
+    };
 
 const currentLocationOpts = {
     url: '/images/current-location.png',
@@ -54,8 +57,8 @@ const shopOpts = {
 };
 
 const announceOpts = {
-  url: '/images/service-pin.png',
-  scaledSize: new window.google.maps.Size(34, 38)
+    url: '/images/service-pin.png',
+    scaledSize: new window.google.maps.Size(34, 38)
 };
 
 const INPUT_STYLE = {
@@ -99,14 +102,14 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
                     onClick={onClick}
                 >
                     {marker.showInfo && (<InfoWindow onCloseClick={onCloseClick}>
-                      {marker.info}
+                        {marker.info}
                     </InfoWindow>)}
                 </Marker>
             );
         })}
-      {props.currentPosition && props.currentPosition !== null && (<Marker
-          icon={currentLocationOpts}
-          position={props.currentPosition}/>)}
+        {props.currentPosition && props.currentPosition !== null && (<Marker
+            icon={currentLocationOpts}
+            position={props.currentPosition}/>)}
     </GoogleMap>
 ));
 
@@ -140,25 +143,25 @@ class Map extends Component {
     }
 
     onLayoutChange(layout, layouts) {
-      saveLayout(layouts);
+        saveLayout(layouts);
     }
 
     setCurrentMarker(id) {
-      var markers = this.state.markers;
-      var selectedMarker = null;
-      markers.forEach(function(marker) {
-        if (marker.id === id) {
-          selectedMarker = marker;
-          marker.showInfo = true;
-        } else {
-          marker.showInfo = false;
-        }
-      });
+        var markers = this.state.markers;
+        var selectedMarker = null;
+        markers.forEach(function (marker) {
+            if (marker.id === id) {
+                selectedMarker = marker;
+                marker.showInfo = true;
+            } else {
+                marker.showInfo = false;
+            }
+        });
 
-      this.setState({
-        center: selectedMarker.location,
-        markers: markers
-      });
+        this.setState({
+            center: selectedMarker.location,
+            markers: markers
+        });
     }
 
     handleInputChange(e) {
@@ -213,27 +216,27 @@ class Map extends Component {
     }
 
     onMarkerClick(marker) {
-      var markers = this.state.markers;
-      markers.forEach(function(m) {
-        if (m === marker) {
-          m.showInfo = true;
-        }
-      });
-      this.setState({
-        markers: markers
-      });
+        var markers = this.state.markers;
+        markers.forEach(function (m) {
+            if (m === marker) {
+                m.showInfo = true;
+            }
+        });
+        this.setState({
+            markers: markers
+        });
     }
 
     onMarkerClose(marker) {
-      var markers = this.state.markers;
-      markers.forEach(function(m) {
-        if (m === marker) {
-          m.showInfo = false;
-        }
-      });
-      this.setState({
-        markers: markers
-      });
+        var markers = this.state.markers;
+        markers.forEach(function (m) {
+            if (m === marker) {
+                m.showInfo = false;
+            }
+        });
+        this.setState({
+            markers: markers
+        });
     }
 
     refreshMap() {
@@ -276,39 +279,48 @@ class Map extends Component {
         self.refs.bestDeals.refresh(json);
         self.refs.shopServices.refresh(json);
         self.refs.publicAnnouncements.refresh(json);
-        ShopsService.search(json).then(function(shopsResult) {
-          var shopsEmbedded = shopsResult['_embedded'];
-          if (!(shopsEmbedded instanceof Array)) {
-              shopsEmbedded = [shopsEmbedded];
-          }
+        ShopsService.search(json).then(function (shopsResult) {
+            var shopsEmbedded = shopsResult['_embedded'];
+            if (!(shopsEmbedded instanceof Array)) {
+                shopsEmbedded = [shopsEmbedded];
+            }
 
-          var markers = self.state.markers;
-          shopsEmbedded.forEach(function (shop) {
-            markers.push({location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: shopOpts, info: (
-              <div>
-                <strong>{shop.name}</strong><br />
-                <NavLink to={"/shops/" + shop.id }>View profile</NavLink>
-              </div>)});
-          });
-          self.setState({
-            isSearching: false,
-            markers: markers
-          });
+            var markers = self.state.markers;
+            shopsEmbedded.forEach(function (shop) {
+                markers.push({
+                    location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: shopOpts, info: (
+                        <div>
+                            <strong>{shop.name}</strong><br />
+                            <NavLink to={"/shops/" + shop.id }>View profile</NavLink>
+                        </div>)
+                });
+            });
+            self.setState({
+                isSearching: false,
+                markers: markers
+            });
         });
-        AnnouncementsService.search(json).then(function(announcesResult) {
-          var announcesEmbedded = announcesResult['_embedded'];
-          if (!(announcesEmbedded instanceof Array)) {
-            announcesEmbedded = [announcesEmbedded];
-          }
+        AnnouncementsService.search(json).then(function (announcesResult) {
+            var announcesEmbedded = announcesResult['_embedded'];
+            if (!(announcesEmbedded instanceof Array)) {
+                announcesEmbedded = [announcesEmbedded];
+            }
 
-          var markers = self.state.markers;
-          announcesEmbedded.forEach(function (announce) {
-            markers.push({location: announce.location, name: announce.name, showInfo: false, id: announce.id, opts: announceOpts, info: (<div><strong>{announce.name}</strong></div>)});
-          });
-          self.setState({
-            isSearching: false,
-            markers: markers
-          });
+            var markers = self.state.markers;
+            announcesEmbedded.forEach(function (announce) {
+                markers.push({
+                    location: announce.location,
+                    name: announce.name,
+                    showInfo: false,
+                    id: announce.id,
+                    opts: announceOpts,
+                    info: (<div><strong>{announce.name}</strong></div>)
+                });
+            });
+            self.setState({
+                isSearching: false,
+                markers: markers
+            });
         });
     }
 
@@ -365,12 +377,17 @@ class Map extends Component {
 
                     {/* Widgets panel */}
                     <ResponsiveReactGridLayout className="layout"
-                        layouts={gridLayout}  rowHeight={300} cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
-                        onLayoutChange={this.onLayoutChange}>
-                      <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
-                      <div key={'b'}><BestDeals ref="bestDeals" history={this.props.history}  setCurrentMarker={this.setCurrentMarker}/></div>
-                      <div key={'c'}><ShopServices ref="shopServices" history={this.props.history} setCurrentMarker={this.setCurrentMarker}/></div>
-                      <div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={this.props.history} setCurrentMarker={this.setCurrentMarker} /></div>
+                                               layouts={gridLayout} rowHeight={300}
+                                               cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
+                                               onLayoutChange={this.onLayoutChange}>
+                        <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}
+                                                        setCurrentMarker={this.setCurrentMarker}/></div>
+                        <div key={'b'}><BestDeals ref="bestDeals" history={this.props.history}
+                                                  setCurrentMarker={this.setCurrentMarker}/></div>
+                        <div key={'c'}><ShopServices ref="shopServices" history={this.props.history}
+                                                     setCurrentMarker={this.setCurrentMarker}/></div>
+                        <div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={this.props.history}
+                                                            setCurrentMarker={this.setCurrentMarker}/></div>
                     </ResponsiveReactGridLayout >
                 </div>
 
@@ -397,7 +414,9 @@ class Map extends Component {
                         }>
                     </GettingStartedGoogleMap>
                 </div>
-                {isLoggedIn && (<div className="addAnnouncement"><a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a></div>)}
+                {isLoggedIn && (
+                    <div className="addAnnouncement"><a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a>
+                    </div>)}
             </div>
         );
     }
@@ -416,17 +435,16 @@ class Map extends Component {
         });
 
 
-
         // Can reorder all the widgets.
         /*
-        $(this.widgetContainer).sortable({
-            handle: '.card-header',
-            opacity: 0.4,
-            placeholder: 'placeholder',
-            forcePlaceholderSize: true,
-            cursor: 'move'
-        });
-        */
+         $(this.widgetContainer).sortable({
+         handle: '.card-header',
+         opacity: 0.4,
+         placeholder: 'placeholder',
+         forcePlaceholderSize: true,
+         cursor: 'move'
+         });
+         */
         // Get the current location and display it.
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(function (position) {

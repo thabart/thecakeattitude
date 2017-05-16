@@ -32,6 +32,21 @@ module.exports = {
             });
         });
     },
+    // Get shop
+    getShop: function (productId) {
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.products_endpoint + '/' + productId + '/shop', {
+                    method: 'POST',
+                    contentType: 'application/json'
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
+    },
     // Search comments
     searchComments: function (productId, content) {
         return new Promise(function (resolve, reject) {

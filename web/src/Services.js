@@ -3,7 +3,7 @@ import Rater from "react-rater";
 import Magnify from "react-magnify";
 import {CommentTab, DescriptionTab} from "./servicetabs";
 import {ShopServices} from "./services/index";
-import {TabContent, TabPane, Nav, NavItem, NavLink, Alert} from "reactstrap";
+import {TabContent, TabPane, Nav, NavItem, NavLink, Alert, Badge, Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {withRouter} from "react-router";
 import Constants from "../Constants";
 import $ from "jquery";
@@ -21,7 +21,8 @@ class Services extends Component {
             loading: false,
             errorMessage: null,
             currentImageIndice: 0,
-            service: null
+            service: null,
+            shop: null
         };
     }
 
@@ -67,6 +68,12 @@ class Services extends Component {
                 isLoading: false
             });
         });
+    }
+
+    // Navigate to the shop
+    navigateShop(e, shopId) {
+        e.preventDefault();
+        this.props.history.push('/shops/' + shopId);
     }
 
     navigateGeneral(e) {
@@ -127,25 +134,36 @@ class Services extends Component {
         return (
             <div className="container">
                 <section className="white-section product-section">
-                    <div className="row col-md-12">
-                        <div className="col-md-8">
-                            <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <a href="#"
+                               onClick={(e) => {
+                                   self.navigateShop(e, "unknown_id");
+                               }}>
+                                {this.state.shop == null ? "Unknown shop" : this.state.shop.name}
+                            </a>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem active>{this.state.product.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="row col-md-12 m-2">
+                        <div className="col-md-8 p-1">
+                            <div className="row p-1">
                                 <div className="col-md-12">
                                     <h3 className="title">{self.state.service.name}</h3>
-                                    <div className="rating">
-                                        <div className="stars">
+                                    <div>
+                                        <div>
                                             <Rater total={5} ref="score" rating={self.state.service.average_score}
                                                    interactive={false}/>
                                             <b> {self.state.service.average_score} </b>
                                         </div>
-                                        <span className="comments">Comments({self.state.service.nb_comments})</span>
+                                        <span>Comments({self.state.service.nb_comments})</span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row p-1">
                                 <div className="col-md-12">
                                     {tags.length > 0 && (
-                                        <ul className="no-padding tags col-md-12 gray">
+                                        <ul className="col-md-12">
                                             {tags}
                                         </ul>)
                                     }
@@ -162,7 +180,7 @@ class Services extends Component {
                                     }} src={currentImageSrc}></Magnify>
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row p-1">
                                 <Nav tabs className="col-md-12">
                                     <NavItem>
                                         <NavLink
@@ -190,13 +208,14 @@ class Services extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4">
-                            <h4 className="price">€ {self.state.service.new_price}</h4>
-                            <button className="btn btn-success">CONTACT THE SHOP</button>
+                        <div className="col-md-4 p1">
+                            <h4>€ {self.state.service.new_price}</h4>
+                            <button className="btn btn-info">CONTACT THE SHOP</button>
                         </div>
                     </div>
                 </section>
-            </div> );
+            </div>
+        );
     }
 
     componentWillMount() {

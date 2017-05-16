@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Alert, TabContent, TabPane, Nav, NavItem, NavLink} from "reactstrap";
+import {Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem} from "reactstrap";
 import Rater from "react-rater";
 import {withRouter} from "react-router";
 import Constants from "../Constants";
@@ -8,8 +8,8 @@ import "react-magnify/lib/react-magnify.css";
 import {ProductsService} from "./services/index";
 import {DescriptionTab, ProductComment} from "./productabs";
 import $ from "jquery";
-import "./Products.css";
 import classnames from "classnames";
+import "./styles/Palette.css";
 
 class Products extends Component {
     constructor(props) {
@@ -24,7 +24,8 @@ class Products extends Component {
             isLoading: false,
             errorMessage: null,
             currentImageIndice: 0,
-            product: null
+            product: null,
+            shop: null
         };
     }
 
@@ -52,7 +53,7 @@ class Products extends Component {
             });
         }).catch(function (e) {
             var json = e.responseJSON;
-            var error = "an error occured while trying to retrieve the product";
+            var error = "An error occured while trying to retrieve the product";
             if (json && json.error_description) {
                 error = json.error_description;
             }
@@ -76,6 +77,12 @@ class Products extends Component {
         this.setState({
             currentImageIndice: indice
         });
+    }
+
+    // Navigate to the shop
+    navigateShop(e, shopId) {
+        e.preventDefault();
+        this.props.history.push('/shops/' + shopId);
     }
 
     navigateGeneral(e) {
@@ -141,47 +148,56 @@ class Products extends Component {
         }
 
         return (
+
             <div className="container">
-                <section className="white-section product-section">
-                    <div className="row col-md-12">
-                        <div className="col-md-8">
-                            <div className="row">
+                <Breadcrumb>
+                    <BreadcrumbItem>
+                        <a href="#"
+                           onClick={(e) => {
+                               self.navigateShop(e, "unknown_id");
+                           }}>
+                            {this.state.shop == null ? "Unknown shop" : this.state.shop.name}
+                        </a>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem active>{this.state.product.name}</BreadcrumbItem>
+                </Breadcrumb>
+                <section className="white-section">
+                    <div className="row col-md-12 m-2">
+                        <div className="col-md-8 p-1">
+                            <div className="row p-1">
                                 <div className="col-md-12">
-                                    <h3 className="title">{this.state.product.name}</h3>
-                                    <div className="rating">
-                                        <div className="stars">
+                                    <h3>{this.state.product.name}</h3>
+                                    <div>
+                                        <div>
                                             <Rater total={5} ref="score" rating={this.state.product.average_score}
                                                    interactive={false}/>
                                             <b> {this.state.product.average_score} </b>
                                         </div>
-                                        <span className="comments">Comments({this.state.product.nb_comments})</span>
+                                        <span>Comments ({this.state.product.nb_comments})</span>
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row p-1">
                                 {tags.length > 0 && (
-                                    <ul className="tags col-md-12 gray">
+                                    <ul className="col-md-12">
                                         {tags}
                                     </ul>)
                                 }
                             </div>
                             {images.length > 0 && (
-                                <div className="row medium-padding-top">
+                                <div className="row p-1">
                                     <ul className="col-md-3 no-style no-margin image-selector">
                                         {images}
                                     </ul>
-                                    <div className={newPrice == null ? "col-md-9" : "col-md-9 is-best-deals"}>
+                                    <div className={newPrice == null ? "col-md-9" : "col-md-9"}>
                                         <Magnify style={{
                                             width: '433px',
                                             height: '433px'
                                         }} src={currentImageSrc}></Magnify>
-                                        <div className="best-deals">
-                                            <img src="/images/hot_deals.png" width="120"/>
-                                        </div>
                                     </div>
                                 </div>)
                             }
-                            <div className="row">
+                            <div className="row p-1">
                                 <Nav tabs className="col-md-12">
                                     <NavItem>
                                         <NavLink
@@ -209,14 +225,19 @@ class Products extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-4">
-                            {newPrice == null ? (<h4 className="price">€ {this.state.product.price}</h4>) : (
+                        <div className="col-md-4 p-1">
+                            {newPrice == null ? (
+                                <h4 className="price">€ {this.state.product.price}</h4>) : (
                                 <div>
-                                    <h4 className="price inline"><strike>€ {this.state.product.price}</strike></h4> (<i>-{promotion.discount}%</i>)
-                                    <h4 className="price inline new-price">€ {newPrice}</h4>
+                                    <h4 className="inline">
+                                        <Badge
+                                            color="success"><strike>€ {this.state.product.price}</strike><i
+                                            className="ml-1">-{promotion.discount}%</i></Badge>
+                                    </h4>
+                                    <h4 className="inline ml-1">€ {newPrice}</h4>
                                 </div>
                             )}
-                            <button className="btn btn-success">BUY</button>
+                            <button className="btn btn-info">BUY</button>
                         </div>
                     </div>
                 </section>

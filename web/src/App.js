@@ -7,7 +7,7 @@ import AddShop from "./AddShop";
 import Shop from "./Shop";
 import Products from "./Products";
 import Services from "./Services";
-import AddAnnouncement from './AddAnnouncement';
+import AddAnnouncement from "./AddAnnouncement";
 import {OpenIdService, SessionService} from "./services/index";
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
@@ -72,17 +72,17 @@ class App extends Component {
                 data: message
             });
         });
-        proxy.on('announcementAdded', function(message) {
-          AppDispatcher.dispatch({
-            actionName: 'add-announce',
-            data: message
-          });
+        proxy.on('announcementAdded', function (message) {
+            AppDispatcher.dispatch({
+                actionName: 'add-announce',
+                data: message
+            });
         });
-        proxy.on('announcementRemoved', function(message) {
-          AppDispatcher.dispatch({
-            actionName: 'remove-announce',
-            data: message
-          });
+        proxy.on('announcementRemoved', function (message) {
+            AppDispatcher.dispatch({
+                actionName: 'remove-announce',
+                data: message
+            });
         });
         connection.start({jsonp: false})
             .done(function () {
@@ -138,7 +138,8 @@ class App extends Component {
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/addshop"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
-                        <Route path="/addAnnounce" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
+                        <Route path="/addAnnounce"
+                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
                         <Route path="/error/:type" component={Error}/>
                     </div>
                 </div>

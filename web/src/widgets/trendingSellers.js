@@ -20,9 +20,9 @@ class TrendingSellers extends Component {
     }
 
     localize(e, shop) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.props.setCurrentMarker(shop.id);
+        e.preventDefault();
+        e.stopPropagation();
+        this.props.setCurrentMarker(shop.id);
     }
 
     // Navigate through the pages
@@ -110,17 +110,19 @@ class TrendingSellers extends Component {
                            self.navigateShop(e, shop.id);
                        }}>
                         <div className="first-column">
-                          <img src={profileImage} className="img-thumbnail rounded picture image-small"/>
+                            <img src={profileImage} className="img-thumbnail rounded picture image-small"/>
                         </div>
                         <div className="second-column">
-                          <div>{shop.name}</div>
-                          <div>
-                            <Rater total={5} rating={shop.average_score} interactive={false}/><i>Comments
-                            : {shop.nb_comments}</i>
-                          </div>
+                            <div>{shop.name}</div>
+                            <div>
+                                <Rater total={5} rating={shop.average_score} interactive={false}/><i>Comments
+                                : {shop.nb_comments}</i>
+                            </div>
                         </div>
                         <div className="last-column">
-                         <i className="fa fa-map-marker localize"onClick={(e) => { self.localize(e, shop); }}></i>
+                            <i className="fa fa-map-marker localize" onClick={(e) => {
+                                self.localize(e, shop);
+                            }}></i>
                         </div>
                     </a>));
             });
