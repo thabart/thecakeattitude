@@ -11,7 +11,11 @@ class FilterModal extends Component {
     this.closeError = this.closeError.bind(this);
     this.addCategories = this.addCategories.bind(this);
     this.removeCategories = this.removeCategories.bind(this);
+    this.confirm = this.confirm.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
+      includeShops: true,
+      includeAnnounces: true,
       isOpened : false,
       isCategoriesLoading: false,
       errorMessage: null,
@@ -20,6 +24,14 @@ class FilterModal extends Component {
       categoriesToRemove: [],
       categoriesInFilter: []
     };
+  }
+  handleInputChange(e) {
+      const target = e.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+      this.setState({
+          [name]: value
+      });
   }
   selectCategory(e, category, isActive, toAdd) {
     var cats = this.state.categoriesToAdd;
@@ -126,6 +138,15 @@ class FilterModal extends Component {
       errorMessage: null
     });
   }
+  confirm() {
+    var result = {
+      include_shops : this.state.includeShops,
+      include_announces : this.state.includeAnnounces,
+      categories : this.state.categoriesInFilter
+    };
+
+    this.props.filter(result);
+  }
   render() {
     var categories = [],
       categoriesInFilter = [],
@@ -165,10 +186,10 @@ class FilterModal extends Component {
         <ModalBody>
             <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
             <div className="form-group">
-                <input type="checkbox"/><label>Include the announces</label>
+                <input type="checkbox" name="includeAnnounces" onChange={this.handleInputChange} checked={this.state.includeAnnounces} /><label>Include the announces</label>
             </div>
             <div className="form-group">
-                <input type="checkbox"/><label>Include the shops</label>
+                <input type="checkbox" name="includeShops" onChange={this.handleInputChange} checked={this.state.includeShops} /><label>Include the shops</label>
             </div>
             {this.state.isCategoriesLoading ? (<div><i className='fa fa-spinner fa-spin'></i></div>) : (
               <div className="form-group categories-selector">
@@ -194,7 +215,7 @@ class FilterModal extends Component {
               </div>
             )}
             <div className="form-group">
-                <button className="btn btn-default">Confirm</button>
+                <button className="btn btn-default" onClick={(e) => {this.confirm(); }}>Confirm</button>
             </div>
         </ModalBody>
     </Modal> );

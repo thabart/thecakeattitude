@@ -119,6 +119,8 @@ class Map extends Component {
         super(props);
         this._searchBox = null;
         this._searchTarget = "name";
+        this._isAnnounceDisplayed = true;
+        this._isShopsDisplayed = true;
         this.openModal = this.openModal.bind(this);
         this.onLayoutChange = this.onLayoutChange.bind(this);
         this.setCurrentMarker = this.setCurrentMarker.bind(this);
@@ -133,7 +135,7 @@ class Map extends Component {
         this.search = this.search.bind(this);
         this.changeFilter = this.changeFilter.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
-        this.selectCategory = this.selectCategory.bind(this);
+        this.filter = this.filter.bind(this);
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
@@ -286,49 +288,70 @@ class Map extends Component {
         self.refs.bestDeals.refresh(json);
         self.refs.shopServices.refresh(json);
         self.refs.publicAnnouncements.refresh(json);
-        ShopsService.search(json).then(function (shopsResult) {
-            var shopsEmbedded = shopsResult['_embedded'];
-            if (!(shopsEmbedded instanceof Array)) {
-                shopsEmbedded = [shopsEmbedded];
-            }
+        if (this._isShopsDisplayed) {
+          ShopsService.search(json).then(function (shopsResult) {
+              var shopsEmbedded = shopsResult['_embedded'];
+              if (!(shopsEmbedded instanceof Array)) {
+                  shopsEmbedded = [shopsEmbedded];
+              }
 
-            var markers = self.state.markers;
-            shopsEmbedded.forEach(function (shop) {
-                markers.push({
-                    location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: shopOpts, info: (
-                        <div>
-                            <strong>{shop.name}</strong><br />
-                            <NavLink to={"/shops/" + shop.id }>View profile</NavLink>
-                        </div>)
-                });
-            });
+              var markers = self.state.markers;
+              shopsEmbedded.forEach(function (shop) {
+                  markers.push({
+                      location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: shopOpts, info: (
+                          <div>
+                              <strong>{shop.name}</strong><br />
+                              <NavLink to={"/shops/" + shop.id }>View profile</NavLink>
+                          </div>)
+                  });
+              });
+              self.setState({
+                  isSearching: false,
+                  markers: markers
+              });
+          }).catch(function() {
             self.setState({
-                isSearching: false,
-                markers: markers
+                isSearching: false
             });
-        });
-        AnnouncementsService.search(json).then(function (announcesResult) {
-            var announcesEmbedded = announcesResult['_embedded'];
-            if (!(announcesEmbedded instanceof Array)) {
-                announcesEmbedded = [announcesEmbedded];
-            }
+          });
+        }
 
-            var markers = self.state.markers;
-            announcesEmbedded.forEach(function (announce) {
-                markers.push({
-                    location: announce.location,
-                    name: announce.name,
-                    showInfo: false,
-                    id: announce.id,
-                    opts: announceOpts,
-                    info: (<div><strong>{announce.name}</strong></div>)
-                });
-            });
+        console.log(this._isAnnounceDisplayed);
+        if (this._isAnnounceDisplayed) {
+          console.log('bingo');
+          AnnouncementsService.search(json).then(function (announcesResult) {
+              var announcesEmbedded = announcesResult['_embedded'];
+              if (!(announcesEmbedded instanceof Array)) {
+                  announcesEmbedded = [announcesEmbedded];
+              }
+
+              var markers = self.state.markers;
+              announcesEmbedded.forEach(function (announce) {
+                  markers.push({
+                      location: announce.location,
+                      name: announce.name,
+                      showInfo: false,
+                      id: announce.id,
+                      opts: announceOpts,
+                      info: (<div><strong>{announce.name}</strong></div>)
+                  });
+              });
+              self.setState({
+                  isSearching: false,
+                  markers: markers
+              });
+          }).catch(function() {
             self.setState({
-                isSearching: false,
-                markers: markers
+                isSearching: false
             });
-        });
+          });
+        }
+
+        if (!this._isAnnounceDisplayed && !this._isShopsDisplayed) {
+          self.setState({
+              isSearching: false
+          });
+        }
     }
 
     onSearchBoxCreated(searchBox) {
@@ -350,8 +373,11 @@ class Map extends Component {
         self.refreshMap();
     }
 
-    selectCategory(e, category) {
-
+    filter(result) {
+      this._isAnnounceDisplayed = result.include_announces;
+      this._isShopsDisplayed = result.include_shops;
+      this.refs.filterModal.close();
+      this.refreshMap();
     }
 
     render() {
@@ -432,7 +458,7 @@ class Map extends Component {
                         this.openModal();
                     }}><i className="fa fa-filter"></i></a>
                 </div>
-                <FilterModal ref="filterModal" />
+                <FilterModal ref="filterModal" filter={this.filter} />
             </div>
         );
     }
