@@ -45,7 +45,6 @@ namespace Cook4Me.Api.Host.Builders
         SearchServiceParameter GetSearchServices(JObject jObj);
         SearchAnnouncementsParameter GetSearchAnnouncements(JObject jObj);
         SearchServiceOccurrenceParameter GetSearchServiceOccurrences(JObject jObj);
-        SearchProductsParameter GetSearchProducts(IQueryCollection query);
         OrderBy GetOrderBy(JObject jObj);
     }
 
@@ -164,9 +163,9 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new SearchShopsParameter
             {
-                CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId),
-                PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place),
-                Subject = jObj.Value<string>(Constants.DtoNames.SearchShop.Subject),
+                CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.CategoryId),
+                PlaceIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.Place),
+                Subjects = jObj.TryGetStringArray(Constants.DtoNames.SearchShop.Subject),
                 Name = jObj.Value<string>(Constants.DtoNames.Shop.Name),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 NorthEast = northEastLocation,
@@ -411,13 +410,14 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new SearchProductsParameter
             {
-                ShopId = jObj.Value<string>(Constants.DtoNames.Product.ShopId),
+                ShopIds = jObj.TryGetStringArray(Constants.DtoNames.Product.ShopId),
                 IsPagingEnabled = true,
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 Filters = filters,
                 FilterPrice = filterPrice,
                 ProductName = jObj.Value<string>(Constants.DtoNames.Product.Name),
-                CategoryId = jObj.Value<string>(Constants.DtoNames.Product.CategoryId),
+                CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Product.CategoryId),
+                ShopCategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Product.ShopCategoryIds),
                 Orders = orderBy,
                 NorthEast = northEastLocation,
                 SouthWest = southWestLocation,
@@ -519,11 +519,13 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Name = jObj.Value<string>(Constants.DtoNames.Service.Name),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
-                ShopId = jObj.Value<string>(Constants.DtoNames.Service.ShopId),
+                ShopIds = jObj.TryGetStringArray(Constants.DtoNames.Service.ShopId),
+                ShopCategoryIds = jObj.TryGetStringArray(Constants.DtoNames.SearchService.ShopCategoryIds),
                 Orders = orders,
                 NorthEast = northEastLocation,
                 SouthWest = southWestLocation,
-                TagName = jObj.Value<string>(Constants.DtoNames.SearchService.Tag)
+                TagName = jObj.Value<string>(Constants.DtoNames.SearchService.Tag),
+                
             };
 
             if (fromDateTime != null && !fromDateTime.Equals(default(DateTime)))
@@ -577,7 +579,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new SearchAnnouncementsParameter
             {
-                CategoryId = jObj.Value<string>(Constants.DtoNames.Announcement.CategoryId),
+                CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Announcement.CategoryId),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 Name = jObj.Value<string>(Constants.DtoNames.Announcement.Name),
                 Orders = orders,
@@ -588,24 +590,6 @@ namespace Cook4Me.Api.Host.Builders
             if (count > 0)
             {
                 result.Count = count;
-            }
-
-            return result;
-        }
-
-        public SearchProductsParameter GetSearchProducts(IQueryCollection query)
-        {
-            if (query == null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            var result = new SearchProductsParameter();
-            foreach (var key in query.Keys)
-            {
-                TrySetStr((r) => result.ShopId = r, key, Constants.DtoNames.Product.ShopId, query);
-                TrySetInt((r) => result.StartIndex = r <= 0 ? result.StartIndex : r, key, Constants.DtoNames.Paginate.StartIndex, query);
-                TrySetInt((r) => result.Count = r <= 0 ? result.Count : r, key, Constants.DtoNames.Paginate.Count, query);
             }
 
             return result;

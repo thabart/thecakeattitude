@@ -114,8 +114,8 @@ namespace Cook4Me.Api.Host.Validators
             // 4. Check the user doesn't already have a shop on the same category.
             var searchResult = await _shopRepository.Search(new SearchShopsParameter
             {
-                CategoryId = shop.CategoryId,
-                Subject = subject
+                CategoryIds = new[] { shop.CategoryId },
+                Subjects = new[] { subject }
             });
             if (searchResult.Content != null && searchResult.Content.Any())
             {

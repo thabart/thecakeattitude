@@ -105,9 +105,9 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             IQueryable<Models.Announcement> announcements = _context.Announcements.Include(c => c.Category);
-            if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
+            if (parameter.CategoryIds != null && parameter.CategoryIds.Any())
             {
-                announcements = announcements.Where(s => s.CategoryId == parameter.CategoryId);
+                announcements = announcements.Where(s => parameter.CategoryIds.Contains(s.CategoryId));
             }
             
 

@@ -30,6 +30,12 @@ class PublicAnnouncements extends Component {
         details : details
       });
     }
+    reset() {
+      this.setState({
+          announcements: [],
+          navigation: []
+      });
+    }
     refresh(json) {
         var request = $.extend({}, json, {
             orders: [
@@ -145,7 +151,7 @@ class PublicAnnouncements extends Component {
                     </ul>
                 )}
                 {content.length == 0
-                    ? (<span>No services</span>) :
+                    ? (<span>No announces</span>) :
                     (<ul className="list-group list-group-flush">
                         {content}
                     </ul>)

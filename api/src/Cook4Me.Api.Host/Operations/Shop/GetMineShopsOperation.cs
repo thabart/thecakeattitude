@@ -51,7 +51,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
 
             var shops = await _repository.Search(new SearchShopsParameter
             {
-                Subject = subject
+                Subjects = new[] { subject }
             });
             _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Shops + "/" + Constants.RouteNames.Me));
             foreach (var shop in shops.Content)

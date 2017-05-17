@@ -99,6 +99,7 @@ namespace Cook4Me.Api.Host
                 public const string Name = "name";
                 public const string Description = "description";
                 public const string CategoryId = "category_id";
+                public const string ShopCategoryIds = "shop_category_ids";
                 public const string Price = "price";
                 public const string NewPrice = "new_price";
                 public const string UnitOfMeasure = "unit_of_measure";
@@ -161,6 +162,7 @@ namespace Cook4Me.Api.Host
                 public const string SouthWest = "sw";
                 public const string Orders = "orders";
                 public const string Tag = "tag";
+                public const string ShopCategoryIds = "shop_category_ids";
             }
 
             public static class Comment

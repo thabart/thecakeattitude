@@ -41,6 +41,13 @@ class TrendingSellers extends Component {
         this.props.history.push('/shops/' + shopId);
     }
 
+    reset() {
+      this.setState({
+          shops: [],
+          navigation: []
+      });
+    }
+
     // Refresh the view
     refresh(json) {
         var request = $.extend({}, json, {

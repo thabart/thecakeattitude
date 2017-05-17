@@ -16,11 +16,40 @@
 
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Host.Extensions
 {
     internal static class JObjectExtensions
     {
+        public static IEnumerable<string> TryGetStringArray(this JObject jObj, string key)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            JToken token;
+            if (!jObj.TryGetValue(key, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                return null;
+            }
+
+            var arr = token as JArray;
+            if (arr == null)
+            {
+                return new[] { token.ToString() };
+            }
+
+            var lst = new List<string>();
+            foreach (var row in arr)
+            {
+                lst.Add(row.ToString());
+            }
+
+            return lst;
+        }
+
         public static double TryGetDouble(this JObject jObj, string key)
         {
             if (jObj == null)

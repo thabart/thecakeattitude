@@ -45,6 +45,13 @@ class ShopServices extends Component {
         this.props.history.push('/services/' + serviceId);
     }
 
+    reset() {
+      this.setState({
+          services: [],
+          navigation: []
+      });
+    }
+
     refresh(json) {
         var request = $.extend({}, json, {
             orders: [

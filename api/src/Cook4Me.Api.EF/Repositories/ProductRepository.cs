@@ -51,9 +51,9 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Comments)
                 .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter)
                 .Include(p => p.Promotions);
-            if (!string.IsNullOrWhiteSpace(parameter.ShopId))
+            if (parameter.ShopIds != null && parameter.ShopIds.Any())
             {
-                products = products.Where(p => p.ShopId == parameter.ShopId);
+                products = products.Where(p => parameter.ShopIds.Contains(p.ShopId));
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.TagName))
@@ -85,9 +85,14 @@ namespace Cook4Me.Api.EF.Repositories
                 products = products.Where(p => p.Name.ToLowerInvariant().Contains(parameter.ProductName.ToLowerInvariant()));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
+            if (parameter.CategoryIds != null && parameter.CategoryIds.Any())
             {
-                products = products.Where(p => p.CategoryId == parameter.CategoryId);
+                products = products.Where(p => parameter.CategoryIds.Contains(p.CategoryId));
+            }
+
+            if (parameter.ShopCategoryIds != null && parameter.ShopCategoryIds.Any())
+            {
+                products = products.Where(p => parameter.ShopCategoryIds.Contains(p.Shop.CategoryId));
             }
 
             if (parameter.Filters != null)

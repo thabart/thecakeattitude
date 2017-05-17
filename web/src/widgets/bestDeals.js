@@ -55,6 +55,13 @@ class BestDeals extends Component {
         this.display(request);
     }
 
+    reset() {
+      this.setState({
+        products: [],
+        navigation: []
+      });
+    }
+
     // Display the list
     display(request) {
         var self = this;

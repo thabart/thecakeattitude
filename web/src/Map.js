@@ -19,22 +19,20 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 function getLayoutFromLocalStorage() {
-    let ls = {};
+    let ls = null;
     if (global.localStorage) {
         try {
-            ls = JSON.parse(global.localStorage.getItem('gameinshop')) || {};
+            ls = JSON.parse(global.localStorage.getItem('gameinshop_layouts')) || null;
         } catch (e) {/*Ignore*/
         }
     }
 
-    return ls['layouts'];
+    return ls;
 }
 
 function saveLayout(value) {
     if (global.localStorage) {
-        global.localStorage.setItem('gameinshop', JSON.stringify({
-            ['layouts']: value
-        }));
+        global.localStorage.setItem('gameinshop_layouts', JSON.stringify(value));
     }
 }
 
@@ -119,12 +117,14 @@ class Map extends Component {
         super(props);
         this._searchBox = null;
         this._searchTarget = "name";
+        this._category_ids = null;
         this._isAnnounceDisplayed = true;
         this._isShopsDisplayed = true;
         this.openModal = this.openModal.bind(this);
         this.onLayoutChange = this.onLayoutChange.bind(this);
         this.setCurrentMarker = this.setCurrentMarker.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
+        this.onFilterLoad = this.onFilterLoad.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onZoomChanged = this.onZoomChanged.bind(this);
@@ -132,7 +132,6 @@ class Map extends Component {
         this.onMarkerClose = this.onMarkerClose.bind(this);
         this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
         this.onPlacesChanged = this.onPlacesChanged.bind(this);
-        this.search = this.search.bind(this);
         this.changeFilter = this.changeFilter.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.filter = this.filter.bind(this);
@@ -187,10 +186,6 @@ class Map extends Component {
         this._searchTarget = $(selected).data('target');
     }
 
-    search() {
-
-    }
-
     onMapLoad(map) {
         var self = this;
         self._googleMap = map;
@@ -202,9 +197,13 @@ class Map extends Component {
         var div = mapInstance.getDiv();
         $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>Search</h3></div></div></div>");
         $(div).append("<div class='searching-overlay'><div class='searching-message'><i class='fa fa-spinner fa-spin'></i></div></div>");
-        setTimeout(function () {
-            self.refreshMap();
-        }, 1000);
+    }
+
+    onFilterLoad(filter) {
+      var self = this;
+      setTimeout(function () {
+          self.filter(filter);
+      }, 1000);
     }
 
     onDragStart() {
@@ -284,12 +283,24 @@ class Map extends Component {
             }
         }
 
-        self.refs.trendingSellers.refresh(json);
-        self.refs.bestDeals.refresh(json);
-        self.refs.shopServices.refresh(json);
-        self.refs.publicAnnouncements.refresh(json);
+        var searchShopsRequest = $.extend({}, json, {
+          category_id: self._category_ids
+        });
+        var searchProductsRequest = $.extend({}, json, {
+          shop_category_ids: self._category_ids
+        });
+        var searchServicesRequest = $.extend({}, json, {
+          shop_category_ids: self._category_ids
+        });
+        var searchAnnounces = $.extend({}, json, {
+          category_id: self._category_ids
+        });
+
         if (this._isShopsDisplayed) {
-          ShopsService.search(json).then(function (shopsResult) {
+          self.refs.trendingSellers.refresh(searchShopsRequest);
+          self.refs.bestDeals.refresh(searchProductsRequest);
+          self.refs.shopServices.refresh(searchServicesRequest);
+          ShopsService.search(searchShopsRequest).then(function (shopsResult) {
               var shopsEmbedded = shopsResult['_embedded'];
               if (!(shopsEmbedded instanceof Array)) {
                   shopsEmbedded = [shopsEmbedded];
@@ -314,11 +325,14 @@ class Map extends Component {
                 isSearching: false
             });
           });
+        } else {
+          self.refs.trendingSellers.reset();
+          self.refs.bestDeals.reset();
+          self.refs.shopServices.reset();
         }
 
-        console.log(this._isAnnounceDisplayed);
         if (this._isAnnounceDisplayed) {
-          console.log('bingo');
+          self.refs.publicAnnouncements.refresh(searchAnnounces);
           AnnouncementsService.search(json).then(function (announcesResult) {
               var announcesEmbedded = announcesResult['_embedded'];
               if (!(announcesEmbedded instanceof Array)) {
@@ -345,6 +359,8 @@ class Map extends Component {
                 isSearching: false
             });
           });
+        } else {
+          self.refs.publicAnnouncements.reset();
         }
 
         if (!this._isAnnounceDisplayed && !this._isShopsDisplayed) {
@@ -376,6 +392,9 @@ class Map extends Component {
     filter(result) {
       this._isAnnounceDisplayed = result.include_announces;
       this._isShopsDisplayed = result.include_shops;
+      this._category_ids = result.categories.map(function(category) {
+        return category.id;
+      });
       this.refs.filterModal.close();
       this.refreshMap();
     }
@@ -458,7 +477,7 @@ class Map extends Component {
                         this.openModal();
                     }}><i className="fa fa-filter"></i></a>
                 </div>
-                <FilterModal ref="filterModal" filter={this.filter} />
+                <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
             </div>
         );
     }
@@ -475,6 +494,8 @@ class Map extends Component {
                     break;
             }
         });
+
+        this._searchShopsRequest = {};
 
         // Get the current location and display it.
         if ("geolocation" in navigator) {

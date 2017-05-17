@@ -3,6 +3,24 @@ import {Modal, ModalHeader, ModalBody, Alert} from "reactstrap";
 import {CategoryService} from './services/index';
 import './FilterModal.css';
 
+function getFilter() {
+  let ls = null;
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem('gameinshop_filter')) || null;
+    } catch (e) {/*Ignore*/
+    }
+  }
+
+  return ls;
+}
+
+function saveFilter(value) {
+    if (global.localStorage) {
+        global.localStorage.setItem('gameinshop_filter', JSON.stringify(value));
+    }
+}
+
 class FilterModal extends Component {
   constructor(props) {
     super(props);
@@ -114,14 +132,50 @@ class FilterModal extends Component {
     var self = this;
     self.setState({
       isOpened: true,
-      isCategoriesLoading: true
+      isCategoriesLoading: true,
+      categoriesInFilter: [],
+      categoriesToAdd: [],
+      categoriesToRemove: [],
+      categories: [],
+      errorMessage: null
     });
+    var filter = getFilter();
     CategoryService.getParents().then(function(result) {
+      var categories = result['_embedded'];
+      var categoriesInFilter = [];
+      var includeShops = true;
+      var includeAnnounces = true;
+      if (filter && filter !== null) {
+        includeShops = filter.include_shops;
+        includeAnnounces = filter.include_announces;
+        categoriesInFilter = filter.categories;
+        categoriesInFilter.forEach(function(categoryInFilter) {
+          categories.forEach(function(category) {
+            var index = -1;
+            category.children.forEach(function(child, i) {
+              if (child.id === categoryInFilter.id) {
+                index = i;
+              }
+            });
+
+            if (index === -1) {
+              return;
+            }
+
+            category.children.splice(index);
+          });
+        });
+      }
+
       self.setState({
         isCategoriesLoading: false,
-        categories : result['_embedded']
+        categories : categories,
+        categoriesInFilter: categoriesInFilter,
+        includeShops : includeShops,
+        includeAnnounces: includeAnnounces
       });
-    }).catch(function() {
+    }).catch(function(e) {
+      console.log(e);
       self.setState({
         isCategoriesLoading: false,
         errorMessage: 'An error occured while trying to retrieve the categories'
@@ -145,6 +199,7 @@ class FilterModal extends Component {
       categories : this.state.categoriesInFilter
     };
 
+    saveFilter(result);
     this.props.filter(result);
   }
   render() {
@@ -219,6 +274,9 @@ class FilterModal extends Component {
             </div>
         </ModalBody>
     </Modal> );
+  }
+  componentDidMount() {
+    this.props.onFilterLoad(getFilter());
   }
 }
 

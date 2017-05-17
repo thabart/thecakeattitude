@@ -72,9 +72,14 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Shop)
                 .Include(p => p.Occurrence).ThenInclude(o => o.Days)
                 .Include(p => p.Comments);
-            if (!string.IsNullOrWhiteSpace(parameter.ShopId))
+            if (parameter.ShopIds != null && parameter.ShopIds.Any())
             {
-                services = services.Where(p => p.ShopId == parameter.ShopId);
+                services = services.Where(p => parameter.ShopIds.Contains(p.ShopId));
+            }
+
+            if (parameter.ShopCategoryIds != null && parameter.ShopCategoryIds.Any())
+            {
+                services = services.Where(p => parameter.ShopCategoryIds.Contains(p.Shop.CategoryId));
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.TagName))

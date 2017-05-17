@@ -219,9 +219,9 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.Comments)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories);
-            if (!string.IsNullOrWhiteSpace(parameter.CategoryId))
+            if (parameter.CategoryIds != null && parameter.CategoryIds.Any())
             {
-                shops = shops.Where(s => s.CategoryId == parameter.CategoryId);
+                shops = shops.Where(s => parameter.CategoryIds.Contains(s.CategoryId));
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.TagName))
@@ -234,14 +234,14 @@ namespace Cook4Me.Api.EF.Repositories
                 shops = shops.Where(s => s.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            if (parameter.Subjects != null && parameter.Subjects.Any())
             {
-                shops = shops.Where(s => s.Subject == parameter.Subject);
+                shops = shops.Where(s => parameter.Subjects.Contains(s.Subject));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameter.PlaceId))
+            if (parameter.PlaceIds != null && parameter.PlaceIds.Any())
             {
-                shops = shops.Where(s => s.PlaceId == parameter.PlaceId);
+                shops = shops.Where(s => parameter.PlaceIds.Contains(s.PlaceId));
             }
 
             if (parameter.NorthEast != null && parameter.SouthWest != null)

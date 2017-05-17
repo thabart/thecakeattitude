@@ -30,7 +30,8 @@ namespace Cook4Me.Api.Core.Parameters
 
         public DateTime? FromDateTime { get; set; }
         public DateTime? ToDateTime { get; set; }
-        public string ShopId { get; set; }
+        public IEnumerable<string> ShopIds { get; set; }
+        public IEnumerable<string> ShopCategoryIds { get; set; }
         public string Name { get; set; }
         public Location NorthEast { get; set; }
         public Location SouthWest { get; set; }
