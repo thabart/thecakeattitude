@@ -31,7 +31,7 @@
 .add-widgets {
   position: fixed;
   bottom: 70px;
-  left: 70px;
+  left: 10px;
   width: 200px;
   background-color: white;
   border-radius: 5px;

@@ -25,7 +25,8 @@ class Widget extends Component {
         this.close = this.close.bind(this);
         this.state = {
             isToggled: true,
-            isCloseOpened: false
+            isCloseOpened: false,
+            isMovedEnabled: true
         };
     }
 
@@ -54,6 +55,12 @@ class Widget extends Component {
       $(this.card).remove();
     }
 
+    enableMove(b) {
+      this.setState({
+        isMovedEnabled: b
+      });
+    }
+
     render() {
         return (
             <div className="card-container"ref={(elt) => {
@@ -68,9 +75,11 @@ class Widget extends Component {
                           <Button outline color="secondary" size="sm" onClick={this.toggle}>
                             <i className={this.state.isToggled ? "fa fa-arrow-up" : "fa fa-arrow-down"}/>
                           </Button>
-                          <Button outline color="secondary" size="sm">
-                            <i className="fa fa-arrows-alt move"/>
-                          </Button>
+                          {this.state.isMovedEnabled && (
+                            <Button outline color="secondary" size="sm">
+                              <i className="fa fa-arrows-alt move"/>
+                            </Button>
+                          )}
                           <Button outline color="secondary" size="sm" onClick={this.toggleClose}>
                             <i className="fa fa-window-close-o"/>
                           </Button>

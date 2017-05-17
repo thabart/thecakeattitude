@@ -30,6 +30,10 @@
   display: none;
 }
 
+.card .list-group-item-action {
+  min-height: 100px;
+}
+
 .card .list-group-item-action .summary {
   width: 100%;
   position: relative;

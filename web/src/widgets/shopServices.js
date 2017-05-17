@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Widget from "../components/widget";
 import Service from "../services/ShopServices";
 import moment from "moment";
+import {Button} from 'reactstrap';
 import Rater from "react-rater";
 import $ from "jquery";
 
@@ -96,6 +97,10 @@ class ShopServices extends Component {
         });
     }
 
+    enableMove(b) {
+      this.refs.widget.enableMove(b);
+    }
+
     render() {
         var title = "Best services",
             content = [],
@@ -103,7 +108,7 @@ class ShopServices extends Component {
             self = this;
         if (self.state.isLoading) {
             return (
-                <Widget title={title} onClose={this.props.onClose}>
+                <Widget title={title} onClose={this.props.onClose} ref="widget">
                     <i className='fa fa-spinner fa-spin'></i>
                 </Widget>);
         }
@@ -141,7 +146,9 @@ class ShopServices extends Component {
                         </div>
                        </div>
                        <div className="last-column">
-                        <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, service); }}></i>
+                        <Button outline color="secondary" size="sm"  onClick={(e) => { self.localize(e, service); }}>
+                          <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, service); }}></i>
+                        </Button>
                        </div>
                     </a>));
             });
@@ -158,7 +165,7 @@ class ShopServices extends Component {
         }
 
         return (
-            <Widget title={title} onClose={this.props.onClose}>
+            <Widget title={title} onClose={this.props.onClose} ref="widget">
                 {navigations.length > 0 && (
                     <ul className="pagination">
                         {navigations}

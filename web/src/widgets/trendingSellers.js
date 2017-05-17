@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {ShopsService} from "../services/index";
 import Widget from "../components/widget";
 import Rater from "react-rater";
+import {Button} from 'reactstrap';
 import $ from "jquery";
 import AppDispatcher from "../appDispatcher";
 
@@ -91,6 +92,10 @@ class TrendingSellers extends Component {
         });
     }
 
+    enableMove(b) {
+      this.refs.widget.enableMove(b);
+    }
+
     // Render the view
     render() {
         var content = [],
@@ -99,7 +104,7 @@ class TrendingSellers extends Component {
             title = "Trending shops";
         if (this.state.isLoading) {
             return (
-                <Widget title={title} onClose={this.props.onClose}>
+                <Widget title={title} onClose={this.props.onClose} ref="widget">
                     <i className='fa fa-spinner fa-spin'></i>
                 </Widget>);
         }
@@ -109,6 +114,12 @@ class TrendingSellers extends Component {
                 var profileImage = shop.profile_image;
                 if (!profileImage) {
                     profileImage = "/images/profile-picture.png";
+                }
+                var tags = [];
+                if (shop.tags && shop.tags.length > 0) {
+                  shop.tags.forEach(function(tag) {
+                    tags.push((<li>{tag}</li>));
+                  });
                 }
 
                 content.push((
@@ -127,9 +138,12 @@ class TrendingSellers extends Component {
                             </div>
                         </div>
                         <div className="last-column">
-                            <i className="fa fa-map-marker localize" onClick={(e) => {
-                                self.localize(e, shop);
-                            }}></i>
+                            <Button outline color="secondary" size="sm">
+                              <i className="fa fa-map-marker localize" onClick={(e) => {
+                                  self.localize(e, shop);
+                              }}></i>
+                            </Button><br />
+                            <i>{shop.category.name}</i><br/>
                         </div>
                     </a>));
             });
@@ -146,7 +160,7 @@ class TrendingSellers extends Component {
         }
 
         return (
-            <Widget title={title} onClose={this.props.onClose}>
+            <Widget title={title} onClose={this.props.onClose} ref="widget">
                 {navigations.length > 0 && (
                     <ul className="pagination">
                         {navigations}

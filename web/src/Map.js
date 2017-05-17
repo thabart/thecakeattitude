@@ -54,19 +54,6 @@ function saveActiveWidgets(value) {
     }
 }
 
-const gridLayout = getLayoutFromLocalStorage() || {
-        lg: [
-            {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true},
-            {i: 'b', x: 1, y: 0, w: 1, h: 1, isResizable: true},
-            {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
-            {i: 'd', x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
-        ]
-    };
-
-const activeWidgets = getActiveWidgets() || [
-  'a', 'b', 'c', 'd'
-];
-
 const currentLocationOpts = {
     url: '/images/current-location.png',
     scaledSize: new window.google.maps.Size(20, 20)
@@ -170,17 +157,18 @@ class Map extends Component {
             isSearching: false,
             bounds: null,
             searchValue: null,
-            activeWidgets: activeWidgets,
+            activeWidgets: getActiveWidgets() || [
+              'a', 'b', 'c', 'd'
+            ],
             isTrendingShopsActive: true,
             isBestDealsActive: true,
             isBestServicesActive: true,
             isPublicAnnouncementsActive: true,
-            isAddingWidgets: false,
-            gridLayout: gridLayout
+            isAddingWidgets: false
         };
         this._internalItems = {
           'a' : (<div key={'a'}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('a'); }}/></div>),
-          'b':  (<div key={'b'}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('b'); }}/></div>),
+          'b':  (<div key={'b'}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('b'); }} /></div>),
           'c':  (<div key={'c'}><ShopServices ref="shopServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('c'); }}/></div>),
           'd': (<div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('d'); }}/></div>)
         };
@@ -191,7 +179,7 @@ class Map extends Component {
     }
 
     onLayoutChange(layout, layouts) {
-        saveLayout(layouts);
+      saveLayout(layouts);
     }
 
     setCurrentMarker(id) {
@@ -254,10 +242,10 @@ class Map extends Component {
     }
 
     onDragEnd() {
-        this.setState({
-            isDragging: false
-        });
-        this.refreshMap();
+      this.setState({
+        isDragging: false
+      });
+      this.refreshMap();
     }
 
     onZoomChanged() {
@@ -507,7 +495,7 @@ class Map extends Component {
       }
 
       activeWidgets.splice(index, 1);
-      saveActiveWidgets(activeWidgets);
+      saveActiveWidgets(this.state.activeWidgets);
       this.setState({
         activeWidgets: activeWidgets
       });
@@ -524,7 +512,15 @@ class Map extends Component {
     render() {
         var cl = "row",
           items = [],
-          self = this;
+          self = this,
+          gridLayout = getLayoutFromLocalStorage() || {
+                  lg: [
+                      {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true},
+                      {i: 'b', x: 1, y: 0, w: 1, h: 1, isResizable: true},
+                      {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
+                      {i: 'd', x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
+                  ]
+              };
         if (this.state.isSearching) {
             cl = "row searching";
         } else if (this.state.isDragging) {
@@ -537,8 +533,8 @@ class Map extends Component {
 
         var session = SessionService.getSession();
         var isLoggedIn = session && session != null;
-        if (this.state.gridLayout && this.state.gridLayout.lg) {
-          this.state.gridLayout.lg.forEach(function(rec) {
+        if (gridLayout && gridLayout.lg) {
+          gridLayout.lg.forEach(function(rec) {
             if (rec.i === 'd' && (!rec['minW'] || rec['w'] < 2)) {
               rec['minW'] = 2;
               rec['w'] = 2;
@@ -570,7 +566,7 @@ class Map extends Component {
 
                     {/* Widgets panel */}
                     <ResponsiveReactGridLayout className="layout"
-                                               layouts={this.state.gridLayout} rowHeight={300}
+                                               layouts={gridLayout} rowHeight={300}
                                                cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
                                                onLayoutChange={this.onLayoutChange}>
                        {items}
@@ -601,15 +597,15 @@ class Map extends Component {
                     </GettingStartedGoogleMap>
                 </div>
                 <div className="options">
-                    {isLoggedIn && (<a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a>)}
-                    <a href="/" onClick={(e) => {
-                        e.preventDefault();
-                        this.openModal();
-                    }}><i className="fa fa-filter"></i></a>
                     <a href="/" onClick={(e) => {
                       e.preventDefault();
                       this.openAddingWidgets();
                     }}><i className="fa fa-bars"></i></a>
+                    <a href="/" onClick={(e) => {
+                      e.preventDefault();
+                      this.openModal();
+                    }}><i className="fa fa-filter"></i></a>
+                    {isLoggedIn && (<a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a>)}
                 </div>
                 <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
                 {this.state.isAddingWidgets && (

@@ -89,6 +89,11 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.ProfileImage, shop.ProfileImage);
             result.Add(Constants.DtoNames.Shop.MapName, shop.MapName);
             result.Add(Constants.DtoNames.Shop.CategoryId, shop.CategoryId);
+            if (shop.ShopCategory != null)
+            {
+                result.Add(Constants.DtoNames.Shop.Category, GetShopCategory(shop.ShopCategory));
+            }
+
             result.Add(Constants.DtoNames.Shop.Place, shop.PlaceId);
             result.Add(Constants.DtoNames.Shop.StreetAddress, shop.StreetAddress); // Street address
             result.Add(Constants.DtoNames.Shop.PostalCode, shop.PostalCode);
@@ -206,6 +211,20 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Error.Code, errorCode);
             result.Add(Constants.DtoNames.Error.Description, errorDescription);
             return result;
+        }
+
+        public JObject GetShopCategory(ShopCategory category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Category.Id, category.Id);
+            jObj.Add(Constants.DtoNames.Category.Name, category.Name);
+            jObj.Add(Constants.DtoNames.Category.Description, category.Description);
+            return jObj;
         }
 
         public JObject GetShopCategory(ShopCategoryAggregate category)

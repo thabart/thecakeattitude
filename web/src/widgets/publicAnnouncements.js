@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Widget from "../components/widget";
 import { AnnouncementsService } from '../services/index';
+import {Button} from 'reactstrap';
 import $ from 'jquery';
 import AppDispatcher from "../appDispatcher";
 
@@ -82,6 +83,9 @@ class PublicAnnouncements extends Component {
             });
         });
     }
+    enableMove(b) {
+      this.refs.widget.enableMove(b);
+    }
     render() {
         var title = "Public announcements",
           content = [],
@@ -89,7 +93,7 @@ class PublicAnnouncements extends Component {
           self = this;
         if (this.state.isLoading) {
             return (
-                <Widget title={title} onClose={this.props.onClose}>
+                <Widget title={title} onClose={this.props.onClose} ref="widget">
                     <i className='fa fa-spinner fa-spin'></i>
                 </Widget>);
         }
@@ -108,7 +112,9 @@ class PublicAnnouncements extends Component {
                     {announcement.category && announcement.category !== null && <div>Belongs to the category <b>{announcement.category.name}</b></div>}
                   </div>
                     <div className="last-column">
-                      <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, announcement); }}></i>
+                      <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, announcement); }}>
+                        <i className="fa fa-map-marker localize"></i>
+                      </Button>
                       {announcement.price > 0 && (
                         <h5 className="price">Proposed price € {announcement.price}</h5>
                       )}
@@ -144,7 +150,7 @@ class PublicAnnouncements extends Component {
         }
 
         return (
-            <Widget title={title} onClose={this.props.onClose}>
+            <Widget title={title} onClose={this.props.onClose} ref="widget">
                 {navigations.length > 0 && (
                     <ul className="pagination">
                         {navigations}

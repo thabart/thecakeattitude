@@ -61,6 +61,7 @@ namespace Cook4Me.Api.Host
                 public const string ProfileImage = "profile_image";
                 public const string MapName = "map_name";
                 public const string CategoryId = "category_id";
+                public const string Category = "category";
                 public const string Place = "place";
                 // Address
                 public const string StreetAddress = "street_address";
