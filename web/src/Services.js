@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import Rater from "react-rater";
 import Magnify from "react-magnify";
 import {CommentTab, DescriptionTab} from "./servicetabs";
-import {ShopServices} from "./services/index";
+import {ShopServices, ShopsService} from "./services/index";
 import {TabContent, TabPane, Nav, NavItem, NavLink, Alert, Badge, Breadcrumb, BreadcrumbItem} from "reactstrap";
 import {withRouter} from "react-router";
 import Constants from "../Constants";
@@ -58,11 +58,21 @@ class Services extends Component {
             isLoading: true
         });
         ShopServices.get(this.props.match.params.id).then(function (r) {
-            self.setState({
-                isLoading: false,
-                service: r['_embedded']
+            var service = r['_embedded'];
+            ShopsService.get(service.shop_id).then(function(sr) {
+              self.setState({
+                  isLoading: false,
+                  service: service,
+                  shop: sr['_embedded']
+              });
+            })
+            .catch(function() {
+              self.setState({
+                errorMessage: 'An error occured while trying to retrieve the service',
+                isLoading: false
+              });
             });
-        }).catch(function (e) {
+        }).catch(function () {
             self.setState({
                 errorMessage: 'An error occured while trying to retrieve the service',
                 isLoading: false
@@ -138,12 +148,12 @@ class Services extends Component {
                         <BreadcrumbItem>
                             <a href="#"
                                onClick={(e) => {
-                                   self.navigateShop(e, "unknown_id");
+                                   self.navigateShop(e, this.state.shop.id);
                                }}>
-                                {this.state.shop == null ? "Unknown shop" : this.state.shop.name}
+                                {this.state.shop.name}
                             </a>
                         </BreadcrumbItem>
-                        <BreadcrumbItem active>{this.state.product.name}</BreadcrumbItem>
+                        <BreadcrumbItem active>{this.state.service.name}</BreadcrumbItem>
                     </Breadcrumb>
                     <div className="row col-md-12 m-2">
                         <div className="col-md-8 p-1">

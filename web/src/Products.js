@@ -5,7 +5,7 @@ import {withRouter} from "react-router";
 import Constants from "../Constants";
 import Magnify from "react-magnify";
 import "react-magnify/lib/react-magnify.css";
-import {ProductsService} from "./services/index";
+import {ProductsService, ShopsService} from "./services/index";
 import {DescriptionTab, ProductComment} from "./productabs";
 import $ from "jquery";
 import classnames from "classnames";
@@ -47,19 +47,22 @@ class Products extends Component {
             isLoading: true
         });
         ProductsService.get(this.props.match.params.id).then(function (r) {
-            self.setState({
-                isLoading: false,
-                product: r['_embedded']
+            var product = r['_embedded'];
+            ShopsService.get(product.shop_id).then(function(sr) {
+              self.setState({
+                  isLoading: false,
+                  product: product,
+                  shop: sr['_embedded']
+              });
+            }).catch(function() {
+                self.setState({
+                    errorMessage: "An error occured while trying to retrieve the product",
+                    isLoading: false
+                });
             });
-        }).catch(function (e) {
-            var json = e.responseJSON;
-            var error = "An error occured while trying to retrieve the product";
-            if (json && json.error_description) {
-                error = json.error_description;
-            }
-
+        }).catch(function () {
             self.setState({
-                errorMessage: error,
+                errorMessage: "An error occured while trying to retrieve the product",
                 isLoading: false
             });
         });
@@ -154,9 +157,9 @@ class Products extends Component {
                     <BreadcrumbItem>
                         <a href="#"
                            onClick={(e) => {
-                               self.navigateShop(e, "unknown_id");
+                               self.navigateShop(e, this.state.shop.id);
                            }}>
-                            {this.state.shop == null ? "Unknown shop" : this.state.shop.name}
+                            {this.state.shop.name}
                         </a>
                     </BreadcrumbItem>
                     <BreadcrumbItem active>{this.state.product.name}</BreadcrumbItem>

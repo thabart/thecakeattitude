@@ -32,14 +32,6 @@ class Description extends Component {
 
             occurrence = (<table className="table table-striped">
                 <tr>
-                    <td>Start</td>
-                    <td>{moment(self.props.service.occurrence.start_datetime).format('LLL')}</td>
-                </tr>
-                <tr>
-                    <td>End</td>
-                    <td>{moment(self.props.service.occurrence.end_datetime).format('LLL')}</td>
-                </tr>
-                <tr>
                     <td colSpan="2">{days}</td>
                 </tr>
             </table>);
