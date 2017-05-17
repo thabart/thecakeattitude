@@ -158,7 +158,10 @@ class Map extends Component {
         this.changeFilter = this.changeFilter.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.filter = this.filter.bind(this);
+        this.filterWidgets = this.filterWidgets.bind(this);
         this.onCloseWidget = this.onCloseWidget.bind(this);
+        this.openAddingWidgets = this.openAddingWidgets.bind(this);
+        this.refreshActiveWidgets = this.refreshActiveWidgets.bind(this);
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
@@ -167,7 +170,13 @@ class Map extends Component {
             isSearching: false,
             bounds: null,
             searchValue: null,
-            activeWidgets: activeWidgets
+            activeWidgets: activeWidgets,
+            isTrendingShopsActive: true,
+            isBestDealsActive: true,
+            isBestServicesActive: true,
+            isPublicAnnouncementsActive: true,
+            isAddingWidgets: false,
+            gridLayout: gridLayout
         };
         this._internalItems = {
           'a' : (<div key={'a'}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('a'); }}/></div>),
@@ -233,6 +242,7 @@ class Map extends Component {
     onFilterLoad(filter) {
       var self = this;
       setTimeout(function () {
+          self.refreshActiveWidgets();
           self.filter(filter);
       }, 1000);
     }
@@ -453,6 +463,42 @@ class Map extends Component {
       this.refreshMap();
     }
 
+    refreshActiveWidgets() {
+      var self = this;
+      self.setState({
+        isTrendingShopsActive: self.state.activeWidgets.includes('a'),
+        isBestDealsActive: self.state.activeWidgets.includes('b'),
+        isBestServicesActive: self.state.activeWidgets.includes('c'),
+        isPublicAnnouncementsActive: self.state.activeWidgets.includes('d')
+      });
+    }
+
+    filterWidgets() {
+      var activeWidgets = [];
+      if (this.state.isTrendingShopsActive) {
+        activeWidgets.push('a');
+      }
+
+      if (this.state.isBestDealsActive) {
+        activeWidgets.push('b')
+      }
+
+      if (this.state.isBestServicesActive) {
+        activeWidgets.push('c');
+      }
+
+      if (this.state.isPublicAnnouncementsActive) {
+        activeWidgets.push('d');
+      }
+
+      saveActiveWidgets(activeWidgets);
+      this.setState({
+        activeWidgets: activeWidgets,
+        isAddingWidgets: false
+      });
+
+    }
+
     onCloseWidget(key) {
       var activeWidgets = this.state.activeWidgets;
       var index = activeWidgets.indexOf(key);
@@ -464,6 +510,14 @@ class Map extends Component {
       saveActiveWidgets(activeWidgets);
       this.setState({
         activeWidgets: activeWidgets
+      });
+      this.refreshActiveWidgets();
+    }
+
+    openAddingWidgets() {
+      var isAddingWidgets = !this.state.isAddingWidgets;
+      this.setState({
+        isAddingWidgets: isAddingWidgets
       });
     }
 
@@ -483,6 +537,15 @@ class Map extends Component {
 
         var session = SessionService.getSession();
         var isLoggedIn = session && session != null;
+        if (this.state.gridLayout && this.state.gridLayout.lg) {
+          this.state.gridLayout.lg.forEach(function(rec) {
+            if (rec.i === 'd' && (!rec['minW'] || rec['w'] < 2)) {
+              rec['minW'] = 2;
+              rec['w'] = 2;
+            }
+          });
+        }
+
         return (
             <div className={cl} id="widget-container">
                 <div className="col-md-8 hidden-sm-down">
@@ -507,7 +570,7 @@ class Map extends Component {
 
                     {/* Widgets panel */}
                     <ResponsiveReactGridLayout className="layout"
-                                               layouts={gridLayout} rowHeight={300}
+                                               layouts={this.state.gridLayout} rowHeight={300}
                                                cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
                                                onLayoutChange={this.onLayoutChange}>
                        {items}
@@ -543,8 +606,32 @@ class Map extends Component {
                         e.preventDefault();
                         this.openModal();
                     }}><i className="fa fa-filter"></i></a>
+                    <a href="/" onClick={(e) => {
+                      e.preventDefault();
+                      this.openAddingWidgets();
+                    }}><i className="fa fa-bars"></i></a>
                 </div>
                 <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
+                {this.state.isAddingWidgets && (
+                  <div className="add-widgets">
+                    <h5>Active widgets</h5>
+                    <div className="form-group">
+                      <input type="checkbox" name="isTrendingShopsActive" checked={this.state.isTrendingShopsActive} onChange={this.handleInputChange}/><label>Trending shops</label>
+                    </div>
+                    <div className="form-group">
+                      <input type="checkbox" name="isBestDealsActive" checked={this.state.isBestDealsActive} onChange={this.handleInputChange}/><label>Best deals</label>
+                    </div>
+                    <div className="form-group">
+                      <input type="checkbox" name="isBestServicesActive" checked={this.state.isBestServicesActive} onChange={this.handleInputChange}/><label>Best services</label>
+                    </div>
+                    <div className="form-group">
+                      <input type="checkbox" name="isPublicAnnouncementsActive" checked={this.state.isPublicAnnouncementsActive} onChange={this.handleInputChange}/><label>Public announcement</label>
+                    </div>
+                    <div className="form-group">
+                      <button className="btn btn-success" onClick={this.filterWidgets}>UPDATE</button>
+                    </div>
+                  </div>
+                )}
             </div>
         );
     }

@@ -277,7 +277,7 @@ class FilterModal extends Component {
               </div>
             )}
             <div className="form-group">
-                <button className="btn btn-default" onClick={(e) => {this.confirm(); }}>Confirm</button>
+                <button className="btn btn-success" onClick={(e) => {this.confirm(); }}>Confirm</button>
             </div>
         </ModalBody>
     </Modal> );
