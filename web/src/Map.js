@@ -36,6 +36,24 @@ function saveLayout(value) {
     }
 }
 
+function getActiveWidgets() {
+    let ls = null;
+    if (global.localStorage) {
+        try {
+            ls = JSON.parse(global.localStorage.getItem('gameinshop_widgets')) || null;
+        } catch (e) {/*Ignore*/
+        }
+    }
+
+    return ls;
+}
+
+function saveActiveWidgets(value) {
+    if (global.localStorage) {
+        global.localStorage.setItem('gameinshop_widgets', JSON.stringify(value));
+    }
+}
+
 const gridLayout = getLayoutFromLocalStorage() || {
         lg: [
             {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true},
@@ -44,6 +62,10 @@ const gridLayout = getLayoutFromLocalStorage() || {
             {i: 'd', x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
         ]
     };
+
+const activeWidgets = getActiveWidgets() || [
+  'a', 'b', 'c', 'd'
+];
 
 const currentLocationOpts = {
     url: '/images/current-location.png',
@@ -115,6 +137,7 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
 class Map extends Component {
     constructor(props) {
         super(props);
+        var self = this;
         this._searchBox = null;
         this._searchTarget = "name";
         this._category_ids = null;
@@ -135,6 +158,7 @@ class Map extends Component {
         this.changeFilter = this.changeFilter.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.filter = this.filter.bind(this);
+        this.onCloseWidget = this.onCloseWidget.bind(this);
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
@@ -142,7 +166,14 @@ class Map extends Component {
             isDragging: false,
             isSearching: false,
             bounds: null,
-            searchValue: null
+            searchValue: null,
+            activeWidgets: activeWidgets
+        };
+        this._internalItems = {
+          'a' : (<div key={'a'}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('a'); }}/></div>),
+          'b':  (<div key={'b'}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('b'); }}/></div>),
+          'c':  (<div key={'c'}><ShopServices ref="shopServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('c'); }}/></div>),
+          'd': (<div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('d'); }}/></div>)
         };
     }
 
@@ -297,9 +328,18 @@ class Map extends Component {
         });
 
         if (this._isShopsDisplayed) {
-          self.refs.trendingSellers.refresh(searchShopsRequest);
-          self.refs.bestDeals.refresh(searchProductsRequest);
-          self.refs.shopServices.refresh(searchServicesRequest);
+          if (self.state.activeWidgets.includes('a')) {
+            self.refs.trendingSellers.refresh(searchShopsRequest);
+          }
+
+          if (self.state.activeWidgets.includes('b')) {
+            self.refs.bestDeals.refresh(searchProductsRequest);
+          }
+
+          if (self.state.activeWidgets.includes('c')) {
+            self.refs.shopServices.refresh(searchServicesRequest);
+          }
+
           ShopsService.search(searchShopsRequest).then(function (shopsResult) {
               var shopsEmbedded = shopsResult['_embedded'];
               if (!(shopsEmbedded instanceof Array)) {
@@ -326,14 +366,24 @@ class Map extends Component {
             });
           });
         } else {
-          self.refs.trendingSellers.reset();
-          self.refs.bestDeals.reset();
-          self.refs.shopServices.reset();
+          if (self.state.activeWidgets.includes('a')) {
+            self.refs.trendingSellers.reset();
+          }
+
+          if (self.state.activeWidgets.includes('b')) {
+            self.refs.bestDeals.reset();
+          }
+
+          if (self.state.activeWidgets.includes('c')) {
+            self.refs.shopServices.reset();
+          }
         }
 
         if (this._isAnnounceDisplayed) {
-          self.refs.publicAnnouncements.refresh(searchAnnounces);
-          AnnouncementsService.search(json).then(function (announcesResult) {
+          if (self.state.activeWidgets.includes('d')) {
+            self.refs.publicAnnouncements.refresh(searchAnnounces);
+          }
+          AnnouncementsService.search(searchAnnounces).then(function (announcesResult) {
               var announcesEmbedded = announcesResult['_embedded'];
               if (!(announcesEmbedded instanceof Array)) {
                   announcesEmbedded = [announcesEmbedded];
@@ -359,8 +409,12 @@ class Map extends Component {
                 isSearching: false
             });
           });
-        } else {
-          self.refs.publicAnnouncements.reset();
+        }
+        else
+        {
+          if (self.state.activeWidgets.includes('d')) {
+            self.refs.publicAnnouncements.reset();
+          }
         }
 
         if (!this._isAnnounceDisplayed && !this._isShopsDisplayed) {
@@ -399,13 +453,33 @@ class Map extends Component {
       this.refreshMap();
     }
 
+    onCloseWidget(key) {
+      var activeWidgets = this.state.activeWidgets;
+      var index = activeWidgets.indexOf(key);
+      if (index === -1) {
+        return;
+      }
+
+      activeWidgets.splice(index, 1);
+      saveActiveWidgets(activeWidgets);
+      this.setState({
+        activeWidgets: activeWidgets
+      });
+    }
+
     render() {
-        var cl = "row";
+        var cl = "row",
+          items = [],
+          self = this;
         if (this.state.isSearching) {
             cl = "row searching";
         } else if (this.state.isDragging) {
             cl = "row pending-search";
         }
+
+        self.state.activeWidgets.forEach(function(activeWidget) {
+          items.push(self._internalItems[activeWidget]);
+        });
 
         var session = SessionService.getSession();
         var isLoggedIn = session && session != null;
@@ -436,14 +510,7 @@ class Map extends Component {
                                                layouts={gridLayout} rowHeight={300}
                                                cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
                                                onLayoutChange={this.onLayoutChange}>
-                        <div key={'a'}><TrendingSellers ref="trendingSellers" history={this.props.history}
-                                                        setCurrentMarker={this.setCurrentMarker}/></div>
-                        <div key={'b'}><BestDeals ref="bestDeals" history={this.props.history}
-                                                  setCurrentMarker={this.setCurrentMarker}/></div>
-                        <div key={'c'}><ShopServices ref="shopServices" history={this.props.history}
-                                                     setCurrentMarker={this.setCurrentMarker}/></div>
-                        <div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={this.props.history}
-                                                            setCurrentMarker={this.setCurrentMarker}/></div>
+                       {items}
                     </ResponsiveReactGridLayout >
                 </div>
 

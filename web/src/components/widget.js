@@ -49,8 +49,9 @@ class Widget extends Component {
     }
 
     close() {
-        this.toggleClose();
-        $(this.card).remove();
+      this.props.onClose();
+      this.toggleClose();
+      $(this.card).remove();
     }
 
     render() {

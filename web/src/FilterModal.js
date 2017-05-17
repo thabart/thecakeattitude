@@ -4,10 +4,18 @@ import {CategoryService} from './services/index';
 import './FilterModal.css';
 
 function getFilter() {
-  let ls = null;
+  let ls = {
+    include_shops : true,
+    include_announces : true,
+    categories : []
+  };
   if (global.localStorage) {
     try {
-      ls = JSON.parse(global.localStorage.getItem('gameinshop_filter')) || null;
+      ls = JSON.parse(global.localStorage.getItem('gameinshop_filter')) || {
+        include_shops : true,
+        include_announces : true,
+        categories : []
+      };
     } catch (e) {/*Ignore*/
     }
   }
@@ -175,7 +183,6 @@ class FilterModal extends Component {
         includeAnnounces: includeAnnounces
       });
     }).catch(function(e) {
-      console.log(e);
       self.setState({
         isCategoriesLoading: false,
         errorMessage: 'An error occured while trying to retrieve the categories'

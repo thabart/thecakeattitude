@@ -89,7 +89,7 @@ class PublicAnnouncements extends Component {
           self = this;
         if (this.state.isLoading) {
             return (
-                <Widget title={title}>
+                <Widget title={title} onClose={this.props.onClose}>
                     <i className='fa fa-spinner fa-spin'></i>
                 </Widget>);
         }
@@ -144,7 +144,7 @@ class PublicAnnouncements extends Component {
         }
 
         return (
-            <Widget title={title}>
+            <Widget title={title} onClose={this.props.onClose}>
                 {navigations.length > 0 && (
                     <ul className="pagination">
                         {navigations}
