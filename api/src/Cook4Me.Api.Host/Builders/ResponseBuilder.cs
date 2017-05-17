@@ -219,6 +219,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Category.Id, category.Id);
             jObj.Add(Constants.DtoNames.Category.Name, category.Name);
             jObj.Add(Constants.DtoNames.Category.Description, category.Description);
+            jObj.Add(Constants.DtoNames.Category.ParentId, category.ParentId);
             if (category.Children != null && category.Children.Any())
             {
                 var arr = new JArray();
@@ -228,6 +229,7 @@ namespace Cook4Me.Api.Host.Builders
                     subObj.Add(Constants.DtoNames.Category.Id, child.Id);
                     subObj.Add(Constants.DtoNames.Category.Name, child.Name);
                     subObj.Add(Constants.DtoNames.Category.Description, child.Description);
+                    subObj.Add(Constants.DtoNames.Category.ParentId, child.ParentId);
                     arr.Add(subObj);
                 }
 

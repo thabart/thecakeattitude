@@ -53,7 +53,7 @@ namespace Cook4Me.Api.EF.Repositories
 
         public async Task<IEnumerable<ShopCategoryAggregate>> GetAll()
         {
-            return await _context.Categories.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return await _context.Categories.Include(c => c.Children).Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
         public async Task<IEnumerable<ShopCategoryAggregate>> Search(SearchCategoriesParameter parameter)
@@ -63,7 +63,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            var categories = _context.Categories.Where(c => c.ParentId == parameter.ParentId);
+            var categories = _context.Categories.Include(c => c.Children).Where(c => c.ParentId == parameter.ParentId);
             return await categories.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
     }
