@@ -24,6 +24,7 @@ namespace Cook4Me.Api.EF.Models
         public string Name { get; set; }
         public string Description { get; set; }
         public string ParentId { get; set; }
+        public string PinImagePartialPath { get; set; }
         public virtual ICollection<Category> Children { get; set; }
         public virtual Category Parent { get; set; }
         public virtual ICollection<Shop> Shops { get; set; }

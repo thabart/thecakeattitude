@@ -76,8 +76,8 @@ namespace Cook4Me.Api.Host.Extensions
                 {
                     clothesCategory,
                     alimentationCategory,
-                    new Category { Id = _shoesCategoryId, Name = "Shoes", Description = "Shoes", ParentId = clothesCategory.Id },
-                    new Category { Id = _bakeryCategoryId, Name = "Pastry & Bakery", Description = "Pastry & Bakery", ParentId = alimentationCategory.Id }
+                    new Category { Id = _shoesCategoryId, Name = "Shoes", Description = "Shoes", ParentId = clothesCategory.Id, PinImagePartialPath = "/pins/shoes-pin.png" },
+                    new Category { Id = _bakeryCategoryId, Name = "Pastry & Bakery", Description = "Pastry & Bakery", ParentId = alimentationCategory.Id, PinImagePartialPath = "/pins/pastry-pin.png" }
                 });
                 context.Maps.AddRange(new[]
                 {

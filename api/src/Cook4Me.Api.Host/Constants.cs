@@ -250,6 +250,7 @@ namespace Cook4Me.Api.Host
                 public const string MainMap = "main_map";
                 public const string Maps = "maps";
                 public const string Children = "children";
+                public const string PinImagePartialPath = "pin_image_partial_path";
             }
 
             public static class Map

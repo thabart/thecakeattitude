@@ -10,6 +10,7 @@ import {withGoogleMap, GoogleMap, InfoWindow, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import FilterModal from './FilterModal';
 import {MAP} from "react-google-maps/lib/constants";
+import Constants from '../Constants';
 import "./Map.css";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
@@ -346,8 +347,13 @@ class Map extends Component {
 
               var markers = self.state.markers;
               shopsEmbedded.forEach(function (shop) {
+                  var opts = shopOpts;
+                  if (shop.category && shop.category.pin_image_partial_path && shop.category.pin_image_partial_path !== null && shop.category.pin_image_partial_path !== '') {
+                    opts.url = Constants.apiUrl + shop.category.pin_image_partial_path;
+                  }
+
                   markers.push({
-                      location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: shopOpts, info: (
+                      location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: opts, info: (
                           <div>
                               <strong>{shop.name}</strong><br />
                               <NavLink to={"/shops/" + shop.id }>View profile</NavLink>

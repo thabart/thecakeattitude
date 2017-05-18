@@ -127,7 +127,8 @@ namespace Cook4Me.Api.EF.Extensions
                 {
                     Id = shop.Category.Id,
                     Name = shop.Category.Name,
-                    Description = shop.Category.Description
+                    Description = shop.Category.Description,
+                    PinImagePartialPath = shop.Category.PinImagePartialPath
                 };
             }
 
@@ -287,7 +288,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Name = category.Name,
                 ParentId = category.ParentId,
                 Children = children,
-                Maps = maps
+                Maps = maps,
+                PinImagePartialPath = category.PinImagePartialPath
             };
         }
 
@@ -310,7 +312,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Description = category.Description,
                 Name = category.Name,
                 ParentId = category.ParentId,
-                Maps = maps
+                Maps = maps,
+                PinImagePartialPath = category.PinImagePartialPath
             };
         }
 
