@@ -9,6 +9,7 @@ import ProductsService from "./Products";
 import ConfigurationService from "./Configuration";
 import ShopServices from "./ShopServices";
 import AnnouncementsService from './Announcement';
+import GoogleMapService from './GoogleMap';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -21,3 +22,4 @@ exports.ProductsService = ProductsService;
 exports.ConfigurationService = ConfigurationService;
 exports.ShopServices = ShopServices;
 exports.AnnouncementsService = AnnouncementsService;
+exports.GoogleMapService = GoogleMapService;

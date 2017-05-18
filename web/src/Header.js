@@ -31,6 +31,7 @@ class Header extends Component {
         this.externalAuthenticate = this.externalAuthenticate.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.disconnect = this.disconnect.bind(this);
+        this.manage = this.manage.bind(this);
         this.state = {
             user: null,
             activeItem: null,
@@ -144,6 +145,11 @@ class Header extends Component {
         this.props.history.push('/');
     }
 
+    // Manage profile
+    manage() {
+      this.props.history.push('/manage/profile');
+    }
+
     // Display the user information.
     displayUser(isLoggedIn, user) {
         this.setState({
@@ -217,6 +223,7 @@ class Header extends Component {
                             <DropdownToggle nav caret>Welcome <strong>{this.state.user.name}</strong></DropdownToggle>
                             <DropdownMenu>
                               <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
+                              <DropdownItem onClick={this.manage}>Manage</DropdownItem>
                             </DropdownMenu>
                           </NavDropdown> : ''
                         }

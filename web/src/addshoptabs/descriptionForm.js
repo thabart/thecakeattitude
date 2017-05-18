@@ -409,7 +409,7 @@ class DescriptionForm extends Component {
                             {pictureImagePreview}
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col-md-6 choose-map-shop-container">
                         <label className="control-label">Choose a place</label> <i className="fa fa-exclamation-circle"
                                                                                    id="choosePlaceToolTip"></i>
                         <Tooltip placement="right" target="choosePlaceToolTip"

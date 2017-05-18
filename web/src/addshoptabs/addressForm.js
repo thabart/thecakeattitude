@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Tooltip} from "reactstrap";
-import {CategoryService, SessionService, OpenIdService, UserService} from "../services/index";
+import {CategoryService, SessionService, OpenIdService, UserService, GoogleMapService} from "../services/index";
 import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import {MAP} from "react-google-maps/lib/constants";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
@@ -20,53 +20,6 @@ const INPUT_STYLE = {
     fontSize: `14px`,
     outline: `none`,
     textOverflow: `ellipses`,
-};
-
-var getAddress = function (adrComponents) {
-    var result = {
-        postal_code: "",
-        locality: "",
-        country: "",
-        street_address: ""
-    };
-    var streetNumber = "",
-        route = "";
-    adrComponents.forEach(function (adrComponent) {
-        if (!adrComponent.types) {
-            return;
-        }
-
-        if (adrComponent.types.includes("street_number")) {
-            streetNumber = adrComponent.long_name;
-            return;
-        }
-
-        if (adrComponent.types.includes("route")) {
-            route = adrComponent.long_name;
-            return;
-        }
-
-        if (adrComponent.types.includes("postal_code")) {
-            result['postal_code'] = adrComponent.long_name;
-            return;
-        }
-
-        if (adrComponent.types.includes("locality")) {
-            result['locality'] = adrComponent.long_name;
-            return;
-        }
-
-        if (adrComponent.types.includes("country")) {
-            result['country'] = adrComponent.long_name;
-            return;
-        }
-    });
-
-    if (streetNumber !== "" && route != "") {
-        result["street_address"] = streetNumber + " " + route;
-    }
-
-    return result;
 };
 
 const GettingStartedGoogleMap = withGoogleMap(props => (
@@ -139,37 +92,27 @@ class AddressForm extends Component {
         var firstPlace = places[0];
         var url = Constants.googleMapUrl + '/geocode/json?key=' + Constants.googleMapKey + '&place_id=' + firstPlace.place_id;
         self.props.onLoading(true);
-        // Retrieve the address details.
-        $.get(url).then(function (r) {
-            if (r.status !== 'OK') {
-                self.props.onError('The address details cannot be fetched');
-                self.props.onLoading(false);
-                enableNext(false);
-                return;
-            }
-
-            var result = r.results[0];
-            var location = firstPlace.geometry.location;
-            var adr = getAddress(result.address_components);
-            adr.place_id = firstPlace.place_id;
-            self.setState({
-                center: location,
-                isAddressCorrect: true,
-                currentLocation: location,
-                address: adr,
-                placeId: firstPlace.place_id
-            });
-            self.props.onLoading(false);
-            if (!adr.postal_code || !adr.locality || !adr.country || !adr.street_address) {
-                self.props.onError('The address should be complete !');
-                enableNext(false);
-            } else {
-                enableNext(true);
-            }
-        }).catch(function (e) {
-            self.props.onError('The address details cannot be fetched');
-            enableNext(false);
-            self.props.onLoading(false);
+        GoogleMapService.getPlaceByPlaceId(firstPlace.place_id).then(function(adr) {
+          adr.adr.place_id = firstPlace.place_id;
+          var location = firstPlace.geometry.location;
+          self.setState({
+              center: location,
+              isAddressCorrect: true,
+              currentLocation: location,
+              address: adr.adr,
+              placeId: firstPlace.place_id
+          });
+          self.props.onLoading(false);
+          if (!adr.adr.postal_code || !adr.adr.locality || !adr.adr.country || !adr.adr.street_address) {
+              self.props.onError('The address should be complete !');
+              enableNext(false);
+          } else {
+              enableNext(true);
+          }
+        }).catch(function() {
+          self.props.onError('The address details cannot be fetched');
+          self.props.onLoading(false);
+          enableNext(false);
         });
     }
 
@@ -287,26 +230,19 @@ class AddressForm extends Component {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                var url = Constants.googleMapUrl + "/geocode/json?latlng=" + position.coords.latitude + "," + position.coords.longitude;
-                $.get(url).then(function (r) {
-                    if (r.status !== 'OK') {
-                        return;
-                    }
-
-                    var result = r.results[0];
-                    var adr = getAddress(result.address_components);
-                    self.setState({
-                        center: location,
-                        currentLocation: location,
-                        address: adr,
-                        isAddressCorrect: true,
-                        placeId: result.place_id
-                    });
-                    self.props.onLoading(false);
-                }).fail(function () {
-                    self.props.onWarning('Current address cannot be retrieved');
-                    self.props.onLoading(false);
-                    setDefaultLocation();
+                GoogleMapService.getPlaceByLocation(position.coords).then(function(adr) {
+                  self.setState({
+                      center: location,
+                      currentLocation: location,
+                      address: adr.adr,
+                      isAddressCorrect: true,
+                      placeId: adr.place_id
+                  });
+                  self.props.onLoading(false);
+                }).catch(function() {
+                  self.props.onWarning('Current address cannot be retrieved');
+                  self.props.onLoading(false);
+                  setDefaultLocation();
                 });
             });
         } else {

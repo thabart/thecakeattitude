@@ -18,3 +18,7 @@
 .popup ul li.error {
     color: red;
 }
+
+.choose-map-shop-container {
+  overflow: hidden;
+}

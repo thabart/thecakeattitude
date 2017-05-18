@@ -8,6 +8,7 @@ import Shop from "./Shop";
 import Products from "./Products";
 import Services from "./Services";
 import Announces from './Announces';
+import Manage from './Manage';
 import AddAnnouncement from "./AddAnnouncement";
 import {OpenIdService, SessionService} from "./services/index";
 import Error from "./Error";
@@ -142,6 +143,8 @@ class App extends Component {
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                         <Route path="/addAnnounce"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
+                        <Route path="/manage/:action"
+                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
                         <Route path="/error/:type" component={Error}/>
                     </div>
                 </div>
