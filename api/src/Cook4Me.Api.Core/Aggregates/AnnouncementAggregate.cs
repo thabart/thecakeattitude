@@ -29,6 +29,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public double Price { get; set; }
+        public string StreetAddress { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public AnnouncementCategory Category { get; set; }

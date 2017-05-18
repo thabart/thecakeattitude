@@ -27,6 +27,7 @@ namespace Cook4Me.Api.Core.Commands.Announcement
         public string Subject { get; set; }
         public string CategoryId { get; set; }
         public string GooglePlaceId { get; set; }
+        public string StreetAddress { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public double Price { get; set; }

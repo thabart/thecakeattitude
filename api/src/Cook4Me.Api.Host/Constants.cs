@@ -146,6 +146,8 @@ namespace Cook4Me.Api.Host
                 public const string UpdateDateTime = "update_datetime";
                 public const string Category = "category";
                 public const string Location = "location";
+                public const string Subject = "subject";
+                public const string StreetAddress = "street_address";
             }
 
             public static class ServiceOccurrence

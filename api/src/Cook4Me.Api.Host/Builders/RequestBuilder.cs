@@ -63,6 +63,7 @@ namespace Cook4Me.Api.Host.Builders
                 Description = jObj.TryGetString(Constants.DtoNames.Announcement.Description),
                 CategoryId = jObj.TryGetString(Constants.DtoNames.Announcement.CategoryId),
                 GooglePlaceId = jObj.TryGetString(Constants.DtoNames.Announcement.GooglePlaceId),
+                StreetAddress = jObj.TryGetString(Constants.DtoNames.Announcement.StreetAddress),
                 Price = jObj.TryGetDouble(Constants.DtoNames.Announcement.Price)
             };
 

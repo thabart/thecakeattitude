@@ -54,6 +54,7 @@ namespace Cook4Me.Api.Handlers
                 Name = message.Name,
                 Price = message.Price,
                 Subject = message.Subject,
+                StreetAddress = message.StreetAddress,
                 UpdateDateTime = message.UpdateDateTime
             };
             if (!await _repository.Add(record))

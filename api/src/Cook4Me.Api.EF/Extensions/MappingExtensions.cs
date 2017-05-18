@@ -51,7 +51,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Latitude = announcement.Latitude,
                 Price = announcement.Price,
                 GooglePlaceId = announcement.GooglePlaceId,
-                Category = category
+                Category = category,
+                StreetAddress = announcement.StreetAddress
             };
         }
 
@@ -74,7 +75,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Latitude = announcement.Latitude,
                 Longitude = announcement.Longitude,
                 Price = announcement.Price,
-                GooglePlaceId = announcement.GooglePlaceId
+                GooglePlaceId = announcement.GooglePlaceId,
+                StreetAddress = announcement.StreetAddress
             };
         }
 

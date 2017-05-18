@@ -740,6 +740,8 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Announcement.CategoryId, announcement.CategoryId);
             jObj.Add(Constants.DtoNames.Announcement.GooglePlaceId, announcement.GooglePlaceId);
             jObj.Add(Constants.DtoNames.Announcement.Price, announcement.Price);
+            jObj.Add(Constants.DtoNames.Announcement.Subject, announcement.Subject);
+            jObj.Add(Constants.DtoNames.Announcement.StreetAddress, announcement.StreetAddress);
             jObj.Add(Constants.DtoNames.Announcement.CreateDateTime, announcement.CreateDateTime);
             jObj.Add(Constants.DtoNames.Announcement.UpdateDateTime, announcement.UpdateDateTime);
             var location = new JObject();

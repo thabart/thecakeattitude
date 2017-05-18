@@ -37,7 +37,8 @@ class AddAnnouncement extends Component {
       category_id: firstTabJson.category_id,
       price: firstTabJson.price,
       location: adr.location,
-      place_id: adr.google_place_id
+      place_id: adr.google_place_id,
+      street_address: adr.street_address
     };
     self.loading(true);
     AnnouncementsService.add(json).then(function() {

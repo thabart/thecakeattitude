@@ -11,6 +11,7 @@ class PublicAnnouncements extends Component {
         this.navigate = this.navigate.bind(this);
         this.showDetails = this.showDetails.bind(this);
         this.localize = this.localize.bind(this);
+        this.navigateToAnnounce = this.navigateToAnnounce.bind(this);
         this.state = {
             errorMessage: null,
             isLoading: false,
@@ -86,6 +87,9 @@ class PublicAnnouncements extends Component {
     enableMove(b) {
       this.refs.widget.enableMove(b);
     }
+    navigateToAnnounce(id) {
+      this.props.history.push('/announces/' + id);
+    }
     render() {
         var title = "Public announcements",
           content = [],
@@ -112,6 +116,9 @@ class PublicAnnouncements extends Component {
                     {announcement.category && announcement.category !== null && <div>Belongs to the category <b>{announcement.category.name}</b></div>}
                   </div>
                     <div className="last-column">
+                      <Button outline color="secondary" size="sm"  onClick={(e) => { self.navigateToAnnounce(announcement.id);}}>
+                        <i className="fa fa-sign-in localize"></i>
+                      </Button>
                       <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, announcement); }}>
                         <i className="fa fa-map-marker localize"></i>
                       </Button>

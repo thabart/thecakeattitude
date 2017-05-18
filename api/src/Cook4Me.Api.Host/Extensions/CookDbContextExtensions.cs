@@ -902,7 +902,9 @@ namespace Cook4Me.Api.Host.Extensions
                     Latitude = 50.8939195F,
                     Description = "first announcement",
                     Name = "FA",
-                    Price = 200
+                    Price = 200,
+                    Subject = "administrator",
+                    StreetAddress = "223 avenue des croix du feu"
                 },
                 new Announcement
                 {
@@ -915,7 +917,9 @@ namespace Cook4Me.Api.Host.Extensions
                     Latitude = 50.8939195F,
                     Description = "second announcement",
                     Name = "SA",
-                    Price = 200
+                    Price = 200,
+                    Subject = "administrator",
+                    StreetAddress = "223 avenue des croix du feu"
                 }
             });
         }
