@@ -20,6 +20,26 @@ module.exports = {
             });
         });
     },
+    // Search mine announcements
+    searchMineAnnouncements: function (content) {
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.announcements_endpoint + '/me/.search', {
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(content),
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
+    },
     // Get announcement
     get: function (id) {
         return new Promise(function (resolve, reject) {

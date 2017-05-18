@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
@@ -23,20 +24,19 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Announcement
 {
-    public interface IGetAnnouncementOperation
+    public interface IGetMineAnnouncementsOperation
     {
-        Task<IActionResult> Execute(string id);
+        Task<IActionResult> Execute(string subject);
     }
 
-    internal class GetAnnouncementOperation : IGetAnnouncementOperation
+    internal class GetMineAnnouncementsOperation : IGetMineAnnouncementsOperation
     {
         private readonly IAnnouncementRepository _repository;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
         private readonly IAnnouncementEnricher _enricher;
 
-        public GetAnnouncementOperation(
-            IAnnouncementRepository repository, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder, IAnnouncementEnricher enricher)
+        public GetMineAnnouncementsOperation(IAnnouncementRepository repository, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder, IAnnouncementEnricher enricher)
         {
             _repository = repository;
             _halResponseBuilder = halResponseBuilder;
@@ -44,27 +44,32 @@ namespace Cook4Me.Api.Host.Operations.Announcement
             _enricher = enricher;
         }
 
-        public async Task<IActionResult> Execute(string id)
+        public async Task<IActionResult> Execute(string subject)
         {
-            if (string.IsNullOrWhiteSpace(id))
+            if (string.IsNullOrWhiteSpace(subject))
             {
-                throw new ArgumentNullException(nameof(id));
+                throw new ArgumentNullException(nameof(subject));
             }
 
-            var product = await _repository.Get(id);
-            if (product == null)
+            var announces = await _repository.Search(new SearchAnnouncementsParameter
             {
-                return new NotFoundResult();
+                Subjects = new [] { subject }
+            });
+            _halResponseBuilder.AddLinks(l => l.AddSelf(GetAnnouncementLink()));
+            if (announces.TotalResults > 0)
+            {
+                foreach (var announce in announces.Content)
+                {
+                    _enricher.Enrich(_halResponseBuilder, announce);
+                }
             }
 
-            _halResponseBuilder.AddLinks(l => l.AddSelf(GetAnnouncementLink(id)));
-            _enricher.Enrich(_halResponseBuilder, product);
             return new OkObjectResult(_halResponseBuilder.Build());
         }
 
-        private static string GetAnnouncementLink(string id)
+        private static string GetAnnouncementLink()
         {
-            return "/" + Constants.RouteNames.Announcements + "/" + id;
+            return "/" + Constants.RouteNames.Announcements + "/" + Constants.RouteNames.Me;
         }
     }
 }

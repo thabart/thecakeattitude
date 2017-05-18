@@ -45,6 +45,7 @@ namespace Cook4Me.Api.Host
             public const string RemoveComment = "{id}/comments/{subid}";
             public const string Filers = "filters";
             public const string Me = "me";
+            public const string SearchMine = "me/.search";
         }
 
         public static class DtoNames

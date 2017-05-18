@@ -32,16 +32,21 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetAnnouncementOperation _getOperation;
         private readonly IAddAnnouncementOperation _addOperation;
         private readonly IDeleteAnnouncementOperation _deleteOperation;
+        private readonly IGetMineAnnouncementsOperation _getMineAnnouncementsOperation;
+        private readonly ISearchMineAnnouncements _searchMineAnnouncements;
 
         public AnnouncementsController(
             ISearchAnnouncementsOperation searchOperation, IGetAnnouncementOperation getOperation,
             IAddAnnouncementOperation addOperation, IDeleteAnnouncementOperation deleteOperation,
+            IGetMineAnnouncementsOperation getMineAnnouncementsOperation, ISearchMineAnnouncements searchMineAnnouncements,
             IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchOperation = searchOperation;
             _getOperation = getOperation;
             _addOperation = addOperation;
             _deleteOperation = deleteOperation;
+            _getMineAnnouncementsOperation = getMineAnnouncementsOperation;
+            _searchMineAnnouncements = searchMineAnnouncements;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -54,6 +59,20 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Get(string id)
         {
             return await _getOperation.Execute(id);
+        }
+
+        [HttpGet(Constants.RouteNames.Me)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> GetMineAnnouncements()
+        {
+            return await _getMineAnnouncementsOperation.Execute(User.GetSubject());
+        }
+
+        [HttpPost(Constants.RouteNames.SearchMine)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> SearchMineAnnouncements([FromBody] JObject jObj)
+        {
+            return await _searchMineAnnouncements.Execute(User.GetSubject(), jObj);
         }
 
         [HttpPost]

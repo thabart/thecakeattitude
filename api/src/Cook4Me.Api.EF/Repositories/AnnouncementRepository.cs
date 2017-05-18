@@ -116,6 +116,11 @@ namespace Cook4Me.Api.EF.Repositories
                 announcements = announcements.Where(s => s.Name.ToLowerInvariant().Contains(parameter.Name.ToLowerInvariant()));
             }
 
+            if (parameter.Subjects != null)
+            {
+                announcements = announcements.Where(s => parameter.Subjects.Contains(s.Subject));
+            }
+
 
             if (parameter.NorthEast != null && parameter.SouthWest != null)
             {
