@@ -23,8 +23,10 @@ using Newtonsoft.Json.Linq;
 using SimpleIdentityServer.Core.Errors;
 using SimpleIdentityServer.Core.Repositories;
 using SimpleIdentityServer.Core.Validators;
+using SimpleIdentityServer.Host.Extensions;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
@@ -171,6 +173,52 @@ namespace Cook4Me.Api.OpenId.Controllers
             return new OkResult();
         }
 
+        [HttpPut(Constants.RouteNames.Image)]
+        public async Task<IActionResult> UpdateImage([FromBody] JObject json)
+        {
+            if (json == null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+
+
+            // 1. Get the subject.
+            var subjectResult = await GetSubject();
+            if (!subjectResult.IsValid)
+            {
+                return subjectResult.Error;
+            }           
+            
+            // 2. Get the user.
+            var user = await _resourceOwnerRepository.GetAsync(subjectResult.Subject);
+            if (user == null)
+            {
+                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
+            }
+
+            // 3. Get Base64 image and save it.
+            var result = _requestBuilder.GetUploadImage(json);
+            string path;
+            if (!AddImage(result, subjectResult.Subject, out path))
+            {
+                return this.BuildError(ErrorCodes.InvalidRequestCode, Constants.ErrorMessages.ErrorOccuredWhileTryingToUpdatePicture);
+            }
+
+            var claim = user.Claims.FirstOrDefault(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture);
+            if (claim != null)
+            {
+                user.Claims.Remove(claim);
+            }
+
+            user.Claims.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, path));
+            if (!await _resourceOwnerRepository.UpdateAsync(user))
+            {
+                return this.BuildError(ErrorCodes.UnhandledExceptionCode, Constants.ErrorMessages.ErrorOccuredWhileTryingToUpdateTheUser);
+            }
+
+            return new OkResult();
+        }
+
         private async Task<GetSubjectResult> GetSubject()
         {
             var accessToken = GetAccessTokenFromAuthorizationHeader();
@@ -212,6 +260,36 @@ namespace Cook4Me.Api.OpenId.Controllers
             }
 
             return authorization.Parameter;
+        }
+
+        private bool AddImage(string base64Encoded, string subject, out string path)
+        {
+            path = null;
+            if (string.IsNullOrWhiteSpace(base64Encoded))
+            {
+                return false;
+            }
+
+            var picturePath = Path.Combine(_hostingEnvironment.WebRootPath, "users/" + subject + ".jpg");
+            if (System.IO.File.Exists(picturePath))
+            {
+                System.IO.File.Delete(picturePath);
+            }
+
+            try
+            {
+                base64Encoded = base64Encoded.Substring(base64Encoded.IndexOf(',') + 1);
+                base64Encoded = base64Encoded.Trim('\0');
+                var imageBytes = Convert.FromBase64String(base64Encoded);
+                System.IO.File.WriteAllBytes(picturePath, imageBytes);
+                path = Request.GetAbsoluteUriWithVirtualPath()+ "/users/" + subject + ".jpg";
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
         }
 
         private static string TryGetValue(IEnumerable<Claim> claims, string type)

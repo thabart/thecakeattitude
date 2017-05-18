@@ -25,6 +25,7 @@ namespace Cook4Me.Api.OpenId
         {
             public const string Users = "users";
             public const string UserClaims = "claims";
+            public const string Image = "image";
             public const string PublicClaims = "{id}/public";
         }
 
@@ -32,6 +33,7 @@ namespace Cook4Me.Api.OpenId
         {
             public const string ErrorOccuredWhileTryingToUpdateTheUser = "an error occured while trying to update the user";
             public const string SubjectDoesntExist = "the subject doesn't exist";
+            public const string ErrorOccuredWhileTryingToUpdatePicture = "an error occured while trying to update the picture";
         }
 
         public static class Claims

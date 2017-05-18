@@ -1,10 +1,12 @@
 import React, {Component} from "react";
+import Promise from "bluebird";
 import {UserService, GoogleMapService} from '../services/index';
 import {Alert} from 'reactstrap';
 import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import Constants from '../../Constants';
 import './profile.css';
+import $ from 'jquery';
 
 const currentLocationOpts = {
     url: '/images/current-location.png',
@@ -51,19 +53,95 @@ class ManageProfile extends Component {
     super(props);
     this._googleMap = null;
     this._searchBox = null;
+    this._hasImageChanged = false;
+    this.save = this.save.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.uploadPicture = this.uploadPicture.bind(this);
     this.closeError = this.closeError.bind(this);
+    this.closeSuccess = this.closeSuccess.bind(this);
     this.onMapLoad = this.onMapLoad.bind(this);
     this.onPlacesChanged = this.onPlacesChanged.bind(this);
     this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
     this.state = {
       isLoading: false,
       errorMessage: null,
+      successMessage: null,
       user: {},
       picture: null,
       location: {},
-      address: {}
+      address: {},
+      isUpdating: false,
+      isEmailInvalid: false,
+      isMobilePhoneInvalid: false,
+      isHomePhoneInvalid: false
     };
+  }
+  save() {
+    var self = this,
+      user = this.state.user,
+      address = this.state.address;
+    var result = $.extend({}, {
+      email: user.email,
+      home_phone_number: user.home_phone_number,
+      mobile_phone_number: user.mobile_phone_number,
+      name: user.name
+    }, address);
+    self.setState({
+        isUpdating: true
+    });
+    var promises = [];
+    if (this._hasImageChanged) {
+      promises.push(UserService.updateImage(this.state.picture));
+    }
+
+    promises.push(UserService.updateClaims(result));
+    Promise.all(promises).then(function() {
+      self.setState({
+        isUpdating: false,
+        successMessage: 'Account has been updated'
+      });
+    }).catch(function() {
+      self.setState({
+        isUpdating: false,
+        errorMessage: 'An error occured while trying to update the user'
+      });
+    });
+  }
+  handleInputChange(e) {
+    var self = this;
+    const target = e.target;
+    const name = target.name;
+    var isEmailInvalid = false,
+        isMobilePhoneInvalid = false,
+        isHomePhoneInvalid = false;
+    switch (name) {
+      case "email":
+        var regex = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
+        if (!regex.test(target.value)) {
+          isEmailInvalid = true;
+        }
+        break;
+        case "mobile_phone_number":
+        case "home_phone_number":
+          var regex = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
+          if (!regex.test(target.value)) {
+            if (name == "mobile_phone_number") {
+              isMobilePhoneInvalid = true;
+            } else {
+              isHomePhoneInvalid = true;
+            }
+          }
+          break;
+      }
+
+      var user = this.state.user;
+      user[name] = target.value;
+      self.setState({
+        isEmailInvalid: isEmailInvalid,
+        isMobilePhoneInvalid: isMobilePhoneInvalid,
+        isHomePhoneInvalid: isHomePhoneInvalid,
+        user: user
+      });
   }
   uploadPicture(e) {
     e.preventDefault();
@@ -71,6 +149,7 @@ class ManageProfile extends Component {
     var file = e.target.files[0];
     var reader = new FileReader();
     reader.onloadend = () => {
+      self._hasImageChanged = true;
       self.setState({
         picture: reader.result
       });
@@ -85,6 +164,11 @@ class ManageProfile extends Component {
       errorMessage: null
     });
   }
+  closeSuccess() {
+    this.setState({
+      successMessage: null
+    });
+  }
   refresh() {
     var self = this;
     self.setState({
@@ -93,7 +177,7 @@ class ManageProfile extends Component {
     UserService.getClaims().then(function(userResult) {
       var picture = "/images/profile-picture.png";
       if (userResult.picture) {
-        picture = Constants.openIdUrl + userResult.picture;
+        picture = userResult.picture;
       }
 
       self.setState({
@@ -105,9 +189,11 @@ class ManageProfile extends Component {
 
       if (userResult.google_place_id) {
         GoogleMapService.getPlaceByPlaceId(userResult.google_place_id).then(function(adr) {
+          var a = adr.adr;
+          a.google_place_id = adr.place_id;
           self.setState({
             location: adr.geometry.location,
-            address: adr.adr
+            address: a
           });
         });
       }
@@ -126,12 +212,14 @@ class ManageProfile extends Component {
     const places = self._searchBox.getPlaces();
     var firstPlace = places[0];
     GoogleMapService.getPlaceByPlaceId(firstPlace.place_id).then(function(adr) {
+      var a = adr.adr;
+      a.google_place_id = adr.place_id;
       self.setState({
-        address: adr.adr,
+        address: a,
         location: adr.geometry.location
       });
-    }).catch(function() {
-
+    }).catch(function(e) {
+      console.log(e);
     });
   }
   render() {
@@ -139,15 +227,19 @@ class ManageProfile extends Component {
       return (<div><i className="fa fa-spinner fa-spin"></i></div>);
     }
 
-    if (this.state.errorMessage !== null) {
-      return (<div><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert></div>);
+    var isInvalid = this.state.isEmailInvalid || this.state.isMobilePhoneInvalid || this.state.isHomePhoneInvalid;
+    var optsActions = {};
+    if (isInvalid) {
+        optsActions['disabled'] = 'disabled';
     }
 
     return (<div className="container">
       <h1>Manage profile</h1>
+      <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.closeSuccess}>{this.state.successMessage}</Alert>
+      <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
       <div className="form-group">
         <label>Displayed name</label>
-        <input type="text" value={this.state.user.name} className="form-control" />
+        <input type="text" value={this.state.user.name} name="name" onChange={this.handleInputChange} className="form-control" />
       </div>
       <div className="form-group">
         <label>Picture</label><br />
@@ -156,15 +248,18 @@ class ManageProfile extends Component {
       </div>
       <div className="form-group">
         <label>Email</label>
-        <input type="text" value={this.state.user.email} className="form-control" />
+        <input type="text" value={this.state.user.email} name="email" onChange={this.handleInputChange} className="form-control" />
+        { this.state.isEmailInvalid && (<span className="invalid-description">The email is invalid</span>) }
       </div>
       <div className="form-group">
         <label>Home phone number</label>
-        <input type="text" value={this.state.user.home_phone_number} className="form-control" />
+        <input type="text" value={this.state.user.home_phone_number} name="home_phone_number" onChange={this.handleInputChange} className="form-control" />
+        { this.state.isHomePhoneInvalid && (<span className="invalid-description">The home phone is invalid</span>) }
       </div>
       <div className="form-group">
         <label>Mobile phone number</label>
-        <input type="text" value={this.state.user.mobile_phone_number} className="form-control" />
+        <input type="text" value={this.state.user.mobile_phone_number} name="mobile_phone_number" onChange={this.handleInputChange} className="form-control" />
+        { this.state.isMobilePhoneInvalid && (<span className="invalid-description">The mobile phone is invalid</span>) }
       </div>
       <div className="form-group">
         <label>Address</label>
@@ -206,7 +301,11 @@ class ManageProfile extends Component {
         </div>
       </div>
       <div className="form-group">
-        <button className="btn btn-success">Update</button>
+        {this.state.isUpdating ? (
+          <button className="btn btn-success" disabled><i className='fa fa-spinner fa-spin'></i>Processing update ...</button>
+        ) : (
+          <button className="btn btn-success" onClick={this.save} {...optsActions}>Update</button>
+        )}
       </div>
     </div>);
   }

@@ -31,7 +31,9 @@ class Header extends Component {
         this.externalAuthenticate = this.externalAuthenticate.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.disconnect = this.disconnect.bind(this);
-        this.manage = this.manage.bind(this);
+        this.manageProfile = this.manageProfile.bind(this);
+        this.manageShops = this.manageShops.bind(this);
+        this.manageAnnounces = this.manageAnnounces.bind(this);
         this.state = {
             user: null,
             activeItem: null,
@@ -146,8 +148,16 @@ class Header extends Component {
     }
 
     // Manage profile
-    manage() {
+    manageProfile() {
       this.props.history.push('/manage/profile');
+    }
+
+    manageShops() {
+      this.props.history.push('/manage/shops');
+    }
+
+    manageAnnounces() {
+      this.props.history.push('/manage/announces');
     }
 
     // Display the user information.
@@ -223,7 +233,10 @@ class Header extends Component {
                             <DropdownToggle nav caret>Welcome <strong>{this.state.user.name}</strong></DropdownToggle>
                             <DropdownMenu>
                               <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
-                              <DropdownItem onClick={this.manage}>Manage</DropdownItem>
+                              <DropdownItem header>Manage</DropdownItem>
+                              <DropdownItem onClick={this.manageProfile}>Profile</DropdownItem>
+                              <DropdownItem onClick={this.manageAnnounces}>Announces</DropdownItem>
+                              <DropdownItem onClick={this.manageShops}>Shops</DropdownItem>
                             </DropdownMenu>
                           </NavDropdown> : ''
                         }

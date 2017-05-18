@@ -55,5 +55,27 @@ module.exports = {
                 reject(e);
             })
         });
+    },
+    // Update image.
+    updateImage: function(img) {
+        return new Promise(function (resolve, reject) {
+            var session = SessionService.getSession();
+            if (!session || !session.access_token) {
+                reject();
+            }
+
+            $.ajax(Constants.openIdUrl + '/users/image', {
+                method: 'PUT',
+                contentType: 'application/json',
+                headers: {
+                    'Authorization': 'Bearer ' + session.access_token
+                },
+                data: JSON.stringify({picture: img})
+            }).then(function (r) {
+                resolve(r);
+            }).fail(function (e) {
+                reject(e);
+            });
+        });
     }
 };

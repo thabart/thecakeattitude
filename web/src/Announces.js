@@ -83,7 +83,7 @@ class Announces extends Component {
 
     var img = "/images/profile-picture.png";
     if (this.state.user.picture && this.state.user.picture !== null) {
-      img = Constants.openIdUrl + this.state.user.picture;
+      img = this.state.user.picture;
     }
 
     return (<div className="container">

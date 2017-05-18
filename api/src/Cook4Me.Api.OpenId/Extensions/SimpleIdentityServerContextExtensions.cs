@@ -132,7 +132,8 @@ namespace Cook4Me.Api.OpenId.Extensions
                         Description = "Access to the address",
                         ScopeClaims = new List<ScopeClaim>
                         {
-                            new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Address }
+                            new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Address },
+                            new ScopeClaim { ClaimCode = Constants.Claims.GooglePlaceId }
                         },
                         Type = ScopeType.ResourceOwner
                     },
@@ -427,7 +428,7 @@ namespace Cook4Me.Api.OpenId.Extensions
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture,
-                                Value = "/img/thabart.jpg"
+                                Value = "http://localhost:5001/img/thabart.jpg"
                             },
                             new ResourceOwnerClaim
                             {
@@ -484,7 +485,7 @@ namespace Cook4Me.Api.OpenId.Extensions
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture,
-                                Value = "/img/laetitia.jpg"
+                                Value = "http://localhost:5001/img/laetitia.jpg"
                             },
                             new ResourceOwnerClaim
                             {

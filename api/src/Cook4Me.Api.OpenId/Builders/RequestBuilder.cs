@@ -25,6 +25,7 @@ namespace Cook4Me.Api.OpenId.Builders
     public interface IRequestBuilder
     {
         IList<Claim> GetUpdateUserParameter(JObject json);
+        string GetUploadImage(JObject json);
     }
 
     internal class RequestBuilder : IRequestBuilder
@@ -32,11 +33,11 @@ namespace Cook4Me.Api.OpenId.Builders
         private Dictionary<string, Action<ICollection<Claim>, string>> _mappingKeyToUpdateUserParameter = new Dictionary<string, Action<ICollection<Claim>, string>>
         {
             { Constants.Dtos.UpdateUser.Name, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, v)) },
-            { Constants.Dtos.UpdateUser.Picture, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, v)) },
             { Constants.Dtos.UpdateUser.Email, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, v)) },
             { Constants.Dtos.UpdateUser.PhoneNumber, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber, v)) },
             { Constants.Claims.HomePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.HomePhoneNumber, v)) },
-            { Constants.Claims.MobilePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.MobilePhoneNumber, v)) }
+            { Constants.Claims.MobilePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.MobilePhoneNumber, v)) },
+            { Constants.Claims.GooglePlaceId, (u, v) => u.Add(new Claim(Constants.Claims.GooglePlaceId, v)) }
         };
 
         private Dictionary<string, Action<JObject, string>> _mappingKeyToAddress = new Dictionary<string, Action<JObject, string>>
@@ -77,6 +78,16 @@ namespace Cook4Me.Api.OpenId.Builders
             }
 
             return claims;
+        }
+
+        public string GetUploadImage(JObject json)
+        {
+            if (json == null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+
+            return json.Value<string>(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture);
         }
 
         private static T GetEnum<T>(string str) where T : struct

@@ -57,7 +57,6 @@ var getPlace = function(url) {
       }
 
       var result = r.results[0];
-      console.log(result);
       var adr = getAddress(result.address_components);
       resolve({adr: adr, place_id: result.place_id, geometry: result.geometry});
     }).catch(function() {
