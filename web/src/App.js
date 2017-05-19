@@ -12,6 +12,7 @@ import Manage from './Manage';
 import AddProduct from './AddProduct';
 import AddAnnouncement from "./AddAnnouncement";
 import {OpenIdService, SessionService} from "./services/index";
+import Constants from '../Constants';
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
 import "./App.css";
@@ -31,7 +32,7 @@ class App extends Component {
     }
 
     componentWillMount() {
-        var connection = $.hubConnection("http://localhost:5000");
+        var connection = $.hubConnection(Constants.apiUrl);
         var proxy = connection.createHubProxy("notifier");
         proxy.on('shopAdded', function (message) {
             AppDispatcher.dispatch({
