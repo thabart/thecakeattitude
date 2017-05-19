@@ -186,7 +186,7 @@ namespace Cook4Me.Api.Host.Extensions
                     new Shop
                     {
                         Id = _secondShopId,
-                        Subject = "laetitia",
+                        Subject = "administrator",
                         Name = "shop 2",
                         Description = "description 2",
                         CategoryId = _shoesCategoryId,

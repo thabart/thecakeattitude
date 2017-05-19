@@ -99,7 +99,8 @@ namespace Cook4Me.Api.Handlers
             _eventPublisher.Publish(new AnnouncementRemovedEvent
             {
                 AnnouncementId = message.AnnouncementId,
-                Subject = message.Subject
+                Subject = message.Subject,
+                CommonId = message.CommonId
             });
         }
     }

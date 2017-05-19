@@ -14,31 +14,30 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Commands.Announcement;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using System;
+using Cook4Me.Api.Core.Commands.Shop;
+using Cook4Me.Api.Host.Validators;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
-using Cook4Me.Api.Host.Validators;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+using Cook4Me.Api.Core.Bus;
 
-namespace Cook4Me.Api.Host.Operations.Announcement
+namespace Cook4Me.Api.Host.Operations.Shop
 {
-    public interface IDeleteAnnouncementOperation
+    public interface IDeleteShopOperation
     {
-        Task<IActionResult> Execute(RemoveAnnouncementCommand command);
+        Task<IActionResult> Execute(RemoveShopCommand removeShopCommand);
     }
 
-    internal class DeleteAnnouncementOperation : IDeleteAnnouncementOperation
+    internal class DeleteShopOperation : IDeleteShopOperation
     {
-        private readonly IRemoveAnnouncementValidator _validator;
+        private readonly IRemoveShopValidator _validator;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
         private readonly ICommandSender _commandSender;
 
-        public DeleteAnnouncementOperation(
-            IRemoveAnnouncementValidator validator, IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
+        public DeleteShopOperation(IRemoveShopValidator validator, IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
         {
             _validator = validator;
             _responseBuilder = responseBuilder;
@@ -46,22 +45,21 @@ namespace Cook4Me.Api.Host.Operations.Announcement
             _commandSender = commandSender;
         }
 
-        public async Task<IActionResult> Execute(RemoveAnnouncementCommand command)
+        public async Task<IActionResult> Execute(RemoveShopCommand removeShopCommand)
         {
-            if (command == null)
+            if (removeShopCommand == null)
             {
-                throw new ArgumentNullException(nameof(command));
+                throw new ArgumentNullException(nameof(removeShopCommand));
             }
 
-
-            var validationResult = await _validator.Validate(command);
+            var validationResult = await _validator.Validate(removeShopCommand);
             if (!validationResult.IsValid)
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, validationResult.Message);
                 return _controllerHelper.BuildResponse(System.Net.HttpStatusCode.BadRequest, error);
             }
-            
-            _commandSender.Send(command);
+
+            _commandSender.Send(removeShopCommand);
             return new OkResult();
         }
     }

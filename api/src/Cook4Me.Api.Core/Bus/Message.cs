@@ -18,5 +18,6 @@ namespace Cook4Me.Api.Core.Bus
 {
     public class Message
     {
+        public string CommonId { get; set; }
     }
 }

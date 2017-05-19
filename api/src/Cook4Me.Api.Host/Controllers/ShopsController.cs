@@ -39,10 +39,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetMineShopsOperation _getMineShopsOperation;
         private readonly IRemoveShopCommentOperation _removeShopCommentOperation;
         private readonly ISearchShopCommentsOperation _searchShopCommentsOperation;
+        private readonly ISearchMineShopsOperation _searchMineShopsOperation;
+        private readonly IDeleteShopOperation _deleteShopOperation;
 
         public ShopsController(IResponseBuilder responseBuilder, IAddShopOperation addShopOperation, IAddShopCommentOperation addShopCommentOperation,
             IGetShopOperation getShopOperation, IGetShopsOperation getShopsOperation, ISearchShopsOperation searchShopsOperation,
             IGetMineShopsOperation getMineShopsOperation, IRemoveShopCommentOperation removeShopCommentOperation, ISearchShopCommentsOperation searchShopCommentsOperation,
+            ISearchMineShopsOperation searchMineShopsOperation, IDeleteShopOperation deleteShopOperation,
             IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _responseBuilder = responseBuilder;
@@ -54,6 +57,8 @@ namespace Cook4Me.Api.Host.Controllers
             _getMineShopsOperation = getMineShopsOperation;
             _removeShopCommentOperation = removeShopCommentOperation;
             _searchShopCommentsOperation = searchShopCommentsOperation;
+            _searchMineShopsOperation = searchMineShopsOperation;
+            _deleteShopOperation = deleteShopOperation;
         }
 
         [HttpGet]
@@ -66,6 +71,18 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> GetShop(string id)
         {
             return await _getShopOperation.Execute(id);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> DeleteShop(string id)
+        {
+            return await _deleteShopOperation.Execute(new RemoveShopCommand
+            {
+                ShopId = id,
+                Subject = User.GetSubject(),
+                CommonId = this.GetCommonId()
+            });
         }
 
         [HttpPost]
@@ -101,6 +118,13 @@ namespace Cook4Me.Api.Host.Controllers
 
             return await _getMineShopsOperation.Execute(subject);
         }
+
+        [HttpPost(Constants.RouteNames.SearchMine)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> SearchMineShops([FromBody] JObject jObj)
+        {
+            return await _searchMineShopsOperation.Execute(jObj, User.GetSubject());
+        } 
 
         [HttpPost(Constants.RouteNames.Comments)]
         [Authorize("Connected")]

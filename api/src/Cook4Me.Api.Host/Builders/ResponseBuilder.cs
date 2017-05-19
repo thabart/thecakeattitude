@@ -41,6 +41,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetServiceComment(ServiceComment serviceComment);
         JObject GetShopCommentAddedEvent(ShopCommentAddedEvent comment);
         JObject GetShopCommentRemovedEvent(ShopCommentRemovedEvent comment);
+        JObject GetShopRemovedEvent(ShopRemovedEvent evt);
         JObject GetProductCommentAddedEvent(ProductCommentAddedEvent comment);
         JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment);
@@ -405,7 +406,22 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
         }
-        
+
+        public JObject GetShopRemovedEvent(ShopRemovedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Shop.Id, evt.ShopId);
+            jObj.Add(Constants.DtoNames.Shop.Subject, evt.ShopId);
+            jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return jObj;
+        }
+
+
         public JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment)
         {
             if (comment == null)
@@ -473,6 +489,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Announcement.Id, evt.AnnouncementId);
+            jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return jObj;
         }
 

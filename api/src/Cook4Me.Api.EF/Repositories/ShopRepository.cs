@@ -311,6 +311,31 @@ namespace Cook4Me.Api.EF.Repositories
             return result;
         }
 
+        public async Task<bool> Remove(ShopAggregate shop)
+        {
+            if (shop == null)
+            {
+                throw new ArgumentNullException(nameof(shop));
+            }
+
+            var record = await _context.Shops.FirstOrDefaultAsync(s => s.Id == shop.Id);
+            if (record == null)
+            {
+                return false;
+            }
+
+            try
+            {
+                _context.Shops.Remove(record);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private static IQueryable<Models.Shop> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Shop, TKey>> keySelector, IQueryable<Models.Shop> shops)
         {
             if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))

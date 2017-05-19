@@ -50,6 +50,11 @@ namespace Cook4Me.Api.Host
 
         public static class DtoNames
         {
+            public static class Message
+            {
+                public const string CommonId = "common_id";
+            }
+
             public static class Shop
             {
                 public const string Id = "id";

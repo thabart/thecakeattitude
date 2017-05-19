@@ -1,21 +1,35 @@
 import React, {Component} from "react";
 import {Alert} from 'reactstrap';
-import {AnnouncementsService, SessionService} from '../services/index';
+import {AnnouncementsService} from '../services/index';
 import moment from 'moment';
+import $ from 'jquery';
 import AppDispatcher from "../appDispatcher";
+import {Guid} from '../utils';
 
 class ManageAnnounces extends Component {
   constructor(props) {
     super(props);
+    this._request = {count: 1, start_index: 0};
+    this._common_id = null;
     this.removeAnnounce = this.removeAnnounce.bind(this);
     this.closeError = this.closeError.bind(this);
     this.closeSuccess = this.closeSuccess.bind(this);
+    this.navigate = this.navigate.bind(this);
     this.state = {
       isLoading: false,
       announces: [],
+      navigation: [],
       errorMessage: null,
       successMessage: null
     };
+  }
+  navigate(e, name) {
+    e.preventDefault();
+    var startIndex = name - 1;
+    this._request = $.extend({}, this._request, {
+        start_index: startIndex
+    });
+    this.refresh();
   }
   closeError() {
     this.setState({
@@ -32,7 +46,8 @@ class ManageAnnounces extends Component {
     self.setState({
       isLoading: true
     });
-    AnnouncementsService.remove(id).then(function() {
+    this._common_id = Guid.generate();
+    AnnouncementsService.remove(id, this._common_id).then(function(r) {
       self.setState({
         isLoading: false,
         successMessage: 'The announce has been removed'
@@ -50,20 +65,28 @@ class ManageAnnounces extends Component {
     self.setState({
       isLoading: true
     });
-    AnnouncementsService.searchMineAnnouncements({ start_index: 0, count: 10 })
+    AnnouncementsService.searchMineAnnouncements(self._request)
       .then(function(result) {
-        var announces = result['_embedded'];
+        var announces = result['_embedded'],
+            navigation = result['_links']['navigation'];
         if (!(announces instanceof Array)) {
           announces = [announces];
         }
 
+        if (!(navigation instanceof Array)) {
+            navigation = [navigation];
+        }
+
         self.setState({
           isLoading: false,
-          announces : announces
+          announces : announces,
+          navigation: navigation
         });
       }).catch(function() {
         self.setState({
-          isLoading: false
+          isLoading: false,
+          announces : [],
+          navigation: []
         });
       });
   }
@@ -73,6 +96,7 @@ class ManageAnnounces extends Component {
     }
 
     var rows = [],
+      navigations = [],
       self = this;
     if (this.state.announces && this.state.announces.length > 0) {
       this.state.announces.forEach(function(announce) {
@@ -85,6 +109,16 @@ class ManageAnnounces extends Component {
             <button className="btn btn-outline-secondary btn-sm" onClick={(e) => { self.removeAnnounce(announce.id); }}><i className="fa fa-trash"></i></button>
           </td>
         </tr>));
+      });
+    }
+
+    if (this.state.navigation && this.state.navigation.length > 1) {
+      this.state.navigation.forEach(function (nav) {
+        navigations.push((
+          <li className="page-item"><a href="#" className="page-link" onClick={(e) => {
+            self.navigate(e, nav.name);
+          }}>{nav.name}</a></li>
+        ));
       });
     }
 
@@ -108,6 +142,11 @@ class ManageAnnounces extends Component {
           </tbody>
         </table>
       )}
+      {navigations.length > 0 && (
+        <ul className="pagination">
+          {navigations}
+        </ul>
+      )}
     </div>);
   }
   componentDidMount() {
@@ -115,7 +154,10 @@ class ManageAnnounces extends Component {
     AppDispatcher.register(function (payload) {
         switch (payload.actionName) {
             case 'remove-announce':
-              self.refresh();
+              if (payload.data && payload.data.common_id === self._common_id) {
+                self.refresh();
+              }
+
               break;
         }
     });

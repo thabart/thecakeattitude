@@ -59,6 +59,7 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<ShopAddedEvent>(_shopEventsHandler.Handle);
                 _bus.RegisterHandler<ShopCommentAddedEvent>(_shopEventsHandler.Handle);
                 _bus.RegisterHandler<ShopCommentRemovedEvent>(_shopEventsHandler.Handle);
+                _bus.RegisterHandler<ShopRemovedEvent>(_shopEventsHandler.Handle);
                 _bus.RegisterHandler<ProductCommentAddedEvent>(_productEventsHandler.Handle);
                 _bus.RegisterHandler<ProductCommentRemovedEvent>(_productEventsHandler.Handle);
                 _bus.RegisterHandler<ServiceCommentAddedEvent>(_serviceEventsHandler.Handle);

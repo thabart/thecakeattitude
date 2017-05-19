@@ -53,14 +53,15 @@ module.exports = {
         });
     },
     // Remove announcement
-    remove: function (id) {
+    remove: function (id, commonId) {
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
                 $.ajax(configuration.announcements_endpoint + '/' + id, {
                     method: 'DELETE',
                     headers: {
-                        'Authorization': 'Bearer ' + accessToken
+                        'Authorization': 'Bearer ' + accessToken,
+                        'CommonId': commonId
                     }
                 }).then(function (r) {
                     resolve(r);

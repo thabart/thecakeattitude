@@ -46,6 +46,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddShopCommentCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<RemoveShopCommentCommand>(shopCommandHandler.Handle);
+            bus.RegisterHandler<RemoveShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddProductCommentCommand>(productCommandHandler.Handle);
             bus.RegisterHandler<RemoveProductCommentCommand>(productCommandHandler.Handle);
             bus.RegisterHandler<AddServiceCommentCommand>(serviceCommandHandler.Handle);

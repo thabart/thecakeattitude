@@ -86,6 +86,12 @@ class App extends Component {
                 data: message
             });
         });
+        proxy.on('shopRemoved', function (message) {
+            AppDispatcher.dispatch({
+                actionName: 'remove-shop',
+                data: message
+            });
+        });
         connection.start({jsonp: false})
             .done(function () {
                 console.log('Now connected, connection ID=' + connection.id);

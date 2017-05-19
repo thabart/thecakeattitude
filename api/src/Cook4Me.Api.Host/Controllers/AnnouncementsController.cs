@@ -89,7 +89,8 @@ namespace Cook4Me.Api.Host.Controllers
             return await _deleteOperation.Execute(new RemoveAnnouncementCommand
             {
                 Subject = User.GetSubject(),
-                AnnouncementId = id
+                AnnouncementId = id,
+                CommonId = this.GetCommonId()
             });
         }
     }

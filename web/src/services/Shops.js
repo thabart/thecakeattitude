@@ -20,6 +20,26 @@ module.exports = {
             });
         });
     },
+    // Search mine shops
+    searchMineShops: function(content) {
+      var accessToken = Session.getSession().access_token;
+      return new Promise(function (resolve, reject) {
+          ConfigurationService.get().then(function (configuration) {
+              $.ajax(configuration.shops_endpoint + '/me/.search', {
+                  method: 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify(content),
+                  headers: {
+                      'Authorization': 'Bearer ' + accessToken
+                  }
+              }).then(function (r) {
+                  resolve(r);
+              }).fail(function (e) {
+                  reject(e);
+              });
+          });
+      });
+    },
     // Search comments
     searchComments: function (shopId, content) {
         return new Promise(function (resolve, reject) {
@@ -61,6 +81,25 @@ module.exports = {
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
                 $.get(configuration.shops_endpoint + '/' + id).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
+    },
+    // Remove the shop
+    remove: function(id, commonId) {
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.shops_endpoint + '/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken,
+                        'CommonId': commonId
+                    }
+                }).then(function (r) {
                     resolve(r);
                 }).fail(function (e) {
                     reject(e);

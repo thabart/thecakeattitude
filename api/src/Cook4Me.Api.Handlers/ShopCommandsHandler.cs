@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ShopCommandsHandler : Handles<AddShopCommand>, Handles<AddShopCommentCommand>, Handles<RemoveShopCommentCommand>
+    public class ShopCommandsHandler : Handles<AddShopCommand>, Handles<AddShopCommentCommand>, Handles<RemoveShopCommentCommand>, Handles<RemoveShopCommand>
     {
         private readonly IShopRepository _shopRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -155,6 +155,28 @@ namespace Cook4Me.Api.Handlers
                 ShopId = message.ShopId,
                 AverageScore = record.AverageScore,
                 NbComments = record.Comments == null ? 0 : record.Comments.Count()
+            });
+        }
+
+        public async Task Handle(RemoveShopCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var record = await _shopRepository.Get(message.ShopId);
+            if (record == null)
+            {
+                return;
+            }
+
+            await _shopRepository.Remove(record);
+            _eventPublisher.Publish(new ShopRemovedEvent
+            {
+                ShopId = message.ShopId,
+                Subject = message.Subject,
+                CommonId = message.CommonId
             });
         }
     }

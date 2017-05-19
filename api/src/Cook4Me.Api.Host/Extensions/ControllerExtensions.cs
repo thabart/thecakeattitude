@@ -15,8 +15,10 @@
 #endregion
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 using System.Net;
 
 namespace Cook4Me.Api.Host.Extensions
@@ -46,6 +48,17 @@ namespace Cook4Me.Api.Host.Extensions
                 Content = JsonConvert.SerializeObject(content),
                 StatusCode = status
             };
+        }
+
+        public static string GetCommonId(this Controller controller)
+        {
+            var str = new StringValues();
+            if (!controller.Request.Headers.TryGetValue("CommonId", out str))
+            {
+                return null;
+            }
+
+            return str.First();
         }
     }
 }
