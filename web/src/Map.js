@@ -167,12 +167,6 @@ class Map extends Component {
             isPublicAnnouncementsActive: true,
             isAddingWidgets: false
         };
-        this._internalItems = {
-          'a' : (<div key={'a'}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('a'); }}/></div>),
-          'b':  (<div key={'b'}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('b'); }} /></div>),
-          'c':  (<div key={'c'}><ShopServices ref="shopServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('c'); }}/></div>),
-          'd': (<div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('d'); }}/></div>)
-        };
     }
 
     openModal() {
@@ -516,9 +510,15 @@ class Map extends Component {
     }
 
     render() {
-        var cl = "row",
-          items = [],
-          self = this,
+        var self = this,
+          internalItems = {
+            'a' : (<div key={'a'}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('a'); }}/></div>),
+            'b':  (<div key={'b'}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('b'); }} /></div>),
+            'c':  (<div key={'c'}><ShopServices ref="shopServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('c'); }}/></div>),
+            'd': (<div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('d'); }}/></div>)
+          },
+          cl = "row",
+          items = [ ],
           gridLayout = getLayoutFromLocalStorage() || {
                   lg: [
                       {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true},
@@ -534,7 +534,7 @@ class Map extends Component {
         }
 
         self.state.activeWidgets.forEach(function(activeWidget) {
-          items.push(self._internalItems[activeWidget]);
+          items.push(internalItems[activeWidget]);
         });
 
         var session = SessionService.getSession();
@@ -551,8 +551,6 @@ class Map extends Component {
         return (
             <div className={cl} id="widget-container">
                 <div className="col-md-8 hidden-sm-down">
-
-                    {/* Search form */}
                     <form className="row col-md-8 offset-md-1" onSubmit={(e) => {
                         e.preventDefault();
                         this.refreshMap();
@@ -569,17 +567,13 @@ class Map extends Component {
                         />
                         <button className="btn btn-info col-md-2" onClick={this.refreshMap}>search</button>
                     </form>
-
-                    {/* Widgets panel */}
                     <ResponsiveReactGridLayout className="layout"
                                                layouts={gridLayout} rowHeight={300}
                                                cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
                                                onLayoutChange={this.onLayoutChange}>
-                       {items}
+                                               {items}
                     </ResponsiveReactGridLayout >
                 </div>
-
-                {/* Map */}
                 <div className="col-md-4" id="map-container">
                     <GettingStartedGoogleMap
                         currentPosition={this.state.currentPosition}
