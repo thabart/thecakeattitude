@@ -82,7 +82,7 @@ namespace Cook4Me.Api.Host.Controllers
             return await _addOperation.Execute(jObj, User.GetSubject());
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize("Connected")]
         public async Task<IActionResult> Remove(string id)
         {

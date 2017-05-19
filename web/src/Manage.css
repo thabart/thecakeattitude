@@ -6,3 +6,8 @@
     overflow-x: hidden !important;
     overflow-y: auto !important;
 }
+
+.manage-container {
+  background-color: white;
+  padding: 10px;
+}

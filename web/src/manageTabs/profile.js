@@ -233,7 +233,7 @@ class ManageProfile extends Component {
         optsActions['disabled'] = 'disabled';
     }
 
-    return (<div className="container">
+    return (<div className="container manage-container">
       <h1>Manage profile</h1>
       <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.closeSuccess}>{this.state.successMessage}</Alert>
       <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
