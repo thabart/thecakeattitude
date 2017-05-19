@@ -9,7 +9,7 @@ import {Guid} from '../utils';
 class ManageAnnounces extends Component {
   constructor(props) {
     super(props);
-    this._request = {count: 1, start_index: 0};
+    this._request = {count: 10, start_index: 0};
     this._common_id = null;
     this.removeAnnounce = this.removeAnnounce.bind(this);
     this.closeError = this.closeError.bind(this);

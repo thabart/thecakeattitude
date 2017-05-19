@@ -1,0 +1,9 @@
+.product-image-container {
+  border: 1px solid #f1f0f0;
+}
+
+.product-image-container .close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+}

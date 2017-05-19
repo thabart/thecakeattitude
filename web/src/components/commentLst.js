@@ -12,7 +12,7 @@ import './commentLst.css';
 class CommentLst extends Component {
   constructor(props) {
     super(props);
-    this.request ={ count: 4, start_index: 0 };
+    this.request = { count: 4, start_index: 0 };
     this.navigateComment = this.navigateComment.bind(this);
     this.addComment = this.addComment.bind(this);
     this.toggleTooltip = this.toggleTooltip.bind(this);
@@ -237,10 +237,6 @@ class CommentLst extends Component {
         if (!picture)
         {
           picture = "/images/profile-picture.png";
-        }
-        else
-        {
-          picture = Constants.openIdUrl + picture;
         }
 
         comments.push((<div className={self.props.className}>

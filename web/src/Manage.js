@@ -14,8 +14,8 @@ class Manage extends Component {
       content = (<ManageShops />);
     }
 
-    return (<div className="row">
-      <nav className="col-sm-3 col-md-2 navbar-light hidden-xs-down sidebar">
+    return (<div className="row" id="manage-profile">
+      <nav className="col-sm-3 col-md-2 navbar-light hidden-xs-down main-sidebar">
         <ul className="nav nav-pills navbar-nav flex-column">
           <li className="nav-item"><NavLink to="/manage/profile" className="nav-link" activeClassName="text-white rounded bg-info">PROFILE</NavLink></li>
           <li className="nav-item"><NavLink to="/manage/announces" className="nav-link" activeClassName="text-white rounded bg-info">ANNOUNCES</NavLink></li>

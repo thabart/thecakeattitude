@@ -9,6 +9,7 @@ import Products from "./Products";
 import Services from "./Services";
 import Announces from './Announces';
 import Manage from './Manage';
+import AddProduct from './AddProduct';
 import AddAnnouncement from "./AddAnnouncement";
 import {OpenIdService, SessionService} from "./services/index";
 import Error from "./Error";
@@ -137,7 +138,7 @@ class App extends Component {
             <Router history={history}>
                 <div id="app-container">
                     <Header />
-                    <div>
+                    <div id="app-body">
                         <Route exact path="/" component={Map}/>
                         <Route path="/home" component={Map}/>
                         <Route path="/sellers" component={Sellers}/>
@@ -145,6 +146,8 @@ class App extends Component {
                         <Route path="/products/:id/:action?" component={Products}/>
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/announces/:id" component={Announces} />
+                        <Route path="/addproduct/:id"
+                              render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddProduct />))}/>
                         <Route path="/addshop"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                         <Route path="/addAnnounce"

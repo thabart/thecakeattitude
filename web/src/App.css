@@ -1,6 +1,9 @@
 html,
-body {
-    height: 100%;
+body,
+#root,
+#app-container,
+#app-body {
+    height: 100% !important;
 }
 
 #app-container {
