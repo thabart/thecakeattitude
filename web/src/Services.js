@@ -83,7 +83,7 @@ class Services extends Component {
     // Navigate to the shop
     navigateShop(e, shopId) {
         e.preventDefault();
-        this.props.history.push('/shops/' + shopId);
+        this.props.history.push('/shops/' + shopId + '/view');
     }
 
     navigateGeneral(e) {

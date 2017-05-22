@@ -10,10 +10,18 @@ class ShopServices extends Component {
     this.openList = this.openList.bind(this);
   }
   openCalendar() {
-    this.props.history.push('/shops/' + this.props.shop.id + '/services/calendar');
+    if (this.props.isEditable) {
+      this.props.history.push('/shops/' + this.props.shop.id + '/edit/services/calendar');
+    } else {
+      this.props.history.push('/shops/' + this.props.shop.id + '/view/services/calendar');
+    }
   }
   openList() {
-    this.props.history.push('/shops/' + this.props.shop.id + '/services');
+    if (this.props.isEditable) {
+      this.props.history.push('/shops/' + this.props.shop.id + '/edit/services');    
+    } else {
+      this.props.history.push('/shops/' + this.props.shop.id + '/view/services');
+    }
   }
   render() {
     var action = this.props.match.params.subaction,

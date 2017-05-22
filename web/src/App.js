@@ -110,12 +110,16 @@ class App extends Component {
             return;
         }
 
-        OpenIdService.introspect(session.access_token).then(function () {
+        OpenIdService.introspect(session.access_token).then(function (i) {
+            AppDispatcher.dispatch({
+              actionName: Constants.events.USER_LOGGED_IN,
+              data: i
+            });
             self.setState({
                 isAccessTokenChecked: true,
                 isLoggedIn: true
             });
-        }).catch(function () {
+        }).catch(function (e) {
             self.setState({
                 isAccessTokenChecked: true,
                 isLoggedIn: false
@@ -143,7 +147,7 @@ class App extends Component {
                         <Route exact path="/" component={Map}/>
                         <Route path="/home" component={Map}/>
                         <Route path="/sellers" component={Sellers}/>
-                        <Route path="/shops/:id/:action?/:subaction?" component={Shop}/>
+                        <Route path="/shops/:id/:paction/:action?/:subaction?" component={Shop}/>
                         <Route path="/products/:id/:action?" component={Products}/>
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/announces/:id" component={Announces} />

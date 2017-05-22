@@ -3,6 +3,7 @@ import {ShopsService, UserService, CommentsService} from "./services/index";
 import {Tooltip, Progress, Alert} from "reactstrap";
 import {withRouter} from "react-router";
 import {ShopProfile, ShopProducts, ShopServices} from "./shopProfile";
+import {ApplicationStore} from './stores';
 import Rater from "react-rater";
 import "./Shop.css";
 import "react-rater/lib/react-rater.css";
@@ -24,7 +25,8 @@ class Shop extends Component {
             scores: null,
             nbComments: 0,
             isRatingOpened: false,
-            errorMessage: null
+            errorMessage: null,
+            isEditable: false
         };
     }
 
@@ -38,19 +40,31 @@ class Shop extends Component {
     // Navigate to the profile
     navigateProfile(e) {
         e.preventDefault();
-        this.props.history.push('/shops/' + this.state.shop.id);
+        if (this.state.isEditable) {
+          this.props.history.push('/shops/' + this.state.shop.id + '/edit');
+        } else {
+          this.props.history.push('/shops/' + this.state.shop.id + '/view');
+        }
     }
 
     // Navigate to the shops
     navigateShops(e) {
         e.preventDefault();
-        this.props.history.push('/shops/' + this.state.shop.id + '/products');
+        if (this.state.isEditable) {
+          this.props.history.push('/shops/' + this.state.shop.id + '/edit/products');
+        } else {
+          this.props.history.push('/shops/' + this.state.shop.id + '/view/products');
+        }
     }
 
     // Navigate to the services.
     navigateServices(e) {
         e.preventDefault();
-        this.props.history.push('/shops/' + this.state.shop.id + '/services');
+        if (this.state.isEditable) {
+          this.props.history.push('/shops/' + this.state.shop.id + '/edit/services');
+        } else {
+          this.props.history.push('/shops/' + this.state.shop.id + '/view/services');
+        }
     }
 
     // Toggle score window
@@ -116,11 +130,11 @@ class Shop extends Component {
         var action = this.props.match.params.action;
         var self = this;
         var tags = [];
-        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore}/>);
+        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable}/>);
         if (action === "products") {
-            content = (<ShopProducts user={this.state.user} shop={this.state.shop}/>);
+            content = (<ShopProducts user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
-            content = (<ShopServices user={this.state.user} shop={this.state.shop}/> );
+            content = (<ShopServices user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/> );
         }
 
         if (!bannerImage) {
@@ -209,16 +223,21 @@ class Shop extends Component {
     componentWillMount() {
         var self = this;
         var shopId = self.props.match.params.id;
+        var paction = self.props.match.params.paction;
+        var isEditable = paction && paction === 'edit';
         self.setState({
             isLoading: true
         });
         ShopsService.get(shopId).then(function (r) {
             var shop = r['_embedded'];
+            var user = ApplicationStore.getUser();
+            isEditable =  isEditable && user && user !== null && user.sub === shop.subject;
             UserService.getPublicClaims(shop.subject).then(function (user) {
                 self.setState({
                     isLoading: false,
                     shop: shop,
-                    user: user
+                    user: user,
+                    isEditable : isEditable
                 });
                 self.refreshScore();
             });
