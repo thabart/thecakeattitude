@@ -5,6 +5,7 @@ import Address from './address';
 import EditableTextArea from './editableTextArea';
 import EditableCategory from './editableCategory';
 import CategorySelector from './categorySelector';
+import PaymentMethodsSelector from './paymentMethodsSelector';
 
 exports.CommentLst = CommentLst;
 exports.EditableText = EditableText;
@@ -13,3 +14,4 @@ exports.Address = Address;
 exports.EditableTextArea = EditableTextArea;
 exports.EditableCategory = EditableCategory;
 exports.CategorySelector = CategorySelector;
+exports.PaymentMethodsSelector = PaymentMethodsSelector;
