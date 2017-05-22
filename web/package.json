@@ -5,6 +5,8 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "bootstrap": "^4.0.0-alpha.6",
+    "classnames": "latest",
+    "jquery": "latest",
     "jquery-ui": "^1.12.1",
     "moment": "^2.18.1",
     "ms-signalr-client": "^2.2.5",
@@ -19,14 +21,12 @@
     "react-google-maps": "^6.0.1",
     "react-magnify": "0.0.3",
     "react-rater": "^0.4.1",
+    "react-router": "latest",
     "react-router-dom": "^4.1.1",
     "react-tagsinput": "^3.16.1",
     "reactstrap": "^4.5.0",
     "request": "^2.81.0",
-    "signalr": "^2.2.1",
-    "jquery": "latest",
-    "react-router": "latest",
-    "classnames": "latest"
+    "signalr": "^2.2.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -42,6 +42,6 @@
     "eject": "react-scripts eject"
   },
   "engines": {
-	"node": "5.10.1"
+    "node": "5.10.1"
   }
 }

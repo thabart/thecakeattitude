@@ -4,6 +4,7 @@ import {Tooltip, Progress, Alert} from "reactstrap";
 import {withRouter} from "react-router";
 import {ShopProfile, ShopProducts, ShopServices} from "./shopProfile";
 import {ApplicationStore} from './stores';
+import {EditableText, EditableTag} from './components';
 import Rater from "react-rater";
 import "./Shop.css";
 import "react-rater/lib/react-rater.css";
@@ -176,7 +177,9 @@ class Shop extends Component {
                 </div>
                 <img src={profileImage} className="img-thumbnail profile-img" width="200" height="200"/>
                 <div className="profile-information">
-                    <h1>{this.state.shop.name}</h1>
+                    {this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name} />)
+                      : (<h1>{this.state.shop.name}</h1> )
+                    }
                     { this.state.nbComments > 0 ? (
                         <div>
                             <span id="rating"><Rater total={5} ref="rater" interactive={false}/> {this.state.nbComments}
@@ -187,11 +190,14 @@ class Shop extends Component {
                                     {ratingSummary}
                                 </ul>
                             </Tooltip>
-                            {tags.length > 0 && (
+                            {tags.length > 0 && this.state.isEditable && (
+                                <EditableTag tags={self.state.shop.tags}/>
+                            )}
+                            {tags.length > 0 && !this.state.isEditable && (
                                 <ul className="tags no-padding">
                                     {tags}
-                                </ul>)
-                            }
+                                </ul>
+                            )}
                         </div>) : '' }
                 </div>
                 <ul className="nav nav-pills menu">
