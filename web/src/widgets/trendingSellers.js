@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {ShopsService} from "../services/index";
+import {NavLink} from "react-router-dom";
 import Widget from "../components/widget";
 import Rater from "react-rater";
 import {Button} from 'reactstrap';
@@ -10,7 +11,6 @@ class TrendingSellers extends Component {
     constructor(props) {
         super(props);
         this.navigate = this.navigate.bind(this);
-        this.navigateShop = this.navigateShop.bind(this);
         this.localize = this.localize.bind(this);
         this.state = {
             errorMessage: null,
@@ -34,12 +34,6 @@ class TrendingSellers extends Component {
             start_index: startIndex
         });
         this.display(request);
-    }
-
-    // Navigate to the shop
-    navigateShop(e, shopId) {
-        e.preventDefault();
-        this.props.history.push('/shops/' + shopId + '/view');
     }
 
     reset() {
@@ -123,10 +117,7 @@ class TrendingSellers extends Component {
                 }
 
                 content.push((
-                    <a key={shop.id} href="#" className="list-group-item list-group-item-action no-padding"
-                       onClick={(e) => {
-                           self.navigateShop(e, shop.id);
-                       }}>
+                    <NavLink to={'/shops/' + shop.id + '/view/profile'} className="list-group-item list-group-item-action no-padding">
                         <div className="first-column">
                             <img src={profileImage} className="img-thumbnail rounded picture image-small"/>
                         </div>
@@ -145,7 +136,7 @@ class TrendingSellers extends Component {
                             </Button><br />
                             <i>{shop.category.name}</i><br/>
                         </div>
-                    </a>));
+                    </NavLink>));
             });
         }
 

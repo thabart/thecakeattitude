@@ -147,7 +147,7 @@ class App extends Component {
                         <Route exact path="/" component={Map}/>
                         <Route path="/home" component={Map}/>
                         <Route path="/sellers" component={Sellers}/>
-                        <Route path="/shops/:id/:paction/:action?/:subaction?" component={Shop}/>
+                        <Route path="/shops/:id/:paction/:action/:subaction?" component={Shop}/>
                         <Route path="/products/:id/:action?" component={Products}/>
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/announces/:id" component={Announces} />

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Range} from "rc-slider";
+import {NavLink} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import {Alert} from "reactstrap";
 import DatePicker from "react-datepicker";
@@ -30,7 +31,6 @@ class List extends Component {
         this.search = this.search.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.changeOrder = this.changeOrder.bind(this);
-        this.navigateToService = this.navigateToService.bind(this);
         this.state = {
             startDate: moment().subtract(10, 'days'),
             endDate: moment(),
@@ -54,10 +54,6 @@ class List extends Component {
         this.setState({
             [name]: value
         });
-    }
-
-    navigateToService(id) {
-        this.props.history.push('/services/' + id);
     }
 
     toggleError() {
@@ -159,9 +155,7 @@ class List extends Component {
                     </table>);
                 }
 
-                services.push((<section className="row product-item" key={service.id} onClick={() => {
-                    self.navigateToService(service.id);
-                }}>
+                services.push((<NavLink to={'/services/' + service.id} className="row product-item no-decoration" key={service.id}>
                     <div className="col-md-3">
                         <img src={image} className="rounded" width="140" height="140"/>
                     </div>
@@ -176,7 +170,7 @@ class List extends Component {
                         <h4 className="price">€ {service.price}</h4>
                         {occurrence}
                     </div>
-                </section>));
+                </NavLink>));
             });
         }
 

@@ -1,19 +1,13 @@
 import React, {Component} from "react";
 import Constants from "../../Constants";
-import {withRouter} from "react-router";
+import {NavLink} from "react-router-dom";
 import Rater from "react-rater";
 import "./productElt.css";
 
 class ProductElt extends Component {
     constructor(props) {
         super(props);
-        this.navigateShop = this.navigateProduct.bind(this);
     }
-
-    navigateProduct(productId) {
-        this.props.history.push('/products/' + productId);
-    }
-
     render() {
         var imageUrl = "#",
             product = this.props.product,
@@ -48,11 +42,9 @@ class ProductElt extends Component {
             newPrice = product.new_price;
         }
 
-        return (<section
-            className={newPrice == null ? this.props.className + " product-item" : this.props.className + " product-item is-best-deals"}
-            onClick={(e) => {
-                self.navigateProduct(product.id);
-            }}>
+        return (<NavLink
+            className={newPrice == null ? this.props.className + " product-item no-decoration" : this.props.className + " product-item is-best-deals no-decoration"}
+            to={'/products/' + product.id}>
             <div className="col-md-3">
                 <img src={imageUrl} className="rounded" width="140" height="140"/>
                 <div className="best-deals">
@@ -81,8 +73,8 @@ class ProductElt extends Component {
                 </ul>
                 <button className="btn btn-success">BUY</button>
             </div>
-        </section>)
+        </NavLink>)
     }
 }
 
-export default withRouter(ProductElt);
+export default ProductElt;

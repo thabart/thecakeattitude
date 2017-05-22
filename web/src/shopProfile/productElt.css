@@ -5,10 +5,6 @@
     display: none;
 }
 
-.product-item {
-    cursor: pointer;
-}
-
 .is-best-deals .best-deals {
     display: block;
 }

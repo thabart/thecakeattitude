@@ -85,7 +85,7 @@ class Products extends Component {
     // Navigate to the shop
     navigateShop(e, shopId) {
         e.preventDefault();
-        this.props.history.push('/shops/' + shopId + '/view');
+        this.props.history.push('/shops/' + shopId + '/view/profile');
     }
 
     navigateGeneral(e) {

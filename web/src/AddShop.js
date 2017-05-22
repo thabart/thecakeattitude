@@ -18,7 +18,7 @@ class AddShop extends Component {
         this._searchBox = null;
         this.data = {};
         this.state = {
-            activeTab: '5',
+            activeTab: '1',
             errorMessage: null,
             warningMessage: null,
             isAddressCorrect: false,

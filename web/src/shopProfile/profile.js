@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert} from "reactstrap";
 import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import {Address, EditableTextArea, EditableCategory, PaymentMethodsSelector} from '../components';
+import {NavLink} from "react-router-dom";
 import Comment from "./comment";
 import BestDeals from "./bestDeals";
 import "./profile.css";
@@ -183,7 +184,8 @@ class ShopProfile extends Component {
                 </div>
             </section>
             <section className="row white-section sub-section shop-section-padding">
-                <h5 className="col-md-12">Contact information</h5>
+                <h5>Contact information</h5>
+                <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>
                 <div className="row col-md-12">
                     <div className="col-md-3 contact">
                         <i className="fa fa-envelope fa-3"></i><br />

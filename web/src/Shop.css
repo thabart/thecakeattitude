@@ -61,6 +61,17 @@
     overflow: hidden;
 }
 
+.cover .profile-img .edit-icon,
+.cover .cover-banner .edit-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.cover .upload-image {
+  display: none;
+}
+
 .cover .menu {
     position: absolute;
     top: 10px;

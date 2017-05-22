@@ -350,7 +350,7 @@ class Map extends Component {
                       location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: opts, info: (
                           <div>
                               <strong>{shop.name}</strong><br />
-                              <NavLink to={"/shops/" + shop.id }>View profile</NavLink>
+                              <NavLink to={"/shops/" + shop.id+ '/view/profile' }>View profile</NavLink>
                           </div>)
                   });
               });

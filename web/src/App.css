@@ -6,6 +6,11 @@ body,
     height: 100% !important;
 }
 
+a.no-decoration {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+
 #app-container {
     padding-top: 56px;
 }

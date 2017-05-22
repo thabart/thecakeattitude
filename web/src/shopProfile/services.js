@@ -1,27 +1,12 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import {NavLink} from "react-router-dom";
 import { Calendar, List } from './shopService';
+import {withRouter} from "react-router";
 import './services.css';
 
 class ShopServices extends Component {
   constructor(props) {
     super(props);
-    this.openCalendar = this.openCalendar.bind(this);
-    this.openList = this.openList.bind(this);
-  }
-  openCalendar() {
-    if (this.props.isEditable) {
-      this.props.history.push('/shops/' + this.props.shop.id + '/edit/services/calendar');
-    } else {
-      this.props.history.push('/shops/' + this.props.shop.id + '/view/services/calendar');
-    }
-  }
-  openList() {
-    if (this.props.isEditable) {
-      this.props.history.push('/shops/' + this.props.shop.id + '/edit/services');    
-    } else {
-      this.props.history.push('/shops/' + this.props.shop.id + '/view/services');
-    }
   }
   render() {
     var action = this.props.match.params.subaction,
@@ -34,11 +19,21 @@ class ShopServices extends Component {
       action = "list";
     }
 
+    var calendarUrl = null,
+      listUrl = null;
+    if (this.props.isEditable) {
+      calendarUrl = '/shops/' + this.props.shop.id + '/edit/services/calendar';
+      listUrl = '/shops/' + this.props.shop.id + '/edit/services';
+    } else {
+      calendarUrl = '/shops/' + this.props.shop.id + '/view/services/calendar';
+      listUrl = '/shops/' + this.props.shop.id + '/view/services';
+    }
+
     return (<section className="row white-section shop-section shop-section-padding">
       <div className="row col-md-12 menu-service">
-        <div className="options">
-          <i className={action === 'list' ? "fa fa-list active" : "fa fa-list"} onClick={self.openList}></i>
-          <i className={action === 'calendar' ? "fa fa-calendar active" : "fa fa-calendar"} onClick={self.openCalendar}></i>
+        <div className="shop-options">
+          <NavLink to={listUrl} className="no-decoration"><i className={action === 'list' ? "fa fa-list active" : "fa fa-list"}></i></NavLink>
+          <NavLink to={calendarUrl} className="no-decoration"><i className={action === 'calendar' ? "fa fa-calendar active" : "fa fa-calendar"}></i></NavLink>
         </div>
       </div>
       {content}

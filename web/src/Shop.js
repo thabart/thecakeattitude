@@ -1,20 +1,23 @@
 import React, {Component} from "react";
 import {ShopsService, UserService, CommentsService} from "./services/index";
-import {Tooltip, Progress, Alert} from "reactstrap";
+import {Tooltip, Progress, Alert, Button} from "reactstrap";
 import {withRouter} from "react-router";
+import {NavLink} from "react-router-dom";
 import {ShopProfile, ShopProducts, ShopServices} from "./shopProfile";
 import {ApplicationStore} from './stores';
 import {EditableText, EditableTag} from './components';
 import Rater from "react-rater";
 import "./Shop.css";
 import "react-rater/lib/react-rater.css";
+import $ from 'jquery';
 
 class Shop extends Component {
     constructor(props) {
         super(props);
-        this.navigateProfile = this.navigateProfile.bind(this);
-        this.navigateShops = this.navigateShops.bind(this);
-        this.navigateServices = this.navigateServices.bind(this);
+        this.clickBannerImage = this.clickBannerImage.bind(this);
+        this.clickPictureImage = this.clickPictureImage.bind(this);
+        this.uploadBannerImage = this.uploadBannerImage.bind(this);
+        this.uploadPictureImage  = this.uploadPictureImage.bind(this);
         this.toggle = this.toggle.bind(this);
         this.refreshScore = this.refreshScore.bind(this);
         this.toggleError = this.toggleError.bind(this);
@@ -38,34 +41,46 @@ class Shop extends Component {
         });
     }
 
-    // Navigate to the profile
-    navigateProfile(e) {
-        e.preventDefault();
-        if (this.state.isEditable) {
-          this.props.history.push('/shops/' + this.state.shop.id + '/edit');
-        } else {
-          this.props.history.push('/shops/' + this.state.shop.id + '/view');
-        }
+    clickBannerImage() {
+      var btn = this.refs.uploadBannerBtn;
+      $(btn).click();
     }
 
-    // Navigate to the shops
-    navigateShops(e) {
-        e.preventDefault();
-        if (this.state.isEditable) {
-          this.props.history.push('/shops/' + this.state.shop.id + '/edit/products');
-        } else {
-          this.props.history.push('/shops/' + this.state.shop.id + '/view/products');
-        }
+    clickPictureImage() {
+      var btn = this.refs.uploadProfileBtn;
+      $(btn).click();
     }
 
-    // Navigate to the services.
-    navigateServices(e) {
+    uploadBannerImage(e) {
+      var self = this;
+      self.uploadImage(e, function (result) {
+        var shop = self.state.shop;
+        shop.banner_image = result;
+        self.setState({
+          shop: shop
+        });
+      });
+    }
+
+    uploadPictureImage(e) {
+      var self = this;
+      self.uploadImage(e, function (result) {
+        var shop = self.state.shop;
+        shop.profile_image = result;
+        self.setState({
+          shop: shop
+        });
+      });
+    }
+
+    uploadImage(e, callback) {
         e.preventDefault();
-        if (this.state.isEditable) {
-          this.props.history.push('/shops/' + this.state.shop.id + '/edit/services');
-        } else {
-          this.props.history.push('/shops/' + this.state.shop.id + '/view/services');
-        }
+        var file = e.target.files[0];
+        var reader = new FileReader();
+        reader.onloadend = () => {
+            callback(reader.result);
+        };
+        reader.readAsDataURL(file);
     }
 
     // Toggle score window
@@ -129,13 +144,26 @@ class Shop extends Component {
         var bannerImage = this.state.shop.banner_image;
         var profileImage = this.state.shop.profile_image;
         var action = this.props.match.params.action;
+        var profileUrl = null;
+        var productsUrl = null;
+        var servicesUrl = null;
         var self = this;
         var tags = [];
-        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable}/>);
+        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable} history={this.props.history}  />);
         if (action === "products") {
             content = (<ShopProducts user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
             content = (<ShopServices user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/> );
+        }
+
+        if (this.state.isEditable) {
+          profileUrl = '/shops/' + this.state.shop.id + '/edit/profile';
+          productsUrl = '/shops/' + this.state.shop.id + '/edit/products';
+          servicesUrl = '/shops/' + this.state.shop.id + '/edit/services';
+        } else {
+          profileUrl = '/shops/' + this.state.shop.id + '/view/profile';
+          productsUrl = '/shops/' + this.state.shop.id + '/view/products';
+          servicesUrl = '/shops/' + this.state.shop.id + '/view/services';
         }
 
         if (!bannerImage) {
@@ -174,8 +202,14 @@ class Shop extends Component {
             <section className="row white-section shop-section cover">
                 <div className="cover-banner">
                     <img src={bannerImage}/>
+                    {self.state.isEditable && (<Button outline color="secondary" size="sm" className="edit-icon"><i className="fa fa-pencil" onClick={this.clickBannerImage}></i></Button>)}
+                    {self.state.isEditable && (<input type="file" accept='image/*' ref="uploadBannerBtn" className="upload-image" onChange={(e) => {this.uploadBannerImage(e);}} />)}
                 </div>
-                <img src={profileImage} className="img-thumbnail profile-img" width="200" height="200"/>
+                <div className="profile-img">
+                  <img src={profileImage} className="img-thumbnail" width="200" height="200"/>
+                  {self.state.isEditable && (<Button outline color="secondary" size="sm" className="edit-icon" onClick={this.clickPictureImage}><i className="fa fa-pencil"></i></Button>)}
+                  {self.state.isEditable && (<input type="file" accept='image/*' ref="uploadProfileBtn" className="upload-image"  onChange={(e) => {this.uploadPictureImage(e);}} />)}
+                </div>
                 <div className="profile-information">
                     {this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name} />)
                       : (<h1>{this.state.shop.name}</h1> )
@@ -201,22 +235,13 @@ class Shop extends Component {
                 </div>
                 <ul className="nav nav-pills menu">
                     <li className="nav-item">
-                        <a href="#"
-                           className={action !== 'products' && action !== 'services' ? 'nav-link active' : 'nav-link'}
-                           onClick={(e) => {
-                               this.navigateProfile(e);
-                           }}>Profile</a>
+                        <NavLink to={profileUrl} className={action !== 'products' && action !== 'services' ? 'nav-link active' : 'nav-link'}>Profile</NavLink>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className={action === 'products' ? 'nav-link active' : 'nav-link'} onClick={(e) => {
-                            this.navigateShops(e);
-                        }}>Products</a>
+                        <NavLink to={productsUrl} className={action === 'products' ? 'nav-link active' : 'nav-link'}>Products</NavLink>
                     </li>
                     <li className="nav-item">
-                        <a href="#" className={action === 'services' ? 'nav-link active' : 'nav-link' }
-                           onClick={(e) => {
-                               this.navigateServices(e);
-                           }}>Services</a>
+                        <NavLink to={servicesUrl} className={action === 'services' ? 'nav-link active' : 'nav-link'}>Services</NavLink>
                     </li>
                 </ul>
             </section>

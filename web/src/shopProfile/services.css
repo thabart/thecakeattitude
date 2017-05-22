@@ -7,13 +7,13 @@
     right: 10px;
 }
 
-.menu-service .options i {
+.menu-service .shop-options i {
     cursor: pointer;
     margin-right: 10px;
     padding: 3px;
 }
 
-.menu-service .options i.active {
+.menu-service .shop-options i.active {
     cursor: auto !important;
     border-radius: 5px;
     background-color: #f1f0f0;
