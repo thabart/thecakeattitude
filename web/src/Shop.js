@@ -182,8 +182,7 @@ class Shop extends Component {
                     }
                     { this.state.nbComments > 0 ? (
                         <div>
-                            <span id="rating"><Rater total={5} ref="rater" interactive={false}/> {this.state.nbComments}
-                                comments</span>
+                            <span id="rating"><Rater total={5} ref="rater" interactive={false}/> {this.state.nbComments} comments</span>
                             <Tooltip placement='bottom' className="ratingPopup" isOpen={this.state.isRatingOpened}
                                      target="rating" toggle={this.toggle}>
                                 <ul>

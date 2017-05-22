@@ -53,11 +53,11 @@ class EditableTag extends Component {
       </div>);
     }
 
-    return (<div>
-      <div className="editable-input-container">
+    return (<div className="row">
+      <div className="editable-input-container col-md-8">
         <TagsInput value={this.state.oldTags} onChange={this.handleTags}/>
       </div>
-      <div className="editable-buttons-container">
+      <div className="editable-buttons-container col-md-4">
         <button className="btn btn-primary btn-sm" onClick={(e) => {this.validate(); }}><i className="fa fa-check"></i></button>
         <button className="btn btn-default btn-sm" onClick={(e) => {this.closeEditMode(); }}><i className="fa fa-times"></i></button>
       </div>

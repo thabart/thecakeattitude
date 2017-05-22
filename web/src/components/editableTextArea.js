@@ -3,7 +3,7 @@ import './editableText.css';
 import './editable.css';
 import TagsInput from "react-tagsinput";
 
-class EditableText extends Component {
+class EditableTextArea extends Component {
   constructor(props) {
     super(props);
     this.onClickField = this.onClickField.bind(this);
@@ -46,9 +46,9 @@ class EditableText extends Component {
       </div>);
     }
 
-    return <form onSubmit={(e) => { e.preventDefault(); this.validate(); }} className="row">
+    return <form onSubmit={(e) => { e.preventDefault(); this.validate(); }} className="row col-md-12">
       <div className="editable-input-container col-md-8">
-        <input type="text" className="form-control" value={this.state.oldValue} onChange={this.handleInputChange} />
+        <textarea className="form-control" onChange={this.handleInputChange}>{this.state.oldValue}</textarea>
       </div>
       <div className="editable-buttons-container col-md-4">
         <button className="btn btn-primary btn-sm" onClick={(e) => {this.validate(); }}><i className="fa fa-check"></i></button>
@@ -60,4 +60,4 @@ class EditableText extends Component {
   }
 }
 
-export default EditableText;
+export default EditableTextArea;

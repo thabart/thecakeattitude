@@ -7,12 +7,3 @@
   border-radius: 5px;
   cursor: pointer;
 }
-
-.editable-input-container {
-  display: inline-block;
-}
-
-.editable-buttons-container {
-  position: absolute;
-  width: 90px;
-}

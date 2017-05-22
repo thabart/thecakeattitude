@@ -1,5 +1,7 @@
 import React, {Component} from "react";
+import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
+import {Address, EditableTextArea} from '../components';
 import Comment from "./comment";
 import BestDeals from "./bestDeals";
 import "./profile.css";
@@ -28,6 +30,14 @@ class ShopProfile extends Component {
         super(props);
         this.refreshScore = this.refreshScore.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
+        this.closeModalAddress = this.closeModalAddress.bind(this);
+        this.openModalAddress = this.openModalAddress.bind(this);
+        this.updateAddress = this.updateAddress.bind(this);
+        this.state = {
+          isModalAddressOpened: false,
+          shop : props.shop,
+          isEditable: props.isEditable
+        };
     }
 
     onMapLoad(map) {
@@ -36,6 +46,28 @@ class ShopProfile extends Component {
 
     refreshScore() {
         this.props.onRefreshScore();
+    }
+
+    closeModalAddress() {
+      this.setState({
+        isModalAddressOpened: false
+      });
+    }
+
+    openModalAddress() {
+      this.setState({
+        isModalAddressOpened: true
+      });
+    }
+
+    updateAddress() {
+      var address = this.refs.address.getAddress();
+      var shop = this.state.shop;
+      shop.street_address = address.street_address;
+      this.setState({
+        shop: shop,
+        isModalAddressOpened: false
+      });
     }
 
     render() {
@@ -76,10 +108,23 @@ class ShopProfile extends Component {
             });
         }
 
+        var categoryName = null;
+        if (this.state.shop && this.state.shop.category) {
+          categoryName = this.state.shop.category.name;
+        }
+
         return ( <div>
             <section className="row white-section shop-section shop-section-padding">
                 <h5 className="col-md-12">Description</h5>
-                <p className="col-md-12">{this.props.shop.description}</p>
+                {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description} />) : (
+                  <p className="col-md-12">{this.state.shop.description}</p>
+                )}
+            </section>
+            <section className="row white-section sub-section shop-section-padding">
+              <h5 className="col-md-12">Category</h5>
+              {this.state.isEditable ? (<span></span>) : (
+                <p className="col-md-12">{categoryName}</p>
+              )}
             </section>
             <section className="row white-section sub-section shop-section-padding">
                 <h5 className="col-md-12">Payment methods</h5>
@@ -103,13 +148,15 @@ class ShopProfile extends Component {
                         <span>{this.props.user.mobile_phone_number}</span>
                     </div>
                     <div className="col-md-3 contact">
-                        <i className="fa fa-map-marker fa-3"></i><br />
-                        <span>{this.props.shop.street_address}</span>
+                        {this.state.isEditable ? (<button className="btn btn-default" onClick={() => { this.openModalAddress(); }}><i className="fa fa-map-marker fa-3"></i></button>) :
+                          (<i className="fa fa-map-marker fa-3"></i>
+                        )}<br />
+                        <span>{this.state.shop.street_address}</span>
                     </div>
                 </div>
                 <div className="col-md-12 map">
                     <GettingStartedGoogleMap
-                        center={this.props.shop.location}
+                        center={this.state.shop.location}
                         onMapLoad={this.onMapLoad}
                         containerElement={
                             <div style={{height: `100%`}}/>
@@ -120,8 +167,15 @@ class ShopProfile extends Component {
                     </GettingStartedGoogleMap>
                 </div>
             </section>
-            <Comment shop={self.props.shop} onRefreshScore={this.refreshScore}/>
-            <BestDeals shop={self.props.shop}/>
+            <Comment shop={self.state.shop} onRefreshScore={this.refreshScore}/>
+            <BestDeals shop={self.state.shop}/>
+            <Modal size="lg" isOpen={this.state.isModalAddressOpened}>
+                <ModalHeader toggle={() => { self.closeModalAddress();}}>Update address</ModalHeader>
+                <ModalBody>
+                  <Address ref="address" />
+                  <button className="btn btn-success" onClick={() => { self.updateAddress(); } }>Update</button>
+                </ModalBody>
+            </Modal>
         </div>);
     }
 }
