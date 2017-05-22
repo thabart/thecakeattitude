@@ -6,7 +6,6 @@ import Constants from '../../Constants';
 var _user = {};
 
 function loadUser(data) {
-  console.log('LOAD USER');
   _user = data;
 }
 

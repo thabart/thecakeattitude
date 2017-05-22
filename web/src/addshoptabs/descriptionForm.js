@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Tooltip} from "reactstrap";
 import {CategoryService, TagService, ShopsService, OpenIdService, SessionService} from "../services/index";
+import {CategorySelector} from '../components';
 import TagsInput from "react-tagsinput";
 import Game from "../game/game";
 import "./descriptionForm.css";
@@ -15,8 +16,6 @@ class DescriptionForm extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.toggleTooltip = this.toggleTooltip.bind(this);
         this.validate = this.validate.bind(this);
-        this.selectCategory = this.selectCategory.bind(this);
-        this.selectSubCategory = this.selectSubCategory.bind(this);
         this.selectMap = this.selectMap.bind(this);
         this.onHouseSelected = this.onHouseSelected.bind(this);
         this.handleTags = this.handleTags.bind(this);
@@ -165,14 +164,6 @@ class DescriptionForm extends Component {
         });
     }
 
-    selectCategory(e) {
-        this.displaySubCategory(e.target.value);
-    }
-
-    selectSubCategory(e) {
-        this.displayMaps(e.target.value);
-    }
-
     selectMap(e) {
         var target = $(e.target).find(':selected');
         var map = {
@@ -212,29 +203,6 @@ class DescriptionForm extends Component {
             }
 
             self.displayMap(maps[0]);
-        });
-    }
-
-    displaySubCategory(categoryId) {
-        var self = this;
-        self.setState({
-            isSubCategoryLoading: true
-        });
-        CategoryService.get(categoryId).then(function (r) {
-            var children = r['_embedded']['children'];
-            var subCategories = [];
-            children.forEach(function (child) {
-                subCategories.push({id: child.id, name: child.name});
-            });
-            self.setState({
-                subCategories: subCategories,
-                isSubCategoryLoading: false
-            });
-            self.displayMaps(subCategories[0].id);
-        }).catch(function () {
-            self.setState({
-                isSubCategoryLoading: false
-            });
         });
     }
 
@@ -295,7 +263,8 @@ class DescriptionForm extends Component {
             placeError = this.buildErrorTooltip('isPlaceInvalid', 'A place should be selected'),
             categories = [],
             subCategories = [],
-            maps = [];
+            maps = [],
+            self = this;
         if (this.state.bannerImage) {
             bannerImagePreview = (
                 <div className='image-container'><img src={this.state.bannerImage} width='50' height='50'/></div>);
@@ -360,28 +329,7 @@ class DescriptionForm extends Component {
                             <TagsInput ref="shopTags" value={this.state.tags} onChange={this.handleTags}/>
                         </div>
                         <div className='row'>
-                            <div className='col-md-6'>
-                                <div className='form-group'>
-                                    <label className='control-label'>Categories</label>
-                                    <div className={this.state.isCategoryLoading ? 'loading' : 'hidden'}><i
-                                        className='fa fa-spinner fa-spin'></i></div>
-                                    <select className={this.state.isCategoryLoading ? 'hidden' : 'form-control'}
-                                            onChange={this.selectCategory}>
-                                        {categories}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className='col-md-6'>
-                                <div className='form-group'>
-                                    <label className='control-label'>Sub categories</label>
-                                    <div className={this.state.isSubCategoryLoading ? 'loading' : 'hidden'}><i
-                                        className='fa fa-spinner fa-spin'></i></div>
-                                    <select className={this.state.isSubCategoryLoading ? 'hidden' : 'form-control'}
-                                            onChange={this.selectSubCategory}>
-                                        {subCategories}
-                                    </select>
-                                </div>
-                            </div>
+                          <CategorySelector onSubCategory={(e) => { self.displayMaps(e); }} />
                         </div>
                         <div className='form-group col-md-12'>
                             <label className='control-label'>Banner image</label> <i
@@ -438,28 +386,6 @@ class DescriptionForm extends Component {
         var container = this.refs.shopTags.refs.div;
         var paddingLeft = 5,
             paddingTop = 5;
-        self.setState({
-            isCategoryLoading: true,
-            isSubCategoryLoading: true
-        })
-        CategoryService.getParents().then(function (result) {
-            var categories = result['_embedded'];
-            var result = [];
-            categories.forEach(function (category) {
-                result.push({id: category.id, name: category.name});
-            });
-            self.setState({
-                isCategoryLoading: false,
-                isSubCategoryLoading: false,
-                categories: result
-            });
-            self.displaySubCategory(result[0].id);
-        }).catch(function () {
-            self.setState({
-                isCategoryLoading: false,
-                isSubCategoryLoading: false
-            });
-        });
         self.popup = $("<div class='popup' style='position: absolute;display: none;'><ul></ul></div>");
         $(document.body).append(self.popup);
         $(input).on('input', function () {

@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { Modal, ModalHeader, ModalBody } from "reactstrap";
 import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
-import {Address, EditableTextArea} from '../components';
+import {Address, EditableTextArea, EditableCategory} from '../components';
 import Comment from "./comment";
 import BestDeals from "./bestDeals";
 import "./profile.css";
@@ -122,7 +122,7 @@ class ShopProfile extends Component {
             </section>
             <section className="row white-section sub-section shop-section-padding">
               <h5 className="col-md-12">Category</h5>
-              {this.state.isEditable ? (<span></span>) : (
+              {this.state.isEditable ? (<EditableCategory value={categoryName} />) : (
                 <p className="col-md-12">{categoryName}</p>
               )}
             </section>
