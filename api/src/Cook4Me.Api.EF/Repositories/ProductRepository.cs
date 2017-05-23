@@ -271,6 +271,61 @@ namespace Cook4Me.Api.EF.Repositories
             }
         }
 
+        public async Task<bool> Insert(ProductAggregate productAggregate)
+        {
+            if (productAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(productAggregate));
+            }
+
+            try
+            {
+                var record = productAggregate.ToModel();
+                var tags = new List<Models.ProductTag>();
+                if (productAggregate.Tags != null && productAggregate.Tags.Any())
+                {
+                    var tagNames = productAggregate.Tags;
+                    var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                    foreach (var connectedTag in connectedTags)
+                    {
+                        tags.Add(new Models.ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = connectedTag.Name,
+                            ProductId = productAggregate.Id
+                        });
+                    }
+
+                    var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                    foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
+                    {
+                        var newTag = new Models.Tag
+                        {
+                            Name = notExistingTagName,
+                            Description = notExistingTagName
+                        };
+                        _context.Tags.Add(newTag);
+                        tags.Add(new Models.ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = notExistingTagName,
+                            ProductId = productAggregate.Id,
+                            Tag = newTag
+                        });
+                    }
+                }
+
+                record.Tags = tags;
+                _context.Products.Add(record);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private static IQueryable<Models.Product> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Product, TKey>> keySelector, IQueryable<Models.Product> products)
         {
             if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))

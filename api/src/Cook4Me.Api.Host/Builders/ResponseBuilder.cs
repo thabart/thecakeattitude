@@ -48,6 +48,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetServiceCommentAddedEvent(ServiceCommentAddedEvent comment);
         JObject GetAnnouncementAddedEvent(AnnouncementAddedEvent evt);
         JObject GetAnnouncementRemovedEvent(AnnouncementRemovedEvent evt);
+        JObject GetProductAddedEvent(ProductAddedEvent evt);
         JObject GetProduct(ProductAggregate product);
         JObject GetPromotion(ProductAggregatePromotion promotion);
         JObject GetService(ServiceAggregate service);
@@ -491,6 +492,31 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Announcement.Id, evt.AnnouncementId);
             jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return jObj;
+        }
+
+        public JObject GetProductAddedEvent(ProductAddedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Product.Id, evt.Id);
+            jObj.Add(Constants.DtoNames.Product.Name, evt.Name);
+            jObj.Add(Constants.DtoNames.Product.Description, evt.Description);
+            jObj.Add(Constants.DtoNames.Product.CategoryId, evt.CategoryId);
+            jObj.Add(Constants.DtoNames.Product.Price, evt.Price);
+            jObj.Add(Constants.DtoNames.Product.NewPrice, evt.NewPrice);
+            jObj.Add(Constants.DtoNames.Product.UnitOfMeasure, evt.UnitOfMeasure);
+            jObj.Add(Constants.DtoNames.Product.Quantity, evt.Quantity);
+            jObj.Add(Constants.DtoNames.Product.ShopId, evt.ShopId);
+            jObj.Add(Constants.DtoNames.Product.AverageScore, evt.AverageScore);
+            jObj.Add(Constants.DtoNames.Product.TotalScore, evt.TotalScore);
+            jObj.Add(Constants.DtoNames.Product.CreateDateTime, evt.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Product.UpdateDateTime, evt.UpdateDateTime);
+            return jObj;
+
         }
 
         public JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment)

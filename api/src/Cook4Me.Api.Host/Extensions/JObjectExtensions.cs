@@ -72,6 +72,28 @@ namespace Cook4Me.Api.Host.Extensions
             return result;
         }
 
+        public static double? TryGetNullableDouble(this JObject jObj, string key)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            JToken token;
+            if (!jObj.TryGetValue(key, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                return null;
+            }
+
+            double result;
+            if (!double.TryParse(token.ToString(), out result))
+            {
+                return null;
+            }
+
+            return result;
+        }
+
         public static string TryGetString(this JObject jObj, string key)
         {
             if (jObj == null)

@@ -35,6 +35,7 @@ namespace Cook4Me.Api.Host.Builders
         AddShopCommentCommand GetAddShopComment(JObject jObj);
         AddProductCommentCommand GetAddProductComment(JObject jObj);
         AddServiceCommentCommand GetAddServiceComment(JObject jObj);
+        AddProductCommand GetAddProduct(JObject jObj);
         SearchShopsParameter GetSearchShops(JObject jObj);
         SearchTagsParameter GetSearchTags(JObject jObj);
         Location GetLocation(JObject jObj);
@@ -289,6 +290,52 @@ namespace Cook4Me.Api.Host.Builders
                 Score = jObj.Value<int>(Constants.DtoNames.Comment.Score),
                 ServiceId = jObj.Value<string>(Constants.DtoNames.Comment.ServiceId)
             };
+        }
+
+        public AddProductCommand GetAddProduct(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new AddProductCommand
+            {
+                CategoryId = jObj.TryGetString(Constants.DtoNames.Product.CategoryId),
+                Name = jObj.TryGetString(Constants.DtoNames.Product.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.Product.Description),
+                Price = jObj.TryGetDouble(Constants.DtoNames.Product.Price),
+                NewPrice = jObj.TryGetDouble(Constants.DtoNames.Product.NewPrice),
+                UnitOfMeasure = jObj.TryGetString(Constants.DtoNames.Product.UnitOfMeasure),
+                Tags = jObj.TryGetStringArray(Constants.DtoNames.Product.Tags),
+                Quantity = jObj.TryGetDouble(Constants.DtoNames.Product.Quantity),
+                ShopId = jObj.TryGetString(Constants.DtoNames.Product.ShopId),
+                AvailableInStock = jObj.TryGetNullableDouble(Constants.DtoNames.Product.AvailableInStock)
+            };
+
+            var filters = new List<AddProductFilter>();
+            var obj = jObj.GetValue(Constants.DtoNames.Product.Filters);
+            var arr = obj as JArray;
+            if (arr != null)
+            {
+                foreach (var rec in arr)
+                {
+                    filters.Add(GetProductFilter(rec as JObject));
+                }
+            }
+
+            result.Filters = filters;
+            return result;
+        }
+
+        public AddProductFilter GetProductFilter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return null;
         }
 
         public SearchShopCommentsParameter GetSearchShopComments(JObject jObj)

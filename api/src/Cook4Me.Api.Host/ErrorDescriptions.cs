@@ -45,5 +45,9 @@ namespace Cook4Me.Api.Host
         public const string TheShopCannotBeRemovedByYou = "the shop cannot be removed by you";
         public const string TheAnnouncementCannotBeRemovedByYou = "the announcement cannot be removed by you";
         public const string ThePriceCannotBeLessThanZero = "the price cannot be less than 0";
+        public const string TheQuantityCannotBeLessThanZero = "the quantity cannot be less than 0";
+        public const string TheAvailableInStockCannotBeLessThanZero = "the available in stock number cannot be less than 0";
+        public const string TheUnitOfMeasureIsNotCorrect = "only the following unit of measure are supported : {0}";
+        public const string TheProductCannotBeAddedByYou = "the product cannot be added by you";
     }
 }

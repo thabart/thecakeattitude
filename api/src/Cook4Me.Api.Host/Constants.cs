@@ -122,6 +122,7 @@ namespace Cook4Me.Api.Host
                 public const string TotalScore = "total_score";
                 public const string Comments = "comments";
                 public const string NbComments = "nb_comments";
+                public const string AvailableInStock = "available_in_stock";
             }
 
             public static class Service

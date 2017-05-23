@@ -20,12 +20,13 @@ using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ProductCommandsHandler : Handles<AddProductCommentCommand>, Handles<RemoveProductCommentCommand>
+    public class ProductCommandsHandler : Handles<AddProductCommentCommand>, Handles<RemoveProductCommentCommand>, Handles<AddProductCommand>
     {
         private readonly IProductRepository _productRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -101,6 +102,65 @@ namespace Cook4Me.Api.Handlers
                 ProductId = message.ProductId,
                 AverageScore = record.AverageScore,
                 NbComments = record.Comments == null ? 0 : record.Comments.Count()
+            });
+        }
+
+        public async Task Handle(AddProductCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var product = new ProductAggregate
+            {
+                Id = message.Id,
+                AverageScore = 0,
+                TotalScore = 0,
+                CategoryId = message.CategoryId,
+                CreateDateTime = message.CreateDateTime,
+                UpdateDateTime = message.UpdateDateTime,
+                Description = message.Description,
+                Name = message.Name,
+                NewPrice = message.NewPrice,
+                Price = message.Price,
+                Quantity = message.Quantity,
+                Tags = message.Tags,
+                UnitOfMeasure = message.UnitOfMeasure,
+                ShopId = message.ShopId,
+                AvailableInStock = message.AvailableInStock
+            };
+            var filters = new List<ProductAggregateFilter>();
+            if (message.Filters != null && message.Filters.Any())
+            {
+                foreach(var filter in message.Filters)
+                {
+                    filters.Add(new ProductAggregateFilter
+                    {
+                        FilterId = filter.FilterId,
+                        FilterValueContent = filter.Value
+                    });
+                }
+            }
+
+            product.Filters = filters;
+            await _productRepository.Insert(product);
+            _eventPublisher.Publish(new ProductAddedEvent
+            {
+                Id = product.Id,
+                CategoryId = product.CategoryId,
+                AverageScore = product.AverageScore,
+                CommonId = message.CommonId,
+                CreateDateTime = product.CreateDateTime,
+                Description = product.Description,
+                Name = product.Name,
+                NewPrice = product.NewPrice,
+                Price = product.Price,
+                Quantity = product.Quantity,
+                ShopId = product.ShopId,
+                TotalScore = product.TotalScore,
+                UnitOfMeasure = product.UnitOfMeasure,
+                UpdateDateTime = product.UpdateDateTime
             });
         }
     }

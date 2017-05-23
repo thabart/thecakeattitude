@@ -34,17 +34,20 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly ISearchProductCommentsOperation _searchProductCommentsOperation;
         private readonly IAddProductCommentOperation _addProductCommentOperation;
         private readonly IRemoveProductCommentOperation _removeProductCommentOperation;
+        private readonly IAddProductOperation _addProductOperation;
 
         public ProductsController(
             ISearchProductsOperation searchProductsOperation, IGetProductOperation getProductOperation,
             ISearchProductCommentsOperation searchProductCommentsOperation, IAddProductCommentOperation addProductCommentOperation,
-            IRemoveProductCommentOperation removeProductCommentOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IRemoveProductCommentOperation removeProductCommentOperation, IAddProductOperation addProductOperation,
+            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchProductsOperation = searchProductsOperation;
             _getProductOperation = getProductOperation;
             _searchProductCommentsOperation = searchProductCommentsOperation;
             _addProductCommentOperation = addProductCommentOperation;
             _removeProductCommentOperation = removeProductCommentOperation;
+            _addProductOperation = addProductOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -57,6 +60,13 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Get(string id)
         {
             return await _getProductOperation.Execute(id);
+        }
+
+        [HttpPost]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Add([FromBody] JObject jObj)
+        {
+            return await _addProductOperation.Execute(jObj, User.GetSubject(), this.GetCommonId());
         }
 
         [HttpPost(Constants.RouteNames.Comments)]

@@ -493,7 +493,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Promotions = promotions,
                 AverageScore = product.AverageScore,
                 TotalScore = product.TotalScore,
-                Comments = comments
+                Comments = comments,
+                AvailableInStock = product.AvailableInStock
             };
         }
 
@@ -515,7 +516,9 @@ namespace Cook4Me.Api.EF.Extensions
                 Price = product.Price,
                 ShopId = product.ShopId,
                 UnitOfMeasure = product.UnitOfMeasure,
-                Name = product.Name
+                Name = product.Name,
+                NewPrice = product.NewPrice,
+                AvailableInStock = product.AvailableInStock
             };
         }
 

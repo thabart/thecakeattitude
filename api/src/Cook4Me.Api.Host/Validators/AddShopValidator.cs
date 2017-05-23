@@ -125,7 +125,7 @@ namespace Cook4Me.Api.Host.Validators
             // 5. Check mandatory parameters.
             if (!IsValid(shop.Name, 1, 15))
             {
-                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Shop.Name, 5, 15));
+                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Shop.Name, 1, 15));
             }
 
             if (!IsValid(shop.Description, 1, 255))
