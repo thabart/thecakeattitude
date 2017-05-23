@@ -203,8 +203,6 @@ class Shop extends Component {
             <section className="row white-section shop-section cover">
                 <div className="cover-banner">
                     <img src={bannerImage}/>
-                    {self.state.isEditable && (<Button outline color="secondary" size="sm" className="edit-icon"><i className="fa fa-pencil" onClick={this.clickBannerImage}></i></Button>)}
-                    {self.state.isEditable && (<input type="file" accept='image/*' ref="uploadBannerBtn" className="upload-image" onChange={(e) => {this.uploadBannerImage(e);}} />)}
                 </div>
                 <div className="profile-img">
                   <img src={profileImage} className="img-thumbnail" width="200" height="200"/>
@@ -213,9 +211,8 @@ class Shop extends Component {
                 </div>
                 <div className="profile-information">
                     { this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name} />)
-                      : ( <h1 className="inline">{this.state.shop.name}</h1> )
+                      : ( <h1>{this.state.shop.name}</h1> )
                     }
-                    { this.state.canBeEdited && ( <a href={'/shops/' + this.state.shop.id + '/edit/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></a> ) }
                     { this.state.nbComments > 0 ? (
                         <div>
                             <span id="rating"><Rater total={5} ref="rater" interactive={false}/> {this.state.nbComments} comments</span>
@@ -246,6 +243,24 @@ class Shop extends Component {
                         <NavLink to={servicesUrl} className={action === 'services' ? 'nav-link active' : 'nav-link'}>Services</NavLink>
                     </li>
                 </ul>
+                <ul className="nav nav-pills menu-shop-options">
+                  { this.state.canBeEdited && (
+                    <li className="nav-item">
+                      <a href={'/shops/' + this.state.shop.id + '/edit/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></a>
+                    </li>
+                  ) }
+                  { this.state.isEditable && (
+                    <li className="nav-item">
+                      <Button outline color="secondary" size="sm"><i className="fa fa-pencil" onClick={this.clickBannerImage}></i></Button>
+                      <input type="file" accept='image/*' ref="uploadBannerBtn" className="upload-image" onChange={(e) => {this.uploadBannerImage(e);}} />
+                    </li>
+                  )}
+                  {this.state.isEditable && (
+                    <li className="nav-item">
+                      <a href={'/shops/' + this.state.shop.id + '/view/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></a>
+                    </li>
+                  )}
+                </ul>
             </section>
             {content}
         </div>);
@@ -260,7 +275,6 @@ class Shop extends Component {
         self.setState({
             isLoading: true
         });
-        console.log('COUCOU');
         ShopsService.get(shopId).then(function (r) {
             var shop = r['_embedded'];
             var user = ApplicationStore.getUser();

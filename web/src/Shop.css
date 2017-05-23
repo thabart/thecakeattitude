@@ -61,8 +61,7 @@
     overflow: hidden;
 }
 
-.cover .profile-img .edit-icon,
-.cover .cover-banner .edit-icon {
+.cover .profile-img .edit-icon {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -72,10 +71,18 @@
   display: none;
 }
 
+.cover .menu,
+.cover .menu-shop-options {
+  position: absolute;
+  top: 10px;
+}
+
 .cover .menu {
-    position: absolute;
-    top: 10px;
     left: 10px;
+}
+
+.cover .menu-shop-options {
+  right: 10px;
 }
 
 #rating .react-rater a {

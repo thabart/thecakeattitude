@@ -3,6 +3,7 @@ import {Range} from "rc-slider";
 import {Alert} from "reactstrap";
 import {ProductsService} from "../services/index";
 import "rc-slider/assets/index.css";
+import {NavLink} from "react-router-dom";
 import "./products.css";
 import ProductElt from "./productElt";
 import $ from "jquery";
@@ -47,7 +48,8 @@ class ShopProducts extends Component {
             productErrorMessage: null,
             productName: null,
             bestDeals: false,
-            activeCategory: null
+            activeCategory: null,
+            isEditable: props.isEditable
         };
     }
 
@@ -169,10 +171,16 @@ class ShopProducts extends Component {
 
     selectCategory(e, id) {
         e.preventDefault();
-        filterJson['category_id'] = id;
+        if (id === null) {
+          delete filterJson['category_id'];
+        } else {
+          filterJson['category_id'] = id;
+        }
+
         this.setState({
             activeCategory: id
         });
+        console.log(filterJson);
         this.updateProducts();
     }
 
@@ -269,6 +277,7 @@ class ShopProducts extends Component {
 
         return (<div>
             <section className="row white-section shop-section shop-section-padding">
+                { this.state.isEditable && (<NavLink className="btn btn-success btn-lg" to={'/addproduct/' + this.props.shop.id}><i className="fa fa-plus"></i> Add product</NavLink>) }
                 <div className="row col-md-12">
                     <div className="col-md-3">
                         <form onSubmit={(e) => {
