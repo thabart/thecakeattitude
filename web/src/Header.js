@@ -20,6 +20,8 @@ import Promise from "bluebird";
 import OpenIdService from "./services/OpenId";
 import AuthenticateService from "./services/Authenticate";
 import SessionService from "./services/Session";
+import AppDispatcher from "./appDispatcher";
+import Constants from '../Constants';
 import "./Header.css";
 import "./styles/Palette.css";
 
@@ -144,6 +146,9 @@ class Header extends Component {
             isLoggedIn: false
         });
         SessionService.remove();
+        AppDispatcher.dispatch({
+          actionName: Constants.events.USER_LOGGED_OUT
+        });
         this.props.history.push('/');
     }
 

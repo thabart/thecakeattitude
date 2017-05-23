@@ -49,5 +49,6 @@ namespace Cook4Me.Api.Host
         public const string TheAvailableInStockCannotBeLessThanZero = "the available in stock number cannot be less than 0";
         public const string TheUnitOfMeasureIsNotCorrect = "only the following unit of measure are supported : {0}";
         public const string TheProductCannotBeAddedByYou = "the product cannot be added by you";
+        public const string SomeFiltersAreNotValid = "some filters are not valid";
     }
 }

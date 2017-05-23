@@ -124,6 +124,9 @@ class App extends Component {
                 isAccessTokenChecked: true,
                 isLoggedIn: false
             });
+            AppDispatcher.dispatch({
+              actionName: Constants.events.USER_LOGGED_OUT
+            });
             SessionService.remove();
         });
     }

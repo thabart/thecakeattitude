@@ -29,6 +29,10 @@ AppDispatcher.register(function(payload) {
     case Constants.events.USER_LOGGED_IN:
       loadUser(payload.data);
       break;
+    case Constants.events.USER_LOGGED_OUT:
+      console.log('COUCOU');
+      loadUser(null);
+    break;
     default:
       return true;
   }

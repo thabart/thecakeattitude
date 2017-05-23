@@ -15,9 +15,9 @@
 #endregion
 
 using Cook4Me.Api.Core.Commands.Product;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -52,13 +52,15 @@ namespace Cook4Me.Api.Host.Validators
         {
             "kg",
             "piece", 
-            "mg"
+            "l"
         };
         private readonly IShopRepository _shopRepository;
+        private readonly IFilterRepository _filterRepository;
 
-        public AddProductValidator(IShopRepository shopRepository)
+        public AddProductValidator(IShopRepository shopRepository, IFilterRepository filterRepository)
         {
             _shopRepository = shopRepository;
+            _filterRepository = filterRepository;
         }
 
         public async Task<AddProductValidationResult> Validate(AddProductCommand command, string subject)
@@ -118,6 +120,18 @@ namespace Cook4Me.Api.Host.Validators
             if (string.IsNullOrWhiteSpace(unitOfMeasure))
             {
                 return new AddProductValidationResult(string.Format(ErrorDescriptions.TheUnitOfMeasureIsNotCorrect, string.Join("," ,_unitOfMeasures)));
+            }
+
+            if (command.Filters != null)
+            {
+                var filters = await _filterRepository.Search(new SearchFiltersParameter
+                {
+                    Filters = command.Filters.Select(f => f.FilterId)
+                });
+                if (command.Filters.Count() != filters.Filters.Count())
+                {
+                    return new AddProductValidationResult(ErrorDescriptions.SomeFiltersAreNotValid);
+                }
             }
 
             return new AddProductValidationResult();

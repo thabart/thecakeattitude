@@ -277,15 +277,15 @@ class Shop extends Component {
         });
         ShopsService.get(shopId).then(function (r) {
             var shop = r['_embedded'];
-            var user = ApplicationStore.getUser();
-            isEditable =  isEditable && user && user !== null && user.sub === shop.subject;
+            var localUser = ApplicationStore.getUser();
+            isEditable =  isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
             UserService.getPublicClaims(shop.subject).then(function (user) {
                 self.setState({
                     isLoading: false,
                     shop: shop,
                     user: user,
                     isEditable : isEditable,
-                    canBeEdited : !isEditable && user.sub === shop.subject
+                    canBeEdited : !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
                 });
                 self.refreshScore();
             });

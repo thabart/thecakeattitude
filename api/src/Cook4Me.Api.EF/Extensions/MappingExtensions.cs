@@ -25,6 +25,19 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static FilterResult ToAggregate(this Filter filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            return new FilterResult
+            {
+                Id = filter.Id,
+                Name = filter.Name
+            };
+        }
         public static AnnouncementAggregate ToAggregate(this Announcement announcement)
         {
             if (announcement == null)

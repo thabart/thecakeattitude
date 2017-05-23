@@ -10,6 +10,7 @@ module.exports = {
     configurationApiUrl: 'http://localhost:5000/.well-known/configuration',
     openIdUrl: 'http://localhost:5001',
     events: {
-      USER_LOGGED_IN: 'USER_LOGGED_IN'
+      USER_LOGGED_IN: 'USER_LOGGED_IN',
+      USER_LOGGED_OUT: 'USER_LOGGED_OUT'
     }
 };
