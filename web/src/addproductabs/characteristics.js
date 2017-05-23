@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import $ from 'jquery';
 import TagsInput from "react-tagsinput";
 import {Alert} from 'reactstrap';
+import {withRouter} from "react-router";
+import {FilterSelector} from '../components';
 
 class CharacteristicsTab extends Component {
   constructor(props) {
@@ -15,20 +17,9 @@ class CharacteristicsTab extends Component {
     this.confirm = this.confirm.bind(this);
     this.addCharacteristic = this.addCharacteristic.bind(this);
     this.selectCharacteristic = this.selectCharacteristic.bind(this);
-    this.handleTags = this.handleTags.bind(this);
     this.removeFilter = this.removeFilter.bind(this);
     this.closeError = this.closeError.bind(this);
     this.state = {
-      characteristicValue: null,
-      characteristics: [{
-        name: 'Colors',
-        id: 'colors'
-      }, {
-        name: 'Size',
-        id: 'size'
-      }],
-      tags: [],
-      productFilters: [],
       errorMessage: null
     };
   }
@@ -89,11 +80,6 @@ class CharacteristicsTab extends Component {
       id : e.target.value
     };
   }
-  handleTags(tags) {
-    this.setState({
-      tags: tags
-    });
-  }
   removeFilter(filter) {
     var productFilters = this.state.productFilters,
       characteristics = this.state.characteristics;
@@ -118,45 +104,13 @@ class CharacteristicsTab extends Component {
     });
   }
   render() {
-    var characteristics = [],
-      productFilters = [],
-      self = this;
-    if (this.state.characteristics && this.state.characteristics.length > 0) {
-      this.state.characteristics.forEach(function(characteristic) {
-        characteristics.push((<option value={characteristic.id}>{characteristic.name}</option>));
-      });
-    }
-
-    if (this.state.productFilters && this.state.productFilters.length > 0) {
-      this.state.productFilters.forEach(function(productFilter) {
-        productFilters.push((<li className="list-group-item justify-content-between">
-          {productFilter.name} : {productFilter.filters.join(',')}
-          <i className="fa fa-times" onClick={(e) => { self.removeFilter(productFilter); }}></i>
-        </li>))
-      });
-    }
-
+    var self = this;
+    var shopId = this.props.match.params.id;
     return (<div>
         <section className="section">
           <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
-          {characteristics.length > 0 && (
-            <form className="row" onSubmit={(e) => { e.preventDefault(); this.addCharacteristic(); }}>
-              <div className="col-md-4">
-                  <select className="form-control" onChange={this.selectCharacteristic}>
-                    {characteristics}
-                  </select>
-              </div>
-              <div className="col-md-4">
-                <TagsInput ref="shopTags" value={this.state.tags} onChange={this.handleTags}/>
-              </div>
-              <div className="col-md-4">
-                <input type="submit" className="btn btn-success" />
-              </div>
-            </form>
-          )}
-          <ul className="list-group">
-            {productFilters}
-          </ul>
+          <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Add some filters to your product for example : Color = Blue, Size = Medium</p></div>
+          <FilterSelector shopId={shopId} />
         </section>
         <section className="col-md-12 sub-section">
             <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
@@ -164,6 +118,9 @@ class CharacteristicsTab extends Component {
         </section>
       </div>);
   }
+  componentWillMount() {
+
+  }
 }
 
-export default CharacteristicsTab;
+export default withRouter(CharacteristicsTab);

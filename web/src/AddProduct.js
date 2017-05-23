@@ -11,7 +11,7 @@ class AddProduct extends Component {
     this.closeError = this.closeError.bind(this);
     this.confirm = this.confirm.bind(this);
     this.state = {
-      activeTab : '1',
+      activeTab : '2',
       errorMessage: null,
       warningMessage: null,
       isLoading: false
