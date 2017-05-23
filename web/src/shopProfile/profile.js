@@ -43,6 +43,7 @@ class ShopProfile extends Component {
           isModalAddressOpened: false,
           isModalPaymentsOpened: false,
           shop : props.shop,
+          user: props.user,
           isEditable: props.isEditable,
           errorMessagePaymentMethods: null,
           errorMessageAddress: null
@@ -185,19 +186,19 @@ class ShopProfile extends Component {
             </section>
             <section className="row white-section sub-section shop-section-padding">
                 <h5>Contact information</h5>
-                <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>
+                { this.state.isEditable && (<NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>) }
                 <div className="row col-md-12">
                     <div className="col-md-3 contact">
                         <i className="fa fa-envelope fa-3"></i><br />
-                        <span>{this.props.user.email}</span>
+                        <span>{this.state.user.email}</span>
                     </div>
                     <div className="col-md-3 contact">
                         <i className="fa fa-phone fa-3"></i><br />
-                        <span>{this.props.user.home_phone_number}</span>
+                        <span>{this.state.user.home_phone_number}</span>
                     </div>
                     <div className="col-md-3 contact">
                         <i className="fa fa-mobile fa-3"></i><br />
-                        <span>{this.props.user.mobile_phone_number}</span>
+                        <span>{this.state.user.mobile_phone_number}</span>
                     </div>
                     <div className="col-md-3 contact">
                         {this.state.isEditable ? (<button className="btn btn-default" onClick={() => { this.openModalAddress(); }}><i className="fa fa-map-marker fa-3"></i></button>) :

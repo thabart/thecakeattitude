@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {ShopsService} from '../services/index';
 import {Alert} from 'reactstrap';
+import {NavLink} from "react-router-dom";
 import moment from 'moment';
 import $ from 'jquery';
 import AppDispatcher from "../appDispatcher";
@@ -106,6 +107,7 @@ class ManageShops extends Component {
           <td>{moment(shop.create_datetime).format('LLL')}</td>
           <td>
             <button className="btn btn-outline-secondary btn-sm" onClick={(e) => { self.removeShop(shop.id); }}><i className="fa fa-trash"></i></button>
+            <NavLink to={'/shops/' + shop.id + '/edit/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>
           </td>
         </tr>));
       });

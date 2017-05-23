@@ -30,7 +30,8 @@ class Shop extends Component {
             nbComments: 0,
             isRatingOpened: false,
             errorMessage: null,
-            isEditable: false
+            isEditable: false,
+            canBeEdited: false
         };
     }
 
@@ -211,9 +212,10 @@ class Shop extends Component {
                   {self.state.isEditable && (<input type="file" accept='image/*' ref="uploadProfileBtn" className="upload-image"  onChange={(e) => {this.uploadPictureImage(e);}} />)}
                 </div>
                 <div className="profile-information">
-                    {this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name} />)
-                      : (<h1>{this.state.shop.name}</h1> )
+                    { this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name} />)
+                      : ( <h1 className="inline">{this.state.shop.name}</h1> )
                     }
+                    { this.state.canBeEdited && ( <a href={'/shops/' + this.state.shop.id + '/edit/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></a> ) }
                     { this.state.nbComments > 0 ? (
                         <div>
                             <span id="rating"><Rater total={5} ref="rater" interactive={false}/> {this.state.nbComments} comments</span>
@@ -258,6 +260,7 @@ class Shop extends Component {
         self.setState({
             isLoading: true
         });
+        console.log('COUCOU');
         ShopsService.get(shopId).then(function (r) {
             var shop = r['_embedded'];
             var user = ApplicationStore.getUser();
@@ -267,7 +270,8 @@ class Shop extends Component {
                     isLoading: false,
                     shop: shop,
                     user: user,
-                    isEditable : isEditable
+                    isEditable : isEditable,
+                    canBeEdited : !isEditable && user.sub === shop.subject
                 });
                 self.refreshScore();
             });
