@@ -12,10 +12,14 @@ class FilterSelector extends Component {
     this.handleTags = this.handleTags.bind(this);
     this.closeError = this.closeError.bind(this);
     this.initialize = this.initialize.bind(this);
+    this.changeFilter = this.changeFilter.bind(this);
+    this.addFilter = this.addFilter.bind(this);
+    this.removeFilter = this.removeFilter.bind(this);
     this.state = {
       isLoading: false,
       tags: [],
       productFilters: [],
+      filters: [],
       errorMessage: null
     };
   }
@@ -43,6 +47,16 @@ class FilterSelector extends Component {
       $(self.popup).find('ul').append('<li>' + filter.content + '</li>');
     });
   }
+  changeFilter(e) {
+    var value = e.target.value;
+    var filter = this.state.filters.find(function(elt) {
+      return elt.id === value;
+    });
+    this._selectedFilter = filter;
+    this.setState({
+      tags: []
+    });
+  }
   initialize(elt) {
     if (this._isInitialized) return;
     var self = this,
@@ -51,31 +65,102 @@ class FilterSelector extends Component {
       paddingLeft = 5,
       paddingTop = 5;
     self.popup = $("<div class='popup' style='position: absolute;display: none;'><ul></ul></div>");
-    $(document.body).append(self.popup);
-    $(input).on('input', function () {
-      var value = this.value;
-      $(self.popup).width($(container).width() + 5);
-      $(self.popup).css('left', $(container).offset().left);
-      $(self.popup).css('top', $(container).offset().top + $(container).height());
-      if (!this.value || this.value === "" || self._selectedFilter === null) {
+    var updatePopup = function(value) {
+      if (self._selectedFilter === null) {
         self.hidePopup();
         return;
       }
 
-      var arr = [];
-      self._selectedFilter.values.forEach(function(f) {
-        if (f.content.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
-          arr.push(f);
-        }
-      });
+      $(self.popup).width($(container).width() + 5);
+      $(self.popup).css('left', $(container).offset().left);
+      $(self.popup).css('top', $(container).offset().top + $(container).height());
+      var arr = [],
+        tags = self.state.tags;
+      if (value && value !== '') {
+        self._selectedFilter.values.forEach(function(f) {
+          if (f.content.toLowerCase().indexOf(value.toLowerCase()) !== -1 && $.inArray(f.content, tags) === -1) {
+            arr.push(f);
+          }
+        });
+      } else {
+        self._selectedFilter.values.forEach(function(f) {
+          if ($.inArray(f.content, tags) === -1) {
+            arr.push(f);
+          }
+        });
+      }
 
       self.displayFilters(arr);
+      self.popup.find('li').click(function() {
+        var tags = self.state.tags;
+        tags.push($(this).html());
+        self.setState({
+          tags: tags
+        });
+        self.hidePopup();
+      });
+    };
+
+    $(document.body).append(self.popup);
+    $(input).on('focus', function() {
+      updatePopup();
+    });
+    $(input).on('input', function () {
+      updatePopup(this.value);
     });
     self._isInitialized = true;
   }
+  addFilter() {
+    if (!this.state.tags || this.state.tags.length === 0) {
+      this.setState({
+        errorMessage: 'At least one filter value should be specified'
+      });
+      return;
+    }
+
+    var productFilter = {
+      filter : this._selectedFilter,
+      tags: this.state.tags
+    };
+    var productFilters = this.state.productFilters;
+    var filters = this.state.filters;
+    filters.splice(filters.indexOf(this._selectedFilter), 1);
+    productFilters.push(productFilter);
+    this.initSelectedFilter();
+    this.setState({
+      productFilters: productFilters,
+      filters: filters,
+      tags: []
+    });
+  }
+  removeFilter(r) {
+    var productFilters = this.state.productFilters;
+    var filters = this.state.filters;
+    var index = productFilters.indexOf(r);
+    if (index === -1) {
+      return;
+    }
+
+    productFilters.splice(index, 1);
+    filters.push(r.filter);
+    this.initSelectedFilter();
+    this.setState({
+      productFilters: productFilters,
+      filters: filters,
+      tags: []
+    });
+  }
+  initSelectedFilter() {
+    if (this.state.filters.length === 0) {
+      this._selectedFilter = null;
+    } else {
+      this._selectedFilter = this.state.filters[0];
+    }
+  }
   render() {
     var filters = [],
-      productFilters = [];
+      productFilters = [],
+      self = this;
     if (this.state.filters && this.state.filters.length > 0) {
       this.state.filters.forEach(function(filter) {
         filters.push((<option value={filter.id}>{filter.name}</option>));
@@ -85,7 +170,7 @@ class FilterSelector extends Component {
     if (this.state.productFilters && this.state.productFilters.length > 0) {
       this.state.productFilters.forEach(function(productFilter) {
         productFilters.push((<li className="list-group-item justify-content-between">
-          {productFilter.name} : {productFilter.filters.join(',')}
+          {productFilter.filter.name} : {productFilter.tags.join(',')}
           <i className="fa fa-times" onClick={(e) => { self.removeFilter(productFilter); }}></i>
         </li>))
       });
@@ -93,25 +178,21 @@ class FilterSelector extends Component {
 
     return (<div>
       <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
-      {filters.length > 0 &&
-        (<div className="row col-md-12">
-            <div className="col-md-4">
-                <select className="form-control">
-                  {filters}
-                </select>
-            </div>
-            <div className="col-md-4">
-              <TagsInput ref={(elt) => {
-                  this.initialize(elt);
-              }} value={this.state.tags} onChange={this.handleTags} inputProps={{placeholder: "Add a filter"}}/>
-            </div>
-            <div className="col-md-4">
-            <div className="col-md-4">
-              <input type="submit" className="btn btn-success" value="Add" />
-            </div>
-          </div>
-        </div>)
-      }
+      <div className={this.state.filters.length === 0 ? "row col-md-12 hidden" : "row col-md-12"}>
+        <div className="col-md-4">
+          <select className="form-control" onChange={this.changeFilter}>
+            {filters}
+          </select>
+        </div>
+        <div className="col-md-4">
+          <TagsInput ref={(elt) => {
+            this.initialize(elt);
+          }} value={this.state.tags} onChange={this.handleTags} inputProps={{placeholder: "Filter values"}}/>
+        </div>
+        <div className="col-md-4">
+          <input type="submit" className="btn btn-success" value="Add" onClick={this.addFilter} />
+        </div>
+      </div>
       <ul className="list-group">
         {productFilters}
       </ul>

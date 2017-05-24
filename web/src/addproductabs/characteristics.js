@@ -109,7 +109,7 @@ class CharacteristicsTab extends Component {
     return (<div>
         <section className="section">
           <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
-          <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Add some filters to your product for example : Color = Blue, Size = Medium</p></div>
+          <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Add some filters to your product for example : <i>Color = Blue, Size = Medium</i></p></div>
           <FilterSelector shopId={shopId} />
         </section>
         <section className="col-md-12 sub-section">
