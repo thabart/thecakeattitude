@@ -23,10 +23,21 @@ class FilterSelector extends Component {
       errorMessage: null
     };
   }
-  handleTags(tags) {
-    this.setState({
-      tags: tags
+  handleTags(tags, changed, changedIndexes) {
+    var changedValue = changed[0].toLowerCase();
+    var selectedValue = this._selectedFilter.values.filter(function(value) {
+      return value.content.toLowerCase().indexOf(changedValue) !== -1;
     });
+    if (selectedValue.length === 0) {
+      return;
+    }
+
+    var newTags = this.state.tags;
+    newTags.push(selectedValue[0].content);
+    this.setState({
+      tags: newTags
+    });
+    this.hidePopup();
   }
   closeError() {
     this.setState({
@@ -156,6 +167,25 @@ class FilterSelector extends Component {
     } else {
       this._selectedFilter = this.state.filters[0];
     }
+  }
+  getFilters() {
+    var productFilters = this.state.productFilters,
+      arr = [];
+    productFilters.forEach(function(productFilter) {
+      var filterValues = [];
+      productFilter.tags.forEach(function(tagName) {
+        filterValues.push(productFilter.filter.values.find(function(val) {
+          return val.content === tagName;
+        }));
+      });
+      arr.push({
+        values : filterValues.map(function(f) {
+          return f.id
+        }),
+        id: productFilter.filter.id
+      });
+    });
+    return arr;
   }
   render() {
     var filters = [],

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {Tooltip} from 'reactstrap';
+import {withRouter} from "react-router";
 import './description.css';
 
 class DescriptionTab extends Component {
@@ -120,7 +121,22 @@ class DescriptionTab extends Component {
       return;
     }
 
-    this.props.next();
+    var json = {
+      name: self.state.name,
+      description: self.state.description,
+      price: self.state.price,
+      new_price: self.state.price,
+      unit_of_measure: self.state.unitOfMeasure,
+      quantity: self.state.quantity,
+      shop_id: self.props.match.params.id,
+      images : self.state.images
+    };
+
+    if (!self.state.unlimited) {
+      json['available_in_stock'] = self.state.availableInStock;
+    }
+
+    this.props.next(json);
   }
   buildErrorTooltip(validName, description) {
       var result;
@@ -265,4 +281,4 @@ class DescriptionTab extends Component {
   }
 }
 
-export default DescriptionTab;
+export default withRouter(DescriptionTab);

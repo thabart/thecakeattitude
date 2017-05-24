@@ -35,7 +35,8 @@ class CharacteristicsTab extends Component {
     this.props.previous();
   }
   confirm() {
-    this.props.confirm();
+    var filters = this.refs.filterSelector.getFilters();
+    this.props.confirm(filters);
   }
   addCharacteristic() {
     if (this._selectedCharacteristic === null) {
@@ -110,7 +111,7 @@ class CharacteristicsTab extends Component {
         <section className="section">
           <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
           <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Add some filters to your product for example : <i>Color = Blue, Size = Medium</i></p></div>
-          <FilterSelector shopId={shopId} />
+          <FilterSelector ref="filterSelector" shopId={shopId} />
         </section>
         <section className="col-md-12 sub-section">
             <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>

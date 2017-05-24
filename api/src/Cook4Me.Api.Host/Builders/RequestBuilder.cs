@@ -335,7 +335,11 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            return null;
+            return new AddProductFilter
+            {
+                FilterId = jObj.TryGetString(Constants.DtoNames.ProductFilter.FilterId),
+                Value = jObj.TryGetString(Constants.DtoNames.ProductFilter.Content)
+            };
         }
 
         public SearchShopCommentsParameter GetSearchShopComments(JObject jObj)

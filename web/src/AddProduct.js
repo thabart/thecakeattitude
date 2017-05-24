@@ -39,8 +39,10 @@ class AddProduct extends Component {
       errorMessage: null
     });
   }
-  confirm() {
-
+  confirm(filters) {
+    var json = this._data['1'];
+    json['fitlers'] = filters;
+    console.log(json);
   }
   render() {
     return (<div className="container">
@@ -56,7 +58,7 @@ class AddProduct extends Component {
                   <DescriptionTab next={(json) => {this.toggle('2', json); }} />
                 </TabPane>
                 <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-                  <CharacteristicsTab previous={() => { this.toggle('1');}} confirm={() => { this.confirm(); }} />
+                  <CharacteristicsTab previous={() => { this.toggle('1');}} confirm={(j) => { this.confirm(j); }} />
                 </TabPane>
             </TabContent>
       </div>);
