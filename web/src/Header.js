@@ -220,7 +220,7 @@ class Header extends Component {
             <div>
                 <Navbar color="faded" light toggleable fixed="top">
                     <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
-                    <NavbarBrand href="/">SHOP IN GAME</NavbarBrand>
+                    <NavLink to="/home" className="navbar-brand">SHOP IN GAME</NavLink>
                     <Collapse isOpen={this.state.isMenuOpen} navbar>
                       <Nav className="mr-auto" navbar>
                         <NavItem>
