@@ -14,7 +14,7 @@ module.exports = {
                     access_token: accessToken
                 };
                 SessionService.setSession(session);
-                resolve();
+                resolve(introspect);
             }).catch(function () {
                 reject();
             })

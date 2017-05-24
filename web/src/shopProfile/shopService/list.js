@@ -135,7 +135,7 @@ class List extends Component {
             self.state.services.forEach(function (service) {
                 var image = "/images/default-service.jpg";
                 if (service.images && service.images.length > 0) {
-                    image = Constants.apiUrl + service.images[0];
+                    image = service.images[0];
                 }
 
                 var occurrence = (<p></p>);

@@ -416,22 +416,22 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "http://localhost/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "http://localhost/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "http://localhost/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "http://localhost/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         }
                     },
                     Tags = new []
@@ -498,17 +498,17 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         }
                     },
                     Tags = new []
@@ -570,17 +570,17 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         }
                     },
                     Tags = new []
@@ -633,12 +633,12 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
                         }
                     },
                     Tags = new []
@@ -787,7 +787,7 @@ namespace Cook4Me.Api.Host.Extensions
                         new ServiceImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/services/service.jpg"
+                            PartialPath = "http://localhost:5000/services/service.jpg"
                         }
                     },
                     Comments = new []
@@ -858,12 +858,12 @@ namespace Cook4Me.Api.Host.Extensions
                         new ServiceImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/services/service.jpg"
+                            PartialPath = "http://localhost:5000/services/service.jpg"
                         },
                         new ServiceImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/services/service.jpg"
+                            PartialPath = "http://localhost:5000/services/service.jpg"
                         },
                         new ServiceImage
                         {

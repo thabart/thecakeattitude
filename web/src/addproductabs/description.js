@@ -22,8 +22,7 @@ class DescriptionTab extends Component {
       quantity: 0,
       unlimited: true,
       availableInStock: 0,
-      productCategories: [],
-      isLoadingProductCategories: false,
+      productCategories: props.shop.product_categories,
       tooltip: {
         toggleName: false,
         toggleDescription: false,
@@ -241,8 +240,7 @@ class DescriptionTab extends Component {
               <Tooltip placement="right" target="productCategory" isOpen={this.state.tooltip.toggleProductCategory} toggle={() => { this.toggleTooltip('toggleProductCategory'); }}>
                 Choose a category
               </Tooltip>
-              {this.state.isLoadingProductCategories && (<i className='fa fa-spinner fa-spin'></i>) }
-              {!this.state.isLoadingProductCategories && (<select name="productCategory" onChange={this.handleInputChange} className="form-control">{productCategories}</select>) }
+              <select name="productCategory" onChange={this.handleInputChange} className="form-control">{productCategories}</select>
             </div>
             <div className="form-group col-md-12">
               <label className="control-label">Tags</label> <i className="fa fa-exclamation-circle" id="productTags"></i>
@@ -311,23 +309,6 @@ class DescriptionTab extends Component {
           <button className="btn btn-primary next" onClick={this.next}>Next</button>
       </section>
     </div>);
-  }
-  componentWillMount() {
-    var self = this;
-    self.setState({
-      isLoadingProductCategories: true
-    });
-    ShopsService.get(this.props.match.params.id).then(function(s) {
-      var productCategories = s['_embedded'].product_categories;
-      self.setState({
-        isLoadingProductCategories: false,
-        productCategories: productCategories
-      });
-    }).catch(function() {
-      self.setState({
-        isLoadingProductCategories: false
-      });
-    });
   }
 }
 

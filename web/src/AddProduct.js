@@ -1,7 +1,8 @@
 import React, {Component} from "react";
-import {Alert, TabContent, TabPane} from 'reactstrap';
+import {Alert, TabContent, TabPane, Breadcrumb, BreadcrumbItem} from 'reactstrap';
+import {NavLink} from "react-router-dom";
 import {DescriptionTab, CharacteristicsTab} from './addproductabs';
-import {ProductsService} from './services/index';
+import {ProductsService, ShopsService} from './services/index';
 import {withRouter} from "react-router";
 
 class AddProduct extends Component {
@@ -16,7 +17,8 @@ class AddProduct extends Component {
       activeTab : '1',
       errorMessage: null,
       warningMessage: null,
-      isLoading: false
+      isLoading: false,
+      shop: {}
     };
   }
   toggle(tab, json) {
@@ -61,7 +63,18 @@ class AddProduct extends Component {
     });
   }
   render() {
+    var shopId = this.props.match.params.id;
     return (<div className="container">
+            {this.state.shop.name && this.state.shop.name !== null && (
+              <Breadcrumb>
+                  <BreadcrumbItem>
+                      <NavLink to={'/shops/' + this.state.shop.id + '/view/profile'}>
+                        {this.state.shop.name}
+                      </NavLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbItem active>Add product</BreadcrumbItem>
+              </Breadcrumb>
+            )}
             <ul className="progressbar">
                 <li className={(parseInt(this.state.activeTab) >= 1) ? 'active' : ''}>Description</li>
                 <li className={(parseInt(this.state.activeTab) >= 2) ? 'active' : ''}>Characteristics</li>
@@ -71,13 +84,30 @@ class AddProduct extends Component {
             <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
                 <div className={this.state.isLoading ? 'loading' : 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
                 <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
-                  <DescriptionTab next={(json) => {this.toggle('2', json); }} />
+                  <DescriptionTab next={(json) => {this.toggle('2', json); }} shop={this.state.shop} />
                 </TabPane>
                 <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
                   <CharacteristicsTab previous={() => { this.toggle('1');}} confirm={(j) => { this.confirm(j); }} />
                 </TabPane>
             </TabContent>
       </div>);
+  }
+  componentWillMount() {
+    var self = this;
+    self.setState({
+      isLoading: true
+    });
+    ShopsService.get(this.props.match.params.id).then(function(s) {
+      self.setState({
+        isLoading: false,
+        shop: s['_embedded']
+      });
+    }).catch(function() {
+      self.setState({
+        isLoading: false,
+        errorMessage: 'The shop doesn\'t exist'
+      });
+    });
   }
 }
 

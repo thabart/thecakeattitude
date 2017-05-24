@@ -12,7 +12,7 @@ class TagsSelector extends Component {
     this.displayTags = this.displayTags.bind(this);
     this.hidePopup = this.hidePopup.bind(this);
     this.state = {
-      tags: []
+      tags: this.props.tags ? this.props.tags : []
     };
   }
   handleTags(tags) {
