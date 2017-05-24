@@ -178,11 +178,11 @@ class FilterSelector extends Component {
           return val.content === tagName;
         }));
       });
-      arr.push({
-        values : filterValues.map(function(f) {
-          return f.id
-        }),
-        id: productFilter.filter.id
+      filterValues.forEach(function(filterValue) {
+        arr.push({
+          value_id: filterValue.id,
+          filter_id: productFilter.filter.id
+        });
       });
     });
     return arr;

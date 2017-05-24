@@ -315,6 +315,19 @@ namespace Cook4Me.Api.EF.Repositories
                     }
                 }
 
+                if (productAggregate.Filters != null && productAggregate.Filters.Any())
+                {
+                    var ids = productAggregate.Filters.Select(f => f.FilterValueId);
+                    var filters = await _context.FilterValues.Where(f => ids.Contains(f.Id)).Select(f => 
+                        new Models.ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = f.Id,
+                            ProductId = productAggregate.Id
+                        }).ToListAsync().ConfigureAwait(false);
+                    record.Filters = filters;
+                }
+
                 record.Tags = tags;
                 _context.Products.Add(record);
                 await _context.SaveChangesAsync().ConfigureAwait(false);

@@ -1,6 +1,8 @@
 import React, {Component} from "react";
 import {Alert, TabContent, TabPane} from 'reactstrap';
 import {DescriptionTab, CharacteristicsTab} from './addproductabs';
+import {ProductsService} from './services/index';
+import {withRouter} from "react-router";
 
 class AddProduct extends Component {
   constructor(props) {
@@ -11,7 +13,7 @@ class AddProduct extends Component {
     this.closeError = this.closeError.bind(this);
     this.confirm = this.confirm.bind(this);
     this.state = {
-      activeTab : '2',
+      activeTab : '1',
       errorMessage: null,
       warningMessage: null,
       isLoading: false
@@ -40,9 +42,25 @@ class AddProduct extends Component {
     });
   }
   confirm(filters) {
-    var json = this._data['1'];
-    json['fitlers'] = filters;
-    console.log(json);
+    var json = this._data['1'],
+      self = this;
+    json['filters'] = filters;
+    var images = json['images'];
+    delete json.images;
+    self.setState({
+      isLoading: true
+    });
+    ProductsService.add(json).then(function() {
+      self.setState({
+        isLoading: false
+      });
+      self.props.history.push('/');
+    }).catch(function() {
+      self.setState({
+        isLoading: false,
+        errorMessage: 'An error occured while trying to add the product'
+      });
+    });
   }
   render() {
     return (<div className="container">
@@ -65,4 +83,4 @@ class AddProduct extends Component {
   }
 }
 
-export default AddProduct;
+export default withRouter(AddProduct);

@@ -338,7 +338,7 @@ namespace Cook4Me.Api.Host.Builders
             return new AddProductFilter
             {
                 FilterId = jObj.TryGetString(Constants.DtoNames.ProductFilter.FilterId),
-                Value = jObj.TryGetString(Constants.DtoNames.ProductFilter.Content)
+                ValueId = jObj.TryGetString(Constants.DtoNames.ProductFilter.ValueId)
             };
         }
 

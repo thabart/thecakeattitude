@@ -138,7 +138,7 @@ namespace Cook4Me.Api.Handlers
                     filters.Add(new ProductAggregateFilter
                     {
                         FilterId = filter.FilterId,
-                        FilterValueContent = filter.Value
+                        FilterValueId = filter.ValueId
                     });
                 }
             }

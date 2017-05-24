@@ -23,5 +23,6 @@ namespace Cook4Me.Api.Core.Repositories
     public interface IFilterRepository
     {
         Task<SearchFiltersResult> Search(SearchFiltersParameter parameter);
+        Task<SearchFilterValuesResult> Search(SearchFilterValuesParameter parameter);
     }
 }

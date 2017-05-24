@@ -23,7 +23,7 @@ namespace Cook4Me.Api.Core.Commands.Product
     public class AddProductFilter
     {
         public string FilterId { get; set; }
-        public string Value { get; set; }
+        public string ValueId { get; set; }
     }
 
     public class AddProductCommand : Command
