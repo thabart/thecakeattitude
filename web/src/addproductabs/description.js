@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Tooltip} from 'reactstrap';
 import {withRouter} from "react-router";
 import {ShopsService} from '../services/index';
+import {TagsSelector} from '../components';
 import './description.css';
 
 class DescriptionTab extends Component {
@@ -31,7 +32,8 @@ class DescriptionTab extends Component {
         toggleUnitOfMeasure: false,
         toggleQuantity: false,
         toggleInStock: false,
-        toggleProductCategory: false
+        toggleProductCategory: false,
+        toggleProductTags: false
       },
       valid: {
         isNameInvalid: false,
@@ -133,7 +135,8 @@ class DescriptionTab extends Component {
       unit_of_measure: self.state.unitOfMeasure,
       quantity: self.state.quantity,
       shop_id: self.props.match.params.id,
-      images : self.state.images
+      images : self.state.images,
+      tags: self.refs.productTags.getTags()
     };
 
     if (self.state.productCategory && self.state.productCategory !== null) {
@@ -240,6 +243,13 @@ class DescriptionTab extends Component {
               </Tooltip>
               {this.state.isLoadingProductCategories && (<i className='fa fa-spinner fa-spin'></i>) }
               {!this.state.isLoadingProductCategories && (<select name="productCategory" onChange={this.handleInputChange} className="form-control">{productCategories}</select>) }
+            </div>
+            <div className="form-group col-md-12">
+              <label className="control-label">Tags</label> <i className="fa fa-exclamation-circle" id="productTags"></i>
+              <Tooltip placement="right" target="productTags" isOpen={this.state.tooltip.toggleProductTags} toggle={() => { this.toggleTooltip('toggleProductTags'); }}>
+                Assign one or more tags
+              </Tooltip>
+              <TagsSelector ref="productTags"/>
             </div>
             <div className="form-group col-md-12">
               <label className="control-label">Images</label> <i className="fa fa-exclamation-circle" id="imagesTooltip"></i>

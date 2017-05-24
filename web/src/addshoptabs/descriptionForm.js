@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Tooltip} from "reactstrap";
 import {CategoryService, TagService, ShopsService, OpenIdService, SessionService} from "../services/index";
-import {CategorySelector} from '../components';
+import {CategorySelector, TagsSelector} from '../components';
 import TagsInput from "react-tagsinput";
 import Game from "../game/game";
 import "./descriptionForm.css";
@@ -18,7 +18,6 @@ class DescriptionForm extends Component {
         this.validate = this.validate.bind(this);
         this.selectMap = this.selectMap.bind(this);
         this.onHouseSelected = this.onHouseSelected.bind(this);
-        this.handleTags = this.handleTags.bind(this);
         this.changeMap = this.changeMap.bind(this);
         this.state = {
             name: null,
@@ -31,7 +30,6 @@ class DescriptionForm extends Component {
             categories: [],
             subCategories: [],
             maps: [],
-            tags: [],
             subCategoryIdSelected: null,
             mapNameSelected: null,
             tooltip: {
@@ -125,7 +123,6 @@ class DescriptionForm extends Component {
             valid.isPlaceInvalid = false;
         }
 
-
         this.setState({
             valid: valid
         });
@@ -147,7 +144,7 @@ class DescriptionForm extends Component {
                 var json = {
                     name: self.state.name,
                     description: self.state.description,
-                    tags: self.state.tags,
+                    tags: self.refs.shopTags.getTags(),
                     banner_image: self.state.bannerImage,
                     profile_image: self.state.pictureImage,
                     map_name: self.state.mapNameSelected,
@@ -226,33 +223,11 @@ class DescriptionForm extends Component {
         return result;
     }
 
-    handleTags(tags) {
-        this.setState({
-            tags: tags
-        });
-        this.hidePopup();
-    }
-
     displayLoading() {
         var ul = $(this.popup).find('ul');
         $(ul).empty();
         $(ul).append('<li>Loading ...</li>');
         $(this.popup).show();
-    }
-
-    displayTags(tags) {
-        var ul = $(this.popup).find('ul');
-        var self = this;
-        $(ul).empty();
-        tags.forEach(function (tag) {
-            $(self.popup).find('ul').append('<li>' + tag.name + '</li>');
-        });
-    }
-
-    hidePopup() {
-        var ul = $(this.popup).find('ul');
-        $(ul).empty();
-        $(this.popup).hide();
     }
 
     render() {
@@ -324,9 +299,8 @@ class DescriptionForm extends Component {
                                       onChange={this.handleInputChange}></textarea>
                         </div>
                         <div className="form-group col-md-12">
-                            <p><i className="fa fa-exclamation-triangle"></i> Add some tags to enrich the description of
-                                your shop</p>
-                            <TagsInput ref="shopTags" value={this.state.tags} onChange={this.handleTags}/>
+                            <p><i className="fa fa-exclamation-triangle"></i> Add some tags to enrich the description of your shop</p>
+                            <TagsSelector ref="shopTags" />
                         </div>
                         <div className='row'>
                           <CategorySelector onSubCategory={(e) => { self.displayMaps(e); }} />
@@ -378,50 +352,6 @@ class DescriptionForm extends Component {
                 </section>
             </div>
         );
-    }
-
-    componentDidMount() {
-        var self = this;
-        var input = this.refs.shopTags.refs.input;
-        var container = this.refs.shopTags.refs.div;
-        var paddingLeft = 5,
-            paddingTop = 5;
-        self.popup = $("<div class='popup' style='position: absolute;display: none;'><ul></ul></div>");
-        $(document.body).append(self.popup);
-        $(input).on('input', function () {
-            $(self.popup).width($(container).width() + 5);
-            $(self.popup).css('left', $(container).offset().left);
-            $(self.popup).css('top', $(container).offset().top + $(container).height());
-            if (!this.value || this.value === "") {
-                self.hidePopup();
-                return;
-            }
-
-            self.displayLoading();
-            TagService.search({name: this.value}).then(function (r) {
-                var embedded = r['_embedded'];
-                if (!embedded) {
-                    self.hidePopup();
-                    return;
-                }
-
-                if (!(embedded instanceof Array)) {
-                    embedded = [embedded];
-                }
-
-                self.displayTags(embedded);
-                self.popup.find('li').click(function () {
-                    var tags = self.state.tags;
-                    tags.push($(this).html());
-                    self.setState({
-                        tags: tags
-                    });
-                    self.hidePopup();
-                });
-            }).catch(function () {
-                self.hidePopup();
-            });
-        });
     }
 }
 
