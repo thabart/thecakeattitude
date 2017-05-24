@@ -310,7 +310,8 @@ namespace Cook4Me.Api.Host.Builders
                 Tags = jObj.TryGetStringArray(Constants.DtoNames.Product.Tags),
                 Quantity = jObj.TryGetDouble(Constants.DtoNames.Product.Quantity),
                 ShopId = jObj.TryGetString(Constants.DtoNames.Product.ShopId),
-                AvailableInStock = jObj.TryGetNullableDouble(Constants.DtoNames.Product.AvailableInStock)
+                AvailableInStock = jObj.TryGetNullableDouble(Constants.DtoNames.Product.AvailableInStock),
+                PartialImagesUrl = jObj.TryGetStringArray(Constants.DtoNames.Product.Images)
             };
 
             var filters = new List<AddProductFilter>();

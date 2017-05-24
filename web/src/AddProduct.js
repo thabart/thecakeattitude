@@ -45,8 +45,6 @@ class AddProduct extends Component {
     var json = this._data['1'],
       self = this;
     json['filters'] = filters;
-    var images = json['images'];
-    delete json.images;
     self.setState({
       isLoading: true
     });

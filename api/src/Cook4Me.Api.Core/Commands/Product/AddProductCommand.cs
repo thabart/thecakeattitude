@@ -41,7 +41,7 @@ namespace Cook4Me.Api.Core.Commands.Product
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public IEnumerable<string> Tags { get; set; }
-        // public IEnumerable<string> PartialImagesUrl { get; set; }
+        public IEnumerable<string> PartialImagesUrl { get; set; }
         public IEnumerable<AddProductFilter> Filters { get; set; }
     }
 }

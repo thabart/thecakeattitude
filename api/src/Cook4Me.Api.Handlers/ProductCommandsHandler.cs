@@ -128,7 +128,8 @@ namespace Cook4Me.Api.Handlers
                 Tags = message.Tags,
                 UnitOfMeasure = message.UnitOfMeasure,
                 ShopId = message.ShopId,
-                AvailableInStock = message.AvailableInStock
+                AvailableInStock = message.AvailableInStock,
+                PartialImagesUrl = message.PartialImagesUrl
             };
             var filters = new List<ProductAggregateFilter>();
             if (message.Filters != null && message.Filters.Any())

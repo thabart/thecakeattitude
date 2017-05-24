@@ -122,7 +122,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddProductValidationResult(string.Format(ErrorDescriptions.TheUnitOfMeasureIsNotCorrect, string.Join("," ,_unitOfMeasures)));
             }
 
-            if (command.Filters != null)
+            if (command.Filters != null && command.Filters.Any())
             {
                 var filterValuesIds = command.Filters.Select(f => f.ValueId);
                 var filters = await _filterRepository.Search(new SearchFilterValuesParameter

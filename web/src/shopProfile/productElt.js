@@ -14,7 +14,7 @@ class ProductElt extends Component {
             self = this;
         // Set default url
         if (product.images && product.images.length > 0) {
-            imageUrl = Constants.apiUrl + product.images[0];
+            imageUrl = product.images[0];
         }
 
         var filters = [];

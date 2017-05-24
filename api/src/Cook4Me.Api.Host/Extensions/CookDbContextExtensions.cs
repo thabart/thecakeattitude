@@ -416,22 +416,22 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost/products/jean.jpg"
                         },
                         new ProductImage
                         {
                             Id = Guid.NewGuid().ToString(),
-                            PartialPath = "/products/jean.jpg"
+                            PartialPath = "http://localhost/products/jean.jpg"
                         }
                     },
                     Tags = new []
