@@ -279,7 +279,6 @@ class Shop extends Component {
         ShopsService.get(shopId).then(function (r) {
             var shop = r['_embedded'];
             var localUser = ApplicationStore.getUser();
-            console.log(localUser);
             isEditable =  isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
             UserService.getPublicClaims(shop.subject).then(function (user) {
                 self.setState({

@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import Splash from "./states/splash";
+import Nothing from './states/nothing';
 
 class Game extends Component {
     constructor(props) {
@@ -13,10 +14,15 @@ class Game extends Component {
 
     create() {
         this._game.state.add('Splash', Splash, false);
+        this._game.state.add('Nothing', Nothing, false);
     }
 
     render() {
         return (<div ref="game"></div>);
+    }
+
+    reset() {
+      this._game.state.start('Nothing', true, true);
     }
 
     loadMap(category) {

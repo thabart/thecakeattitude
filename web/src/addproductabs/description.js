@@ -3,6 +3,7 @@ import {Tooltip} from 'reactstrap';
 import {withRouter} from "react-router";
 import {ShopsService} from '../services/index';
 import {TagsSelector} from '../components';
+import {AddProductStore} from '../stores';
 import './description.css';
 
 class DescriptionTab extends Component {
@@ -22,7 +23,7 @@ class DescriptionTab extends Component {
       quantity: 0,
       unlimited: true,
       availableInStock: 0,
-      productCategories: props.shop.product_categories,
+      productCategories: [],
       tooltip: {
         toggleName: false,
         toggleDescription: false,
@@ -309,6 +310,15 @@ class DescriptionTab extends Component {
           <button className="btn btn-primary next" onClick={this.next}>Next</button>
       </section>
     </div>);
+  }
+  componentWillMount() {
+    var self = this;
+    AddProductStore.addChangeListener(function() {
+      var shop = AddProductStore.getShop();
+      self.setState({
+        productCategories: shop.product_categories
+      });
+    });
   }
 }
 

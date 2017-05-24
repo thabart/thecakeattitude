@@ -303,7 +303,20 @@ class DescriptionForm extends Component {
                             <TagsSelector ref="shopTags" />
                         </div>
                         <div className='row'>
-                          <CategorySelector onSubCategory={(e) => { self.displayMaps(e); }} />
+                          <CategorySelector onSubCategory={(e) => {
+                            if (e === null) {
+                              self.setState({
+                                  maps: [],
+                                  subCategoryIdSelected: null,
+                                  place: null,
+                                  mapNameSelected: null
+                              });
+                              self.refs.game.reset();
+                              return;
+                            }
+
+                            self.displayMaps(e);
+                          }} />
                         </div>
                         <div className='form-group col-md-12'>
                             <label className='control-label'>Banner image</label> <i

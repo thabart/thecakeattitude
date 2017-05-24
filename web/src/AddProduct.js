@@ -4,6 +4,8 @@ import {NavLink} from "react-router-dom";
 import {DescriptionTab, CharacteristicsTab} from './addproductabs';
 import {ProductsService, ShopsService} from './services/index';
 import {withRouter} from "react-router";
+import AppDispatcher from './appDispatcher';
+import Constants from '../Constants';
 
 class AddProduct extends Component {
   constructor(props) {
@@ -92,7 +94,7 @@ class AddProduct extends Component {
             </TabContent>
       </div>);
   }
-  componentWillMount() {
+  componentDidMount() {
     var self = this;
     self.setState({
       isLoading: true
@@ -102,7 +104,11 @@ class AddProduct extends Component {
         isLoading: false,
         shop: s['_embedded']
       });
-    }).catch(function() {
+      AppDispatcher.dispatch({
+        actionName: Constants.events.ADD_PRODUCT_LOADED,
+        data: s['_embedded']
+      });
+    }).catch(function(e) {
       self.setState({
         isLoading: false,
         errorMessage: 'The shop doesn\'t exist'

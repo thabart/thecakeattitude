@@ -277,7 +277,7 @@ class ShopProducts extends Component {
 
         return (<div>
             <section className="row white-section shop-section shop-section-padding">
-                { this.state.isEditable && (<NavLink className="btn btn-success btn-lg" to={'/addproduct/' + this.props.shop.id}><i className="fa fa-plus"></i> Add product</NavLink>) }
+                { this.state.isEditable && (<NavLink className="btn btn-success" to={'/addproduct/' + this.props.shop.id}><i className="fa fa-plus"></i> Add product</NavLink>) }
                 <div className="row col-md-12">
                     <div className="col-md-3">
                         <form onSubmit={(e) => {
