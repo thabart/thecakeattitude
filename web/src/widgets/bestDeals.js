@@ -117,7 +117,7 @@ class BestDeals extends Component {
                 if (!productImage || productImage.length === 0) {
                     productImage = "/images/jean.jpg";
                 } else {
-                    productImage = Constants.apiUrl + productImage[0];
+                    productImage = productImage[0];
                 }
 
                 content.push((

@@ -38,6 +38,21 @@ namespace Cook4Me.Api.EF.Extensions
                 Name = filter.Name
             };
         }
+
+        public static FilterValueResult ToAggregate(this FilterValue filter)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            return new FilterValueResult
+            {
+                Id = filter.Id,
+                Content = filter.Content
+            };
+        }
+
         public static AnnouncementAggregate ToAggregate(this Announcement announcement)
         {
             if (announcement == null)

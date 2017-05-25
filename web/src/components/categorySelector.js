@@ -33,9 +33,20 @@ class CategorySelector extends Component {
   }
   displaySubCategory(categoryId) {
       var self = this;
+      if (!categoryId || categoryId === null) {
+        self._selectedCategory = null;
+        self.setState({
+            subCategories: []
+        });
+        if (self.props.onSubCategory) self.props.onSubCategory(null);
+        return;
+      }
+
       self.setState({
-          isSubCategoryLoading: true
+          isSubCategoryLoading: true,
+          subCategories: []
       });
+
       CategoryService.get(categoryId).then(function (r) {
           var children = r['_embedded']['children'];
           var subCategories = [];
@@ -56,7 +67,7 @@ class CategorySelector extends Component {
   }
   render() {
     var self = this,
-        categories = [],
+        categories = [(<option></option>)],
         subCategories = [];
     if (this.state.categories) {
       this.state.categories.forEach(function (category) {
@@ -65,8 +76,8 @@ class CategorySelector extends Component {
     }
 
     if (this.state.subCategories) {
-      this.state.subCategories.forEach(function (category) {
-        subCategories.push(<option value={category.id}>{category.name}</option>);
+      this.state.subCategories.forEach(function (category, index) {
+        subCategories.push(<option value={category.id} selected={index === 0}>{category.name}</option>);
       });
     }
 
@@ -112,7 +123,6 @@ class CategorySelector extends Component {
             isSubCategoryLoading: false,
             categories: result
         });
-        self.displaySubCategory(result[0].id);
     }).catch(function () {
         self.setState({
             isCategoryLoading: false,

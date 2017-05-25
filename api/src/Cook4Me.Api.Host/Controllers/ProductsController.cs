@@ -66,7 +66,7 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> Add([FromBody] JObject jObj)
         {
-            return await _addProductOperation.Execute(jObj, User.GetSubject(), this.GetCommonId());
+            return await _addProductOperation.Execute(jObj, User.GetSubject(), this.GetCommonId(), this.Request);
         }
 
         [HttpPost(Constants.RouteNames.Comments)]

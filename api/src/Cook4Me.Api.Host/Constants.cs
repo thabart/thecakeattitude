@@ -55,6 +55,13 @@ namespace Cook4Me.Api.Host
                 public const string CommonId = "common_id";
             }
 
+            public static class ProductCategory
+            {
+                public const string Id = "id";
+                public const string Name = "name";
+                public const string Description = "description";
+            }
+
             public static class Shop
             {
                 public const string Id = "id";
@@ -82,6 +89,8 @@ namespace Cook4Me.Api.Host
                 public const string Filters = "filters";
                 // Comments
                 public const string Comments = "comments";
+                // Product categories
+                public const string ProductCategories = "product_categories";
                 // Tilemap information
                 public const string ShopPath = "shop_path";
                 public const string UndergroundPath = "underground_path";

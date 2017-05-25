@@ -86,7 +86,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddProductValidationResult(ErrorDescriptions.TheShopDoesntExist);
             }
 
-            if (shop.Subject == subject)
+            if (shop.Subject != subject)
             {
                 return new AddProductValidationResult(ErrorDescriptions.TheProductCannotBeAddedByYou);
             }
@@ -122,13 +122,14 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddProductValidationResult(string.Format(ErrorDescriptions.TheUnitOfMeasureIsNotCorrect, string.Join("," ,_unitOfMeasures)));
             }
 
-            if (command.Filters != null)
+            if (command.Filters != null && command.Filters.Any())
             {
-                var filters = await _filterRepository.Search(new SearchFiltersParameter
+                var filterValuesIds = command.Filters.Select(f => f.ValueId);
+                var filters = await _filterRepository.Search(new SearchFilterValuesParameter
                 {
-                    Filters = command.Filters.Select(f => f.FilterId)
+                    FilterValueIds = filterValuesIds
                 });
-                if (command.Filters.Count() != filters.Filters.Count())
+                if (filters.Filters.Count() != filterValuesIds.Count())
                 {
                     return new AddProductValidationResult(ErrorDescriptions.SomeFiltersAreNotValid);
                 }

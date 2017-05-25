@@ -7,6 +7,9 @@ import './services.css';
 class ShopServices extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isEditable: this.props.isEditable
+    };
   }
   render() {
     var action = this.props.match.params.subaction,
@@ -30,6 +33,7 @@ class ShopServices extends Component {
     }
 
     return (<section className="row white-section shop-section shop-section-padding">
+      { this.state.isEditable && (<NavLink className="btn btn-success" to={'/addservice/' + this.props.shop.id}><i className="fa fa-plus"></i> Add service</NavLink>) }
       <div className="row col-md-12 menu-service">
         <div className="shop-options">
           <NavLink to={listUrl} className="no-decoration"><i className={action === 'list' ? "fa fa-list active" : "fa fa-list"}></i></NavLink>

@@ -121,7 +121,7 @@ class Announces extends Component {
                   <h5>{this.state.user.name}</h5>
                 </div>
               </div>
-              <h4 className="price">Estimation <i>€ 300</i></h4>
+              <h4 className="price">Estimation <i>€ {this.state.announce.price}</i></h4>
               <h5>Contact me</h5>
               <ul className="list-group">
                 {this.state.user.email && this.state.user.email !== null && (

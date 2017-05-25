@@ -7,6 +7,7 @@ import EditableCategory from './editableCategory';
 import CategorySelector from './categorySelector';
 import PaymentMethodsSelector from './paymentMethodsSelector';
 import FilterSelector from './filterSelector';
+import TagsSelector from './tagsSelector';
 
 exports.CommentLst = CommentLst;
 exports.EditableText = EditableText;
@@ -17,3 +18,4 @@ exports.EditableCategory = EditableCategory;
 exports.CategorySelector = CategorySelector;
 exports.PaymentMethodsSelector = PaymentMethodsSelector;
 exports.FilterSelector = FilterSelector;
+exports.TagsSelector = TagsSelector;

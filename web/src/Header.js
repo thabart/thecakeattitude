@@ -74,7 +74,7 @@ class Header extends Component {
         });
     }
 
-    handeAuthenticationSuccess() {
+    handeAuthenticationSuccess(i) {
         var self = this;
         self.displayUserName().then(function () {
             self.setState({
@@ -83,6 +83,10 @@ class Header extends Component {
                 isAuthenticateOpened: false,
                 isLoggedIn: true
             });
+        });
+        AppDispatcher.dispatch({
+          actionName: Constants.events.USER_LOGGED_IN,
+          data: i
         });
         self.props.history.push('/');
     }
@@ -95,8 +99,8 @@ class Header extends Component {
             isLoading: true
         });
         OpenIdService.passwordAuthentication(this.state.login, this.state.password).then(function (resp) {
-            AuthenticateService.authenticate(resp.access_token).then(function () {
-                self.handeAuthenticationSuccess();
+            AuthenticateService.authenticate(resp.access_token).then(function (i) {
+                self.handeAuthenticationSuccess(i);
             }).catch(function () {
                 self.handleAuthenticationError();
             });
@@ -128,10 +132,10 @@ class Header extends Component {
                 var href = w.location.href;
                 var accessToken = getParameterByName('access_token', href);
                 if (accessToken) {
-                    AuthenticateService.authenticate(accessToken).then(function () {
+                    AuthenticateService.authenticate(accessToken).then(function (i) {
                         clearInterval(interval);
                         w.close();
-                        self.handeAuthenticationSuccess();
+                        self.handeAuthenticationSuccess(i);
                     }).catch(function () {
                         self.handleAuthenticationError();
                     });
@@ -216,7 +220,7 @@ class Header extends Component {
             <div>
                 <Navbar color="faded" light toggleable fixed="top">
                     <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
-                    <NavbarBrand href="/">SHOP IN GAME</NavbarBrand>
+                    <NavLink to="/home" className="navbar-brand">SHOP IN GAME</NavLink>
                     <Collapse isOpen={this.state.isMenuOpen} navbar>
                       <Nav className="mr-auto" navbar>
                         <NavItem>

@@ -41,15 +41,39 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Filter> filters = _context.Filters;
+            IQueryable<Models.Filter> filters = _context.Filters.Include(f => f.Values);
             if (parameter.Filters != null && parameter.Filters.Any())
             {
-                filters = _context.Filters.Where(f => parameter.Filters.Contains(f.Id));
+                filters = filters.Where(f => parameter.Filters.Contains(f.Id));
+            }
+
+            if (parameter.FilterValueIds != null && parameter.FilterValueIds.Any())
+            {
+                filters = filters.Where(f => f.Values.Any(v => parameter.FilterValueIds.Contains(v.Id)));
             }
 
             return new SearchFiltersResult
             {
-                Filters = await _context.Filters.Select(f => f.ToAggregate()).ToListAsync().ConfigureAwait(false)
+                Filters = await filters.Select(f => f.ToAggregate()).ToListAsync().ConfigureAwait(false)
+            };
+        }
+
+        public async Task<SearchFilterValuesResult> Search(SearchFilterValuesParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.FilterValue> filterValues = _context.FilterValues;
+            if (parameter.FilterValueIds != null && parameter.FilterValueIds.Any())
+            {
+                filterValues = filterValues.Where(f => parameter.FilterValueIds.Contains(f.Id));
+            }
+
+            return new SearchFilterValuesResult
+            {
+                Filters = await filterValues.Select(f => f.ToAggregate()).ToListAsync().ConfigureAwait(false)
             };
         }
     }

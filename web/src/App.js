@@ -155,7 +155,7 @@ class App extends Component {
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/announces/:id" component={Announces} />
                         <Route path="/addproduct/:id"
-                              render={() => (!self.isLoggedIn() ? (<AddProduct />) : (<AddProduct />))}/>
+                              render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                         <Route path="/addshop"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                         <Route path="/addAnnounce"

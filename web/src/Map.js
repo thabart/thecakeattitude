@@ -395,7 +395,10 @@ class Map extends Component {
                       showInfo: false,
                       id: announce.id,
                       opts: announceOpts,
-                      info: (<div><strong>{announce.name}</strong></div>)
+                      info: (<div>
+                        <strong>{announce.name}</strong><br />
+                        <NavLink to={"/announces/" + announce.id }>View announce</NavLink>
+                      </div>)
                   });
               });
               self.setState({
@@ -605,7 +608,7 @@ class Map extends Component {
                       e.preventDefault();
                       this.openModal();
                     }}><i className="fa fa-filter"></i></a>
-                    {isLoggedIn && (<a href="/addAnnounce"><i className="fa fa-bullhorn"></i></a>)}
+                    {isLoggedIn && (<NavLink to="/addAnnounce"><i className="fa fa-bullhorn"></i></NavLink>)}
                 </div>
                 <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
                 {this.state.isAddingWidgets && (
