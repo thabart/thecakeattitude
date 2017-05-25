@@ -21,24 +21,24 @@ module.exports = {
         });
     },
     // Search mine shops
-    searchMineShops: function(content) {
-      var accessToken = Session.getSession().access_token;
-      return new Promise(function (resolve, reject) {
-          ConfigurationService.get().then(function (configuration) {
-              $.ajax(configuration.shops_endpoint + '/me/.search', {
-                  method: 'POST',
-                  contentType: 'application/json',
-                  data: JSON.stringify(content),
-                  headers: {
-                      'Authorization': 'Bearer ' + accessToken
-                  }
-              }).then(function (r) {
-                  resolve(r);
-              }).fail(function (e) {
-                  reject(e);
-              });
-          });
-      });
+    searchMineShops: function (content) {
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.shops_endpoint + '/me/.search', {
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(content),
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     },
     // Search comments
     searchComments: function (shopId, content) {
@@ -89,7 +89,7 @@ module.exports = {
         });
     },
     // Remove the shop
-    remove: function(id, commonId) {
+    remove: function (id, commonId) {
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
