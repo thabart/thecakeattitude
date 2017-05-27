@@ -127,7 +127,7 @@ class Services extends Component {
         if (self.state.service.images && self.state.service.images.length > 0) {
             var i = 0;
             self.state.service.images.forEach(function (image) {
-                var img = Constants.apiUrl + image;
+                var img = image;
                 if (i === self.state.currentImageIndice) {
                     currentImageSrc = img;
                 }

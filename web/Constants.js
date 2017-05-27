@@ -11,6 +11,7 @@ module.exports = {
     openIdUrl: 'http://localhost:5001',
     events: {
       USER_LOGGED_IN: 'USER_LOGGED_IN',
-      USER_LOGGED_OUT: 'USER_LOGGED_OUT'
+      USER_LOGGED_OUT: 'USER_LOGGED_OUT',
+      ADD_PRODUCT_LOADED: 'ADD_PRODUCT_LOADED'
     }
 };

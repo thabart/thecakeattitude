@@ -122,6 +122,15 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
+            var productCategories = new JArray();
+            if (shop.ProductCategories != null && shop.ProductCategories.Any())
+            {
+                foreach(var record in shop.ProductCategories)
+                {
+                    productCategories.Add(GetProductCategory(record));
+                }
+            }
+
             var filters = new JArray(); // Filters
             if (shop.ShopFilters != null && shop.ShopFilters.Any())
             {
@@ -133,6 +142,7 @@ namespace Cook4Me.Api.Host.Builders
             
             result.Add(Constants.DtoNames.Shop.Filters, filters);
             result.Add(Constants.DtoNames.Shop.Payments, payments);
+            result.Add(Constants.DtoNames.Shop.ProductCategories, productCategories);
             result.Add(Constants.DtoNames.Shop.ShopPath, shop.ShopRelativePath); // Game
             result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
             result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime); // Other informations
@@ -140,6 +150,20 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.NbComments, nbComments);
             result.Add(Constants.DtoNames.Shop.AverageScore, shop.AverageScore);
             result.Add(Constants.DtoNames.Shop.TotalScore, shop.TotalScore);
+            return result;
+        }
+
+        public JObject GetProductCategory(ShopProductCategory category)
+        {
+            if (category == null)
+            {
+                throw new ArgumentNullException(nameof(category));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.ProductCategory.Id, category.Id);
+            result.Add(Constants.DtoNames.ProductCategory.Name, category.Name);
+            result.Add(Constants.DtoNames.ProductCategory.Description, category.Description);
             return result;
         }
 

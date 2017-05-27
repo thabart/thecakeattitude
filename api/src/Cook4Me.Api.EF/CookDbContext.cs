@@ -36,6 +36,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductCategory> ProductCategories { get; set; }
         public virtual DbSet<Filter> Filters { get; set; }
+        public virtual DbSet<FilterValue> FilterValues { get; set; }
         public virtual DbSet<ProductPromotion> Promotions { get; set; }
         public virtual DbSet<Service> Services { get; set; }
         public virtual DbSet<ServiceOccurrence> ServiceOccurrences { get; set; }

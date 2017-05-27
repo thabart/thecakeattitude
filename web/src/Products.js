@@ -136,7 +136,7 @@ class Products extends Component {
         if (this.state.product.images && this.state.product.images.length > 0) {
             var i = 0;
             this.state.product.images.forEach(function (image) {
-                var img = Constants.apiUrl + image;
+                var img = image;
                 if (i === self.state.currentImageIndice) {
                     currentImageSrc = img;
                 }

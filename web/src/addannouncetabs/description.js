@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {TabContent, TabPane, Alert, Tooltip} from "reactstrap";
+import {CategorySelector} from '../components';
 import {CategoryService} from "../services/index";
 
 class DescriptionAnnouncement extends Component {
@@ -8,22 +9,15 @@ class DescriptionAnnouncement extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.validate = this.validate.bind(this);
     this.toggleTooltip = this.toggleTooltip.bind(this);
-    this.selectCategory = this.selectCategory.bind(this);
-    this.selectSubCategory = this.selectSubCategory.bind(this);
     this.state = {
       name: null,
       description: null,
       price: null,
-      subCategoryIdSelected: null,
-      isCategoryLoading: false,
-      isSubCategoryLoading: false,
       tooltip: {
         toggleName: false,
         toggleDescription: false,
         togglePrice: false
       },
-      categories: [],
-      subCategories: [],
       valid: {
         isNameInvalid: false,
         isDescriptionInvalid: false,
@@ -37,43 +31,6 @@ class DescriptionAnnouncement extends Component {
       const name = target.name;
       this.setState({
           [name]: value
-      });
-  }
-  selectCategory(e) {
-    this.displaySubCategory(e.target.value);
-  }
-  selectSubCategory(e) {
-    this.setState({
-      subCategoryIdSelected: e.target.value
-    })
-  }
-  displaySubCategory(categoryId) {
-      var self = this;
-      if (!categoryId || categoryId === null || categoryId === '') {
-        var subCategories = [{id: null, name: null}];
-        self.setState({
-            subCategories: subCategories
-        });
-        return;
-      }
-
-      self.setState({
-          isSubCategoryLoading: true
-      });
-      CategoryService.get(categoryId).then(function (r) {
-          var children = r['_embedded']['children'];
-          var subCategories = [];
-          children.forEach(function (child) {
-              subCategories.push({id: child.id, name: child.name});
-          });
-          self.setState({
-              subCategories: subCategories,
-              isSubCategoryLoading: false
-          });
-      }).catch(function () {
-          self.setState({
-              isSubCategoryLoading: false
-          });
       });
   }
   toggleTooltip(name) {
@@ -135,33 +92,22 @@ class DescriptionAnnouncement extends Component {
         return;
     }
 
+    var category = this.refs.categorySelector.getCategory();
     var json = {
       name: this.state.name,
       description: this.state.description,
-      category_id: this.state.subCategoryIdSelected,
       price: this.state.price
     };
+    if (category && category !== null) {
+      json.category_id = category.id;
+    }
+    
     this.props.onNext(json);
   }
   render() {
-    var categories = [],
-      subCategories = [],
-      nameError = this.buildErrorTooltip('isNameInvalid', 'Should contains 1 to 15 characters'),
+    var nameError = this.buildErrorTooltip('isNameInvalid', 'Should contains 1 to 15 characters'),
       descriptionError = this.buildErrorTooltip('isDescriptionInvalid', 'Should contains 1 to 255 characters'),
       priceError = this.buildErrorTooltip('isPriceInvalid', 'the price should be a number > 0');
-
-    if (this.state.categories) {
-      this.state.categories.forEach(function (category) {
-        categories.push(<option value={category.id}>{category.name}</option>);
-      });
-    }
-
-    if (this.state.subCategories) {
-      this.state.subCategories.forEach(function (category) {
-        subCategories.push(<option value={category.id}>{category.name}</option>);
-      });
-    }
-
     return (
     <div>
       <section className="row">
@@ -182,24 +128,7 @@ class DescriptionAnnouncement extends Component {
           <textarea className='form-control' name='description' onChange={this.handleInputChange}></textarea>
         </div>
         <div className="form-group col-md-12 row">
-          <div className="col-md-6">
-            <div className="form-group">
-              <label className="control-label">Categories</label>
-              <div className={this.state.isCategoryLoading ? 'loading' : 'hidden'}><i className='fa fa-spinner fa-spin'></i></div>
-              <select className={this.state.isCategoryLoading ? 'hidden' : 'form-control'} onChange={this.selectCategory}>
-                {categories}
-              </select>
-            </div>
-          </div>
-          <div className="col-md-6">
-            <div className="form-group">
-              <label className="control-label">Sub categories</label>
-              <div className={this.state.isSubCategoryLoading ? 'loading' : 'hidden'}><i className='fa fa-spinner fa-spin'></i></div>
-              <select className={this.state.isSubCategoryLoading ? 'hidden' : 'form-control'} onChange={this.selectSubCategory}>
-                {subCategories}
-              </select>
-            </div>
-          </div>
+          <CategorySelector ref="categorySelector" />
         </div>
         <div className="form-group col-md-12">
           <label className="control-label">Price</label> <i className="fa fa-exclamation-circle" id="priceTooltip"></i>
@@ -217,31 +146,6 @@ class DescriptionAnnouncement extends Component {
           <button className="btn btn-primary next" onClick={this.validate}>Next</button>
       </section>
     </div>);
-  }
-  componentDidMount() {
-      var self = this;
-      self.setState({
-          isCategoryLoading: true,
-          isSubCategoryLoading: true
-      });
-    CategoryService.getParents().then(function (result) {
-        var categories = result['_embedded'];
-        var result = [{id: null, name: null}];
-        categories.forEach(function (category) {
-            result.push({id: category.id, name: category.name});
-        });
-        self.setState({
-            isCategoryLoading: false,
-            isSubCategoryLoading: false,
-            categories: result
-        });
-        self.displaySubCategory(result[0].id);
-    }).catch(function () {
-        self.setState({
-            isCategoryLoading: false,
-            isSubCategoryLoading: false
-        });
-    });
   }
 }
 

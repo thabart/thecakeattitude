@@ -282,7 +282,7 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 var record = productAggregate.ToModel();
                 var tags = new List<Models.ProductTag>();
-                if (productAggregate.Tags != null && productAggregate.Tags.Any())
+                if (productAggregate.Tags != null && productAggregate.Tags.Any()) // Add tags
                 {
                     var tagNames = productAggregate.Tags;
                     var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
@@ -313,6 +313,30 @@ namespace Cook4Me.Api.EF.Repositories
                             Tag = newTag
                         });
                     }
+                }
+
+                if (productAggregate.Filters != null && productAggregate.Filters.Any()) // Add filters
+                {
+                    var ids = productAggregate.Filters.Select(f => f.FilterValueId);
+                    var filters = await _context.FilterValues.Where(f => ids.Contains(f.Id)).Select(f => 
+                        new Models.ProductFilter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            FilterValueId = f.Id,
+                            ProductId = productAggregate.Id
+                        }).ToListAsync().ConfigureAwait(false);
+                    record.Filters = filters;
+                }
+
+                if (productAggregate.PartialImagesUrl != null && productAggregate.PartialImagesUrl.Any()) // Add images
+                {
+                    record.Images = productAggregate.PartialImagesUrl.Select(i =>
+                        new Models.ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = i
+                        }
+                    ).ToList();
                 }
 
                 record.Tags = tags;

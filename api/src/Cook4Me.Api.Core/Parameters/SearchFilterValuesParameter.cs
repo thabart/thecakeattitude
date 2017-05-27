@@ -1,4 +1,4 @@
-﻿#region
+﻿#region copyright
 // Copyright 2017 Habart Thierry
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +18,8 @@ using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Parameters
 {
-    public class SearchFiltersParameter
+    public class SearchFilterValuesParameter
     {
-        public IEnumerable<string> Filters { get; set; }
         public IEnumerable<string> FilterValueIds { get; set; }
     }
 }

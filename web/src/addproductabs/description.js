@@ -1,5 +1,9 @@
 import React, {Component} from "react";
 import {Tooltip} from 'reactstrap';
+import {withRouter} from "react-router";
+import {ShopsService} from '../services/index';
+import {TagsSelector} from '../components';
+import {AddProductStore} from '../stores';
 import './description.css';
 
 class DescriptionTab extends Component {
@@ -19,6 +23,7 @@ class DescriptionTab extends Component {
       quantity: 0,
       unlimited: true,
       availableInStock: 0,
+      productCategories: [],
       tooltip: {
         toggleName: false,
         toggleDescription: false,
@@ -26,7 +31,9 @@ class DescriptionTab extends Component {
         togglePrice: false,
         toggleUnitOfMeasure: false,
         toggleQuantity: false,
-        toggleInStock: false
+        toggleInStock: false,
+        toggleProductCategory: false,
+        toggleProductTags: false
       },
       valid: {
         isNameInvalid: false,
@@ -120,7 +127,27 @@ class DescriptionTab extends Component {
       return;
     }
 
-    this.props.next();
+    var json = {
+      name: self.state.name,
+      description: self.state.description,
+      price: self.state.price,
+      new_price: self.state.price,
+      unit_of_measure: self.state.unitOfMeasure,
+      quantity: self.state.quantity,
+      shop_id: self.props.match.params.id,
+      images : self.state.images,
+      tags: self.refs.productTags.getTags()
+    };
+
+    if (self.state.productCategory && self.state.productCategory !== null) {
+      json['category_id'] = self.state.productCategory;
+    }
+
+    if (!self.state.unlimited) {
+      json['available_in_stock'] = self.state.availableInStock;
+    }
+
+    this.props.next(json);
   }
   buildErrorTooltip(validName, description) {
       var result;
@@ -162,6 +189,7 @@ class DescriptionTab extends Component {
       quantityError = this.buildErrorTooltip('isQuantityInvalid', 'the quantity must be more than 0'),
       inStockError = this.buildErrorTooltip('isInStockInvalid', 'the stock must be more or equal to 0'),
       images = [],
+      productCategories = [(<option></option>)],
       self = this;
     if (this.state.images && this.state.images.length > 0) {
       this.state.images.forEach(function(image) {
@@ -183,6 +211,12 @@ class DescriptionTab extends Component {
       });
     }
 
+    if (this.state.productCategories && this.state.productCategories.length > 0) {
+      this.state.productCategories.forEach(function(productCategory) {
+        productCategories.push((<option value={productCategory.id}>{productCategory.name}</option>));
+      });
+    }
+
     return (<div>
         <section className="row section">
           <div className="col-md-6 row">
@@ -201,6 +235,20 @@ class DescriptionTab extends Component {
               </Tooltip>
                {descriptionError}
               <textarea className='form-control' name='description' onChange={this.handleInputChange}></textarea>
+            </div>
+            <div className="form-group col-md-12">
+              <label className="control-label">Product category</label> <i className="fa fa-exclamation-circle" id="productCategory"></i>
+              <Tooltip placement="right" target="productCategory" isOpen={this.state.tooltip.toggleProductCategory} toggle={() => { this.toggleTooltip('toggleProductCategory'); }}>
+                Choose a category
+              </Tooltip>
+              <select name="productCategory" onChange={this.handleInputChange} className="form-control">{productCategories}</select>
+            </div>
+            <div className="form-group col-md-12">
+              <label className="control-label">Tags</label> <i className="fa fa-exclamation-circle" id="productTags"></i>
+              <Tooltip placement="right" target="productTags" isOpen={this.state.tooltip.toggleProductTags} toggle={() => { this.toggleTooltip('toggleProductTags'); }}>
+                Assign one or more tags
+              </Tooltip>
+              <TagsSelector ref="productTags"/>
             </div>
             <div className="form-group col-md-12">
               <label className="control-label">Images</label> <i className="fa fa-exclamation-circle" id="imagesTooltip"></i>
@@ -263,6 +311,15 @@ class DescriptionTab extends Component {
       </section>
     </div>);
   }
+  componentWillMount() {
+    var self = this;
+    AddProductStore.addChangeListener(function() {
+      var shop = AddProductStore.getShop();
+      self.setState({
+        productCategories: shop.product_categories
+      });
+    });
+  }
 }
 
-export default DescriptionTab;
+export default withRouter(DescriptionTab);

@@ -145,6 +145,7 @@ class Shop extends Component {
         var bannerImage = this.state.shop.banner_image;
         var profileImage = this.state.shop.profile_image;
         var action = this.props.match.params.action;
+        var subaction = this.props.match.params.subaction;
         var profileUrl = null;
         var productsUrl = null;
         var servicesUrl = null;
@@ -256,7 +257,7 @@ class Shop extends Component {
                 <ul className="nav nav-pills menu-shop-options">
                     { this.state.canBeEdited && (
                         <li className="nav-item">
-                            <a href={'/shops/' + this.state.shop.id + '/edit/profile'}
+                            <a href={'/shops/' + this.state.shop.id + '/edit/' + action + (subaction && subaction !== null ? '/' + subaction : '') }
                                className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></a>
                         </li>
                     ) }
@@ -272,7 +273,7 @@ class Shop extends Component {
                     )}
                     {this.state.isEditable && (
                         <li className="nav-item">
-                            <a href={'/shops/' + this.state.shop.id + '/view/profile'}
+                            <a href={'/shops/' + this.state.shop.id + '/view/' + action + (subaction && subaction !== null ? '/' + subaction : '')}
                                className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></a>
                         </li>
                     )}

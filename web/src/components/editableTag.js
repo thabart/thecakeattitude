@@ -1,17 +1,17 @@
 import React, {Component} from "react";
 import TagsInput from "react-tagsinput";
+import TagsSelector from './tagsSelector';
 import './editable.css';
 
 class EditableTag extends Component {
   constructor(props) {
     super(props);
+    this._tagsSelector = null;
     this.onClickField = this.onClickField.bind(this);
-    this.handleTags = this.handleTags.bind(this);
     this.validate = this.validate.bind(this);
     this.closeEditMode = this.closeEditMode.bind(this);
     this.state = {
       tags: props.tags,
-      oldTags: props.tags,
       isEditMode: false
     };
   }
@@ -20,15 +20,9 @@ class EditableTag extends Component {
       isEditMode: true
     });
   }
-  handleTags(tags) {
-    this.setState({
-      oldTags: tags
-    });
-  }
   validate() {
-    var oldTags = this.state.oldTags;
     this.setState({
-      tags: oldTags,
+      tags: this._tagsSelector.getTags(),
       isEditMode: false
     });
   }
@@ -55,7 +49,9 @@ class EditableTag extends Component {
 
     return (<div className="row">
       <div className="editable-input-container col-md-8">
-        <TagsInput value={this.state.oldTags} onChange={this.handleTags}/>
+        <TagsSelector ref={(elt) => {
+          this._tagsSelector = elt;
+        }} tags={this.state.tags} />
       </div>
       <div className="editable-buttons-container col-md-4">
         <button className="btn btn-primary btn-sm" onClick={(e) => {this.validate(); }}><i className="fa fa-check"></i></button>
