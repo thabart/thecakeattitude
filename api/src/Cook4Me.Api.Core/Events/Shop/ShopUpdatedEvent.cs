@@ -14,15 +14,15 @@
 // limitations under the License.
 #endregion
 
-using System;
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Bus;
 
-namespace Cook4Me.Api.Core.Aggregates
+namespace Cook4Me.Api.Core.Events.Shop
 {
-    public class ShopFilter
+    public class ShopUpdatedEvent : Event
     {
-        public string Id { get; set; }
+        public string ShopId { get; set; }
         public string Name { get; set; }
-        public IEnumerable<ShopFilterValue> Values { get; set; }
+        public float Longitude { get; set; }
+        public float Latitude { get; set; }
     }
 }

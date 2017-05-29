@@ -40,13 +40,14 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IRemoveShopCommentOperation _removeShopCommentOperation;
         private readonly ISearchShopCommentsOperation _searchShopCommentsOperation;
         private readonly ISearchMineShopsOperation _searchMineShopsOperation;
+        private readonly IUpdateShopOperation _updateShopOperation;
         private readonly IDeleteShopOperation _deleteShopOperation;
 
         public ShopsController(IResponseBuilder responseBuilder, IAddShopOperation addShopOperation, IAddShopCommentOperation addShopCommentOperation,
             IGetShopOperation getShopOperation, IGetShopsOperation getShopsOperation, ISearchShopsOperation searchShopsOperation,
             IGetMineShopsOperation getMineShopsOperation, IRemoveShopCommentOperation removeShopCommentOperation, ISearchShopCommentsOperation searchShopCommentsOperation,
             ISearchMineShopsOperation searchMineShopsOperation, IDeleteShopOperation deleteShopOperation,
-            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IUpdateShopOperation updateShopOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _responseBuilder = responseBuilder;
             _addShopOperation = addShopOperation;
@@ -97,6 +98,20 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return await _addShopOperation.Execute(obj, subject);
+        }
+        
+        [HttpPut]
+        [Authorize("Connected")]
+        public async Task<IActionResult> UpdateShop([FromBody] JObject jObj)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _updateShopOperation.Execute(jObj, subject);
         }
 
         [HttpPost(Constants.RouteNames.Search)]

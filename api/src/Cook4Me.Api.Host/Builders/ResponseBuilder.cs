@@ -32,6 +32,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetFilter(ShopFilter filter);
         JObject GetFilterValue(ShopFilterValue filterValue);
         JObject GetShopAddedEvent(ShopAddedEvent evt);
+        JObject GetShopUpdatedEvent(ShopUpdatedEvent evt);
         JObject GetError(string errorCode, string errorDescription);
         JObject GetShopCategory(ShopCategoryAggregate category);
         JObject GetMap(ShopMap map);
@@ -218,6 +219,24 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Id, evt.ShopId);
             result.Add(Constants.DtoNames.Shop.Location, location);
             result.Add(Constants.DtoNames.Shop.Name, evt.Name);
+            return result;
+        }
+
+        public JObject GetShopUpdatedEvent(ShopUpdatedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            var location = new JObject();
+            location.Add(Constants.DtoNames.Location.Latitude, evt.Latitude);
+            location.Add(Constants.DtoNames.Location.Longitude, evt.Longitude);
+            result.Add(Constants.DtoNames.Shop.Id, evt.ShopId);
+            result.Add(Constants.DtoNames.Shop.Location, location);
+            result.Add(Constants.DtoNames.Shop.Name, evt.Name);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return result;
         }
         

@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Handlers
 {
-    public class ShopEventsHandler : Handles<ShopAddedEvent>, Handles<ShopCommentAddedEvent>, Handles<ShopCommentRemovedEvent>, Handles<ShopRemovedEvent>
+    public class ShopEventsHandler : Handles<ShopAddedEvent>, Handles<ShopCommentAddedEvent>, Handles<ShopCommentRemovedEvent>, Handles<ShopRemovedEvent>, Handles<ShopUpdatedEvent>
     {
         private readonly IConnectionManager _connectionManager;
         private readonly IResponseBuilder _responseBuilder;
@@ -33,6 +33,18 @@ namespace Cook4Me.Api.Host.Handlers
         {
             _connectionManager = connectionManager;
             _responseBuilder = responseBuilder;
+        }
+
+        public Task Handle(ShopUpdatedEvent message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var notifier = _connectionManager.GetHubContext<Notifier>();
+            notifier.Clients.All.shopUpdated(_responseBuilder.GetShopUpdatedEvent(message));
+            return Task.FromResult(0);
         }
 
         public Task Handle(ShopAddedEvent message)

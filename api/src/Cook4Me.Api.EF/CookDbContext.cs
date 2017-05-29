@@ -43,6 +43,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<ServiceOccurrenceDay> ServiceOccurrenceDays { get; set; }
         public virtual DbSet<ServiceDay> ServiceDays { get; set; }
         public virtual DbSet<Announcement> Announcements { get; set; }
+        public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
