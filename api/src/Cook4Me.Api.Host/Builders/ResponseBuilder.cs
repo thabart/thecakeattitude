@@ -413,6 +413,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
+            jObj.Add(Constants.DtoNames.Message.CommonId, comment.CommonId);
             return jObj;
         }
 
@@ -448,6 +449,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
+            jObj.Add(Constants.DtoNames.Message.CommonId, comment.CommonId);
             return jObj;
         }
 

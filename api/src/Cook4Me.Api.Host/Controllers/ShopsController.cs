@@ -146,7 +146,7 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> AddComment([FromBody] JObject jObj)
         {
-            return await _addShopCommentOperation.Execute(jObj, User.GetSubject());
+            return await _addShopCommentOperation.Execute(jObj, User.GetSubject(), this.GetCommonId());
         }
 
         [HttpPost(Constants.RouteNames.SearchComments)]
@@ -163,7 +163,8 @@ namespace Cook4Me.Api.Host.Controllers
             {
                 CommentId = subid,
                 Subject = User.GetSubject(),
-                ShopId = id
+                ShopId = id,
+                CommonId = this.GetCommonId()
             });
         }
     }

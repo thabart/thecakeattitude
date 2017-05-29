@@ -13,6 +13,7 @@ import $ from 'jquery';
 import AppDispatcher from './appDispatcher';
 import Constants from '../Constants';
 import {Guid} from './utils';
+import NotificationSystem from 'react-notification-system';
 
 class Shop extends Component {
     constructor(props) {
@@ -24,7 +25,6 @@ class Shop extends Component {
         this.toggle = this.toggle.bind(this);
         this.refreshScore = this.refreshScore.bind(this);
         this.toggleError = this.toggleError.bind(this);
-        this.toggleSuccess = this.toggleSuccess.bind(this);
         this.toggleUpdatingError = this.toggleUpdatingError.bind(this);
         this.updateTitle = this.updateTitle.bind(this);
         this.updateTags = this.updateTags.bind(this);
@@ -38,7 +38,6 @@ class Shop extends Component {
             nbComments: 0,
             isRatingOpened: false,
             errorMessage: null,
-            successMessage: null,
             updatingErrorMessage: null,
             isEditable: false,
             canBeEdited: false
@@ -50,13 +49,6 @@ class Shop extends Component {
         this.setState({
             errorMessage: null
         });
-    }
-
-    // Toggle the success message
-    toggleSuccess() {
-      this.setState({
-        successMessage: null
-      });
     }
 
     // Toggle updating error message
@@ -199,7 +191,7 @@ class Shop extends Component {
         var servicesUrl = null;
         var self = this;
         var tags = [];
-        var content = (<ShopProfile ref="profile" user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable} history={this.props.history}  />);
+        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable} history={this.props.history}  />);
         if (action === "products") {
             content = (<ShopProducts user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
@@ -250,7 +242,6 @@ class Shop extends Component {
 
         return (<div className="container">
             <span className={!this.state.isUpdating && "hidden"}>Is updating ...</span>
-            <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.toggleSuccess}>{this.state.successMessage}</Alert>
             <Alert color="danger" isOpen={this.state.updatingErrorMessage !== null} toggle={this.toggleUpdatingError}>{this.state.updatingErrorMessage}</Alert>
             <section className="row white-section shop-section cover">
                 <div className="cover-banner">
@@ -315,6 +306,7 @@ class Shop extends Component {
                 </ul>
             </section>
             {content}
+            <NotificationSystem ref="notificationSystem" />
         </div>);
     }
 
@@ -350,8 +342,12 @@ class Shop extends Component {
                           case 'update-shop':
                               if (payload.data && payload.data.common_id === self._commonId) {
                                 self.setState({
-                                  isUpdating: false,
-                                  successMessage: 'The shop has been updated'
+                                  isUpdating: false
+                                });
+                                self.refs.notificationSystem.addNotification({
+                                  message: 'The shop has been updated',
+                                  level: 'success',
+                                  position: 'bl'
                                 });
                               }
                               break;

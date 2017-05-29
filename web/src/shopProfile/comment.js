@@ -2,10 +2,12 @@ import React, {Component} from "react";
 import {CommentLst} from "../components";
 import {ShopsService} from "../services/index";
 import AppDispatcher from "../appDispatcher";
+import NotificationSystem from 'react-notification-system';
 
 class Comment extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.removeCommentCallback = this.removeCommentCallback.bind(this);
         this.searchCommentsCallback = this.searchCommentsCallback.bind(this);
         this.addCommentCallback = this.addCommentCallback.bind(this);
@@ -25,18 +27,30 @@ class Comment extends Component {
     }
 
     render() {
-        return (<CommentLst ref="comments" className="col-md-6" removeCommentCallback={this.removeCommentCallback}
+        return (<div><CommentLst ref="comments" className="col-md-6" removeCommentCallback={this.removeCommentCallback}
                             searchCommentsCallback={this.searchCommentsCallback}
-                            addCommentCallback={this.addCommentCallback}/>);
+                            addCommentCallback={this.addCommentCallback}/>
+                            <NotificationSystem ref="notificationSystem" />
+                            </div>);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         // Refresh the comments.
         var self = this;
-        AppDispatcher.register(function (payload) {
+        this._waitForToken = AppDispatcher.register(function(payload) {
             switch (payload.actionName) {
                 case 'new-shop-comment':
                 case 'remove-shop-comment':
+                    var message = "A comment has been removed";
+                    if (payload.actionName === "new-shop-comment") {
+                      message = "A comment has been added";
+                    }
+
+                    self.refs.notificationSystem.addNotification({
+                      message: message,
+                      level: 'info',
+                      position: 'tr'
+                    });
                     if (payload && payload.data && payload.data.shop_id === self.props.shop.id) {
                         self.refs.comments.refreshComments();
                         self.props.onRefreshScore();
@@ -44,6 +58,10 @@ class Comment extends Component {
                     break;
             }
         });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

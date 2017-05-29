@@ -20,6 +20,7 @@
     "react-dom": "^15.4.2",
     "react-google-maps": "^6.0.1",
     "react-magnify": "0.0.3",
+    "react-notification-system": "^0.2.14",
     "react-rater": "^0.4.1",
     "react-router": "latest",
     "react-router-dom": "^4.1.1",

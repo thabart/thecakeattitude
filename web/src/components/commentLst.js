@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Tooltip, Alert, Modal, ModalHeader, ModalFooter, Button } from 'reactstrap';
 import { UserService, SessionService, OpenIdService } from '../services/index';
 import { withRouter } from 'react-router';
+import {ApplicationStore} from '../stores';
 import Promise from 'bluebird';
 import moment from 'moment';
 import Rater from 'react-rater';
@@ -315,24 +316,14 @@ class CommentLst extends Component {
   }
   componentWillMount() {
     var self = this;
-    var session = SessionService.getSession();
-    if (session || session !== null) {
-      OpenIdService.introspect(session.access_token).then(function(introspect) {
-        if (introspect && introspect.active) {
-          self.setState({
-            isAuthenticated: true,
-            subject: introspect.sub
-          });
-        }
-        else {
-          SessionService.remove();
-        }
-      }).catch(function() {
-        SessionService.remove();
-        return;
+    var user = ApplicationStore.getUser();
+    if (user && user !== null) {
+      self.setState({
+        isAuthenticated: true,
+        subject: user.sub
       });
     }
-
+    
     self.refreshComments();
   }
 }

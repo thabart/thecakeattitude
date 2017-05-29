@@ -156,7 +156,6 @@ class PaymentMethodsSelector extends Component {
             secondIban = payment.iban.substring(4, 8);
             thirdIban = payment.iban.substring(8, 12);
             fourthIban = payment.iban.substring(12, 16);
-            console.log(payment.iban);
             break;
           case "PayPal":
           case "paypal":
