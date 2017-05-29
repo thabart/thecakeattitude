@@ -112,7 +112,7 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            return await _updateShopOperation.Execute(jObj, id, subject, this.GetCommonId());
+            return await _updateShopOperation.Execute(jObj, this.Request, id, subject, this.GetCommonId());
         }
 
         [HttpPost(Constants.RouteNames.Search)]

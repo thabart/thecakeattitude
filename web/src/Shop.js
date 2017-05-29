@@ -84,6 +84,10 @@ class Shop extends Component {
         self.setState({
           shop: shop
         });
+        AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+          data: { banner_image: result }
+        });
       });
     }
 
@@ -94,6 +98,10 @@ class Shop extends Component {
         shop.profile_image = result;
         self.setState({
           shop: shop
+        });
+        AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+          data: { profile_image: result }
         });
       });
     }

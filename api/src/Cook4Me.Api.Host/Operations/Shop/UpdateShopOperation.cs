@@ -25,12 +25,15 @@ using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Host.Validators;
 using Cook4Me.Api.Core.Commands.Shop;
 using System.Net;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Cook4Me.Api.Host.Extensions;
 
 namespace Cook4Me.Api.Host.Operations.Shop
 {
     public interface IUpdateShopOperation
     {
-        Task<IActionResult> Execute(JObject jObj, string id, string subject, string commonId);
+        Task<IActionResult> Execute(JObject jObj, HttpRequest request, string id, string subject, string commonId);
     }
 
     internal class UpdateShopOperation : IUpdateShopOperation
@@ -54,11 +57,16 @@ namespace Cook4Me.Api.Host.Operations.Shop
             _commandSender = commandSender;
         }
 
-        public async Task<IActionResult> Execute(JObject jObj, string id, string subject, string commonId)
+        public async Task<IActionResult> Execute(JObject jObj, HttpRequest request, string id, string subject, string commonId)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
             }
 
             if (string.IsNullOrWhiteSpace(id))
@@ -83,6 +91,21 @@ namespace Cook4Me.Api.Host.Operations.Shop
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
+            // 2. Add image
+            if (!string.IsNullOrWhiteSpace(command.BannerImage))
+            {
+                string bannerImage = null;
+                AddImage(command.BannerImage, request, "banner", out bannerImage);
+                command.BannerImage = bannerImage;
+            }
+
+            if (!string.IsNullOrWhiteSpace(command.ProfileImage))
+            {
+                string profileImage = null;
+                AddImage(command.ProfileImage, request, "profile", out profileImage);
+                command.ProfileImage = profileImage;
+            }
+
             command.Id = id;
             command.UpdateDateTime = DateTime.UtcNow;
             command.CommonId = commonId;
@@ -95,6 +118,36 @@ namespace Cook4Me.Api.Host.Operations.Shop
             
             _commandSender.Send(command);
             return new OkResult();
+        }
+
+        private bool AddImage(string base64Encoded, HttpRequest request, string type, out string path)
+        {
+            path = null;
+            if (string.IsNullOrWhiteSpace(base64Encoded))
+            {
+                return false;
+            }
+
+            var id = Guid.NewGuid().ToString();
+            var picturePath = Path.Combine(_env.WebRootPath, "shops/" + id + "_" + type + ".jpg");
+            if (File.Exists(picturePath))
+            {
+                File.Delete(picturePath);
+            }
+
+            try
+            {
+                base64Encoded = base64Encoded.Substring(base64Encoded.IndexOf(',') + 1);
+                base64Encoded = base64Encoded.Trim('\0');
+                var imageBytes = Convert.FromBase64String(base64Encoded);
+                File.WriteAllBytes(picturePath, imageBytes);
+                path = request.GetAbsoluteUriWithVirtualPath() + "/shops/" + id + "_" + type + ".jpg";
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

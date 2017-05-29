@@ -48,7 +48,8 @@ class ShopProfile extends Component {
           user: props.user,
           isEditable: props.isEditable,
           errorMessagePaymentMethods: null,
-          errorMessageAddress: null
+          errorMessageAddress: null,
+          isAdrValidateEnabled: true
         };
     }
 
@@ -100,6 +101,10 @@ class ShopProfile extends Component {
       var address = this.refs.address.getAddress();
       var shop = this.state.shop;
       shop.street_address = address.street_address;
+      shop.location = {
+        lng: address.location.lng(),
+        lat: address.location.lat()
+      };
       this.setState({
         shop: shop,
         isModalAddressOpened: false
@@ -126,13 +131,6 @@ class ShopProfile extends Component {
         actionName: Constants.events.UPDATE_SHOP_INFORMATION,
         data: { payments: arr }
       });
-    }
-
-    getJson() {
-      var json = this.refs.address.getAddress();
-      json['description'] = this.state.shop.description;
-      json['payments'] = this.state.shop.payments;
-      return json;
     }
 
     render() {
@@ -252,10 +250,14 @@ class ShopProfile extends Component {
                     self.setState({
                       errorMessageAddress: m
                     });
+                  }} position={this.state.shop.location} addressCorrect={(m) => {
+                    self.setState({
+                      isAdrValidateEnabled: m
+                    });
                   }} />
                 </ModalBody>
                 <ModalFooter>
-                  <button className="btn btn-success" onClick={() => {self.updateAddress(); }}>Validate</button>
+                  <button className="btn btn-success" onClick={() => {self.updateAddress(); }} disabled={!this.state.isAdrValidateEnabled}>Validate</button>
                   <button className="btn btn-default" onClick={self.closeModalAddress}>Cancel</button>
                 </ModalFooter>
             </Modal>
@@ -268,7 +270,7 @@ class ShopProfile extends Component {
                   self.setState({
                     errorMessagePaymentMethods: m
                   });
-                }} />
+                }} payments={self.state.shop.payments} />
               </ModalBody>
               <ModalFooter>
                 <button className="btn btn-success" onClick={(r) => {self.updatePaymentMethods(r); }}>Validate</button>

@@ -149,7 +149,6 @@ namespace Cook4Me.Api.Host.Operations.Product
             {
                 return false;
             }
-
         }
     }
 }
