@@ -4,12 +4,15 @@ import {Tooltip, Progress, Alert, Button} from "reactstrap";
 import {withRouter} from "react-router";
 import {NavLink} from "react-router-dom";
 import {ShopProfile, ShopProducts, ShopServices} from "./shopProfile";
-import {ApplicationStore} from './stores';
+import {ApplicationStore, EditShopStore} from './stores';
 import {EditableText, EditableTag} from './components';
 import Rater from "react-rater";
 import "./Shop.css";
 import "react-rater/lib/react-rater.css";
 import $ from 'jquery';
+import AppDispatcher from './appDispatcher';
+import Constants from '../Constants';
+import {Guid} from './utils';
 
 class Shop extends Component {
     constructor(props) {
@@ -21,8 +24,13 @@ class Shop extends Component {
         this.toggle = this.toggle.bind(this);
         this.refreshScore = this.refreshScore.bind(this);
         this.toggleError = this.toggleError.bind(this);
+        this.toggleSuccess = this.toggleSuccess.bind(this);
+        this.toggleUpdatingError = this.toggleUpdatingError.bind(this);
+        this.updateTitle = this.updateTitle.bind(this);
+        this.updateTags = this.updateTags.bind(this);
         this.state = {
             isLoading: false,
+            isUpdating: false,
             location: {},
             user: null,
             shop: null,
@@ -30,16 +38,32 @@ class Shop extends Component {
             nbComments: 0,
             isRatingOpened: false,
             errorMessage: null,
+            successMessage: null,
+            updatingErrorMessage: null,
             isEditable: false,
             canBeEdited: false
         };
     }
 
-    // Toggle the error
+    // Toggle the error message
     toggleError() {
         this.setState({
             errorMessage: null
         });
+    }
+
+    // Toggle the success message
+    toggleSuccess() {
+      this.setState({
+        successMessage: null
+      });
+    }
+
+    // Toggle updating error message
+    toggleUpdatingError() {
+      this.setState({
+        updatingErrorMessage: null
+      });
     }
 
     clickBannerImage() {
@@ -130,6 +154,22 @@ class Shop extends Component {
         });
     }
 
+    // Udpate the title
+    updateTitle(title) {
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+        data: { name: title }
+      });
+    }
+
+    // Update the tags
+    updateTags(tags) {
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+        data: { tags: tags }
+      });
+    }
+
     // Render the component
     render() {
         if (this.state.isLoading) {
@@ -151,7 +191,7 @@ class Shop extends Component {
         var servicesUrl = null;
         var self = this;
         var tags = [];
-        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable} history={this.props.history}  />);
+        var content = (<ShopProfile ref="profile" user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable} history={this.props.history}  />);
         if (action === "products") {
             content = (<ShopProducts user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
@@ -201,6 +241,9 @@ class Shop extends Component {
         }
 
         return (<div className="container">
+            <span className={!this.state.isUpdating && "hidden"}>Is updating ...</span>
+            <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.toggleSuccess}>{this.state.successMessage}</Alert>
+            <Alert color="danger" isOpen={this.state.updatingErrorMessage !== null} toggle={this.toggleUpdatingError}>{this.state.updatingErrorMessage}</Alert>
             <section className="row white-section shop-section cover">
                 <div className="cover-banner">
                     <img src={bannerImage}/>
@@ -211,7 +254,7 @@ class Shop extends Component {
                   {self.state.isEditable && (<input type="file" accept='image/*' ref="uploadProfileBtn" className="upload-image"  onChange={(e) => {this.uploadPictureImage(e);}} />)}
                 </div>
                 <div className="profile-information">
-                    { this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name} />)
+                    { this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name} validate={this.updateTitle} />)
                       : ( <h1>{this.state.shop.name}</h1> )
                     }
                     { this.state.nbComments > 0 ? (
@@ -224,7 +267,7 @@ class Shop extends Component {
                                 </ul>
                             </Tooltip>
                             {tags.length > 0 && this.state.isEditable && (
-                                <EditableTag tags={self.state.shop.tags}/>
+                                <EditableTag tags={self.state.shop.tags} validate={this.updateTags}/>
                             )}
                             {tags.length > 0 && !this.state.isEditable && (
                                 <ul className="tags no-padding">
@@ -289,6 +332,40 @@ class Shop extends Component {
                     canBeEdited : !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
                 });
                 self.refreshScore();
+                if (isEditable) {
+                  AppDispatcher.dispatch({
+                    actionName: Constants.events.EDIT_SHOP_LOADED,
+                    data: shop
+                  });
+                  AppDispatcher.register(function (payload) {
+                      switch (payload.actionName) {
+                          case 'update-shop':
+                              if (payload.data && payload.data.common_id === self._commonId) {
+                                self.setState({
+                                  isUpdating: false,
+                                  successMessage: 'The shop has been updated'
+                                });
+                              }
+                              break;
+                      }
+                  });
+
+                  EditShopStore.addChangeListener(function() {
+                    var shop = EditShopStore.getShop();
+                    self.setState({
+                      isUpdating: true
+                    });
+                    self._commonId = Guid.generate();
+                    ShopsService.update(shop.id, shop, self._commonId).then(function() {
+
+                    }).catch(function() {
+                      self.setState({
+                        isUpdating: false,
+                        updatingErrorMessage: 'An error occured while trying to update the shop'
+                      });
+                    });
+                  });
+                }
             });
         }).catch(function (e) {
             var json = e.responseJSON;

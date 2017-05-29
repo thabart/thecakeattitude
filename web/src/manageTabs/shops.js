@@ -107,6 +107,7 @@ class ManageShops extends Component {
           <td>{moment(shop.create_datetime).format('LLL')}</td>
           <td>
             <button className="btn btn-outline-secondary btn-sm" onClick={(e) => { self.removeShop(shop.id); }}><i className="fa fa-trash"></i></button>
+            <NavLink to={'/shops/' + shop.id + '/view/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></NavLink>
             <NavLink to={'/shops/' + shop.id + '/edit/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>
             <NavLink to={'/addproduct/' + shop.id} className="btn btn-success"><i className="fa fa-plus"></i> ADD PRODUCT</NavLink>
             <NavLink to={'/addservice/' + shop.id} className="btn btn-success"><i className="fa fa-plus"></i> ADD SERVICE</NavLink>

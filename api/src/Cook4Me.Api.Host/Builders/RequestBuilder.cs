@@ -158,9 +158,6 @@ namespace Cook4Me.Api.Host.Builders
             result.TagNames = ts;
             result.BannerImage = jObj.Value<string>(Constants.DtoNames.Shop.BannerImage);
             result.ProfileImage = jObj.Value<string>(Constants.DtoNames.Shop.ProfileImage);
-            result.MapName = jObj.Value<string>(Constants.DtoNames.Shop.MapName);
-            result.CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId);
-            result.PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place);
             result.StreetAddress = jObj.Value<string>(Constants.DtoNames.Shop.StreetAddress); // Street address
             result.PostalCode = jObj.Value<string>(Constants.DtoNames.Shop.PostalCode);
             result.Locality = jObj.Value<string>(Constants.DtoNames.Shop.Locality);
@@ -267,7 +264,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 methodEnum = AddPaymentInformationMethods.Cash;
             }
-            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase))
+            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(method, "BankTransfer", StringComparison.CurrentCultureIgnoreCase))
             {
                 methodEnum = AddPaymentInformationMethods.BankTransfer;
             }
@@ -302,7 +300,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 methodEnum = AddPaymentInformationMethods.Cash;
             }
-            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase))
+            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(method, "BankTransfer", StringComparison.CurrentCultureIgnoreCase))
             {
                 methodEnum = AddPaymentInformationMethods.BankTransfer;
             }

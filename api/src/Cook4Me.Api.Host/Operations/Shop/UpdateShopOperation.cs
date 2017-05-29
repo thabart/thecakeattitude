@@ -30,7 +30,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
 {
     public interface IUpdateShopOperation
     {
-        Task<IActionResult> Execute(JObject jObj, string subject);
+        Task<IActionResult> Execute(JObject jObj, string id, string subject, string commonId);
     }
 
     internal class UpdateShopOperation : IUpdateShopOperation
@@ -54,11 +54,16 @@ namespace Cook4Me.Api.Host.Operations.Shop
             _commandSender = commandSender;
         }
 
-        public async Task<IActionResult> Execute(JObject jObj, string subject)
+        public async Task<IActionResult> Execute(JObject jObj, string id, string subject, string commonId)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
+            }
+
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
             }
 
             if (string.IsNullOrWhiteSpace(subject))
@@ -78,7 +83,9 @@ namespace Cook4Me.Api.Host.Operations.Shop
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
+            command.Id = id;
             command.UpdateDateTime = DateTime.UtcNow;
+            command.CommonId = commonId;
             var validationResult = await _updateShopValidator.Validate(command, subject);
             if (!validationResult.IsValid)
             {

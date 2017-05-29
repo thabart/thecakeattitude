@@ -37,21 +37,14 @@ namespace Cook4Me.Api.Core.Commands.Shop
     public class UpdateShopCommand : Command
     {
         public string Id { get; set; }
-        public string Subject { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string BannerImage { get; set; }
         public string ProfileImage { get; set; }
-        public string MapName { get; set; }
-        public string CategoryId { get; set; }
-        public string PlaceId { get; set; }
         public string StreetAddress { get; set; }
         public string PostalCode { get; set; }
         public string Locality { get; set; }
         public string Country { get; set; }
-        public string ShopRelativePath { get; set; }
-        public string UndergroundRelativePath { get; set; }
-        public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public string GooglePlaceId { get; set; }
         public float Longitude { get; set; }

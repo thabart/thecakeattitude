@@ -60,6 +60,7 @@ namespace Cook4Me.Api.Host.Controllers
             _searchShopCommentsOperation = searchShopCommentsOperation;
             _searchMineShopsOperation = searchMineShopsOperation;
             _deleteShopOperation = deleteShopOperation;
+            _updateShopOperation = updateShopOperation;
         }
 
         [HttpGet]
@@ -100,9 +101,9 @@ namespace Cook4Me.Api.Host.Controllers
             return await _addShopOperation.Execute(obj, subject);
         }
         
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize("Connected")]
-        public async Task<IActionResult> UpdateShop([FromBody] JObject jObj)
+        public async Task<IActionResult> UpdateShop(string id, [FromBody] JObject jObj)
         {
             var subject = User.GetSubject();
             if (string.IsNullOrEmpty(subject))
@@ -111,7 +112,7 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            return await _updateShopOperation.Execute(jObj, subject);
+            return await _updateShopOperation.Execute(jObj, id, subject, this.GetCommonId());
         }
 
         [HttpPost(Constants.RouteNames.Search)]

@@ -25,6 +25,7 @@ class EditableTag extends Component {
       tags: this._tagsSelector.getTags(),
       isEditMode: false
     });
+    if (this.props.validate) this.props.validate(this._tagsSelector.getTags());
   }
   closeEditMode() {
     this.setState({

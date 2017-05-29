@@ -201,32 +201,27 @@ namespace Cook4Me.Api.Handlers
                 });
             }
 
-            var aggregate = new ShopAggregate
+            var shop = await _shopRepository.Get(message.Id);
+            if (shop == null)
             {
-                Id = message.Id,
-                Subject = message.Subject,
-                Name = message.Name,
-                Description = message.Description,
-                BannerImage = message.BannerImage,
-                ProfileImage = message.ProfileImage,
-                MapName = message.MapName,
-                CategoryId = message.CategoryId,
-                PlaceId = message.PlaceId,
-                StreetAddress = message.StreetAddress,
-                PostalCode = message.PostalCode,
-                Locality = message.Locality,
-                Country = message.Country,
-                GooglePlaceId = message.GooglePlaceId,
-                Longitude = message.Longitude,
-                Latitude = message.Latitude,
-                ShopRelativePath = message.ShopRelativePath,
-                UndergroundRelativePath = message.UndergroundRelativePath,
-                CreateDateTime = message.CreateDateTime,
-                UpdateDateTime = message.UpdateDateTime,
-                ShopPaymentMethods = paymentMethods,
-                TagNames = message.TagNames
-            };
-            await _shopRepository.Update(aggregate);
+                return;
+            }
+            
+            shop.Name = message.Name;
+            shop.Description = message.Description;
+            shop.BannerImage = message.BannerImage;
+            shop.ProfileImage = message.ProfileImage;
+            shop.StreetAddress = message.StreetAddress;
+            shop.PostalCode = message.PostalCode;
+            shop.Locality = message.Locality;
+            shop.Country = message.Country;
+            shop.GooglePlaceId = message.GooglePlaceId;
+            shop.Longitude = message.Longitude;
+            shop.Latitude = message.Latitude;
+            shop.UpdateDateTime = message.UpdateDateTime;
+            shop.ShopPaymentMethods = paymentMethods;
+            shop.TagNames = message.TagNames;
+            await _shopRepository.Update(shop);
             _eventPublisher.Publish(new ShopUpdatedEvent
             {
                 ShopId = message.Id,

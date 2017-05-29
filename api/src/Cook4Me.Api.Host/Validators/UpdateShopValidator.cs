@@ -15,11 +15,10 @@
 #endregion
 
 using Cook4Me.Api.Core.Commands.Shop;
-using System.Threading.Tasks;
 using System;
 using Cook4Me.Api.Core.Repositories;
-using Cook4Me.Api.Core.Parameters;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Validators
 {
@@ -47,13 +46,11 @@ namespace Cook4Me.Api.Host.Validators
 
     internal class UpdateShopValidator : IUpdateShopValidator
     {
-        private readonly IShopCategoryRepository _categoryRepository;
         private readonly IShopRepository _shopRepository;
         private readonly IMapRepository _mapRepository;
 
-        public UpdateShopValidator(IShopCategoryRepository categoryRepository, IShopRepository shopRepository, IMapRepository mapRepository)
+        public UpdateShopValidator(IShopRepository shopRepository, IMapRepository mapRepository)
         {
-            _categoryRepository = categoryRepository;
             _shopRepository = shopRepository;
             _mapRepository = mapRepository;
         }
@@ -70,26 +67,13 @@ namespace Cook4Me.Api.Host.Validators
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            // 1. Check category.
-            var category = await _categoryRepository.Get(shop.CategoryId);
-            if (category == null)
+            var record = await _shopRepository.Get(shop.Id);
+            if (record == null)
             {
-                return new UpdateShopValidationResult(ErrorDescriptions.TheCategoryDoesntExist);
-            }
-            
-
-            // 2. Check the user doesn't already have a shop on the same category.
-            var searchResult = await _shopRepository.Search(new SearchShopsParameter
-            {
-                CategoryIds = new[] { shop.CategoryId },
-                Subjects = new[] { subject }
-            });
-            if (searchResult.Content != null && searchResult.Content.Any())
-            {
-                return new UpdateShopValidationResult(ErrorDescriptions.TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory);
+                return new UpdateShopValidationResult(ErrorDescriptions.TheShopDoesntExist);
             }
 
-            // 3. Check mandatory parameters.
+            // 1. Check mandatory parameters.
             if (!IsValid(shop.Name, 1, 15))
             {
                 return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Shop.Name, 1, 15));
@@ -98,11 +82,6 @@ namespace Cook4Me.Api.Host.Validators
             if (!IsValid(shop.Description, 1, 255))
             {
                 return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Shop.Description, 5, 15));
-            }
-
-            if (!IsValid(shop.PlaceId))
-            {
-                return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Place));
             }
 
             if (!IsValid(shop.GooglePlaceId))

@@ -94,6 +94,12 @@ class App extends Component {
                 data: message
             });
         });
+        proxy.on('shopUpdated', function(message) {
+            AppDispatcher.dispatch({
+                actionName: 'update-shop',
+                data: message
+            });
+        });
         connection.start({jsonp: false})
             .done(function () {
                 console.log('Now connected, connection ID=' + connection.id);

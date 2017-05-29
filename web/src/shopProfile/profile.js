@@ -6,6 +6,8 @@ import {NavLink} from "react-router-dom";
 import Comment from "./comment";
 import BestDeals from "./bestDeals";
 import "./profile.css";
+import AppDispatcher from '../appDispatcher';
+import Constants from '../../Constants';
 
 const shopOpts = {
     url: '/images/shop-pin.png',
@@ -102,6 +104,10 @@ class ShopProfile extends Component {
         shop: shop,
         isModalAddressOpened: false
       });
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+        data: address
+      });
     }
 
     updatePaymentMethods() {
@@ -116,6 +122,17 @@ class ShopProfile extends Component {
         isModalPaymentsOpened: false,
         shop: shop
       });
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+        data: { payments: arr }
+      });
+    }
+
+    getJson() {
+      var json = this.refs.address.getAddress();
+      json['description'] = this.state.shop.description;
+      json['payments'] = this.state.shop.payments;
+      return json;
     }
 
     render() {
@@ -167,15 +184,19 @@ class ShopProfile extends Component {
         return ( <div>
             <section className="row white-section shop-section shop-section-padding">
                 <h5 className="col-md-12">Description</h5>
-                {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description} />) : (
+                {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description}
+                  validate={(i) => {
+                    AppDispatcher.dispatch({
+                      actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+                      data: { description: i }
+                      });
+                  }} />) : (
                   <p className="col-md-12">{this.state.shop.description}</p>
                 )}
             </section>
             <section className="row white-section sub-section shop-section-padding">
               <h5 className="col-md-12">Category</h5>
-              {this.state.isEditable ? (<EditableCategory value={categoryName} />) : (
-                <p className="col-md-12">{categoryName}</p>
-              )}
+              <p className="col-md-12">{categoryName}</p>
             </section>
             <section className="row white-section sub-section shop-section-padding">
                 <h5>Payment methods</h5>
