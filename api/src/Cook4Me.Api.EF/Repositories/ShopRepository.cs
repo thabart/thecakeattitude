@@ -175,6 +175,7 @@ namespace Cook4Me.Api.EF.Repositories
                     var record = await _context.Shops
                         .Include(s => s.Comments)
                         .Include(s => s.PaymentMethods)
+                        .Include(s => s.ProductCategories)
                         .Include(s => s.ShopTags)
                         .Include(s => s.Filters).ThenInclude(f => f.Values)
                         .FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
@@ -295,6 +296,7 @@ namespace Cook4Me.Api.EF.Repositories
                             UpdateDateTime = productCategoryToAdd.UpdateDateTime,
                             ShopId = shop.Id
                         };
+                        _context.ProductCategories.Add(rec);
                     }
 
                     var filters = shop.ShopFilters == null ? new List<ShopFilter>() : shop.ShopFilters; // Update filters.
@@ -349,7 +351,16 @@ namespace Cook4Me.Api.EF.Repositories
                         var rec = new Models.Filter
                         {
                             Id = filterToAdd.Id,
-                            Name = filterToAdd.Name
+                            Name = filterToAdd.Name,
+                            ShopId = shop.Id,
+                            Values = filterToAdd.Values == null ? new List<Models.FilterValue>() : filterToAdd.Values.Select(v => new Models.FilterValue
+                            {
+                                Id = v.Id,
+                                Content = v.Content,
+                                CreateDateTime = v.CreateDateTime,
+                                UpdateDateTime = v.UpdateDateTime,
+                                FilterId = filterToAdd.Id
+                            }).ToList()
                         };
                         _context.Filters.Add(rec);
                     }

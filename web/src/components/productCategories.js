@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Tooltip} from "reactstrap";
 import TagsInput from "react-tagsinput";
 import $ from 'jquery';
+import {Guid} from '../utils';
 
 class ProductCategories extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class ProductCategories extends Component {
     tags.forEach(function(t) {
       if (typeof t === 'string') {
         arr.push({
-          id: null,
+          id: Guid.generate(),
           name: t
         });
       } else {

@@ -12,6 +12,7 @@ import Manage from './Manage';
 import AddProduct from './AddProduct';
 import AddAnnouncement from "./AddAnnouncement";
 import {OpenIdService, SessionService} from "./services/index";
+import {ApplicationStore} from './stores';
 import Constants from '../Constants';
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
@@ -19,6 +20,7 @@ import "./App.css";
 import $ from "jquery";
 import "ms-signalr-client";
 import AppDispatcher from "./appDispatcher";
+import NotificationSystem from 'react-notification-system';
 
 var history = createBrowserHistory();
 
@@ -34,6 +36,12 @@ class App extends Component {
     componentWillMount() {
         var connection = $.hubConnection(Constants.apiUrl);
         var proxy = connection.createHubProxy("notifier");
+        proxy.on('productAdded', function(message) {
+            AppDispatcher.dispatch({
+                actionName: 'new-product',
+                data: message
+            });
+        });
         proxy.on('shopAdded', function (message) {
             AppDispatcher.dispatch({
                 actionName: 'new-shop',
@@ -170,9 +178,18 @@ class App extends Component {
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
                         <Route path="/error/:type" component={Error}/>
                     </div>
+                    <NotificationSystem ref="notificationSystem" />
                 </div>
             </Router>
         );
+    }
+
+    componentDidMount() {
+      var self = this;
+      ApplicationStore.addMessageListener(function() {
+        var message = ApplicationStore.getMessage();
+        self.refs.notificationSystem.addNotification(message);
+      });
     }
 }
 

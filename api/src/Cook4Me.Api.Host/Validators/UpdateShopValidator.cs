@@ -14,9 +14,10 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Shop;
-using System;
 using Cook4Me.Api.Core.Repositories;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,8 +30,9 @@ namespace Cook4Me.Api.Host.Validators
 
     public class UpdateShopValidationResult
     {
-        public UpdateShopValidationResult()
+        public UpdateShopValidationResult(ShopAggregate shop)
         {
+            Shop = shop;
             IsValid = true;
         }
 
@@ -42,6 +44,7 @@ namespace Cook4Me.Api.Host.Validators
 
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
+        public ShopAggregate Shop { get; set; }
     }
 
     internal class UpdateShopValidator : IUpdateShopValidator
@@ -155,7 +158,7 @@ namespace Cook4Me.Api.Host.Validators
                 }
             }
 
-            return new UpdateShopValidationResult();
+            return new UpdateShopValidationResult(record);
         }
 
         private static bool IsValid(string value, int min, int max)

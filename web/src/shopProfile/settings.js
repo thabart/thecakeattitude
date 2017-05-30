@@ -4,6 +4,7 @@ import {ShopsService} from "../services/index";
 import {Tooltip} from "reactstrap";
 import AppDispatcher from "../appDispatcher";
 import NotificationSystem from 'react-notification-system';
+import Constants from '../../Constants';
 
 class ShopSettings extends Component {
     constructor(props) {
@@ -52,7 +53,10 @@ class ShopSettings extends Component {
             values: filter.tags
           }
         });
-      // TODO :Call ShopUpdate service.
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+        data: { product_categories: categories, filters: filters }
+      });
     }
 
     render() {

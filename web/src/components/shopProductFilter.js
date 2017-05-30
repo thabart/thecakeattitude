@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Tooltip} from "reactstrap";
 import TagsInput from "react-tagsinput";
 import $ from 'jquery';
+import {Guid} from '../utils';
 
 class ShopProductFilter extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ class ShopProductFilter extends Component {
     var filters = this.state.filters;
     filters.push({
       id: this._indexFilter,
-      externalId: null,
+      externalId: Guid.generate(),
       tags: [],
       name: '',
       isNotComplete: true
@@ -109,7 +110,7 @@ class ShopProductFilter extends Component {
             tags.forEach(function(t) {
               if (typeof t === 'string') {
                 arr.push({
-                  id: null,
+                  id: Guid.generate(),
                   content: t
                 });
               } else {

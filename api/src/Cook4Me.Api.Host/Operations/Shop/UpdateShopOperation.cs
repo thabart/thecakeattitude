@@ -92,20 +92,6 @@ namespace Cook4Me.Api.Host.Operations.Shop
             }
 
             // 2. Add image
-            if (!string.IsNullOrWhiteSpace(command.BannerImage))
-            {
-                string bannerImage = null;
-                AddImage(command.BannerImage, request, "banner", out bannerImage);
-                command.BannerImage = bannerImage;
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.ProfileImage))
-            {
-                string profileImage = null;
-                AddImage(command.ProfileImage, request, "profile", out profileImage);
-                command.ProfileImage = profileImage;
-            }
-
             command.Id = id;
             command.UpdateDateTime = DateTime.UtcNow;
             command.CommonId = commonId;
@@ -147,8 +133,30 @@ namespace Cook4Me.Api.Host.Operations.Shop
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
-            }            
-            
+            }
+
+            if (!string.IsNullOrWhiteSpace(command.BannerImage))
+            {
+                string bannerImage = null;
+                AddImage(command.BannerImage, request, "banner", out bannerImage);
+                command.BannerImage = bannerImage;
+            }
+            else
+            {
+                command.BannerImage = validationResult.Shop.BannerImage;
+            }
+
+            if (!string.IsNullOrWhiteSpace(command.ProfileImage))
+            {
+                string profileImage = null;
+                AddImage(command.ProfileImage, request, "profile", out profileImage);
+                command.ProfileImage = profileImage;
+            }
+            else
+            {
+                command.ProfileImage = validationResult.Shop.ProfileImage;
+            }
+
             _commandSender.Send(command);
             return new OkResult();
         }

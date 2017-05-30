@@ -487,7 +487,7 @@ namespace Cook4Me.Api.EF.Extensions
             IEnumerable<ProductAggregateFilter> filterValues = new List<ProductAggregateFilter>();
             if (product.Filters != null)
             {
-                filterValues = product.Filters.Select(f => f.ToAggregate());
+                filterValues = product.Filters.Select(f => f.ToAggregate()).Where(f => f != null);
             }
 
             IEnumerable<ProductAggregatePromotion> promotions = new List<ProductAggregatePromotion>();

@@ -265,7 +265,7 @@ namespace Cook4Me.Api.Handlers
             {
                 shop.ShopFilters = message.ProductFilters.Select(f => new ShopFilter
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = f.Id,
                     Name = f.Name,
                     Values = f.Values == null ? new List<ShopFilterValue>() : f.Values.Select(v => new ShopFilterValue
                     {

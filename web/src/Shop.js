@@ -13,11 +13,11 @@ import $ from 'jquery';
 import AppDispatcher from './appDispatcher';
 import Constants from '../Constants';
 import {Guid} from './utils';
-import NotificationSystem from 'react-notification-system';
 
 class Shop extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.clickBannerImage = this.clickBannerImage.bind(this);
         this.clickPictureImage = this.clickPictureImage.bind(this);
         this.uploadBannerImage = this.uploadBannerImage.bind(this);
@@ -28,9 +28,9 @@ class Shop extends Component {
         this.toggleUpdatingError = this.toggleUpdatingError.bind(this);
         this.updateTitle = this.updateTitle.bind(this);
         this.updateTags = this.updateTags.bind(this);
+        this.refresh = this.refresh.bind(this);
         this.state = {
-            isLoading: false,
-            isUpdating: false,
+            isLoading: true,
             location: {},
             user: null,
             shop: null,
@@ -170,6 +170,49 @@ class Shop extends Component {
       });
     }
 
+    refresh() {
+      var self = this,
+        shopId = self.props.match.params.id,
+        paction = self.props.match.params.paction,
+        isEditable = paction && paction === 'edit';
+      self.setState({
+          isLoading: true
+      });
+      ShopsService.get(shopId).then(function (r) {
+          var shop = r['_embedded'];
+          var localUser = ApplicationStore.getUser();
+          isEditable =  isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
+          UserService.getPublicClaims(shop.subject).then(function (user) {
+              self.setState({
+                  isLoading: false,
+                  shop: shop,
+                  user: user,
+                  isEditable : isEditable,
+                  canBeEdited : !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
+              });
+              self.refreshScore();
+              if (isEditable) {
+                AppDispatcher.dispatch({
+                  actionName: Constants.events.EDIT_SHOP_LOADED,
+                  data: shop
+                });
+              }
+          });
+      }).catch(function (e) {
+          var json = e.responseJSON;
+          var error = "an error occured while trying to retrieve the shop";
+          if (json && json.error_description) {
+              error = json.error_description;
+          }
+
+          self.setState({
+              errorMessage: error,
+              isLoading: false
+          });
+      });
+
+    }
+
     // Render the component
     render() {
         if (this.state.isLoading) {
@@ -250,7 +293,6 @@ class Shop extends Component {
         }
 
         return (<div className="container">
-            <span className={!this.state.isUpdating && "hidden"}>Is updating ...</span>
             <Alert color="danger" isOpen={this.state.updatingErrorMessage !== null} toggle={this.toggleUpdatingError}>{this.state.updatingErrorMessage}</Alert>
             <section className="row white-section shop-section cover">
                 <div className="cover-banner">
@@ -318,83 +360,45 @@ class Shop extends Component {
                 </ul>
             </section>
             {content}
-            <NotificationSystem ref="notificationSystem" />
         </div>);
     }
 
     // Execute after the render
-    componentWillMount() {
-        var self = this;
-        var shopId = self.props.match.params.id;
-        var paction = self.props.match.params.paction;
-        var isEditable = paction && paction === 'edit';
-        self.setState({
-            isLoading: true
-        });
-        ShopsService.get(shopId).then(function (r) {
-            var shop = r['_embedded'];
-            var localUser = ApplicationStore.getUser();
-            isEditable =  isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
-            UserService.getPublicClaims(shop.subject).then(function (user) {
-                self.setState({
-                    isLoading: false,
-                    shop: shop,
-                    user: user,
-                    isEditable : isEditable,
-                    canBeEdited : !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
-                });
-                self.refreshScore();
-                if (isEditable) {
-                  AppDispatcher.dispatch({
-                    actionName: Constants.events.EDIT_SHOP_LOADED,
-                    data: shop
-                  });
-                  AppDispatcher.register(function (payload) {
-                      switch (payload.actionName) {
-                          case 'update-shop':
-                              if (payload.data && payload.data.common_id === self._commonId) {
-                                self.setState({
-                                  isUpdating: false
-                                });
-                                self.refs.notificationSystem.addNotification({
-                                  message: 'The shop has been updated',
-                                  level: 'success',
-                                  position: 'bl'
-                                });
-                              }
-                              break;
-                      }
-                  });
-
-                  EditShopStore.addChangeListener(function() {
-                    var shop = EditShopStore.getShop();
-                    self.setState({
-                      isUpdating: true
+    componentDidMount() {
+      var self = this,
+        shopId = self.props.match.params.id;
+      this._waitForToken = AppDispatcher.register(function (payload) {
+          switch (payload.actionName) {
+              case 'update-shop':
+                  if (payload.data && payload.data.id === shopId) {
+                    ApplicationStore.sendMessage({
+                      message: 'The shop has been updated',
+                      level: 'success',
+                      position: 'bl'
                     });
-                    self._commonId = Guid.generate();
-                    ShopsService.update(shop.id, shop, self._commonId).then(function() {
+                    self.refresh();
+                  }
+                  break;
+          }
+      });
 
-                    }).catch(function() {
-                      self.setState({
-                        isUpdating: false,
-                        updatingErrorMessage: 'An error occured while trying to update the shop'
-                      });
-                    });
-                  });
-                }
-            });
-        }).catch(function (e) {
-            var json = e.responseJSON;
-            var error = "an error occured while trying to retrieve the shop";
-            if (json && json.error_description) {
-                error = json.error_description;
-            }
+      EditShopStore.addChangeListener(function() {
+        var shop = EditShopStore.getShop();
+        self._commonId = Guid.generate();
+        ShopsService.update(shop.id, shop, self._commonId).then(function() {
 
-            self.setState({
-                errorMessage: error,
-                isLoading: false
-            });
+        }).catch(function() {
+          self.setState({
+            updatingErrorMessage: 'An error occured while trying to update the shop'
+          });
         });
+      });
+
+      this.refresh();
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 
