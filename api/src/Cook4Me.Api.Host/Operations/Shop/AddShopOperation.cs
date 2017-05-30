@@ -103,15 +103,19 @@ namespace Cook4Me.Api.Host.Operations.Shop
             if (!string.IsNullOrWhiteSpace(command.BannerImage))
             {
                 string bannerImage = null;
-                AddImage(command.BannerImage, request, "banner", out bannerImage);
-                command.BannerImage = bannerImage;
+                if (AddImage(command.BannerImage, request, "banner", out bannerImage))
+                {
+                    command.BannerImage = bannerImage;
+                }
             }
 
             if (!string.IsNullOrWhiteSpace(command.ProfileImage))
             {
                 string profileImage = null;
-                AddImage(command.ProfileImage, request, "profile", out profileImage);
-                command.ProfileImage = profileImage;
+                if (AddImage(command.ProfileImage, request, "profile", out profileImage))
+                {
+                    command.ProfileImage = profileImage;
+                }
             }
 
             // 2. Add the files.
