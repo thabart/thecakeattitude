@@ -27,6 +27,18 @@ namespace Cook4Me.Api.Core.Commands.Shop
         PayPal
     }
 
+    public class AddShopProductCategory
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class AddProductShopFilter
+    {
+        public string Name { get; set; }
+        public IEnumerable<string> Values { get; set; }
+    }
+
     public class AddPaymentInformation
     {
         public string Id { get; set; }
@@ -58,5 +70,7 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public float Latitude { get; set; }
         public IEnumerable<string> TagNames { get; set; }
         public IEnumerable<AddPaymentInformation> PaymentMethods { get; set; }
+        public IEnumerable<AddShopProductCategory> ProductCategories { get; set; }
+        public IEnumerable<AddProductShopFilter> ProductFilters { get; set; }
     }
 }

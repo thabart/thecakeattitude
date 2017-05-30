@@ -168,6 +168,42 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Payments));
             }
 
+            if (shop.ProductCategories != null)
+            {
+                if (shop.ProductCategories.Any(f => string.IsNullOrWhiteSpace(f.Name)))
+                {
+                    return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.ProductCategories + "." + Constants.DtoNames.ProductCategory.Name));
+                }
+
+                if (shop.ProductCategories.GroupBy(c => c.Name).Any(kvp => kvp.Count() > 1))
+                {
+                    return new AddShopValidationResult(string.Format(ErrorDescriptions.DuplicateValues, Constants.DtoNames.Shop.ProductCategories));
+                }
+            }
+
+            if (shop.ProductFilters != null)
+            {
+                if (shop.ProductFilters.Any(f => string.IsNullOrWhiteSpace(f.Name)))
+                {
+                    return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Filters + "." + Constants.DtoNames.Filter.Name));
+                }
+
+                if (shop.ProductFilters.Any(f => f.Values == null || !f.Values.Any()))
+                {
+                    return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Filters + "." + Constants.DtoNames.Filter.Values));
+                }
+
+                if (shop.ProductFilters.GroupBy(c => c.Name).Any(kvp => kvp.Count() > 1))
+                {
+                    return new AddShopValidationResult(string.Format(ErrorDescriptions.DuplicateValues, Constants.DtoNames.Shop.Filters));
+                }
+
+                if (shop.ProductFilters.Any(p => p.Values.GroupBy(v => v).Count() != p.Values.Count()))
+                {
+                    return new AddShopValidationResult(string.Format(ErrorDescriptions.DuplicateValues, Constants.DtoNames.Shop.Filters + "." + Constants.DtoNames.Filter.Values));
+                }
+            }
+
             return new AddShopValidationResult(category, map);
         }
 

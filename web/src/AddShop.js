@@ -18,7 +18,7 @@ class AddShop extends Component {
         this._searchBox = null;
         this.data = {};
         this.state = {
-            activeTab: '4',
+            activeTab: '1',
             errorMessage: null,
             warningMessage: null,
             isAddressCorrect: false,
@@ -152,7 +152,6 @@ class AddShop extends Component {
                         <ProductForm onPrevious={() => {
                             this.toggle('3');
                           }} onNext={(json) => {
-                            console.log(json);
                             this.toggle('5', json);
                           }} />
                     </TabPane>

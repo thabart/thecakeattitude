@@ -50,5 +50,6 @@ namespace Cook4Me.Api.Host
         public const string TheUnitOfMeasureIsNotCorrect = "only the following unit of measure are supported : {0}";
         public const string TheProductCannotBeAddedByYou = "the product cannot be added by you";
         public const string SomeFiltersAreNotValid = "some filters are not valid";
+        public const string DuplicateValues = "the values must be unique in the parameter {0}";
     }
 }

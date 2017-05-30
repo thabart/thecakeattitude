@@ -8,6 +8,7 @@ import AppDispatcher from "../appDispatcher";
 class PublicAnnouncements extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.navigate = this.navigate.bind(this);
         this.showDetails = this.showDetails.bind(this);
         this.localize = this.localize.bind(this);
@@ -172,9 +173,9 @@ class PublicAnnouncements extends Component {
             </Widget>
         );
     }
-    componentWillMount() {
+    componentDidMount() {
         var self = this;
-        AppDispatcher.register(function (payload) {
+        this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'add-announce':
                 case 'remove-announce':
@@ -185,6 +186,10 @@ class PublicAnnouncements extends Component {
                     break;
             }
         });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

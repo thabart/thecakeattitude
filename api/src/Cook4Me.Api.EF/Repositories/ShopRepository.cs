@@ -43,7 +43,9 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 var record = shop.ToModel();
                 var tags = new List<Models.ShopTag>();
-                if (shop.TagNames != null && shop.TagNames.Any())
+                var filters = new List<Models.Filter>();
+                var productCategories = new List<Models.ProductCategory>();
+                if (shop.TagNames != null && shop.TagNames.Any()) // Add tags
                 {
                     var tagNames = shop.TagNames;
                     var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
@@ -76,6 +78,45 @@ namespace Cook4Me.Api.EF.Repositories
                     }
                 }
 
+                if (shop.ShopFilters != null)
+                {
+                    foreach(var shopFilter in shop.ShopFilters)
+                    {
+                        filters.Add(new Models.Filter
+                        {
+                            Id = shopFilter.Id,
+                            Name = shopFilter.Name,
+                            ShopId = shop.Id,
+                            Values = shopFilter.Values == null ? new List<Models.FilterValue>() : shopFilter.Values.Select(v => new Models.FilterValue
+                            {
+                                Id = v.Id,
+                                Content = v.Content,
+                                CreateDateTime = v.CreateDateTime,
+                                UpdateDateTime = v.UpdateDateTime,
+                                FilterId = shopFilter.Id
+                            }).ToList()
+                        });
+                    }
+                }
+
+                if (shop.ProductCategories != null)
+                {
+                    foreach(var productCategory in shop.ProductCategories)
+                    {
+                        productCategories.Add(new Models.ProductCategory
+                        {
+                            Id = productCategory.Id,
+                            Description = productCategory.Description,
+                            Name = productCategory.Name,
+                            ShopId = shop.Id,
+                            CreateDateTime = productCategory.CreateDateTime,
+                            UpdateDateTime = productCategory.UpdateDateTime
+                        });
+                    }
+                }
+
+                record.ProductCategories = productCategories;
+                record.Filters = filters;
                 record.ShopTags = tags;
                 _context.Shops.Add(record);
                 await _context.SaveChangesAsync().ConfigureAwait(false);

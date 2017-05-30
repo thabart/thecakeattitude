@@ -80,6 +80,34 @@ namespace Cook4Me.Api.Handlers
                 ShopPaymentMethods = paymentMethods,
                 TagNames = message.TagNames
             };
+            if (message.ProductCategories != null)
+            {
+                aggregate.ProductCategories = message.ProductCategories.Select(p => new ShopProductCategory
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = p.Name,
+                    Description = p.Description,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow
+                }).ToList();
+            }
+
+            if (message.ProductFilters != null)
+            {
+                aggregate.ShopFilters = message.ProductFilters.Select(f => new ShopFilter
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = f.Name,
+                    Values = f.Values == null ? new List<ShopFilterValue>() : f.Values.Select(v => new ShopFilterValue
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        Content = v
+                    })
+                }).ToList();
+            }
+
             await _shopRepository.Add(aggregate);
             _eventPublisher.Publish(new ShopAddedEvent
             {
@@ -87,7 +115,7 @@ namespace Cook4Me.Api.Handlers
                 Name = message.Name,
                 Longitude = message.Longitude,
                 Latitude = message.Latitude,
-                CommonId = message.CommonId
+                CommonId = message.CommonId,
             });
         }
 

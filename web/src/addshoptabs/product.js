@@ -57,7 +57,9 @@ class ProductForm extends Component {
   next() {
     var filters = this.state.filters;
     var filtersJson = [],
-      productCategoriesJson = this.state.tags;
+      productCategoriesJson = this.state.tags.map(function(tag) {
+        return { name: tag };
+      });
     filters = filters.filter(function(filter) {
       return filter.isCorrect === true && filter.isNotComplete === false;
     });
@@ -69,7 +71,7 @@ class ProductForm extends Component {
       filtersJson.push(record);
     });
 
-    // if (this.props.onNext) this.props.onNext({ filters : filtersJson, product_categories: productCategoriesJson });
+    if (this.props.onNext) this.props.onNext({ filters : filtersJson, product_categories: productCategoriesJson });
   }
   getFilter(filter, filters) {
     var sf = null;
@@ -86,7 +88,7 @@ class ProductForm extends Component {
     if (changedIndexes[0] === innerTags.length ) {
       var changedValue = changed[0].toLowerCase();
       var selectedValue = innerTags.filter(function(tag) {
-        return tag.toLowerCase().indexOf(changedValue) !== -1;
+        return tag.toLowerCase() === changedValue;
       });
 
       if (selectedValue.length > 0) {

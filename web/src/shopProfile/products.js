@@ -180,7 +180,6 @@ class ShopProducts extends Component {
         this.setState({
             activeCategory: id
         });
-        console.log(filterJson);
         this.updateProducts();
     }
 
