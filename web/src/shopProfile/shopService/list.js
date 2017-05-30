@@ -253,7 +253,7 @@ class List extends Component {
         );
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.request = $.extend({}, this.request, {
             shop_id: this.props.shop.id
         });

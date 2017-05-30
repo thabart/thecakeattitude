@@ -53,16 +53,16 @@ namespace Cook4Me.Api.Host.Extensions
             
             InsertCategories(context);
             InsertTags(context);
-            // InsertShops(context);
-            // InsertFilters(context);
-            // InsertComments(context);
-            // InsertShopTags(context);
-            // InsertProductCategories(context);
-            // InsertProducts(context);
-            // InsertPromotions(context);
-            // InsertDays(context);
-            // InsertServices(context);
-            // InsertAnnouncements(context);
+            InsertShops(context);
+            InsertFilters(context);
+            InsertComments(context);
+            InsertShopTags(context);
+            InsertProductCategories(context);
+            InsertProducts(context);
+            InsertPromotions(context);
+            InsertDays(context);
+            InsertServices(context);
+            InsertAnnouncements(context);
             context.SaveChanges();
         }
 

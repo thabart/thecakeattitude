@@ -179,6 +179,11 @@ namespace Cook4Me.Api.Host.Validators
                 {
                     return new AddShopValidationResult(string.Format(ErrorDescriptions.DuplicateValues, Constants.DtoNames.Shop.ProductCategories));
                 }
+
+                if (shop.ProductCategories.Count() > 5)
+                {
+                    return new AddShopValidationResult(ErrorDescriptions.OnlyFiveCategoriesCanBeAdded);
+                }
             }
 
             if (shop.ProductFilters != null)

@@ -175,6 +175,21 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
+        public UpdateShopProductCategory GetUpdateShopProductCategory(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpdateShopProductCategory
+            {
+                Id = jObj.TryGetString(Constants.DtoNames.ProductCategory.Id),
+                Name = jObj.TryGetString(Constants.DtoNames.ProductCategory.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description),
+            };
+        }
+
         public AddProductShopFilter GetAddProductShopFilter(JObject jObj)
         {
             if (jObj == null)
@@ -186,6 +201,40 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Name = jObj.TryGetString(Constants.DtoNames.Filter.Name),
                 Values = jObj.TryGetStringArray(Constants.DtoNames.Filter.Values)
+            };
+        }
+
+        public UpdateProductShopFilter GetUpdateProductShopFilter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var values = new List<UpdateProductShopFilterValue>();
+            var valuesObj = jObj[Constants.DtoNames.Filter.Values];
+            if (valuesObj != null)
+            {
+                var valuesArr = valuesObj as JArray;
+                if (valuesArr != null)
+                {
+                    foreach(var value in valuesArr)
+                    {
+                        var obj = value as JObject;
+                        values.Add(new UpdateProductShopFilterValue
+                        {
+                            Id = obj.TryGetString(Constants.DtoNames.FilterValue.Id),
+                            Content = obj.TryGetString(Constants.DtoNames.FilterValue.Content)
+                        });
+                    }
+                }
+            }
+
+            return new UpdateProductShopFilter
+            {
+                Id = jObj.TryGetString(Constants.DtoNames.Filter.Id),
+                Name = jObj.TryGetString(Constants.DtoNames.Filter.Name),
+                Values = values
             };
         }
 
@@ -235,6 +284,33 @@ namespace Cook4Me.Api.Host.Builders
                 result.Longitude = location.Value<float>(Constants.DtoNames.Location.Longitude);
             }
 
+            var productFiltersObj = jObj[Constants.DtoNames.Shop.Filters];
+            var filters = new List<UpdateProductShopFilter>();
+            if (productFiltersObj != null)
+            {
+                var productFiltersArr = productFiltersObj as JArray;
+                if (productFiltersArr != null)
+                {
+                    foreach (var productFilter in productFiltersArr)
+                    {
+                        filters.Add(GetUpdateProductShopFilter(productFilter as JObject));
+                    }
+                }
+            }
+
+            var productCategories = new List<UpdateShopProductCategory>();
+            var productCategoriesObj = jObj[Constants.DtoNames.Shop.ProductCategories];
+            if (productCategoriesObj != null)
+            {
+                var productCategoriesArr = productCategoriesObj as JArray;
+                foreach (var productCategory in productCategoriesArr)
+                {
+                    productCategories.Add(GetUpdateShopProductCategory(productCategory as JObject));
+                }
+            }
+
+            result.ProductFilters = filters;
+            result.ProductCategories = productCategories;
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
             result.PaymentMethods = paymentMethods;
             return result;

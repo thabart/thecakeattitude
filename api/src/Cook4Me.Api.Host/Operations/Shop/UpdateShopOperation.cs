@@ -109,6 +109,39 @@ namespace Cook4Me.Api.Host.Operations.Shop
             command.Id = id;
             command.UpdateDateTime = DateTime.UtcNow;
             command.CommonId = commonId;
+            if (command.ProductCategories != null)
+            {
+                foreach(var productCategory in command.ProductCategories)
+                {
+                    if (string.IsNullOrWhiteSpace(productCategory.Id))
+                    {
+                        productCategory.Id = Guid.NewGuid().ToString();
+                    }
+                }
+            }
+
+            if (command.ProductFilters != null)
+            {
+                foreach(var productFilter in command.ProductFilters)
+                {
+                    if (string.IsNullOrWhiteSpace(productFilter.Id))
+                    {
+                        productFilter.Id = Guid.NewGuid().ToString();
+                    }
+
+                    if (productFilter.Values != null)
+                    {
+                        foreach(var value in productFilter.Values)
+                        {
+                            if (string.IsNullOrWhiteSpace(value.Id))
+                            {
+                                value.Id = Guid.NewGuid().ToString();
+                            }
+                        }
+                    }
+                }
+            }
+
             var validationResult = await _updateShopValidator.Validate(command, subject);
             if (!validationResult.IsValid)
             {

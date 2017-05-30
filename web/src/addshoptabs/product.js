@@ -1,8 +1,7 @@
 import React, {Component} from "react";
 import {Tooltip} from "reactstrap";
-import {Address} from '../components';
 import TagsInput from "react-tagsinput";
-import $ from 'jquery';
+import {ShopProductFilter, ProductCategories} from '../components';
 
 class ProductForm extends Component {
   constructor(props) {
@@ -10,7 +9,6 @@ class ProductForm extends Component {
     this._indexFilter = 0;
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.handleTags = this.handleTags.bind(this);
-    this.addFilterLine = this.addFilterLine.bind(this);
     this.previous = this.previous.bind(this);
     this.next = this.next.bind(this);
     this.state = {
@@ -18,8 +16,7 @@ class ProductForm extends Component {
         toggleProductCategories: false,
         toggleProductFilters: false
       },
-      tags: [],
-      filters: []
+      tags: []
     };
   }
   toggleTooltip(name) {
@@ -38,27 +35,14 @@ class ProductForm extends Component {
       tags: tags
     });
   }
-  addFilterLine() {
-    var filters = this.state.filters;
-    filters.push({
-      id: this._indexFilter,
-      tags: [],
-      name: '',
-      isNotComplete: true
-    });
-    this.setState({
-      filters: filters
-    });
-    this._indexFilter++;
-  }
   previous() {
     if (this.props.onPrevious) this.props.onPrevious();
   }
   next() {
-    var filters = this.state.filters;
+    var filters = this.refs.shopProductFilter.getFilters();
     var filtersJson = [],
-      productCategoriesJson = this.state.tags.map(function(tag) {
-        return { name: tag };
+      productCategoriesJson = this.refs.productCategories.getCategories().map(function(cat) {
+        return { name: cat.name };
       });
     filters = filters.filter(function(filter) {
       return filter.isCorrect === true && filter.isNotComplete === false;
@@ -66,7 +50,7 @@ class ProductForm extends Component {
     filters.map(function(filter) {
       var record = {
         name: filter.name,
-        values : filter.tags
+        values : filter.tags.map(function(t) { return t.content; })
       };
       filtersJson.push(record);
     });
@@ -101,87 +85,6 @@ class ProductForm extends Component {
   render() {
     var filters = [],
       self = this;
-    if (this.state.filters && this.state.filters.length > 0) {
-      this.state.filters.forEach(function(filter) {
-        filters.push(<div className="row col-md-12">
-          <div className="col-md-4"><input type="text" className="form-control" value={filter.name} placeholder="Filter name" onChange={(e) => {
-            var fs = self.state.filters.slice(0);
-            var sf = self.getFilter(filter, fs);
-            if (sf === null) {
-              return;
-            }
-
-            sf.name = e.target.value;
-            var names = fs.filter(function(m) { return m.name.toLowerCase() === e.target.value.toLowerCase(); });
-            sf.isCorrect = names.length <= 1;
-            sf.isNotComplete = e.target.value === null || e.target.value === '' || sf.tags.length === 0;
-            self.setState({
-              filters: fs
-            });
-          }} /></div>
-          <div className="col-md-6"><TagsInput value={filter.tags} onChange={(tags, changed, changedIndexes) => {
-            var fs = self.state.filters.slice(0);
-            var sf = self.getFilter(filter, fs);
-            if (sf === null) {
-              return;
-            }
-
-            if (self.isTagsExist(tags, changed, changedIndexes, sf.tags)) {
-                return;
-            }
-
-            sf.tags = tags;
-            sf.isNotComplete = sf.name === null || sf.name === '' || sf.tags.length === 0;
-            self.setState({
-              filters: fs
-            });
-          }}   inputProps={{placeholder: "Values"}} /></div>
-          <div className="col-md-2"><button className="btn btn-outline-secondary btn-sm" data-target={filter.id} onClick={(e) => {
-            var id = parseInt($(e.target).attr('data-target'));
-            var fs = self.state.filters.slice(0);
-            var sf = null;
-            fs.forEach(function(f) {
-              if (f.id === id) {
-                sf = f;
-                return;
-              }
-            });
-
-            if (sf === null) {
-              return;
-            }
-
-            var index = fs.indexOf(sf);
-            if (index === -1) {
-              return;
-            }
-
-            fs.splice(index, 1);
-            self.setState({
-              filters: fs
-            });
-          }}><i className="fa fa-close" data-target={filter.id}></i></button>
-           { filter.isCorrect === false && (<span>
-             <i className="fa fa-exclamation-triangle validation-error" id={"validationError_"+filter.id}></i>
-             <Tooltip placement="right" target={"validationError_"+filter.id} isOpen={self.state.tooltip["validationError_"+filter.id]} toggle={() => {
-                 self.toggleTooltip("validationError_"+filter.id);
-             }}>
-              A filter with the same name has already been specified
-             </Tooltip>
-           </span>) }
-           { filter.isNotComplete && (<span>
-            <i className="fa fa-exclamation" id={"warningError"+filter.id}></i>
-            <Tooltip placement="right" target={"warningError"+filter.id} isOpen={self.state.tooltip["warningError"+filter.id]} toggle={() => {
-                self.toggleTooltip("warningError"+filter.id);
-            }}>
-             At least one tag must be specified and the name must be filled-in
-            </Tooltip>
-           </span>) }
-          </div>
-        </div>);
-      });
-    }
-
     return (<div>
         <section className="col-md-12 section">
           <div className="form-group">
@@ -189,7 +92,7 @@ class ProductForm extends Component {
             <Tooltip placement="right" target="productCategories" isOpen={this.state.tooltip.toggleProductCategories} toggle={() => { this.toggleTooltip('toggleProductCategories'); }}>
                 You can add 5 product categories (max)
             </Tooltip>
-            <TagsInput value={this.state.tags} onChange={this.handleTags}  inputProps={{placeholder: "Category"}}/>
+            <ProductCategories ref="productCategories" />
           </div>
           <div className="row">
             <div className="col-md-12">
@@ -198,8 +101,7 @@ class ProductForm extends Component {
                   Add product filters and their values
               </Tooltip>
             </div>
-            <div className="col-md-12"><button className="btn btn-success" onClick={this.addFilterLine}><i className="fa fa-plus"></i> Add filter</button></div>
-            {filters}
+            <ShopProductFilter ref="shopProductFilter" />
           </div>
         </section>
         <section className="col-md-12 sub-section">

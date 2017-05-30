@@ -51,5 +51,6 @@ namespace Cook4Me.Api.Host
         public const string TheProductCannotBeAddedByYou = "the product cannot be added by you";
         public const string SomeFiltersAreNotValid = "some filters are not valid";
         public const string DuplicateValues = "the values must be unique in the parameter {0}";
+        public const string OnlyFiveCategoriesCanBeAdded = "only 5 product categories can be added";
     }
 }

@@ -72,7 +72,7 @@ class Calendar extends Component {
       </div>
       );
   }
-  componentWillMount() {
+  componentDidMount() {
     var start = moment().startOf('month').format(),
       end = moment().endOf('month').format();
     this.request = { from_datetime: start, to_datetime: end, shop_id: this.props.shop.id };

@@ -3,7 +3,7 @@ import {ShopsService, UserService, CommentsService} from "./services/index";
 import {Tooltip, Progress, Alert, Button} from "reactstrap";
 import {withRouter} from "react-router";
 import {NavLink} from "react-router-dom";
-import {ShopProfile, ShopProducts, ShopServices} from "./shopProfile";
+import {ShopProfile, ShopProducts, ShopServices, ShopSettings} from "./shopProfile";
 import {ApplicationStore, EditShopStore} from './stores';
 import {EditableText, EditableTag} from './components';
 import Rater from "react-rater";
@@ -189,6 +189,9 @@ class Shop extends Component {
         var profileUrl = null;
         var productsUrl = null;
         var servicesUrl = null;
+        var settingsUrl = null;
+        var viewUrl = null;
+        var editUrl = null;
         var self = this;
         var tags = [];
         var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable} history={this.props.history}  />);
@@ -196,16 +199,22 @@ class Shop extends Component {
             content = (<ShopProducts user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
             content = (<ShopServices user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/> );
+        } else if (action === 'settings' && this.state.isEditable) {
+            content = (<ShopSettings shop={this.state.shop} />);
         }
 
         if (this.state.isEditable) {
           profileUrl = '/shops/' + this.state.shop.id + '/edit/profile';
           productsUrl = '/shops/' + this.state.shop.id + '/edit/products';
           servicesUrl = '/shops/' + this.state.shop.id + '/edit/services';
+          settingsUrl = '/shops/' + this.state.shop.id + '/edit/settings';
+          viewUrl = '/shops/' + this.state.shop.id + '/view/' + (action === 'settings' ? 'profile' : action) + (subaction && subaction !== null ? '/' + subaction : '');
         } else {
           profileUrl = '/shops/' + this.state.shop.id + '/view/profile';
           productsUrl = '/shops/' + this.state.shop.id + '/view/products';
           servicesUrl = '/shops/' + this.state.shop.id + '/view/services';
+          settingsUrl = null;
+          editUrl = '/shops/' + this.state.shop.id + '/edit/' + action + (subaction && subaction !== null ? '/' + subaction : '');
         }
 
         if (!bannerImage) {
@@ -277,7 +286,7 @@ class Shop extends Component {
                 </div>
                 <ul className="nav nav-pills menu">
                     <li className="nav-item">
-                        <NavLink to={profileUrl} className={action !== 'products' && action !== 'services' ? 'nav-link active' : 'nav-link'}>Profile</NavLink>
+                        <NavLink to={profileUrl} className={action === 'profile' ? 'nav-link active' : 'nav-link'}>Profile</NavLink>
                     </li>
                     <li className="nav-item">
                         <NavLink to={productsUrl} className={action === 'products' ? 'nav-link active' : 'nav-link'}>Products</NavLink>
@@ -285,11 +294,14 @@ class Shop extends Component {
                     <li className="nav-item">
                         <NavLink to={servicesUrl} className={action === 'services' ? 'nav-link active' : 'nav-link'}>Services</NavLink>
                     </li>
+                    <li className="nav-item">
+                      { this.state.isEditable && (<NavLink to={settingsUrl} className={action === 'settings' ? 'nav-link active' : 'nav-link'}>Settings</NavLink>) }
+                    </li>
                 </ul>
                 <ul className="nav nav-pills menu-shop-options">
                   { this.state.canBeEdited && (
                     <li className="nav-item">
-                      <a href={'/shops/' + this.state.shop.id + '/edit/' + action + (subaction && subaction !== null ? '/' + subaction : '') } className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></a>
+                      <a href={editUrl} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></a>
                     </li>
                   ) }
                   { this.state.isEditable && (
@@ -300,7 +312,7 @@ class Shop extends Component {
                   )}
                   {this.state.isEditable && (
                     <li className="nav-item">
-                      <a href={'/shops/' + this.state.shop.id + '/view/' + action + (subaction && subaction !== null ? '/' + subaction : '')} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></a>
+                      <a href={viewUrl} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></a>
                     </li>
                   )}
                 </ul>

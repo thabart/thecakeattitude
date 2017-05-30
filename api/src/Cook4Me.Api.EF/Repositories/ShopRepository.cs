@@ -235,37 +235,66 @@ namespace Cook4Me.Api.EF.Repositories
                     }
                     record.ShopTags = tags; 
 
-                    var paymentMethods = shop.ShopPaymentMethods == null ? new List<ShopPaymentMethod>() : shop.ShopPaymentMethods;
+                    var paymentMethods = shop.ShopPaymentMethods == null ? new List<ShopPaymentMethod>() : shop.ShopPaymentMethods; // Update payment methods.
                     var paymentMethodIds = paymentMethods.Select(p => p.Id);
-                    if (record.PaymentMethods != null) // Update payment methods.
+                    var paymentsToUpdate = record.PaymentMethods.Where(c => paymentMethodIds.Contains(c.Id));
+                    var paymentsToRemove = record.PaymentMethods.Where(c => !paymentMethodIds.Contains(c.Id));
+                    var existingPaymentIds = record.PaymentMethods.Select(c => c.Id);
+                    var paymentsToAdd = paymentMethods.Where(c => !existingPaymentIds.Contains(c.Id));
+                    foreach (var paymentToUpdate in paymentsToUpdate)
                     {
-                        var paymentsToUpdate = record.PaymentMethods.Where(c => paymentMethodIds.Contains(c.Id));
-                        var paymentsToRemove = record.PaymentMethods.Where(c => !paymentMethodIds.Contains(c.Id));
-                        var existingPaymentIds = record.PaymentMethods.Select(c => c.Id);
-                        var paymentsToAdd = paymentMethods.Where(c => !existingPaymentIds.Contains(c.Id));
-                        foreach (var paymentToUpdate in paymentsToUpdate)
-                        {
-                            var payment = paymentMethods.First(c => c.Id == paymentToUpdate.Id);
-                            paymentToUpdate.Method = (int)payment.Method;
-                            paymentToUpdate.Iban = payment.Iban;
-                        }
+                        var payment = paymentMethods.First(c => c.Id == paymentToUpdate.Id);
+                        paymentToUpdate.Method = (int)payment.Method;
+                        paymentToUpdate.Iban = payment.Iban;
+                    }
 
-                        foreach (var paymentToRemove in paymentsToRemove)
-                        {
-                            _context.PaymentMethods.Remove(paymentToRemove);
-                        }
+                    foreach (var paymentToRemove in paymentsToRemove)
+                    {
+                        _context.PaymentMethods.Remove(paymentToRemove);
+                    }
 
-                        foreach (var paymentToAdd in paymentsToAdd)
+                    foreach (var paymentToAdd in paymentsToAdd)
+                    {
+                        var rec = new Models.PaymentMethod
                         {
-                            var rec = new Models.PaymentMethod
-                            {
-                                Id = paymentToAdd.Id,
-                                Iban = paymentToAdd.Iban,
-                                Method = (int)paymentToAdd.Method,
-                                ShopId = shop.Id
-                            };
-                            _context.PaymentMethods.Add(rec);
-                        }
+                            Id = paymentToAdd.Id,
+                            Iban = paymentToAdd.Iban,
+                            Method = (int)paymentToAdd.Method,
+                            ShopId = shop.Id
+                        };
+                        _context.PaymentMethods.Add(rec);
+                    }
+
+                    var productCategories = shop.ProductCategories == null ? new List<ShopProductCategory>() : shop.ProductCategories;
+                    var productCategoryIds = productCategories.Select(p => p.Id);
+                    var productCategoriesToUpdate = record.ProductCategories.Where(c => productCategoryIds.Contains(c.Id));
+                    var productCategoriesToRemove = record.ProductCategories.Where(c => !productCategoryIds.Contains(c.Id));
+                    var existingCategoryIds = record.ProductCategories.Select(c => c.Id);
+                    var productCategoriesToAdd = productCategories.Where(c => !existingCategoryIds.Contains(c.Id));
+                    foreach(var productCategoryToUpdate in productCategoriesToUpdate)
+                    {
+                        var productCategory = productCategories.First(p => p.Id == productCategoryToUpdate.Id);
+                        productCategoryToUpdate.Name = productCategory.Name;
+                        productCategoryToUpdate.UpdateDateTime = productCategory.UpdateDateTime;
+                        productCategoryToUpdate.Description = productCategory.Description;
+                    }
+
+                    foreach(var productCategoryToRemove in productCategoriesToRemove)
+                    {
+                        _context.ProductCategories.Remove(productCategoryToRemove);
+                    }
+
+                    foreach(var productCategoryToAdd in productCategoriesToAdd)
+                    {
+                        var rec = new Models.ProductCategory
+                        {
+                            Id = productCategoryToAdd.Id,
+                            Description = productCategoryToAdd.Description,
+                            Name = productCategoryToAdd.Name,
+                            CreateDateTime = productCategoryToAdd.CreateDateTime,
+                            UpdateDateTime = productCategoryToAdd.UpdateDateTime,
+                            ShopId = shop.Id
+                        };
                     }
 
                     var filters = shop.ShopFilters == null ? new List<ShopFilter>() : shop.ShopFilters; // Update filters.

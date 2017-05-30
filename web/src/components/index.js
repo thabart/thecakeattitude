@@ -8,6 +8,8 @@ import CategorySelector from './categorySelector';
 import PaymentMethodsSelector from './paymentMethodsSelector';
 import FilterSelector from './filterSelector';
 import TagsSelector from './tagsSelector';
+import ShopProductFilter from './shopProductFilter';
+import ProductCategories from './productCategories';
 
 exports.CommentLst = CommentLst;
 exports.EditableText = EditableText;
@@ -19,3 +21,5 @@ exports.CategorySelector = CategorySelector;
 exports.PaymentMethodsSelector = PaymentMethodsSelector;
 exports.FilterSelector = FilterSelector;
 exports.TagsSelector = TagsSelector;
+exports.ShopProductFilter = ShopProductFilter;
+exports.ProductCategories = ProductCategories;

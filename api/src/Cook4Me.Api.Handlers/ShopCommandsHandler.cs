@@ -249,6 +249,34 @@ namespace Cook4Me.Api.Handlers
             shop.UpdateDateTime = message.UpdateDateTime;
             shop.ShopPaymentMethods = paymentMethods;
             shop.TagNames = message.TagNames;
+            if (message.ProductCategories != null)
+            {
+                shop.ProductCategories = message.ProductCategories.Select(p => new ShopProductCategory
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Description = p.Description,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow
+                }).ToList();
+            }
+
+            if (message.ProductFilters != null)
+            {
+                shop.ShopFilters = message.ProductFilters.Select(f => new ShopFilter
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = f.Name,
+                    Values = f.Values == null ? new List<ShopFilterValue>() : f.Values.Select(v => new ShopFilterValue
+                    {
+                        Id = v.Id,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        Content = v.Content
+                    })
+                }).ToList();
+            }
+
             await _shopRepository.Update(shop);
             _eventPublisher.Publish(new ShopUpdatedEvent
             {
