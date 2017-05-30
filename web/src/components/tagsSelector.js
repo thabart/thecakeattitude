@@ -30,7 +30,6 @@ class TagsSelector extends Component {
       this.setState({
           tags: tags
       });
-      console.log('coucou');
       this.hidePopup();
   }
   hidePopup() {

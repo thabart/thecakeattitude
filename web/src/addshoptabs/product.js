@@ -2,10 +2,12 @@ import React, {Component} from "react";
 import {Tooltip} from "reactstrap";
 import {Address} from '../components';
 import TagsInput from "react-tagsinput";
+import $ from 'jquery';
 
 class ProductForm extends Component {
   constructor(props) {
     super(props);
+    this._indexFilter = 0;
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.handleTags = this.handleTags.bind(this);
     this.addFilterLine = this.addFilterLine.bind(this);
@@ -27,7 +29,11 @@ class ProductForm extends Component {
           tooltip: tooltip
       });
   }
-  handleTags(tags) {
+  handleTags(tags, changed, changedIndexes) {
+    if (this.isTagsExist(tags, changed, changedIndexes, this.state.tags)) {
+      return;
+    }
+
     this.setState({
       tags: tags
     });
@@ -35,12 +41,15 @@ class ProductForm extends Component {
   addFilterLine() {
     var filters = this.state.filters;
     filters.push({
-      id: filters.length,
-      tags: []
+      id: this._indexFilter,
+      tags: [],
+      name: '',
+      isNotComplete: true
     });
     this.setState({
       filters: filters
     });
+    this._indexFilter++;
   }
   previous() {
     if (this.props.onPrevious) this.props.onPrevious();
@@ -49,6 +58,9 @@ class ProductForm extends Component {
     var filters = this.state.filters;
     var filtersJson = [],
       productCategoriesJson = this.state.tags;
+    filters = filters.filter(function(filter) {
+      return filter.isCorrect === true && filter.isNotComplete === false;
+    });
     filters.map(function(filter) {
       var record = {
         name: filter.name,
@@ -57,7 +69,32 @@ class ProductForm extends Component {
       filtersJson.push(record);
     });
 
-    if (this.props.onNext) this.props.onNext({ filters : filtersJson, product_categories: productCategoriesJson });
+    // if (this.props.onNext) this.props.onNext({ filters : filtersJson, product_categories: productCategoriesJson });
+  }
+  getFilter(filter, filters) {
+    var sf = null;
+    filters.forEach(function(f) {
+      if (f.id === filter.id) {
+        sf = f;
+        return;
+      }
+    });
+
+    return sf;
+  }
+  isTagsExist(tags, changed, changedIndexes, innerTags) {
+    if (changedIndexes[0] === innerTags.length ) {
+      var changedValue = changed[0].toLowerCase();
+      var selectedValue = innerTags.filter(function(tag) {
+        return tag.toLowerCase().indexOf(changedValue) !== -1;
+      });
+
+      if (selectedValue.length > 0) {
+        return true;
+      }
+    }
+
+    return false;
   }
   render() {
     var filters = [],
@@ -65,49 +102,44 @@ class ProductForm extends Component {
     if (this.state.filters && this.state.filters.length > 0) {
       this.state.filters.forEach(function(filter) {
         filters.push(<div className="row col-md-12">
-          <div className="col-md-4"><input type="text" className="form-control" placeholder="Filter name" onChange={(e) => {
-            var fs = self.state.filters;
-            var sf = null;
-            fs.forEach(function(f) {
-              if (f.id === filter.id) {
-                sf = f;
-                return;
-              }
-            });
-
+          <div className="col-md-4"><input type="text" className="form-control" value={filter.name} placeholder="Filter name" onChange={(e) => {
+            var fs = self.state.filters.slice(0);
+            var sf = self.getFilter(filter, fs);
             if (sf === null) {
               return;
             }
 
             sf.name = e.target.value;
+            var names = fs.filter(function(m) { return m.name.toLowerCase() === e.target.value.toLowerCase(); });
+            sf.isCorrect = names.length <= 1;
+            sf.isNotComplete = e.target.value === null || e.target.value === '' || sf.tags.length === 0;
             self.setState({
               filters: fs
             });
           }} /></div>
-          <div className="col-md-6"><TagsInput value={filter.tags} onChange={(e) => {
-            var fs = self.state.filters;
-            var sf = null;
-            fs.forEach(function(f) {
-              if (f.id === filter.id) {
-                sf = f;
-                return;
-              }
-            });
-
+          <div className="col-md-6"><TagsInput value={filter.tags} onChange={(tags, changed, changedIndexes) => {
+            var fs = self.state.filters.slice(0);
+            var sf = self.getFilter(filter, fs);
             if (sf === null) {
               return;
             }
 
-            sf.tags = e;
+            if (self.isTagsExist(tags, changed, changedIndexes, sf.tags)) {
+                return;
+            }
+
+            sf.tags = tags;
+            sf.isNotComplete = sf.name === null || sf.name === '' || sf.tags.length === 0;
             self.setState({
               filters: fs
             });
           }}   inputProps={{placeholder: "Values"}} /></div>
-          <div className="col-md-2"><button className="btn btn-outline-secondary btn-sm" onClick={() => {
-            var fs = self.state.filters;
+          <div className="col-md-2"><button className="btn btn-outline-secondary btn-sm" data-target={filter.id} onClick={(e) => {
+            var id = parseInt($(e.target).attr('data-target'));
+            var fs = self.state.filters.slice(0);
             var sf = null;
             fs.forEach(function(f) {
-              if (f.id === filter.id) {
+              if (f.id === id) {
                 sf = f;
                 return;
               }
@@ -126,7 +158,24 @@ class ProductForm extends Component {
             self.setState({
               filters: fs
             });
-          }}><i className="fa fa-close"></i></button></div>
+          }}><i className="fa fa-close" data-target={filter.id}></i></button>
+           { filter.isCorrect === false && (<span>
+             <i className="fa fa-exclamation-triangle validation-error" id={"validationError_"+filter.id}></i>
+             <Tooltip placement="right" target={"validationError_"+filter.id} isOpen={self.state.tooltip["validationError_"+filter.id]} toggle={() => {
+                 self.toggleTooltip("validationError_"+filter.id);
+             }}>
+              A filter with the same name has already been specified
+             </Tooltip>
+           </span>) }
+           { filter.isNotComplete && (<span>
+            <i className="fa fa-exclamation" id={"warningError"+filter.id}></i>
+            <Tooltip placement="right" target={"warningError"+filter.id} isOpen={self.state.tooltip["warningError"+filter.id]} toggle={() => {
+                self.toggleTooltip("warningError"+filter.id);
+            }}>
+             At least one tag must be specified and the name must be filled-in
+            </Tooltip>
+           </span>) }
+          </div>
         </div>);
       });
     }
