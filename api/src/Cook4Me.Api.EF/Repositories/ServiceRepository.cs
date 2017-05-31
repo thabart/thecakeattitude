@@ -356,6 +356,17 @@ namespace Cook4Me.Api.EF.Repositories
             }
         }
 
+        public async Task<bool> Add(ServiceAggregate serviceAggregate)
+        {
+            if (serviceAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(serviceAggregate));
+            }
+
+
+            return false;
+        }
+
         private static IQueryable<Models.Service> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Service, TKey>> keySelector, IQueryable<Models.Service> products)
         {
             if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))

@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>
+    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>, Handles<AddServiceCommand>
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -102,6 +102,14 @@ namespace Cook4Me.Api.Handlers
                 AverageScore = record.AverageScore,
                 NbComments = record.Comments == null ? 0 : record.Comments.Count()
             });
+        }
+
+        public async Task Handle(AddServiceCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
         }
     }
 }
