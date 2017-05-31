@@ -7,11 +7,12 @@ import {ShopsService} from './services/index';
 class AddService extends Component {
   constructor(props) {
     super(props);
-    this._data = [];
+    this._data = {};
     this.closeWarning = this.closeWarning.bind(this);
     this.closeError = this.closeError.bind(this);
+    this.save = this.save.bind(this);
     this.state = {
-      activeTab: '2',
+      activeTab: '1',
       isLoading: false,
       errorMessage: null,
       warningMessage: null,
@@ -40,6 +41,14 @@ class AddService extends Component {
       errorMessage: null
     });
   }
+  save(occurrence) {
+    var json = this._data['1'],
+      self = this;
+    json['occurrence'] = occurrence;
+    self.setState({
+      isLoading: true
+    });
+  }
   render() {
     return (<div className="container">
             {this.state.shop.name && this.state.shop.name !== null && (
@@ -64,7 +73,7 @@ class AddService extends Component {
                   <DescriptionTab onNext={(json) => {this.toggle('2', json); }} />
                 </TabPane>
                 <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-                  <PlanningTab onPrevious={() => { this.toggle('1'); } } />
+                  <PlanningTab onPrevious={() => { this.toggle('1'); } } onNext={(json) => { this.save(json); }} />
                 </TabPane>
             </TabContent>
     </div>);
