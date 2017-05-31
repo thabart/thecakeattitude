@@ -7,18 +7,28 @@ import {ShopsService} from './services/index';
 class AddService extends Component {
   constructor(props) {
     super(props);
+    this._data = [];
     this.closeWarning = this.closeWarning.bind(this);
     this.closeError = this.closeError.bind(this);
     this.state = {
-      activeTab: '1',
+      activeTab: '2',
       isLoading: false,
       errorMessage: null,
       warningMessage: null,
-      shop: {
-        name: 'test',
-        id: ''
-      }
+      shop: {}
     };
+  }
+  toggle(tab, json) {
+    var self = this;
+    if (json) {
+      self._data[self.state.activeTab] = json;
+    }
+
+    if (self.state.activeTab !== tab) {
+      self.setState({
+        activeTab: tab
+      });
+    }
   }
   closeWarning() {
     this.setState({
@@ -31,7 +41,6 @@ class AddService extends Component {
     });
   }
   render() {
-
     return (<div className="container">
             {this.state.shop.name && this.state.shop.name !== null && (
               <Breadcrumb>
@@ -52,10 +61,10 @@ class AddService extends Component {
             <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
                 <div className={this.state.isLoading ? 'loading' : 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
                 <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
-                  <DescriptionTab />
+                  <DescriptionTab onNext={(json) => {this.toggle('2', json); }} />
                 </TabPane>
                 <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-                  <PlanningTab />
+                  <PlanningTab onPrevious={() => { this.toggle('1'); } } />
                 </TabPane>
             </TabContent>
     </div>);
