@@ -11,6 +11,7 @@ import Announces from './Announces';
 import Manage from './Manage';
 import AddProduct from './AddProduct';
 import AddAnnouncement from "./AddAnnouncement";
+import AddService from './AddService';
 import {OpenIdService, SessionService} from "./services/index";
 import {ApplicationStore} from './stores';
 import Constants from '../Constants';
@@ -168,10 +169,9 @@ class App extends Component {
                         <Route path="/products/:id/:action?" component={Products}/>
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/announces/:id" component={Announces} />
-                        <Route path="/addproduct/:id"
-                              render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
-                        <Route path="/addshop"
-                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                        <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
+                        <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                        <Route path="/addservice/:id" component={AddService} />
                         <Route path="/addAnnounce"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
                         <Route path="/manage/:action"

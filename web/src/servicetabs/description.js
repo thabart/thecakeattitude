@@ -44,7 +44,7 @@ class Description extends Component {
                     <p className="col-md-12">{this.props.service.description}</p>
                     <h5 className="title col-md-12">Occurrence</h5>
                     <p className="col-md-12">
-                        <NavLink to={"/shops/" + self.props.service.shop_id + '/services/calendar'}>View
+                        <NavLink to={"/shops/" + self.props.service.shop_id + '/view/services/calendar'}>View
                             Calendar</NavLink>
                         {occurrence}
                     </p>
