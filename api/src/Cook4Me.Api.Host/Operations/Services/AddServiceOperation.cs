@@ -16,18 +16,24 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Validators;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Services
 {
     public interface IAddServiceOperation
     {
-        Task<IActionResult> Execute(JObject jObj, string subject);
+        Task<IActionResult> Execute(JObject jObj, string subject, string commonId, HttpRequest request);
     }
 
     internal class AddServiceOperation : IAddServiceOperation
@@ -37,19 +43,21 @@ namespace Cook4Me.Api.Host.Operations.Services
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
         private readonly ICommandSender _commandSender;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         public AddServiceOperation(IRequestBuilder requestBuilder, IAddServiceValidator addServiceValidator, 
             IResponseBuilder responseBuilder, IControllerHelper controllerHelper,
-            ICommandSender commandSender)
+            ICommandSender commandSender, IHostingEnvironment hostingEnvironment)
         {
             _requestBuilder = requestBuilder;
             _addServiceValidator = addServiceValidator;
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
             _commandSender = commandSender;
+            _hostingEnvironment = hostingEnvironment;
         }
 
-        public Task<IActionResult> Execute(JObject jObj, string subject)
+        public async Task<IActionResult> Execute(JObject jObj, string subject, string commonId, HttpRequest request)
         {
             if (jObj == null)
             {
@@ -61,7 +69,69 @@ namespace Cook4Me.Api.Host.Operations.Services
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            return null;
+            var command = _requestBuilder.GetAddService(jObj);
+            var validationResult = await _addServiceValidator.Validate(command, subject);
+            if (!validationResult.IsValid)
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
+                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
+            }
+
+            var images = new List<string>();
+            if (command.Images != null)
+            {
+                foreach (var image in command.Images)
+                {
+                    string path;
+                    if (!AddImage(image, request, out path))
+                    {
+                        continue;
+                    }
+
+                    images.Add(path);
+                }
+            }
+
+            command.Id = Guid.NewGuid().ToString();
+            command.CreateDateTime = DateTime.UtcNow;
+            command.UpdateDateTime = DateTime.UtcNow;
+            command.CommonId = commonId;
+            command.NewPrice = command.Price;
+            command.Images = images;
+
+            _commandSender.Send(command);
+            var obj = new { id = command.Id };
+            return new OkObjectResult(obj);
+        }
+
+        private bool AddImage(string base64Encoded, HttpRequest request, out string path)
+        {
+            path = null;
+            if (string.IsNullOrWhiteSpace(base64Encoded))
+            {
+                return false;
+            }
+
+            var id = Guid.NewGuid().ToString();
+            var picturePath = Path.Combine(_hostingEnvironment.WebRootPath, "services/" + id + ".jpg");
+            if (System.IO.File.Exists(picturePath))
+            {
+                System.IO.File.Delete(picturePath);
+            }
+
+            try
+            {
+                base64Encoded = base64Encoded.Substring(base64Encoded.IndexOf(',') + 1);
+                base64Encoded = base64Encoded.Trim('\0');
+                var imageBytes = Convert.FromBase64String(base64Encoded);
+                System.IO.File.WriteAllBytes(picturePath, imageBytes);
+                path = request.GetAbsoluteUriWithVirtualPath() + "/services/" + id + ".jpg";
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

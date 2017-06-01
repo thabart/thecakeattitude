@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Bus;
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Commands.Service
 {
@@ -25,6 +26,7 @@ namespace Cook4Me.Api.Core.Commands.Service
         public TimeSpan EndTime { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public IEnumerable<DayOfWeek> Days { get; set; }
     }
 
     public class AddServiceCommand : Command
@@ -38,5 +40,7 @@ namespace Cook4Me.Api.Core.Commands.Service
         public DateTime UpdateDateTime { get; set; }
         public double NewPrice { get; set; }
         public AddServiceOccurrence Occurrence { get; set; }
+        public IEnumerable<string> Images { get; set; }
+        public IEnumerable<string> Tags { get; set; }
     }
 }

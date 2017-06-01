@@ -110,6 +110,53 @@ namespace Cook4Me.Api.Handlers
             {
                 throw new ArgumentNullException(nameof(message));
             }
+
+            ServiceAggregateOccurrence occurrence = null;
+            if (message.Occurrence != null)
+            {
+                occurrence = new ServiceAggregateOccurrence
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Days = message.Occurrence.Days,
+                    StartDate = message.Occurrence.StartDate,
+                    EndDate = message.Occurrence.EndDate,
+                    StartTime = message.Occurrence.StartTime,
+                    EndTime = message.Occurrence.EndTime
+                };
+            }
+
+            var service = new ServiceAggregate
+            {
+                Id = message.Id,
+                Name = message.Name,
+                Description = message.Description,
+                PartialImagesUrl = message.Images,
+                Price = message.Price,
+                NewPrice = message.NewPrice,
+                Tags = message.Tags,
+                ShopId = message.ShopId,
+                CreateDateTime = message.CreateDateTime,
+                UpdateDateTime = message.UpdateDateTime,
+                TotalScore = 0,
+                AverageScore = 0,
+                Occurrence = occurrence
+            };
+            if (!await _serviceRepository.Add(service))
+            {
+                return;
+            }
+
+            _eventPublisher.Publish(new ServiceAddedEvent
+            {
+                Id = message.Id,
+                Name = message.Name,
+                Description = message.Description,
+                Price = message.Price,
+                NewPrice = message.NewPrice,
+                ShopId = message.ShopId,
+                CreateDateTime = message.CreateDateTime,
+                UpdateDateTime = message.UpdateDateTime
+            });
         }
     }
 }

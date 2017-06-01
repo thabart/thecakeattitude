@@ -363,8 +363,85 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(serviceAggregate));
             }
 
+            try
+            {
+                var record = serviceAggregate.ToModel();
+                var tags = new List<Models.ServiceTag>();
+                if (serviceAggregate.Tags != null && serviceAggregate.Tags.Any()) // Add tags
+                {
+                    var tagNames = serviceAggregate.Tags;
+                    var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                    foreach (var connectedTag in connectedTags)
+                    {
+                        tags.Add(new Models.ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = connectedTag.Name,
+                            ServiceId = serviceAggregate.Id
+                        });
+                    }
 
-            return false;
+                    var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                    foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
+                    {
+                        var newTag = new Models.Tag
+                        {
+                            Name = notExistingTagName,
+                            Description = notExistingTagName
+                        };
+                        _context.Tags.Add(newTag);
+                        tags.Add(new Models.ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = notExistingTagName,
+                            ServiceId = serviceAggregate.Id,
+                            Tag = newTag
+                        });
+                    }
+                }
+
+                if (serviceAggregate.PartialImagesUrl != null && serviceAggregate.PartialImagesUrl.Any()) // Add images
+                {
+                    record.Images = serviceAggregate.PartialImagesUrl.Select(i =>
+                        new Models.ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = i
+                        }
+                    ).ToList();
+                }
+
+                if (serviceAggregate.Occurrence != null) // Add occurrence.
+                {
+                    var days = new List<Models.ServiceOccurrenceDay>();
+                    if (serviceAggregate.Occurrence.Days != null)
+                    {
+                        days = serviceAggregate.Occurrence.Days.Select(d => new Models.ServiceOccurrenceDay
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            DayId = ((int)d).ToString()
+                        }).ToList();
+                    }
+                    record.Occurrence = new Models.ServiceOccurrence
+                    {
+                        Id = serviceAggregate.Occurrence.Id,
+                        StartDate = serviceAggregate.Occurrence.StartDate,
+                        EndDate = serviceAggregate.Occurrence.EndDate,
+                        StartTime = serviceAggregate.Occurrence.StartTime,
+                        EndTime = serviceAggregate.Occurrence.EndTime,
+                        Days = days
+                    };
+                }
+
+                record.Tags = tags;
+                _context.Services.Add(record);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static IQueryable<Models.Service> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Service, TKey>> keySelector, IQueryable<Models.Service> products)

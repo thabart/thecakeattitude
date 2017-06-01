@@ -108,6 +108,28 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
+        public static Service ToModel(this ServiceAggregate aggregate)
+        {
+            if (aggregate == null)
+            {
+                throw new ArgumentNullException(nameof(aggregate));
+            }
+
+            return new Service
+            {
+                Id = aggregate.Id,
+                Name = aggregate.Name,
+                Description = aggregate.Description,
+                NewPrice = aggregate.NewPrice,
+                Price = aggregate.Price,
+                ShopId = aggregate.ShopId,
+                UpdateDateTime = aggregate.UpdateDateTime,
+                TotalScore = aggregate.TotalScore,
+                AverageScore = aggregate.AverageScore,
+                CreateDateTime = aggregate.CreateDateTime
+            };
+        }
+
         public static AnnouncementCategory ToCategoryAggregate(this Category category)
         {
             if (category == null)

@@ -47,6 +47,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment);
         JObject GetServiceCommentAddedEvent(ServiceCommentAddedEvent comment);
+        JObject GetServiceAddedEvent(ServiceAddedEvent evt);
         JObject GetAnnouncementAddedEvent(AnnouncementAddedEvent evt);
         JObject GetAnnouncementRemovedEvent(AnnouncementRemovedEvent evt);
         JObject GetProductAddedEvent(ProductAddedEvent evt);
@@ -500,6 +501,25 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
+            return jObj;
+        }
+
+        public JObject GetServiceAddedEvent(ServiceAddedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Service.Id, evt.Id);
+            jObj.Add(Constants.DtoNames.Service.Name, evt.Name);
+            jObj.Add(Constants.DtoNames.Service.Description, evt.Description);
+            jObj.Add(Constants.DtoNames.Service.ShopId, evt.ShopId);
+            jObj.Add(Constants.DtoNames.Service.Price, evt.Price);
+            jObj.Add(Constants.DtoNames.Service.NewPrice, evt.NewPrice);
+            jObj.Add(Constants.DtoNames.Service.CreateDatetime, evt.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Service.UpdateDatetime, evt.UpdateDateTime);
             return jObj;
         }
 

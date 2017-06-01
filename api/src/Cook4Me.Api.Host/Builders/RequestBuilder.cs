@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -31,6 +32,8 @@ namespace Cook4Me.Api.Host.Builders
     {
         AddAnnouncementCommand GetAnnouncement(JObject jObj);
         AddShopCommand GetAddShop(JObject jObj);
+        AddServiceCommand GetAddService(JObject jObj);
+        AddServiceOccurrence GetAddServiceOccurrence(JObject jObj);
         UpdateShopCommand GetUpdateShop(JObject jObj);
         AddPaymentInformation GetPaymentMethod(JObject jObj);
         UpdatePaymentInformation GetUpdatePaymentMethod(JObject jObj);
@@ -161,6 +164,56 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
+        public AddServiceCommand GetAddService(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var occurrenceObj = jObj.GetValue(Constants.DtoNames.Service.Occurrence);
+            AddServiceOccurrence occurrence = null;
+            if (occurrenceObj == null)
+            {
+                occurrence = GetAddServiceOccurrence(occurrenceObj as JObject);
+            }
+
+            return new AddServiceCommand
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.Service.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.Service.Description),
+                Price = jObj.TryGetDouble(Constants.DtoNames.Service.Price),
+                ShopId = jObj.TryGetString(Constants.DtoNames.Service.ShopId),
+                Occurrence = occurrence,
+                Images = jObj.TryGetStringArray(Constants.DtoNames.Service.Images),
+                Tags = jObj.TryGetStringArray(Constants.DtoNames.Service.Tags)
+            };
+        }
+
+        public AddServiceOccurrence GetAddServiceOccurrence(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var days = new List<DayOfWeek>();
+            var daysStr = jObj.TryGetStringArray(Constants.DtoNames.Occurrence.Days);
+            if (daysStr != null)
+            {
+                days = daysStr.Select(d => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d)).ToList();
+            }
+
+            return new AddServiceOccurrence
+            {
+                StartDate = jObj.TryGetDateTime(Constants.DtoNames.Occurrence.StartDate),
+                EndDate = jObj.TryGetDateTime(Constants.DtoNames.Occurrence.EndDate),
+                StartTime = jObj.TryGetTime(Constants.DtoNames.Occurrence.StartTime),
+                EndTime = jObj.TryGetTime(Constants.DtoNames.Occurrence.EndTime),
+                Days = days
+            };
+        }
+
         public AddShopProductCategory GetAddShopProductCategory(JObject jObj)
         {
             if (jObj == null)
@@ -171,7 +224,7 @@ namespace Cook4Me.Api.Host.Builders
             return new AddShopProductCategory
             {
                 Name = jObj.TryGetString(Constants.DtoNames.ProductCategory.Name),
-                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description),
+                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description)
             };
         }
 
@@ -626,8 +679,7 @@ namespace Cook4Me.Api.Host.Builders
 
             return result;
         }
-
-
+        
         public SearchProductsParameter GetSearchProducts(JObject jObj)
         {
             if (jObj == null)
