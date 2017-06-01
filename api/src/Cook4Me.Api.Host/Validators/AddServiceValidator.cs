@@ -111,7 +111,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddServiceValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Occurrence.EndDate));
             }
 
-            if (command.Occurrence.StartDate > command.Occurrence.EndDate || command.Occurrence.EndDate > DateTime.UtcNow)
+            if (command.Occurrence.StartDate > command.Occurrence.EndDate || command.Occurrence.EndDate < DateTime.UtcNow)
             {
                 return new AddServiceValidationResult(ErrorDescriptions.TheOccurrenceDatePeriodIsNotValid);
             }

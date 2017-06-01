@@ -43,7 +43,7 @@ namespace Cook4Me.Api.Host.Handlers
             }
 
             var notifier = _connectionManager.GetHubContext<Notifier>();
-            notifier.Clients.All.serviceCommentRemoved(_responseBuilder.GetServiceAddedEvent(message));
+            notifier.Clients.All.serviceAdded(_responseBuilder.GetServiceAddedEvent(message));
             return Task.FromResult(0);
         }
 

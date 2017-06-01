@@ -2,7 +2,8 @@ import React, {Component} from "react";
 import {Alert, TabContent, TabPane, Breadcrumb, BreadcrumbItem} from 'reactstrap';
 import {NavLink} from "react-router-dom";
 import {DescriptionTab, PlanningTab} from './addservicetabs';
-import {ShopsService} from './services/index';
+import {ShopsService,ShopServices} from './services/index';
+import {withRouter} from "react-router";
 
 class AddService extends Component {
   constructor(props) {
@@ -47,6 +48,18 @@ class AddService extends Component {
     json['occurrence'] = occurrence;
     self.setState({
       isLoading: true
+    });
+    json['shop_id'] = this.props.match.params.id;
+    ShopServices.add(json).then(function() {      
+        self.setState({
+          isLoading: false
+        });
+        self.props.history.push('/');
+    }).catch(function() {
+      self.setState({
+        isLoading: false,
+        errorMessage: 'An error occured while trying to add the service'
+      });
     });
   }
   render() {
@@ -97,4 +110,4 @@ class AddService extends Component {
   }
 }
 
-export default AddService;
+export default withRouter(AddService);

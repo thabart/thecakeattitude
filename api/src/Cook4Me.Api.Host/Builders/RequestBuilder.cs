@@ -173,7 +173,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var occurrenceObj = jObj.GetValue(Constants.DtoNames.Service.Occurrence);
             AddServiceOccurrence occurrence = null;
-            if (occurrenceObj == null)
+            if (occurrenceObj != null)
             {
                 occurrence = GetAddServiceOccurrence(occurrenceObj as JObject);
             }
