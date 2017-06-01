@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {CommentLst} from "../components";
 import {ShopsService} from "../services/index";
 import AppDispatcher from "../appDispatcher";
-import NotificationSystem from 'react-notification-system';
 
 class Comment extends Component {
     constructor(props) {
@@ -30,7 +29,6 @@ class Comment extends Component {
         return (<div><CommentLst ref="comments" className="col-md-6" removeCommentCallback={this.removeCommentCallback}
                             searchCommentsCallback={this.searchCommentsCallback}
                             addCommentCallback={this.addCommentCallback}/>
-                            <NotificationSystem ref="notificationSystem" />
                             </div>);
     }
 
@@ -41,19 +39,8 @@ class Comment extends Component {
             switch (payload.actionName) {
                 case 'new-shop-comment':
                 case 'remove-shop-comment':
-                    var message = "A comment has been removed";
-                    if (payload.actionName === "new-shop-comment") {
-                      message = "A comment has been added";
-                    }
-
-                    self.refs.notificationSystem.addNotification({
-                      message: message,
-                      level: 'info',
-                      position: 'tr'
-                    });
                     if (payload && payload.data && payload.data.shop_id === self.props.shop.id) {
                         self.refs.comments.refreshComments();
-                        self.props.onRefreshScore();
                     }
                     break;
             }

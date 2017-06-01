@@ -428,6 +428,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Content, comment.Content);
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
             jObj.Add(Constants.DtoNames.Comment.ProductId, comment.ProductId);
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
@@ -479,6 +480,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ServiceId, comment.ServiceId);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
@@ -494,6 +496,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Content, comment.Content);
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
             jObj.Add(Constants.DtoNames.Comment.ServiceId, comment.ServiceId);
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
@@ -594,6 +597,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ProductId, comment.ProductId);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;

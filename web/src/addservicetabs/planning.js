@@ -137,8 +137,8 @@ class PlanningTab extends Component {
     var json = {
       start_time: startTime.format('HH:mm:ss'),
       end_time: endTime.format('HH:mm:ss'),
-      start_date: self.state.startDate.format(),
-      end_date: self.state.endDate.format(),
+      start_date: self.state.startDate.format('YYYY-MM-DD'),
+      end_date: self.state.endDate.format('YYYY-MM-DD'),
       days: self.state.days
     };
     if (this.props.onNext) this.props.onNext(json);

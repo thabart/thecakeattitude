@@ -31,7 +31,6 @@ const GettingStartedGoogleMap = withGoogleMap(props => {
 class ShopProfile extends Component {
     constructor(props) {
         super(props);
-        this.refreshScore = this.refreshScore.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
         this.closeModalAddress = this.closeModalAddress.bind(this);
         this.closeModalPayments = this.closeModalPayments.bind(this);
@@ -55,10 +54,6 @@ class ShopProfile extends Component {
 
     onMapLoad(map) {
         this._googleMap = map;
-    }
-
-    refreshScore() {
-        this.props.onRefreshScore();
     }
 
     closeModalAddress() {
@@ -239,7 +234,7 @@ class ShopProfile extends Component {
                     </GettingStartedGoogleMap>
                 </div>
             </section>
-            <Comment shop={self.state.shop} onRefreshScore={this.refreshScore}/>
+            <Comment shop={self.state.shop} />
             <BestDeals shop={self.state.shop}/>
             {/* Modal window for the address */}
             <Modal size="lg" isOpen={this.state.isModalAddressOpened}>

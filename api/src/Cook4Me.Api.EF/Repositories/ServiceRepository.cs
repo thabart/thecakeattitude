@@ -107,15 +107,14 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 foreach (var order in parameter.Orders)
                 {
+                    services = Order(order, "total_score", s => s.TotalScore, services);
+                    services = Order(order, "average_score", s => s.AverageScore, services);
+                    services = Order(order, "price", s => s.NewPrice, services);
                     services = Order(order, "update_datetime", s => s.UpdateDateTime, services);
                     services = Order(order, "create_datetime", s => s.CreateDateTime, services);
-                    services = Order(order, "average_score", s => s.AverageScore, services);
-                    services = Order(order, "total_score", s => s.TotalScore, services);
-                    services = Order(order, "price", s => s.NewPrice, services);
                 }
             }
 
-            services.OrderByDescending(s => s.UpdateDateTime);
             var result = new SearchServiceResult
             {
                 TotalResults = await services.CountAsync().ConfigureAwait(false),

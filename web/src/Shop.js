@@ -237,7 +237,7 @@ class Shop extends Component {
         var editUrl = null;
         var self = this;
         var tags = [];
-        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} onRefreshScore={this.refreshScore} isEditable={this.state.isEditable} history={this.props.history}  />);
+        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable} history={this.props.history}  />);
         if (action === "products") {
             content = (<ShopProducts user={this.state.user} shop={this.state.shop}  isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
@@ -379,6 +379,44 @@ class Shop extends Component {
                     self.refresh();
                   }
                   break;
+              case 'new-product': // Display popup when a product has been added to the shop.
+                if (payload.data && payload.data.shop_id === shopId) {
+                  ApplicationStore.sendMessage({
+                    message: 'A new product has been added',
+                    level: 'info',
+                    position: 'tr'
+                  });
+                }
+              break;
+              case 'new-service': // Display popup when a service has been added to the shop.
+                if (payload.data && payload.data.shop_id === shopId) {
+                  ApplicationStore.sendMessage({
+                    message: 'A new service has been added',
+                    level: 'info',
+                    position: 'tr'
+                  });
+                }
+              break;
+              case 'new-shop-comment': // Display popup when a comment has been added to the shop.
+                if (payload.data && payload.data.shop_id === shopId) {
+                  ApplicationStore.sendMessage({
+                    message: 'A comment has been added',
+                    level: 'info',
+                    position: 'tr'
+                  });
+                  self.refreshScore();
+                }
+              break;
+              case 'remove-shop-comment': // Display popup when a comment has been removed
+                if (payload.data && payload.data.shop_id === shopId) {
+                  ApplicationStore.sendMessage({
+                    message: 'A comment has been removed',
+                    level: 'info',
+                    position: 'tr'
+                  });
+                  self.refreshScore();
+                }
+              break;
           }
       });
 

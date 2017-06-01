@@ -37,6 +37,12 @@ class App extends Component {
     componentWillMount() {
         var connection = $.hubConnection(Constants.apiUrl);
         var proxy = connection.createHubProxy("notifier");
+        proxy.on('serviceAdded', function(message) {
+          AppDispatcher.dispatch({
+            actionName: 'new-service',
+            data: message
+          });
+        });
         proxy.on('productAdded', function(message) {
             AppDispatcher.dispatch({
                 actionName: 'new-product',

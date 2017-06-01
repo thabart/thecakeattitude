@@ -8,7 +8,6 @@ import "./products.css";
 import ProductElt from "./productElt";
 import $ from "jquery";
 import AppDispatcher from "../appDispatcher";
-import {EditShopStore} from '../stores';
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -352,18 +351,23 @@ class ShopProducts extends Component {
     componentDidMount() {
         var self = this,
             shopId = this.props.shop.id,
-            filters = this.props.shop.filters;
+            filters = this.props.shop.filters
         self._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'new-product-comment':
+                case 'new-product-comment': // When a comment is removed or added => refresh the list.
                 case 'remove-product-comment':
-                    filterJson = $.extend({}, filterJson, {
+                    if (payload.data.shop_id === shopId) {
+                      filterJson = $.extend({}, filterJson, {
                         start_index: 0
-                    });
-                    self.updateProducts();
+                      });
+                      self.updateProducts();
+                    }
                     break;
-                case 'update-shop':
-                  if (payload.id === shopId) {
+                case 'new-product': // When a product is added to the shop => refresh the list.
+                  if (payload.data.shop_id === shopId) {
+                    filterJson = $.extend({}, filterJson, {
+                      start_index: 0
+                    });
                     self.updateProducts();
                   }
                 break;

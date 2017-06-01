@@ -64,6 +64,7 @@ namespace Cook4Me.Api.Handlers
             {
                 Id = message.Id,
                 ServiceId = message.ServiceId,
+                ShopId = record.ShopId,
                 Content = message.Content,
                 Score = message.Score,
                 Subject = message.Subject,
@@ -98,6 +99,7 @@ namespace Cook4Me.Api.Handlers
             _eventPublisher.Publish(new ServiceCommentRemovedEvent
             {
                 Id = message.CommentId,
+                ShopId = record.ShopId,
                 ServiceId = message.ServiceId,
                 AverageScore = record.AverageScore,
                 NbComments = record.Comments == null ? 0 : record.Comments.Count()

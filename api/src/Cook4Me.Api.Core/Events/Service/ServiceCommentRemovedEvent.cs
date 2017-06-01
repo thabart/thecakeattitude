@@ -22,6 +22,7 @@ namespace Cook4Me.Api.Core.Events.Service
     {
         public string Id { get; set; }
         public string ServiceId { get; set; }
+        public string ShopId { get; set; }
         public double AverageScore { get; set; }
         public int NbComments { get; set; }
     }

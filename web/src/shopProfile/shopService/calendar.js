@@ -5,6 +5,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './calendar.css';
 import { ShopServices } from '../../services/index';
+import AppDispatcher from "../../appDispatcher";
 
 BigCalendar.setLocalizer(
   BigCalendar.momentLocalizer(moment)
@@ -13,6 +14,7 @@ BigCalendar.setLocalizer(
 class Calendar extends Component {
   constructor(props) {
     super(props);
+    this._waitForToken = null;
     this.onNavigate = this.onNavigate.bind(this);
     this.toggleError = this.toggleError.bind(this);
     this.onSelectEvent = this.onSelectEvent.bind(this);
@@ -74,9 +76,24 @@ class Calendar extends Component {
   }
   componentDidMount() {
     var start = moment().startOf('month').format(),
-      end = moment().endOf('month').format();
+      end = moment().endOf('month').format(),
+      self = this,
+      shopId = this.props.shop.id;
     this.request = { from_datetime: start, to_datetime: end, shop_id: this.props.shop.id };
     this.refresh();
+    self._waitForToken = AppDispatcher.register(function (payload) {
+        switch (payload.actionName) {
+            case 'new-service':
+                if (payload.data && payload.data.shop_id === shopId) {
+                  self.refresh();
+                }
+                break;
+            break;
+        }
+    });
+  }
+  componentWillUnmount() {
+    AppDispatcher.unregister(this._waitForToken);
   }
 }
 
