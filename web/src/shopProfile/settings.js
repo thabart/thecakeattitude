@@ -63,6 +63,11 @@ class ShopSettings extends Component {
         var self = this;
         return (<div>
           <section className="col-md-12 white-section shop-section shop-section-padding">
+            <p>
+              <b>Edit the filter and the categories of all your products.</b> <br/>
+              <i>Category</i> : <i>Women</i> or <i>Men</i><br/>
+              A <i>filter</i> is a common characteristic which can be assigned to your products for example : <i>Colors</i> or <i>Size</i>.
+            </p>
             <div className="form-group">
               <label className="form-label">Product categories</label> <i className="fa fa-exclamation-circle" id="productCategories"></i>
               <Tooltip placement="right" target="productCategories" isOpen={self.state.tooltip["toggleProductCategories"]} toggle={() => {
