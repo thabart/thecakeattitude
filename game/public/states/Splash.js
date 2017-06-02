@@ -32,6 +32,7 @@ Splash.prototype = {
 		this.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
 		this.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');
 		this.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
+		this.game.load.image('overview', Constants.apiUrl + '/maps/map_overview.png');
 
 		this.game.load.image('overview_firstMap', Constants.apiUrl + '/maps/overview_map.png');
 		this.game.load.image('tallgrass', Constants.apiUrl + '/maps/tilesets/tallgrass.png');

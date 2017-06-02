@@ -53,6 +53,9 @@ var Map = function(key, tileMap, game, category) {
 		this.layers.houses2 = this.tileMap.createLayer('Houses2');
 		this.layers.decorations = this.tileMap.createLayer('Decorations');
 		this.layers.walls = this.tileMap.createLayer('Walls');
+		var overview = game.add.sprite(game.width - 200, 10, 'overview');
+		overview.width = 190;
+		overview.fixedToCamera = true;
 		this.tileMap.createLayer('Wraps');
 
 		/*
