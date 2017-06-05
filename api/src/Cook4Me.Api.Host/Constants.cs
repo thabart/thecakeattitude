@@ -148,6 +148,8 @@ namespace Cook4Me.Api.Host
                 public const string AverageScore = "average_score";
                 public const string TotalScore = "total_score";
                 public const string NbComments = "nb_comments";
+                public const string CreateDatetime = "create_datetime";
+                public const string UpdateDatetime = "update_datetime";
             }
 
             public static class Announcement
@@ -164,6 +166,15 @@ namespace Cook4Me.Api.Host
                 public const string Location = "location";
                 public const string Subject = "subject";
                 public const string StreetAddress = "street_address";
+            }
+
+            public static class Occurrence
+            {
+                public const string StartDate = "start_date";
+                public const string EndDate = "end_date";
+                public const string StartTime = "start_time";
+                public const string EndTime = "end_time";
+                public const string Days = "days";
             }
 
             public static class ServiceOccurrence

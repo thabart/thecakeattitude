@@ -7,6 +7,10 @@ class PaymentMethodsSelector extends Component {
         this.activate = this.activate.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.state = {
+            firstIban: null,
+            secondIban: null,
+            thirdIban: null,
+            fourthIban: null,
             currentItem: null,
             activateCash: false,
             activateBankTransfer: false,
@@ -95,19 +99,19 @@ class PaymentMethodsSelector extends Component {
                 <div className="row">
                   <div className="col-md-3">
                     <input type="text" className="form-control" maxLength="4" placeholder="BE__"
-                    name="firstIban" onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
+                    name="firstIban" value={this.state.firstIban} onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
                   </div>
                   <div className="col-md-3">
                     <input type="text" className="form-control" maxLength="4" placeholder="0000"
-                    name="secondIban" onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
+                    name="secondIban" value={this.state.secondIban} onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
                   </div>
                   <div className="col-md-3">
                     <input type="text" className="form-control" maxLength="4" placeholder="0000"
-                    name="thirdIban" onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
+                    name="thirdIban" value={this.state.thirdIban} onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
                   </div>
                   <div className="col-md-3">
                     <input type="text" className="form-control" maxLength="4" placeholder="0000"
-                    name="fourthIban" onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
+                    name="fourthIban" value={this.state.fourthIban} onChange={this.handleInputChange} onClick={(e) => { e.stopPropagation();}}/>
                   </div>
                 </div>
               </div>
@@ -125,6 +129,50 @@ class PaymentMethodsSelector extends Component {
               </div>
           </a>
         </div>);
+    }
+
+    componentDidMount() {
+      if (!this.props.payments || !(this.props.payments instanceof Array)) {
+        return;
+      }
+
+      var activatePaypal = false,
+        activateBankTransfer = false,
+        activateCash = false,
+        firstIban = null,
+        secondIban = null,
+        thirdIban = null,
+        fourthIban = null;
+      this.props.payments.forEach(function(payment) {
+        switch (payment.method) {
+          case "Cash":
+          case "cash":
+            activateCash = true;
+            break;
+          case "BankTransfer":
+          case "bank_transfer":
+            activateBankTransfer = true;
+            firstIban = payment.iban.substring(0, 4);
+            secondIban = payment.iban.substring(4, 8);
+            thirdIban = payment.iban.substring(8, 12);
+            fourthIban = payment.iban.substring(12, 16);
+            break;
+          case "PayPal":
+          case "paypal":
+              activatePaypal = true;
+            break;
+          }
+      });
+
+      this.setState({
+        activateCash: activateCash,
+        activateBankTransfer: activateBankTransfer,
+        activatePaypal: activatePaypal,
+        firstIban: firstIban,
+        secondIban: secondIban,
+        thirdIban: thirdIban,
+        fourthIban: fourthIban
+      });
     }
 }
 

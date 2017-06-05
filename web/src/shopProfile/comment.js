@@ -6,6 +6,7 @@ import AppDispatcher from "../appDispatcher";
 class Comment extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.removeCommentCallback = this.removeCommentCallback.bind(this);
         this.searchCommentsCallback = this.searchCommentsCallback.bind(this);
         this.addCommentCallback = this.addCommentCallback.bind(this);
@@ -25,25 +26,29 @@ class Comment extends Component {
     }
 
     render() {
-        return (<CommentLst ref="comments" className="col-md-6" removeCommentCallback={this.removeCommentCallback}
+        return (<div><CommentLst ref="comments" className="col-md-6" removeCommentCallback={this.removeCommentCallback}
                             searchCommentsCallback={this.searchCommentsCallback}
-                            addCommentCallback={this.addCommentCallback}/>);
+                            addCommentCallback={this.addCommentCallback}/>
+                            </div>);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         // Refresh the comments.
         var self = this;
-        AppDispatcher.register(function (payload) {
+        this._waitForToken = AppDispatcher.register(function(payload) {
             switch (payload.actionName) {
                 case 'new-shop-comment':
                 case 'remove-shop-comment':
                     if (payload && payload.data && payload.data.shop_id === self.props.shop.id) {
                         self.refs.comments.refreshComments();
-                        self.props.onRefreshScore();
                     }
                     break;
             }
         });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

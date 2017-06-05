@@ -10,6 +10,7 @@ import AppDispatcher from "../appDispatcher";
 class BestDeals extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.navigate = this.navigate.bind(this);
         this.navigateProduct = this.navigateProduct.bind(this);
         this.localize = this.localize.bind(this);
@@ -173,9 +174,9 @@ class BestDeals extends Component {
         );
     }
 
-    componentWillMount() {
+    componentDidMount() {
         var self = this;
-        AppDispatcher.register(function (payload) {
+        this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'new-product-comment':
                 case 'remove-product-comment':
@@ -186,6 +187,10 @@ class BestDeals extends Component {
                     break;
             }
         });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

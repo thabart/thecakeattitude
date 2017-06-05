@@ -15,7 +15,18 @@ class TagsSelector extends Component {
       tags: this.props.tags ? this.props.tags : []
     };
   }
-  handleTags(tags) {
+  handleTags(tags, changed, changedIndexes) {
+      if (changedIndexes[0] === this.state.tags.length ) {
+        var changedValue = changed[0].toLowerCase();
+        var selectedValue = this.state.tags.filter(function(tag) {
+          return tag.toLowerCase().indexOf(changedValue) !== -1;
+        });
+
+        if (selectedValue.length > 0) {
+          return;
+        }
+      }
+
       this.setState({
           tags: tags
       });
@@ -63,11 +74,10 @@ class TagsSelector extends Component {
 
           self.displayTags(embedded);
           self.popup.find('li').click(function () {
-            var tags = self.state.tags;
-            tags.push($(this).html());
-            self.setState({
-              tags: tags
-            });
+            var tags = self.state.tags.slice(0);
+            var tag = $(this).html();
+            tags.push(tag);
+            self.handleTags(tags, [tag], [self.state.tags.length]);
             self.hidePopup();
           });
         }).catch(function() {

@@ -6,6 +6,7 @@ import AppDispatcher from "../appDispatcher";
 class Comments extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.removeCommentCallback = this.removeCommentCallback.bind(this);
         this.searchCommentsCallback = this.searchCommentsCallback.bind(this);
         this.addCommentCallback = this.addCommentCallback.bind(this);
@@ -30,10 +31,10 @@ class Comments extends Component {
                             addCommentCallback={this.addCommentCallback}/>);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         var self = this;
         // Refresh the comments.
-        AppDispatcher.register(function (payload) {
+        self._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'new-service-comment':
                 case 'remove-service-comment':
@@ -44,6 +45,10 @@ class Comments extends Component {
                     break;
             }
         });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

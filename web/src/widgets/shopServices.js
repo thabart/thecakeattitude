@@ -5,6 +5,7 @@ import moment from "moment";
 import {Button} from 'reactstrap';
 import Rater from "react-rater";
 import $ from "jquery";
+import AppDispatcher from "../appDispatcher";
 
 var daysMapping = {
     "0": "Monday",
@@ -19,6 +20,7 @@ var daysMapping = {
 class ShopServices extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.navigateService = this.navigateService.bind(this);
         this.localize = this.localize.bind(this);
         this.state = {
@@ -34,7 +36,7 @@ class ShopServices extends Component {
 
     navigate(e, name) {
         e.preventDefault();
-        var startIndex = name - 1;
+        var startIndex = (name - 1) * 5;
         var request = $.extend({}, this.request, {
             start_index: startIndex
         });
@@ -56,8 +58,7 @@ class ShopServices extends Component {
     refresh(json) {
         var request = $.extend({}, json, {
             orders: [
-                {target: "total_score", method: 'desc'},
-                {target: "update_datetime", method: 'desc'}
+                {target: "total_score", method: 'desc'}
             ],
             from_datetime: moment().format(),
             to_datetime: moment().format(),
@@ -179,6 +180,26 @@ class ShopServices extends Component {
                 }
             </Widget>
         );
+    }
+
+    componentDidMount() {
+        var self = this;
+        this._waitForToken = AppDispatcher.register(function (payload) {
+            switch (payload.actionName) {
+                case 'new-service':
+                case 'new-service-comment':
+                case 'remove-service-comment':
+                    var request = $.extend({}, self.request, {
+                        start_index: 0
+                    });
+                    self.refresh(request);
+                    break;
+            }
+        });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

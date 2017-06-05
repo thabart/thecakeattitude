@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {TabContent, TabPane, Alert} from "reactstrap";
 import {withRouter} from "react-router";
-import {DescriptionForm, ContactInfoForm, PaymentForm, AddressForm} from "./addshoptabs";
+import {DescriptionForm, ContactInfoForm, PaymentForm, AddressForm, ProductForm} from "./addshoptabs";
 import {ShopsService} from "./services/index";
 import $ from "jquery";
 import "./AddShop.css";
@@ -149,21 +149,11 @@ class AddShop extends Component {
                         }}/>
                     </TabPane>
                     <TabPane tabId='4' className={this.state.isLoading ? 'hidden' : ''}>
-                        <section className="col-md-12 section">
-                            <button type='button' className='btn btn-success'><span
-                                className='fa fa-plus glyphicon-align-left'></span> Add product
-                            </button>
-                        </section>
-                        <section className="col-md-12 sub-section">
-                            <button className="btn btn-primary previous" onClick={() => {
-                                this.toggle('3');
-                            }}>Previous
-                            </button>
-                            <button className="btn btn-primary next" onClick={() => {
-                                this.toggle('5');
-                            }}>Next
-                            </button>
-                        </section>
+                        <ProductForm onPrevious={() => {
+                            this.toggle('3');
+                          }} onNext={(json) => {
+                            this.toggle('5', json);
+                          }} />
                     </TabPane>
                     <TabPane tabId='5' className={this.state.isLoading ? 'hidden' : ''}>
                         <PaymentForm onError={(msg) => {

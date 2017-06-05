@@ -43,7 +43,9 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 var record = shop.ToModel();
                 var tags = new List<Models.ShopTag>();
-                if (shop.TagNames != null && shop.TagNames.Any())
+                var filters = new List<Models.Filter>();
+                var productCategories = new List<Models.ProductCategory>();
+                if (shop.TagNames != null && shop.TagNames.Any()) // Add tags
                 {
                     var tagNames = shop.TagNames;
                     var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
@@ -76,6 +78,45 @@ namespace Cook4Me.Api.EF.Repositories
                     }
                 }
 
+                if (shop.ShopFilters != null)
+                {
+                    foreach(var shopFilter in shop.ShopFilters)
+                    {
+                        filters.Add(new Models.Filter
+                        {
+                            Id = shopFilter.Id,
+                            Name = shopFilter.Name,
+                            ShopId = shop.Id,
+                            Values = shopFilter.Values == null ? new List<Models.FilterValue>() : shopFilter.Values.Select(v => new Models.FilterValue
+                            {
+                                Id = v.Id,
+                                Content = v.Content,
+                                CreateDateTime = v.CreateDateTime,
+                                UpdateDateTime = v.UpdateDateTime,
+                                FilterId = shopFilter.Id
+                            }).ToList()
+                        });
+                    }
+                }
+
+                if (shop.ProductCategories != null)
+                {
+                    foreach(var productCategory in shop.ProductCategories)
+                    {
+                        productCategories.Add(new Models.ProductCategory
+                        {
+                            Id = productCategory.Id,
+                            Description = productCategory.Description,
+                            Name = productCategory.Name,
+                            ShopId = shop.Id,
+                            CreateDateTime = productCategory.CreateDateTime,
+                            UpdateDateTime = productCategory.UpdateDateTime
+                        });
+                    }
+                }
+
+                record.ProductCategories = productCategories;
+                record.Filters = filters;
                 record.ShopTags = tags;
                 _context.Shops.Add(record);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
@@ -131,7 +172,13 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 try
                 {
-                    var record = await _context.Shops.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
+                    var record = await _context.Shops
+                        .Include(s => s.Comments)
+                        .Include(s => s.PaymentMethods)
+                        .Include(s => s.ProductCategories)
+                        .Include(s => s.ShopTags)
+                        .Include(s => s.Filters).ThenInclude(f => f.Values)
+                        .FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
                     if (record == null)
                     {
                         return false;
@@ -155,43 +202,202 @@ namespace Cook4Me.Api.EF.Repositories
                     record.TotalScore = shop.TotalScore;
                     record.AverageScore = shop.AverageScore;
                     record.UpdateDateTime = shop.UpdateDateTime;
-                    var comments = shop.Comments == null ? new List<ShopComment>() : shop.Comments;
-                    var commentIds = comments.Select(c => c.Id);
-                    // Update the comments
-                    if (record.Comments != null)
+
+                    var tags = new List<Models.ShopTag>(); // Update tags.
+                    var shopTags = shop.TagNames == null ? new List<string>() : shop.TagNames;
+                    var tagNames = shop.TagNames;
+                    var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                    foreach (var connectedTag in connectedTags)
                     {
-                        var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
-                        var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
-                        var existingCommentIds = record.Comments.Select(c => c.Id);
-                        var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
-                        foreach(var commentToUpdate in commentsToUpdate)
+                        tags.Add(new Models.ShopTag
                         {
-                            var comment = comments.First(c => c.Id == commentToUpdate.Id);
-                            commentToUpdate.Score = comment.Score;
-                            commentToUpdate.Subject = comment.Subject;
-                            commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
-                            commentToUpdate.Content = comment.Content;
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = connectedTag.Name,
+                            ShopId = shop.Id
+                        });
+                    }
+
+                    var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                    foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
+                    {
+                        var newTag = new Models.Tag
+                        {
+                            Name = notExistingTagName,
+                            Description = notExistingTagName
+                        };
+                        _context.Tags.Add(newTag);
+                        tags.Add(new Models.ShopTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = notExistingTagName,
+                            ShopId = shop.Id,
+                            Tag = newTag
+                        });
+                    }
+                    record.ShopTags = tags; 
+
+                    var paymentMethods = shop.ShopPaymentMethods == null ? new List<ShopPaymentMethod>() : shop.ShopPaymentMethods; // Update payment methods.
+                    var paymentMethodIds = paymentMethods.Select(p => p.Id);
+                    var paymentsToUpdate = record.PaymentMethods.Where(c => paymentMethodIds.Contains(c.Id));
+                    var paymentsToRemove = record.PaymentMethods.Where(c => !paymentMethodIds.Contains(c.Id));
+                    var existingPaymentIds = record.PaymentMethods.Select(c => c.Id);
+                    var paymentsToAdd = paymentMethods.Where(c => !existingPaymentIds.Contains(c.Id));
+                    foreach (var paymentToUpdate in paymentsToUpdate)
+                    {
+                        var payment = paymentMethods.First(c => c.Id == paymentToUpdate.Id);
+                        paymentToUpdate.Method = (int)payment.Method;
+                        paymentToUpdate.Iban = payment.Iban;
+                    }
+
+                    foreach (var paymentToRemove in paymentsToRemove)
+                    {
+                        _context.PaymentMethods.Remove(paymentToRemove);
+                    }
+
+                    foreach (var paymentToAdd in paymentsToAdd)
+                    {
+                        var rec = new Models.PaymentMethod
+                        {
+                            Id = paymentToAdd.Id,
+                            Iban = paymentToAdd.Iban,
+                            Method = (int)paymentToAdd.Method,
+                            ShopId = shop.Id
+                        };
+                        _context.PaymentMethods.Add(rec);
+                    }
+
+                    var productCategories = shop.ProductCategories == null ? new List<ShopProductCategory>() : shop.ProductCategories;
+                    var productCategoryIds = productCategories.Select(p => p.Id);
+                    var productCategoriesToUpdate = record.ProductCategories.Where(c => productCategoryIds.Contains(c.Id));
+                    var productCategoriesToRemove = record.ProductCategories.Where(c => !productCategoryIds.Contains(c.Id));
+                    var existingCategoryIds = record.ProductCategories.Select(c => c.Id);
+                    var productCategoriesToAdd = productCategories.Where(c => !existingCategoryIds.Contains(c.Id));
+                    foreach(var productCategoryToUpdate in productCategoriesToUpdate)
+                    {
+                        var productCategory = productCategories.First(p => p.Id == productCategoryToUpdate.Id);
+                        productCategoryToUpdate.Name = productCategory.Name;
+                        productCategoryToUpdate.UpdateDateTime = productCategory.UpdateDateTime;
+                        productCategoryToUpdate.Description = productCategory.Description;
+                    }
+
+                    foreach(var productCategoryToRemove in productCategoriesToRemove)
+                    {
+                        _context.ProductCategories.Remove(productCategoryToRemove);
+                    }
+
+                    foreach(var productCategoryToAdd in productCategoriesToAdd)
+                    {
+                        var rec = new Models.ProductCategory
+                        {
+                            Id = productCategoryToAdd.Id,
+                            Description = productCategoryToAdd.Description,
+                            Name = productCategoryToAdd.Name,
+                            CreateDateTime = productCategoryToAdd.CreateDateTime,
+                            UpdateDateTime = productCategoryToAdd.UpdateDateTime,
+                            ShopId = shop.Id
+                        };
+                        _context.ProductCategories.Add(rec);
+                    }
+
+                    var filters = shop.ShopFilters == null ? new List<ShopFilter>() : shop.ShopFilters; // Update filters.
+                    var filterIds = filters.Select(c => c.Id);
+                    var filtersToUpdate = record.Filters.Where(c => filterIds.Contains(c.Id));
+                    var filtersToRemove = record.Filters.Where(c => !filterIds.Contains(c.Id));
+                    var existingFilterIds = record.Filters.Select(c => c.Id);
+                    var filtersToAdd = filters.Where(c => !existingFilterIds.Contains(c.Id));
+                    foreach (var filterToUpdate in filtersToUpdate)
+                    {
+                        var filter = filters.First(c => c.Id == filterToUpdate.Id);
+                        filterToUpdate.Name = filter.Name;
+                        var filterValues = filter.Values == null ? new List<ShopFilterValue>() : filter.Values;
+                        var filterValueIds = filterValues.Select(f => f.Id);
+                        var filterValuesToUpdate = filterToUpdate.Values.Where(v => filterValueIds.Contains(v.Id)); // Update filter values.
+                        var filterValuesToRemove = filterToUpdate.Values.Where(v => !filterValueIds.Contains(v.Id));
+                        var existingFilterValueIds = filterToUpdate.Values.Select(v => v.Id);
+                        var filterValuesToAdd = filter.Values.Where(v => !existingFilterValueIds.Contains(v.Id));
+                        foreach(var filterValueToUpdate in filterValuesToUpdate)
+                        {
+                            var filterValue = filterToUpdate.Values.First(v => v.Id == filterValueToUpdate.Id);
+                            filterValue.UpdateDateTime = filterValueToUpdate.UpdateDateTime;
+                            filterValue.Content = filterValueToUpdate.Content;
                         }
 
-                        foreach(var commentToRemove in commentsToRemove)
+                        foreach(var filterValueToRemove in filterValuesToRemove)
                         {
-                            _context.Comments.Remove(commentToRemove);
+                            _context.FilterValues.Remove(filterValueToRemove);
                         }
 
-                        foreach(var commentToAdd in commentsToAdd)
+                        foreach(var filterValueToAdd in filterValuesToAdd)
                         {
-                            var rec = new Models.Comment
+                            var rec = new Models.FilterValue
                             {
-                                Id = commentToAdd.Id,
-                                Content = commentToAdd.Content,
-                                Score = commentToAdd.Score,
-                                CreateDateTime = commentToAdd.CreateDateTime,
-                                ShopId = shop.Id,
-                                UpdateDateTime = commentToAdd.UpdateDateTime,
-                                Subject = commentToAdd.Subject
+                                Id = filterValueToAdd.Id,
+                                Content = filterValueToAdd.Content,
+                                CreateDateTime = filterValueToAdd.CreateDateTime,
+                                UpdateDateTime = filterValueToAdd.UpdateDateTime,
+                                FilterId = filter.Id
                             };
-                            _context.Comments.Add(rec);
+                            _context.FilterValues.Add(rec);
                         }
+                    }
+
+                    foreach (var filterToRemove in filtersToRemove)
+                    {
+                        _context.Filters.Remove(filterToRemove);
+                    }
+
+                    foreach (var filterToAdd in filtersToAdd)
+                    {
+                        var rec = new Models.Filter
+                        {
+                            Id = filterToAdd.Id,
+                            Name = filterToAdd.Name,
+                            ShopId = shop.Id,
+                            Values = filterToAdd.Values == null ? new List<Models.FilterValue>() : filterToAdd.Values.Select(v => new Models.FilterValue
+                            {
+                                Id = v.Id,
+                                Content = v.Content,
+                                CreateDateTime = v.CreateDateTime,
+                                UpdateDateTime = v.UpdateDateTime,
+                                FilterId = filterToAdd.Id
+                            }).ToList()
+                        };
+                        _context.Filters.Add(rec);
+                    }
+                    
+                    var comments = shop.Comments == null ? new List<ShopComment>() : shop.Comments; // Update comments
+                    var commentIds = comments.Select(c => c.Id);
+                    var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id)); 
+                    var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
+                    var existingCommentIds = record.Comments.Select(c => c.Id);
+                    var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
+                    foreach(var commentToUpdate in commentsToUpdate)
+                    {
+                        var comment = comments.First(c => c.Id == commentToUpdate.Id);
+                        commentToUpdate.Score = comment.Score;
+                        commentToUpdate.Subject = comment.Subject;
+                        commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
+                        commentToUpdate.Content = comment.Content;
+                    }
+
+                    foreach(var commentToRemove in commentsToRemove)
+                    {
+                        _context.Comments.Remove(commentToRemove);
+                    }
+
+                    foreach(var commentToAdd in commentsToAdd)
+                    {
+                        var rec = new Models.Comment
+                        {
+                            Id = commentToAdd.Id,
+                            Content = commentToAdd.Content,
+                            Score = commentToAdd.Score,
+                            CreateDateTime = commentToAdd.CreateDateTime,
+                            ShopId = shop.Id,
+                            UpdateDateTime = commentToAdd.UpdateDateTime,
+                            Subject = commentToAdd.Subject
+                        };
+                        _context.Comments.Add(rec);
                     }
 
                     await _context.SaveChangesAsync().ConfigureAwait(false);

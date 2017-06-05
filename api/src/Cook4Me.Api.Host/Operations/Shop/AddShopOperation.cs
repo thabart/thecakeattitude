@@ -18,9 +18,11 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,7 +34,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
 {
     public interface IAddShopOperation
     {
-        Task<IActionResult> Execute(JObject obj, string subject);
+        Task<IActionResult> Execute(JObject obj, HttpRequest request, string subject);
     }
 
     internal class AddShopOperation : IAddShopOperation
@@ -56,11 +58,16 @@ namespace Cook4Me.Api.Host.Operations.Shop
             _commandSender = commandSender;
         }
 
-        public async Task<IActionResult> Execute(JObject obj, string subject)
+        public async Task<IActionResult> Execute(JObject obj, HttpRequest request, string subject)
         {
             if (obj == null)
             {
                 throw new ArgumentNullException(nameof(obj));
+            }
+
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
             }
 
             if (string.IsNullOrWhiteSpace(subject))
@@ -93,6 +100,24 @@ namespace Cook4Me.Api.Host.Operations.Shop
             command.Subject = subject;
             command.ShopRelativePath = GetRelativeShopPath(command.Id);
             command.UndergroundRelativePath = GetRelativeUndergroundPath(command.Id);
+            if (!string.IsNullOrWhiteSpace(command.BannerImage))
+            {
+                string bannerImage = null;
+                if (AddImage(command.BannerImage, request, "banner", out bannerImage))
+                {
+                    command.BannerImage = bannerImage;
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(command.ProfileImage))
+            {
+                string profileImage = null;
+                if (AddImage(command.ProfileImage, request, "profile", out profileImage))
+                {
+                    command.ProfileImage = profileImage;
+                }
+            }
+
             // 2. Add the files.
             if (!AddShopMap(command, validationResult.Map))
             {
@@ -145,6 +170,36 @@ namespace Cook4Me.Api.Host.Operations.Shop
         private static string GetRelativeUndergroundPath(string id)
         {
             return @"shops/" + id + "_underground.json";
+        }
+        
+        private bool AddImage(string base64Encoded, HttpRequest request, string type, out string path)
+        {
+            path = null;
+            if (string.IsNullOrWhiteSpace(base64Encoded))
+            {
+                return false;
+            }
+
+            var id = Guid.NewGuid().ToString();
+            var picturePath = Path.Combine(_env.WebRootPath, "shops/" + id + "_" + type + ".jpg");
+            if (File.Exists(picturePath))
+            {
+                File.Delete(picturePath);
+            }
+
+            try
+            {
+                base64Encoded = base64Encoded.Substring(base64Encoded.IndexOf(',') + 1);
+                base64Encoded = base64Encoded.Trim('\0');
+                var imageBytes = Convert.FromBase64String(base64Encoded);
+                File.WriteAllBytes(picturePath, imageBytes);
+                path = request.GetAbsoluteUriWithVirtualPath() + "/shops/" + id + "_" + type + ".jpg";
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

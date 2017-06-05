@@ -6,6 +6,8 @@ import {NavLink} from "react-router-dom";
 import Comment from "./comment";
 import BestDeals from "./bestDeals";
 import "./profile.css";
+import AppDispatcher from '../appDispatcher';
+import Constants from '../../Constants';
 
 const shopOpts = {
     url: '/images/shop-pin.png',
@@ -29,7 +31,6 @@ const GettingStartedGoogleMap = withGoogleMap(props => {
 class ShopProfile extends Component {
     constructor(props) {
         super(props);
-        this.refreshScore = this.refreshScore.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
         this.closeModalAddress = this.closeModalAddress.bind(this);
         this.closeModalPayments = this.closeModalPayments.bind(this);
@@ -46,16 +47,13 @@ class ShopProfile extends Component {
           user: props.user,
           isEditable: props.isEditable,
           errorMessagePaymentMethods: null,
-          errorMessageAddress: null
+          errorMessageAddress: null,
+          isAdrValidateEnabled: true
         };
     }
 
     onMapLoad(map) {
         this._googleMap = map;
-    }
-
-    refreshScore() {
-        this.props.onRefreshScore();
     }
 
     closeModalAddress() {
@@ -98,9 +96,17 @@ class ShopProfile extends Component {
       var address = this.refs.address.getAddress();
       var shop = this.state.shop;
       shop.street_address = address.street_address;
+      shop.location = {
+        lng: address.location.lng(),
+        lat: address.location.lat()
+      };
       this.setState({
         shop: shop,
         isModalAddressOpened: false
+      });
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+        data: address
       });
     }
 
@@ -115,6 +121,10 @@ class ShopProfile extends Component {
       this.setState({
         isModalPaymentsOpened: false,
         shop: shop
+      });
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+        data: { payments: arr }
       });
     }
 
@@ -167,15 +177,19 @@ class ShopProfile extends Component {
         return ( <div>
             <section className="row white-section shop-section shop-section-padding">
                 <h5 className="col-md-12">Description</h5>
-                {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description} />) : (
+                {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description}
+                  validate={(i) => {
+                    AppDispatcher.dispatch({
+                      actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+                      data: { description: i }
+                      });
+                  }} />) : (
                   <p className="col-md-12">{this.state.shop.description}</p>
                 )}
             </section>
             <section className="row white-section sub-section shop-section-padding">
               <h5 className="col-md-12">Category</h5>
-              {this.state.isEditable ? (<EditableCategory value={categoryName} />) : (
-                <p className="col-md-12">{categoryName}</p>
-              )}
+              <p className="col-md-12">{categoryName}</p>
             </section>
             <section className="row white-section sub-section shop-section-padding">
                 <h5>Payment methods</h5>
@@ -220,7 +234,7 @@ class ShopProfile extends Component {
                     </GettingStartedGoogleMap>
                 </div>
             </section>
-            <Comment shop={self.state.shop} onRefreshScore={this.refreshScore}/>
+            <Comment shop={self.state.shop} />
             <BestDeals shop={self.state.shop}/>
             {/* Modal window for the address */}
             <Modal size="lg" isOpen={this.state.isModalAddressOpened}>
@@ -231,10 +245,14 @@ class ShopProfile extends Component {
                     self.setState({
                       errorMessageAddress: m
                     });
+                  }} position={this.state.shop.location} addressCorrect={(m) => {
+                    self.setState({
+                      isAdrValidateEnabled: m
+                    });
                   }} />
                 </ModalBody>
                 <ModalFooter>
-                  <button className="btn btn-success" onClick={() => {self.updateAddress(); }}>Validate</button>
+                  <button className="btn btn-success" onClick={() => {self.updateAddress(); }} disabled={!this.state.isAdrValidateEnabled}>Validate</button>
                   <button className="btn btn-default" onClick={self.closeModalAddress}>Cancel</button>
                 </ModalFooter>
             </Modal>
@@ -247,7 +265,7 @@ class ShopProfile extends Component {
                   self.setState({
                     errorMessagePaymentMethods: m
                   });
-                }} />
+                }} payments={self.state.shop.payments} />
               </ModalBody>
               <ModalFooter>
                 <button className="btn btn-success" onClick={(r) => {self.updatePaymentMethods(r); }}>Validate</button>

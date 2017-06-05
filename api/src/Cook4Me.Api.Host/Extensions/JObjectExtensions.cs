@@ -50,6 +50,52 @@ namespace Cook4Me.Api.Host.Extensions
             return lst;
         }
 
+        public static DateTime TryGetDateTime(this JObject jObj, string key)
+        {
+
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            JToken token;
+            if (!jObj.TryGetValue(key, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                return default(DateTime);
+            }
+
+            DateTime result;
+            if (!DateTime.TryParse(token.ToString(), out result))
+            {
+                return default(DateTime);
+            }
+
+            return result;
+        }
+
+        public static TimeSpan TryGetTime(this JObject jObj, string key)
+        {
+
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            JToken token;
+            if (!jObj.TryGetValue(key, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                return default(TimeSpan);
+            }
+
+            TimeSpan result;
+            if (!TimeSpan.TryParse(token.ToString(), out result))
+            {
+                return default(TimeSpan);
+            }
+
+            return result;
+        }
+
         public static double TryGetDouble(this JObject jObj, string key)
         {
             if (jObj == null)

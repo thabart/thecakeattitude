@@ -136,6 +136,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
             services.AddTransient<IRemoveServiceCommentValidator, RemoveServiceCommentValidator>();
             services.AddTransient<IAddShopValidator, AddShopValidator>();
+            services.AddTransient<IUpdateShopValidator, UpdateShopValidator>();
             services.AddTransient<IAddCommentValidator, AddCommentValidator>();
             services.AddTransient<IRemoveShopCommentValidator, RemoveShopCommentValidator>();
             services.AddTransient<IRemoveProductCommentValidator, RemoveProductCommentValidator>();
@@ -143,6 +144,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IAddAnnouncementValidator, AddAnnouncementValidator>();
             services.AddTransient<IRemoveShopValidator, RemoveShopValidator>();
             services.AddTransient<IAddProductValidator, AddProductValidator>();
+            services.AddTransient<IAddServiceValidator, AddServiceValidator>();
             services.AddTransient<IControllerHelper, ControllerHelper>();
             services.AddTransient<IAddShopOperation, AddShopOperation>();
             services.AddTransient<IAddShopCommentOperation, AddShopCommentOperation>();
@@ -175,8 +177,10 @@ namespace Cook4Me.Api.Host
             services.AddTransient<ISearchAnnouncementsOperation, SearchAnnouncementsOperation>();
             services.AddTransient<IGetMineAnnouncementsOperation, GetMineAnnouncementsOperation>();
             services.AddTransient<ISearchMineShopsOperation, SearchMineShopsOperation>();
+            services.AddTransient<IUpdateShopOperation, UpdateShopOperation>();
             services.AddTransient<IAddProductOperation, AddProductOperation>();
             services.AddTransient<IDeleteShopOperation, DeleteShopOperation>();
+            services.AddTransient<IAddServiceOperation, AddServiceOperation>();
             services.AddTransient<ISearchMineAnnouncements, SearchMineAnnouncements>();
             services.AddTransient<IServiceCommentEnricher, ServiceCommentEnricher>();
             services.AddTransient<IShopEnricher, ShopEnricher>();

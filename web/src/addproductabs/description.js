@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Tooltip} from 'reactstrap';
 import {withRouter} from "react-router";
 import {ShopsService} from '../services/index';
-import {TagsSelector} from '../components';
+import {TagsSelector, ImagesUploader} from '../components';
 import {AddProductStore} from '../stores';
 import './description.css';
 
@@ -12,12 +12,10 @@ class DescriptionTab extends Component {
     this.toggleTooltip = this.toggleTooltip.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.next = this.next.bind(this);
-    this.uploadProductImage = this.uploadProductImage.bind(this);
     this.toggleUnlimited = this.toggleUnlimited.bind(this);
     this.state = {
       name: null,
       description: null,
-      images: [],
       price: null,
       unitOfMeasure: "piece",
       quantity: 0,
@@ -135,7 +133,7 @@ class DescriptionTab extends Component {
       unit_of_measure: self.state.unitOfMeasure,
       quantity: self.state.quantity,
       shop_id: self.props.match.params.id,
-      images : self.state.images,
+      images : self.refs.imagesUploader.getImages(),
       tags: self.refs.productTags.getTags()
     };
 
@@ -162,20 +160,6 @@ class DescriptionTab extends Component {
 
       return result;
   }
-  uploadProductImage(e) {
-    e.preventDefault();
-    var self = this;
-    var file = e.target.files[0];
-    var reader = new FileReader();
-    reader.onloadend = () => {
-      var images = self.state.images;
-      images.push(reader.result);
-      self.setState({
-        images: images
-      });
-    };
-    reader.readAsDataURL(file);
-  }
   toggleUnlimited() {
     var unlimited = this.state.unlimited;
     this.setState({
@@ -188,28 +172,8 @@ class DescriptionTab extends Component {
       priceError = this.buildErrorTooltip('isPriceInvalid', 'the price must be more than 0'),
       quantityError = this.buildErrorTooltip('isQuantityInvalid', 'the quantity must be more than 0'),
       inStockError = this.buildErrorTooltip('isInStockInvalid', 'the stock must be more or equal to 0'),
-      images = [],
       productCategories = [(<option></option>)],
       self = this;
-    if (this.state.images && this.state.images.length > 0) {
-      this.state.images.forEach(function(image) {
-        images.push((<div className="col-md-2 product-image-container">
-            <div className="close" onClick={() => {
-              var imgs = self.state.images;
-              var index = imgs.indexOf(image);
-              if (index === -1) {
-                return;
-              }
-
-              imgs.splice(index, 1);
-              self.setState({
-                images: imgs
-              });
-            }}><i className="fa fa-times"></i></div>
-            <img src={image} width="50" height="50" />
-        </div>));
-      });
-    }
 
     if (this.state.productCategories && this.state.productCategories.length > 0) {
       this.state.productCategories.forEach(function(productCategory) {
@@ -255,10 +219,7 @@ class DescriptionTab extends Component {
               <Tooltip placement="right" target="imagesTooltip" isOpen={this.state.tooltip.toggleImages} toggle={() => { this.toggleTooltip('toggleImages'); }}>
                 Images
               </Tooltip>
-              <div><input type='file' accept='image/*' onChange={(e) => this.uploadProductImage(e)}/></div>
-              <div className="row">
-                {images}
-              </div>
+              <ImagesUploader ref="imagesUploader" />
             </div>
           </div>
           <div className="col-md-6 row">

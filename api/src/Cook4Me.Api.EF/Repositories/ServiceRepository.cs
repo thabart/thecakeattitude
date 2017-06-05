@@ -107,15 +107,14 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 foreach (var order in parameter.Orders)
                 {
+                    services = Order(order, "total_score", s => s.TotalScore, services);
+                    services = Order(order, "average_score", s => s.AverageScore, services);
+                    services = Order(order, "price", s => s.NewPrice, services);
                     services = Order(order, "update_datetime", s => s.UpdateDateTime, services);
                     services = Order(order, "create_datetime", s => s.CreateDateTime, services);
-                    services = Order(order, "average_score", s => s.AverageScore, services);
-                    services = Order(order, "total_score", s => s.TotalScore, services);
-                    services = Order(order, "price", s => s.NewPrice, services);
                 }
             }
 
-            services.OrderByDescending(s => s.UpdateDateTime);
             var result = new SearchServiceResult
             {
                 TotalResults = await services.CountAsync().ConfigureAwait(false),
@@ -353,6 +352,94 @@ namespace Cook4Me.Api.EF.Repositories
                     transaction.Rollback();
                     return false;
                 }
+            }
+        }
+
+        public async Task<bool> Add(ServiceAggregate serviceAggregate)
+        {
+            if (serviceAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(serviceAggregate));
+            }
+
+            try
+            {
+                var record = serviceAggregate.ToModel();
+                var tags = new List<Models.ServiceTag>();
+                if (serviceAggregate.Tags != null && serviceAggregate.Tags.Any()) // Add tags
+                {
+                    var tagNames = serviceAggregate.Tags;
+                    var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                    foreach (var connectedTag in connectedTags)
+                    {
+                        tags.Add(new Models.ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = connectedTag.Name,
+                            ServiceId = serviceAggregate.Id
+                        });
+                    }
+
+                    var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                    foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
+                    {
+                        var newTag = new Models.Tag
+                        {
+                            Name = notExistingTagName,
+                            Description = notExistingTagName
+                        };
+                        _context.Tags.Add(newTag);
+                        tags.Add(new Models.ServiceTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = notExistingTagName,
+                            ServiceId = serviceAggregate.Id,
+                            Tag = newTag
+                        });
+                    }
+                }
+
+                if (serviceAggregate.PartialImagesUrl != null && serviceAggregate.PartialImagesUrl.Any()) // Add images
+                {
+                    record.Images = serviceAggregate.PartialImagesUrl.Select(i =>
+                        new Models.ServiceImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = i
+                        }
+                    ).ToList();
+                }
+
+                if (serviceAggregate.Occurrence != null) // Add occurrence.
+                {
+                    var days = new List<Models.ServiceOccurrenceDay>();
+                    if (serviceAggregate.Occurrence.Days != null)
+                    {
+                        days = serviceAggregate.Occurrence.Days.Select(d => new Models.ServiceOccurrenceDay
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            DayId = ((int)d).ToString()
+                        }).ToList();
+                    }
+                    record.Occurrence = new Models.ServiceOccurrence
+                    {
+                        Id = serviceAggregate.Occurrence.Id,
+                        StartDate = serviceAggregate.Occurrence.StartDate,
+                        EndDate = serviceAggregate.Occurrence.EndDate,
+                        StartTime = serviceAggregate.Occurrence.StartTime,
+                        EndTime = serviceAggregate.Occurrence.EndTime,
+                        Days = days
+                    };
+                }
+
+                record.Tags = tags;
+                _context.Services.Add(record);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
