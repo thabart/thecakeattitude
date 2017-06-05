@@ -24,6 +24,7 @@ var filterJson = {
 class ShopProducts extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.changePrice = this.changePrice.bind(this);
         this.toggleError = this.toggleError.bind(this);
         this.filter = this.filter.bind(this);
@@ -49,7 +50,8 @@ class ShopProducts extends Component {
             productName: null,
             bestDeals: false,
             activeCategory: null,
-            isEditable: props.isEditable
+            isEditable: props.isEditable,
+            shop: props.shop
         };
     }
 
@@ -180,7 +182,6 @@ class ShopProducts extends Component {
         this.setState({
             activeCategory: id
         });
-        console.log(filterJson);
         this.updateProducts();
     }
 
@@ -258,19 +259,17 @@ class ShopProducts extends Component {
             });
         }
 
-        if (this.props.shop['_links'] && this.props.shop['_links']['productCategories']) {
-            var arr = this.props.shop['_links']['productCategories'];
+        if (this.state.shop && this.state.shop.product_categories) {
+            var arr = this.state.shop.product_categories;
             if (!(arr instanceof Array)) {
                 arr = [arr];
             }
 
             arr.forEach(function (cat) {
-                var splitted = cat.href.split('/');
-                var catId = splitted[splitted.length - 1];
                 productCategories.push((<li className="nav-item"><a
-                    className={self.state.activeCategory == catId ? "nav-link active" : "nav-link"} href="#"
+                    className={self.state.activeCategory == cat.id ? "nav-link active" : "nav-link"} href="#"
                     onClick={(e) => {
-                        self.selectCategory(e, catId);
+                        self.selectCategory(e, cat.id);
                     }}>{cat.name}</a></li>))
             });
         }
@@ -353,19 +352,29 @@ class ShopProducts extends Component {
     }
 
     // Execute after the render
-    componentWillMount() {
+    componentDidMount() {
         var self = this,
             shopId = this.props.shop.id,
-            filters = this.props.shop.filters;
-        AppDispatcher.register(function (payload) {
+            filters = this.props.shop.filters
+        self._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'new-product-comment':
+                case 'new-product-comment': // When a comment is removed or added => refresh the list.
                 case 'remove-product-comment':
-                    filterJson = $.extend({}, filterJson, {
+                    if (payload.data.shop_id === shopId) {
+                      filterJson = $.extend({}, filterJson, {
                         start_index: 0
+                      });
+                      self.updateProducts();
+                    }
+                    break;
+                case 'new-product': // When a product is added to the shop => refresh the list.
+                  if (payload.data.shop_id === shopId) {
+                    filterJson = $.extend({}, filterJson, {
+                      start_index: 0
                     });
                     self.updateProducts();
-                    break;
+                  }
+                break;
             }
         });
         self.setState({
@@ -377,6 +386,10 @@ class ShopProducts extends Component {
             filters: filters
         });
         self.updateProducts();
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

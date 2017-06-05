@@ -57,6 +57,7 @@ namespace Cook4Me.Api.Host.Handlers
                 }
 
                 _bus.RegisterHandler<ShopAddedEvent>(_shopEventsHandler.Handle);
+                _bus.RegisterHandler<ShopUpdatedEvent>(_shopEventsHandler.Handle);
                 _bus.RegisterHandler<ShopCommentAddedEvent>(_shopEventsHandler.Handle);
                 _bus.RegisterHandler<ShopCommentRemovedEvent>(_shopEventsHandler.Handle);
                 _bus.RegisterHandler<ShopRemovedEvent>(_shopEventsHandler.Handle);
@@ -65,6 +66,7 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<ProductAddedEvent>(_productEventsHandler.Handle);
                 _bus.RegisterHandler<ServiceCommentAddedEvent>(_serviceEventsHandler.Handle);
                 _bus.RegisterHandler<ServiceCommentRemovedEvent>(_serviceEventsHandler.Handle);
+                _bus.RegisterHandler<ServiceAddedEvent>(_serviceEventsHandler.Handle);
                 _bus.RegisterHandler<AnnouncementAddedEvent>(_announcementEventsHandler.Handle);
                 _bus.RegisterHandler<AnnouncementRemovedEvent>(_announcementEventsHandler.Handle);
                 _isInitiated = true;

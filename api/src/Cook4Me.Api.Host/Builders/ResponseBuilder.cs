@@ -32,6 +32,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetFilter(ShopFilter filter);
         JObject GetFilterValue(ShopFilterValue filterValue);
         JObject GetShopAddedEvent(ShopAddedEvent evt);
+        JObject GetShopUpdatedEvent(ShopUpdatedEvent evt);
         JObject GetError(string errorCode, string errorDescription);
         JObject GetShopCategory(ShopCategoryAggregate category);
         JObject GetMap(ShopMap map);
@@ -46,6 +47,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment);
         JObject GetServiceCommentAddedEvent(ServiceCommentAddedEvent comment);
+        JObject GetServiceAddedEvent(ServiceAddedEvent evt);
         JObject GetAnnouncementAddedEvent(AnnouncementAddedEvent evt);
         JObject GetAnnouncementRemovedEvent(AnnouncementRemovedEvent evt);
         JObject GetProductAddedEvent(ProductAddedEvent evt);
@@ -218,6 +220,24 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Id, evt.ShopId);
             result.Add(Constants.DtoNames.Shop.Location, location);
             result.Add(Constants.DtoNames.Shop.Name, evt.Name);
+            return result;
+        }
+
+        public JObject GetShopUpdatedEvent(ShopUpdatedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            var location = new JObject();
+            location.Add(Constants.DtoNames.Location.Latitude, evt.Latitude);
+            location.Add(Constants.DtoNames.Location.Longitude, evt.Longitude);
+            result.Add(Constants.DtoNames.Shop.Id, evt.ShopId);
+            result.Add(Constants.DtoNames.Shop.Location, location);
+            result.Add(Constants.DtoNames.Shop.Name, evt.Name);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return result;
         }
         
@@ -394,6 +414,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
+            jObj.Add(Constants.DtoNames.Message.CommonId, comment.CommonId);
             return jObj;
         }
 
@@ -407,6 +428,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Content, comment.Content);
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
             jObj.Add(Constants.DtoNames.Comment.ProductId, comment.ProductId);
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
@@ -429,6 +451,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
+            jObj.Add(Constants.DtoNames.Message.CommonId, comment.CommonId);
             return jObj;
         }
 
@@ -457,6 +480,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ServiceId, comment.ServiceId);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;
@@ -472,6 +496,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Content, comment.Content);
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.Score, comment.Score);
             jObj.Add(Constants.DtoNames.Comment.ServiceId, comment.ServiceId);
             jObj.Add(Constants.DtoNames.Comment.Subject, comment.Subject);
@@ -479,6 +504,25 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
+            return jObj;
+        }
+
+        public JObject GetServiceAddedEvent(ServiceAddedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Service.Id, evt.Id);
+            jObj.Add(Constants.DtoNames.Service.Name, evt.Name);
+            jObj.Add(Constants.DtoNames.Service.Description, evt.Description);
+            jObj.Add(Constants.DtoNames.Service.ShopId, evt.ShopId);
+            jObj.Add(Constants.DtoNames.Service.Price, evt.Price);
+            jObj.Add(Constants.DtoNames.Service.NewPrice, evt.NewPrice);
+            jObj.Add(Constants.DtoNames.Service.CreateDatetime, evt.CreateDateTime);
+            jObj.Add(Constants.DtoNames.Service.UpdateDatetime, evt.UpdateDateTime);
             return jObj;
         }
 
@@ -553,6 +597,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Comment.Id, comment.Id);
             jObj.Add(Constants.DtoNames.Comment.ProductId, comment.ProductId);
+            jObj.Add(Constants.DtoNames.Comment.ShopId, comment.ShopId);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
             return jObj;

@@ -1,19 +1,23 @@
 import React, {Component} from "react";
-import {ShopsService, UserService} from "./services/index";
-import {Nav, NavItem, Tooltip, Progress, Alert, Button} from "reactstrap";
+import {ShopsService, UserService, CommentsService} from "./services/index";
+import {Tooltip, Progress, Alert, Button} from "reactstrap";
 import {withRouter} from "react-router";
 import {NavLink} from "react-router-dom";
-import {ShopProfile, ShopProducts, ShopServices} from "./shopProfile";
-import {ApplicationStore} from "./stores";
-import {EditableText, EditableTag} from "./components";
+import {ShopProfile, ShopProducts, ShopServices, ShopSettings} from "./shopProfile";
+import {ApplicationStore, EditShopStore} from './stores';
+import {EditableText, EditableTag} from './components';
 import Rater from "react-rater";
 import "./Shop.css";
 import "react-rater/lib/react-rater.css";
-import $ from "jquery";
+import $ from 'jquery';
+import AppDispatcher from './appDispatcher';
+import Constants from '../Constants';
+import {Guid} from './utils';
 
 class Shop extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.clickBannerImage = this.clickBannerImage.bind(this);
         this.clickPictureImage = this.clickPictureImage.bind(this);
         this.uploadBannerImage = this.uploadBannerImage.bind(this);
@@ -21,8 +25,12 @@ class Shop extends Component {
         this.toggle = this.toggle.bind(this);
         this.refreshScore = this.refreshScore.bind(this);
         this.toggleError = this.toggleError.bind(this);
+        this.toggleUpdatingError = this.toggleUpdatingError.bind(this);
+        this.updateTitle = this.updateTitle.bind(this);
+        this.updateTags = this.updateTags.bind(this);
+        this.refresh = this.refresh.bind(this);
         this.state = {
-            isLoading: false,
+            isLoading: true,
             location: {},
             user: null,
             shop: null,
@@ -30,15 +38,23 @@ class Shop extends Component {
             nbComments: 0,
             isRatingOpened: false,
             errorMessage: null,
+            updatingErrorMessage: null,
             isEditable: false,
             canBeEdited: false
         };
     }
 
-    // Toggle the error
+    // Toggle the error message
     toggleError() {
         this.setState({
             errorMessage: null
+        });
+    }
+
+    // Toggle updating error message
+    toggleUpdatingError() {
+        this.setState({
+            updatingErrorMessage: null
         });
     }
 
@@ -60,6 +76,10 @@ class Shop extends Component {
             self.setState({
                 shop: shop
             });
+            AppDispatcher.dispatch({
+                actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+                data: {banner_image: result}
+            });
         });
     }
 
@@ -70,6 +90,10 @@ class Shop extends Component {
             shop.profile_image = result;
             self.setState({
                 shop: shop
+            });
+            AppDispatcher.dispatch({
+                actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+                data: {profile_image: result}
             });
         });
     }
@@ -130,22 +154,75 @@ class Shop extends Component {
         });
     }
 
+    // Udpate the title
+    updateTitle(title) {
+        AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+            data: {name: title}
+        });
+    }
+
+    // Update the tags
+    updateTags(tags) {
+        AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+            data: {tags: tags}
+        });
+    }
+
+    refresh() {
+        var self = this,
+            shopId = self.props.match.params.id,
+            paction = self.props.match.params.paction,
+            isEditable = paction && paction === 'edit';
+        self.setState({
+            isLoading: true
+        });
+        ShopsService.get(shopId).then(function (r) {
+            var shop = r['_embedded'];
+            var localUser = ApplicationStore.getUser();
+            isEditable = isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
+            UserService.getPublicClaims(shop.subject).then(function (user) {
+                self.setState({
+                    isLoading: false,
+                    shop: shop,
+                    user: user,
+                    isEditable: isEditable,
+                    canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
+                });
+                self.refreshScore();
+                if (isEditable) {
+                    AppDispatcher.dispatch({
+                        actionName: Constants.events.EDIT_SHOP_LOADED,
+                        data: shop
+                    });
+                }
+            });
+        }).catch(function (e) {
+            var json = e.responseJSON;
+            var error = "an error occured while trying to retrieve the shop";
+            if (json && json.error_description) {
+                error = json.error_description;
+            }
+
+            self.setState({
+                errorMessage: error,
+                isLoading: false
+            });
+        });
+
+    }
+
     // Render the component
     render() {
         if (this.state.isLoading) {
-            return (<div className="container">Loading...</div>);
+            return (<div className="container">Loading ...</div>);
         }
 
         if (this.state.errorMessage !== null) {
-            return (
-                <div className="container">
-                    <Alert color="danger"
-                           isOpen={this.state.errorMessage !== null}
-                           toggle={this.toggleError}>
-                        {this.state.errorMessage}
-                    </Alert>
-                </div>
-            );
+            return (<div className="container"><Alert color="danger" isOpen={this.state.errorMessage !== null}
+                                                      toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+            </div>);
         }
 
         var bannerImage = this.state.shop.banner_image;
@@ -155,38 +232,35 @@ class Shop extends Component {
         var profileUrl = null;
         var productsUrl = null;
         var servicesUrl = null;
+        var settingsUrl = null;
+        var viewUrl = null;
+        var editUrl = null;
         var self = this;
         var tags = [];
-        var content = (
-            <ShopProfile user={this.state.user}
-                         shop={this.state.shop}
-                         onRefreshScore={this.refreshScore}
-                         isEditable={this.state.isEditable}
-                         history={this.props.history}/>
-        );
-
+        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}
+                                    history={this.props.history}/>);
         if (action === "products") {
             content = (
-                <ShopProducts user={this.state.user}
-                              shop={this.state.shop}
-                              isEditable={this.state.isEditable}/>
-            );
+                <ShopProducts user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
             content = (
-                <ShopServices user={this.state.user}
-                              shop={this.state.shop}
-                              isEditable={this.state.isEditable}/>
-            );
+                <ShopServices user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}/> );
+        } else if (action === 'settings' && this.state.isEditable) {
+            content = (<ShopSettings shop={this.state.shop}/>);
         }
 
         if (this.state.isEditable) {
             profileUrl = '/shops/' + this.state.shop.id + '/edit/profile';
             productsUrl = '/shops/' + this.state.shop.id + '/edit/products';
             servicesUrl = '/shops/' + this.state.shop.id + '/edit/services';
+            settingsUrl = '/shops/' + this.state.shop.id + '/edit/settings';
+            viewUrl = '/shops/' + this.state.shop.id + '/view/' + (action === 'settings' ? 'profile' : action) + (subaction && subaction !== null ? '/' + subaction : '');
         } else {
             profileUrl = '/shops/' + this.state.shop.id + '/view/profile';
             productsUrl = '/shops/' + this.state.shop.id + '/view/products';
             servicesUrl = '/shops/' + this.state.shop.id + '/view/services';
+            settingsUrl = null;
+            editUrl = '/shops/' + this.state.shop.id + '/edit/' + action + (subaction && subaction !== null ? '/' + subaction : '');
         }
 
         if (!bannerImage) {
@@ -221,154 +295,165 @@ class Shop extends Component {
             });
         }
 
-        return (
-            <div className="container bg-white rounded">
-                <section className="row p-1 cover">
-                    <div className="cover-banner">
-                        <img src={bannerImage}/>
-                    </div>
-                    <div className="profile-img">
-                        <img src={profileImage}
-                             className="img-thumbnail"
-                             width="200"
-                             height="200"/>
-                        {self.state.isEditable && (
-                            <Button outline
-                                    color="secondary"
-                                    size="sm"
-                                    className="edit-icon"
-                                    onClick={this.clickPictureImage}>
-                                <i className="fa fa-pencil"/>
-                            </Button>
-                        )}
-                        {self.state.isEditable && (
-                            <input type="file"
-                                   accept='image/*'
-                                   ref="uploadProfileBtn"
-                                   className="upload-image"
+        return (<div className="container">
+            <Alert color="danger" isOpen={this.state.updatingErrorMessage !== null}
+                   toggle={this.toggleUpdatingError}>{this.state.updatingErrorMessage}</Alert>
+            <section className="row white-section shop-section cover">
+                <div className="cover-banner">
+                    <img src={bannerImage}/>
+                </div>
+                <div className="profile-img">
+                    <img src={profileImage} className="img-thumbnail" width="200" height="200"/>
+                    {self.state.isEditable && (<Button outline color="secondary" size="sm" className="edit-icon"
+                                                       onClick={this.clickPictureImage}><i className="fa fa-pencil"></i></Button>)}
+                    {self.state.isEditable && (
+                        <input type="file" accept='image/*' ref="uploadProfileBtn" className="upload-image"
+                               onChange={(e) => {
+                                   this.uploadPictureImage(e);
+                               }}/>)}
+                </div>
+                <div className="profile-information">
+                    { this.state.isEditable ? (
+                        <EditableText className="header1" value={this.state.shop.name} validate={this.updateTitle}/>)
+                        : ( <h1>{this.state.shop.name}</h1> )
+                    }
+                    { this.state.nbComments > 0 ? (
+                        <div>
+                            <span id="rating"><Rater total={5} ref="rater" interactive={false}/> {this.state.nbComments}
+                                comments</span>
+                            <Tooltip placement='bottom' className="ratingPopup" isOpen={this.state.isRatingOpened}
+                                     target="rating" toggle={this.toggle}>
+                                <ul>
+                                    {ratingSummary}
+                                </ul>
+                            </Tooltip>
+                            {tags.length > 0 && this.state.isEditable && (
+                                <EditableTag tags={self.state.shop.tags} validate={this.updateTags}/>
+                            )}
+                            {tags.length > 0 && !this.state.isEditable && (
+                                <ul className="tags no-padding">
+                                    {tags}
+                                </ul>
+                            )}
+                        </div>) : '' }
+                </div>
+                <ul className="nav nav-pills menu">
+                    <li className="nav-item">
+                        <NavLink to={profileUrl} className={action === 'profile' ? 'nav-link active' : 'nav-link'}>Profile</NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to={productsUrl} className={action === 'products' ? 'nav-link active' : 'nav-link'}>Products</NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink to={servicesUrl} className={action === 'services' ? 'nav-link active' : 'nav-link'}>Services</NavLink>
+                    </li>
+                    <li className="nav-item">
+                        { this.state.isEditable && (<NavLink to={settingsUrl}
+                                                             className={action === 'settings' ? 'nav-link active' : 'nav-link'}>Settings</NavLink>) }
+                    </li>
+                </ul>
+                <ul className="nav nav-pills menu-shop-options">
+                    { this.state.canBeEdited && (
+                        <li className="nav-item">
+                            <a href={editUrl} className="btn btn-outline-secondary btn-sm"><i
+                                className="fa fa-pencil"></i></a>
+                        </li>
+                    ) }
+                    { this.state.isEditable && (
+                        <li className="nav-item">
+                            <Button outline color="secondary" size="sm"><i className="fa fa-pencil"
+                                                                           onClick={this.clickBannerImage}></i></Button>
+                            <input type="file" accept='image/*' ref="uploadBannerBtn" className="upload-image"
                                    onChange={(e) => {
-                                       this.uploadPictureImage(e);
-                                   }}/>)}
-                    </div>
-                    <div className="profile-information">
-                        { this.state.isEditable ? (<EditableText className="header1" value={this.state.shop.name}/>)
-                            : ( <h1>{this.state.shop.name}</h1> )
-                        }
-                        { this.state.nbComments > 0 ? (
-                            <div>
-                            <span id="rating">
-                                <Rater total={5} ref="rater" interactive={false}/> {this.state.nbComments} comments
-                            </span>
-                                <Tooltip placement='bottom'
-                                         className="ratingPopup"
-                                         isOpen={this.state.isRatingOpened}
-                                         target="rating"
-                                         toggle={this.toggle}>
-                                    <ul>
-                                        {ratingSummary}
-                                    </ul>
-                                </Tooltip>
-                                {tags.length > 0 && this.state.isEditable && (
-                                    <EditableTag tags={self.state.shop.tags}/>
-                                )}
-                                {tags.length > 0 && !this.state.isEditable && (
-                                    <ul className="tags no-padding">
-                                        {tags}
-                                    </ul>
-                                )}
-                            </div>) : '' }
-                    </div>
-                    <Nav pills className="menu">
-                        <NavItem>
-                            <NavLink to={profileUrl}
-                                     className={action !== 'products' && action !== 'services' ? 'nav-link active' : 'nav-link'}>
-                                Profile
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink to={productsUrl}
-                                     className={action === 'products' ? 'nav-link active' : 'nav-link'}>
-                                Products
-                            </NavLink>
-                        </NavItem>
-                        <NavItem>
-                            <NavLink to={servicesUrl}
-                                     className={action === 'services' ? 'nav-link active' : 'nav-link'}>
-                                Services
-                            </NavLink>
-                        </NavItem>
-                    </Nav>
-
-                    <ul className="nav nav-pills menu-shop-options">
-                        {this.state.canBeEdited && (
-                            <li className="nav-item">
-                                <a href={'/shops/' + this.state.shop.id + '/edit/' + action + (subaction && subaction !== null ? '/' + subaction : '') }
-                                   className="btn btn-outline-secondary btn-sm">
-                                    <i className="fa fa-pencil"/>
-                                </a>
-                            </li>
-                        ) }
-                        {this.state.isEditable && (
-                            <li className="nav-item">
-                                <Button outline color="secondary" size="sm">
-                                    <i className="fa fa-pencil" onClick={this.clickBannerImage}/>
-                                </Button>
-                                <input type="file" accept='image/*' ref="uploadBannerBtn" className="upload-image"
-                                       onChange={(e) => {
-                                           this.uploadBannerImage(e);
-                                       }}/>
-                            </li>
-                        )}
-                        {this.state.isEditable && (
-                            <li className="nav-item">
-                                <a href={'/shops/' + this.state.shop.id + '/view/' + action + (subaction && subaction !== null ? '/' + subaction : '')}
-                                   className="btn btn-outline-secondary btn-sm">
-                                    <i className="fa fa-eye"/>
-                                </a>
-                            </li>
-                        )}
-                    </ul>
-                </section>
-                {content}
-            </div>
-        );
+                                       this.uploadBannerImage(e);
+                                   }}/>
+                        </li>
+                    )}
+                    {this.state.isEditable && (
+                        <li className="nav-item">
+                            <a href={viewUrl} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></a>
+                        </li>
+                    )}
+                </ul>
+            </section>
+            {content}
+        </div>);
     }
 
     // Execute after the render
-    componentWillMount() {
-        var self = this;
-        var shopId = self.props.match.params.id;
-        var paction = self.props.match.params.paction;
-        var isEditable = paction && paction === 'edit';
-        self.setState({
-            isLoading: true
-        });
-        ShopsService.get(shopId).then(function (r) {
-            var shop = r['_embedded'];
-            var localUser = ApplicationStore.getUser();
-            isEditable = isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
-            UserService.getPublicClaims(shop.subject).then(function (user) {
-                self.setState({
-                    isLoading: false,
-                    shop: shop,
-                    user: user,
-                    isEditable: isEditable,
-                    canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
-                });
-                self.refreshScore();
-            });
-        }).catch(function (e) {
-            var json = e.responseJSON;
-            var error = "an error occured while trying to retrieve the shop";
-            if (json && json.error_description) {
-                error = json.error_description;
+    componentDidMount() {
+        var self = this,
+            shopId = self.props.match.params.id;
+        this._waitForToken = AppDispatcher.register(function (payload) {
+            switch (payload.actionName) {
+                case 'update-shop':
+                    if (payload.data && payload.data.id === shopId) {
+                        ApplicationStore.sendMessage({
+                            message: 'The shop has been updated',
+                            level: 'success',
+                            position: 'bl'
+                        });
+                        self.refresh();
+                    }
+                    break;
+                case 'new-product': // Display popup when a product has been added to the shop.
+                    if (payload.data && payload.data.shop_id === shopId) {
+                        ApplicationStore.sendMessage({
+                            message: 'A new product has been added',
+                            level: 'info',
+                            position: 'tr'
+                        });
+                    }
+                    break;
+                case 'new-service': // Display popup when a service has been added to the shop.
+                    if (payload.data && payload.data.shop_id === shopId) {
+                        ApplicationStore.sendMessage({
+                            message: 'A new service has been added',
+                            level: 'info',
+                            position: 'tr'
+                        });
+                    }
+                    break;
+                case 'new-shop-comment': // Display popup when a comment has been added to the shop.
+                    if (payload.data && payload.data.shop_id === shopId) {
+                        ApplicationStore.sendMessage({
+                            message: 'A comment has been added',
+                            level: 'info',
+                            position: 'tr'
+                        });
+                        self.refreshScore();
+                    }
+                    break;
+                case 'remove-shop-comment': // Display popup when a comment has been removed
+                    if (payload.data && payload.data.shop_id === shopId) {
+                        ApplicationStore.sendMessage({
+                            message: 'A comment has been removed',
+                            level: 'info',
+                            position: 'tr'
+                        });
+                        self.refreshScore();
+                    }
+                    break;
             }
+        });
 
-            self.setState({
-                errorMessage: error,
-                isLoading: false
+        EditShopStore.addChangeListener(function () {
+            var shop = EditShopStore.getShop();
+            self._commonId = Guid.generate();
+            ShopsService.update(shop.id, shop, self._commonId).then(function () {
+
+            }).catch(function () {
+                self.setState({
+                    updatingErrorMessage: 'An error occured while trying to update the shop'
+                });
             });
         });
+
+        this.refresh();
+    }
+
+    componentWillUnmount() {
+        AppDispatcher.unregister(this._waitForToken);
     }
 }
 

@@ -148,5 +148,26 @@ module.exports = {
                 });
             });
         });
+    },
+    // Update the shop
+    update: function(shopId, content, commonId) {
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.shops_endpoint + '/' + shopId, {
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken,
+                        'CommonId': commonId
+                    },
+                    data: JSON.stringify(content)
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     }
 };

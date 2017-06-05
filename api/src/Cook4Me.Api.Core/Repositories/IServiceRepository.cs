@@ -28,5 +28,6 @@ namespace Cook4Me.Api.Core.Repositories
         Task<ServiceAggregate> Get(string id);
         Task<SearchServiceCommentsResult> Search(SearchServiceCommentParameter parameter);
         Task<bool> Update(ServiceAggregate service);
+        Task<bool> Add(ServiceAggregate service);
     }
 }

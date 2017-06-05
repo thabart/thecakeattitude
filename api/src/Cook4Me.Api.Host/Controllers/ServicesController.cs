@@ -33,11 +33,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly ISearchServiceCommentsOperation _searchServiceCommentsOperation;
         private readonly IRemoveServiceCommentOperation _removeServiceCommentOperation;
         private readonly IAddServiceCommentOperation _addServiceCommentOperation;
+        private readonly IAddServiceOperation _addServiceOperation;
 
         public ServicesController(
             ISearchServiceOccurrencesOperation searchServiceOccurrencesOperation, ISearchServicesOperation searchServicesOperation,
             IGetServiceOperation getServiceOperation, ISearchServiceCommentsOperation searchServiceCommentsOperation, 
-            IRemoveServiceCommentOperation removeServiceCommentOperation, IAddServiceCommentOperation addServiceCommentOperation)
+            IRemoveServiceCommentOperation removeServiceCommentOperation, IAddServiceCommentOperation addServiceCommentOperation,
+            IAddServiceOperation addServiceOperation)
         {
             _searchServiceOccurrencesOperation = searchServiceOccurrencesOperation;
             _searchServicesOperation = searchServicesOperation;
@@ -45,12 +47,20 @@ namespace Cook4Me.Api.Host.Controllers
             _searchServiceCommentsOperation = searchServiceCommentsOperation;
             _removeServiceCommentOperation = removeServiceCommentOperation;
             _addServiceCommentOperation = addServiceCommentOperation;
+            _addServiceOperation = addServiceOperation;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetService(string id)
         {
             return await _getServiceOperation.Execute(id);
+        }
+
+        [HttpPost]
+        [Authorize("Connected")]
+        public async Task<IActionResult> AddService([FromBody] JObject jObj)
+        {
+            return await _addServiceOperation.Execute(jObj, User.GetSubject(), this.GetCommonId(), this.Request);
         }
 
         [HttpPost(Constants.RouteNames.SearchOccurrences)]

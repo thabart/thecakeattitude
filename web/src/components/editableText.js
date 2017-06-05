@@ -38,6 +38,7 @@ class EditableText extends Component {
       value: oldValue,
       isEditMode: false
     });
+    if (this.props.validate) this.props.validate(oldValue);
   }
   render() {
     if (!this.state.isEditMode) {

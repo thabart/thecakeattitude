@@ -40,13 +40,14 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IRemoveShopCommentOperation _removeShopCommentOperation;
         private readonly ISearchShopCommentsOperation _searchShopCommentsOperation;
         private readonly ISearchMineShopsOperation _searchMineShopsOperation;
+        private readonly IUpdateShopOperation _updateShopOperation;
         private readonly IDeleteShopOperation _deleteShopOperation;
 
         public ShopsController(IResponseBuilder responseBuilder, IAddShopOperation addShopOperation, IAddShopCommentOperation addShopCommentOperation,
             IGetShopOperation getShopOperation, IGetShopsOperation getShopsOperation, ISearchShopsOperation searchShopsOperation,
             IGetMineShopsOperation getMineShopsOperation, IRemoveShopCommentOperation removeShopCommentOperation, ISearchShopCommentsOperation searchShopCommentsOperation,
             ISearchMineShopsOperation searchMineShopsOperation, IDeleteShopOperation deleteShopOperation,
-            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IUpdateShopOperation updateShopOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _responseBuilder = responseBuilder;
             _addShopOperation = addShopOperation;
@@ -59,6 +60,7 @@ namespace Cook4Me.Api.Host.Controllers
             _searchShopCommentsOperation = searchShopCommentsOperation;
             _searchMineShopsOperation = searchMineShopsOperation;
             _deleteShopOperation = deleteShopOperation;
+            _updateShopOperation = updateShopOperation;
         }
 
         [HttpGet]
@@ -96,7 +98,21 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            return await _addShopOperation.Execute(obj, subject);
+            return await _addShopOperation.Execute(obj, this.Request, subject);
+        }
+        
+        [HttpPut("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> UpdateShop(string id, [FromBody] JObject jObj)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _updateShopOperation.Execute(jObj, this.Request, id, subject, this.GetCommonId());
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -130,7 +146,7 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> AddComment([FromBody] JObject jObj)
         {
-            return await _addShopCommentOperation.Execute(jObj, User.GetSubject());
+            return await _addShopCommentOperation.Execute(jObj, User.GetSubject(), this.GetCommonId());
         }
 
         [HttpPost(Constants.RouteNames.SearchComments)]
@@ -147,7 +163,8 @@ namespace Cook4Me.Api.Host.Controllers
             {
                 CommentId = subid,
                 Subject = User.GetSubject(),
-                ShopId = id
+                ShopId = id,
+                CommonId = this.GetCommonId()
             });
         }
     }

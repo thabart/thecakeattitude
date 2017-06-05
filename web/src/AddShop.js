@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import Stepper from "react-stepper-horizontal";
-import {TabContent, TabPane, Alert, Button} from "reactstrap";
+import {TabContent, TabPane, Alert} from "reactstrap";
 import {withRouter} from "react-router";
-import {DescriptionForm, ContactInfoForm, PaymentForm, AddressForm} from "./addshoptabs";
+import {DescriptionForm, ContactInfoForm, PaymentForm, AddressForm, ProductForm} from "./addshoptabs";
 import {ShopsService} from "./services/index";
 import $ from "jquery";
 import "./AddShop.css";
@@ -163,23 +163,11 @@ class AddShop extends Component {
                         }}/>
                     </TabPane>
                     <TabPane tabId='4' className={this.state.isLoading ? 'hidden' : ''}>
-                        <div className="container bg-white rounded">
-                            <section className="row p-1">
-                                <div className="col-md-12">
-                                    <Button outline color="info">
-                                        <span className='fa fa-plus glyphicon-align-left'></span> Add product
-                                    </Button>
-                                </div>
-                            </section>
-                            <section className="row p-1">
-                                <Button outline color="info" onClick={() => {
-                                    this.toggle('3');
-                                }}>Previous</Button>
-                                <Button outline color="info" onClick={() => {
-                                    this.toggle('5');
-                                }}>Next</Button>
-                            </section>
-                        </div>
+                        <ProductForm onPrevious={() => {
+                            this.toggle('3');
+                        }} onNext={(json) => {
+                            this.toggle('5', json);
+                        }}/>
                     </TabPane>
                     <TabPane tabId='5' className={this.state.isLoading ? 'hidden' : ''}>
                         <PaymentForm onError={(msg) => {

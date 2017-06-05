@@ -50,5 +50,11 @@ namespace Cook4Me.Api.Host
         public const string TheUnitOfMeasureIsNotCorrect = "only the following unit of measure are supported : {0}";
         public const string TheProductCannotBeAddedByYou = "the product cannot be added by you";
         public const string SomeFiltersAreNotValid = "some filters are not valid";
+        public const string DuplicateValues = "the values must be unique in the parameter {0}";
+        public const string OnlyFiveCategoriesCanBeAdded = "only 5 product categories can be added";
+        public const string TheServiceCannotBeAddedByYou = "the service cannot be added by you";
+        public const string TheDaysAreNotValid = "either the parameter 'days' is empty or one of its value is not valid";
+        public const string TheOccurrenceDatePeriodIsNotValid = "the occurence date period is not valid";
+        public const string TheOccurrenceTimePeriodIsNotValid = "the occurrence time period is not valid";
     }
 }

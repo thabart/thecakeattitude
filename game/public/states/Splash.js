@@ -3,7 +3,7 @@ Splash.prototype = {
 	init: function() {
 		this.loadingBar = this.game.make.text(this.game.world.centerX, 380, 'Loading...', {fill: 'white'});
 	},
-	preload: function() {		
+	preload: function() {
 		var self = this;
 		// LOAD ALL THE ASSETS.
 		$.get(Constants.apiUrl + '/categories').then(function(result) {
@@ -14,12 +14,12 @@ Splash.prototype = {
 			if (!$.isArray(embedded)) {
 				embedded = [ embedded ];
 			}
-			
+
 			embedded.forEach(function(category) {
 				if (!category.overview_link || !category.map_link) {
 					return;
 				}
-				
+
 				var tileMapLoader = self.game.load.tilemap(category.map_name, Constants.apiUrl + category.map_link, null, Phaser.Tilemap.TILED_JSON);
 				var imageLoader = self.game.load.image(category.overview_name, Constants.apiUrl + category.overview_link);
 				tileMapLoader.start();
@@ -27,15 +27,20 @@ Splash.prototype = {
 			});
 		});
 		// this.game.load.crossOrigin = "anonymous";
-		this.game.load.tilemap('MainMap', Constants.apiUrl + '/maps/main.json', null, Phaser.Tilemap.TILED_JSON);
+		this.game.load.tilemap('MainMap', Constants.apiUrl + '/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
+
+		this.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
+		this.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');
+		this.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
+		this.game.load.image('overview', Constants.apiUrl + '/maps/map_overview.png');
+
 		this.game.load.image('overview_firstMap', Constants.apiUrl + '/maps/overview_map.png');
 		this.game.load.image('tallgrass', Constants.apiUrl + '/maps/tilesets/tallgrass.png');
 		this.game.load.image('farming_fishing', Constants.apiUrl + '/maps/tilesets/farming_fishing.png');
 		this.game.load.image('plowed_soil', Constants.apiUrl + '/maps/tilesets/plowed_soil.png');
-		this.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
 		this.game.load.image('floor', Constants.apiUrl + '/shops/tilesets/floor.png');
 		this.game.load.image('stuff', Constants.apiUrl + '/shops/tilesets/stuff.png');
-		this.game.load.image('player', Constants.apiUrl + '/characters/phaser-dude.png');		
+		this.game.load.image('player', Constants.apiUrl + '/characters/phaser-dude.png');
 		this.game.load.image('addShop', Constants.apiUrl + '/images/add-player.png');
 		this.game.load.image('house', Constants.apiUrl + '/maps/tilesets/house.png');
 		this.game.load.image('freePlace', Constants.apiUrl + '/maps/tilesets/freePlace.png');
@@ -78,8 +83,14 @@ Splash.prototype = {
 		this.game.state.add('Game', Game);
 		this.game.state.add('ShopChooser', ShopChooser);
 		 setTimeout(function () {
-			self.game.state.start("Connect");
-			/*			
+			// self.game.state.start("Connect");
+			var options = {
+				pseudo : 'test',
+				map: 'MainMap',
+				category: {}
+			};
+			self.game.state.start("Game", true, false, options);
+			/*
 			var newPlayer = {
 				pseudo : 'player',
 				map: 'firstMap'

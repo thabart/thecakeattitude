@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>
+    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>, Handles<AddServiceCommand>
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -64,6 +64,7 @@ namespace Cook4Me.Api.Handlers
             {
                 Id = message.Id,
                 ServiceId = message.ServiceId,
+                ShopId = record.ShopId,
                 Content = message.Content,
                 Score = message.Score,
                 Subject = message.Subject,
@@ -98,9 +99,65 @@ namespace Cook4Me.Api.Handlers
             _eventPublisher.Publish(new ServiceCommentRemovedEvent
             {
                 Id = message.CommentId,
+                ShopId = record.ShopId,
                 ServiceId = message.ServiceId,
                 AverageScore = record.AverageScore,
                 NbComments = record.Comments == null ? 0 : record.Comments.Count()
+            });
+        }
+
+        public async Task Handle(AddServiceCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            ServiceAggregateOccurrence occurrence = null;
+            if (message.Occurrence != null)
+            {
+                occurrence = new ServiceAggregateOccurrence
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Days = message.Occurrence.Days,
+                    StartDate = message.Occurrence.StartDate,
+                    EndDate = message.Occurrence.EndDate,
+                    StartTime = message.Occurrence.StartTime,
+                    EndTime = message.Occurrence.EndTime
+                };
+            }
+
+            var service = new ServiceAggregate
+            {
+                Id = message.Id,
+                Name = message.Name,
+                Description = message.Description,
+                PartialImagesUrl = message.Images,
+                Price = message.Price,
+                NewPrice = message.NewPrice,
+                Tags = message.Tags,
+                ShopId = message.ShopId,
+                CreateDateTime = message.CreateDateTime,
+                UpdateDateTime = message.UpdateDateTime,
+                TotalScore = 0,
+                AverageScore = 0,
+                Occurrence = occurrence
+            };
+            if (!await _serviceRepository.Add(service))
+            {
+                return;
+            }
+
+            _eventPublisher.Publish(new ServiceAddedEvent
+            {
+                Id = message.Id,
+                Name = message.Name,
+                Description = message.Description,
+                Price = message.Price,
+                NewPrice = message.NewPrice,
+                ShopId = message.ShopId,
+                CreateDateTime = message.CreateDateTime,
+                UpdateDateTime = message.UpdateDateTime
             });
         }
     }

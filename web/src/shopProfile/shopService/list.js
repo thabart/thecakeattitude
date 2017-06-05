@@ -9,6 +9,7 @@ import moment from "moment";
 import {ShopServices} from "../../services/index";
 import Constants from "../../../Constants";
 import $ from "jquery";
+import AppDispatcher from "../../appDispatcher";
 
 let countServices = 5;
 var daysMapping = {
@@ -24,6 +25,7 @@ var daysMapping = {
 class List extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.handleChangeStart = this.handleChangeStart.bind(this);
         this.handleChangeEnd = this.handleChangeEnd.bind(this);
         this.toggleError = this.toggleError.bind(this);
@@ -253,11 +255,31 @@ class List extends Component {
         );
     }
 
-    componentWillMount() {
+    componentDidMount() {
+        var self = this,
+          shopId = self.props.shop.id;
         this.request = $.extend({}, this.request, {
-            shop_id: this.props.shop.id
+            shop_id: shopId
         });
         this.refresh();
+        self._waitForToken = AppDispatcher.register(function (payload) {
+            switch (payload.actionName) {
+                case 'new-service':
+                case 'new-service-comment':
+                case 'remove-service-comment':
+                    if (payload.data && payload.data.shop_id === shopId) {
+                      self.request = $.extend({}, self.request, {
+                          start_index: 0
+                      });
+                      self.refresh();
+                    }
+                break;
+            }
+        });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

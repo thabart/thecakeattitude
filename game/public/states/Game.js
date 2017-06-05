@@ -9,14 +9,14 @@ var Game = function () {
 		worldScale = null,
 		previousScale = null;
 	this.getPlayerPosition = function(warp, wps, playerHeight, playerWidth) {
-		var map = warp.map;				
+		var map = warp.map;
 		var warpEntryName = warp.warp_entry;
 		var padding = 20;
 		var result = {
 			x : 0,
 			y : 0
 		};
-		
+
 		if (warpEntryName) {
 			if (wps) {
 				wps.children.forEach(function(wp) {
@@ -41,14 +41,14 @@ var Game = function () {
 								x -= playerWidth + padding;
 							break;
 						}
-						
+
 						result.x = x;
 						result.y = y;
 					}
 				});
 			}
 		}
-		
+
 		return result;
 	};
 	this.getPlayer = function(id) {
@@ -58,7 +58,7 @@ var Game = function () {
 				return this.map.players[i];
 			}
 		}
-	
+
 		return false
 	};
 	this.addPlayer = function(id, x, y, direction, pseudo) {
@@ -66,20 +66,20 @@ var Game = function () {
 		newPlayer.direction = direction;
 		this.map.players.push(newPlayer);
 	};
-	this.removePlayer = function(id) {		
+	this.removePlayer = function(id) {
 		var player = this.getPlayer(id);
 		if (!player) {
 			return;
 		}
-		
+
 		player.remove();
-		this.map.players.splice(this.map.players.indexOf(player), 1);	
+		this.map.players.splice(this.map.players.indexOf(player), 1);
 	};
-	this.cleanPlayers = function() {		
+	this.cleanPlayers = function() {
 		this.map.players.forEach(function(player) {
 			player.remove();
 		});
-		
+
 		this.map.players = [];
 	};
 	this.updatePlayer = function(id, x, y, direction) {
@@ -87,48 +87,54 @@ var Game = function () {
 		if (!player) {
 			return;
 		}
-		
+
 		player.update(x, y, direction);
 	};
 };
 Game.prototype = {
 	init: function(options) {
 		this.options = options;
+		var buildMenuOptions = function() {
+			var result = $("<div style='position: absolute; top: 0%; right: 0%;'>"+
+				"<ul><li>coucou</li></ul>"+
+				"</div>");
+			$(game).append(result);
+			// $(self.game).append(result);
+			return result;
+		};
+		// Add menu options to the right of the screen.
+		buildMenuOptions();
 	},
 	create: function() {
 		var self = this;
 		this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
 		// Start the Arcade physics systems.
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
-		// Change background color.				
-		this.game.stage.backgroundColor = '#787878';		
+		// Change background color.
+		this.game.stage.backgroundColor = '#787878';
 		// Keep running on losing focus
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
 		var tileMap = this.game.add.tilemap(self.options.map);
-		this.map = new Map(self.options.map, tileMap, this.game, this.options.category);		
+		this.map = new Map(self.options.map, tileMap, this.game, this.options.category);
 		this.map.init();
 		this.map.addPlayer(300, 300, self.options.pseudo);
-		this.cursors = this.game.input.keyboard.createCursorKeys();	
-		// Connect to socket server		
-		this.socket = io('http://localhost:3001').connect();		
+		this.cursors = this.game.input.keyboard.createCursorKeys();
+		// Connect to socket server
+		this.socket = io('http://localhost:3001').connect();
 		this.socket.on('connect', function() {
-			console.log('socket connected');			
 			self.cleanPlayers();
 			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: self.options.pseudo });
 		});
 		this.socket.on('disconnect', function() {
-			console.log('socket disconnected');
 			self.socket.emit('remove');
 		});
 		this.socket.on('new_player', function(data) {
-			console.log('new player');
 			if (data.mapId == self.map.key) {
 				self.addPlayer(data.id, data.x, data.y, data.direction, data.pseudo);
 			}
 		});
 		this.socket.on('remove_player', function(data) {
-			console.log('remove player');
 			self.removePlayer(data.id);
 		});
 		this.socket.on('move_player', function(data) {
@@ -137,21 +143,21 @@ Game.prototype = {
 		this.socket.on('message', function(data) {
 			self.displayMessage(data.message, data.id);
 		});
-		
+
 		// Listen keyboard events
 		spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		worldScale = 1
 		previousScale = 1;
 		this.game.input.mouse.mouseWheelCallback = function(evt) {
 			var wheelDelta = self.game.input.mouse.wheelDelta;
-            if (wheelDelta < 0)  {   
+            if (wheelDelta < 0)  {
 				worldScale -= 0.005;
 			}
-            else {   
+            else {
 				worldScale += 0.005;
 			}
 		};
-		
+
 		this.game.onFocus.add(function(e) {
 			self.isFocusLost = false;
 		});
@@ -162,25 +168,25 @@ Game.prototype = {
 			if (currentNpc == null) {
 				return;
 			}
-			
+
 			currentNpc.interact();
 		}, this);
 	},
-	update: function() {		
+	update: function() {
 		var self = this;
 		try {
 			if (!this.map.player || !this.map.layers.collision || this.preventUpdate) return;
 			this.map.players.forEach(function(p) {
 				if (!self.game.physics.arcade.collide(p.sprite, self.map.layers.collision)) {
-					p.updatePosition();		
-					p.updateMessagePosition();						
+					p.updatePosition();
+					p.updateMessagePosition();
 				}
 			});
-			
+
 			if (self.game.physics.arcade.collide(self.map.player.sprite, self.map.layers.collision)) {
 				return;
 			}
-			
+
 			// Warp the player to another map.
 			if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, warp) {
 				var tileMap = self.game.add.tilemap(warp.map),
@@ -193,16 +199,16 @@ Game.prototype = {
 				self.map.init().done(function() {
 					var playerPosition = self.getPlayerPosition(warp, self.map.getWarps(), playerHeight, playerWidth);
 					self.map.addPlayer(playerPosition.x, playerPosition.y, pseudo);
-					// Remove the player from the map & add him to the new map.		
+					// Remove the player from the map & add him to the new map.
 					self.socket.emit('remove');
 					self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: pseudo });
 					self.game.camera.focusOnXY(playerPosition.x, playerPosition.y);
 					self.preventUpdate = false;
-				});				
+				});
 			})) {
 				return;
 			}
-			
+
 			// Interact with NPCs.
 			if (!self.game.physics.arcade.overlap(self.map.player.hitZone, self.map.getNpcObjs(), function(e, npc) {
 				currentNpc = self.map.getNpc(npc);
@@ -210,13 +216,13 @@ Game.prototype = {
 					self.map.player.hideInteraction();
 					return;
 				}
-				
+
 				self.map.player.displayInteraction();
 			})) {
 				self.map.player.hideInteraction();
 				currentNpc = null;
 			}
-		
+
 			// Update player.
 			if (self.isFocusLost) {
 				this.cursors.up.isDown = false;
@@ -225,17 +231,17 @@ Game.prototype = {
 				this.cursors.left.isDown = false;
 				this.map.player.setDirection([]);
 			}
-			
+
 			isPositionUpdated = this.map.player.updateDirection(this.cursors);
-			
-			this.map.player.updatePosition();	
-			this.map.player.updateMessagePosition();	
-			if (isPositionUpdated) {			
+
+			this.map.player.updatePosition();
+			this.map.player.updateMessagePosition();
+			if (isPositionUpdated) {
 				this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
 			}
-			
+
 			// Zoom on the map
-			if (worldScale != previousScale) {				
+			if (worldScale != previousScale) {
 				// self.game.world.scale.set(worldScale);
 				previousScale = worldScale;
 			}
@@ -244,7 +250,7 @@ Game.prototype = {
 			console.log(err);
 		}
 	},
-	render: function() {		
+	render: function() {
 		if (this.map.player) this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
 	},
 	displayMessage : function(txt, id) {
@@ -255,13 +261,13 @@ Game.prototype = {
 				return;
 			}
 		}
-		
+
 		// 1. Destroy the message.
 		if (player.evtMessage != null) {
 			this.game.time.events.remove(player.evtMessage);
 		}
-		
-		player.destroyMessage();					
+
+		player.destroyMessage();
 		var speechBubble = new SpeechBubble(this.game, player.sprite.x + (player.sprite.width / 2), player.sprite.y, 150, txt);
 		this.game.world.add(speechBubble);
 		var evtMessage = this.game.time.events.add(Phaser.Timer.SECOND * 5, function() {
@@ -270,7 +276,7 @@ Game.prototype = {
 		player.displayMessage(speechBubble, evtMessage);
 	},
 	sendMessage: function(txt) {
-		this.displayMessage(txt);		
+		this.displayMessage(txt);
 		this.socket.emit('message', { message : txt });
 	}
 };

@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -31,7 +32,11 @@ namespace Cook4Me.Api.Host.Builders
     {
         AddAnnouncementCommand GetAnnouncement(JObject jObj);
         AddShopCommand GetAddShop(JObject jObj);
+        AddServiceCommand GetAddService(JObject jObj);
+        AddServiceOccurrence GetAddServiceOccurrence(JObject jObj);
+        UpdateShopCommand GetUpdateShop(JObject jObj);
         AddPaymentInformation GetPaymentMethod(JObject jObj);
+        UpdatePaymentInformation GetUpdatePaymentMethod(JObject jObj);
         AddShopCommentCommand GetAddShopComment(JObject jObj);
         AddProductCommentCommand GetAddProductComment(JObject jObj);
         AddServiceCommentCommand GetAddServiceComment(JObject jObj);
@@ -127,6 +132,238 @@ namespace Cook4Me.Api.Host.Builders
                 result.Longitude = location.Value<float>(Constants.DtoNames.Location.Longitude);
             }
 
+            var productFiltersObj = jObj[Constants.DtoNames.Shop.Filters];
+            var filters = new List<AddProductShopFilter>();
+            if (productFiltersObj != null)
+            {
+                var productFiltersArr = productFiltersObj as JArray;
+                if (productFiltersArr != null)
+                {
+                    foreach(var productFilter in productFiltersArr)
+                    {
+                        filters.Add(GetAddProductShopFilter(productFilter as JObject));
+                    }
+                }
+            }
+
+            var productCategories = new List<AddShopProductCategory>();
+            var productCategoriesObj = jObj[Constants.DtoNames.Shop.ProductCategories];
+            if (productCategoriesObj != null)
+            {
+                var productCategoriesArr = productCategoriesObj as JArray;
+                foreach(var productCategory in productCategoriesArr)
+                {
+                    productCategories.Add(GetAddShopProductCategory(productCategory as JObject));
+                }
+            }
+
+            result.ProductFilters = filters;
+            result.ProductCategories = productCategories;
+            result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
+            result.PaymentMethods = paymentMethods;
+            return result;
+        }
+
+        public AddServiceCommand GetAddService(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var occurrenceObj = jObj.GetValue(Constants.DtoNames.Service.Occurrence);
+            AddServiceOccurrence occurrence = null;
+            if (occurrenceObj != null)
+            {
+                occurrence = GetAddServiceOccurrence(occurrenceObj as JObject);
+            }
+
+            return new AddServiceCommand
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.Service.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.Service.Description),
+                Price = jObj.TryGetDouble(Constants.DtoNames.Service.Price),
+                ShopId = jObj.TryGetString(Constants.DtoNames.Service.ShopId),
+                Occurrence = occurrence,
+                Images = jObj.TryGetStringArray(Constants.DtoNames.Service.Images),
+                Tags = jObj.TryGetStringArray(Constants.DtoNames.Service.Tags)
+            };
+        }
+
+        public AddServiceOccurrence GetAddServiceOccurrence(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var days = new List<DayOfWeek>();
+            var daysStr = jObj.TryGetStringArray(Constants.DtoNames.Occurrence.Days);
+            if (daysStr != null)
+            {
+                days = daysStr.Select(d => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d)).ToList();
+            }
+
+            return new AddServiceOccurrence
+            {
+                StartDate = jObj.TryGetDateTime(Constants.DtoNames.Occurrence.StartDate),
+                EndDate = jObj.TryGetDateTime(Constants.DtoNames.Occurrence.EndDate),
+                StartTime = jObj.TryGetTime(Constants.DtoNames.Occurrence.StartTime),
+                EndTime = jObj.TryGetTime(Constants.DtoNames.Occurrence.EndTime),
+                Days = days
+            };
+        }
+
+        public AddShopProductCategory GetAddShopProductCategory(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new AddShopProductCategory
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.ProductCategory.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description)
+            };
+        }
+
+        public UpdateShopProductCategory GetUpdateShopProductCategory(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpdateShopProductCategory
+            {
+                Id = jObj.TryGetString(Constants.DtoNames.ProductCategory.Id),
+                Name = jObj.TryGetString(Constants.DtoNames.ProductCategory.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description),
+            };
+        }
+
+        public AddProductShopFilter GetAddProductShopFilter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+            
+            return new AddProductShopFilter
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.Filter.Name),
+                Values = jObj.TryGetStringArray(Constants.DtoNames.Filter.Values)
+            };
+        }
+
+        public UpdateProductShopFilter GetUpdateProductShopFilter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var values = new List<UpdateProductShopFilterValue>();
+            var valuesObj = jObj[Constants.DtoNames.Filter.Values];
+            if (valuesObj != null)
+            {
+                var valuesArr = valuesObj as JArray;
+                if (valuesArr != null)
+                {
+                    foreach(var value in valuesArr)
+                    {
+                        var obj = value as JObject;
+                        values.Add(new UpdateProductShopFilterValue
+                        {
+                            Id = obj.TryGetString(Constants.DtoNames.FilterValue.Id),
+                            Content = obj.TryGetString(Constants.DtoNames.FilterValue.Content)
+                        });
+                    }
+                }
+            }
+
+            return new UpdateProductShopFilter
+            {
+                Id = jObj.TryGetString(Constants.DtoNames.Filter.Id),
+                Name = jObj.TryGetString(Constants.DtoNames.Filter.Name),
+                Values = values
+            };
+        }
+
+        public UpdateShopCommand GetUpdateShop(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new UpdateShopCommand();
+            result.Name = jObj.Value<string>(Constants.DtoNames.Shop.Name); // General information
+            result.Description = jObj.Value<string>(Constants.DtoNames.Shop.Description);
+            var tags = jObj.GetValue(Constants.DtoNames.Shop.Tags);
+            JArray firstArr = null;
+            var ts = new List<string>();
+            if (tags != null && (firstArr = tags as JArray) != null)
+            {
+                foreach (var tag in tags)
+                {
+                    ts.Add(tag.ToString());
+                }
+            }
+
+            result.TagNames = ts;
+            result.BannerImage = jObj.Value<string>(Constants.DtoNames.Shop.BannerImage);
+            result.ProfileImage = jObj.Value<string>(Constants.DtoNames.Shop.ProfileImage);
+            result.StreetAddress = jObj.Value<string>(Constants.DtoNames.Shop.StreetAddress); // Street address
+            result.PostalCode = jObj.Value<string>(Constants.DtoNames.Shop.PostalCode);
+            result.Locality = jObj.Value<string>(Constants.DtoNames.Shop.Locality);
+            result.Country = jObj.Value<string>(Constants.DtoNames.Shop.Country);
+            var paymentMethods = new List<UpdatePaymentInformation>();
+            var payments = jObj[Constants.DtoNames.Shop.Payments];
+            JArray arr = null;
+            if (payments != null && (arr = payments as JArray) != null)
+            {
+                foreach (var payment in payments)
+                {
+                    paymentMethods.Add(GetUpdatePaymentMethod(payment as JObject));
+                }
+            }
+
+            var location = jObj[Constants.DtoNames.Shop.Location];
+            if (location != null)
+            {
+                result.Latitude = location.Value<float>(Constants.DtoNames.Location.Latitude);
+                result.Longitude = location.Value<float>(Constants.DtoNames.Location.Longitude);
+            }
+
+            var productFiltersObj = jObj[Constants.DtoNames.Shop.Filters];
+            var filters = new List<UpdateProductShopFilter>();
+            if (productFiltersObj != null)
+            {
+                var productFiltersArr = productFiltersObj as JArray;
+                if (productFiltersArr != null)
+                {
+                    foreach (var productFilter in productFiltersArr)
+                    {
+                        filters.Add(GetUpdateProductShopFilter(productFilter as JObject));
+                    }
+                }
+            }
+
+            var productCategories = new List<UpdateShopProductCategory>();
+            var productCategoriesObj = jObj[Constants.DtoNames.Shop.ProductCategories];
+            if (productCategoriesObj != null)
+            {
+                var productCategoriesArr = productCategoriesObj as JArray;
+                foreach (var productCategory in productCategoriesArr)
+                {
+                    productCategories.Add(GetUpdateShopProductCategory(productCategory as JObject));
+                }
+            }
+
+            result.ProductFilters = filters;
+            result.ProductCategories = productCategories;
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
             result.PaymentMethods = paymentMethods;
             return result;
@@ -211,7 +448,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 methodEnum = AddPaymentInformationMethods.Cash;
             }
-            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase))
+            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(method, "BankTransfer", StringComparison.CurrentCultureIgnoreCase))
             {
                 methodEnum = AddPaymentInformationMethods.BankTransfer;
             }
@@ -226,6 +464,42 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             return new AddPaymentInformation
+            {
+                Id = Guid.NewGuid().ToString(),
+                Method = (AddPaymentInformationMethods)methodEnum.Value,
+                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
+            };
+        }
+
+        public UpdatePaymentInformation GetUpdatePaymentMethod(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            AddPaymentInformationMethods? methodEnum = null;
+            var method = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Method);
+            if (string.Equals(method, "cash", StringComparison.CurrentCultureIgnoreCase))
+            {
+                methodEnum = AddPaymentInformationMethods.Cash;
+            }
+            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase) ||
+                string.Equals(method, "BankTransfer", StringComparison.CurrentCultureIgnoreCase))
+            {
+                methodEnum = AddPaymentInformationMethods.BankTransfer;
+            }
+            else if (string.Equals(method, "paypal", StringComparison.CurrentCultureIgnoreCase))
+            {
+                methodEnum = AddPaymentInformationMethods.PayPal;
+            }
+
+            if (methodEnum == null)
+            {
+                throw new ArgumentException(ErrorDescriptions.ThePaymentMethodDoesntExist);
+            }
+
+            return new UpdatePaymentInformation
             {
                 Id = Guid.NewGuid().ToString(),
                 Method = (AddPaymentInformationMethods)methodEnum.Value,
@@ -405,8 +679,7 @@ namespace Cook4Me.Api.Host.Builders
 
             return result;
         }
-
-
+        
         public SearchProductsParameter GetSearchProducts(JObject jObj)
         {
             if (jObj == null)

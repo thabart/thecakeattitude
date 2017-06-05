@@ -5,6 +5,8 @@ import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import {MAP} from "react-google-maps/lib/constants";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import Constants from "../../Constants";
+import Promise from "bluebird";
+import "./address.css";
 
 const INPUT_STYLE = {
     boxSizing: `border-box`,
@@ -226,45 +228,55 @@ class Address extends Component {
 
     componentDidMount() {
         var self = this;
-        var setDefaultLocation = function () {
-            self.setState({
-                center: {
-                    lat: 50,
-                    lng: 50
-                }
-            });
-        };
         if (self.props.onLoading) self.props.onLoading(true);
-        // Get the current location and display it.
-        if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var location = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                GoogleMapService.getPlaceByLocation(position.coords).then(function (adr) {
-                    self.setState({
-                        center: location,
-                        currentLocation: location,
-                        address: adr.adr,
-                        isAddressCorrect: true,
-                        placeId: adr.place_id
-                    });
-                    if (self.props.addressCorrect) self.props.addressCorrect(true);
-                    if (self.props.onLoading) self.props.onLoading(false);
-                }).catch(function () {
-                    if (self.props.onWarning) self.props.onWarning('Current address cannot be retrieved');
-                    if (self.props.onLoading) self.props.onLoading(false);
-                    if (self.props.addressCorrect) self.props.addressCorrect(false);
-                    setDefaultLocation();
+        var promise = null;
+        if (self.props.position) { // Retrieve position from the parent.
+            promise = new Promise(function (resolve) {
+                resolve(self.props.position);
+            });
+        }
+        else if ("geolocation" in navigator) { // Retrieve position from current location.
+            promise = new Promise(function (resolve) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    var location = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    resolve(location);
                 });
             });
-        } else {
-            if (self.props.onWarning) self.props.onWarning('Geolocation is not supported by your browser');
-            if (self.props.onLoading) self.props.onLoading(false);
-            if (self.props.addressCorrect) self.props.addressCorrect(false);
-            setDefaultLocation();
+        } else { // Get default location.
+            promise = new Promise(function (resolve) {
+                resolve({
+                    lat: 50,
+                    lng: 50
+                })
+            });
         }
+
+        promise.then(function (location) {
+            GoogleMapService.getPlaceByLocation({latitude: location.lat, longitude: location.lng}).then(function (adr) {
+                self.setState({
+                    center: location,
+                    currentLocation: location,
+                    address: adr.adr,
+                    isAddressCorrect: true,
+                    placeId: adr.place_id
+                });
+                if (self.props.addressCorrect) self.props.addressCorrect(true);
+                if (self.props.onLoading) self.props.onLoading(false);
+            }).catch(function () {
+                if (self.props.onWarning) self.props.onWarning('Current address cannot be retrieved');
+                if (self.props.onLoading) self.props.onLoading(false);
+                if (self.props.addressCorrect) self.props.addressCorrect(false);
+                self.setState({
+                    center: {
+                        lat: 50,
+                        lng: 50
+                    }
+                });
+            });
+        });
     }
 }
 

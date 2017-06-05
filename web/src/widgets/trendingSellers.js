@@ -10,6 +10,7 @@ import AppDispatcher from "../appDispatcher";
 class TrendingSellers extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.navigate = this.navigate.bind(this);
         this.localize = this.localize.bind(this);
         this.state = {
@@ -168,9 +169,9 @@ class TrendingSellers extends Component {
     }
 
     // Execute after the render
-    componentWillMount() {
+    componentDidMount() {
         var self = this;
-        AppDispatcher.register(function (payload) {
+        this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'new-shop':
                 case 'new-shop-comment':
@@ -182,6 +183,10 @@ class TrendingSellers extends Component {
                     break;
             }
         });
+    }
+
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

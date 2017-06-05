@@ -17,6 +17,7 @@ import "jquery-ui/ui/widgets/sortable";
 import AppDispatcher from "./appDispatcher";
 import "react-grid-layout/css/styles.css";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import NotificationSystem from 'react-notification-system';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 function getLayoutFromLocalStorage() {
@@ -126,6 +127,7 @@ class Map extends Component {
     constructor(props) {
         super(props);
         var self = this;
+        this._waitForToken = null;
         this._searchBox = null;
         this._searchTarget = "name";
         this._category_ids = null;
@@ -631,6 +633,7 @@ class Map extends Component {
                     </div>
                   </div>
                 )}
+                <NotificationSystem ref="notificationSystem" />
             </div>
         );
     }
@@ -638,12 +641,21 @@ class Map extends Component {
     componentDidMount() {
         var self = this;
         // Refresh the map when a new shop arrived.
-        AppDispatcher.register(function (payload) {
+        this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'new-shop':
                     var shops = self.state.shops;
-                    shops.push(payload.data);
-                    self.setState(shops);
+                    if (shops) {
+                      shops.push(payload.data);
+                      self.setState(shops);
+                    }
+
+                    console.log(self.refs);
+                    self.refs.notificationSystem.addNotification({
+                      message: 'A new shop has been added',
+                      level: 'success',
+                      position: 'bl'
+                    });
                     break;
             }
         });
@@ -667,6 +679,9 @@ class Map extends Component {
         } else {
             // TODO : Geolocation is not possible.
         }
+    }
+    componentWillUnmount() {
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 

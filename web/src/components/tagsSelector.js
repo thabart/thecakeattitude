@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import TagsInput from "react-tagsinput";
-import {TagService} from "../services/index";
-import $ from "jquery";
+import {TagService} from '../services/index';
+import $ from 'jquery';
 
 class TagsSelector extends Component {
     constructor(props) {
@@ -16,7 +16,18 @@ class TagsSelector extends Component {
         };
     }
 
-    handleTags(tags) {
+    handleTags(tags, changed, changedIndexes) {
+        if (changedIndexes[0] === this.state.tags.length) {
+            var changedValue = changed[0].toLowerCase();
+            var selectedValue = this.state.tags.filter(function (tag) {
+                return tag.toLowerCase().indexOf(changedValue) !== -1;
+            });
+
+            if (selectedValue.length > 0) {
+                return;
+            }
+        }
+
         this.setState({
             tags: tags
         });
@@ -45,9 +56,11 @@ class TagsSelector extends Component {
 
     initialize(elt) {
         if (this._isInitialized) return;
-        const self = this,
+        var self = this,
             input = elt.refs.input,
-            container = elt.refs.div;
+            container = elt.refs.div,
+            paddingLeft = 5,
+            paddingTop = 5;
         self.popup = $("<div class='popup' style='position: absolute;display: none;'><ul></ul></div>");
         var updatePopup = function (value) {
             $(self.popup).width($(container).width() + 5);
@@ -66,11 +79,10 @@ class TagsSelector extends Component {
 
                 self.displayTags(embedded);
                 self.popup.find('li').click(function () {
-                    var tags = self.state.tags;
-                    tags.push($(this).html());
-                    self.setState({
-                        tags: tags
-                    });
+                    var tags = self.state.tags.slice(0);
+                    var tag = $(this).html();
+                    tags.push(tag);
+                    self.handleTags(tags, [tag], [self.state.tags.length]);
                     self.hidePopup();
                 });
             }).catch(function () {
@@ -89,11 +101,9 @@ class TagsSelector extends Component {
     }
 
     render() {
-        return (
-            <TagsInput ref={(elt) => {
-                this.initialize(elt);
-            }} value={this.state.tags} onChange={this.handleTags}/>
-        );
+        return (<TagsInput ref={(elt) => {
+            this.initialize(elt);
+        }} value={this.state.tags} onChange={this.handleTags}/>);
     }
 }
 

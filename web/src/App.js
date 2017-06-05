@@ -11,7 +11,9 @@ import Announces from './Announces';
 import Manage from './Manage';
 import AddProduct from './AddProduct';
 import AddAnnouncement from "./AddAnnouncement";
+import AddService from './AddService';
 import {OpenIdService, SessionService} from "./services/index";
+import {ApplicationStore} from './stores';
 import Constants from '../Constants';
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
@@ -19,6 +21,7 @@ import "./App.css";
 import $ from "jquery";
 import "ms-signalr-client";
 import AppDispatcher from "./appDispatcher";
+import NotificationSystem from 'react-notification-system';
 
 var history = createBrowserHistory();
 
@@ -34,6 +37,18 @@ class App extends Component {
     componentWillMount() {
         var connection = $.hubConnection(Constants.apiUrl);
         var proxy = connection.createHubProxy("notifier");
+        proxy.on('serviceAdded', function(message) {
+          AppDispatcher.dispatch({
+            actionName: 'new-service',
+            data: message
+          });
+        });
+        proxy.on('productAdded', function(message) {
+            AppDispatcher.dispatch({
+                actionName: 'new-product',
+                data: message
+            });
+        });
         proxy.on('shopAdded', function (message) {
             AppDispatcher.dispatch({
                 actionName: 'new-shop',
@@ -91,6 +106,12 @@ class App extends Component {
         proxy.on('shopRemoved', function (message) {
             AppDispatcher.dispatch({
                 actionName: 'remove-shop',
+                data: message
+            });
+        });
+        proxy.on('shopUpdated', function(message) {
+            AppDispatcher.dispatch({
+                actionName: 'update-shop',
                 data: message
             });
         });
@@ -154,19 +175,28 @@ class App extends Component {
                         <Route path="/products/:id/:action?" component={Products}/>
                         <Route path="/services/:id/:action?" component={Services}/>
                         <Route path="/announces/:id" component={Announces} />
-                        <Route path="/addproduct/:id"
-                              render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
-                        <Route path="/addshop"
-                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                        <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
+                        <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                        <Route path="/addservice/:id"
+                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
                         <Route path="/addAnnounce"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
                         <Route path="/manage/:action"
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
                         <Route path="/error/:type" component={Error}/>
                     </div>
+                    <NotificationSystem ref="notificationSystem" />
                 </div>
             </Router>
         );
+    }
+
+    componentDidMount() {
+      var self = this;
+      ApplicationStore.addMessageListener(function() {
+        var message = ApplicationStore.getMessage();
+        self.refs.notificationSystem.addNotification(message);
+      });
     }
 }
 

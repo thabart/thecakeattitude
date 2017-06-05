@@ -14,11 +14,15 @@
 // limitations under the License.
 #endregion
 
+using System;
+
 namespace Cook4Me.Api.Core.Aggregates
 {
     public class ShopFilterValue
     {
         public string Id { get; set; }
         public string Content { get; set; }
+        public DateTime UpdateDateTime { get; set; }
+        public DateTime CreateDateTime { get; set; }
     }
 }
