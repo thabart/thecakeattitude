@@ -1,7 +1,6 @@
 import React, {Component} from "react";
-import {Tooltip} from "reactstrap";
-import {CategoryService, SessionService, OpenIdService, UserService} from "../services/index";
-import "./contactInfoForm.css";
+import {Form, FormGroup, Col, Label, Input, FormFeedback, Button} from "reactstrap";
+import {UserService} from "../services/index";
 
 class ContactInfoForm extends Component {
     constructor(props) {
@@ -131,51 +130,83 @@ class ContactInfoForm extends Component {
             optsActions['disabled'] = 'disabled';
         }
 
+        /** Errors **/
+        const emailError = this.state.isEmailInvalid ? "The email is not valid" : null;
+        const mobilePhoneError = this.state.isMobilePhoneInvalid ? "The mobile phone is not valid" : null;
+        const homePhoneError = this.state.isHomePhoneInvalid ? "The home phone is not valid" : null;
+        const feedbackEmail = emailError ? "warning" : undefined;
+        const feedbackMobilePhone = mobilePhoneError ? "warning" : undefined;
+        const feedbackHomePhone = homePhoneError ? "warning" : undefined;
+
         return (
-            <div>
-                <section className="col-md-12 section">
-                    <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Those
-                        information are coming from your profile.</p><p>Do-you want to update them ? <input
-                        type='checkbox' onClick={this.toggle}/> Yes or No</p></div>
-                    <div className='form-group col-md-12'>
-                        <label className='control-label'>Email</label>
-                        <input type='email'
-                               className={!this.state.isEmailInvalid ? 'form-control' : 'form-control invalid'}
-                               value={this.state.userInfo.email} onChange={this.handleInputChange}
-                               name='email' {...opts} />
-                        { this.state.isEmailInvalid && (
-                            <span className="invalid-description">The email is invalid</span>) }
-                    </div>
-                    <div className='form-group col-md-12'>
-                        <label className='control-label'>Mobile phone</label>
-                        <input type='text'
-                               className={!this.state.isMobilePhoneInvalid ? 'form-control' : 'form-control invalid'}
-                               value={this.state.userInfo.mobile_phone_number} onChange={this.handleInputChange}
-                               name='mobile_phone_number' {...opts} />
-                        { this.state.isMobilePhoneInvalid && (
-                            <span className="invalid-description">The mobile phone is not valid</span>) }
-                    </div>
-                    <div className='form-group col-md-12'>
-                        <label className='control-label'>Home phone</label>
-                        <input type='text'
-                               className={!this.state.isHomePhoneInvalid ? 'form-control' : 'form-control invalid'}
-                               value={this.state.userInfo.home_phone_number} onChange={this.handleInputChange}
-                               name='home_phone_number' {...opts} />
-                        { this.state.isHomePhoneInvalid &&
-                        <span className="invalid-description">The home phone is not valid</span> }
+            <div className="container bg-white rounded">
+                <section className="row p-1">
+                    <div className="col-md-12">
+                        <Form>
+                            <FormGroup>
+                                <p>
+                                    <i className="fa fa-exclamation-triangle text-info"/>
+                                    Those information are coming from your profile.
+                                </p>
+                                <p>Do-you want to update them ?{' '}
+                                    <Label check>
+                                        <Input type="checkbox" onClick={this.toggle}/>{' '}
+                                        Yes or No
+                                    </Label>
+                                </p>
+                            </FormGroup>
+                            <FormGroup color={feedbackEmail}>
+                                <Label sm={12}>Email</Label>
+                                <Col sm={12}>
+                                    <Input state={feedbackEmail}
+                                           type="email"
+                                           className={!this.state.isEmailInvalid ? 'form-control' : 'form-control invalid'}
+                                           value={this.state.userInfo.email} onChange={this.handleInputChange}
+                                           name='email' {...opts}/>
+                                    {emailError && (<FormFeedback>{emailError}</FormFeedback>)}
+                                </Col>
+                            </FormGroup>
+                            <FormGroup color={feedbackMobilePhone}>
+                                <Label sm={12}>Mobile phone</Label>
+                                <Col sm={12}>
+                                    <Input state={feedbackMobilePhone}
+                                           type="text"
+                                           className={!this.state.isMobilePhoneInvalid ? 'form-control' : 'form-control invalid'}
+                                           value={this.state.userInfo.mobile_phone_number}
+                                           onChange={this.handleInputChange}
+                                           name='mobile_phone_number' {...opts} />
+                                    {mobilePhoneError && (<FormFeedback>{mobilePhoneError}</FormFeedback>)}
+                                </Col>
+                            </FormGroup>
+                            <FormGroup color={feedbackHomePhone}>
+                                <Label sm={12}>Home phone</Label>
+                                <Col sm={12}>
+                                    <Input state={feedbackHomePhone}
+                                           type="text"
+                                           className={!this.state.isHomePhoneInvalid ? 'form-control' : 'form-control invalid'}
+                                           value={this.state.userInfo.home_phone_number}
+                                           onChange={this.handleInputChange}
+                                           name='home_phone_number' {...opts} />
+                                    {this.state.isHomePhoneInvalid && (<FormFeedback>{homePhoneError}</FormFeedback>)}
+                                </Col>
+                            </FormGroup>
+                        </Form>
                     </div>
                 </section>
-                <section className="col-md-12 sub-section">
-                    <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
+                <section className="row p-1">
+
+                    <Button outline color="info" onClick={this.previous}>Previous</Button>
                     {!this.state.isUpdating ?
-                        (<button className="btn btn-primary previous" onClick={this.update} {...optsActions}>
-                            Update</button>) :
-                        (<button className="btn btn-primary previous" disabled><i className='fa fa-spinner fa-spin'></i>
-                            Processing update ...</button>)
+                        (<Button outline color="info" onClick={this.update} {...optsActions}>Update</Button>) :
+                        (<Button outline color="info" disabled>
+                                <i className='fa fa-spinner fa-spin'/>
+                                Processing update ...
+                            </Button>
+                        )
                     }
                     {!this.state.isUpdating ?
-                        (<button className="btn btn-primary next" onClick={this.next} {...optsActions}>Next</button>) :
-                        (<button className="btn btn-primary next" disabled>Next</button>)
+                        (<Button outline color="info" onClick={this.next} {...optsActions}>Next</Button>) :
+                        (<Button outline color="info" disabled>Next</Button>)
                     }
                 </section>
             </div>

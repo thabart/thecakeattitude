@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert} from "reactstrap";
 import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
-import {Address, EditableTextArea, EditableCategory, PaymentMethodsSelector} from '../components';
+import {Address, EditableTextArea, EditableCategory, PaymentMethodsSelector} from "../components";
 import {NavLink} from "react-router-dom";
 import Comment from "./comment";
 import BestDeals from "./bestDeals";
@@ -40,13 +40,13 @@ class ShopProfile extends Component {
         this.updateAddress = this.updateAddress.bind(this);
         this.updatePaymentMethods = this.updatePaymentMethods.bind(this);
         this.state = {
-          isModalAddressOpened: false,
-          isModalPaymentsOpened: false,
-          shop : props.shop,
-          user: props.user,
-          isEditable: props.isEditable,
-          errorMessagePaymentMethods: null,
-          errorMessageAddress: null
+            isModalAddressOpened: false,
+            isModalPaymentsOpened: false,
+            shop: props.shop,
+            user: props.user,
+            isEditable: props.isEditable,
+            errorMessagePaymentMethods: null,
+            errorMessageAddress: null
         };
     }
 
@@ -59,63 +59,63 @@ class ShopProfile extends Component {
     }
 
     closeModalAddress() {
-      this.setState({
-        isModalAddressOpened: false
-      });
+        this.setState({
+            isModalAddressOpened: false
+        });
     }
 
     closeModalPayments() {
-      this.setState({
-        isModalPaymentsOpened: false
-      });
+        this.setState({
+            isModalPaymentsOpened: false
+        });
     }
 
     closePaymentMethodsError() {
-      this.setState({
-        errorMessagePaymentMethods: null
-      });
+        this.setState({
+            errorMessagePaymentMethods: null
+        });
     }
 
     closeAddressError() {
-      this.setState({
-        errorMessageAddress: null
-      });
+        this.setState({
+            errorMessageAddress: null
+        });
     }
 
     openModalAddress() {
-      this.setState({
-        isModalAddressOpened: true
-      });
+        this.setState({
+            isModalAddressOpened: true
+        });
     }
 
     openModalPayments() {
-      this.setState({
-        isModalPaymentsOpened: true
-      });
+        this.setState({
+            isModalPaymentsOpened: true
+        });
     }
 
     updateAddress() {
-      var address = this.refs.address.getAddress();
-      var shop = this.state.shop;
-      shop.street_address = address.street_address;
-      this.setState({
-        shop: shop,
-        isModalAddressOpened: false
-      });
+        var address = this.refs.address.getAddress();
+        var shop = this.state.shop;
+        shop.street_address = address.street_address;
+        this.setState({
+            shop: shop,
+            isModalAddressOpened: false
+        });
     }
 
     updatePaymentMethods() {
-      var arr = this.refs.paymentMethods.validate();
-      if (!arr || arr === null) {
-        return;
-      }
+        var arr = this.refs.paymentMethods.validate();
+        if (!arr || arr === null) {
+            return;
+        }
 
-      var shop = this.state.shop;
-      shop.payments = arr;
-      this.setState({
-        isModalPaymentsOpened: false,
-        shop: shop
-      });
+        var shop = this.state.shop;
+        shop.payments = arr;
+        this.setState({
+            isModalPaymentsOpened: false,
+            shop: shop
+        });
     }
 
     render() {
@@ -131,7 +131,7 @@ class ShopProfile extends Component {
                     case "cash":
                         paymentsInner.push((
                             <div className="col-md-3 contact">
-                                <i className="fa fa-money fa-3"></i><br/>
+                                <i className="fa fa-money fa-3 text-info"/><br/>
                                 <label>Cash</label>
                             </div>
                         ));
@@ -140,8 +140,8 @@ class ShopProfile extends Component {
                     case "bank_transfer":
                         paymentsInner.push((
                             <div className="col-md-3 contact">
-                                <i className="fa fa-credit-card fa-3"></i><br/>
-                                <label>Bank transfer</label><br />
+                                <i className="fa fa-credit-card fa-3 text-info"/><br/>
+                                <label>Bank transfer</label>{' '}
                                 <label>IBAN : <i>{payment.iban}</i></label>
                             </div>
                         ));
@@ -150,7 +150,7 @@ class ShopProfile extends Component {
                     case "paypal":
                         paymentsInner.push((
                             <div className="col-md-3 contact">
-                                <i className="fa fa-paypal fa-3"></i><br/>
+                                <i className="fa fa-paypal fa-3 text-info"/><br/>
                                 <label>Paypal</label>
                             </div>
                         ));
@@ -161,100 +161,128 @@ class ShopProfile extends Component {
 
         var categoryName = null;
         if (this.state.shop && this.state.shop.category) {
-          categoryName = this.state.shop.category.name;
+            categoryName = this.state.shop.category.name;
         }
 
-        return ( <div>
-            <section className="row white-section shop-section shop-section-padding">
-                <h5 className="col-md-12">Description</h5>
-                {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description} />) : (
-                  <p className="col-md-12">{this.state.shop.description}</p>
-                )}
-            </section>
-            <section className="row white-section sub-section shop-section-padding">
-              <h5 className="col-md-12">Category</h5>
-              {this.state.isEditable ? (<EditableCategory value={categoryName} />) : (
-                <p className="col-md-12">{categoryName}</p>
-              )}
-            </section>
-            <section className="row white-section sub-section shop-section-padding">
-                <h5>Payment methods</h5>
-                { this.state.isEditable && (<Button outline color="secondary" size="sm" onClick={this.openModalPayments}><i className="fa fa-pencil"></i></Button>) }
-                <div className="row col-md-12">
-                  {paymentsInner}
-                </div>
-            </section>
-            <section className="row white-section sub-section shop-section-padding">
-                <h5>Contact information</h5>
-                { this.state.isEditable && (<NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>) }
-                <div className="row col-md-12">
-                    <div className="col-md-3 contact">
-                        <i className="fa fa-envelope fa-3"></i><br />
-                        <span>{this.state.user.email}</span>
+        return (
+            <div>
+                <section className="row white-section shop-section shop-section-padding">
+                    <h5 className="col-md-12">Description</h5>
+                    {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description}/>) : (
+                        <p className="col-md-12">{this.state.shop.description}</p>
+                    )}
+                </section>
+                <section className="row white-section sub-section shop-section-padding">
+                    <h5 className="col-md-12">Category</h5>
+                    {this.state.isEditable ? (<EditableCategory value={categoryName}/>) : (
+                        <p className="col-md-12">{categoryName}</p>
+                    )}
+                </section>
+                <section className="row white-section sub-section shop-section-padding">
+                    <h5 className="col-md-12">Payment method(s)</h5>
+                    { this.state.isEditable && (
+                        <Button outline
+                                color="secondary"
+                                size="sm"
+                                onClick={this.openModalPayments}>
+                            <i className="fa fa-pencil"/>
+                        </Button>) }
+                    <div className="row col-md-12">
+                        {paymentsInner}
                     </div>
-                    <div className="col-md-3 contact">
-                        <i className="fa fa-phone fa-3"></i><br />
-                        <span>{this.state.user.home_phone_number}</span>
+                </section>
+                <section className="row white-section sub-section shop-section-padding">
+                    <h5 className="col-md-12">Contact information</h5>
+                    { this.state.isEditable && (
+                        <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm">
+                            <i className="fa fa-pencil"/>
+                        </NavLink>
+                    )}
+                    <div className="row col-md-12">
+                        <div className="col-md-3 contact">
+                            <i className="fa fa-envelope fa-3 text-info"/>{' '}
+                            <span>{this.state.user.email}</span>
+                        </div>
+                        <div className="col-md-3 contact">
+                            <i className="fa fa-phone fa-3 text-info"/>{' '}
+                            <span>{this.state.user.home_phone_number}</span>
+                        </div>
+                        <div className="col-md-3 contact">
+                            <i className="fa fa-mobile fa-3 text-info"/>{' '}
+                            <span>{this.state.user.mobile_phone_number}</span>
+                        </div>
+                        <div className="col-md-3 contact">
+                            {this.state.isEditable ? (
+                                <Button className="btn btn-default"
+                                        onClick={() => {
+                                            this.openModalAddress();
+                                        }}>
+                                    <i className="fa fa-map-marker fa-3 text-info"/></Button>) :
+                                (<i className="fa fa-map-marker fa-3 text-info"/>
+                                )}{' '}
+                            <span>{this.state.shop.street_address}</span>
+                        </div>
                     </div>
-                    <div className="col-md-3 contact">
-                        <i className="fa fa-mobile fa-3"></i><br />
-                        <span>{this.state.user.mobile_phone_number}</span>
+                    <div className="col-md-12 map">
+                        <GettingStartedGoogleMap
+                            center={this.state.shop.location}
+                            onMapLoad={this.onMapLoad}
+                            containerElement={
+                                <div style={{height: `100%`}}/>
+                            }
+                            mapElement={
+                                <div style={{height: `100%`}}/>
+                            }>
+                        </GettingStartedGoogleMap>
                     </div>
-                    <div className="col-md-3 contact">
-                        {this.state.isEditable ? (<button className="btn btn-default" onClick={() => { this.openModalAddress(); }}><i className="fa fa-map-marker fa-3"></i></button>) :
-                          (<i className="fa fa-map-marker fa-3"></i>
-                        )}<br />
-                        <span>{this.state.shop.street_address}</span>
-                    </div>
-                </div>
-                <div className="col-md-12 map">
-                    <GettingStartedGoogleMap
-                        center={this.state.shop.location}
-                        onMapLoad={this.onMapLoad}
-                        containerElement={
-                            <div style={{height: `100%`}}/>
-                        }
-                        mapElement={
-                            <div style={{height: `100%`}}/>
-                        }>
-                    </GettingStartedGoogleMap>
-                </div>
-            </section>
-            <Comment shop={self.state.shop} onRefreshScore={this.refreshScore}/>
-            <BestDeals shop={self.state.shop}/>
-            {/* Modal window for the address */}
-            <Modal size="lg" isOpen={this.state.isModalAddressOpened}>
-                <ModalHeader toggle={() => { self.closeModalAddress();}}>Update address</ModalHeader>
-                <ModalBody>
-                  <Alert color="danger" isOpen={this.state.errorMessageAddress !== null} toggle={this.closeAddressError}>{this.state.errorMessageAddress}</Alert>
-                  <Address ref="address" onError={(m) => {
-                    self.setState({
-                      errorMessageAddress: m
-                    });
-                  }} />
-                </ModalBody>
-                <ModalFooter>
-                  <button className="btn btn-success" onClick={() => {self.updateAddress(); }}>Validate</button>
-                  <button className="btn btn-default" onClick={self.closeModalAddress}>Cancel</button>
-                </ModalFooter>
-            </Modal>
-            {/* Modal window for the payment methods */}
-            <Modal size="lg" isOpen={this.state.isModalPaymentsOpened}>
-              <ModalHeader toggle={() => { self.closeModalPayments(); }}>Update payment methods</ModalHeader>
-              <ModalBody>
-                <Alert color="danger" isOpen={this.state.errorMessagePaymentMethods !== null} toggle={this.closePaymentMethodsError}>{this.state.errorMessagePaymentMethods}</Alert>
-                <PaymentMethodsSelector ref="paymentMethods"  onError={(m) => {
-                  self.setState({
-                    errorMessagePaymentMethods: m
-                  });
-                }} />
-              </ModalBody>
-              <ModalFooter>
-                <button className="btn btn-success" onClick={(r) => {self.updatePaymentMethods(r); }}>Validate</button>
-                <button className="btn btn-default" onClick={self.closeModalPayments}>Cancel</button>
-              </ModalFooter>
-            </Modal>
-        </div>);
+                </section>
+                <Comment shop={self.state.shop} onRefreshScore={this.refreshScore}/>
+                <BestDeals shop={self.state.shop}/>
+                {/* Modal window for the address */}
+                <Modal size="lg" isOpen={this.state.isModalAddressOpened}>
+                    <ModalHeader toggle={() => {
+                        self.closeModalAddress();
+                    }}>Update address</ModalHeader>
+                    <ModalBody>
+                        <Alert color="danger" isOpen={this.state.errorMessageAddress !== null}
+                               toggle={this.closeAddressError}>{this.state.errorMessageAddress}</Alert>
+                        <Address ref="address" onError={(m) => {
+                            self.setState({
+                                errorMessageAddress: m
+                            });
+                        }}/>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button className="btn btn-success" onClick={() => {
+                            self.updateAddress();
+                        }}>Validate
+                        </Button>
+                        <Button className="btn btn-default" onClick={self.closeModalAddress}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+                {/* Modal window for the payment methods */}
+                <Modal size="lg" isOpen={this.state.isModalPaymentsOpened}>
+                    <ModalHeader toggle={() => {
+                        self.closeModalPayments();
+                    }}>Update payment methods</ModalHeader>
+                    <ModalBody>
+                        <Alert color="danger" isOpen={this.state.errorMessagePaymentMethods !== null}
+                               toggle={this.closePaymentMethodsError}>{this.state.errorMessagePaymentMethods}</Alert>
+                        <PaymentMethodsSelector ref="paymentMethods" onError={(m) => {
+                            self.setState({
+                                errorMessagePaymentMethods: m
+                            });
+                        }}/>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button className="btn btn-success" onClick={(r) => {
+                            self.updatePaymentMethods(r);
+                        }}>Validate
+                        </Button>
+                        <Button className="btn btn-default" onClick={self.closeModalPayments}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+            </div>);
     }
 }
 

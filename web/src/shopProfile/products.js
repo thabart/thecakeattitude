@@ -172,9 +172,9 @@ class ShopProducts extends Component {
     selectCategory(e, id) {
         e.preventDefault();
         if (id === null) {
-          delete filterJson['category_id'];
+            delete filterJson['category_id'];
         } else {
-          filterJson['category_id'] = id;
+            filterJson['category_id'] = id;
         }
 
         this.setState({
@@ -275,77 +275,81 @@ class ShopProducts extends Component {
             });
         }
 
-        return (<div>
-            <section className="row white-section shop-section shop-section-padding">
-                { this.state.isEditable && (<NavLink className="btn btn-success" to={'/addproduct/' + this.props.shop.id}><i className="fa fa-plus"></i> Add product</NavLink>) }
-                <div className="row col-md-12">
-                    <div className="col-md-3">
-                        <form onSubmit={(e) => {
-                            e.preventDefault();
-                            this.search();
-                        }}>
-                            <div className="form-group">
-                                <label>Product name</label>
-                                <input type="text" className="form-control" name="productName"
-                                       onChange={this.handleInputChange}/>
-                            </div>
-                            <div className="form-group">
-                                <button className="btn btn-default" onClick={this.search}>Search</button>
-                            </div>
-                        </form>
-                        <div className="form-group filter">
-                            <input type="checkbox" onClick={this.handleBestDeals}/> Best deals
-                        </div>
-                        <div className="form-group filter">
-                            <label>Price</label>
-                            <Range min={minPrice} ref="priceRange" max={maxPrice} defaultValue={[minPrice, maxPrice]}
-                                   onChange={this.changePrice} onAfterChange={this.priceChange}/>
-                            <div className="row">
-                                <span className="col-md-4">Min €</span><input type="text" name="minPrice"
-                                                                              className="form-control col-md-6"
-                                                                              onChange={this.handlePriceChange}
-                                                                              value={this.state.minPrice}/>
-                            </div>
-                            <div className="row">
-                                <span className="col-md-4">Max €</span><input type="text" name="maxPrice"
-                                                                              className="form-control col-md-6"
-                                                                              onChange={this.handlePriceChange}
-                                                                              value={this.state.maxPrice}/>
-                            </div>
-                        </div>
-                        {filters}
-                    </div>
-                    <div className="col-md-9">
-                        <Alert color="danger" isOpen={this.state.productErrorMessage !== null}
-                               toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
-                        <div className="col-md-12">
-                            <ul className="nav nav-pills">
-                                {productCategories}
-                            </ul>
-                            <div className="col-md-4 offset-md-8">
-                                <label>Filter by</label>
-                                <select className="form-control" onChange={(e) => {
-                                    this.changeOrder(e);
-                                }}>
-                                    <option data-target="update_datetime" data-method="desc">Latest</option>
-                                    <option data-target="price" data-method="asc">Price (asc)</option>
-                                    <option data-target="price" data-method="desc">Price (desc)</option>
-                                </select>
-                            </div>
-                            { this.state.isProductsLoading ? (
-                                <div className="col-md-8"><i className='fa fa-spinner fa-spin'></i></div>) : (
-                                <div>
-                                    {products.length === 0 ? (<span>No products</span>) : products}
+        return (
+            <div>
+                <section className="row white-section shop-section shop-section-padding">
+                    { this.state.isEditable && (
+                        <NavLink className="btn btn-success" to={'/addproduct/' + this.props.shop.id}><i
+                            className="fa fa-plus"></i> Add product</NavLink>) }
+                    <div className="row col-md-12">
+                        <div className="col-md-3">
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                this.search();
+                            }}>
+                                <div className="form-group">
+                                    <label>Product name</label>
+                                    <input type="text" className="form-control" name="productName"
+                                           onChange={this.handleInputChange}/>
                                 </div>
-                            )}
-                            {pagination.length > 0 && (<ul className="pagination">
-                                {pagination}
-                            </ul>)}
+                                <div className="form-group">
+                                    <button className="btn btn-default" onClick={this.search}>Search</button>
+                                </div>
+                            </form>
+                            <div className="form-group filter">
+                                <input type="checkbox" onClick={this.handleBestDeals}/> Best deals
+                            </div>
+                            <div className="form-group filter">
+                                <label>Price</label>
+                                <Range min={minPrice} ref="priceRange" max={maxPrice}
+                                       defaultValue={[minPrice, maxPrice]}
+                                       onChange={this.changePrice} onAfterChange={this.priceChange}/>
+                                <div className="row">
+                                    <span className="col-md-4">Min €</span><input type="text" name="minPrice"
+                                                                                  className="form-control col-md-6"
+                                                                                  onChange={this.handlePriceChange}
+                                                                                  value={this.state.minPrice}/>
+                                </div>
+                                <div className="row">
+                                    <span className="col-md-4">Max €</span><input type="text" name="maxPrice"
+                                                                                  className="form-control col-md-6"
+                                                                                  onChange={this.handlePriceChange}
+                                                                                  value={this.state.maxPrice}/>
+                                </div>
+                            </div>
+                            {filters}
+                        </div>
+                        <div className="col-md-9">
+                            <Alert color="danger" isOpen={this.state.productErrorMessage !== null}
+                                   toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
+                            <div className="col-md-12">
+                                <ul className="nav nav-pills">
+                                    {productCategories}
+                                </ul>
+                                <div className="col-md-4 offset-md-8">
+                                    <label>Filter by</label>
+                                    <select className="form-control" onChange={(e) => {
+                                        this.changeOrder(e);
+                                    }}>
+                                        <option data-target="update_datetime" data-method="desc">Latest</option>
+                                        <option data-target="price" data-method="asc">Price (asc)</option>
+                                        <option data-target="price" data-method="desc">Price (desc)</option>
+                                    </select>
+                                </div>
+                                { this.state.isProductsLoading ? (
+                                    <div className="col-md-8"><i className='fa fa-spinner fa-spin'></i></div>) : (
+                                    <div>
+                                        {products.length === 0 ? (<span>No products</span>) : products}
+                                    </div>
+                                )}
+                                {pagination.length > 0 && (<ul className="pagination">
+                                    {pagination}
+                                </ul>)}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div>);
+                </section>
+            </div>);
     }
 
     // Execute after the render

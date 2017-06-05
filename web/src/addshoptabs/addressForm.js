@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {Address} from '../components';
+import {Button} from "reactstrap";
+import {Address} from "../components";
 
 class AddressForm extends Component {
     constructor(props) {
@@ -8,14 +9,14 @@ class AddressForm extends Component {
         this.next = this.next.bind(this);
         this.setAddressCorrect = this.setAddressCorrect.bind(this);
         this.state = {
-          isAddressCorrect: false
+            isAddressCorrect: false
         };
     }
 
     setAddressCorrect(c) {
-      this.setState({
-        isAddressCorrect: c
-      });
+        this.setState({
+            isAddressCorrect: c
+        });
     }
 
     previous() {
@@ -23,28 +24,37 @@ class AddressForm extends Component {
     }
 
     next() {
-      var json = this.refs.address.getAddress();
-      this.props.onNext(json);
+        var json = this.refs.address.getAddress();
+        this.props.onNext(json);
     }
 
     display() {
-      this.refs.address.display();
+        this.refs.address.display();
     }
 
     render() {
         return (
-            <div>
-                <section className="row section">
-                  <Address ref="address" onLoading={(e) => { this.props.onLoading(e); }}
-                      onWarning={(e) => { this.props.onWarning(e);}} onError={(e) => {this.props.onError(e); }}
-                      addressCorrect={(e) => {this.setAddressCorrect(e); }}/>
+            <div className="container bg-white rounded">
+                <section className="row p-1">
+                    <Address ref="address"
+                             onLoading={(e) => {
+                                 this.props.onLoading(e);
+                             }}
+                             onWarning={(e) => {
+                                 this.props.onWarning(e);
+                             }}
+                             onError={(e) => {
+                                 this.props.onError(e);
+                             }}
+                             addressCorrect={(e) => {
+                                 this.setAddressCorrect(e);
+                             }}/>
                 </section>
-                <section className="col-md-12 sub-section">
-                    <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
-                    <button className={this.props.nextButtonClass ? this.props.nextButtonClass : 'btn btn-primary next'} disabled={!this.state.isAddressCorrect}
-                            onClick={this.next}>
-                            {this.props.nextButtonLabel ? this.props.nextButtonLabel : 'Next'}
-                    </button>
+                <section className="row p-1">
+                    <Button outline color="info" onClick={this.previous}>Previous</Button>
+                    <Button outline color="info"
+                            disabled={!this.state.isAddressCorrect}
+                            onClick={this.next}>{this.props.nextButtonLabel ? this.props.nextButtonLabel : 'Next'}</Button>
                 </section>
             </div>
         );

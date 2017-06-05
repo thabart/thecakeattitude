@@ -88,11 +88,20 @@ class BestDeals extends Component {
 
         return (
             <section className="row section white-section shop-section shop-section-padding">
-                <h5>Best deals</h5>
-                <div className="col-md-12"><Alert color="danger" isOpen={this.state.errorMessage !== null}
-                                                  toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>
+                <h5 className="col-md-12">Best deals</h5>
+                <div className="col-md-12">
+                    <Alert color="danger"
+                           isOpen={this.state.errorMessage !== null}
+                           toggle={this.toggleError}>
+                        {this.state.errorMessage}
+                    </Alert>
+                </div>
                 {this.state.isBestDealsLoading ?
-                    (<div className="col-md-12"><i className='fa fa-spinner fa-spin'></i></div>) :
+                    (
+                        <div className="col-md-12">
+                            <i className='fa fa-spinner fa-spin'/>
+                        </div>
+                    ) :
                     products.length == 0 ? (<span>No deals</span>) :
                         (<div className="col-md-12">
                             <div className="col-md-12">

@@ -1,12 +1,10 @@
 import React, {Component} from "react";
-import {Tooltip} from "reactstrap";
-import {CategoryService, SessionService, OpenIdService, UserService, GoogleMapService} from "../services/index";
+import {Form, FormGroup, Label, Col, Input} from "reactstrap";
+import {GoogleMapService} from "../services/index";
 import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import {MAP} from "react-google-maps/lib/constants";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import Constants from "../../Constants";
-import $ from "jquery";
-import './address.css';
 
 const INPUT_STYLE = {
     boxSizing: `border-box`,
@@ -92,27 +90,27 @@ class Address extends Component {
         var firstPlace = places[0];
         var url = Constants.googleMapUrl + '/geocode/json?key=' + Constants.googleMapKey + '&place_id=' + firstPlace.place_id;
         if (self.props.onLoading) self.props.onLoading(true);
-        GoogleMapService.getPlaceByPlaceId(firstPlace.place_id).then(function(adr) {
-          adr.adr.place_id = firstPlace.place_id;
-          var location = firstPlace.geometry.location;
-          self.setState({
-              center: location,
-              isAddressCorrect: true,
-              currentLocation: location,
-              address: adr.adr,
-              placeId: firstPlace.place_id
-          });
-          if (self.props.onLoading) self.props.onLoading(false);
-          if (!adr.adr.postal_code || !adr.adr.locality || !adr.adr.country || !adr.adr.street_address) {
-              if (self.props.onError) self.props.onError('The address should be complete !');
-              enableNext(false);
-          } else {
-              enableNext(true);
-          }
-        }).catch(function() {
-          if (self.props.onError) self.props.onError('The address details cannot be fetched');
-          if (self.props.onLoading) self.props.onLoading(false);
-          enableNext(false);
+        GoogleMapService.getPlaceByPlaceId(firstPlace.place_id).then(function (adr) {
+            adr.adr.place_id = firstPlace.place_id;
+            var location = firstPlace.geometry.location;
+            self.setState({
+                center: location,
+                isAddressCorrect: true,
+                currentLocation: location,
+                address: adr.adr,
+                placeId: firstPlace.place_id
+            });
+            if (self.props.onLoading) self.props.onLoading(false);
+            if (!adr.adr.postal_code || !adr.adr.locality || !adr.adr.country || !adr.adr.street_address) {
+                if (self.props.onError) self.props.onError('The address should be complete !');
+                enableNext(false);
+            } else {
+                enableNext(true);
+            }
+        }).catch(function () {
+            if (self.props.onError) self.props.onError('The address details cannot be fetched');
+            if (self.props.onLoading) self.props.onLoading(false);
+            enableNext(false);
         });
     }
 
@@ -125,76 +123,104 @@ class Address extends Component {
     }
 
     getAddress() {
-      var json = {
-        street_address: this.state.address.street_address,
-        postal_code: this.state.address.postal_code,
-        locality: this.state.address.locality,
-        country: this.state.address.country,
-        location: this.state.currentLocation,
-        google_place_id: this.state.placeId
-      };
-      return json;
+        var json = {
+            street_address: this.state.address.street_address,
+            postal_code: this.state.address.postal_code,
+            locality: this.state.address.locality,
+            country: this.state.address.country,
+            location: this.state.currentLocation,
+            google_place_id: this.state.placeId
+        };
+        return json;
     }
 
     render() {
-        var self = this;
         if (this.state.isContactInfoHidden) {
             return (<section className="col-md-12 section">Loading ...</section>)
         }
 
-        var opts = {};
-        if (!this.state.isEnabled) {
-            opts['readOnly'] = 'readOnly';
-        }
+        /*
+         var opts = {};
+         if (!this.state.isEnabled) {
+         opts['readOnly'] = 'readOnly';
+         }
+         */
 
-        var isInvalid = this.state.isEmailInvalid || this.state.isMobilePhoneInvalid || this.state.isHomePhoneInvalid;
-        var optsActions = {};
-        if (isInvalid) {
-            optsActions['disabled'] = 'disabled';
-        }
+        /*
+         var isInvalid = this.state.isEmailInvalid || this.state.isMobilePhoneInvalid || this.state.isHomePhoneInvalid;
+         var optsActions = {};
+         if (isInvalid) {
+         optsActions['disabled'] = 'disabled';
+         }
+         */
 
         return (
-          <section className="row col-md-12">
-            <div className="col-md-6">
-              <div className='form-group col-md-12'><label className='control-label'>Street
-                address</label><input type='text'
-                  className={this.state.address.street_address !== "" ? 'form-control' : 'form-control invalid'}
-                  name='street_address' value={this.state.address.street_address}
-                  readOnly/></div>
-              <div className='form-group col-md-12'><label className='control-label'>Postal code</label><input
-                  type='text'
-                  className={this.state.address.postal_code !== "" ? 'form-control' : 'form-control invalid'}
-                  name='postal_code' value={this.state.address.postal_code} readOnly/></div>
-              <div className='form-group col-md-12'><label className='control-label'>Locality</label><input
-                  type='text'
-                  className={this.state.address.locality !== "" ? 'form-control' : 'form-control invalid'}
-                  name='locality' value={this.state.address.locality} readOnly/></div>
-              <div className='form-group col-md-12'><label className='control-label'>Country</label><input
-                  type='text'
-                  className={this.state.address.country !== "" ? 'form-control' : 'form-control invalid'}
-                  name='country' value={this.state.address.country} readOnly/></div>
-                  <input type="hidden" name="place_id" value={this.state.address.place_id}/>
-              </div>
-            <div className="col-md-6">
-              <GettingStartedGoogleMap
-                    ref={(i) => this.googleMap = i }
-                    zoom={this.state.zoom}
-                    center={this.state.center}
-                    centerContent={this.state.centerContent}
-                    currentLocation={this.state.currentLocation}
-                    onMapLoad={this.onMapLoad}
-                    onSearchBoxCreated={this.onSearchBoxCreated}
-                    onPlacesChanged={this.onPlacesChanged}
-                    bounds={this.state.bounds}
-                    containerElement={
-                      <div style={{height: `100%`}}/>
-                    }
-                    mapElement={
-                      <div style={{height: `100%`}}/>
-                    }>
-              </GettingStartedGoogleMap>
+            <div className="row col-md-12">
+                <div className="col-md-6">
+                    <Form>
+                        <FormGroup>
+                            <Label sm={12}>Street address</Label>
+                            <Col sm={12}>
+                                <Input type="text"
+                                       className={this.state.address.street_address !== "" ? 'form-control' : 'form-control invalid'}
+                                       name="street_address"
+                                       value={this.state.address.street_address}
+                                       readOnly/>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label sm={12}>Postal code</Label>
+                            <Col sm={12}>
+                                <Input type="text"
+                                       className={this.state.address.postal_code !== "" ? 'form-control' : 'form-control invalid'}
+                                       name="postal_code"
+                                       value={this.state.address.postal_code}
+                                       readOnly/>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label sm={12}>Locality</Label>
+                            <Col sm={12}>
+                                <Input type="text"
+                                       className={this.state.address.locality !== "" ? 'form-control' : 'form-control invalid'}
+                                       name="locality"
+                                       value={this.state.address.locality}
+                                       readOnly/>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup>
+                            <Label sm={12}>Country</Label>
+                            <Col sm={12}>
+                                <Input type="text"
+                                       className={this.state.address.country !== "" ? 'form-control' : 'form-control invalid'}
+                                       name="country"
+                                       value={this.state.address.country}
+                                       readOnly/>
+                            </Col>
+                        </FormGroup>
+                        <input type="hidden" name="place_id" value={this.state.address.place_id}/>
+                    </Form>
+                </div>
+                <div className="col-md-6">
+                    <GettingStartedGoogleMap
+                        ref={(i) => this.googleMap = i }
+                        zoom={this.state.zoom}
+                        center={this.state.center}
+                        centerContent={this.state.centerContent}
+                        currentLocation={this.state.currentLocation}
+                        onMapLoad={this.onMapLoad}
+                        onSearchBoxCreated={this.onSearchBoxCreated}
+                        onPlacesChanged={this.onPlacesChanged}
+                        bounds={this.state.bounds}
+                        containerElement={
+                            <div style={{height: `100%`}}/>
+                        }
+                        mapElement={
+                            <div style={{height: `100%`}}/>
+                        }>
+                    </GettingStartedGoogleMap>
+                </div>
             </div>
-          </section>
         );
     }
 
@@ -216,21 +242,21 @@ class Address extends Component {
                     lat: position.coords.latitude,
                     lng: position.coords.longitude
                 };
-                GoogleMapService.getPlaceByLocation(position.coords).then(function(adr) {
-                  self.setState({
-                      center: location,
-                      currentLocation: location,
-                      address: adr.adr,
-                      isAddressCorrect: true,
-                      placeId: adr.place_id
-                  });
-                  if (self.props.addressCorrect) self.props.addressCorrect(true);
-                  if (self.props.onLoading) self.props.onLoading(false);
-                }).catch(function() {
-                  if (self.props.onWarning) self.props.onWarning('Current address cannot be retrieved');
-                  if (self.props.onLoading) self.props.onLoading(false);
-                  if (self.props.addressCorrect) self.props.addressCorrect(false);
-                  setDefaultLocation();
+                GoogleMapService.getPlaceByLocation(position.coords).then(function (adr) {
+                    self.setState({
+                        center: location,
+                        currentLocation: location,
+                        address: adr.adr,
+                        isAddressCorrect: true,
+                        placeId: adr.place_id
+                    });
+                    if (self.props.addressCorrect) self.props.addressCorrect(true);
+                    if (self.props.onLoading) self.props.onLoading(false);
+                }).catch(function () {
+                    if (self.props.onWarning) self.props.onWarning('Current address cannot be retrieved');
+                    if (self.props.onLoading) self.props.onLoading(false);
+                    if (self.props.addressCorrect) self.props.addressCorrect(false);
+                    setDefaultLocation();
                 });
             });
         } else {

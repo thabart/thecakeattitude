@@ -1,10 +1,8 @@
 import React, {Component} from "react";
-import {Tooltip} from "reactstrap";
-import {CategoryService, TagService, ShopsService, OpenIdService, SessionService} from "../services/index";
-import {CategorySelector, TagsSelector} from '../components';
-import TagsInput from "react-tagsinput";
+import {Form, FormGroup, Label, Col, Row, Input, Button, FormFeedback, UncontrolledTooltip} from "reactstrap";
+import {CategoryService, ShopsService, OpenIdService, SessionService} from "../services/index";
+import {CategorySelector, TagsSelector} from "../components";
 import Game from "../game/game";
-import "./descriptionForm.css";
 import "react-tagsinput/react-tagsinput.css";
 import $ from "jquery";
 
@@ -209,46 +207,40 @@ class DescriptionForm extends Component {
         });
     }
 
-    buildErrorTooltip(validName, description) {
+    buildError(validName, description) {
         var result;
         if (this.state.valid[validName]) {
-            result = (<span><i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
-      <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => {
-          this.toggleTooltip(validName);
-      }}>
-        {description}
-      </Tooltip></span>);
+            result = (
+                <span>
+                    {description}
+                </span>);
         }
 
         return result;
     }
 
-    displayLoading() {
-        var ul = $(this.popup).find('ul');
-        $(ul).empty();
-        $(ul).append('<li>Loading ...</li>');
-        $(this.popup).show();
-    }
-
     render() {
-        var bannerImagePreview,
-            pictureImagePreview,
-            nameError = this.buildErrorTooltip('isNameInvalid', 'Should contains 1 to 15 characters'),
-            descriptionError = this.buildErrorTooltip('isDescriptionInvalid', 'Should contains 1 to 255 characters'),
-            placeError = this.buildErrorTooltip('isPlaceInvalid', 'A place should be selected'),
-            categories = [],
-            subCategories = [],
-            maps = [],
-            self = this;
-        if (this.state.bannerImage) {
-            bannerImagePreview = (
-                <div className='image-container'><img src={this.state.bannerImage} width='50' height='50'/></div>);
-        }
 
-        if (this.state.pictureImage) {
-            pictureImagePreview = (
-                <div className='image-container'><img src={this.state.pictureImage} width='100' height='100'/></div>);
-        }
+        const txtToolTipName = 'Name displayed in the shop s profile';
+        const txtToolTipDescription = 'Description displayed in the shop s profile';
+        const txtToolTipTags = 'Add some tags to enrich the description of your shop';
+        const txtToolTipBanner = 'Banner image displayed on your profile';
+        const txtToolTipPicture = 'Profile s picture';
+        const txtToolTipGame = 'Placement in the game';
+        const bannerImagePreview = this.state.bannerImage && (
+                <div><img className='img-thumbnail' src={this.state.bannerImage} width='50' height='50'/></div>);
+        const pictureImagePreview = this.state.pictureImage && (
+                <div><img className='img-thumbnail' src={this.state.pictureImage} width='100' height='100'/></div>);
+        const nameError = this.buildError('isNameInvalid', 'Should contains 1 to 15 characters');
+        const descriptionError = this.buildError('isDescriptionInvalid', 'Should contains 1 to 255 characters');
+        const placeError = this.buildError('isPlaceInvalid', 'A place should be selected');
+        const feedbackName = nameError ? "warning" : undefined;
+        const feedbackDescription = descriptionError ? "warning" : undefined;
+        const feedbackPlace = placeError ? "warning" : undefined;
+        let categories = [];
+        let subCategories = [];
+        let maps = [];
+        const self = this;
 
         if (this.state.categories) {
             this.state.categories.forEach(function (category) {
@@ -269,99 +261,132 @@ class DescriptionForm extends Component {
                                   data-mapname={map.map_name}>{map.map_name}</option>);
             });
         }
-        return (
-            <div>
-                <section className="row section">
-                    <div className="col-md-6">
-                        <div className='form-group col-md-12'>
-                            <label className='control-label'>Name</label> <i className="fa fa-exclamation-circle"
-                                                                             id="nameToolTip"></i>
-                            <Tooltip placement="right" target="nameToolTip" isOpen={this.state.tooltip.toggleName}
-                                     toggle={() => {
-                                         this.toggleTooltip('toggleName');
-                                     }}>
-                                Name displayed in the shop s profile
-                            </Tooltip>
-                            {nameError}
-                            <input type='text' className='form-control' name='name' onChange={this.handleInputChange}/>
-                        </div>
-                        <div className='form-group col-md-12'>
-                            <label className='control-label'>Description</label> <i className="fa fa-exclamation-circle"
-                                                                                    id="descriptionToolTip"></i>
-                            <Tooltip placement="right" target="descriptionToolTip"
-                                     isOpen={this.state.tooltip.toggleDescription} toggle={() => {
-                                this.toggleTooltip('toggleDescription');
-                            }}>
-                                Description displayed in the shop s profile
-                            </Tooltip>
-                            {descriptionError}
-                            <textarea className='form-control' name='description'
-                                      onChange={this.handleInputChange}></textarea>
-                        </div>
-                        <div className="form-group col-md-12">
-                            <p><i className="fa fa-exclamation-triangle"></i> Add some tags to enrich the description of your shop</p>
-                            <TagsSelector ref="shopTags" />
-                        </div>
-                        <div className='row'>
-                          <CategorySelector onSubCategory={(e) => {
-                            if (e === null) {
-                              self.setState({
-                                  maps: [],
-                                  subCategoryIdSelected: null,
-                                  place: null,
-                                  mapNameSelected: null
-                              });
-                              self.refs.game.reset();
-                              return;
-                            }
 
-                            self.displayMaps(e);
-                          }} />
-                        </div>
-                        <div className='form-group col-md-12'>
-                            <label className='control-label'>Banner image</label> <i
-                            className="fa fa-exclamation-circle" id="bannerImageTooltip"></i>
-                            <Tooltip placement="right" target="bannerImageTooltip"
-                                     isOpen={this.state.tooltip.toggleBannerImage} toggle={() => {
-                                this.toggleTooltip('toggleBannerImage');
-                            }}>
-                                Banner image displayed on your profile
-                            </Tooltip>
-                            <div><input type='file' accept='image/*' onChange={(e) => this.uploadBannerImage(e)}/></div>
-                            {bannerImagePreview}
-                        </div>
-                        <div className='form-group col-md-12'>
-                            <label className='control-label'>Profile picture</label> <i
-                            className="fa fa-exclamation-circle" id="profileImageTooltip"></i>
-                            <Tooltip placement="right" target="profileImageTooltip"
-                                     isOpen={this.state.tooltip.toggleProfileImage} toggle={() => {
-                                this.toggleTooltip('toggleProfileImage');
-                            }}>
-                                Profile s picture
-                            </Tooltip>
-                            <div><input type='file' accept='image/*' onChange={(e) => this.uploadPictureImage(e)}/>
-                            </div>
-                            {pictureImagePreview}
-                        </div>
+        return (
+            <div className="container bg-white rounded">
+                <section className="row p-1">
+                    <div className="col-md-6">
+                        <Form>
+                            <FormGroup color={feedbackName}>
+                                <Label sm={12}>Name <i className="fa fa-info-circle text-info"
+                                                       id="toolTipName"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipName">
+                                    {txtToolTipName}
+                                </UncontrolledTooltip>
+                                <Col sm={12}>
+                                    <Input state={feedbackName}
+                                           type="text"
+                                           name="name"
+                                           onChange={this.handleInputChange}/>
+                                    <FormFeedback>{nameError}</FormFeedback>
+                                </Col>
+                            </FormGroup>
+                            <CategorySelector onSubCategory={(e) => {
+                                if (e === null) {
+                                    self.setState({
+                                        maps: [],
+                                        subCategoryIdSelected: null,
+                                        place: null,
+                                        mapNameSelected: null
+                                    });
+                                    self.refs.game.reset();
+                                    return;
+                                }
+
+                                self.displayMaps(e);
+                            }}/>
+                            <FormGroup>
+                                <Label sm={12}>Tags <i className="fa fa-info-circle text-info"
+                                                       id="toolTipTags"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipTags">
+                                    {txtToolTipTags}
+                                </UncontrolledTooltip>
+                                <Col sm={12}>
+                                    <TagsSelector ref="shopTags"/>
+                                </Col>
+                            </FormGroup>
+                            <FormGroup color={feedbackDescription}>
+                                <Label sm={12}>Description <i
+                                    className="fa fa-info-circle text-info"
+                                    id="toolTipDescription"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipDescription">
+                                    {txtToolTipDescription}
+                                </UncontrolledTooltip>
+                                <Col sm={12}>
+                                    <Input state={feedbackDescription}
+                                           type="textarea"
+                                           name="description"
+                                           onChange={this.handleInputChange}/>
+                                    <FormFeedback>{descriptionError}</FormFeedback>
+                                </Col>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label sm={12}>Banner image <i className="fa fa-info-circle text-info"
+                                                               id="toolTipBanner"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipBanner">
+                                    {txtToolTipBanner}
+                                </UncontrolledTooltip>
+                                <Row>
+                                    <Col sm={8}>
+                                        <Input type="file"
+                                               accept="image/*"
+                                               onChange={(e) => this.uploadBannerImage(e)}/>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <FormFeedback>{bannerImagePreview}</FormFeedback>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                            <FormGroup>
+                                <Label sm={12}>Profile picture <i
+                                    className="fa fa-info-circle text-info"
+                                    id="toolTipPicture"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipPicture">
+                                    {txtToolTipPicture}
+                                </UncontrolledTooltip>
+                                <Row>
+                                    <Col sm={8}>
+                                        <Input type="file"
+                                               accept="image/*"
+                                               onChange={(e) => this.uploadPictureImage(e)}/>
+                                    </Col>
+                                    <Col sm={4}>
+                                        <FormFeedback>{pictureImagePreview}</FormFeedback>
+                                    </Col>
+                                </Row>
+                            </FormGroup>
+                        </Form>
                     </div>
-                    <div className="col-md-6 choose-map-shop-container">
-                        <label className="control-label">Choose a place</label> <i className="fa fa-exclamation-circle"
-                                                                                   id="choosePlaceToolTip"></i>
-                        <Tooltip placement="right" target="choosePlaceToolTip"
-                                 isOpen={this.state.tooltip.toggleChoosePlace} toggle={() => {
-                            this.toggleTooltip('toggleChoosePlace');
-                        }}>
-                            Placement in the game
-                        </Tooltip>
-                        {placeError}
-                        <select className="form-control col-md-5" onChange={this.selectMap}>{maps}</select>
-                        <Game ref="game" onHouseSelected={this.onHouseSelected} onLoadMap={(mapName) => {
-                            this.changeMap(mapName);
-                        }}/>
+                    <div className="col-md-6">
+                        <Form>
+                            <FormGroup color={feedbackPlace}>
+                                <Label sm={12}>Choose a place <i
+                                    className="fa fa-info-circle text-info"
+                                    id="toolTipGame"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipGame">
+                                    {txtToolTipGame}
+                                </UncontrolledTooltip>
+                                <Col sm={12}>
+                                    <Input state={feedbackPlace}
+                                           type="select"
+                                           onChange={this.selectMap}>
+                                        {maps}
+                                    </Input>
+                                    <FormFeedback>{placeError}</FormFeedback>
+                                </Col>
+                            </FormGroup>
+                            <Game
+                                ref="game"
+                                onHouseSelected={this.onHouseSelected}
+                                onLoadMap={(mapName) => {
+                                    this.changeMap(mapName);
+                                }}/>
+                        </Form>
+
                     </div>
                 </section>
-                <section className="col-md-12 sub-section">
-                    <button className="btn btn-primary next" onClick={this.validate}>Next</button>
+                <section className="row p-1">
+                    <Button outline color="info" onClick={this.validate}>Next</Button>
                 </section>
             </div>
         );

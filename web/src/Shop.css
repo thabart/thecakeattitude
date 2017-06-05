@@ -62,19 +62,19 @@
 }
 
 .cover .profile-img .edit-icon {
-  position: absolute;
-  top: 5px;
-  right: 5px;
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }
 
 .cover .upload-image {
-  display: none;
+    display: none;
 }
 
 .cover .menu,
 .cover .menu-shop-options {
-  position: absolute;
-  top: 10px;
+    position: absolute;
+    top: 10px;
 }
 
 .cover .menu {
@@ -82,7 +82,7 @@
 }
 
 .cover .menu-shop-options {
-  right: 10px;
+    right: 10px;
 }
 
 #rating .react-rater a {

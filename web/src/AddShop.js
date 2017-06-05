@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {TabContent, TabPane, Alert} from "reactstrap";
+import Stepper from "react-stepper-horizontal";
+import {TabContent, TabPane, Alert, Button} from "reactstrap";
 import {withRouter} from "react-router";
 import {DescriptionForm, ContactInfoForm, PaymentForm, AddressForm} from "./addshoptabs";
 import {ShopsService} from "./services/index";
@@ -22,7 +23,18 @@ class AddShop extends Component {
             errorMessage: null,
             warningMessage: null,
             isAddressCorrect: false,
-            isLoading: false
+            isLoading: false,
+            steps: [{
+                title: 'Description'
+            }, {
+                title: 'Address'
+            }, {
+                title: 'Contact'
+            }, {
+                title: 'Products'
+            }, {
+                title: 'Payment'
+            }]
         };
     }
 
@@ -95,7 +107,7 @@ class AddShop extends Component {
             if (json && json.error_description) {
                 self.displayError(json.error_description);
             } else {
-                self.displayError('an error occured while trying to add the shop');
+                self.displayError('an error occurred while trying to add the shop');
             }
         });
     }
@@ -103,20 +115,22 @@ class AddShop extends Component {
     render() {
         return (
             <div className="container">
-                <ul className="progressbar">
-                    <li className={(parseInt(this.state.activeTab) >= 1) ? 'active' : ''}>Description</li>
-                    <li className={(parseInt(this.state.activeTab) >= 2) ? 'active' : ''}>Address</li>
-                    <li className={(parseInt(this.state.activeTab) >= 3) ? 'active' : ''}>Contact</li>
-                    <li className={(parseInt(this.state.activeTab) >= 4) ? 'active' : ''}>Products</li>
-                    <li className={(parseInt(this.state.activeTab) >= 5) ? 'active' : ''}>Payment</li>
-                </ul>
-                <Alert color="danger" isOpen={this.state.errorMessage !== null}
-                       toggle={this.toggleError}>{this.state.errorMessage}</Alert>
-                <Alert color="warning" isOpen={this.state.warningMessage !== null}
-                       toggle={this.toggleWarning}>{this.state.warningMessage}</Alert>
-                <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
-                    <div className={this.state.isLoading ? 'loading' : 'loading hidden'}><i
-                        className='fa fa-spinner fa-spin'></i></div>
+                <div className="mt-1 mb-1 p-1 bg-white rounded">
+                    <Stepper steps={this.state.steps} activeStep={this.state.activeTab}/>
+                </div>
+
+                <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>
+                    {this.state.errorMessage}
+                </Alert>
+
+                <Alert color="warning" isOpen={this.state.warningMessage !== null} toggle={this.toggleWarning}>
+                    {this.state.warningMessage}
+                </Alert>
+
+                <TabContent activeTab={this.state.activeTab}>
+                    <div className={this.state.isLoading ? 'loading' : 'loading hidden'}>
+                        <i className='fa fa-spinner fa-spin'/>
+                    </div>
                     <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
                         <DescriptionForm onNext={(json) => {
                             this.toggle('2', json);
@@ -149,21 +163,23 @@ class AddShop extends Component {
                         }}/>
                     </TabPane>
                     <TabPane tabId='4' className={this.state.isLoading ? 'hidden' : ''}>
-                        <section className="col-md-12 section">
-                            <button type='button' className='btn btn-success'><span
-                                className='fa fa-plus glyphicon-align-left'></span> Add product
-                            </button>
-                        </section>
-                        <section className="col-md-12 sub-section">
-                            <button className="btn btn-primary previous" onClick={() => {
-                                this.toggle('3');
-                            }}>Previous
-                            </button>
-                            <button className="btn btn-primary next" onClick={() => {
-                                this.toggle('5');
-                            }}>Next
-                            </button>
-                        </section>
+                        <div className="container bg-white rounded">
+                            <section className="row p-1">
+                                <div className="col-md-12">
+                                    <Button outline color="info">
+                                        <span className='fa fa-plus glyphicon-align-left'></span> Add product
+                                    </Button>
+                                </div>
+                            </section>
+                            <section className="row p-1">
+                                <Button outline color="info" onClick={() => {
+                                    this.toggle('3');
+                                }}>Previous</Button>
+                                <Button outline color="info" onClick={() => {
+                                    this.toggle('5');
+                                }}>Next</Button>
+                            </section>
+                        </div>
                     </TabPane>
                     <TabPane tabId='5' className={this.state.isLoading ? 'hidden' : ''}>
                         <PaymentForm onError={(msg) => {
@@ -175,6 +191,7 @@ class AddShop extends Component {
                         }}/>
                     </TabPane>
                 </TabContent>
+
             </div>
         );
     }

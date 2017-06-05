@@ -1,5 +1,6 @@
 import React, {Component} from "react";
-import {PaymentMethodsSelector} from '../components';
+import {Button} from "reactstrap";
+import {PaymentMethodsSelector} from "../components";
 
 class PaymentForm extends Component {
     constructor(props) {
@@ -9,10 +10,10 @@ class PaymentForm extends Component {
     }
 
     confirm() {
-      var result = this.refs.selector.validate();
-      if (result && result !== null) {
-        if (this.props.onConfirm) this.props.onConfirm({payments: result});
-      }
+        var result = this.refs.selector.validate();
+        if (result && result !== null) {
+            if (this.props.onConfirm) this.props.onConfirm({payments: result});
+        }
     }
 
     previous() {
@@ -21,15 +22,20 @@ class PaymentForm extends Component {
 
     render() {
         return (
-            <div>
-                <section className="col-md-12 section">
-                    <p><i className="fa fa-exclamation-circle"></i> Choose one or more payment method(s)</p>
-                    <PaymentMethodsSelector ref="selector" onError={this.props.onError}/>
-                </section>
-                <section className="col-md-12 sub-section">
-                    <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
-                    <button className="btn btn-success confirm" onClick={this.confirm}>Confirm</button>
-                </section>
+            <div className="container bg-white rounded">
+                <div className="col-md-12">
+                    <section className="row p-1">
+                        <p>
+                            <i className="fa fa-exclamation-circle text-info"/>{' '}
+                            Choose one or more payment method(s)
+                        </p>
+                        <PaymentMethodsSelector ref="selector" onError={this.props.onError}/>
+                    </section>
+                    <section className="row p-1">
+                        <Button outline color="info" onClick={this.previous}>Previous</Button>
+                        <Button outline color="info" onClick={this.confirm}>Confirm</Button>
+                    </section>
+                </div>
             </div>
         )
     }
