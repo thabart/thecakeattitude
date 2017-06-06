@@ -154,7 +154,7 @@ body {
   margin-top: 10px;
 }
 
-.game-menu ul li, .game-tchat {
+.game-menu ul li {
   border: solid 1px #7c9c60;
 }
 
@@ -175,15 +175,22 @@ body {
 }
 
 .game-tchat {
-  bottom: 10px;
+  top: 350px;
   left: 10px;
-  background-color: rgba(128, 128, 128, 0.45);
-  border-radius: 5px;
-  position: relative;
+  position: absolute !important;
   min-height: 250px;
   height: 250px;
   min-width: 300px;
   width: 300px;
+}
+
+.game-tchat .content {
+  background-color: rgba(128, 128, 128, 0.45);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: solid 1px #7c9c60;
+  border-right: solid 1px #7c9c60;
+  border-bottom: solid 1px #7c9c60;
 }
 
 .game-tchat .header {
@@ -203,10 +210,13 @@ body {
   font-weight: bold;
 }
 
-.game-tchat .header .close {
+.game-tchat .header .options {
   position: absolute;
   right: 0;
   top: 0;
+}
+
+.game-tchat .header .options .option {
   width: 24px;
   height: 24px;
   line-height: 24px;
@@ -215,10 +225,19 @@ body {
   background-color: white;
   border: 1px solid black;
   border-radius: 50%;
+  padding: 0;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.game-tchat .header .options .option:hover {
+  opacity: 1;
 }
 
 .game-tchat .body {
   padding: 5px;
+  overflow-y: auto;
+  height: 75%;
 }
 
 .game-tchat ul {
@@ -231,4 +250,23 @@ body {
 
 .game-tchat .body .my-message {
   color: #12c512;
+}
+
+.action-btn {
+  border-radius: 5px;
+  border: none;
+  font-family: 'QuicksandLight' sans-serif;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: white;
+  background-color: #129cc5;
+  border: 1px solid #167794;
+  box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -moz-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -webkit-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+}
+
+.input {
+  border-radius: 5px;
 }

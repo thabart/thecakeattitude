@@ -105,32 +105,58 @@ Game.prototype = {
 			var modalTchat = $("<div class='game-tchat'>" +
 				"<div class='header'>" +
 					"<i class='fa fa-comments'></i><span class='title'>Tchat</span>" +
-					"<button class='close'><i class='fa fa-times'></i></button>"+
+					"<div class='options'>"+
+						"<button class='option minify'><i class='fa fa-minus'></i></button>"+
+						"<button class='option close'><i class='fa fa-times'></i></button>"+
+					"</div>"+
 				"</div>"+
-				"<div class='body'>" +
-					"<ul>"+
-						"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-						"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-						"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-						"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-						"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-						"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-					"</ul>" +
-				"</div>" +
-				"<div class='footer'>"+
-					"<form>" +
-						"<input type='text' />" +
-						"<button>Send</button>" +
-					"</form>"+
+				"<div class='content'>" +
+					"<div class='body'>" +
+						"<ul>"+
+							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+						"</ul>" +
+					"</div>" +
+					"<div class='footer'>"+
+						"<form>" +
+							"<input type='text' class='input' />" +
+							"<button class='action-btn'>Send</button>" +
+						"</form>"+
+					"</div>"+
 				"</div>"+
 			"</div>");
 			$(game).append(result);
 			$(game).append(modalTchat);
-
-			$(modalTchat).css('top', "-250px");
 			$(modalTchat).draggable({ handle: '.header' });
+			$(modalTchat).resizable({
+				containment: '#game'
+			});
+			$(modalTchat).find('.minify').click(function() {
+				$(modalTchat).find('.content').slideToggle();
+				var icon = $(this).find('.fa');
+				if ($(icon).hasClass('fa-minus')) {
+					$(icon).removeClass('fa-minus');
+					$(icon).addClass('fa-plus');
+				} else {
+					$(icon).removeClass('fa-plus');
+					$(icon).addClass('fa-minus');
+				}
+			});
+			$(modalTchat).find('.close').click(function() {
+				$(modalTchat).toggle();
+			});
 			$(result).find('#tchat-option').click(function(e) {
-
+				$(modalTchat).toggle();
 			});
 			return result;
 		};
