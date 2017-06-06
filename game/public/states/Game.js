@@ -135,8 +135,21 @@ Game.prototype = {
 					"</div>"+
 				"</div>"+
 			"</div>");
+			var settingsModal = $("<div class='modal'>"+
+				"<div class='modal-content'>"+
+					"<div class='modal-window'>"+
+						"<div class='header'>"+
+							"<span class='title'>Settings</span>"+
+						"</div>"+
+						"<div class='content'>"+
+							"<ul><li>coucou</li></ul>"+
+						"</div>"+
+					"</div>"+
+				"</div>"+
+			"</div>")
 			$(game).append(result);
 			$(game).append(modalTchat);
+			$(game).append(settingsModal);
 			$(modalTchat).draggable({ handle: '.header' });
 			$(modalTchat).resizable({
 				containment: '#game'
