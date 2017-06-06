@@ -5,9 +5,14 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
 	var overviewSize = Configuration.getOverviewSize();
 	var overviewPlayerCoordinate = Calculator.getOverviewPlayerCoordinate({x: x, y: y}, tileMap, overviewSize, overviewCoordinate);
-	this.overviewSprite = game.add.graphics(0, 0); // Add overview sprite.
-	this.overviewSprite.beginFill(0xFF0000, 1);
-	this.overviewSprite.drawCircle(overviewCoordinate.x, overviewCoordinate.y, 2);
+	this.overviewSprite = game.add.graphics(overviewPlayerCoordinate.x, overviewPlayerCoordinate.y); // Add overview sprite.
+	if (currentUser) {
+		this.overviewSprite.beginFill(0xFF0000, 1);
+	} else {
+		this.overviewSprite.beginFill(0x0000FF, 1);
+	}
+
+	this.overviewSprite.drawCircle(0, 0, 2);
 	this.direction = [];
 	this.message = null;
 	this.evtMessage = null;
@@ -45,7 +50,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.updateOverviewPosition = function(x, y) {
 		var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
 		var overviewSize = Configuration.getOverviewSize();
-		var overviewPlayerCoordinate = Calculator.getOverviewPlayerRelativeCoordinate({x: x, y: y}, tileMap, overviewSize);
+		var overviewPlayerCoordinate = Calculator.getOverviewPlayerCoordinate({x: x, y: y}, tileMap, overviewSize, overviewCoordinate);
 		this.overviewSprite.x = overviewPlayerCoordinate.x;
 		this.overviewSprite.y = overviewPlayerCoordinate.y;
 	};

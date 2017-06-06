@@ -168,12 +168,16 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   background-color: #ffbc00;
 }
 
+.menu-options .light-blue {
+  background-color: #00b8ff;
+}
+
 .menu-options .blue {
   background-color: #129cc5;
 }
 
 .game-tchat {
-  top: 345px;
+  top: 330px;
   left: 10px;
   position: absolute !important;
   min-height: 250px;
@@ -305,6 +309,10 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   -moz-box-shadow : 3px 3px 5px rgba(136, 136, 136, 0.82);
   -webkit-box-shadow : 3px 3px 5px rgba(136, 136, 136, 0.82);
   -o-box-shadow : 3px 3px 5px rgba(136, 136, 136, 0.82);
+}
+
+.modal-lg .modal-window {
+  width: 650px;
 }
 
 .modal-window-circle .header {

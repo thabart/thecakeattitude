@@ -97,6 +97,7 @@ Game.prototype = {
 		var buildMenuOptions = function() {
 			var result = $("<div class='game-menu'>"+
 				"<ul class='menu-options'>"+
+					"<li class='light-blue menu-option' id='map-option'><i class='fa fa-map'></i></li>"+
 					"<li class='default menu-option' id='tchat-option'><i class='fa fa-comments'></i></li>"+
 					"<li class='blue menu-option' id='pause-option'><i class='fa fa-pause'></i></li>"+
 					"<li class='green menu-option' id='settings-option'><i class='fa fa-cog'></i></li>"+
@@ -165,10 +166,26 @@ Game.prototype = {
 					"</div>"+
 				"</div>"+
 			"</div>");
+			var mapModal = $("<div class='modal modal-lg' id='map-modal' style='display:none;'>"+
+				"<div class='modal-content'>"+
+					"<div class='modal-window'>"+
+						"<div class='header'>"+
+							"<span class='title'>Map</span>"+
+							"<div class='options'>"+
+								"<button class='option close'><i class='fa fa-times'></i></button>"+
+							"</div>"+
+						"</div>"+
+						"<div class='container'>"+
+							"<img src='"+Constants.apiUrl + '/maps/map_overview.png'+"' />"+
+						"</div>"+
+					"</div>"+
+				"</div>"+
+			"</div>")
 			$(game).append(result);
 			$(game).append(modalTchat);
 			$(game).append(settingsModal);
 			$(game).append(pauseModal);
+			$(game).append(mapModal);
 			$(modalTchat).draggable({ handle: '.header' });
 			$(modalTchat).resizable({
 				containment: '#game'
@@ -193,6 +210,9 @@ Game.prototype = {
 			$(pauseModal).find('.close').click(function() {
 				$(pauseModal).toggle();
 			});
+			$(mapModal).find('.close').click(function() {
+				$(mapModal).toggle();
+			});
 			$(result).find('#tchat-option').click(function() {
 				$(modalTchat).toggle();
 			});
@@ -201,6 +221,9 @@ Game.prototype = {
 			});
 			$(result).find('#pause-option').click(function() {
 				$(pauseModal).toggle();
+			});
+			$(result).find('#map-option').click(function() {
+				$(mapModal).toggle();
 			});
 			return result;
 		};
