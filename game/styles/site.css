@@ -1,0 +1,196 @@
+@font-face {
+  font-family: 'QuicksandLight';
+  src: url('fonts/Quicksand-Light.otf') format('opentype'),
+    url('fonts/Quicksand-Light.ttf') format('truetype'),
+    url('fonts/Quicksand-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'QuicksandLight';
+  font-weight: bold;
+  src: url('fonts/Quicksand-Bold.otf') format('opentype'),
+    url('fonts/Quicksand-Bold.ttf') format('truetype'),
+    url('fonts/Quicksand-Bold.woff') format('woff');
+}
+
+body {
+  font-family: 'QuicksandLight', sans-serif;
+}
+
+#game-container {
+  width:980px;
+  margin: 0 auto;
+}
+
+#game {
+  position: relative;
+}
+
+#errors li{
+  list-style-type: none;
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  max-width: 300px;
+}
+
+#errors {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+#errors .success {
+  background-color: green !important;
+  color: white !important;
+}
+
+#errors .error {
+  background-color: red !important;
+  color: white !important;
+}
+
+.login {
+  position: absolute;
+  top: 20;
+  right: 20;
+  background-color: white;
+  border-radius: 5px;
+  border: 1px solid gray;
+  padding: 10px;
+}
+
+.tab .content{
+  border-bottom: 1px solid #f1f0f0;
+  padding-bottom: 10px;
+  min-height: 440px;
+}
+
+.tab .navigation {
+  padding-top: 10px;
+}
+
+.progressbar {
+  counter-reset: step;
+}
+
+.progressbar li {
+  text-align: center;
+  list-style-type: none;
+  text-transform: uppercase;
+  float: left;
+  width: 16.5%;
+}
+
+.progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 30px;
+  line-height: 30px;
+  display: block;
+  color: white;
+  background: rgba(148, 135, 135, 0.9);
+  border-radius: 50%;
+  margin: 0 auto 5px auto;
+  z-index: 1;
+}
+
+.progressbar li:after {
+  content: '';
+  height: 2px;
+  right: 50%;
+  background: rgba(148, 135, 135, 0.9);
+  display: block;
+  position: relative;
+  top: -45px;
+  width: 100%;
+  z-index: 0;
+}
+
+.progressbar li:first-child:after {
+  content: none;
+}
+
+.progressbar li.active:before,
+.progressbar li.active:after {
+  background: #27AE60;
+}
+
+.game-menu, .game-tchat {
+  position: absolute;
+}
+
+.game-menu {
+  bottom: 10px;
+  right: 10px;
+}
+
+.game-menu ul, .game-tchat .body ul  {
+  list-style-type: none;
+}
+
+.game-menu ul li {
+  border-radius: 50%;
+  font-size: 16pt;
+  color: white;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  line-height: 60px;
+  box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -moz-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -webkit-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.game-menu ul li, .game-tchat {
+  border: solid 1px #7c9c60;
+}
+
+.game-menu ul li:hover {
+  border-color: gray;
+}
+
+.game-menu ul li.green {
+  background-color: #12c512;
+}
+
+.game-menu ul li.default {
+  background-color: #ffbc00;
+}
+
+.game-menu ul li.blue {
+  background-color: #129cc5;
+}
+
+.game-tchat {
+  bottom: 10px;
+  left: 10px;
+  background-color: rgba(128, 128, 128, 0.45);
+  border-radius: 5px;
+}
+
+.game-tchat .header {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: rgb(232, 228, 228);
+}
+
+.game-tchat .body {
+  padding: 5px;
+}
+
+.game-tchat ul {
+  padding: 0;
+}
+
+.game-tchat .body .external-message {
+  color: #ffbc00;
+}
+
+.game-tchat .body .my-message {
+  color: #12c512;
+}

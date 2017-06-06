@@ -95,11 +95,39 @@ Game.prototype = {
 	init: function(options) {
 		this.options = options;
 		var buildMenuOptions = function() {
-			var result = $("<div style='position: absolute; top: 0%; right: 0%;'>"+
-				"<ul><li>coucou</li></ul>"+
+			var result = $("<div class='game-menu'>"+
+				"<ul>"+
+					"<li class='default' id='tchat-option'><i class='fa fa-comments default'></i></li>"+
+					"<li class='blue'><i class='fa fa-pause' id='pause-option'></i></li>"+
+					"<li class='green'><i class='fa fa-cog' id='settings-option'></i></li>"+
+				"</ul>"+
 				"</div>");
+			var modalTchat = $("<div class='game-tchat'>" +
+				"<div class='header bold'>" +
+					"Tchat" +
+				"</div>"+
+				"<div class='body'>" +
+					"<ul>"+
+						"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+						"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+						"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+						"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+						"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
+						"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
+					"</ul>" +
+				"</div>" +
+				"<div class='footer'>"+
+					"<form>" +
+						"<input type='text' />" +
+						"<button>Send</button>" +
+					"</form>"+
+				"</div>"+
+			"</div>");
 			$(game).append(result);
-			// $(self.game).append(result);
+			$(game).append(modalTchat);
+			$(result).find('#tchat-option').click(function(e) {
+
+			});
 			return result;
 		};
 		// Add menu options to the right of the screen.
