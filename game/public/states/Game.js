@@ -96,10 +96,10 @@ Game.prototype = {
 		this.options = options;
 		var buildMenuOptions = function() {
 			var result = $("<div class='game-menu'>"+
-				"<ul>"+
-					"<li class='default' id='tchat-option'><i class='fa fa-comments default'></i></li>"+
-					"<li class='blue' id='pause-option'><i class='fa fa-pause'></i></li>"+
-					"<li class='green' id='settings-option'><i class='fa fa-cog'></i></li>"+
+				"<ul class='menu-options'>"+
+					"<li class='default menu-option' id='tchat-option'><i class='fa fa-comments'></i></li>"+
+					"<li class='blue menu-option' id='pause-option'><i class='fa fa-pause'></i></li>"+
+					"<li class='green menu-option' id='settings-option'><i class='fa fa-cog'></i></li>"+
 				"</ul>"+
 				"</div>");
 			var modalTchat = $("<div class='game-tchat'>" +
@@ -145,14 +145,30 @@ Game.prototype = {
 							"</div>"+
 						"</div>"+
 						"<div class='content'>"+
-							"<ul><li>coucou</li></ul>"+
+							"<ul class='list'><li>Enable music</li></ul>"+
 						"</div>"+
 					"</div>"+
 				"</div>"+
-			"</div>")
+			"</div>");
+			var pauseModal = $("<div class='modal' id='pause-modal' style='display: none;'>"+
+				"<div class='modal-content'>"+
+					"<div class='modal-window modal-window-circle'>"+
+						"<div class='header'>"+
+							"<span class='title'>Pause</span>"+
+							"<div class='options'>"+
+								"<button class='option close'><i class='fa fa-times'></i></button>"+
+							"</div>"+
+						"</div>"+
+						"<ul class='content menu-options'>"+
+							"<li class='default menu-option'><i class='fa fa-sign-out'></i></li>"+
+						"</div>"+
+					"</div>"+
+				"</div>"+
+			"</div>");
 			$(game).append(result);
 			$(game).append(modalTchat);
 			$(game).append(settingsModal);
+			$(game).append(pauseModal);
 			$(modalTchat).draggable({ handle: '.header' });
 			$(modalTchat).resizable({
 				containment: '#game'
@@ -174,11 +190,17 @@ Game.prototype = {
 			$(settingsModal).find('.close').click(function() {
 				$(settingsModal).toggle();
 			});
+			$(pauseModal).find('.close').click(function() {
+				$(pauseModal).toggle();
+			});
 			$(result).find('#tchat-option').click(function() {
 				$(modalTchat).toggle();
 			});
 			$(result).find('#settings-option').click(function() {
 				$(settingsModal).toggle();
+			});
+			$(result).find('#pause-option').click(function() {
+				$(pauseModal).toggle();
 			});
 			return result;
 		};

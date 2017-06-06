@@ -1,7 +1,13 @@
-var Player = function(id, x, y, game, currentUser, pseudo) {
+var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	var hitPadding = 30;
 	this.id = id;
-	this.sprite = game.add.sprite(x, y, 'player');;
+	this.sprite = game.add.sprite(x, y, 'player');
+	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
+	var overviewSize = Configuration.getOverviewSize();
+	var overviewPlayerCoordinate = Calculator.getOverviewPlayerCoordinate({x: x, y: y}, tileMap, overviewSize, overviewCoordinate);
+	this.overviewSprite = game.add.graphics(0, 0); // Add overview sprite.
+	this.overviewSprite.beginFill(0xFF0000, 1);
+	this.overviewSprite.drawCircle(overviewCoordinate.x, overviewCoordinate.y, 2);
 	this.direction = [];
 	this.message = null;
 	this.evtMessage = null;
@@ -36,10 +42,19 @@ var Player = function(id, x, y, game, currentUser, pseudo) {
 		return result;
 	}
 
+	this.updateOverviewPosition = function(x, y) {
+		var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
+		var overviewSize = Configuration.getOverviewSize();
+		var overviewPlayerCoordinate = Calculator.getOverviewPlayerRelativeCoordinate({x: x, y: y}, tileMap, overviewSize);
+		this.overviewSprite.x = overviewPlayerCoordinate.x;
+		this.overviewSprite.y = overviewPlayerCoordinate.y;
+	};
+
 	// Remove the player.
 	this.remove = function() {
 		this.sprite.destroy();
 		this.hitZone.destroy();
+		this.overviewSprite.destroy();
 		this.pseudo.destroy();
 		interactionSprite.destroy();
 		if (this.message != null)
@@ -60,6 +75,7 @@ var Player = function(id, x, y, game, currentUser, pseudo) {
 		if (this.sprite) this.sprite.visible = isVisible;
 		if (this.hitZone) this.hitZone.visible = isVisible;
 		if (this.pseudo) this.pseudo.visible = isVisible;
+		if (this.overviewSprite) this.overviewSprite.visible = isVisible;
 	};
 	// Update direction.
 	// Returns : true if the direction changes.
@@ -73,6 +89,7 @@ var Player = function(id, x, y, game, currentUser, pseudo) {
 	};
 	// Update the properties.
 	this.update = function(x, y, direction) {
+		this.updateOverviewPosition(x, y);
 		this.sprite.x = x;
 		this.sprite.y = y;
 		this.direction = direction;
@@ -96,16 +113,25 @@ var Player = function(id, x, y, game, currentUser, pseudo) {
 	this.updatePosition = function() {
 		this.sprite.body.velocity.x = 0;
 		this.sprite.body.velocity.y = 0;
+		var isPositionUpdated = false;
 		if (this.direction.indexOf(0) != -1) {
 			this.sprite.body.velocity.y = -300;
+			isPositionUpdated = true;
 		} else if (this.direction.indexOf(2) != -1) {
 			this.sprite.body.velocity.y = 300;
+			isPositionUpdated = true;
 		}
 
 		if (this.direction.indexOf(1) != -1) {
 			this.sprite.body.velocity.x = 300;
+			isPositionUpdated = true;
 		} else if (this.direction.indexOf(3) != -1) {
 			this.sprite.body.velocity.x = -300;
+			isPositionUpdated = true;
+		}
+
+		if (isPositionUpdated) {
+			this.updateOverviewPosition(this.sprite.x, this.sprite.y);
 		}
 	};
 	// Reset the direction.

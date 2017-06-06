@@ -25,6 +25,7 @@
     "react-rater": "^0.4.1",
     "react-router": "latest",
     "react-router-dom": "^4.1.1",
+    "react-stepper-horizontal": "^1.0.7",
     "react-tagsinput": "^3.16.1",
     "reactstrap": "^4.5.0",
     "request": "^2.81.0",

@@ -3,6 +3,7 @@ var Map = function(key, tileMap, game, category) {
 	var houseObj = null;
 	this.npcs = [];
 	this.npcObjs = null;
+	this.overview = null;
 	this.warps = null;
 	this.playersGroup = null;
 	this.key = key;
@@ -21,7 +22,8 @@ var Map = function(key, tileMap, game, category) {
 		walls: null
 	},
 	this.groups = {
-		players: null
+		players: null,
+		overviewPlayers: null
 	};
 
 	this.init = function() {
@@ -53,9 +55,14 @@ var Map = function(key, tileMap, game, category) {
 		this.layers.houses2 = this.tileMap.createLayer('Houses2');
 		this.layers.decorations = this.tileMap.createLayer('Decorations');
 		this.layers.walls = this.tileMap.createLayer('Walls');
-		var overview = game.add.sprite(game.width - 200, 10, 'overview');
-		overview.width = 190;
-		overview.fixedToCamera = true;
+		var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
+		var overviewSize = Configuration.getOverviewSize();
+		this.overview = game.add.sprite(overviewCoordinate.x, overviewCoordinate.y, 'overview');
+		this.overview.width = overviewSize.w;
+		this.overview.height = overviewSize.h;
+		this.overview.fixedToCamera = true;
+		this.groups.overviewPlayers = game.add.group();
+		this.groups.overviewPlayers.fixedToCamera = true;
 		this.tileMap.createLayer('Wraps');
 
 		/*
@@ -135,7 +142,6 @@ var Map = function(key, tileMap, game, category) {
 		*/
 
 		// Specify which tile can collide.
-		this.tileMap.setCollision(3, true, 'Collision');
 		var result = $.Deferred();
 		$.when.apply(null, deferredLoaded).done(function() {
 			result.resolve();
@@ -147,9 +153,10 @@ var Map = function(key, tileMap, game, category) {
 	this.addPlayer = function(playerX, playerY, pseudo) {
 		this.layers.ground.resizeWorld();
     game.world.setBounds(0, 0, game.world.width, game.world.height);
-		this.player = new Player(null, playerX, playerY, game, true, pseudo); // Set current player.
+		this.player = new Player(null, playerX, playerY, game, true, pseudo, this.tileMap); // Set current player.
 		this.player.sprite.body.collideWorldBounds = true;
 		this.groups.players.add(this.player.sprite);
+		this.groups.overviewPlayers.add(this.player.overviewSprite);
 		game.camera.focusOnXY(playerX, playerY);
 		game.camera.follow(this.player.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 	};

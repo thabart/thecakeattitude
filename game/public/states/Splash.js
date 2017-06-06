@@ -73,6 +73,8 @@ Splash.prototype = {
 		this.game.load.script('Helpers', 'public/game/Helpers.js');
 		this.game.load.script('ShopInteraction', 'public/game/ShopInteraction.js');
 		this.game.load.script('CategoryClient', 'public/game/CategoryClient.js');
+		this.game.load.script('Calculator', 'public/utils/calculator.js');
+		this.game.load.script('Configuration', 'public/utils/configuration.js');
 		this.game.add.existing(this.loadingBar);
 	},
 	create: function() {
