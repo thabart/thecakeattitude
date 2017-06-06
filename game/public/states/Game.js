@@ -103,8 +103,9 @@ Game.prototype = {
 				"</ul>"+
 				"</div>");
 			var modalTchat = $("<div class='game-tchat'>" +
-				"<div class='header bold'>" +
-					"Tchat" +
+				"<div class='header'>" +
+					"<i class='fa fa-comments'></i><span class='title'>Tchat</span>" +
+					"<button class='close'><i class='fa fa-times'></i></button>"+
 				"</div>"+
 				"<div class='body'>" +
 					"<ul>"+
@@ -125,6 +126,9 @@ Game.prototype = {
 			"</div>");
 			$(game).append(result);
 			$(game).append(modalTchat);
+
+			$(modalTchat).css('top', "-250px");
+			$(modalTchat).draggable({ handle: '.header' });
 			$(result).find('#tchat-option').click(function(e) {
 
 			});

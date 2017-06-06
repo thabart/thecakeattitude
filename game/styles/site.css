@@ -22,8 +22,16 @@ body {
   margin: 0 auto;
 }
 
+#game, .game-tchat {
+  max-width: 980px;
+}
+
 #game {
   position: relative;
+  overflow: hidden;
+  width: 980px;
+  height: 600px;
+  min-height: 600px;
 }
 
 #errors li{
@@ -117,7 +125,7 @@ body {
   background: #27AE60;
 }
 
-.game-menu, .game-tchat {
+.game-menu {
   position: absolute;
 }
 
@@ -171,12 +179,42 @@ body {
   left: 10px;
   background-color: rgba(128, 128, 128, 0.45);
   border-radius: 5px;
+  position: relative;
+  min-height: 250px;
+  height: 250px;
+  min-width: 300px;
+  width: 300px;
 }
 
 .game-tchat .header {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   background-color: rgb(232, 228, 228);
+  cursor: move;
+}
+
+.game-tchat .header h5 {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.game-tchat .header .title {
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.game-tchat .header .close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12pt;
+  text-align: center;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 50%;
 }
 
 .game-tchat .body {
