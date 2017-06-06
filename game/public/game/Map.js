@@ -2,8 +2,8 @@
 var Map = function(key, tileMap, game, category) {
 	var houseObj = null;
 	this.npcs = [];
-	this.npcObjs = null;
 	this.overview = null;
+	this.npcObjs = null;
 	this.warps = null;
 	this.playersGroup = null;
 	this.key = key;
@@ -142,6 +142,7 @@ var Map = function(key, tileMap, game, category) {
 		*/
 
 		// Specify which tile can collide.
+		this.tileMap.setCollision(3, true, 'Collision');
 		var result = $.Deferred();
 		$.when.apply(null, deferredLoaded).done(function() {
 			result.resolve();
