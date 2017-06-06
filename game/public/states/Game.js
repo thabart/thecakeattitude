@@ -98,8 +98,8 @@ Game.prototype = {
 			var result = $("<div class='game-menu'>"+
 				"<ul>"+
 					"<li class='default' id='tchat-option'><i class='fa fa-comments default'></i></li>"+
-					"<li class='blue'><i class='fa fa-pause' id='pause-option'></i></li>"+
-					"<li class='green'><i class='fa fa-cog' id='settings-option'></i></li>"+
+					"<li class='blue' id='pause-option'><i class='fa fa-pause'></i></li>"+
+					"<li class='green' id='settings-option'><i class='fa fa-cog'></i></li>"+
 				"</ul>"+
 				"</div>");
 			var modalTchat = $("<div class='game-tchat'>" +
@@ -135,11 +135,14 @@ Game.prototype = {
 					"</div>"+
 				"</div>"+
 			"</div>");
-			var settingsModal = $("<div class='modal'>"+
+			var settingsModal = $("<div class='modal' style='display:none;'>"+
 				"<div class='modal-content'>"+
 					"<div class='modal-window'>"+
 						"<div class='header'>"+
 							"<span class='title'>Settings</span>"+
+							"<div class='options'>"+
+								"<button class='option close'><i class='fa fa-times'></i></button>"+
+							"</div>"+
 						"</div>"+
 						"<div class='content'>"+
 							"<ul><li>coucou</li></ul>"+
@@ -168,8 +171,14 @@ Game.prototype = {
 			$(modalTchat).find('.close').click(function() {
 				$(modalTchat).toggle();
 			});
-			$(result).find('#tchat-option').click(function(e) {
+			$(settingsModal).find('.close').click(function() {
+				$(settingsModal).toggle();
+			});
+			$(result).find('#tchat-option').click(function() {
 				$(modalTchat).toggle();
+			});
+			$(result).find('#settings-option').click(function() {
+				$(settingsModal).toggle();
 			});
 			return result;
 		};
