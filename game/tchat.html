@@ -6,6 +6,12 @@
 		<!-- Jquery -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
+		<script src="/libs/jquery.i18n.js"></script>
+		<script src="/libs/jquery.i18n.messagestore.js"></script>
+		<script src="/libs/jquery.i18n.fallbacks.js"></script>
+		<script src="/libs/jquery.i18n.parser.js"></script>
+		<script src="/libs/jquery.i18n.emitter.js"></script>
+		<script src="/libs/jquery.i18n.language.js"></script>
 		<!-- Bootstrap -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.js"></script>
@@ -31,7 +37,6 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-		// Display error.
 		(function() {
 			var errorModal = {
 				display: function(msg, time, state) {
@@ -45,10 +50,8 @@
 			};
 			window.errorModal = errorModal;
 		})();
-		// Display autocompletebox.
 
 		$(document).ready(function() {
-			// Speech bubble
 			var canvas = function(opts) {
 				this.game = null;
 				function preload() {
@@ -56,7 +59,6 @@
 				};
 
 				function create() {
-					// ADD STATE : https://github.com/MattMcFarland/phaser-menu-system
 					this.game.state.add('Splash', Splash);
 					var s = this.game.state.start('Splash', true, true);
 				}
@@ -67,9 +69,13 @@
 					this.game = new Phaser.Game(980, 600, Phaser.CANVAS, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
 				};
 			};
-
-			var c = new canvas();
-			c.init();
+			var i18n = $.i18n();
+			i18n.locale = 'en';
+			i18n.load('/public/i18n/'+ i18n.locale +'.json', i18n.locale).done(function() {
+				var c = new canvas();
+				c.init();
+			});
+			$.i18n.debug = true;
 		});
 	</script>
 </html>

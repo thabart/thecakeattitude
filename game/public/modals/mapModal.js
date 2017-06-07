@@ -1,12 +1,13 @@
 var MapModal = function() {};
-MapModal.prototype = {
+MapModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function() {
     var self = this;
-    self.modal = $("<div class='modal modal-lg' id='map-modal' style='display:none;'>"+
+    var title = $.i18n('mapModalTitle');
+    self.create("<div class='modal modal-lg' id='map-modal' style='display:none;'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+
-            "<span class='title'>Map</span>"+
+            "<span class='title'>"+title+"</span>"+
             "<div class='options'>"+
               "<button class='option close'><i class='fa fa-times'></i></button>"+
             "</div>"+
@@ -16,16 +17,9 @@ MapModal.prototype = {
         "</div>"+
       "</div>"+
     "</div>");
-    $(Constants.gameSelector).append(self.modal);
 		GameStateStore.onCurrentMapChanged(function(e, obj) {
       var img = obj.map.game.cache.getImage(obj.map.overviewKey);
       $(self.modal).find('.container').html(img);
 		});
-    $(self.modal).find('.close').click(function() {
-      $(self.modal).toggle();
-    });
-  },
-  toggle() {
-    $(this.modal).toggle();
   }
-};
+});

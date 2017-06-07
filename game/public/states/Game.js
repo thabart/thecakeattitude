@@ -98,9 +98,13 @@ Game.prototype = {
 		self.modals = {};
 		self.modals.tchat = new TchatModal();
 		self.modals.map = new MapModal();
+		self.modals.pause = new PauseModal();
+		self.modals.settings = new SettingsModal();
 		self.store = GameStateStore;
 		self.modals.tchat.init();
 		self.modals.map.init();
+		self.modals.pause.init();
+		self.modals.settings.init();
 		$(self.modals.tchat).on('message', function(e, data) {
 			self.map.player.displayMessage(data.content);
 		});
@@ -113,60 +117,21 @@ Game.prototype = {
 					"<li class='green menu-option' id='settings-option'><i class='fa fa-cog'></i></li>"+
 				"</ul>"+
 				"</div>");
-			var settingsModal = $("<div class='modal' style='display:none;'>"+
-				"<div class='modal-content'>"+
-					"<div class='modal-window'>"+
-						"<div class='header'>"+
-							"<span class='title'>Settings</span>"+
-							"<div class='options'>"+
-								"<button class='option close'><i class='fa fa-times'></i></button>"+
-							"</div>"+
-						"</div>"+
-						"<div class='content'>"+
-							"<ul class='list'><li>Enable music</li></ul>"+
-						"</div>"+
-					"</div>"+
-				"</div>"+
-			"</div>");
-			var pauseModal = $("<div class='modal' id='pause-modal' style='display: none;'>"+
-				"<div class='modal-content'>"+
-					"<div class='modal-window modal-window-circle'>"+
-						"<div class='header'>"+
-							"<span class='title'>Pause</span>"+
-							"<div class='options'>"+
-								"<button class='option close'><i class='fa fa-times'></i></button>"+
-							"</div>"+
-						"</div>"+
-						"<ul class='content menu-options'>"+
-							"<li class='default menu-option'><i class='fa fa-sign-out'></i></li>"+
-						"</div>"+
-					"</div>"+
-				"</div>"+
-			"</div>");
 			$(game).append(result);
-			$(game).append(settingsModal);
-			$(game).append(pauseModal);
-			$(settingsModal).find('.close').click(function() {
-				$(settingsModal).toggle();
-			});
-			$(pauseModal).find('.close').click(function() {
-				$(pauseModal).toggle();
-			});
 			$(result).find('#tchat-option').click(function() {
 				self.modals.tchat.toggle();
 			});
 			$(result).find('#settings-option').click(function() {
-				$(settingsModal).toggle();
+				self.modals.settings.toggle();
 			});
 			$(result).find('#pause-option').click(function() {
-				$(pauseModal).toggle();
+				self.modals.pause.toggle();
 			});
 			$(result).find('#map-option').click(function() {
 				self.modals.map.toggle();
 			});
 			return result;
 		};
-		// Add menu options to the right of the screen.
 		buildMenuOptions();
 	},
 	create: function() {

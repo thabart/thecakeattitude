@@ -24,8 +24,11 @@ Splash.prototype = {
 		this.game.load.script('Calculator', 'public/utils/calculator.js');
 		this.game.load.script('Configuration', 'public/utils/configuration.js');
 		// Load modal windows.
+		this.game.load.script('BaseModal', 'public/modals/baseModal.js');
 		this.game.load.script('TchatModal', 'public/modals/tchatModal.js');
 		this.game.load.script('MapModal', 'public/modals/mapModal.js');
+		this.game.load.script('SettingsModal', 'public/modals/settingsModal.js');
+		this.game.load.script('PauseModal', 'public/modals/pauseModal.js');
 		// Load the stores
 		this.game.load.script('GameStateStore', 'public/stores/gameStateStore.js');
 		this.game.add.existing(this.loadingBar);

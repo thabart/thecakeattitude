@@ -5,6 +5,7 @@ var app = express();
 
 app.use('/public', express.static(__dirname + '/public'));
 app.use('/styles', express.static(__dirname + '/styles'));
+app.use('/libs', express.static(__dirname + '/libs'));
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname+'/tchat.html'));
 });
