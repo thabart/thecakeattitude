@@ -7,5 +7,6 @@ var Constants = {
 	userClaims : 'http://localhost:5001/users/claims',
 	userPublicClaims : 'http://localhost:5001/users/{id}/public',
 	googleMapUrl: 'http://maps.googleapis.com/maps/api',
-	apiUrl: 'http://localhost:5000'
+	apiUrl: 'http://localhost:5000',
+	gameSelector: '#game'
 };

@@ -17,6 +17,7 @@ body {
   font-family: 'QuicksandLight', sans-serif;
 }
 
+/* Game */
 #game-container {
   width:980px;
   margin: 0 auto;
@@ -34,6 +35,7 @@ body {
   min-height: 600px;
 }
 
+/* Errors */
 #errors li{
   list-style-type: none;
   background-color: white;
@@ -59,6 +61,7 @@ body {
   color: white !important;
 }
 
+/* Login state */
 .login {
   position: absolute;
   top: 20;
@@ -79,6 +82,7 @@ body {
   padding-top: 10px;
 }
 
+/* Progress bar */
 .progressbar {
   counter-reset: step;
 }
@@ -125,6 +129,7 @@ body {
   background: #27AE60;
 }
 
+/* Display game menu + tchat */
 .game-menu {
   position: absolute;
   bottom: 10px;
@@ -280,6 +285,8 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   border-radius: 5px;
 }
 
+/* Modal window */
+
 .modal {
   background-color: rgba(14, 14, 14, 0.33);
   z-index: 1000;
@@ -361,6 +368,8 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   border-bottom: 1px solid #ebebeb;
 }
 
+/* Pause modal window */
+
 #pause-modal .menu-options {
   text-align: center;
 }
@@ -369,6 +378,32 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   display: inline-block;
   margin-right: 5px;
 }
+
 #pause-modal .menu-options li i {
   padding-top: 17px;
+}
+
+/* Bubble tchat */
+.tchat-bubble {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.87);
+  border-radius: 2px;
+  min-width: 60px;
+  max-width: 400px;
+  word-wrap: break-word;
+}
+
+.tchat-bubble:after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  border-width: 10px 10px 0;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.87) transparent;
+  display: block;
+  width: 0;
 }

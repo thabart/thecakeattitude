@@ -1,5 +1,6 @@
 var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
-	var hitPadding = 30;
+	var hitPadding = 30,
+		messageTimeoutMs = 5000; // Hide the message after 5 seconds.
 	this.id = id;
 	this.sprite = game.add.sprite(x, y, 'player');
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
@@ -14,8 +15,6 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 
 	this.overviewSprite.drawCircle(0, 0, 2);
 	this.direction = [];
-	this.message = null;
-	this.evtMessage = null;
 	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2));
 	this.hitZone.lineStyle(2, 0x0000FF, 1);
 	this.hitZone.drawRect(0, 0, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
@@ -23,6 +22,9 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	interactionSprite.fixedToCamera = true;
 	interactionSprite.visible = false;
 	this.sprite.addChild(this.hitZone);
+	this.tchatBubble = $("<p class='tchat-bubble' style='display:none;'></p>");
+	this.messageTimeout = null;
+	$(Constants.gameSelector).append(this.tchatBubble);
 
 	// TODO : MAX : Characters in pseudo = 10
 	var pseudoStyle = { font: '15px', wordWrap: true, wordWrapWidth: 60, align: 'center' };
@@ -47,6 +49,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		return result;
 	}
 
+	// Display the player position in the overview map.
 	this.updateOverviewPosition = function(x, y) {
 		var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
 		var overviewSize = Configuration.getOverviewSize();
@@ -54,7 +57,17 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		this.overviewSprite.x = overviewPlayerCoordinate.x;
 		this.overviewSprite.y = overviewPlayerCoordinate.y;
 	};
+	// Update the message position.
+	this.updateMessagePosition = function() {
+		if (!$(this.tchatBubble).is(':visible')) {
+			return;
+		}
 
+		var relativeX = this.sprite.x - game.camera.x - this.sprite.width / 2 - $(this.tchatBubble).outerWidth() / 2;
+		var relativeY = this.sprite.y - game.camera.y - this.sprite.height - $(this.tchatBubble).outerHeight();
+		$(this.tchatBubble).css('top', relativeY + 'px');
+		$(this.tchatBubble).css('left', relativeX + 'px');
+	};
 	// Remove the player.
 	this.remove = function() {
 		this.sprite.destroy();
@@ -67,15 +80,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 			this.message.destroy();
 		}
 	};
-	// Update message position.
-	this.updateMessagePosition = function() {
-		if (this.message == null) {
-			return;
-		}
-
-		this.message.x = Math.floor(this.sprite.x + (this.sprite.width / 2));
-		this.message.y = Math.floor(this.sprite.y);
-	};
+	// Hide or display the player
 	this.display = function(isVisible) {
 		if (this.sprite) this.sprite.visible = isVisible;
 		if (this.hitZone) this.hitZone.visible = isVisible;
@@ -95,14 +100,21 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	// Update the properties.
 	this.update = function(x, y, direction) {
 		this.updateOverviewPosition(x, y);
+		this.updateMessagePosition();
 		this.sprite.x = x;
 		this.sprite.y = y;
 		this.direction = direction;
 	};
 	// Display message
-	this.displayMessage = function(message, evtMessage) {
-		this.message = message;
-		this.evtMessage = evtMessage;
+	this.displayMessage = function(message) {
+		var self = this;
+		clearTimeout(this.messageTimeout);
+		this.tchatBubble.html(message);
+		this.updateMessagePosition();
+		$(this.tchatBubble).show();
+		this.messageTimeout = setTimeout(function() {
+			$(self.tchatBubble).hide();
+		}, messageTimeoutMs);
 	};
 	// Destroy the message.
 	this.destroyMessage = function() {
@@ -120,24 +132,30 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		this.sprite.body.velocity.y = 0;
 		var isPositionUpdated = false;
 		if (this.direction.indexOf(0) != -1) {
-			this.sprite.body.velocity.y = -300;
+			// this.sprite.body.velocity.y = -300;
+			this.sprite.body.velocity.y -= 300;
 			isPositionUpdated = true;
 		} else if (this.direction.indexOf(2) != -1) {
-			this.sprite.body.velocity.y = 300;
+			// this.sprite.body.velocity.y = 300;
+			this.sprite.body.velocity.y += 300;
 			isPositionUpdated = true;
 		}
 
 		if (this.direction.indexOf(1) != -1) {
-			this.sprite.body.velocity.x = 300;
+			// this.sprite.body.velocity.x = 300;
+			this.sprite.body.velocity.x += 300;
 			isPositionUpdated = true;
 		} else if (this.direction.indexOf(3) != -1) {
-			this.sprite.body.velocity.x = -300;
+			// this.sprite.body.velocity.x = -300;
+			this.sprite.body.velocity.x -= 300;
 			isPositionUpdated = true;
 		}
 
 		if (isPositionUpdated) {
 			this.updateOverviewPosition(this.sprite.x, this.sprite.y);
 		}
+
+		this.updateMessagePosition();
 	};
 	// Reset the direction.
 	this.resetDirection = function() {

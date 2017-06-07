@@ -93,7 +93,10 @@ var Game = function () {
 };
 Game.prototype = {
 	init: function(options) {
+		var self = this;
 		this.options = options;
+		this.modalTchat = new TchatModal();
+		this.modalTchat.init();
 		var buildMenuOptions = function() {
 			var result = $("<div class='game-menu'>"+
 				"<ul class='menu-options'>"+
@@ -103,39 +106,6 @@ Game.prototype = {
 					"<li class='green menu-option' id='settings-option'><i class='fa fa-cog'></i></li>"+
 				"</ul>"+
 				"</div>");
-			var modalTchat = $("<div class='game-tchat'>" +
-				"<div class='header'>" +
-					"<i class='fa fa-comments'></i><span class='title'>Tchat</span>" +
-					"<div class='options'>"+
-						"<button class='option minify'><i class='fa fa-minus'></i></button>"+
-						"<button class='option close'><i class='fa fa-times'></i></button>"+
-					"</div>"+
-				"</div>"+
-				"<div class='content'>" +
-					"<div class='body'>" +
-						"<ul>"+
-							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='external-message'><b>Name</b> hello my name is mili</li>"+
-							"<li class='my-message'><b>Name</b> hello my name is mili</li>"+
-						"</ul>" +
-					"</div>" +
-					"<div class='footer'>"+
-						"<form>" +
-							"<input type='text' class='input' />" +
-							"<button class='action-btn'>Send</button>" +
-						"</form>"+
-					"</div>"+
-				"</div>"+
-			"</div>");
 			var settingsModal = $("<div class='modal' style='display:none;'>"+
 				"<div class='modal-content'>"+
 					"<div class='modal-window'>"+
@@ -182,28 +152,9 @@ Game.prototype = {
 				"</div>"+
 			"</div>")
 			$(game).append(result);
-			$(game).append(modalTchat);
 			$(game).append(settingsModal);
 			$(game).append(pauseModal);
 			$(game).append(mapModal);
-			$(modalTchat).draggable({ handle: '.header' });
-			$(modalTchat).resizable({
-				containment: '#game'
-			});
-			$(modalTchat).find('.minify').click(function() {
-				$(modalTchat).find('.content').slideToggle();
-				var icon = $(this).find('.fa');
-				if ($(icon).hasClass('fa-minus')) {
-					$(icon).removeClass('fa-minus');
-					$(icon).addClass('fa-plus');
-				} else {
-					$(icon).removeClass('fa-plus');
-					$(icon).addClass('fa-minus');
-				}
-			});
-			$(modalTchat).find('.close').click(function() {
-				$(modalTchat).toggle();
-			});
 			$(settingsModal).find('.close').click(function() {
 				$(settingsModal).toggle();
 			});
@@ -214,7 +165,7 @@ Game.prototype = {
 				$(mapModal).toggle();
 			});
 			$(result).find('#tchat-option').click(function() {
-				$(modalTchat).toggle();
+				self.modalTchat.toggle();
 			});
 			$(result).find('#settings-option').click(function() {
 				$(settingsModal).toggle();

@@ -75,6 +75,8 @@ Splash.prototype = {
 		this.game.load.script('CategoryClient', 'public/game/CategoryClient.js');
 		this.game.load.script('Calculator', 'public/utils/calculator.js');
 		this.game.load.script('Configuration', 'public/utils/configuration.js');
+		// Load modal window
+		this.game.load.script('TchatModal', 'public/modals/tchatModal.js');
 		this.game.add.existing(this.loadingBar);
 	},
 	create: function() {
