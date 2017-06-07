@@ -94,9 +94,12 @@ var Game = function () {
 Game.prototype = {
 	init: function(options) {
 		var self = this;
-		this.options = options;
-		this.modalTchat = new TchatModal();
-		this.modalTchat.init();
+		self.options = options;
+		self.modalTchat = new TchatModal();
+		self.modalTchat.init();
+		$(this.modalTchat).on('message', function(e, data) {
+			self.map.player.displayMessage(data.content);
+		});
 		var buildMenuOptions = function() {
 			var result = $("<div class='game-menu'>"+
 				"<ul class='menu-options'>"+
@@ -183,7 +186,7 @@ Game.prototype = {
 	},
 	create: function() {
 		var self = this;
-		this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
+		// this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
 		// Start the Arcade physics systems.
 		this.game.physics.startSystem(Phaser.Physics.ARCADE);
 		// Change background color.
@@ -221,7 +224,7 @@ Game.prototype = {
 		});
 
 		// Listen keyboard events
-		spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		// spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		worldScale = 1
 		previousScale = 1;
 		this.game.input.mouse.mouseWheelCallback = function(evt) {
@@ -240,6 +243,7 @@ Game.prototype = {
 		this.game.onBlur.add(function(e) {
 			self.isFocusLost = true;
 		});
+		/*
 		spaceBar.onDown.add(function() {
 			if (currentNpc == null) {
 				return;
@@ -247,6 +251,7 @@ Game.prototype = {
 
 			currentNpc.interact();
 		}, this);
+		*/
 	},
 	update: function() {
 		var self = this;

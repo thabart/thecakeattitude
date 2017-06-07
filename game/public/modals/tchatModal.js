@@ -41,19 +41,19 @@ TchatModal.prototype = {
         $(icon).addClass('fa-minus');
       }
     });
-    $(self.modal).find('.input').keypress(function() {
-      console.log('coucou');
-    });
     $(self.modal).find('.sendMessageForm').submit(function(e) {
       e.preventDefault();
-      var text = $(self.modal).find('.message').val();
-      $(self).trigger('message', text);
-      self.messages.push({
+      var input = $(self.modal).find('.input');
+      var text = input.val();
+      var record = {
         pseudo: 'Name',
         content: text,
         type: 'me'
-      });
+      };
+      $(self).trigger('message', [ record ]);
+      self.messages.push(record);
       self.refresh();
+      input.val('');
     });
   },
   toggle() {
@@ -68,5 +68,7 @@ TchatModal.prototype = {
       var li = "<li class='"+cl+"'><b>"+message.pseudo+"</b> "+message.content+"</li>";
       $(ul).append(li);
     });
+    var height = $(ul).height();
+    $(self.modal).find('.body').animate({ scrollTop: height}, 50);
   }
 };

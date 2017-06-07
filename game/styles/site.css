@@ -266,10 +266,13 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   color: #12c512;
 }
 
-.action-btn {
+.action-btn, .input {
+  padding: 8px;
   border-radius: 5px;
+}
+
+.action-btn {
   border: none;
-  font-family: 'QuicksandLight' sans-serif;
   text-transform: uppercase;
   font-weight: bold;
   color: white;
@@ -279,10 +282,6 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   -moz-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
   -webkit-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
   -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
-}
-
-.input {
-  border-radius: 5px;
 }
 
 /* Modal window */
