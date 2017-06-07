@@ -45,8 +45,8 @@
                  "properties":
                     {
                      "entry_dir":"top",
-                     "map":"first_shoes_map",
-                     "warp_entry":"shopentry_39254871-afe4-41bf-841f-f5b35300e351"
+                     "map":"<map_name>",
+                     "warp_entry":"<warp_entry>"
                     },
                  "propertytypes":
                     {
@@ -68,7 +68,7 @@
                  "properties":
                     {
                      "entry_dir":"top",
-                     "map":"underground_39254871-afe4-41bf-841f-f5b35300e351",
+                     "map":"<underground_name>",
                      "warp_entry":"entry"
                     },
                  "propertytypes":
