@@ -30,14 +30,21 @@ SplashGame.prototype = {
 		});
 		*/
 		// this.game.load.crossOrigin = "anonymous";
-		this.mapKey = 'main_map';
-		this.overviewKey = 'overview_main_map';
-		if (this.options.isMainMap) {
-			this.game.load.tilemap(this.mapKey, Constants.apiUrl + '/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
-			this.game.load.image(this.overviewKey, Constants.apiUrl + '/maps/map_overview.png');
-		}
-
-		this.game.add.existing(this.loadingBar);
+		var self = this;
+		self.mapKey = 'main_map';
+		self.overviewKey = 'overview_main_map';
+		var txtGroup = self.game.add.group();
+		var bgGroup = self.game.add.group();
+		var bg3Loader = self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
+		bg3Loader.onFileComplete.add(function() {
+			bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg3'));
+			txtGroup.add(self.loadingBar);
+			self.game.world.bringToTop(txtGroup);
+			if (self.options.isMainMap) {
+				self.game.load.tilemap(this.mapKey, Constants.apiUrl + '/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
+				self.game.load.image(this.overviewKey, Constants.apiUrl + '/maps/map_overview.png');
+			}
+		}, this);
 	},
 	create: function() {
 		var self = this;
