@@ -1,13 +1,15 @@
 'use strict';
-var Map = function(key, tileMap, game, category) {
+
+var Map = function(key, tileMap, game) {
 	var houseObj = null;
+	this.key = key;
+	this.tileMap = tileMap;
+	this.game = game;
 	this.npcs = [];
 	this.overview = null;
 	this.npcObjs = null;
 	this.warps = null;
 	this.playersGroup = null;
-	this.key = key;
-	this.tileMap = tileMap;
 	this.player = null;
 	this.players = [];
 	this.warpRectangles = [];

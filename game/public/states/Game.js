@@ -95,9 +95,13 @@ Game.prototype = {
 	init: function(options) {
 		var self = this;
 		self.options = options;
-		self.modalTchat = new TchatModal();
-		self.modalTchat.init();
-		$(this.modalTchat).on('message', function(e, data) {
+		self.modals = {};
+		self.modals.tchat = new TchatModal();
+		self.modals.map = new MapModal();
+		self.store = GameStateStore;
+		self.modals.tchat.init();
+		self.modals.map.init();
+		$(self.modals.tchat).on('message', function(e, data) {
 			self.map.player.displayMessage(data.content);
 		});
 		var buildMenuOptions = function() {
@@ -139,36 +143,17 @@ Game.prototype = {
 					"</div>"+
 				"</div>"+
 			"</div>");
-			var mapModal = $("<div class='modal modal-lg' id='map-modal' style='display:none;'>"+
-				"<div class='modal-content'>"+
-					"<div class='modal-window'>"+
-						"<div class='header'>"+
-							"<span class='title'>Map</span>"+
-							"<div class='options'>"+
-								"<button class='option close'><i class='fa fa-times'></i></button>"+
-							"</div>"+
-						"</div>"+
-						"<div class='container'>"+
-							"<img src='"+Constants.apiUrl + '/maps/map_overview.png'+"' />"+
-						"</div>"+
-					"</div>"+
-				"</div>"+
-			"</div>")
 			$(game).append(result);
 			$(game).append(settingsModal);
 			$(game).append(pauseModal);
-			$(game).append(mapModal);
 			$(settingsModal).find('.close').click(function() {
 				$(settingsModal).toggle();
 			});
 			$(pauseModal).find('.close').click(function() {
 				$(pauseModal).toggle();
 			});
-			$(mapModal).find('.close').click(function() {
-				$(mapModal).toggle();
-			});
 			$(result).find('#tchat-option').click(function() {
-				self.modalTchat.toggle();
+				self.modals.tchat.toggle();
 			});
 			$(result).find('#settings-option').click(function() {
 				$(settingsModal).toggle();
@@ -177,7 +162,7 @@ Game.prototype = {
 				$(pauseModal).toggle();
 			});
 			$(result).find('#map-option').click(function() {
-				$(mapModal).toggle();
+				self.modals.map.toggle();
 			});
 			return result;
 		};
@@ -194,8 +179,8 @@ Game.prototype = {
 		// Keep running on losing focus
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
-		var tileMap = this.game.add.tilemap(self.options.map);
-		this.map = new Map(self.options.map, tileMap, this.game, this.options.category);
+		var tileMap = this.game.add.tilemap(self.options.mapKey);
+		this.map = new Map(self.options.map, tileMap, this.game);
 		this.map.init();
 		this.map.addPlayer(300, 300, self.options.pseudo);
 		this.cursors = this.game.input.keyboard.createCursorKeys();
