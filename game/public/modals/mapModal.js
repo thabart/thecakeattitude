@@ -17,6 +17,10 @@ MapModal.prototype = {
       "</div>"+
     "</div>");
     $(Constants.gameSelector).append(self.modal);
+		GameStateStore.onCurrentMapChanged(function(e, obj) {
+      var img = obj.map.game.cache.getImage(obj.map.overviewKey);
+      $(self.modal).find('.container').html(img);
+		});
     $(self.modal).find('.close').click(function() {
       $(self.modal).toggle();
     });

@@ -180,8 +180,9 @@ Game.prototype = {
 		this.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
 		var tileMap = this.game.add.tilemap(self.options.mapKey);
-		this.map = new Map(self.options.map, tileMap, this.game);
+		this.map = new Map(self.options.mapKey, self.options.overviewKey, tileMap, this.game);
 		this.map.init();
+		this.store.setCurrentMap(this.map);
 		this.map.addPlayer(300, 300, self.options.pseudo);
 		this.cursors = this.game.input.keyboard.createCursorKeys();
 		// Connect to socket server

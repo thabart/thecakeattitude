@@ -1,8 +1,9 @@
 'use strict';
 
-var Map = function(key, tileMap, game) {
+var Map = function(key, overviewKey, tileMap, game) {
 	var houseObj = null;
 	this.key = key;
+	this.overviewKey = overviewKey;
 	this.tileMap = tileMap;
 	this.game = game;
 	this.npcs = [];
@@ -35,18 +36,6 @@ var Map = function(key, tileMap, game) {
 		this.tileMap.addTilesetImage('Town@64x64', 'Town@64x64');
 		this.tileMap.addTilesetImage('Shadows@64x64', 'Shadows@64x64');
 		this.tileMap.addTilesetImage('tiles', 'tiles');
-
-		/*
-		this.tileMap.addTilesetImage('tallgrass', 'tallgrass');
-		this.tileMap.addTilesetImage('farming_fishing', 'farming_fishing');
-		this.tileMap.addTilesetImage('plowed_soil', 'plowed_soil');
-		this.tileMap.addTilesetImage('house', 'house');
-		this.tileMap.addTilesetImage('freePlace', 'freePlace');
-		this.tileMap.addTilesetImage('floor', 'floor');
-		this.tileMap.addTilesetImage('stuff', 'stuff');
-		this.tileMap.addTilesetImage('panel-info', 'panel-info');
-		*/
-
 		// Add layers.
 		this.layers.collision = this.tileMap.createLayer('Collision');
 		this.layers.ground = this.tileMap.createLayer('Ground');
@@ -59,7 +48,7 @@ var Map = function(key, tileMap, game) {
 		this.layers.walls = this.tileMap.createLayer('Walls');
 		var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
 		var overviewSize = Configuration.getOverviewSize();
-		this.overview = game.add.sprite(overviewCoordinate.x, overviewCoordinate.y, 'overview');
+		this.overview = game.add.sprite(overviewCoordinate.x, overviewCoordinate.y, this.overviewKey);
 		this.overview.width = overviewSize.w;
 		this.overview.height = overviewSize.h;
 		this.overview.fixedToCamera = true;
