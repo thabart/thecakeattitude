@@ -9,6 +9,6 @@ app.use('/libs', express.static(__dirname + '/libs'));
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname+'/tchat.html'));
 });
-app.listen(3000, function() {
-	console.log('Game is listening on port 3000!');
+app.listen(3002, function() {
+	console.log('Game is listening on port 3002!');
 });

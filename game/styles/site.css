@@ -433,20 +433,26 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
 }
 
 /* Warper modal */
-.warper-modal .search-category-form,
-.warper-modal .map-selector {
+.warper-modal .first-column,
+.warper-modal .second-column {
   display: inline-block;
   vertical-align: top;
 }
 
-.warper-modal .search-category-form {
+.warper-modal .first-column {
   padding-right: 10px;
 }
 
-.warper-modal .map-selector {
+.warper-modal .second-column {
   border-left: 1px solid rgb(222, 214, 214);
   padding-left: 10px;
+  padding-bottom: 5px;
   min-height: 160px;
+}
+
+.warper-modal .map-row {
+  border-top: 1px solid rgb(222, 214, 214);
+  padding-top: 5px;
 }
 
 /* Bubble tchat */

@@ -5,6 +5,7 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
     var title = $.i18n('warperModalTitle'),
       selectCategory = $.i18n('selectCategory'),
       selectSubCategory = $.i18n('selectSubCategory'),
+      selectMap = $.i18n('selectMap'),
       ok = $.i18n('ok');
     self.create("<div class='modal modal-lg warper-modal' style='display:none;'>"+
       "<div class='modal-content'>"+
@@ -28,12 +29,12 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
               "<div class='sk-cube sk-cube9'></div>"+
             "</div>"+
             "<div class='content'>"+
-              "<form class='search-category-form'>"+
+              "<form class='first-column'>"+
                 "<label>"+selectCategory+"</label>"+
                 "<select size='4' class='selector category-selector'>"+
                 "</select>"+
               "</form>"+
-              "<div class='map-selector'>"+
+              "<div class='second-column'>"+
                 "<div class='sk-cube-grid sub-category-loader'>"+
                   "<div class='sk-cube sk-cube1'></div>"+
                   "<div class='sk-cube sk-cube2'></div>"+
@@ -50,6 +51,9 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
                   "<select size='10' class='sub-category-selector selector selector-lg'>"+
                   "</select>"+
                 "</div>"+
+              "</div>"+
+              "<div class='map-row'>"+
+                "<label>"+selectMap+"</label>"+
               "</div>"+
             "</div>"+
           "</div>"+
@@ -79,6 +83,7 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
     });
     subCategorySelector.change(function() {
       $(confirmButton).prop('disabled', false);
+
     });
   },
   show() {

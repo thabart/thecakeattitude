@@ -9,5 +9,5 @@ app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname+'/build/index.html'));
 });
 app.listen(3001, function() {
-	console.log('Game is listening on port 3000!');
+	console.log('Game is listening on port 3001!');
 });
