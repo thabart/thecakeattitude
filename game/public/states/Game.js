@@ -151,7 +151,7 @@ Game.prototype = {
 		this.map.addPlayer(300, 300, self.options.pseudo);
 		this.cursors = this.game.input.keyboard.createCursorKeys();
 		// Connect to socket server
-		this.socket = io('http://localhost:3001').connect();
+		this.socket = io(Constants.socketServer).connect();
 		this.socket.on('connect', function() {
 			self.cleanPlayers();
 			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: self.options.pseudo });

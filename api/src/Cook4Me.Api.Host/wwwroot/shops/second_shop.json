@@ -136,20 +136,20 @@
          "tilecount":1980,
          "tileheight":32,
          "tilewidth":32
-        }, 
-        {
-         "columns":32,
-         "firstgid":1981,
-         "image":"tilesets\/TownInterior@64x64.png",
-         "imageheight":1024,
-         "imagewidth":1024,
-         "margin":0,
-         "name":"TownInterior@64x64",
-         "spacing":0,
-         "tilecount":1024,
-         "tileheight":32,
-         "tilewidth":32
-        }, 
+        },
+  {
+    "columns": 32,
+    "firstgid": 1981,
+    "image": "tilesets/TownInterior@64x64.png",
+    "imageheight": 1024,
+    "imagewidth": 1024,
+    "margin": 0,
+    "name": "TownInterior@64x64",
+    "spacing": 0,
+    "tilecount": 1024,
+    "tileheight": 32,
+    "tilewidth": 32
+  }, 
         {
          "columns":8,
          "firstgid":3005,

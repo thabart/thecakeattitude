@@ -41,8 +41,8 @@ SplashGame.prototype = {
 			txtGroup.add(self.loadingBar);
 			self.game.world.bringToTop(txtGroup);
 			if (self.options.isMainMap) {
-				self.game.load.tilemap(this.mapKey, Constants.apiUrl + '/maps/map.json', null, Phaser.Tilemap.TILED_JSON);
-				self.game.load.image(this.overviewKey, Constants.apiUrl + '/maps/map_overview.png');
+				self.game.load.tilemap(self.mapKey, Constants.apiUrl + '/maps/main.json', null, Phaser.Tilemap.TILED_JSON);
+				self.game.load.image(self.overviewKey, Constants.apiUrl + '/maps/main_overview.png');
 			}
 		}, this);
 	},

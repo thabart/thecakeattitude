@@ -26,7 +26,8 @@ var Map = function(key, overviewKey, tileMap, game) {
 	},
 	this.groups = {
 		players: null,
-		overviewPlayers: null
+		overviewPlayers: null,
+		warps: null
 	};
 
 	this.init = function() {
@@ -54,7 +55,6 @@ var Map = function(key, overviewKey, tileMap, game) {
 		this.overview.fixedToCamera = true;
 		this.groups.overviewPlayers = game.add.group();
 		this.groups.overviewPlayers.fixedToCamera = true;
-		this.tileMap.createLayer('Wraps');
 
 		/*
 		// Create all the objects.

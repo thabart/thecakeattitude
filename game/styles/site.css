@@ -367,6 +367,14 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   border-bottom: 1px solid #ebebeb;
 }
 
+#map-modal .container {
+  text-align: center;
+}
+
+#map-modal img {
+  max-width: 500px;
+}
+
 /* Pause modal window */
 
 #pause-modal .menu-options {
