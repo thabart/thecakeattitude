@@ -1,3 +1,6 @@
 {
-  "mapModalTitle" : "Plan"
+  "mapModalTitle" : "Plan",
+  "pauseModalTitle": "Pause",
+  "exit": "Quitter",
+  "navToMainMap": "Aller vers la map principale"
 }

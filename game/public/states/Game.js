@@ -108,8 +108,13 @@ Game.prototype = {
 		$(self.modals.tchat).on('message', function(e, data) {
 			self.map.player.displayMessage(data.content);
 		});
+		$(self.modals.pause).on('goToMainMap', function(e, data) {
+			self.game.state.start("SplashGame", true, false, {
+				isMainMap: true
+			});
+		});
 		var buildMenuOptions = function() {
-			var result = $("<div class='game-menu'>"+
+			self.optionsMenu = $("<div class='game-menu'>"+
 				"<ul class='menu-options'>"+
 					"<li class='light-blue menu-option' id='map-option'><i class='fa fa-map'></i></li>"+
 					"<li class='default menu-option' id='tchat-option'><i class='fa fa-comments'></i></li>"+
@@ -117,20 +122,20 @@ Game.prototype = {
 					"<li class='green menu-option' id='settings-option'><i class='fa fa-cog'></i></li>"+
 				"</ul>"+
 				"</div>");
-			$(game).append(result);
-			$(result).find('#tchat-option').click(function() {
+			$(game).append(self.optionsMenu);
+			$(self.optionsMenu).find('#tchat-option').click(function() {
 				self.modals.tchat.toggle();
 			});
-			$(result).find('#settings-option').click(function() {
+			$(self.optionsMenu).find('#settings-option').click(function() {
 				self.modals.settings.toggle();
 			});
-			$(result).find('#pause-option').click(function() {
+			$(self.optionsMenu).find('#pause-option').click(function() {
 				self.modals.pause.toggle();
 			});
-			$(result).find('#map-option').click(function() {
+			$(self.optionsMenu).find('#map-option').click(function() {
 				self.modals.map.toggle();
 			});
-			return result;
+			return self.optionsMenu;
 		};
 		buildMenuOptions();
 	},
@@ -194,6 +199,7 @@ Game.prototype = {
 		this.game.onBlur.add(function(e) {
 			self.isFocusLost = true;
 		});
+
 		/*
 		spaceBar.onDown.add(function() {
 			if (currentNpc == null) {
@@ -285,30 +291,12 @@ Game.prototype = {
 	render: function() {
 		if (this.map.player) this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
 	},
-	displayMessage : function(txt, id) {
-		var player = this.map.player;
-		if (id) {
-			player = this.getPlayer(id);
-			if (!player) {
-				return;
-			}
-		}
-
-		// 1. Destroy the message.
-		if (player.evtMessage != null) {
-			this.game.time.events.remove(player.evtMessage);
-		}
-
-		player.destroyMessage();
-		var speechBubble = new SpeechBubble(this.game, player.sprite.x + (player.sprite.width / 2), player.sprite.y, 150, txt);
-		this.game.world.add(speechBubble);
-		var evtMessage = this.game.time.events.add(Phaser.Timer.SECOND * 5, function() {
-			player.destroyMessage();
-		}, this);
-		player.displayMessage(speechBubble, evtMessage);
-	},
-	sendMessage: function(txt) {
-		this.displayMessage(txt);
-		this.socket.emit('message', { message : txt });
+	shutdown() {
+		this.modals.tchat.remove();
+		this.modals.map.remove();
+		this.modals.pause.remove();
+		this.modals.settings.remove();
+		this.optionsMenu.remove();
+		this.map.destroy();
 	}
 };

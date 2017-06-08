@@ -10,5 +10,11 @@ BaseModal.prototype = {
   },
   toggle() {
     $(this.modal).toggle();
+  },
+  hide() {
+    $(this.modal).hide();
+  },
+  remove() {
+    $(this.modal).remove();
   }
 };

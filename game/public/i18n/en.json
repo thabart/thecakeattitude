@@ -1,3 +1,6 @@
 {
-  "mapModalTitle" : "Map"
+  "mapModalTitle" : "Map",
+  "pauseModalTitle": "Pause",
+  "exit": "Exit",
+  "navToMainMap": "Go to the main map"
 }

@@ -70,5 +70,11 @@ TchatModal.prototype = {
     });
     var height = $(ul).height();
     $(self.modal).find('.body').animate({ scrollTop: height}, 50);
+  },
+  hide() {
+    $(this.modal).hide();
+  },
+  remove() {
+    $(this.modal).remove();
   }
 };

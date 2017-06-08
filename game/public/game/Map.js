@@ -171,27 +171,16 @@ var Map = function(key, overviewKey, tileMap, game) {
 	};
 
 	this.destroy = function() {
-		// Destroy the layers
-		if (this.layers.collision) this.layers.collision.destroy();
-		if (this.layers.ground) this.layers.ground.destroy();
-		if (this.layers.earth) this.layers.earth.destroy();
-		if (this.layers.alimentation) this.layers.alimentation.destroy();
+		for (var layer in this.layers) {
+			if (this.layers[layer]) this.layers[layer].destroy();
+		}
 
-		// Destroy objects
-		this.npcs.forEach(function(npc) {
-			npc[1].destroy();
-		});
-		this.warpRectangles.forEach(function(warp) {
-			warp.destroy();
-		});
-		this.players.forEach(function(p) {
-			p.remove();
-		});
+		for (var group in this.groups) {
+			if (this.groups[group]) this.groups[group].destroy();
+		}
 
-		if (this.warps) this.warps.destroy();
-		if (this.npcObjs) this.npcObjs.destroy();
-		if (this.tileMap) this.tileMap.destroy();
-		if (this.player) this.player.remove();
+		this.players.forEach(function(p) { p.destroy() });
+		this.player.destroy();
 	};
 
 	this.getNpcObjs = function() {

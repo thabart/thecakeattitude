@@ -116,15 +116,9 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 			$(self.tchatBubble).hide();
 		}, messageTimeoutMs);
 	};
-	// Destroy the message.
-	this.destroyMessage = function() {
-		if (this.message == null) {
-			return;
-		}
-
-		this.message.destroy();
-		this.message = null;
-		this.evtMessage = null;
+	// Destroy the player.
+	this.destroy = function() {
+		$(this.tchatBubble).remove();
 	};
 	// Update player position.
 	this.updatePosition = function() {

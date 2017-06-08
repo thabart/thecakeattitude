@@ -266,6 +266,10 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   color: #12c512;
 }
 
+.lg-action-btn {
+  width: 200px;
+}
+
 .action-btn, .input {
   padding: 8px;
   border-radius: 5px;
@@ -358,13 +362,21 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   padding: 5px;
 }
 
-.modal-window .content ul.list {
+.modal-window .content ul.list  {
   padding: 0;
 }
 
 .modal-window .content ul.list li {
   padding: 10px;
   border-bottom: 1px solid #ebebeb;
+}
+
+.modal-window .content ul.no-border li {
+  border: none;
+}
+
+.modal-window .content ul.center-text li {
+  text-align: center;
 }
 
 #map-modal .container {
