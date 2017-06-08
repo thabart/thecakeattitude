@@ -12,6 +12,8 @@ Splash.prototype = {
 			bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg1'));
 			txtGroup.add(self.loadingBar);
 			self.game.world.bringToTop(txtGroup);
+			// Load all NPCs.
+			self.game.load.spritesheet('warper', Constants.apiUrl + '/characters/warper.png', 48, 48);
 			// Load tilesets
 			self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
 			self.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');

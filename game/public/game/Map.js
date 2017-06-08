@@ -56,6 +56,10 @@ var Map = function(key, overviewKey, tileMap, game) {
 		this.groups.overviewPlayers = game.add.group();
 		this.groups.overviewPlayers.fixedToCamera = true;
 
+		var warper = game.add.sprite(200, 200, 'warper');
+		var animation = warper.animations.add('walk');
+		warper.animations.play('walk', 0.9, true);
+
 		/*
 		// Create all the objects.
 		this.warps = game.add.group();
