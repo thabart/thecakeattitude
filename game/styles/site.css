@@ -266,6 +266,8 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   color: #12c512;
 }
 
+/* Action button */
+
 .lg-action-btn {
   width: 200px;
 }
@@ -286,6 +288,13 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   -moz-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
   -webkit-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
   -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+}
+
+/* Selector style */
+.selector {
+  display: block;
+  min-width: 150px;
+  border-radius: 5px;
 }
 
 /* Modal window */
@@ -379,6 +388,11 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   text-align: center;
 }
 
+.modal-window .footer {
+  border-top: 1px solid gray;
+  padding: 5px;
+}
+
 #map-modal .container {
   text-align: center;
 }
@@ -400,6 +414,23 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
 
 #pause-modal .menu-options li i {
   padding-top: 17px;
+}
+
+/* Warper modal */
+.warper-modal .search-category-form,
+.warper-modal .map-selector {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.warper-modal .search-category-form {
+  padding-right: 10px;
+}
+
+.warper-modal .map-selector {
+  border-left: 1px solid rgb(222, 214, 214);
+  padding-left: 10px;
+  min-height: 160px;
 }
 
 /* Bubble tchat */
@@ -425,4 +456,67 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   border-color: rgba(255, 255, 255, 0.87) transparent;
   display: block;
   width: 0;
+}
+
+/* Loading spinner */
+.sk-cube-grid {
+  width: 30px;
+  height: 30px;
+  margin: auto;
+}
+
+.sk-cube-grid .sk-cube {
+  width: 33%;
+  height: 33%;
+  background-color: #258ad2;
+  float: left;
+  -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+          animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+}
+.sk-cube-grid .sk-cube1 {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s; }
+.sk-cube-grid .sk-cube2 {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s; }
+.sk-cube-grid .sk-cube3 {
+  -webkit-animation-delay: 0.4s;
+          animation-delay: 0.4s; }
+.sk-cube-grid .sk-cube4 {
+  -webkit-animation-delay: 0.1s;
+          animation-delay: 0.1s; }
+.sk-cube-grid .sk-cube5 {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s; }
+.sk-cube-grid .sk-cube6 {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s; }
+.sk-cube-grid .sk-cube7 {
+  -webkit-animation-delay: 0s;
+          animation-delay: 0s; }
+.sk-cube-grid .sk-cube8 {
+  -webkit-animation-delay: 0.1s;
+          animation-delay: 0.1s; }
+.sk-cube-grid .sk-cube9 {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s; }
+
+@-webkit-keyframes sk-cubeGridScaleDelay {
+  0%, 70%, 100% {
+    -webkit-transform: scale3D(1, 1, 1);
+            transform: scale3D(1, 1, 1);
+  } 35% {
+    -webkit-transform: scale3D(0, 0, 1);
+            transform: scale3D(0, 0, 1);
+  }
+}
+
+@keyframes sk-cubeGridScaleDelay {
+  0%, 70%, 100% {
+    -webkit-transform: scale3D(1, 1, 1);
+            transform: scale3D(1, 1, 1);
+  } 35% {
+    -webkit-transform: scale3D(0, 0, 1);
+            transform: scale3D(0, 0, 1);
+  }
 }

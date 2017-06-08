@@ -1,6 +1,8 @@
 {
   "mapModalTitle" : "Plan",
   "pauseModalTitle": "Pause",
+  "warperModalTitle": "Se téléporter",
   "exit": "Quitter",
-  "navToMainMap": "Aller vers la map principale"
+  "navToMainMap": "Aller vers la map principale",
+  "selectCategory": "Sélectionner une catégorie"
 }

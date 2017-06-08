@@ -34,31 +34,40 @@ var Map = function(key, overviewKey, tileMap, game) {
 		var self = this;
 		var deferredLoaded = [];
 		// Load the images.
-		this.tileMap.addTilesetImage('Town@64x64', 'Town@64x64');
-		this.tileMap.addTilesetImage('Shadows@64x64', 'Shadows@64x64');
-		this.tileMap.addTilesetImage('tiles', 'tiles');
+		self.tileMap.addTilesetImage('Town@64x64', 'Town@64x64');
+		self.tileMap.addTilesetImage('Shadows@64x64', 'Shadows@64x64');
+		self.tileMap.addTilesetImage('tiles', 'tiles');
 		// Add layers.
-		this.layers.collision = this.tileMap.createLayer('Collision');
-		this.layers.ground = this.tileMap.createLayer('Ground');
-		this.layers.groundDecorations = this.tileMap.createLayer('GroundDecorations');
-		this.groups.players = game.add.group();
-		this.layers.shadows = this.tileMap.createLayer('Shadows');
-		this.layers.houses1 = this.tileMap.createLayer('Houses1');
-		this.layers.houses2 = this.tileMap.createLayer('Houses2');
-		this.layers.decorations = this.tileMap.createLayer('Decorations');
-		this.layers.walls = this.tileMap.createLayer('Walls');
+		self.layers.collision = self.tileMap.createLayer('Collision');
+		self.layers.ground = self.tileMap.createLayer('Ground');
+		self.layers.groundDecorations = self.tileMap.createLayer('GroundDecorations');
+		self.groups.players = game.add.group();
+		self.layers.shadows = self.tileMap.createLayer('Shadows');
+		self.layers.houses1 = self.tileMap.createLayer('Houses1');
+		self.layers.houses2 = self.tileMap.createLayer('Houses2');
+		self.layers.decorations = self.tileMap.createLayer('Decorations');
+		self.layers.walls = self.tileMap.createLayer('Walls');
 		var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
 		var overviewSize = Configuration.getOverviewSize();
-		this.overview = game.add.sprite(overviewCoordinate.x, overviewCoordinate.y, this.overviewKey);
-		this.overview.width = overviewSize.w;
-		this.overview.height = overviewSize.h;
-		this.overview.fixedToCamera = true;
-		this.groups.overviewPlayers = game.add.group();
-		this.groups.overviewPlayers.fixedToCamera = true;
+		self.overview = game.add.sprite(overviewCoordinate.x, overviewCoordinate.y, self.overviewKey);
+		self.overview.width = overviewSize.w;
+		self.overview.height = overviewSize.h;
+		self.overview.fixedToCamera = true;
+		self.groups.overviewPlayers = game.add.group();
+		self.groups.overviewPlayers.fixedToCamera = true;
 
-		var warper = game.add.sprite(200, 200, 'warper');
-		var animation = warper.animations.add('walk');
-		warper.animations.play('walk', 0.9, true);
+		var npcObjs = self.tileMap.objects['Npcs'];
+		if (npcObjs) { // Create the NPCs.
+			npcObjs.forEach(function(npc) {
+				var o = null;
+				switch(npc.type) {
+					case "warper":
+						o = new Warper();
+						o.init(game, npc);
+					break;
+				}
+			});
+		}
 
 		/*
 		// Create all the objects.

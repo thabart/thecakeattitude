@@ -13,7 +13,7 @@ Splash.prototype = {
 			txtGroup.add(self.loadingBar);
 			self.game.world.bringToTop(txtGroup);
 			// Load all NPCs.
-			self.game.load.spritesheet('warper', Constants.apiUrl + '/characters/warper.png', 48, 48);
+			self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/warper.png', 'public/sprites/warper.json');
 			// Load tilesets
 			self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
 			self.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');
@@ -39,8 +39,14 @@ Splash.prototype = {
 			self.game.load.script('MapModal', 'public/modals/mapModal.js');
 			self.game.load.script('SettingsModal', 'public/modals/settingsModal.js');
 			self.game.load.script('PauseModal', 'public/modals/pauseModal.js');
+			self.game.load.script('WarperModal', 'public/modals/warperModal.js');
 			// Load the stores
 			self.game.load.script('GameStateStore', 'public/stores/gameStateStore.js');
+			// Load the NPCs.
+			self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
+			self.game.load.script('Warper', 'public/characters/warper.js');
+			// Load the clients
+			self.game.load.script('CategoryClient', 'public/clients/categoryClient.js');
 		}, this);
 		bg1Loader.start();
 	},
