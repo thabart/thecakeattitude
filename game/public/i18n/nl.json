@@ -4,5 +4,7 @@
   "warperModalTitle": "Warper",
   "exit": "Exit",
   "navToMainMap": "Go to the main map",
-  "selectCategory": "Select a category"
+  "selectCategory": "Select a category",
+  "selectSubCategory": "Select a sub category",
+  "ok": "ok"
 }

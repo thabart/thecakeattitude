@@ -4,5 +4,7 @@
   "warperModalTitle": "Se téléporter",
   "exit": "Quitter",
   "navToMainMap": "Aller vers la map principale",
-  "selectCategory": "Sélectionner une catégorie"
+  "selectCategory": "Sélectionner une catégorie",
+  "selectSubCategory": "Sélectionner une sous catégorie",
+  "ok": "ok"
 }

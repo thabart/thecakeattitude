@@ -290,11 +290,27 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
 }
 
+.action-btn:disabled {
+  opacity: 0.3;
+}
+
 /* Selector style */
 .selector {
   display: block;
   min-width: 150px;
   border-radius: 5px;
+}
+
+.selector option {
+  font-family: 'QuicksandLight', sans-serif;
+}
+
+.selector option:checked {
+  background: linear-gradient(#129cc5, #129cc5) !important;
+}
+
+.selector-lg {
+  min-width: 350px !important;
 }
 
 /* Modal window */
