@@ -106,7 +106,7 @@ Game.prototype = {
 		self.modals.pause.init();
 		self.modals.settings.init();
 		$(self.modals.tchat).on('message', function(e, data) {
-			self.map.player.displayMessage(data.content);
+			self.map.currentPlayer.displayMessage(data.content);
 		});
 		$(self.modals.pause).on('goToMainMap', function(e, data) {
 			self.game.state.start("SplashGame", true, false, {
@@ -143,18 +143,18 @@ Game.prototype = {
 		var self = this;
 		// this.game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
 		// Start the Arcade physics systems.
-		this.game.physics.startSystem(Phaser.Physics.ARCADE);
+		self.game.physics.startSystem(Phaser.Physics.ARCADE);
 		// Change background color.
-		this.game.stage.backgroundColor = '#787878';
+		self.game.stage.backgroundColor = '#787878';
 		// Keep running on losing focus
-		this.game.stage.disableVisibilityChange = true;
+		self.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
-		var tileMap = this.game.add.tilemap(self.options.mapKey);
-		this.map = new Map(self.options.mapKey, self.options.overviewKey, tileMap, this.game);
-		this.map.init();
+		var tileMap = self.game.add.tilemap(self.options.mapKey);
+		this.map = new CategoryMap();
+		this.map.init(self.options.overviewKey, tileMap, self.game);
 		this.store.setCurrentMap(this.map);
-		this.map.addPlayer(300, 300, self.options.pseudo);
-		this.cursors = this.game.input.keyboard.createCursorKeys();
+		this.map.setCurrentPlayer(300, 300, self.options.pseudo);
+		this.cursors = self.game.input.keyboard.createCursorKeys();
 		// Connect to socket server
 		this.socket = io(Constants.socketServer).connect();
 		this.socket.on('connect', function() {
@@ -166,7 +166,7 @@ Game.prototype = {
 		});
 		this.socket.on('new_player', function(data) {
 			if (data.mapId == self.map.key) {
-				self.addPlayer(data.id, data.x, data.y, data.direction, data.pseudo);
+				// self.addPlayer(data.id, data.x, data.y, data.direction, data.pseudo);
 			}
 		});
 		this.socket.on('remove_player', function(data) {
@@ -181,22 +181,10 @@ Game.prototype = {
 
 		// Listen keyboard events
 		// spaceBar = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		worldScale = 1
-		previousScale = 1;
-		this.game.input.mouse.mouseWheelCallback = function(evt) {
-			var wheelDelta = self.game.input.mouse.wheelDelta;
-            if (wheelDelta < 0)  {
-				worldScale -= 0.005;
-			}
-            else {
-				worldScale += 0.005;
-			}
-		};
-
-		this.game.onFocus.add(function(e) {
+		self.game.onFocus.add(function(e) {
 			self.isFocusLost = false;
 		});
-		this.game.onBlur.add(function(e) {
+		self.game.onBlur.add(function(e) {
 			self.isFocusLost = true;
 		});
 
@@ -213,7 +201,8 @@ Game.prototype = {
 	update: function() {
 		var self = this;
 		try {
-			if (!this.map.player || !this.map.layers.collision || this.preventUpdate) return;
+			if (!this.map.currentPlayer || !this.map.layers.collision || this.preventUpdate) return;
+			// Check collisions.
 			this.map.players.forEach(function(p) {
 				if (!self.game.physics.arcade.collide(p.sprite, self.map.layers.collision)) {
 					p.updatePosition();
@@ -221,67 +210,37 @@ Game.prototype = {
 				}
 			});
 
-			if (self.game.physics.arcade.collide(self.map.player.sprite, self.map.layers.collision)) {
+			// Check collision.
+			if (self.game.physics.arcade.collide(self.map.currentPlayer.sprite, self.map.layers.collision)) {
 				return;
 			}
 
-			// Warp the player to another map.
-			if (self.game.physics.arcade.overlap(self.map.player.sprite, self.map.getWarps(), function(e, warp) {
-				var tileMap = self.game.add.tilemap(warp.map),
-					playerHeight = self.map.player.sprite.height,
-					playerWidth = self.map.player.sprite.width,
-					pseudo = self.map.player.getPseudo();
-				self.preventUpdate = true;
-				self.map.destroy();
-				self.map = new Map(warp.map, tileMap, self.game, warp.category); // TODO : Pass category.
-				self.map.init().done(function() {
-					var playerPosition = self.getPlayerPosition(warp, self.map.getWarps(), playerHeight, playerWidth);
-					self.map.addPlayer(playerPosition.x, playerPosition.y, pseudo);
-					// Remove the player from the map & add him to the new map.
-					self.socket.emit('remove');
-					self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: pseudo });
-					self.game.camera.focusOnXY(playerPosition.x, playerPosition.y);
-					self.preventUpdate = false;
-				});
+			// Detect player sprite overlap a warp & teleport the player to the map.
+			if (self.game.physics.arcade.overlap(self.map.currentPlayer.sprite, self.map.groups.warps, function(e, warp) {
+		    var json = {
+		      map_link: warp.target_map_path,
+		      overview_link: warp.target_overview_path,
+		      isMainMap: false
+		    };
+		  	self.game.state.start("SplashGame", true, false, json);
 			})) {
 				return;
 			}
 
-			// Interact with NPCs.
-			if (!self.game.physics.arcade.overlap(self.map.player.hitZone, self.map.getNpcObjs(), function(e, npc) {
-				currentNpc = self.map.getNpc(npc);
-				if (!currentNpc.getIsEnabled()) {
-					self.map.player.hideInteraction();
-					return;
-				}
-
-				self.map.player.displayInteraction();
-			})) {
-				self.map.player.hideInteraction();
-				currentNpc = null;
-			}
-
-			// Update player.
+			// Update player position.
 			if (self.isFocusLost) {
 				this.cursors.up.isDown = false;
 				this.cursors.right.isDown = false;
 				this.cursors.down.isDown = false;
 				this.cursors.left.isDown = false;
-				this.map.player.setDirection([]);
+				this.map.currentPlayer.setDirection([]);
 			}
 
-			isPositionUpdated = this.map.player.updateDirection(this.cursors);
-
-			this.map.player.updatePosition();
-			this.map.player.updateMessagePosition();
+			isPositionUpdated = this.map.currentPlayer.updateDirection(this.cursors);
+			this.map.currentPlayer.updatePosition();
+			this.map.currentPlayer.updateMessagePosition();
 			if (isPositionUpdated) {
-				this.socket.emit('move_player', {x : this.map.player.getX(), y : this.map.player.getY(), direction : this.map.player.getDirection() });
-			}
-
-			// Zoom on the map
-			if (worldScale != previousScale) {
-				// self.game.world.scale.set(worldScale);
-				previousScale = worldScale;
+				this.socket.emit('move_player', {x : this.map.currentPlayer.getX(), y : this.map.currentPlayer.getY(), direction : this.map.currentPlayer.getDirection() });
 			}
 		}
 		catch(err) {

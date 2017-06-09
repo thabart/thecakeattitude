@@ -87,8 +87,41 @@
          "width":400,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":140,
+         "name":"Warps",
+         "objects":[
+                {
+                 "height":64.5,
+                 "id":1,
+                 "name":"",
+                 "properties":
+                    {
+                     "target_map_path":"http:\/\/localhost:5000\/shops\/first_shop.json",
+                     "target_overview_path":"http:\/\/localhost:5000\/shops\/first_shop_overview.png"
+                    },
+                 "propertytypes":
+                    {
+                     "target_map_path":"string",
+                     "target_overview_path":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64.5,
+                 "x":607.5,
+                 "y":735.5
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":400,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":1,
+ "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

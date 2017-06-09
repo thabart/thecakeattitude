@@ -16,6 +16,7 @@ Splash.prototype = {
 			self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/warper.png', 'public/sprites/warper.json');
 			// Load tilesets
 			self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
+			self.game.load.image('TownInterior@64x64', Constants.apiUrl + '/shops/tilesets/TownInterior@64x64.png');
 			self.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');
 			self.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
 			// Load player
@@ -28,7 +29,9 @@ Splash.prototype = {
 			self.game.load.script('ShopChooser', 'public/states/ShopChooser.js');
 			self.game.load.script('Game', 'public/states/Game.js');
 			// Load main objects.
-			self.game.load.script('Map', 'public/game/Map.js');
+			self.game.load.script('BaseMap', 'public/game/baseMap.js');
+			self.game.load.script('ShopMap', 'public/game/shopMap.js');
+			self.game.load.script('CategoryMap', 'public/game/categoryMap.js');
 			self.game.load.script('Player', 'public/game/Player.js');
 			// Load utils.
 			self.game.load.script('Calculator', 'public/utils/calculator.js');
