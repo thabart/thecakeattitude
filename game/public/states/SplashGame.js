@@ -43,6 +43,9 @@ SplashGame.prototype = {
 			if (self.options.isMainMap) {
 				self.game.load.tilemap(self.mapKey, Constants.apiUrl + '/maps/main.json', null, Phaser.Tilemap.TILED_JSON);
 				self.game.load.image(self.overviewKey, Constants.apiUrl + '/maps/main_overview.png');
+			} else {
+				self.game.load.tilemap(self.mapKey, self.options.map_link, null, Phaser.Tilemap.TILED_JSON);
+				self.game.load.image(self.overviewKey, self.options.overview_link);
 			}
 		}, this);
 	},

@@ -6,15 +6,11 @@ var Map = function(key, overviewKey, tileMap, game) {
 	this.overviewKey = overviewKey;
 	this.tileMap = tileMap;
 	this.game = game;
-	this.npcs = [];
-	this.overview = null;
-	this.npcObjs = null;
-	this.warps = null;
-	this.playersGroup = null;
-	this.player = null;
-	this.players = [];
-	this.warpRectangles = [];
-	this.layers = {
+	this.overview = null; // overview image.
+	this.npcs = []; // list of npcs.
+	this.player = null; // current player.
+	this.players = []; // other players.
+	this.layers = { // layers displayed or not on the map.
 		collision : null,
 		ground: null,
 		groundDecorations: null,
@@ -24,10 +20,11 @@ var Map = function(key, overviewKey, tileMap, game) {
 		decorations: null,
 		walls: null
 	},
-	this.groups = {
+	this.groups = { // group of objects
 		players: null,
 		overviewPlayers: null,
-		warps: null
+		warps: null,
+		npcs: null
 	};
 
 	this.init = function() {
@@ -55,6 +52,7 @@ var Map = function(key, overviewKey, tileMap, game) {
 		self.overview.fixedToCamera = true;
 		self.groups.overviewPlayers = game.add.group();
 		self.groups.overviewPlayers.fixedToCamera = true;
+		self.groups.npcs = game.add.group();
 
 		var npcObjs = self.tileMap.objects['Npcs'];
 		if (npcObjs) { // Create the NPCs.
@@ -65,6 +63,11 @@ var Map = function(key, overviewKey, tileMap, game) {
 						o = new Warper();
 						o.init(game, npc);
 					break;
+				}
+
+				if (o !== null) {
+					self.npcs.push(o);
+					self.groups.npcs.add(o.getSprite());
 				}
 			});
 		}
@@ -194,6 +197,7 @@ var Map = function(key, overviewKey, tileMap, game) {
 
 		this.players.forEach(function(p) { p.destroy() });
 		this.player.destroy();
+		this.npcs.forEach(function(npc) { npc.destroy(); });
 	};
 
 	this.getNpcObjs = function() {

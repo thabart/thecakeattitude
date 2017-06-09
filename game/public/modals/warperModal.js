@@ -1,12 +1,13 @@
 var WarperModal = function() {};
 WarperModal.prototype = $.extend({}, BaseModal.prototype, {
-  init: function() {
+  init: function(game) {
     var self = this;
     var title = $.i18n('warperModalTitle'),
       selectCategory = $.i18n('selectCategory'),
       selectSubCategory = $.i18n('selectSubCategory'),
       selectMap = $.i18n('selectMap'),
       ok = $.i18n('ok');
+    self.game = game;
     self.create("<div class='modal modal-lg warper-modal' style='display:none;'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -81,6 +82,7 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
     var subCategorySelector = $(self.modal).find('.sub-category-selector'),
       categorySelector = $(self.modal).find('.category-selector'),
       mapSelector = $(self.modal).find('.map-selector'),
+      okBtn = $(self.modal).find('.confirm'),
       confirmButton = $(self.modal).find('.confirm');
     // Display sub categories when the category changed.
     categorySelector.change(function() {
@@ -115,6 +117,16 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
           $(confirmButton).prop('disabled', false);
         });
       });
+    });
+    // Raise an event when the user clicks on OK.
+    okBtn.click(function() {
+      var selectedMap = $(mapSelector).find('.selected');
+      var json = {
+        map_link: selectedMap.data('map'),
+        overview_link: selectedMap.data('overview'),
+        isMainMap: false
+      };
+  		self.game.state.start("SplashGame", true, false, json);
     });
   },
   show() {

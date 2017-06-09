@@ -103,7 +103,7 @@ namespace Cook4Me.Api.Host.Extensions
                         CategoryId = _bakeryCategoryId,
                         MapName = "first_bakery_map",
                         PartialMapUrl = "/maps/first_bakery_map.json",
-                        PartialOverviewUrl = "/maps/first_bakery_overview.png",
+                        PartialOverviewUrl = "/maps/first_bakery_map_overview.png",
                         OverviewName = "first_bakery_overview",
                         IsMain = true
                     },

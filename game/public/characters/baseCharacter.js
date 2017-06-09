@@ -17,5 +17,8 @@ BaseCharacter.prototype = {
   },
   getSprite: function() {
 		return this.sprite;
-	}
+	},
+  destroy: function() {
+    this.sprite.destroy();
+  }
 };
