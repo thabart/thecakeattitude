@@ -6,34 +6,9 @@ SplashGame.prototype = {
 	},
 	preload: function() {
 		var self = this;
-		// LOAD ALL THE ASSETS.
-		/*
-		$.get(Constants.apiUrl + '/categories').then(function(result) {
-			var embedded = result['_embedded'];
-			if (!embedded) {
-				return;
-			}
-			if (!$.isArray(embedded)) {
-				embedded = [ embedded ];
-			}
-
-			embedded.forEach(function(category) {
-				if (!category.overview_link || !category.map_link) {
-					return;
-				}
-
-				var tileMapLoader = self.game.load.tilemap(category.map_name, Constants.apiUrl + category.map_link, null, Phaser.Tilemap.TILED_JSON);
-				var imageLoader = self.game.load.image(category.overview_name, Constants.apiUrl + category.overview_link);
-				tileMapLoader.start();
-				imageLoader.start();
-			});
-		});
-		*/
-		// this.game.load.crossOrigin = "anonymous";
-		var self = this;
 		self.mapKey = 'main_map';
 		self.overviewKey = 'overview_main_map';
-		self.typeMap = self.options.typeMap || 'category';
+		self.typeMap = self.options.typeMap || 'main';
 		var txtGroup = self.game.add.group();
 		var bgGroup = self.game.add.group();
 		var bg3Loader = self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
@@ -59,6 +34,10 @@ SplashGame.prototype = {
 				overviewKey: self.overviewKey,
 				typeMap: self.typeMap
 			};
+			if (self.typeMap === 'category') {
+				options.categoryId = self.options.categoryId;
+			}
+
 			self.game.state.start("Game", true, false, options);
 		}, 1000);
 	}

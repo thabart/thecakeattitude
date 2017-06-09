@@ -20,6 +20,7 @@ Splash.prototype = {
 			self.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');
 			self.game.load.image('ShopShadows@64x64', Constants.apiUrl + '/shops/tilesets/Shadows@64x64.png');
 			self.game.load.image('freePlace', Constants.apiUrl + '/maps/tilesets/freePlace.png');
+			self.game.load.image('shop', Constants.apiUrl + '/maps/tilesets/shop.png');
 			self.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
 			// Load player
 			self.game.load.image('player', Constants.apiUrl + '/characters/phaser-dude.png');
@@ -34,6 +35,7 @@ Splash.prototype = {
 			self.game.load.script('BaseMap', 'public/game/baseMap.js');
 			self.game.load.script('ShopMap', 'public/game/shopMap.js');
 			self.game.load.script('CategoryMap', 'public/game/categoryMap.js');
+			self.game.load.script('MainMap', 'public/game/mainMap.js');
 			self.game.load.script('Player', 'public/game/Player.js');
 			// Load utils.
 			self.game.load.script('Calculator', 'public/utils/calculator.js');
@@ -52,6 +54,7 @@ Splash.prototype = {
 			self.game.load.script('Warper', 'public/characters/warper.js');
 			// Load the clients
 			self.game.load.script('CategoryClient', 'public/clients/categoryClient.js');
+			self.game.load.script('ShopClient', 'public/clients/shopClient.js');
 		}, this);
 		bg1Loader.start();
 	},

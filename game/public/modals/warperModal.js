@@ -107,7 +107,7 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
       self.isMapLoading(true);
       CategoryClient.getCategory(categoryId).then(function(cat) {
         mapSelector.empty();
-        var maps = cat._embedded.maps.map(function(map) { return "<li data-map='"+Constants.apiUrl + map.map_link+"' data-overview='"+Constants.apiUrl + map.overview_link+"'><span>"+map.map_name+"</span><img src='"+ Constants.apiUrl + map.overview_link+"' /></li>"; });
+        var maps = cat._embedded.maps.map(function(map) { return "<li data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'><span>"+map.map_name+"</span><img src='"+ Constants.apiUrl + map.overview_link+"' /></li>"; });
         maps.forEach(function(map) { mapSelector.append(map); });
         self.isMapLoading(false);
         // Enable the OK button + add ".selected" class to li.
@@ -124,7 +124,9 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
       var json = {
         map_link: selectedMap.data('map'),
         overview_link: selectedMap.data('overview'),
-        isMainMap: false
+        isMainMap: false,
+        categoryId: selectedMap.data('categoryid'),
+        typeMap: 'category'
       };
   		self.game.state.start("SplashGame", true, false, json);
     });

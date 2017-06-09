@@ -152,11 +152,15 @@ Game.prototype = {
 		var tileMap = self.game.add.tilemap(self.options.mapKey);
 		if (self.options.typeMap === 'shop') {
 			self.map = new ShopMap();
-		} else {
+			self.map.init(self.options.overviewKey, tileMap, self.game);
+		} else if (self.options.typeMap === 'category') {
 			self.map = new CategoryMap();
+			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
+		} else {
+			self.map = new MainMap();
+			self.map.init(self.options.overviewKey, tileMap, self.game);
 		}
 
-		self.map.init(self.options.overviewKey, tileMap, self.game);
 		self.store.setCurrentMap(self.map);
 		self.map.setCurrentPlayer(300, 300, self.options.pseudo);
 		self.cursors = self.game.input.keyboard.createCursorKeys();
