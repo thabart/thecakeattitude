@@ -2,7 +2,7 @@ var Warper = function() {};
 Warper.prototype = $.extend({}, BaseCharacter.prototype, {
 	init: function(game, npc) {
 		var name = 'warper';
-		this.create(game, npc, 'warper');
+		this.create(game, npc, 'warper', 1);
 		this.modal = new WarperModal();
 		this.modal.init(game);
 	},

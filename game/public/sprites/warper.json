@@ -2,19 +2,43 @@
 	"frames": [
 		{
 			"filename": "stay01",
-			"frame": {"x":0,"y":0,"w":48,"h":48},
+			"frame": {"x":9,"y":8,"w":35,"h":92},
 			"rotated": false,
 			"trimmed": true,
-			"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
-			"sourceSize": {"w":48,"h":48}
+			"spriteSourceSize": {"x":0,"y":0,"w":35,"h":92},
+			"sourceSize": {"w":35,"h":92}
 		},
 		{
 			"filename": "stay02",
-			"frame": {"x":48,"y":0,"w":48,"h":48},
+			"frame": {"x":57,"y":8,"w":36,"h":92},
 			"rotated": false,
 			"trimmed": true,
-			"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
-			"sourceSize": {"w":48,"h":48}
+			"spriteSourceSize": {"x":0,"y":0,"w":36,"h":92},
+			"sourceSize": {"w":36,"h":92}
+		},
+		{
+			"filename": "stay03",
+			"frame": {"x":105,"y":8,"w":36,"h":92},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":36,"h":92},
+			"sourceSize": {"w":36,"h":92}
+		},
+		{
+			"filename": "stay04",
+			"frame": {"x":153,"y":8,"w":36,"h":92},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":36,"h":92},
+			"sourceSize": {"w":36,"h":92}
+		},
+		{
+			"filename": "stay05",
+			"frame": {"x":201,"y":8,"w":34,"h":92},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":34,"h":92},
+			"sourceSize": {"w":34,"h":92}
 		}
 	],
 	"meta": {}

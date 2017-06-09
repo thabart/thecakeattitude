@@ -34,6 +34,11 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addOverviewImage();
 		self.addOverviewPlayersGroup();
 
+		// ADD FAKE WARP
+		var spr = self.game.add.sprite(100, 100, 'warp');
+		spr.animations.add('stay');
+		spr.animations.play('stay', 10, true);
+
 		// Resize the world & set boundaries.
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);

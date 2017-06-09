@@ -1,9 +1,14 @@
 var BaseCharacter = function() { };
 BaseCharacter.prototype = {
-  create: function(game, npc, spriteName) {
+  create: function(game, npc, spriteName, fps) {
     this.sprite = game.add.sprite(npc.x, npc.y, spriteName);
     this.sprite.animations.add('stay');
-    this.sprite.animations.play('stay', 1, true);
+    if (fps) {
+      this.sprite.animations.play('stay', fps, true);
+    } else {
+      this.sprite.animations.play('stay', 1, true);
+    }
+
     this.sprite.inputEnabled = true;
     this.sprite.events.onInputOver.add(function() {
       game.canvas.style.cursor = "pointer";

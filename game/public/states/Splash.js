@@ -12,8 +12,9 @@ Splash.prototype = {
 			bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg1'));
 			txtGroup.add(self.loadingBar);
 			self.game.world.bringToTop(txtGroup);
-			// Load all NPCs.
-			self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/warper.png', 'public/sprites/warper.json');
+			// Load all NPCs & animations.
+			self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/npc.png', 'public/sprites/warper.json');
+			self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
 			// Load tilesets
 			self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
 			self.game.load.image('TownInterior@64x64', Constants.apiUrl + '/shops/tilesets/TownInterior@64x64.png');
@@ -52,6 +53,8 @@ Splash.prototype = {
 			// Load the NPCs.
 			self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 			self.game.load.script('Warper', 'public/characters/warper.js');
+			// Load the animations
+			self.game.load.script('WarpAnimation', 'public/animations/warpAnimation.js');
 			// Load the clients
 			self.game.load.script('CategoryClient', 'public/clients/categoryClient.js');
 			self.game.load.script('ShopClient', 'public/clients/shopClient.js');
