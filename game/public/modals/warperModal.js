@@ -53,7 +53,22 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
                 "</div>"+
               "</div>"+
               "<div class='map-row'>"+
-                "<label>"+selectMap+"</label>"+
+                "<div class='sk-cube-grid maps-loader'>"+
+                  "<div class='sk-cube sk-cube1'></div>"+
+                  "<div class='sk-cube sk-cube2'></div>"+
+                  "<div class='sk-cube sk-cube3'></div>"+
+                  "<div class='sk-cube sk-cube4'></div>"+
+                  "<div class='sk-cube sk-cube5'></div>"+
+                  "<div class='sk-cube sk-cube6'></div>"+
+                  "<div class='sk-cube sk-cube7'></div>"+
+                  "<div class='sk-cube sk-cube8'></div>"+
+                  "<div class='sk-cube sk-cube9'></div>"+
+                "</div>"+
+                "<div class='map-content'>"+
+                  "<label>"+selectMap+"</label>"+
+                  "<ul class='list-selector map-selector'>"+
+                  "</ul>"+
+                "</div>"+
               "</div>"+
             "</div>"+
           "</div>"+
@@ -64,34 +79,52 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
       "</div>"+
     "</div>");
     var subCategorySelector = $(self.modal).find('.sub-category-selector'),
+      categorySelector = $(self.modal).find('.category-selector'),
+      mapSelector = $(self.modal).find('.map-selector'),
       confirmButton = $(self.modal).find('.confirm');
-    $(self.modal).find('.category-selector').change(function() {
-      $(confirmButton).prop('disabled', true);
+    // Display sub categories when the category changed.
+    categorySelector.change(function() {
       var categoryId = $(this).find(':selected').val();
+      $(confirmButton).prop('disabled', true);
+      $(subCategorySelector).empty();
+      $(mapSelector).empty();
       if (!categoryId) {
-        $(subCategorySelector).empty();
         return;
       }
 
       self.isSubCategoryLoading(true);
       CategoryClient.getCategory(categoryId).then(function(cat) {
         var subCategories = cat._embedded.children.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
-        $(subCategorySelector).empty();
         subCategories.forEach(function(category) { subCategorySelector.append(category); });
         self.isSubCategoryLoading(false);
       });
     });
+    // Display maps when the sub-category changed.
     subCategorySelector.change(function() {
-      $(confirmButton).prop('disabled', false);
-
+      var categoryId = $(this).find(':selected').val();
+      self.isMapLoading(true);
+      CategoryClient.getCategory(categoryId).then(function(cat) {
+        mapSelector.empty();
+        var maps = cat._embedded.maps.map(function(map) { return "<li data-map='"+Constants.apiUrl + map.map_link+"' data-overview='"+Constants.apiUrl + map.overview_link+"'><span>"+map.map_name+"</span><img src='"+ Constants.apiUrl + map.overview_link+"' /></li>"; });
+        maps.forEach(function(map) { mapSelector.append(map); });
+        self.isMapLoading(false);
+        // Enable the OK button + add ".selected" class to li.
+        mapSelector.find('li').click(function() {
+          mapSelector.find('li').removeClass('selected');
+          $(this).addClass('selected');
+          $(confirmButton).prop('disabled', false);
+        });
+      });
     });
   },
   show() {
     var self = this,
       selector = $(self.modal).find('.category-selector'),
+      mapSelector = $(self.modal).find('.map-selector'),
       subCategorySelector = $(self.modal).find('.sub-category-selector');
     subCategorySelector.empty();
     selector.empty();
+    mapSelector.empty();
     self.isCategoryLoading(true);
     $(self.modal).find('.confirm').prop('disabled', true);
     $(self.modal).show();
@@ -101,23 +134,21 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
       categories.forEach(function(category) { selector.append(category); });
       self.isCategoryLoading(false);
       self.isSubCategoryLoading(false);
+      self.isMapLoading(false);
     });
   },
   isCategoryLoading(b) {
-    var loader = $(this.modal).find('.category-loader'),
-      content = $(this.modal).find('.content');
-    if (b) {
-      loader.show();
-      content.hide();
-      return;
-    }
-
-    loader.hide();
-    content.show();
+    this.isLoading(b, '.category-loader', '.content');
   },
   isSubCategoryLoading(b) {
-    var loader = $(this.modal).find('.sub-category-loader'),
-      content = $(this.modal).find('.sub-categories-content');
+    this.isLoading(b, '.sub-category-loader', '.sub-categories-content');
+  },
+  isMapLoading(b) {
+    var loader = this.isLoading(b, '.maps-loader', '.map-content');
+  },
+  isLoading(b, loaderSelector, contentSelector) {
+    var loader = $(this.modal).find(loaderSelector),
+      content = $(this.modal).find(contentSelector);
     if (b) {
       loader.show();
       content.hide();

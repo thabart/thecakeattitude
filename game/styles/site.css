@@ -136,7 +136,7 @@ body {
   right: 10px;
 }
 
-ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
+ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-selector  {
   list-style-type: none;
 }
 
@@ -309,8 +309,48 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
   background: linear-gradient(#129cc5, #129cc5) !important;
 }
 
+.selector option:hover {
+  background: linear-gradient(#e6edef, #e6edef);
+}
+
 .selector-lg {
   min-width: 350px !important;
+}
+
+.list-selector {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
+
+.list-selector li.selected {
+  background-color: #129cc5 !important;
+  color: white;
+}
+
+.list-selector li:hover {
+  background-color: #e6edef;
+}
+
+.map-selector {
+  max-height: 210px;
+  overflow-y: auto;
+}
+
+.map-selector li {
+  display: table;
+  cursor: pointer;
+  width: 100%;
+}
+
+.map-selector img, .map-selector span {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.map-selector img {
+  max-width: 200px;
+  float : right;
 }
 
 /* Modal window */
@@ -328,7 +368,7 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list  {
 
 .modal-content {
   display: table-cell;
-  vertical-align: middle;;
+  vertical-align: middle;
 }
 
 .modal-window-circle {
