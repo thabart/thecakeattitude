@@ -150,32 +150,37 @@ Game.prototype = {
 		self.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
 		var tileMap = self.game.add.tilemap(self.options.mapKey);
-		this.map = new CategoryMap();
-		this.map.init(self.options.overviewKey, tileMap, self.game);
-		this.store.setCurrentMap(this.map);
-		this.map.setCurrentPlayer(300, 300, self.options.pseudo);
-		this.cursors = self.game.input.keyboard.createCursorKeys();
+		if (self.options.typeMap === 'shop') {
+			self.map = new ShopMap();
+		} else {
+			self.map = new CategoryMap();
+		}
+
+		self.map.init(self.options.overviewKey, tileMap, self.game);
+		self.store.setCurrentMap(self.map);
+		self.map.setCurrentPlayer(300, 300, self.options.pseudo);
+		self.cursors = self.game.input.keyboard.createCursorKeys();
 		// Connect to socket server
-		this.socket = io(Constants.socketServer).connect();
-		this.socket.on('connect', function() {
+		self.socket = io(Constants.socketServer).connect();
+		self.socket.on('connect', function() {
 			self.cleanPlayers();
 			self.socket.emit('new_player', { x : self.map.player.getX(), y : self.map.player.getY(), direction : self.map.player.getDirection(), mapId: self.map.key, pseudo: self.options.pseudo });
 		});
-		this.socket.on('disconnect', function() {
+		self.socket.on('disconnect', function() {
 			self.socket.emit('remove');
 		});
-		this.socket.on('new_player', function(data) {
+		self.socket.on('new_player', function(data) {
 			if (data.mapId == self.map.key) {
 				// self.addPlayer(data.id, data.x, data.y, data.direction, data.pseudo);
 			}
 		});
-		this.socket.on('remove_player', function(data) {
+		self.socket.on('remove_player', function(data) {
 			self.removePlayer(data.id);
 		});
-		this.socket.on('move_player', function(data) {
+		self.socket.on('move_player', function(data) {
 			self.updatePlayer(data.id, data.x, data.y, data.direction);
 		});
-		this.socket.on('message', function(data) {
+		self.socket.on('message', function(data) {
 			self.displayMessage(data.message, data.id);
 		});
 
@@ -220,6 +225,7 @@ Game.prototype = {
 		    var json = {
 		      map_link: warp.target_map_path,
 		      overview_link: warp.target_overview_path,
+					typeMap: 'shop',
 		      isMainMap: false
 		    };
 		  	self.game.state.start("SplashGame", true, false, json);

@@ -147,7 +147,10 @@ namespace Cook4Me.Api.Host.Operations.Shop
             {
                 foreach (var shopLine in shopLines)
                 {
-                    shopWriter.WriteLine(shopLine.Replace("<map_name>", map.MapName).Replace("<warp_entry>", "shopentry_" + shop.Id).Replace("<underground_name>", "underground_" + shop.Id));
+                    shopWriter
+                        .WriteLine(shopLine.Replace("<map_name>", map.MapName)
+                        .Replace("<warp_entry>", "shopentry_" + shop.Id)
+                        .Replace("<underground_name>", "underground_" + shop.Id));
                 }
             }
 

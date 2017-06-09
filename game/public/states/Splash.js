@@ -18,6 +18,8 @@ Splash.prototype = {
 			self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
 			self.game.load.image('TownInterior@64x64', Constants.apiUrl + '/shops/tilesets/TownInterior@64x64.png');
 			self.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');
+			self.game.load.image('ShopShadows@64x64', Constants.apiUrl + '/shops/tilesets/Shadows@64x64.png');
+			self.game.load.image('freePlace', Constants.apiUrl + '/maps/tilesets/freePlace.png');
 			self.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
 			// Load player
 			self.game.load.image('player', Constants.apiUrl + '/characters/phaser-dude.png');

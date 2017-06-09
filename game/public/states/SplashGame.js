@@ -33,6 +33,7 @@ SplashGame.prototype = {
 		var self = this;
 		self.mapKey = 'main_map';
 		self.overviewKey = 'overview_main_map';
+		self.typeMap = self.options.typeMap || 'category';
 		var txtGroup = self.game.add.group();
 		var bgGroup = self.game.add.group();
 		var bg3Loader = self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
@@ -55,7 +56,8 @@ SplashGame.prototype = {
 			var options = {
 				pseudo: 'test',
 				mapKey : self.mapKey,
-				overviewKey: self.overviewKey
+				overviewKey: self.overviewKey,
+				typeMap: self.typeMap
 			};
 			self.game.state.start("Game", true, false, options);
 		}, 1000);
