@@ -18,5 +18,9 @@
   "previous": "Previous",
   "address": "Address",
   "contactInformation": "Contact",
-  "payment": "Payment"
+  "payment": "Payment",
+  "streetAddress": "Street address",
+  "postalCode": "Postal code",
+  "locality": "Locality",
+  "country": "Country"
 }

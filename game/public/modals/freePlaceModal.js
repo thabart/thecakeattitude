@@ -58,6 +58,7 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
     showTab(0);
     $(descriptionTab).on('next', function() {
       showTab(1);
+      addressTab.init();
     });
     $(addressTab).on('previous', function() { // Address.
       showTab(0);
