@@ -34,7 +34,7 @@ SplashGame.prototype = {
 				overviewKey: self.overviewKey,
 				typeMap: self.typeMap
 			};
-			if (self.typeMap === 'category') {
+			if (self.options.categoryId) {
 				options.categoryId = self.options.categoryId;
 			}
 

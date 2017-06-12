@@ -65,6 +65,8 @@ CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
 							targetOverviewPath = Constants.apiUrl + f[0].map.overview_link;
 						self.groups.warps.set(warp, 'target_map_path', targetMapPath, false, false, 0, true);
 						self.groups.warps.set(warp, 'target_overview_path', targetOverviewPath, false, false, 0, true);
+						self.groups.warps.set(warp, 'typeMap', 'shop', false, false, 0, true);
+						self.groups.warps.set(warp, 'categoryId', categoryId, false, false, 0, true);
 					} else {
 						var shopSpr = self.game.add.sprite(shopObj.x, shopObj.y - freePlaceImage.height, 'freePlace');
 						self.groups.freePlaces.add(shopSpr);

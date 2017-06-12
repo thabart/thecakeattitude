@@ -59,20 +59,25 @@ BaseMap.prototype = {
 			});
 		}
   },
-  addWarpsGroup: function() {
+  addWarpsGroup: function(typeMap, categoryId) {
     var self = this;
     self.groups.warps = self.game.add.group();
 		var warpObjs = self.tileMap.objects['Warps'];
 		if (warpObjs) { // Create the warps.
 			warpObjs.forEach(function(warpObj) {
-				var warp = self.game.add.sprite(warpObj.x, warpObj.y, null);
+				var warp = self.game.add.sprite(warpObj.x, warpObj.y, 'warp');
+        warp.animations.add('stay');
+        warp.animations.play('stay', 10, true);
 				self.game.physics.enable(warp, Phaser.Physics.ARCADE);
-				warp.name = warpObj.name;
-				warp.body.setSize(warpObj.width, warpObj.height, 0, 0);
 				self.groups.warps.add(warp);
 				for (var property in warpObj.properties) {
 					self.groups.warps.set(warp, property, warpObj.properties[property], false, false, 0, true);
 				}
+
+        self.groups.warps.set(warp, 'typeMap', typeMap, false, false, 0, true);
+        if (categoryId) {
+          self.groups.warps.set(warp, 'categoryId', categoryId, false, false, 0, true);
+        }
 			});
 		}
   },

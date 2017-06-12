@@ -152,7 +152,7 @@ Game.prototype = {
 		var tileMap = self.game.add.tilemap(self.options.mapKey);
 		if (self.options.typeMap === 'shop') {
 			self.map = new ShopMap();
-			self.map.init(self.options.overviewKey, tileMap, self.game);
+			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
 		} else if (self.options.typeMap === 'category') {
 			self.map = new CategoryMap();
 			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
@@ -229,7 +229,8 @@ Game.prototype = {
 		    var json = {
 		      map_link: warp.target_map_path,
 		      overview_link: warp.target_overview_path,
-					typeMap: 'shop',
+					categoryId : warp.categoryId,
+					typeMap: warp.typeMap,
 		      isMainMap: false
 		    };
 		  	self.game.state.start("SplashGame", true, false, json);
