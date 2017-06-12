@@ -93,6 +93,21 @@ BaseMap.prototype = {
 		self.game.camera.follow(self.currentPlayer.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
     self.groups.players.add(self.currentPlayer.sprite);
 	},
+  getDefaultPlayerCoordinate: function() {
+    var self = this;
+		var warpObjs = self.tileMap.objects['Warps'];
+    if (!warpObjs) return null;
+    var filteredWarps = warpObjs.filter(function(warp) { return warp.properties && warp.properties['is_entry']; });
+    if (!filteredWarps || filteredWarps.length === 0) {
+      return null;
+    }
+
+    var x = filteredWarps[0].x,
+      y = filteredWarps[0].y,
+      playerFrame = self.game.cache.getImage('player');
+    y = y - playerFrame.height;
+    return { x : x, y : y };
+  },
 	destroy: function() {
 		for (var layer in this.layers) {
 			if (this.layers[layer]) this.layers[layer].destroy();

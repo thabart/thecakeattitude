@@ -150,6 +150,7 @@ Game.prototype = {
 		self.game.stage.disableVisibilityChange = true;
 		// Add tile map and tile set image.
 		var tileMap = self.game.add.tilemap(self.options.mapKey);
+		var position = GameStateStore.getLastPlayerPosition();
 		if (self.options.typeMap === 'shop') {
 			self.map = new ShopMap();
 			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
@@ -162,7 +163,9 @@ Game.prototype = {
 		}
 
 		self.store.setCurrentMap(self.map);
-		self.map.setCurrentPlayer(300, 300, self.options.pseudo);
+		var playerPosition = self.options.playerPosition || self.map.getDefaultPlayerCoordinate() || {x: 300, y: 300}; // Set player position.
+		self.map.setCurrentPlayer(playerPosition.x, playerPosition.y, self.options.pseudo);
+
 		self.cursors = self.game.input.keyboard.createCursorKeys();
 		// Connect to socket server
 		self.socket = io(Constants.socketServer).connect();
@@ -226,14 +229,17 @@ Game.prototype = {
 
 			// Detect player sprite overlap a warp & teleport the player to the map.
 			if (self.game.physics.arcade.overlap(self.map.currentPlayer.sprite, self.map.groups.warps, function(e, warp) {
+				var playerPosition = GameStateStore.getLastPlayerPosition();
 		    var json = {
 		      map_link: warp.target_map_path,
 		      overview_link: warp.target_overview_path,
 					categoryId : warp.categoryId,
 					typeMap: warp.typeMap,
+					playerPosition: playerPosition,
 		      isMainMap: false
 		    };
 		  	self.game.state.start("SplashGame", true, false, json);
+				GameStateStore.saveLastPlayerPosition({ x: self.map.currentPlayer.getX(), y: self.map.currentPlayer.getY() });
 			})) {
 				return;
 			}

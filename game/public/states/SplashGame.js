@@ -38,6 +38,10 @@ SplashGame.prototype = {
 				options.categoryId = self.options.categoryId;
 			}
 
+			if (self.options.playerPosition) {
+				options.playerPosition = self.options.playerPosition;
+			}
+
 			self.game.state.start("Game", true, false, options);
 		}, 1000);
 	}

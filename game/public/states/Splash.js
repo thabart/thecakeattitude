@@ -48,8 +48,6 @@ Splash.prototype = {
 			self.game.load.script('SettingsModal', 'public/modals/settingsModal.js');
 			self.game.load.script('PauseModal', 'public/modals/pauseModal.js');
 			self.game.load.script('WarperModal', 'public/modals/warperModal.js');
-			// Load the stores
-			self.game.load.script('GameStateStore', 'public/stores/gameStateStore.js');
 			// Load the NPCs.
 			self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 			self.game.load.script('Warper', 'public/characters/warper.js');

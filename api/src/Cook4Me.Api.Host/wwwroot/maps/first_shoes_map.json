@@ -137,6 +137,25 @@
                  "width":64.5,
                  "x":607.5,
                  "y":735.5
+                }, 
+                {
+                 "height":64.666666666667,
+                 "id":5,
+                 "name":"",
+                 "properties":
+                    {
+                     "is_entry":"true"
+                    },
+                 "propertytypes":
+                    {
+                     "is_entry":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":62.6666666666661,
+                 "x":6208,
+                 "y":2207.33333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -145,7 +164,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":5,
+ "nextobjectid":7,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
