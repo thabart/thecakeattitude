@@ -42,7 +42,7 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
                 "</div>"+
                 "<div>"+
                   "<label>"+tags+"</label>"+
-                  "<input type='text' class='input-control' />"+
+                  "<input type='text' class='input-control tags' />"+
                 "</div>"+
               "</section>"+
               "<section class='col-6'>"+
@@ -63,5 +63,29 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
         "</div>"+
       "</div>"+
     "</div>");
+
+    $(this.modal).find('.tags').selectize({
+      create: false,
+      labelField: 'name',
+      searchField: 'name',
+      valueField: 'name',
+      render: {
+        option: function(item, escape) {
+          return "<div><span class='title'>"+item.name+"</span></div>";
+        }
+      },
+      load: function(query, callback) {
+        TagsClient.search({name: query}).then(function(tags) {
+          var embedded = tags._embedded;
+          if (!(embedded instanceof Array)) {
+            embedded = [embedded];
+          }
+
+          callback(embedded);
+        }).fail(function() {
+          callback();
+        });
+      }
+    });
   }
 });

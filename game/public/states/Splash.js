@@ -58,6 +58,7 @@ Splash.prototype = {
 			// Load the clients
 			self.game.load.script('CategoryClient', 'public/clients/categoryClient.js');
 			self.game.load.script('ShopClient', 'public/clients/shopClient.js');
+			self.game.load.script('TagsClient', 'public/clients/tagsClient.js');
 		}, this);
 		bg1Loader.start();
 	},
