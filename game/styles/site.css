@@ -288,6 +288,11 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
   -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
 }
 
+.green-action-btn {
+  border: 1px solid #30a027 !important;
+  background-color: #35bd2a !important;
+}
+
 .action-btn:disabled {
   opacity: 0.3;
 }

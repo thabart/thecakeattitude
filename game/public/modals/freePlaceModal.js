@@ -9,6 +9,8 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
       payment = $.i18n('payment');
     var descriptionTab = new FreePlaceModalDescriptionTab();
     var addressTab = new FreePlaceModalAddressTab();
+    var contactInfoTab = new FreePlaceModalContactTab();
+    var paymentTab = new FreePlaceModalPaymentTab();
     self.create("<div class='modal modal-lg' id='free-place-modal' style='display:none;'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -26,6 +28,8 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
           "</ul>"+
           "<div class='tab0'></div>"+
           "<div class='tab1'></div>"+
+          "<div class='tab2'></div>"+
+          "<div class='tab3'></div>"+
         "</div>"+
       "</div>"+
     "</div>");
@@ -49,12 +53,29 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
     };
     $(self.modal).find('.tab0').append(descriptionTab.render());
     $(self.modal).find('.tab1').append(addressTab.render());
+    $(self.modal).find('.tab2').append(contactInfoTab.render());
+    $(self.modal).find('.tab3').append(paymentTab.render());
     showTab(0);
     $(descriptionTab).on('next', function() {
       showTab(1);
     });
-    $(addressTab).on('previous', function() {
+    $(addressTab).on('previous', function() { // Address.
       showTab(0);
+    });
+    $(addressTab).on('next', function() {
+      showTab(2);
+    });
+    $(contactInfoTab).on('previous', function() { // Contact information.
+      showTab(1);
+    });
+    $(contactInfoTab).on('next', function() {
+      showTab(3)
+    });
+    $(paymentTab).on('previous', function() { // Payment.
+      showTab(2);
+    });
+    $(paymentTab).on('confirm', function() {
+      console.log('confirm');
     });
   }
 });
