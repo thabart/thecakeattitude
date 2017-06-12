@@ -484,6 +484,10 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
   padding: 10px;
 }
 
+#free-place-modal .images img {
+  width: 50px;
+}
+
 /* Warper modal */
 .warper-modal .first-column,
 .warper-modal .second-column {
