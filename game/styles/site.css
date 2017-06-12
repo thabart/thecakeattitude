@@ -90,9 +90,7 @@ body {
 .progressbar li {
   text-align: center;
   list-style-type: none;
-  text-transform: uppercase;
   float: left;
-  width: 16.5%;
 }
 
 .progressbar li:before {
@@ -102,7 +100,7 @@ body {
   line-height: 30px;
   display: block;
   color: white;
-  background: rgba(148, 135, 135, 0.9);
+  background: rgb(216, 216, 216);
   border-radius: 50%;
   margin: 0 auto 5px auto;
   z-index: 1;
@@ -112,11 +110,12 @@ body {
   content: '';
   height: 2px;
   right: 50%;
-  background: rgba(148, 135, 135, 0.9);
+  background: rgb(216, 216, 216);
   display: block;
   position: relative;
-  top: -45px;
-  width: 100%;
+  top: -40px;
+  margin-right: 15px;
+  margin-left: 15px;
   z-index: 0;
 }
 
@@ -126,7 +125,7 @@ body {
 
 .progressbar li.active:before,
 .progressbar li.active:after {
-  background: #27AE60;
+  background: #129cc5;
 }
 
 /* Display game menu + tchat */
@@ -267,7 +266,6 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
 }
 
 /* Action button */
-
 .lg-action-btn {
   width: 200px;
 }
@@ -294,15 +292,26 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
   opacity: 0.3;
 }
 
+/* Input style */
+.input-control {
+  display: block;
+  border: 1px solid rgb(216, 216, 216);
+  border-radius: 5px;
+  padding: 5px;
+  margin: 2px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.selector option, .input-control {
+  font-family: 'QuicksandLight', sans-serif;
+}
+
 /* Selector style */
 .selector {
   display: block;
   min-width: 150px;
   border-radius: 5px;
-}
-
-.selector option {
-  font-family: 'QuicksandLight', sans-serif;
 }
 
 .selector option:checked {
@@ -354,7 +363,6 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
 }
 
 /* Modal window */
-
 .modal {
   background-color: rgba(14, 14, 14, 0.33);
   z-index: 1000;
@@ -458,7 +466,6 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
 }
 
 /* Pause modal window */
-
 #pause-modal .menu-options {
   text-align: center;
 }
@@ -470,6 +477,11 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
 
 #pause-modal .menu-options li i {
   padding-top: 17px;
+}
+
+/* Free place modal window */
+#free-place-modal .container {
+  padding: 10px;
 }
 
 /* Warper modal */
@@ -581,4 +593,18 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
     -webkit-transform: scale3D(0, 0, 1);
             transform: scale3D(0, 0, 1);
   }
+}
+
+/* Grid system */
+.col-6 {
+  width: 45%;
+  padding: 10px;
+  vertical-align: top;
+  display: inline-block;;
+}
+
+.col-3 {
+  width: 25% !important;
+  vertical-align: top;
+  display: inline-block;
 }

@@ -5,8 +5,6 @@ BaseCharacter.prototype = {
     this.sprite.animations.add('stay');
     if (fps) {
       this.sprite.animations.play('stay', fps, true);
-    } else {
-      this.sprite.animations.play('stay', 1, true);
     }
 
     this.sprite.inputEnabled = true;

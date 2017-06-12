@@ -68,8 +68,13 @@ CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
 						self.groups.warps.set(warp, 'typeMap', 'shop', false, false, 0, true);
 						self.groups.warps.set(warp, 'categoryId', categoryId, false, false, 0, true);
 					} else {
-						var shopSpr = self.game.add.sprite(shopObj.x, shopObj.y - freePlaceImage.height, 'freePlace');
-						self.groups.freePlaces.add(shopSpr);
+						var npcJson = {
+							x: shopObj.x,
+							y: shopObj.y - freePlaceImage.height
+						};
+						var fp = new FreePlace();
+						fp.init(self.game, npcJson);
+						self.groups.freePlaces.add(fp.getSprite());
 					}
 				});
 			});

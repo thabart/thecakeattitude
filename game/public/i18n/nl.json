@@ -2,10 +2,20 @@
   "mapModalTitle": "Map",
   "pauseModalTitle": "Pause",
   "warperModalTitle": "Warper",
+  "freePlaceModalTitle": "Add a shop",
   "exit": "Exit",
   "navToMainMap": "Go to the main map",
   "selectCategory": "Select a category",
   "selectSubCategory": "Select a sub category",
   "selectMap": "Select a map",
-  "ok": "ok"
+  "ok": "ok",
+  "name": "Name",
+  "description": "Description",
+  "tags": "Tags",
+  "bannerImage": "Banner image",
+  "profilePicture": "Profile picture",
+  "next": "Next",
+  "address": "Address",
+  "contactInformation": "Contact",
+  "payment": "Payment"
 }

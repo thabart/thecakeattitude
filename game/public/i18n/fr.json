@@ -2,10 +2,20 @@
   "mapModalTitle" : "Plan",
   "pauseModalTitle": "Pause",
   "warperModalTitle": "Se téléporter",
+  "freePlaceModalTitle": "Ajouter un magasin",
   "exit": "Quitter",
   "navToMainMap": "Aller vers la map principale",
   "selectCategory": "Sélectionner une catégorie",
   "selectSubCategory": "Sélectionner une sous catégorie",
   "selectMap": "Selectionner une carte",
-  "ok": "ok"
+  "ok": "ok",
+  "name": "Nom",
+  "description": "Description",
+  "tags": "Tags",
+  "bannerImage": "Image de bannière",
+  "profilePicture": "Photo de profil",
+  "next": "Suivant",
+  "address": "Adresse",
+  "contactInformation": "Contact",
+  "payment": "Paiement"
 }
