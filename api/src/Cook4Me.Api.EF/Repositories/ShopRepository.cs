@@ -133,6 +133,7 @@ namespace Cook4Me.Api.EF.Repositories
             return await _context.Shops.Include(c => c.Category)
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
+                .Include(c => c.Map)
                 .Include(c => c.Comments)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
@@ -150,6 +151,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
                 .Include(c => c.Comments)
+                .Include(c => c.Map)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
                 .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
@@ -423,6 +425,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags).ThenInclude(t => t.Tag)
                 .Include(c => c.Comments)
+                .Include(c => c.Map)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories);
             if (parameter.CategoryIds != null && parameter.CategoryIds.Any())

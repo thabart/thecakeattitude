@@ -49,6 +49,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public DateTime UpdateDateTime { get; set; }
         public int TotalScore { get; set; }
         public double AverageScore { get; set; }
+        public ShopMap Map { get; set; }
         public ShopCategory ShopCategory { get; set; }
         public IEnumerable<string> TagNames { get; set; }
         public IEnumerable<ShopPaymentMethod> ShopPaymentMethods { get; set; }

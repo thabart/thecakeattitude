@@ -168,6 +168,7 @@ namespace Cook4Me.Api.EF.Extensions
             }
 
             ShopCategory shopCategory = null;
+            ShopMap shopMap = null;
             var tagNames = new List<string>();
             var paymentMethods = new List<ShopPaymentMethod>();
             var comments = new List<ShopComment>();
@@ -236,6 +237,19 @@ namespace Cook4Me.Api.EF.Extensions
                 }).ToList();
             }
 
+            if (shop.Map != null)
+            {
+                shopMap = new ShopMap
+                {
+                    MapName = shop.Map.MapName,
+                    OverviewName = shop.Map.OverviewName,
+                    PartialOverviewUrl = shop.Map.PartialOverviewUrl,
+                    PartialMapUrl = shop.Map.PartialMapUrl,
+                    CategoryId = shop.Map.CategoryId,
+                    IsMain = shop.Map.IsMain
+                };
+            }
+
             return new ShopAggregate
             {
                 Id = shop.Id,
@@ -265,7 +279,8 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopPaymentMethods = paymentMethods,
                 Comments = comments,
                 ShopFilters = filters,
-                ProductCategories = productCategories
+                ProductCategories = productCategories,
+                Map = shopMap
             };
         }
 

@@ -141,6 +141,11 @@ namespace Cook4Me.Api.Host.Builders
                     filters.Add(GetFilter(filter));
                 }
             }
+
+            if (shop.Map != null) // Map
+            {
+                result.Add(Constants.DtoNames.Shop.Map, GetMap(shop.Map));
+            }
             
             result.Add(Constants.DtoNames.Shop.Filters, filters);
             result.Add(Constants.DtoNames.Shop.Payments, payments);

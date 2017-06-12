@@ -181,6 +181,13 @@ namespace Cook4Me.Api.Host.Extensions
                                 Id = Guid.NewGuid().ToString(),
                                 Method = 2
                             }
+                        },
+                        Map = new Map
+                        {
+                            MapName = "first_shop",
+                            PartialMapUrl = "/shops/first_shop.json",
+                            OverviewName = "first_shop_overview",
+                            PartialOverviewUrl = "/shops/first_shop_overview.png"
                         }
                     },
                     new Shop
@@ -208,6 +215,13 @@ namespace Cook4Me.Api.Host.Extensions
                                 Id = Guid.NewGuid().ToString(),
                                 Method = 0
                             }
+                        },
+                        Map = new Map
+                        {
+                            MapName = "second_shop",
+                            PartialMapUrl = "/shops/second_shop.json",
+                            OverviewName = "first_shop_overview",
+                            PartialOverviewUrl = "/shops/second_shop_overview.png"
                         }
                     }
                 });
