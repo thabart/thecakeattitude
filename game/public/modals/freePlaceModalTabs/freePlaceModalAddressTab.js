@@ -86,6 +86,8 @@ FreePlaceModalAddressTab.prototype = {
         navigator.geolocation.getCurrentPosition(function(position) {
           var coordinates = position.coords
           dfd.resolve({lat: coordinates.latitude, lng: coordinates.longitude});
+        }, function() {
+          dfd.resolve({lat: 50, lng: 50});
         });
       } else {
         dfd.resolve({lat: 50, lng: 50});

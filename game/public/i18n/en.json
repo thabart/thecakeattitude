@@ -24,6 +24,12 @@
   "locality": "Locality",
   "country": "Country",
   "enterAnAddressPlaceHodler": "Enter an address",
+  "email": "Email",
+  "mobile-phone": "Mobile phone",
+  "home-phone": "Home phone",
+  "update": "Update",
+  "informationAreComingFromYourProfile": "Those informations are coming from your profile. Do you want to update them ?",
+  "yesNo": "Yes / No",
   "error-adrMustBeComplete": "The address must be complete",
   "error-onlyOneAdr": "Select only one address",
   "error": "Error"

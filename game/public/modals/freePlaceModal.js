@@ -55,7 +55,7 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
     $(self.modal).find('.tab1').append(addressTab.render());
     $(self.modal).find('.tab2').append(contactInfoTab.render());
     $(self.modal).find('.tab3').append(paymentTab.render());
-    showTab(0);
+    showTab(2);
     $(descriptionTab).on('next', function() {
       showTab(1);
       addressTab.init();
