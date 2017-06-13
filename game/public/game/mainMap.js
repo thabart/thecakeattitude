@@ -34,9 +34,12 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addOverviewImage();
 		self.addOverviewPlayersGroup();
 
-		var spr = self.game.add.sprite(200, 200, 'sorry');
-    spr.animations.add('walk');
-    spr.animations.play('walk', 10, false);
+		var sprLove = self.game.add.sprite(200, 200, 'love');
+    sprLove.animations.add('walk');
+    sprLove.animations.play('walk', 2, true);
+		var sprSorry = self.game.add.sprite(400, 200, 'sorry');
+	  sprSorry.animations.add('walk');
+	  sprSorry.animations.play('walk', 10, true);
 
 		// Resize the world & set boundaries.
 		self.layers.ground.resizeWorld();
