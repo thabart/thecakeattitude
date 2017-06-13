@@ -54,6 +54,9 @@ Splash.prototype = {
 			self.game.load.script('FreePlaceModalAddressTab', 'public/modals/freePlaceModalTabs/freePlaceModalAddressTab.js');
 			self.game.load.script('FreePlaceModalContactTab', 'public/modals/freePlaceModalTabs/freePlaceModalContactTab.js');
 			self.game.load.script('FreePlaceModalPaymentTab', 'public/modals/freePlaceModalTabs/freePlaceModalPaymentTab.js');
+			self.game.load.script('WarperCurrentUserShopsTab', 'public/modals/warperModalTabs/warperCurrentUserShopsTab.js');
+			self.game.load.script('WarperMapsTab', 'public/modals/warperModalTabs/warperMapsTab.js');
+			self.game.load.script('WarperShopsTab', 'public/modals/warperModalTabs/warperShopsTab.js');
 			// Load the NPCs.
 			self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 			self.game.load.script('Warper', 'public/characters/warper.js');
