@@ -68,6 +68,8 @@ Splash.prototype = {
 			self.game.load.script('ShopClient', 'public/clients/shopClient.js');
 			self.game.load.script('TagsClient', 'public/clients/tagsClient.js');
 			self.game.load.script('GoogleMapService', 'public/clients/googleMapService.js');
+			// Load the emoticons.
+			self.game.load.spritesheet('sorry', 'styles/emoticons/sorry.png', 32, 50, 25);
 		}, this);
 		bg1Loader.start();
 	},

@@ -35,6 +35,9 @@
   "bankTransfer": "Bank transfer",
   "insertIban": "Please insert your IBAN",
   "chooseOneOreMorePaymentMethods": "Choose one or more payment method(s)",
+  "maps": "Maps",
+  "shops": "Shops",
+  "yourShops": "Your shops",
   "error-adrMustBeComplete": "The address must be complete",
   "error-onlyOneAdr": "Select only one address",
   "error": "Error"

@@ -3,6 +3,9 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function(game) {
     var self = this;
     var title = $.i18n('warperModalTitle'),
+      maps = $.i18n('maps'),
+      shops = $.i18n('shops'),
+      yourShops = $.i18n('yourShops'),
       ok = $.i18n('ok');
     self.game = game;
     self.warperMapsTab = new WarperMapsTab();
@@ -18,9 +21,9 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
             "</div>"+
           "</div>"+
           "<ul class='tab'>"+
-            "<li class='tab-item'>Maps</li>"+
-            "<li class='tab-item'>Shops</li>"+
-            "<li class='tab-item'>Your shops</li>"+
+            "<li class='tab-item'>"+maps+"</li>"+
+            "<li class='tab-item'>"+shops+"</li>"+
+            "<li class='tab-item'>"+yourShops+"</li>"+
           "</ul>"+
           "<div class='tab0'></div>"+
           "<div class='tab1'></div>"+

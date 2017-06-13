@@ -35,6 +35,9 @@
   "bankTransfer": "Virement bancaire",
   "insertIban": "Insérez votre IBAN",
   "chooseOneOreMorePaymentMethods": "Choisissez un ou plusieurs moyens de paiement",
+  "maps": "Maps",
+  "shops": "Magasins",
+  "yourShops": "Vos magasins",
   "error-adrMustBeComplete": "L'addresse doit être complète",
   "error-onlyOneAdr": "Sélectionner seulement une adresse",
   "error": "Erreur"
