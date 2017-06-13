@@ -61,6 +61,19 @@ body {
   color: white !important;
 }
 
+.alert-error {
+  display: none;
+  border: 1px solid #ebccd1;
+  background-color: #f2dede;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.alert-error .close {
+  float: right;
+  cursor: pointer;
+}
+
 /* Login state */
 .login {
   position: absolute;
@@ -85,6 +98,7 @@ body {
 /* Progress bar */
 .progressbar {
   counter-reset: step;
+  min-height: 50px;
 }
 
 .progressbar li {
@@ -502,6 +516,7 @@ ul.menu-options, .game-tchat .body ul, .modal-window .content ul.list, ul.list-s
 
 #free-place-modal .google-map-searchbox {
   top: 7px !important;
+  width: 150px;
 }
 
 /* Warper modal */

@@ -41,6 +41,7 @@ Splash.prototype = {
 			// Load utils.
 			self.game.load.script('Calculator', 'public/utils/calculator.js');
 			self.game.load.script('Configuration', 'public/utils/configuration.js');
+			self.game.load.script('GoogleMapUtils', 'public/utils/GoogleMapUtils.js');
 			// Load modal windows.
 			self.game.load.script('BaseModal', 'public/modals/baseModal.js');
 			self.game.load.script('TchatModal', 'public/modals/tchatModal.js');
@@ -63,6 +64,7 @@ Splash.prototype = {
 			self.game.load.script('CategoryClient', 'public/clients/categoryClient.js');
 			self.game.load.script('ShopClient', 'public/clients/shopClient.js');
 			self.game.load.script('TagsClient', 'public/clients/tagsClient.js');
+			self.game.load.script('GoogleMapService', 'public/clients/googleMapService.js');
 		}, this);
 		bg1Loader.start();
 	},

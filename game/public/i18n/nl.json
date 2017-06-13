@@ -22,5 +22,9 @@
   "streetAddress": "Street address",
   "postalCode": "Postal code",
   "locality": "Locality",
-  "country": "Country"
+  "country": "Country",
+  "enterAnAddressPlaceHodler": "Enter an address",
+  "error-adrMustBeComplete": "The address must be complete",
+  "error-onlyOneAdr": "Select only one address",
+  "error": "Error"
 }
