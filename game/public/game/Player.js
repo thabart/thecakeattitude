@@ -3,6 +3,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		messageTimeoutMs = 5000; // Hide the message after 5 seconds.
 	this.id = id;
 	this.sprite = game.add.sprite(x, y, 'player');
+	this.spriteEmoticon = null;
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
 	var overviewSize = Configuration.getOverviewSize();
 	var overviewPlayerCoordinate = Calculator.getOverviewPlayerCoordinate({x: x, y: y}, tileMap, overviewSize, overviewCoordinate);
@@ -15,7 +16,21 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 
 	this.overviewSprite.drawCircle(0, 0, 2);
 	this.direction = [];
-	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2));
+	this.emoticons = [
+		{
+			"sprite": "sorry",
+			"cmd": "/sorry",
+			"fps": 10,
+			"collapsedms": 4000
+		},
+		{
+			"sprite": "love",
+			"cmd": "/love",
+			"fps": 4,
+			"collapsedms": 2000
+		}
+	];
+	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2)); // Draw hit zone.
 	this.hitZone.lineStyle(2, 0x0000FF, 1);
 	this.hitZone.drawRect(0, 0, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
 	var interactionSprite = game.add.sprite(0, game.camera.height - 50, 'spacebar');
@@ -32,7 +47,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		pseudoStyle.fill = '#FFA500';
 	}
 
-	this.pseudo = game.add.text(-this.sprite.width / 2, -15, pseudo, pseudoStyle);
+	this.pseudo = game.add.text(-this.sprite.width / 2, -15, pseudo, pseudoStyle); // Draw pseudo.
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 
@@ -105,16 +120,38 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		this.sprite.y = y;
 		this.direction = direction;
 	};
+	// Remove emoticon
+	this.removeEmoticon = function() {
+		if (this.spriteEmoticon !== null) {
+			this.spriteEmoticon.destroy();
+			this.spriteEmoticon = null;
+		}
+	};
 	// Display message
 	this.displayMessage = function(message) {
 		var self = this;
-		clearTimeout(this.messageTimeout);
-		this.tchatBubble.html(message);
-		this.updateMessagePosition();
-		$(this.tchatBubble).show();
-		this.messageTimeout = setTimeout(function() {
-			$(self.tchatBubble).hide();
-		}, messageTimeoutMs);
+		clearTimeout(self.messageTimeout);
+		self.removeEmoticon();
+		$(self.tchatBubble).hide();
+		var emoticon = self.emoticons.filter(function(em) { return em.cmd === message; });
+		if (emoticon.length === 1) {
+			var spriteName = emoticon[0].sprite;
+			var frame = game.cache.getFrameData(spriteName).getFrame(0);
+			self.spriteEmoticon = game.add.sprite(-frame.width, -frame.height, spriteName);
+	    self.spriteEmoticon.animations.add('walk');
+	    self.spriteEmoticon.animations.play('walk', emoticon[0].fps, false);
+			self.sprite.addChild(self.spriteEmoticon);
+			self.messageTimeout = setTimeout(function() {
+				self.removeEmoticon();
+			}, emoticon[0].collapsedms);
+		} else {
+			self.tchatBubble.html(message);
+			self.updateMessagePosition();
+			$(self.tchatBubble).show();
+			self.messageTimeout = setTimeout(function() {
+				$(self.tchatBubble).hide();
+			}, messageTimeoutMs);
+		}
 	};
 	// Destroy the player.
 	this.destroy = function() {
