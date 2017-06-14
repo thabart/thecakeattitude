@@ -70,7 +70,9 @@ Splash.prototype = {
 			self.game.load.script('GoogleMapService', 'public/clients/googleMapService.js');
 			// Load the emoticons.
 			self.game.load.spritesheet('sorry', 'styles/emoticons/sorry.png', 32, 50, 25);
-			self.game.load.spritesheet('love', 'styles/emoticons/love-eyes.png', 32, 32, 5);
+			self.game.load.spritesheet('love-eyes', 'styles/emoticons/love-eyes.png', 31, 24, 5);
+			self.game.load.spritesheet('money', 'styles/emoticons/money.png', 27, 24, 6);
+			self.game.load.spritesheet('love', 'styles/emoticons/love.png', 112, 97, 29);
 		}, this);
 		bg1Loader.start();
 	},

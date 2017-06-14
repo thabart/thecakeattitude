@@ -20,14 +20,22 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		{
 			"sprite": "sorry",
 			"cmd": "/sorry",
-			"fps": 10,
-			"collapsedms": 4000
+			"fps": 12
+		},
+		{
+			"sprite": "love-eyes",
+			"cmd": "/leyes",
+			"fps": 12
+		},
+		{
+			"sprite": "money",
+			"cmd": "/money",
+			"fps": 12
 		},
 		{
 			"sprite": "love",
 			"cmd": "/love",
-			"fps": 4,
-			"collapsedms": 2000
+			"fps": 12
 		}
 	];
 	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2)); // Draw hit zone.
@@ -138,12 +146,12 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 			var spriteName = emoticon[0].sprite;
 			var frame = game.cache.getFrameData(spriteName).getFrame(0);
 			self.spriteEmoticon = game.add.sprite(-frame.width, -frame.height, spriteName);
-	    self.spriteEmoticon.animations.add('walk');
+	    var walkAnim = self.spriteEmoticon.animations.add('walk');
 	    self.spriteEmoticon.animations.play('walk', emoticon[0].fps, false);
-			self.sprite.addChild(self.spriteEmoticon);
-			self.messageTimeout = setTimeout(function() {
+			walkAnim.onComplete.add(function() {
 				self.removeEmoticon();
-			}, emoticon[0].collapsedms);
+			}, self);
+			self.sprite.addChild(self.spriteEmoticon);
 		} else {
 			self.tchatBubble.html(message);
 			self.updateMessagePosition();
