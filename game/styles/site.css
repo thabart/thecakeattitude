@@ -539,6 +539,11 @@ ul.tab  {
   border: 1px solid rgb(195, 195, 195);
 }
 
+/* Login modal */
+#login-modal .local-login {
+  padding: 15px;
+}
+
 /* Warper modal */
 .warper-modal .first-column,
 .warper-modal .second-column {

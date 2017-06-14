@@ -4,7 +4,7 @@ BaseModal.prototype = {
     var self = this;
     self.modal = $(html);
     $(Constants.gameSelector).append(self.modal);
-    $(self.modal).find('.close').click(function() {
+    $(self.modal).find('.header .close').click(function() {
       $(self.modal).toggle();
     });
   },

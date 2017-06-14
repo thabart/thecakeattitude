@@ -50,6 +50,7 @@ Splash.prototype = {
 			self.game.load.script('PauseModal', 'public/modals/pauseModal.js');
 			self.game.load.script('WarperModal', 'public/modals/warperModal.js');
 			self.game.load.script('FreePlaceModal', 'public/modals/freePlaceModal.js');
+			self.game.load.script('LoginModal', 'public/modals/loginModal.js');
 			self.game.load.script('EmoticonsSelectorModal', 'public/modals/emoticonsSelectorModal.js');
 			self.game.load.script('FreePlaceModalDescriptionTab', 'public/modals/freePlaceModalTabs/freePlaceModalDescriptionTab.js');
 			self.game.load.script('FreePlaceModalAddressTab', 'public/modals/freePlaceModalTabs/freePlaceModalAddressTab.js');
@@ -69,6 +70,7 @@ Splash.prototype = {
 			self.game.load.script('ShopClient', 'public/clients/shopClient.js');
 			self.game.load.script('TagsClient', 'public/clients/tagsClient.js');
 			self.game.load.script('GoogleMapService', 'public/clients/googleMapService.js');
+			self.game.load.script('OpenIdClient', 'public/clients/openIdClient.js');
 			// Load the emoticons.
 			self.game.load.spritesheet('sorry', 'styles/emoticons/sorry.png', 32, 50, 25);
 			self.game.load.spritesheet('love-eyes', 'styles/emoticons/love-eyes.png', 31, 24, 5);
@@ -87,11 +89,13 @@ Splash.prototype = {
 		this.game.state.add('ShopChooser', ShopChooser);
 		this.game.state.add('SplashGame', SplashGame);
 		 setTimeout(function () {
-			// self.game.state.start("Connect");
+			self.game.state.start("Connect");
+			/*
 			var options = {
 				isMainMap: true
 			};
 			self.game.state.start("SplashGame", true, false, options);
+			*/
 		}, 1000);
 	}
 };

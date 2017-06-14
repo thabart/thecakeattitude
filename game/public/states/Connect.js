@@ -2,23 +2,16 @@
 var Connect = function() {};
 Connect.prototype = {
 	preload: function() {
-		
+		this.game.load.image('bg2', 'styles/backgrounds/bg2.jpg');
 	},
-	init: function() {
-		var buildLoginModal = function() {
-			var result = $("<div class='card' style='position: absolute; top: 50%; left: 50%;transform: translate(-50%, -50%);'>"+
-				"<div class='card-header'>Authenticate</div>"+
-				"<div class='card-block'><form style='display: none;'>"+
-					"<div class='form-group'><label>Login</label><input type='text' class='form-control' name='login' /></div>"+
-					"<div class='form-group'><label>Password</label><input type='password' class='form-control' name='password' /></div>"+
-					"<div class='form-group'><input type='submit' class='btn btn-default' value='login' /></div>"+
-					"<div class='form-group'><a href='#'>Create an account</a></div>"+
-					"<div class='form-group'><a href='http://localhost:5001/authorization?scope=openid%20profile&state=75BCNvRlEGHpQRCT&redirect_uri=http://localhost:3000/callback&response_type=id_token%20token&client_id=game&nonce=nonce&response_mode=query' id='use-external-account'>Use external account</a></div>"+
-				"</form><div style='text-align:center;'><i class='fa fa-spinner fa-spin' style='font-size:24px; width: 24px; height:24px;'></i></div></div>"+
-				"</div>");
-			$(game).append(result);
-			return result;
-		};
+	init: function() { },
+	create: function() {
+		var self = this;
+		self.game.add.tileSprite(0, 0, 980, 600, 'bg2');
+		var loginModal = new LoginModal();
+		loginModal.init();
+		loginModal.toggle();
+		/*
 		var titlePaddingTop = 10,
 			titlePaddingLeft = 10,
 			playWidth = 341,
@@ -28,7 +21,7 @@ Connect.prototype = {
 			clientSecret = Constants.ClientSecret,
 			sessionName = Constants.SessionName,
 			loginWindow = buildLoginModal(),
-			getFormData = Helpers.getFormData,
+			// getFormData = Helpers.getFormData,
 			getParameterByName = function(name, url) {
 				if (!url) url = window.location.href;
 				name = name.replace(/[\[\]]/g, "\\$&");
@@ -42,15 +35,15 @@ Connect.prototype = {
 			displayLoading = function(isLoading) {
 				if (isLoading) {
 					$(loginWindow).find('.fa-spinner').show();
-					$(loginWindow).find('form').hide();					
-				} else {					
+					$(loginWindow).find('form').hide();
+				} else {
 					$(loginWindow).find('.fa-spinner').hide();
 					$(loginWindow).find('form').show();
 				}
 			},
 			navigateToMenu = function(subject) {
-				self.game.state.start("Menu", true, false, subject);		
-				loginWindow.remove();		
+				self.game.state.start("Menu", true, false, subject);
+				loginWindow.remove();
 			},
 			introspectAccessToken = function(accessToken, introspectionUrl, successCallback, errorCallback) {
 				var json = {
@@ -58,7 +51,7 @@ Connect.prototype = {
 					client_secret : clientSecret,
 					token : accessToken,
 					token_type_hint : 'access_token'
-				};			
+				};
 				$.ajax(introspectionUrl, {
 					data: json,
 					method: 'POST',
@@ -68,31 +61,33 @@ Connect.prototype = {
 						if (successCallback) successCallback(r);
 						return;
 					}
-					
+
 					if (errorCallback) errorCallback();
-				}).fail(function() {	
-					if (errorCallback) errorCallback();	
+				}).fail(function() {
+					if (errorCallback) errorCallback();
 				});
 			};
-		
+		*/
+		/*
 		if (sessionStorage.getItem(sessionName)) {
 			var accessToken = sessionStorage.getItem(sessionName);
 			$.get(openIdWellKnownConfiguration).then(function(c) {
 				var introspectionUrl = c.introspection_endpoint;
-				introspectAccessToken(accessToken, introspectionUrl, function(r) {				
+				introspectAccessToken(accessToken, introspectionUrl, function(r) {
 					navigateToMenu(r.sub);
-				}, function() {					
-					displayLoading(false);			
+				}, function() {
+					displayLoading(false);
 					sessionStorage.removeItem(sessionName);
 				});
 			}).fail(function() {
 				displayLoading(false);
-				errorModal.display('Cannot contact the server', 3000, 'error');				
+				errorModal.display('Cannot contact the server', 3000, 'error');
 			});
 		} else {
 			displayLoading(false);
 		}
-		
+		*/
+		/*
 		loginWindow.find('form').submit(function(e) {
 			e.preventDefault();
 			var serialize = getFormData(this);
@@ -105,16 +100,16 @@ Connect.prototype = {
 				client_secret: clientSecret
 			};
 			var data = encodeURIComponent(JSON.stringify(json));
-			$.get(openIdWellKnownConfiguration).then(function(config) {			
+			$.get(openIdWellKnownConfiguration).then(function(config) {
 				var introspectionUrl = config.introspection_endpoint;
 				$.ajax(config.token_endpoint, {
 					data: json,
 					method: 'POST',
 					dataType: 'json'
-				}).then(function(r) {					
+				}).then(function(r) {
 					var accessToken = r.access_token;
-					introspectAccessToken(accessToken, introspectionUrl, function(i) {			
-						sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.	
+					introspectAccessToken(accessToken, introspectionUrl, function(i) {
+						sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.
 						navigateToMenu(i.sub);
 					});
 				}).fail(function(e, p , t) {
@@ -128,26 +123,27 @@ Connect.prototype = {
 			e.preventDefault();
 			var href = $(this).attr('href');
 			var w = window.open(href, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
-			var interval = setInterval(function() {		
-				if (w.closed) {					
+			var interval = setInterval(function() {
+				if (w.closed) {
 					clearInterval(interval);
 					return;
 				}
-				
+
 				var href = w.location.href;
 				var accessToken = getParameterByName('access_token', href);
-				if (accessToken) {				
-					$.get(openIdWellKnownConfiguration).then(function(config) {							
+				if (accessToken) {
+					$.get(openIdWellKnownConfiguration).then(function(config) {
 						var introspectionUrl = config.introspection_endpoint;
-						introspectAccessToken(accessToken, introspectionUrl, function(i) {			
+						introspectAccessToken(accessToken, introspectionUrl, function(i) {
 							clearInterval(interval);
 							w.close();
-							sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.	
+							sessionStorage.setItem(sessionName, accessToken); // Store the access token into the session.
 							navigateToMenu(i.sub);
-						});	
+						});
 					});
 				}
 			}, 1000);
 		});
-	}	
+		*/
+	}
 };
