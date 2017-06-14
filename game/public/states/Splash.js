@@ -50,6 +50,7 @@ Splash.prototype = {
 			self.game.load.script('PauseModal', 'public/modals/pauseModal.js');
 			self.game.load.script('WarperModal', 'public/modals/warperModal.js');
 			self.game.load.script('FreePlaceModal', 'public/modals/freePlaceModal.js');
+			self.game.load.script('EmoticonsSelectorModal', 'public/modals/emoticonsSelectorModal.js');
 			self.game.load.script('FreePlaceModalDescriptionTab', 'public/modals/freePlaceModalTabs/freePlaceModalDescriptionTab.js');
 			self.game.load.script('FreePlaceModalAddressTab', 'public/modals/freePlaceModalTabs/freePlaceModalAddressTab.js');
 			self.game.load.script('FreePlaceModalContactTab', 'public/modals/freePlaceModalTabs/freePlaceModalContactTab.js');
@@ -73,6 +74,7 @@ Splash.prototype = {
 			self.game.load.spritesheet('love-eyes', 'styles/emoticons/love-eyes.png', 31, 24, 5);
 			self.game.load.spritesheet('money', 'styles/emoticons/money.png', 27, 24, 6);
 			self.game.load.spritesheet('love', 'styles/emoticons/love.png', 112, 97, 29);
+			self.game.load.spritesheet('thanks', 'styles/emoticons/thx.png', 43, 43, 22);
 		}, this);
 		bg1Loader.start();
 	},

@@ -2,6 +2,8 @@ var TchatModal = function() {};
 TchatModal.prototype = {
   init: function() {
     var self = this;
+    self.emoticonsSelector = new EmoticonsSelectorModal();
+    self.emoticonsSelector.init();
     self.messages = [];
     self.modal = $("<div class='game-tchat'>" +
       "<div class='header'>" +
@@ -20,6 +22,7 @@ TchatModal.prototype = {
           "<form class='sendMessageForm'>" +
             "<input type='text' class='input' />" +
             "<button class='action-btn'>Send</button>" +
+            "<button class='action-btn emoticon-selector'><i class='fa fa-smile-o' /></button>" +
           "</form>"+
         "</div>"+
       "</div>"+
@@ -54,6 +57,10 @@ TchatModal.prototype = {
       self.messages.push(record);
       self.refresh();
       input.val('');
+    });
+    $(self.modal).find('.emoticon-selector').click(function(e) {
+      e.preventDefault();
+      self.emoticonsSelector.toggle();
     });
   },
   toggle() {

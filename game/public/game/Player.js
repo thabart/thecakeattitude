@@ -16,28 +16,6 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 
 	this.overviewSprite.drawCircle(0, 0, 2);
 	this.direction = [];
-	this.emoticons = [
-		{
-			"sprite": "sorry",
-			"cmd": "/sorry",
-			"fps": 12
-		},
-		{
-			"sprite": "love-eyes",
-			"cmd": "/leyes",
-			"fps": 12
-		},
-		{
-			"sprite": "money",
-			"cmd": "/money",
-			"fps": 12
-		},
-		{
-			"sprite": "love",
-			"cmd": "/love",
-			"fps": 12
-		}
-	];
 	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2)); // Draw hit zone.
 	this.hitZone.lineStyle(2, 0x0000FF, 1);
 	this.hitZone.drawRect(0, 0, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
@@ -141,7 +119,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		clearTimeout(self.messageTimeout);
 		self.removeEmoticon();
 		$(self.tchatBubble).hide();
-		var emoticon = self.emoticons.filter(function(em) { return em.cmd === message; });
+		var emoticon = Constants.emoticons.filter(function(em) { return em.cmd === message; });
 		if (emoticon.length === 1) {
 			var spriteName = emoticon[0].sprite;
 			var frame = game.cache.getFrameData(spriteName).getFrame(0);

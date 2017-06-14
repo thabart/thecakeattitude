@@ -530,6 +530,15 @@ ul.tab  {
   width: 150px;
 }
 
+/* Emoticons selector modal */
+#emoticons-selector-modal .emoticon {
+  text-align: center;
+}
+
+#emoticons-selector-modal .emoticon img {
+  border: 1px solid rgb(195, 195, 195);
+}
+
 /* Warper modal */
 .warper-modal .first-column,
 .warper-modal .second-column {
