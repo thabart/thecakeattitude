@@ -96,15 +96,18 @@ Game.prototype = {
 		var self = this;
 		self.options = options;
 		self.modals = {};
+		self.floating = {};
 		self.modals.tchat = new TchatModal();
 		self.modals.map = new MapModal();
 		self.modals.pause = new PauseModal();
 		self.modals.settings = new SettingsModal();
+		self.floating.profileMenu = new ProfileMenuFloating();
 		self.store = GameStateStore;
 		self.modals.tchat.init();
 		self.modals.map.init();
 		self.modals.pause.init();
 		self.modals.settings.init();
+		self.floating.profileMenu.init();
 		$(self.modals.tchat).on('message', function(e, data) {
 			self.map.currentPlayer.displayMessage(data.content);
 		});
@@ -113,13 +116,16 @@ Game.prototype = {
 				isMainMap: true
 			});
 		});
+		$(self.modals.pause).on('exit', function() {
+			self.game.state.start("Menu");
+		});
 		var buildMenuOptions = function() {
-			self.optionsMenu = $("<div class='game-menu'>"+
-				"<ul class='menu-options'>"+
-					"<li class='light-blue menu-option' id='map-option'><i class='fa fa-map'></i></li>"+
-					"<li class='default menu-option' id='tchat-option'><i class='fa fa-comments'></i></li>"+
-					"<li class='blue menu-option' id='pause-option'><i class='fa fa-pause'></i></li>"+
-					"<li class='green menu-option' id='settings-option'><i class='fa fa-cog'></i></li>"+
+			self.optionsMenu = $("<div class='floating-options-bottom-left'>"+
+				"<ul class='floating-options'>"+
+					"<li class='light-blue floating-option' id='map-option'><i class='fa fa-map'></i></li>"+
+					"<li class='default floating-option' id='tchat-option'><i class='fa fa-comments'></i></li>"+
+					"<li class='blue floating-option' id='pause-option'><i class='fa fa-pause'></i></li>"+
+					"<li class='green floating-option' id='settings-option'><i class='fa fa-cog'></i></li>"+
 				"</ul>"+
 				"</div>");
 			$(game).append(self.optionsMenu);
@@ -272,6 +278,7 @@ Game.prototype = {
 		this.modals.map.remove();
 		this.modals.pause.remove();
 		this.modals.settings.remove();
+		this.floating.profileMenu.remove();
 		this.optionsMenu.remove();
 		this.map.destroy();
 	}

@@ -52,6 +52,7 @@ Splash.prototype = {
 			self.game.load.script('WarperModal', 'public/modals/warperModal.js');
 			self.game.load.script('FreePlaceModal', 'public/modals/freePlaceModal.js');
 			self.game.load.script('LoginModal', 'public/modals/loginModal.js');
+			self.game.load.script('MenuModal', 'public/modals/menuModal.js');
 			self.game.load.script('EmoticonsSelectorModal', 'public/modals/emoticonsSelectorModal.js');
 			self.game.load.script('FreePlaceModalDescriptionTab', 'public/modals/freePlaceModalTabs/freePlaceModalDescriptionTab.js');
 			self.game.load.script('FreePlaceModalAddressTab', 'public/modals/freePlaceModalTabs/freePlaceModalAddressTab.js');
@@ -60,6 +61,8 @@ Splash.prototype = {
 			self.game.load.script('WarperCurrentUserShopsTab', 'public/modals/warperModalTabs/warperCurrentUserShopsTab.js');
 			self.game.load.script('WarperMapsTab', 'public/modals/warperModalTabs/warperMapsTab.js');
 			self.game.load.script('WarperShopsTab', 'public/modals/warperModalTabs/warperShopsTab.js');
+			// Load floating menu.
+			self.game.load.script('ProfileMenuFloating', 'public/floating/profile.js');
 			// Load the NPCs.
 			self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 			self.game.load.script('Warper', 'public/characters/warper.js');
@@ -90,13 +93,13 @@ Splash.prototype = {
 		this.game.state.add('ShopChooser', ShopChooser);
 		this.game.state.add('SplashGame', SplashGame);
 		 setTimeout(function () {
-			self.game.state.start("Connect");
+			self.game.state.start('Menu');
+			// self.game.state.start("Connect");
 			/*
 			var options = {
 				isMainMap: true
 			};
-			self.game.state.start("SplashGame", true, false, options);
-			*/
+			self.game.state.start("SplashGame", true, false, options);*/
 		}, 1000);
 	}
 };

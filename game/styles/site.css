@@ -17,6 +17,12 @@ body {
   font-family: 'QuicksandLight', sans-serif;
 }
 
+ul.no-style {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
 /* Game */
 #game-container {
   width:980px;
@@ -149,22 +155,35 @@ body {
 }
 
 /* Display game menu + tchat */
-.game-menu {
+
+ul.floating-options,
+.game-tchat .body ul,
+.modal-window .content ul.list,
+ul.list-selector,
+ul.list-group,
+ul.tab,
+ul.tooltip-actions  {
+  list-style-type: none;
+}
+
+ul.floating-options {
+  margin: 0;
+  padding: 0;
+}
+
+.floating-options-top-left {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
+.floating-options-bottom-left {
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
 
-ul.menu-options,
-.game-tchat .body ul,
-.modal-window .content ul.list,
-ul.list-selector,
-ul.list-group,
-ul.tab  {
-  list-style-type: none;
-}
-
-.menu-options .menu-option {
+.floating-options .floating-option {
   border-radius: 50%;
   font-size: 16pt;
   color: white;
@@ -181,28 +200,36 @@ ul.tab  {
   margin-top: 10px;
 }
 
-.menu-options div.menu-option {
+.floating-options div.floating-option {
   padding-top: 17px;
 }
 
-.menu-options .menu-option:hover {
+.floating-options .floating-option:hover {
   border-color: gray;
 }
 
-.menu-options .green {
+.floating-options .green {
   background-color: #12c512;
 }
 
-.menu-options .default {
+.floating-options .default {
   background-color: #ffbc00;
 }
 
-.menu-options .light-blue {
+.floating-options .light-blue {
   background-color: #00b8ff;
 }
 
-.menu-options .blue {
+.floating-options .dark-blue {
+  background-color: #0066ff;
+}
+
+.floating-options .blue {
   background-color: #129cc5;
+}
+
+#account-floating {
+  z-index: 2000;
 }
 
 .game-tchat {
@@ -293,6 +320,10 @@ ul.tab  {
 /* Action button */
 .lg-action-btn {
   width: 200px;
+}
+
+.md-action-btn {
+  width: 120px;
 }
 
 .action-btn, .input {
@@ -406,6 +437,10 @@ ul.tab  {
   display: table;
 }
 
+.modal-transparent {
+  background-color: transparent !important;
+}
+
 .modal-content {
   display: table-cell;
   vertical-align: middle;
@@ -498,16 +533,16 @@ ul.tab  {
 }
 
 /* Pause modal window */
-#pause-modal .menu-options {
+#pause-modal .floating-options {
   text-align: center;
 }
 
-#pause-modal .menu-options li {
+#pause-modal .floating-options li {
   display: inline-block;
   margin-right: 5px;
 }
 
-#pause-modal .menu-options li i {
+#pause-modal .floating-options li i {
   padding-top: 17px;
 }
 
@@ -565,6 +600,37 @@ ul.tab  {
 .warper-modal .map-row {
   border-top: 1px solid rgb(222, 214, 214);
   padding-top: 5px;
+}
+
+/* Display tooltip */
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltip-content {
+  box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -moz-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -webkit-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
+  background-color: rgba(255, 255, 255, 0.87);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.tooltip-top {
+  padding-top: 10px;
+}
+
+.tooltip-top:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  border-width: 0 10px 10px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.87) transparent;
+  display: block;
+  width: 0;
 }
 
 /* Bubble tchat */

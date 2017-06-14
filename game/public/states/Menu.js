@@ -1,8 +1,11 @@
 'use strict';
 var Menu = function() {};
 Menu.prototype = {
-	preload: function() { },
-	init: function(subject) {	
+	preload: function() {
+		this.game.load.image('bg4', 'styles/backgrounds/bg4.jpg');
+	},
+	init: function() {
+		/*
 		var buildSettingsModal = function() {
 			var result = $("<div class='modal fade'><div class='modal-dialog'><div class='modal-content'>"+
 				"<div class='modal-header'><h5 class='modal-title'>Settings</h5><button type='button' class='close' data-dismiss='modal'><span >&times;</span></button></div>"+
@@ -21,7 +24,7 @@ Menu.prototype = {
 					"</div>"+
 					"<div class='tab-pane' id='contactinformation'>"+
 						"<div class='form-group'><label class='control-label'>Street Address</label><input type='text' class='form-control' name='street_address' /></div>"+
-						"<div class='form-group'><label class='control-label'>Postal code</label><input type='text' class='form-control' name='postal_code' /></div>"+	
+						"<div class='form-group'><label class='control-label'>Postal code</label><input type='text' class='form-control' name='postal_code' /></div>"+
 						"<div class='form-group'><label class='control-label'>Locality</label><input type='text' class='form-control' name='locality' /></div>"+
 						"<div class='form-group'><label class='control-label'>Country</label><input type='text' class='form-control' name='country' /></div>"+
 						"<div class='form-group'><input type='checkbox' /> Use current location</div>"+
@@ -32,7 +35,7 @@ Menu.prototype = {
 			$(document.body).append(result);
 			return result;
 		};
-		
+
 		var titlePaddingTop = 10,
 			titlePaddingLeft = 10,
 			rectWidth = 150,
@@ -49,7 +52,7 @@ Menu.prototype = {
 			getCurrentLocation = Helpers.getCurrentLocation,
 			parseAddress = Helpers.parseAddress,
 			self = this,
-			displayAddress = function(adr) {				
+			displayAddress = function(adr) {
 				$(settingsModal).find("input[name='street_address']").val(adr.street_address);
 				$(settingsModal).find("input[name='postal_code']").val(adr.postal_code);
 				$(settingsModal).find("input[name='locality']").val(adr.locality);
@@ -65,22 +68,22 @@ Menu.prototype = {
 					headers: {
 						'Authorization': 'Bearer '+accessToken
 					}
-				}).then(function(userInfo) {	
+				}).then(function(userInfo) {
 					if (successCb) successCb(userInfo);
 				}).fail(function(e, m) {
-					errorModal.display('User information cannot be retrieved', 3000, 'error');		
+					errorModal.display('User information cannot be retrieved', 3000, 'error');
 					if (errorCb) errorCb();
-				});				
+				});
 			},
 			displaySettingsLoading = function(isLoading) {
-				if (isLoading) {				
+				if (isLoading) {
 					$(settingsModal).find('#loading').show();
 					$(settingsModal).find('#content').hide();
 					return;
 				}
-				
+
 				$(settingsModal).find('#loading').hide();
-				$(settingsModal).find('#content').show();		
+				$(settingsModal).find('#content').show();
 			},
 			displaySettings = function() {
 				displaySettingsLoading(true);
@@ -89,23 +92,23 @@ Menu.prototype = {
 					$(settingsModal).find("input[name='phone_number']").val(userInfo.phone_number);
 					$(settingsModal).find("input[name='email']").val(userInfo.email);
 					if (userInfo.address) {
-						var adr = parseAddress(userInfo.address);	
+						var adr = parseAddress(userInfo.address);
 						displayAddress(adr);
 					}
-					
-					displaySettingsLoading(false);					
-				}, function() {					
+
+					displaySettingsLoading(false);
+				}, function() {
 					displaySettingsLoading(false);
 				});
 			},
 			optStyle = { font: '20px Arial', fill: '#ffffff' },
-			titleStyle = { font: '32px Arial', fill: '#ffffff' };	
-			
-		if (!accessToken) {			
-			errorModal.display('You must be connected', 3000, 'error');			
+			titleStyle = { font: '32px Arial', fill: '#ffffff' };
+
+		if (!accessToken) {
+			errorModal.display('You must be connected', 3000, 'error');
 			return;
 		}
-		
+
 		$(settingsModal).find('#update-profile').submit(function(e) {
 			e.preventDefault();
 			displaySettingsLoading(true);
@@ -116,27 +119,27 @@ Menu.prototype = {
 				data: JSON.stringify(json),
 				headers: {
 					'Authorization': 'Bearer '+accessToken
-				}				
+				}
 			}).then(function() {
 				$(settingsModal).modal('toggle');
-				errorModal.display('Information has been updated', 3000, 'success');						
+				errorModal.display('Information has been updated', 3000, 'success');
 			}).fail(function(e, m) {
-				errorModal.display('Error while trying to update the user information', 3000, 'error');		
-				displaySettingsLoading(false);				
+				errorModal.display('Error while trying to update the user information', 3000, 'error');
+				displaySettingsLoading(false);
 			});
 		});
 		$(settingsModal).find("input[type='checkbox']").click(function() {
-			var isChecked = $(this).is(':checked');			
+			var isChecked = $(this).is(':checked');
 			if (!isChecked)	{
 				return;
 			}
-			
-			displaySettingsLoading(true);	
+
+			displaySettingsLoading(true);
 			getCurrentLocation(function(adr) {
-				displaySettingsLoading(false);	
+				displaySettingsLoading(false);
 				displayAddress(adr);
-			}, function() {								
-				displaySettingsLoading(false);	
+			}, function() {
+				displaySettingsLoading(false);
 			});
 		});
 		var menu = [
@@ -155,7 +158,7 @@ Menu.prototype = {
 				width: sellerWidth,
 				height: sellerHeight,
 				callback: function() {
-					retrieUserInformation(function(userInfo) {						
+					retrieUserInformation(function(userInfo) {
 						var options = {
 							pseudo : userInfo.name,
 							map: 'MainMap',
@@ -177,7 +180,7 @@ Menu.prototype = {
 				}
 			}
 		];
-		
+
 		var maxWidth = menu.length * (rectWidth + rectPaddingLeft);
 		var minX = self.game.width / 2 - maxWidth / 2;
 		for (var i = 0; i < menu.length; i++) {
@@ -190,7 +193,7 @@ Menu.prototype = {
 				titleY = sprY + optPaddingTop + record.height;
 			var graphic = self.game.add.graphics(rectX, rectY);
 			graphic.beginFill(0xb8bbc1, 0.5);
-			graphic.lineStyle(2, 0x92959b, 1);			
+			graphic.lineStyle(2, 0x92959b, 1);
 			graphic.drawRoundedRect(0, 0, rectWidth, rectHeight, 5);
 			graphic.endFill();
 			graphic.inputEnabled = true;
@@ -204,5 +207,25 @@ Menu.prototype = {
 			self.game.add.sprite(sprX, sprY, record.spriteName);
 			self.game.add.text(titleX, titleY, record.title, optStyle);
 		}
+		*/
+	},
+	create: function() {
+		var self = this;
+		self.game.add.tileSprite(0, 0, 980, 600, 'bg4');
+		self.profileMenuFloating = new ProfileMenuFloating(); // Add floating profile menu.
+		self.profileMenuFloating.init();
+		self.menuModal = new MenuModal(); // Display modal menu without close button.
+		self.menuModal.init();
+		self.menuModal.toggle();
+		$(self.menuModal).on('shopping', function() {
+			var options = {
+				isMainMap: true
+			};
+			self.game.state.start("SplashGame", true, false, options);
+		});
+	},
+	shutdown: function() {
+		this.menuModal.remove();
+		this.profileMenuFloating.remove();
 	}
 };
