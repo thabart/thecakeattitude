@@ -8,7 +8,8 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
       useOtherIdProviders = $.i18n('useOtherIdProviders'),
       cannotAuthenticate = $.i18n('error-cannotAuthenticate'),
       error = $.i18n('error'),
-      login = $.i18n('authenticate');
+      login = $.i18n('authenticate'),
+      sessionName = "shopInGame-Game";
     self.create("<div class='modal modal-lg' id='login-modal' style='display:none;'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -66,7 +67,7 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
         error.appendTo(elt.prev());
       }
     });
-    $(self.modal).find('.local-login-form').submit(function(e) {
+    $(self.modal).find('.local-login-form').submit(function(e) { // Local authentication.
       e.preventDefault();
       self.displayError(false);
       if (!self.loginFormValidation.valid()) {
@@ -86,10 +87,31 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
 			};
       OpenIdClient.postToken(json).then(function(r) {
         self.isLoading(false);
+        $(self).trigger('authenticated', [ r.access_token ]);
       }).fail(function() {
         self.isLoading(false);
         self.displayError(true, $.i18n('error-cannotAuthenticate'));
       });
+    });
+    $(self.modal).find('.use-other-id-providers').click(function(e) { // External authentication.
+      e.preventDefault();
+      var href = Constants.openIdUrl + "/authorization?scope=openid%20profile&state=75BCNvRlEGHpQRCT"+
+        "&redirect_uri="+Constants.callbackUrl+"&response_type=id_token%20token&client_id="+Constants.ClientId+"&nonce=nonce&response_mode=query";
+      var w = window.open(href, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400'); // Open modal window.
+      var interval = setInterval(function() {
+				if (w.closed) {
+					clearInterval(interval);
+					return;
+				}
+
+				var href = w.location.href;
+				var accessToken = HrefUtils.getParameter('access_token', href);
+				if (accessToken) {
+          clearInterval(interval);
+          w.close();
+          $(self).trigger('authenticated', [ accessToken ]);
+				}
+			}, 1000);
     });
     $(self.modal).find('.alert-error .close').click(function() {
       self.displayError(false);

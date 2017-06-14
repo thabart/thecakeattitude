@@ -8,16 +8,7 @@ var OpenIdClient = {
         method: 'POST',
         dataType: 'json'
       }).then(function(r) {
-        self.introspect({
-          client_id : Constants.ClientId,
-          client_secret : Constants.ClientSecret,
-          token : r.access_token,
-          token_type_hint : 'access_token'
-        }).then(function(r) {
-          dfd.resolve(r);
-        }).fail(function() {
-          dfd.reject();
-        });
+        dfd.resolve(r);
       }).fail(function() {
         dfd.reject();
       });
