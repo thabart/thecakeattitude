@@ -9,6 +9,7 @@ var ShopClient = {
       }).then(function (r) {
 				dfd.resolve(r);
       }).fail(function (e) {
+				if (e.status === 404) dfd.resolve({_embedded: []});
         dfd.fail(e);
       });
 		});
