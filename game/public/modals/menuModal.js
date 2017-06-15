@@ -2,7 +2,7 @@ var MenuModal = function() { };
 MenuModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function() {
     var self = this,
-      title = $.i18n('menu'),
+      title = $.i18n('menuModalTitle'),
     	yourShops = $.i18n('yourShops'),
       doYourShopping = $.i18n('doYourShopping');
     self.create("<div class='modal modal-transparent' id='menu-modal' style='display: none;'>"+

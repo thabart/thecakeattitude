@@ -1,9 +1,7 @@
 'use strict';
 var Connect = function() {};
 Connect.prototype = {
-	preload: function() {
-		this.game.load.image('bg2', 'styles/backgrounds/bg2.jpg');
-	},
+	preload: function() { },
 	init: function() { },
 	create: function() {
 		var self = this;

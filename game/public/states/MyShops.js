@@ -1,8 +1,10 @@
-var CharacterChooser = function() { };
-CharacterChooser.prototype = {
+var MyShops = function() { };
+MyShops.prototype = {
 	preload: function() {
 	},
-	init: function(user) {		
+	init: function(user) {
+
+		/*
 		var accessToken = sessionStorage.getItem(Constants.SessionName),
 			rectHeight = 150,
 			rectWidth = 150,
@@ -10,7 +12,7 @@ CharacterChooser.prototype = {
 			addShopWidth = 48,
 			addShopHeight = 48,
 			shopWidth = 48,
-			shopHeight = 48, 
+			shopHeight = 48,
 			playWidth = 341,
 			playHeight = 111,
 			backWidth = 108,
@@ -35,17 +37,17 @@ CharacterChooser.prototype = {
 					headers: {
 						'Authorization': 'Bearer '+accessToken
 					}
-				}).then(function(userInfo) {	
+				}).then(function(userInfo) {
 					if (successCb) successCb(userInfo);
 				}).fail(function(e, m) {
-					errorModal.display('User information cannot be retrieved', 3000, 'error');		
+					errorModal.display('User information cannot be retrieved', 3000, 'error');
 					if (errorCb) errorCb();
-				});				
+				});
 			},
 			freePlace = function(spr, g) {
 				this.sprite = spr;
 				this.graphic = g;
-				
+
 				this.destroy = function() {
 					this.sprite.destroy();
 					this.graphic.events.onInputDown.removeAll();
@@ -63,12 +65,12 @@ CharacterChooser.prototype = {
 							"<div class='modal-body'>"+
 								"<div class='form-group'>"+
 									"<label class='control-label'>Category</label>"+
-									"<select class='category form-control'>"+								
+									"<select class='category form-control'>"+
 									"</select>"+
 								"</div>"+
 								"<div class='form-group'>"+
 									"<label class='control-label'>Sub category</label>"+
-									"<select class='sub-category form-control'>"+								
+									"<select class='sub-category form-control'>"+
 									"</select>"+
 								"</div>"+
 							"</div>"+
@@ -93,32 +95,32 @@ CharacterChooser.prototype = {
 					if (!g.isSelected) {
 						isSelected = true;
 					}
-					
+
 					drawGraphic(g, true);
 					rectShops.forEach(function(gr) {
 						if (gr == g) {
 							return;
 						}
-						
-						drawGraphic(gr, false);						
+
+						drawGraphic(gr, false);
 					});
-					
-					selectedShop = shop;				
-					self.start.visible = true;			
+
+					selectedShop = shop;
+					self.start.visible = true;
 				}, this);
 				var style = { font: "20px Arial" };
 				self.game.add.text(sprX - 30, sprY + pseudoPaddingTop + shopHeight, shop.name, style);
-				rectShops.push(graph);			
+				rectShops.push(graph);
 			},
-			drawGraphic = function(g, isSelected) {		
-				g.clear();				
+			drawGraphic = function(g, isSelected) {
+				g.clear();
 				g.beginFill(0xb8bbc1, 0.5);
 				if (isSelected) {
-					g.lineStyle(2, 0xEC1515, 1);			
+					g.lineStyle(2, 0xEC1515, 1);
 				} else {
-					g.lineStyle(2, 0x92959b, 1);			
+					g.lineStyle(2, 0x92959b, 1);
 				}
-				
+
 				g.drawRoundedRect(0, 0, rectWidth, rectHeight, 5);
 				g.endFill();
 				g.isSelected = isSelected;
@@ -129,7 +131,7 @@ CharacterChooser.prototype = {
 					$(modal).find('.content').hide();
 					return;
 				}
-				
+
 				$(modal).find('.fa-spinner').hide();
 				$(modal).find('.content').show();
 			},
@@ -141,21 +143,21 @@ CharacterChooser.prototype = {
 						errorModal.display('categories cannot be displayed', 3000, 'error');
 						return;
 					}
-					
+
 					var elt = $(modal).find('.category');
 					$(elt).empty();
 					result['_embedded'].forEach(function(record) {
 						var selfLink = record['_links'].self;
-						$(elt).append("<option value='"+record.id+"' data-href='"+selfLink+"'>"+record.name+"</option>");					
+						$(elt).append("<option value='"+record.id+"' data-href='"+selfLink+"'>"+record.name+"</option>");
 					});
 					var partialUrl = $(elt).find(':selected').data('href');
 					displaySubCategories(partialUrl);
-					
-				}).fail(function() {				
+
+				}).fail(function() {
 					displayLoadingAddShop(false);
 					errorModal.display('categories cannot be displayed', 3000, 'error');
 				});
-			}, 
+			},
 			displaySubCategories = function(partialUrl) {
 				var elt = $(modal).find('.sub-category');
 				$(elt).empty();
@@ -164,18 +166,18 @@ CharacterChooser.prototype = {
 						errorModal.display('sub categories cannot be displayed', 3000, 'error');
 						return;
 					}
-					
+
 					var items = result['_links'].items;
 					items.forEach(function(record) {
 						var parts = record.href.split('/');
 						var id = parts[parts.length - 1];
-						$(elt).append("<option value='"+id+"' data-href='"+record.href+"'>"+record.name+"</option>");					
+						$(elt).append("<option value='"+id+"' data-href='"+record.href+"'>"+record.name+"</option>");
 					});
 				}).fail(function() {
-					errorModal.display('sub categories cannot be displayed', 3000, 'error');				
+					errorModal.display('sub categories cannot be displayed', 3000, 'error');
 				});
 			};
-		
+
 		$.ajax(Constants.apiUrl + '/shops/me', {
 			type: 'GET',
 			headers: {
@@ -189,7 +191,7 @@ CharacterChooser.prototype = {
 			else if (!$.isArray(shops)) {
 				shops = [shops];
 			}
-			
+
 			var nbShops = shops.length;
 			// Create shops
 			for (var ind = 0; ind < maxSquares; ind++) {
@@ -215,28 +217,28 @@ CharacterChooser.prototype = {
 				}
 			}
 		}).fail(function() {
-			
+
 		});
-		
+
 		// Display the title.
 		var titleStyle = { font: '32px Arial', fill: '#ffffff' };
 		self.game.add.text(titlePaddingTop, titlePaddingLeft, 'Choose your shop', titleStyle);
 		// Display shop selector.
 		$(modal).find('#confirm').click(function() {
 			var partialUrl = $(modal).find('.sub-category').find(':selected').data('href');
-			$.get(Constants.apiUrl + partialUrl).then(function(r) {	
+			$.get(Constants.apiUrl + partialUrl).then(function(r) {
 				selectedCategory = r;
 				$(modal).modal('toggle');
-			}).fail(function() {			
+			}).fail(function() {
 				$(modal).modal('toggle');
-				errorModal.display('error while trying to display the map', 3000, 'error');			
+				errorModal.display('error while trying to display the map', 3000, 'error');
 			});
 		});
 		$(modal).on('hidden.bs.modal', function(e) {
 			if (selectedCategory == null) {
 				return;
 			}
-			
+
 			var category = selectedCategory['_embedded'];
 			self.game.state.start("ShopChooser", true, false, category, 'CharacterChooser');
 		});
@@ -249,19 +251,19 @@ CharacterChooser.prototype = {
 			if (!selectedShop) {
 				return;
 			}
-			
+
 			// Load the map.
 			if (!self.game.cache.checkTilemapKey("shop_" + selectedShop.id)) {
 				var loader = self.game.load.tilemap("shop_" + selectedShop.id, Constants.apiUrl + '/' + selectedShop.shop_path, null, Phaser.Tilemap.TILED_JSON);
 				loader.start();
 			}
-		
+
 			// Load the underground.
 			if (!self.game.cache.checkTilemapKey("underground_path" + selectedShop.id)) {
 				var loader = self.game.load.tilemap("underground_" + selectedShop.id, Constants.apiUrl + '/' + selectedShop.underground_path, null, Phaser.Tilemap.TILED_JSON);
 				loader.start();
 			}
-			
+
 			// Retrieve the user information & category name.
 			retrieUserInformation(function(userInfo) {
 				getCategory(selectedShop.category_id).then(function(category) {
@@ -273,7 +275,7 @@ CharacterChooser.prototype = {
 							name: category.name
 						}
 					};
-					self.game.state.start("Game", true, false, options);					
+					self.game.state.start("Game", true, false, options);
 				});
 			});
 			// ;
@@ -282,8 +284,19 @@ CharacterChooser.prototype = {
 			self.game.state.start('Menu');
 		});
 		this.start.visible = false;
+		*/
 	},
 	create: function() {
-		
+		var self = this;
+		self.game.add.tileSprite(0, 0, 980, 600, 'bg4');
+		self.profileMenuFloating = new ProfileMenuFloating(); // Add floating profile menu.
+		self.profileMenuFloating.init();
+		self.myShopsSelector = new MyShopsSelectorModal(); // Add my shops modal selector.
+		self.myShopsSelector.init();
+		self.myShopsSelector.toggle();
+	},
+	shutdown: function() {
+		this.profileMenuFloating.remove();
+		this.myShopsSelector.remove();
 	}
 };

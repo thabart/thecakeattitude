@@ -10,6 +10,9 @@ Splash.prototype = {
 		var bg1Loader = this.game.load.image('bg1', 'styles/backgrounds/bg1.jpg');
 		bg1Loader.onFileComplete.add(function() {
 			bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg1'));
+			self.game.load.image('bg2', 'styles/backgrounds/bg3.jpg');
+			self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
+			self.game.load.image('bg4', 'styles/backgrounds/bg4.jpg');
 			txtGroup.add(self.loadingBar);
 			self.game.world.bringToTop(txtGroup);
 			// Load all NPCs & animations.
@@ -29,7 +32,7 @@ Splash.prototype = {
 			self.game.load.script('SplashGame', 'public/states/SplashGame.js');
 			self.game.load.script('Connect', 'public/states/Connect.js');
 			self.game.load.script('Menu', 'public/states/Menu.js');
-			self.game.load.script('CharacterChooser', 'public/states/CharacterChooser.js');
+			self.game.load.script('MyShops', 'public/states/MyShops.js');
 			self.game.load.script('ShopChooser', 'public/states/ShopChooser.js');
 			self.game.load.script('Game', 'public/states/Game.js');
 			// Load main objects.
@@ -54,6 +57,7 @@ Splash.prototype = {
 			self.game.load.script('LoginModal', 'public/modals/loginModal.js');
 			self.game.load.script('MenuModal', 'public/modals/menuModal.js');
 			self.game.load.script('EmoticonsSelectorModal', 'public/modals/emoticonsSelectorModal.js');
+			self.game.load.script('MyShopsSelectorModal', 'public/modals/myShopsSelectorModal.js');
 			self.game.load.script('FreePlaceModalDescriptionTab', 'public/modals/freePlaceModalTabs/freePlaceModalDescriptionTab.js');
 			self.game.load.script('FreePlaceModalAddressTab', 'public/modals/freePlaceModalTabs/freePlaceModalAddressTab.js');
 			self.game.load.script('FreePlaceModalContactTab', 'public/modals/freePlaceModalTabs/freePlaceModalContactTab.js');
@@ -88,12 +92,13 @@ Splash.prototype = {
 		var self = this;
 		this.game.state.add('Connect', Connect);
 		this.game.state.add('Menu', Menu);
-		this.game.state.add('CharacterChooser', CharacterChooser);
+		this.game.state.add('MyShops', MyShops);
 		this.game.state.add('Game', Game);
 		this.game.state.add('ShopChooser', ShopChooser);
 		this.game.state.add('SplashGame', SplashGame);
 		 setTimeout(function () {
-			self.game.state.start('Menu');
+			 self.game.state.start('MyShops');
+			// self.game.state.start('Menu');
 			// self.game.state.start("Connect");
 			/*
 			var options = {

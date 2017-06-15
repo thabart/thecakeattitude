@@ -11,19 +11,16 @@ SplashGame.prototype = {
 		self.typeMap = self.options.typeMap || 'main';
 		var txtGroup = self.game.add.group();
 		var bgGroup = self.game.add.group();
-		var bg3Loader = self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
-		bg3Loader.onFileComplete.add(function() {
-			bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg3'));
-			txtGroup.add(self.loadingBar);
-			self.game.world.bringToTop(txtGroup);
-			if (self.options.isMainMap) {
-				self.game.load.tilemap(self.mapKey, Constants.apiUrl + '/maps/main.json', null, Phaser.Tilemap.TILED_JSON);
-				self.game.load.image(self.overviewKey, Constants.apiUrl + '/maps/main_overview.png');
-			} else {
-				self.game.load.tilemap(self.mapKey, self.options.map_link, null, Phaser.Tilemap.TILED_JSON);
-				self.game.load.image(self.overviewKey, self.options.overview_link);
-			}
-		}, this);
+		bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg3'));
+		txtGroup.add(self.loadingBar);
+		self.game.world.bringToTop(txtGroup);
+		if (self.options.isMainMap) {
+			self.game.load.tilemap(self.mapKey, Constants.apiUrl + '/maps/main.json', null, Phaser.Tilemap.TILED_JSON);
+			self.game.load.image(self.overviewKey, Constants.apiUrl + '/maps/main_overview.png');
+		} else {
+			self.game.load.tilemap(self.mapKey, self.options.map_link, null, Phaser.Tilemap.TILED_JSON);
+			self.game.load.image(self.overviewKey, self.options.overview_link);
+		}
 	},
 	create: function() {
 		var self = this;
