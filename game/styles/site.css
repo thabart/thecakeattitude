@@ -632,6 +632,10 @@ ul.floating-options {
   width: 500px;
 }
 
+#shop-chooser-modal .take-the-place {
+  float: right;
+}
+
 .map-overview .place {
   border: 2px solid gray;
   position: absolute;
@@ -640,6 +644,10 @@ ul.floating-options {
 
 .map-overview .free-place {
   border: 2px solid green !important;
+}
+
+.map-overview .selected-place {
+  border: 2px solid red !important;
 }
 
 /* Warper modal */

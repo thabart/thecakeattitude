@@ -7,6 +7,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       selectCategory = $.i18n('selectCategory'),
       selectSubCategory = $.i18n('selectSubCategory'),
       goToTheShop = $.i18n('goToTheShop'),
+      takeThePlace = $.i18n('takeThePlace'),
       selectMap = $.i18n('selectMap');
     self.create("<div class='modal modal-lg modal-transparent' id='shop-chooser-modal' style='display:none;'>"+
       "<div class='modal-content'>"+
@@ -89,7 +90,8 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
             "</div>"+
           "</div>"+
           "<div class='footer'>"+
-            "<button class='action-btn'>"+goToTheShop+"</button>"+
+            "<button class='action-btn go-to-the-shop'>"+goToTheShop+"</button>"+
+            "<button class='action-btn take-the-place'>"+takeThePlace+"</button>"+
           "</div>"+
         "</div>"+
       "</div>"+
@@ -97,17 +99,20 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
     var categorySelector = $(self.modal).find('.category-selector'),
       subCategorySelector = $(self.modal).find('.sub-category-selector'),
       mapSelector = $(self.modal).find('.map-selector'),
-      mapOverview = $(self.modal).find('.map-overview');
+      mapOverview = $(self.modal).find('.map-overview'),
+      takeThePlace = $(self.modal).find('.take-the-place');
     categorySelector.change(function() { // Display sub category when category changed.
       var categoryId = $(this).find(':selected').val();
       $(subCategorySelector).empty();
       $(mapSelector).empty();
       $(mapOverview).empty();
+      self.disableGoToTheShop(true);
       if (!categoryId) {
         return;
       }
 
       self.isSubCategoryLoading(true);
+      self.disableTakeThePlace(true);
       CategoryClient.getCategory(categoryId).then(function(cat) {
         var subCategories = cat._embedded.children.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
         subCategories.forEach(function(category) { subCategorySelector.append(category); });
@@ -120,6 +125,8 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       CategoryClient.getCategory(categoryId).then(function(cat) {
         mapSelector.empty();
         mapOverview.empty();
+        self.disableGoToTheShop(true);
+        self.disableTakeThePlace(true);
         var maps = cat._embedded.maps.map(function(map) { return "<option data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'>"+map.map_name+"</option>"; });
         maps.forEach(function(map) { mapSelector.append(map); });
         self.isMapLoading(false);
@@ -131,7 +138,9 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
         categoryid = selected.data('categoryid'),
         mapLink = selected.data('map');
       mapOverview.empty();
-      $.when(ShopClient.searchShops({category_id : [ 'azeaze' ] }), $.get(mapLink)).done(function(shops, json) {
+      self.disableGoToTheShop(true);
+      self.disableTakeThePlace(true);
+      $.when(ShopClient.searchShops({category_id : [ categoryid ] }), $.get(mapLink)).done(function(shops, json) {
         var img = $("<img src='"+overviewImage+"' class='img-overview' />");
         img.bind('load', function() {
           var imgSize = {
@@ -169,7 +178,17 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
             if (shop.length === 0) {
               $(square).addClass('free-place');
               $(square).click(function() {
-                $(self).trigger('freePlace');
+                mapOverview.find('.place').removeClass('selected-place');
+                $(this).addClass('selected-place');
+                self.disableGoToTheShop(true);
+                self.disableTakeThePlace(false);
+              });
+            } else {
+              $(square).click(function() {
+                mapOverview.find('.place').removeClass('selected-place');
+                $(this).addClass('selected-place');
+                self.disableGoToTheShop(false);
+                self.disableTakeThePlace(true);
               });
             }
 
@@ -179,12 +198,15 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
         mapOverview.append(img);
       });
     });
-
-
+    takeThePlace.click(function() { // Send an event "takeThePlace".
+      $(self).trigger('freePlace');
+    });
     categorySelector.empty();
     subCategorySelector.empty();
     mapSelector.empty();
     self.isCategoryLoading(true);
+    self.disableGoToTheShop(true);
+    self.disableTakeThePlace(true);
     CategoryClient.getCategoryParents().then(function(r) { // Display the categories.
       var categories = r._embedded.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
       categorySelector.append("<option></option>");
@@ -206,6 +228,12 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
   },
   isOverviewLoading: function(b) { // Display or hide overview image.
     this.isLoading(b, '.overview-loader', '.map-overview');
+  },
+  disableGoToTheShop: function(b) {
+    $(this.modal).find('.go-to-the-shop').prop('disabled', b);
+  },
+  disableTakeThePlace: function(b) {
+    $(this.modal).find('.take-the-place').prop('disabled', b);
   },
   isLoading: function(b, loaderSelector, contentSelector) { // Common method used to display or hide loader.
     var loader = $(this.modal).find(loaderSelector),
