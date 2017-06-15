@@ -180,6 +180,12 @@ ul.floating-options {
 .floating-options-bottom-left {
   position: absolute;
   bottom: 10px;
+  left: 10px;
+}
+
+.floating-options-bottom-right {
+  position: absolute;
+  bottom: 10px;
   right: 10px;
 }
 
@@ -196,8 +202,11 @@ ul.floating-options {
   -moz-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
   -webkit-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
   -o-box-shadow : 2px 2px 5px rgba(136, 136, 136, 0.82);
-  cursor: pointer;
   margin-top: 10px;
+}
+
+.floating-options .floating-option:hover {
+  cursor: pointer;
 }
 
 .floating-options div.floating-option {
@@ -228,7 +237,11 @@ ul.floating-options {
   background-color: #129cc5;
 }
 
-#account-floating {
+.floating-options .orange {
+  background-color: #ffb100;
+}
+
+#account-floating, #back-floating {
   z-index: 2000;
 }
 

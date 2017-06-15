@@ -120,7 +120,7 @@ Game.prototype = {
 			self.game.state.start("Menu");
 		});
 		var buildMenuOptions = function() {
-			self.optionsMenu = $("<div class='floating-options-bottom-left'>"+
+			self.optionsMenu = $("<div class='floating-options-bottom-right'>"+
 				"<ul class='floating-options'>"+
 					"<li class='light-blue floating-option' id='map-option'><i class='fa fa-map'></i></li>"+
 					"<li class='default floating-option' id='tchat-option'><i class='fa fa-comments'></i></li>"+

@@ -294,9 +294,15 @@ MyShops.prototype = {
 		self.myShopsSelector = new MyShopsSelectorModal(); // Add my shops modal selector.
 		self.myShopsSelector.init();
 		self.myShopsSelector.toggle();
+		self.backMenuFloating = new BackMenuFloating(); // Add back menu floating.
+		self.backMenuFloating.init();
+		$(self.backMenuFloating).on('back', function() {
+			self.game.state.start('Menu');
+		});
 	},
 	shutdown: function() {
 		this.profileMenuFloating.remove();
 		this.myShopsSelector.remove();
+		this.backMenuFloating.remove();
 	}
 };

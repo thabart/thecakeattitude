@@ -11,6 +11,9 @@ Menu.prototype = {
 		self.menuModal = new MenuModal(); // Display modal menu without close button.
 		self.menuModal.init();
 		self.menuModal.toggle();
+		$(self.menuModal).on('viewYourShops', function() {
+			self.game.state.start("MyShops");
+		});
 		$(self.menuModal).on('shopping', function() {
 			var options = {
 				isMainMap: true

@@ -8,11 +8,11 @@ Splash.prototype = {
 		var txtGroup = this.game.add.group();
 		var bgGroup = this.game.add.group();
 		var bg1Loader = this.game.load.image('bg1', 'styles/backgrounds/bg1.jpg');
+		self.game.load.image('bg2', 'styles/backgrounds/bg2.jpg');
+		self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
+		self.game.load.image('bg4', 'styles/backgrounds/bg4.jpg');
 		bg1Loader.onFileComplete.add(function() {
 			bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg1'));
-			self.game.load.image('bg2', 'styles/backgrounds/bg3.jpg');
-			self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
-			self.game.load.image('bg4', 'styles/backgrounds/bg4.jpg');
 			txtGroup.add(self.loadingBar);
 			self.game.world.bringToTop(txtGroup);
 			// Load all NPCs & animations.
@@ -67,6 +67,7 @@ Splash.prototype = {
 			self.game.load.script('WarperShopsTab', 'public/modals/warperModalTabs/warperShopsTab.js');
 			// Load floating menu.
 			self.game.load.script('ProfileMenuFloating', 'public/floating/profile.js');
+			self.game.load.script('BackMenuFloating', 'public/floating/back.js');
 			// Load the NPCs.
 			self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 			self.game.load.script('Warper', 'public/characters/warper.js');
