@@ -8,6 +8,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       selectSubCategory = $.i18n('selectSubCategory'),
       goToTheShop = $.i18n('goToTheShop'),
       takeThePlace = $.i18n('takeThePlace'),
+      viewShop = $.i18n('viewShop'),
       selectMap = $.i18n('selectMap');
     self.create("<div class='modal modal-lg modal-transparent' id='shop-chooser-modal' style='display:none;'>"+
       "<div class='modal-content'>"+
@@ -84,13 +85,12 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
                 "<div class='sk-cube sk-cube8'></div>"+
                 "<div class='sk-cube sk-cube9'></div>"+
               "</div>"+
-              "<div class='map-overview'>"+
-                // "<img src='http://localhost:5000/maps/first_shoes_map_overview.png' class='img-overview' />" +
-              "</div>"+
+              "<div class='map-overview'></div>"+
             "</div>"+
           "</div>"+
           "<div class='footer'>"+
             "<button class='action-btn go-to-the-shop'>"+goToTheShop+"</button>"+
+            "<button class='action-btn view-shop'>"+viewShop+"</button>"+
             "<button class='action-btn take-the-place'>"+takeThePlace+"</button>"+
           "</div>"+
         "</div>"+
@@ -100,19 +100,21 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       subCategorySelector = $(self.modal).find('.sub-category-selector'),
       mapSelector = $(self.modal).find('.map-selector'),
       mapOverview = $(self.modal).find('.map-overview'),
-      takeThePlace = $(self.modal).find('.take-the-place');
+      takeThePlace = $(self.modal).find('.take-the-place')
+      goToTheShop = $(self.modal).find('.go-to-the-shop');
     categorySelector.change(function() { // Display sub category when category changed.
       var categoryId = $(this).find(':selected').val();
-      $(subCategorySelector).empty();
-      $(mapSelector).empty();
-      $(mapOverview).empty();
       self.disableGoToTheShop(true);
       if (!categoryId) {
         return;
       }
 
+      subCategorySelector.empty();
+      mapSelector.empty();
+      mapOverview.empty();
       self.isSubCategoryLoading(true);
       self.disableTakeThePlace(true);
+      self.disableViewShop(true);
       CategoryClient.getCategory(categoryId).then(function(cat) {
         var subCategories = cat._embedded.children.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
         subCategories.forEach(function(category) { subCategorySelector.append(category); });
@@ -127,6 +129,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
         mapOverview.empty();
         self.disableGoToTheShop(true);
         self.disableTakeThePlace(true);
+        self.disableViewShop(true);
         var maps = cat._embedded.maps.map(function(map) { return "<option data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'>"+map.map_name+"</option>"; });
         maps.forEach(function(map) { mapSelector.append(map); });
         self.isMapLoading(false);
@@ -175,19 +178,24 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
             $(square).css('width', overviewHouseSize.w + "px");
             $(square).css('height', overviewHouseSize.h + "px");
             var shop = embeddedShops.filter(function(s) { return s.place === house.name });
-            if (shop.length === 0) {
+            if (shop.length === 0) { // Free place.
               $(square).addClass('free-place');
               $(square).click(function() {
                 mapOverview.find('.place').removeClass('selected-place');
                 $(this).addClass('selected-place');
                 self.disableGoToTheShop(true);
+                self.disableViewShop(true);
                 self.disableTakeThePlace(false);
               });
-            } else {
+            } else if (shop[0].map) { // Shop exists.
+              $(square).data('map', Constants.apiUrl + shop[0].map.map_link);
+              $(square).data('overview', Constants.apiUrl + shop[0].map.overview_link);
+              $(square).data('category', categoryid);
               $(square).click(function() {
                 mapOverview.find('.place').removeClass('selected-place');
                 $(this).addClass('selected-place');
                 self.disableGoToTheShop(false);
+                self.disableViewShop(false);
                 self.disableTakeThePlace(true);
               });
             }
@@ -201,12 +209,25 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
     takeThePlace.click(function() { // Send an event "takeThePlace".
       $(self).trigger('freePlace');
     });
+    goToTheShop.click(function() { // Go to the shop.
+      var selectedPlace = mapOverview.find('.selected-place');
+      var json = {
+        map_link: selectedPlace.data('map'),
+        overview_link: selectedPlace.data('overview'),
+        categoryId : selectedPlace.data('category'),
+        typeMap: 'shop',
+        isMainMap: false
+      };
+      $(self).trigger('goToTheShop', [json]);
+    });
+
     categorySelector.empty();
     subCategorySelector.empty();
     mapSelector.empty();
     self.isCategoryLoading(true);
     self.disableGoToTheShop(true);
     self.disableTakeThePlace(true);
+    self.disableViewShop(true);
     CategoryClient.getCategoryParents().then(function(r) { // Display the categories.
       var categories = r._embedded.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
       categorySelector.append("<option></option>");
@@ -215,6 +236,9 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       self.isSubCategoryLoading(false);
       self.isMapLoading(false);
       self.isOverviewLoading(false);
+      self.disableGoToTheShop(true);
+      self.disableTakeThePlace(true);
+      self.disableViewShop(true);
     });
   },
   isCategoryLoading: function(b) { // Display or hide category loader.
@@ -234,6 +258,9 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
   },
   disableTakeThePlace: function(b) {
     $(this.modal).find('.take-the-place').prop('disabled', b);
+  },
+  disableViewShop: function(b) {
+    $(this.modal).find('.view-shop').prop('disabled', b);
   },
   isLoading: function(b, loaderSelector, contentSelector) { // Common method used to display or hide loader.
     var loader = $(this.modal).find(loaderSelector),

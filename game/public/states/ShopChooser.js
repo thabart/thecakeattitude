@@ -9,7 +9,6 @@ ShopChooser.prototype = {
 		self.backMenuFloating.init();
 		$(self.backMenuFloating).on('back', function() {
 			self.game.state.start('MyShops');
-			self.destroy();
 		});
 		self.shopChooserModal = new ShopChooserModal(); // Add shop chooser modal.
 		self.shopChooserModal.init();
@@ -17,10 +16,13 @@ ShopChooser.prototype = {
 		$(self.shopChooserModal).on('freePlace', function() { // Display free modal window.
 			self.freePlaceModal.toggle();
 		});
+		$(self.shopChooserModal).on('goToTheShop', function(e, data) {
+			self.game.state.start("SplashGame", true, false, data);
+		});
 		self.freePlaceModal = new FreePlaceModal();
 		self.freePlaceModal.init();
 	},
-	destroy: function() {
+	shutdown: function() {
 		this.backMenuFloating.remove();
 		this.shopChooserModal.remove();
 		this.freePlaceModal.remove();
