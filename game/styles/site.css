@@ -398,6 +398,10 @@ ul.floating-options {
   background: linear-gradient(#e6edef, #e6edef);
 }
 
+.selector-md {
+  min-width: 300px !important;
+}
+
 .selector-lg {
   min-width: 350px !important;
 }
@@ -617,6 +621,27 @@ ul.floating-options {
   padding: 15px;
 }
 
+/* Shop chooser modal */
+#shop-chooser-modal .map-overview {
+  margin: 0 auto;
+  position: relative;
+}
+
+#shop-chooser-modal .map-overview,
+#shop-chooser-modal .map-overview img {
+  width: 500px;
+}
+
+.map-overview .place {
+  border: 2px solid gray;
+  position: absolute;
+  cursor: pointer;
+}
+
+.map-overview .free-place {
+  border: 2px solid green !important;
+}
+
 /* Warper modal */
 .warper-modal .first-column,
 .warper-modal .second-column {
@@ -764,11 +789,23 @@ ul.floating-options {
   width: 45%;
   padding: 10px;
   vertical-align: top;
-  display: inline-block;;
+  display: inline-block;
+}
+
+.col-4 {
+  width: 33% !important;
+  vertical-align: top;
+  display: inline-block;
 }
 
 .col-3 {
   width: 25% !important;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.col-9 {
+  width: 75% !important;
   vertical-align: top;
   display: inline-block;
 }

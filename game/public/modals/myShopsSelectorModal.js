@@ -43,7 +43,7 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
 
     });
     $(self.modal).find('.create-shop').click(function() {
-
+      $(self).trigger('createShop');
     });
   }
 });

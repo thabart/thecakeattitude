@@ -56,6 +56,7 @@ Splash.prototype = {
 			self.game.load.script('FreePlaceModal', 'public/modals/freePlaceModal.js');
 			self.game.load.script('LoginModal', 'public/modals/loginModal.js');
 			self.game.load.script('MenuModal', 'public/modals/menuModal.js');
+			self.game.load.script('ShopChooserModal', 'public/modals/shopChooserModal.js');
 			self.game.load.script('EmoticonsSelectorModal', 'public/modals/emoticonsSelectorModal.js');
 			self.game.load.script('MyShopsSelectorModal', 'public/modals/myShopsSelectorModal.js');
 			self.game.load.script('FreePlaceModalDescriptionTab', 'public/modals/freePlaceModalTabs/freePlaceModalDescriptionTab.js');
@@ -98,7 +99,8 @@ Splash.prototype = {
 		this.game.state.add('ShopChooser', ShopChooser);
 		this.game.state.add('SplashGame', SplashGame);
 		 setTimeout(function () {
-			 self.game.state.start('MyShops');
+			 self.game.state.start('ShopChooser');
+			// self.game.state.start('MyShops');
 			// self.game.state.start('Menu');
 			// self.game.state.start("Connect");
 			/*

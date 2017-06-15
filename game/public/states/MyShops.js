@@ -294,6 +294,9 @@ MyShops.prototype = {
 		self.myShopsSelector = new MyShopsSelectorModal(); // Add my shops modal selector.
 		self.myShopsSelector.init();
 		self.myShopsSelector.toggle();
+		$(self.myShopsSelector).on('createShop', function() {
+			self.game.state.start('ShopChooser');
+		});
 		self.backMenuFloating = new BackMenuFloating(); // Add back menu floating.
 		self.backMenuFloating.init();
 		$(self.backMenuFloating).on('back', function() {

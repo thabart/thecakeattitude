@@ -20,4 +20,11 @@ var Calculator = {
       y: ((playerPosition.y * overviewMapSize.h) / tileMap.heightInPixels)
     };
   },
+  // Get the house size.
+  getHouseSize: function(house, tileMap, overviewMapSize) {
+    return {
+      w: (house.width * overviewMapSize.w) / tileMap.widthInPixels,
+      h: (house.height * overviewMapSize.h) / tileMap.heightInPixels
+    };
+  }
 };

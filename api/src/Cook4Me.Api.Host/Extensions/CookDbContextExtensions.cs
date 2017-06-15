@@ -24,7 +24,7 @@ namespace Cook4Me.Api.Host.Extensions
 {
     internal static class CookDbContextExtensions
     {
-        private static string _shoesCategoryId = Guid.NewGuid().ToString();
+        private static string _shoesCategoryId = "a20ab67b-f046-40c5-b5cd-566b3fca2749"; //Guid.NewGuid().ToString();
         private static string _bakeryCategoryId = Guid.NewGuid().ToString();
         private static string _firstShopId = Guid.NewGuid().ToString();
         private static string _secondShopId = Guid.NewGuid().ToString();
