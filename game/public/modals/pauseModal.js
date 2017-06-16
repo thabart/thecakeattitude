@@ -5,7 +5,7 @@ PauseModal.prototype = $.extend({}, BaseModal.prototype, {
       exit = $.i18n('exit'),
       title = $.i18n('mapModalTitle'),
       self = this;
-    self.create("<div class='modal' id='pause-modal' style='display: none;'>"+
+    self.create("<div class='modal md-effect-2' id='pause-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window modal-window-circle'>"+
           "<div class='header'>"+

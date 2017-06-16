@@ -10,7 +10,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       takeThePlace = $.i18n('takeThePlace'),
       viewShop = $.i18n('viewShop'),
       selectMap = $.i18n('selectMap');
-    self.create("<div class='modal modal-lg modal-transparent' id='shop-chooser-modal' style='display:none;'>"+
+    self.create("<div class='modal modal-lg modal-transparent md-effect-2' id='shop-chooser-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+

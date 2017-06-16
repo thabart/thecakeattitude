@@ -11,7 +11,7 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
     var addressTab = new FreePlaceModalAddressTab();
     var contactInfoTab = new FreePlaceModalContactTab();
     var paymentTab = new FreePlaceModalPaymentTab();
-    self.create("<div class='modal modal-lg' id='free-place-modal' style='display:none;'>"+
+    self.create("<div class='modal modal-lg md-effect-1' id='free-place-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+

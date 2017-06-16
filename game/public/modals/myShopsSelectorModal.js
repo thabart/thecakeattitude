@@ -5,7 +5,7 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
       title = $.i18n('myShopsSelectorModalTitle'),
       createShop = $.i18n('createShop'),
       goToTheShop = $.i18n('goToTheShop');
-    self.create("<div class='modal modal-lg modal-transparent' id='my-shops-selector-modal' style='display: none;'>"+
+    self.create("<div class='modal modal-lg modal-transparent md-effect-2' id='my-shops-selector-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+

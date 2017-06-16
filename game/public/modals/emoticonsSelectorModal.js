@@ -7,7 +7,7 @@ EmoticonsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
     Constants.emoticons.forEach(function(emoticon) {
       emoticons.push("<div class='col-3 emoticon'><img src='"+emoticon.img+"' /><br />"+emoticon.cmd+"</div>");
     });
-    self.create("<div class='modal modal-lg' id='emoticons-selector-modal' style='display:none;'>"+
+    self.create("<div class='modal modal-lg md-effect-2' id='emoticons-selector-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+

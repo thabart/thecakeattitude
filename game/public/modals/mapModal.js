@@ -3,7 +3,7 @@ MapModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function() {
     var self = this;
     var title = $.i18n('mapModalTitle');
-    self.create("<div class='modal modal-lg' id='map-modal' style='display:none;'>"+
+    self.create("<div class='modal modal-lg md-effect-2' id='map-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+

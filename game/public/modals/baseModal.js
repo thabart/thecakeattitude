@@ -5,11 +5,11 @@ BaseModal.prototype = {
     self.modal = $(html);
     $(Constants.gameSelector).append(self.modal);
     $(self.modal).find('.header .close').click(function() {
-      $(self.modal).toggle();
+      $(self.modal).toggleClass('md-show');
     });
   },
   toggle() {
-    $(this.modal).toggle();
+    $(this.modal).toggleClass('md-show');
   },
   hide() {
     $(this.modal).hide();

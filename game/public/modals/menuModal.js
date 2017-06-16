@@ -5,7 +5,7 @@ MenuModal.prototype = $.extend({}, BaseModal.prototype, {
       title = $.i18n('menuModalTitle'),
     	yourShops = $.i18n('yourShops'),
       doYourShopping = $.i18n('doYourShopping');
-    self.create("<div class='modal modal-transparent' id='menu-modal' style='display: none;'>"+
+    self.create("<div class='modal modal-transparent md-effect-2' id='menu-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window modal-window-circle'>"+
           "<div class='header'>"+

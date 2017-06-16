@@ -11,7 +11,7 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
     self.warperMapsTab = new WarperMapsTab();
     self.warperShopsTab = new WarperShopsTab();
     self.warperCurrentUserShopsTab = new WarperCurrentUserShopsTab();
-    self.create("<div class='modal modal-lg warper-modal' style='display:none;'>"+
+    self.create("<div class='modal modal-lg warper-modal md-effect-2'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+

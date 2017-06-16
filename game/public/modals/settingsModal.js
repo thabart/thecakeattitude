@@ -1,7 +1,7 @@
 var SettingsModal = function() {};
 SettingsModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function() {
-    this.create("<div class='modal' style='display:none;'>"+
+    this.create("<div class='modal md-effect-2'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+
