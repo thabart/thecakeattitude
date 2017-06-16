@@ -55,6 +55,7 @@
   "goToTheShop": "Go to the shop",
   "takeThePlace": "Prendre la place",
   "viewShop": "Voir le magasin",
+  "unknown": "Inconnu",
   "error-cannotAuthenticate": "Soit le login et / ou mot de passe sont invalides",
   "error-adrMustBeComplete": "L'addresse doit être complète",
   "error-onlyOneAdr": "Sélectionner seulement une adresse",

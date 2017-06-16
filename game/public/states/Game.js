@@ -119,6 +119,9 @@ Game.prototype = {
 		$(self.modals.pause).on('exit', function() {
 			self.game.state.start("Menu");
 		});
+		$(self.floating.profileMenu).on('disconnect', function() {
+			self.game.state.start('Connect');
+		});
 		var buildMenuOptions = function() {
 			self.optionsMenu = $("<div class='floating-options-bottom-right'>"+
 				"<ul class='floating-options'>"+

@@ -15,9 +15,6 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
         "<div class='modal-window'>"+
           "<div class='header'>"+
             "<span class='title'>"+title+"</span>"+
-            "<div class='options'>"+
-              "<button class='option close'><i class='fa fa-times'></i></button>"+
-            "</div>"+
           "</div>"+
           "<form class='local-login-form'>"+
             "<div class='sk-cube-grid login-loader'>"+
@@ -45,7 +42,7 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
               "</div>"+
             "</div>"+
             "<div class='footer'>"+
-              "<button class='action-btn'>"+login+"</button>" +
+              "<button class='action-btn local-login-btn'>"+login+"</button>" +
               "<button class='action-btn use-other-id-providers'>"+useOtherIdProviders+"</button>"+
             "</div>"+
           "</form>"+
@@ -98,8 +95,14 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
       var href = Constants.openIdUrl + "/authorization?scope=openid%20profile&state=75BCNvRlEGHpQRCT"+
         "&redirect_uri="+Constants.callbackUrl+"&response_type=id_token%20token&client_id="+Constants.ClientId+"&nonce=nonce&response_mode=query";
       var w = window.open(href, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400'); // Open modal window.
+      self.isLoading(true);
+      self.disableLogin(true);
+      self.disableUseExtAuthProviders(true);
       var interval = setInterval(function() {
 				if (w.closed) {
+          self.isLoading(false);
+          self.disableLogin(false);
+          self.disableUseExtAuthProviders(false);
 					clearInterval(interval);
 					return;
 				}
@@ -126,6 +129,12 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
       $(self.modal).find('.login-loader').hide();
       $(self.modal).find('.local-login').show();
     }
+  },
+  disableLogin: function(b) { // Disable or enable the login button.
+    $(this.modal).find('.local-login-btn').prop('disabled', b);
+  },
+  disableUseExtAuthProviders: function(b) { // Disable or enable use external authentication providers.
+    $(this.modal).find('.use-other-id-providers').prop('disabled', b);
   },
   displayError: function(b, msg) { // Display or hide the error.
     var self = this;

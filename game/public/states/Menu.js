@@ -8,6 +8,9 @@ Menu.prototype = {
 		self.game.add.tileSprite(0, 0, 980, 600, 'bg4');
 		self.profileMenuFloating = new ProfileMenuFloating(); // Add floating profile menu.
 		self.profileMenuFloating.init();
+		$(self.profileMenuFloating).on('disconnect', function() {
+			self.game.state.start('Connect');
+		});
 		self.menuModal = new MenuModal(); // Display modal menu without close button.
 		self.menuModal.init();
 		self.menuModal.toggle();

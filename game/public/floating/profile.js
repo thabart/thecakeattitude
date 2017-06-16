@@ -1,10 +1,12 @@
 var ProfileMenuFloating = function() { };
 ProfileMenuFloating.prototype = {
   init: function() {
+    var user = GameStateStore.getUser();
+    var name = user.username || $.i18n('unknown');
   	var self = this,
   		editYourAccount = $.i18n('editYourAccount'),
       disconnect = $.i18n('disconnect'),
-  		welcome = $.i18n('welcome').replace('{0}', 'th');
+  		welcome = $.i18n('welcome').replace('{0}', name);
   	self.floatingMenu = $("<div class='floating-options-top-left' id='account-floating'>"+
   		"<ul class='floating-options'>"+
   			"<li class='dark-blue floating-option profile' id='map-option'><i class='fa fa-user'></i></li>"+
@@ -14,7 +16,7 @@ ProfileMenuFloating.prototype = {
   				"<span>"+welcome+"</span>"+
   				"<ul class='no-style'>"+
   					"<li><button class='action-btn lg-action-btn'>"+editYourAccount+"</button></li>"+
-  					"<li><button class='action-btn lg-action-btn'>"+disconnect+"</button></li>"+
+  					"<li><button class='action-btn lg-action-btn disconnect'>"+disconnect+"</button></li>"+
   				"</ul>"+
   			"</div>"+
   		"</div>"+
@@ -23,6 +25,11 @@ ProfileMenuFloating.prototype = {
   		$(self.floatingMenu).find('.tooltip').toggle();
   	});
   	$(self.floatingMenu).find('.tooltip').hide();
+    $(self.floatingMenu).find('.disconnect').click(function() {
+      GameStateStore.setUser(null);
+      sessionStorage.removeItem(Constants.sessionName);
+      $(self).trigger('disconnect');
+    });
     $(Constants.gameSelector).append(self.floatingMenu);
   },
   remove: function() {

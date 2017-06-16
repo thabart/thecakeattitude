@@ -621,6 +621,10 @@ ul.floating-options {
   padding: 15px;
 }
 
+#login-modal .local-login-btn {
+  float: right;
+}
+
 /* Shop chooser modal */
 #shop-chooser-modal .map-overview {
   margin: 0 auto;

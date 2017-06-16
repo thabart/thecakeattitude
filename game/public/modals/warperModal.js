@@ -55,7 +55,7 @@ WarperModal.prototype = $.extend({}, BaseModal.prototype, {
   },
   show() {
     var self = this;
-    $(self.modal).show();
+    self.toggle();
     self.warperMapsTab.init();
   }
 });

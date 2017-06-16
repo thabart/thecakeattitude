@@ -99,7 +99,8 @@ Splash.prototype = {
 		this.game.state.add('ShopChooser', ShopChooser);
 		this.game.state.add('SplashGame', SplashGame);
 		 setTimeout(function () {
-			 self.game.state.start('ShopChooser');
+			 self.game.state.start('Connect');
+			// self.game.state.start('ShopChooser');
 			// self.game.state.start('MyShops');
 			// self.game.state.start('Menu');
 			// self.game.state.start("Connect");

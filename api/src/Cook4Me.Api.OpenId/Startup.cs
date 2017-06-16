@@ -146,8 +146,8 @@ namespace Cook4Me.Api.OpenId
         {
             var facebookOpts = new OAuthOptions
             {
-                ClientId = "203605726782977",
-                ClientSecret = "3eab7b3374ae1ed5728b06342bc25422",
+                ClientId = "238483006641587",
+                ClientSecret = "cd8dc6a496bf91c7e78afdab93514c6f",
                 AuthenticationScheme = "Facebook",
                 DisplayName = "Facebook",
                 ClaimsIssuer = "Facebook",

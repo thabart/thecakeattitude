@@ -18,9 +18,9 @@ Connect.prototype = {
 					token_type_hint : 'access_token'
 				}).then(function(r) {
 					sessionStorage.setItem(Constants.sessionName, at);
+					console.log(r);
 					GameStateStore.setUser(r);
-					// REDIRECT TO MENU
-					console.log(GameStateStore.getUser());
+					self.game.state.start('Menu');
 				}).fail(function() {
 					self.loginModal.displayError(true, $.i18n('error-cannotAuthenticate'));
 				});
@@ -36,13 +36,16 @@ Connect.prototype = {
 				token_type_hint : 'access_token'
 			}).then(function(r) {
 				GameStateStore.setUser(r);
-				// REDIRECT TO MENU
-				console.log(GameStateStore.getUser());
+	 			self.game.state.start('Menu');
 			}).fail(function() {
+				sessionStorage.removeItem(Constants.sessionName);
 				createLoginModal();
 			});
 		} else {
 			createLoginModal();
 		}
+	},
+	shutdown() {
+		if (this.loginModal) this.loginModal.remove();
 	}
 };

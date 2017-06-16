@@ -9,7 +9,6 @@ Warper.prototype = $.extend({}, BaseCharacter.prototype, {
 	},
 	interact() {
 		this.modal.show();
-		// this.modal.toggle();
 	},
 	destroy() {
 	  this.sprite.destroy();
