@@ -22,25 +22,34 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
         "</div>"+
         "<div class='container'>"+
           "<div class='content'>"+
-            "<div>"+
-              "<label>"+displayedName+"</label>"+
-              "<input type='text' class='input-control' />" +
+            "<div>"+ // Display name + email
+              "<div class='col-6'>"+
+                "<label>"+displayedName+"</label>"+
+                "<input type='text' class='input-control' />" +
+              "</div>"+
+              "<div class='col-6'>"+
+                "<label>"+email+"</label>"+
+                "<input type='text' class='input-control' />" +
+              "</div>"+
             "</div>"+
-            "<div>"+
-              "<label>"+picture+"</label>"+
-              "<input type='text' class='input-control' />" +
+            "<div>"+ // Picture
+              "<div class='col-6'>"+
+                "<label>"+picture+"</label>"+
+                "<input type='file' accept='image/*' class='input-control' />"+
+              "</div>"+
+              "<div class='col-6'>"+
+
+              "</div>"+
             "</div>"+
-            "<div>"+
-              "<label>"+email+"</label>"+
-              "<input type='text' class='input-control' />" +
-            "</div>"+
-            "<div>"+
-              "<label>"+homePhoneNumber+"</label>"+
-              "<input type='text' class='input-control' />" +
-            "</div>"+
-            "<div>"+
-              "<label>"+mobilePhoneNumber+"</label>"+
-              "<input type='text' class='input-control' />" +
+            "<div>"+ // Phone (mobile + home)
+              "<div class='col-6'>"+
+                "<label>"+homePhoneNumber+"</label>"+
+                "<input type='text' class='input-control' />" +
+              "</div>"+
+              "<div class='col-6'>"+
+                "<label>"+mobilePhoneNumber+"</label>"+
+                "<input type='text' class='input-control' />" +
+              "</div>"+
             "</div>"+
             "<div>"+
               "<label>"+address+"</label>"+

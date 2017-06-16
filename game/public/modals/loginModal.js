@@ -92,7 +92,7 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
     });
     $(self.modal).find('.use-other-id-providers').click(function(e) { // External authentication.
       e.preventDefault();
-      var href = Constants.openIdUrl + "/authorization?scope=openid%20profile&state=75BCNvRlEGHpQRCT"+
+      var href = Constants.openIdUrl + "/authorization?scope=openid%20profile%20email&state=75BCNvRlEGHpQRCT"+
         "&redirect_uri="+Constants.callbackUrl+"&response_type=id_token%20token&client_id="+Constants.ClientId+"&nonce=nonce&response_mode=query";
       var w = window.open(href, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400'); // Open modal window.
       self.isLoading(true);

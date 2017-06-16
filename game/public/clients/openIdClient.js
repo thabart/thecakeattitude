@@ -35,5 +35,24 @@ var OpenIdClient = {
     });
 
     return dfd;
+  },
+  getUserInformation: function(accessToken) { // Get user information.
+    var dfd = jQuery.Deferred();
+    $.get(Constants.openIdWellKnownConfiguration).then(function(configuration) {
+      $.ajax(configuration.userinfo_endpoint, {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + accessToken
+        }
+      }).then(function(r) {
+        dfd.resolve(r);
+      }).fail(function() {
+        dfd.reject();
+      });
+    }).fail(function() {
+      dfd.reject();
+    });
+
+    return dfd;
   }
 };

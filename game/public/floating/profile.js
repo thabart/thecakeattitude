@@ -2,7 +2,7 @@ var ProfileMenuFloating = function() { };
 ProfileMenuFloating.prototype = {
   init: function() {
     var user = GameStateStore.getUser();
-    var name = user.username || $.i18n('unknown');
+    var name = user.name || $.i18n('unknown');
   	var self = this,
   		editYourAccount = $.i18n('editYourAccount'),
       disconnect = $.i18n('disconnect'),
@@ -40,6 +40,6 @@ ProfileMenuFloating.prototype = {
   },
   remove: function() {
     $(this.floatingMenu).remove();
-    $(this.editProfileModal).remove();
+    this.editProfileModal.remove();
   }
 };

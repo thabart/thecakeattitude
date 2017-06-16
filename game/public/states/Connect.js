@@ -11,14 +11,8 @@ Connect.prototype = {
 			self.loginModal.init();
 			self.loginModal.toggle();
 			$(self.loginModal).on('authenticated', function(e, at) {
-				OpenIdClient.introspect({ // Introsect the access token.
-					client_id : Constants.ClientId,
-					client_secret : Constants.ClientSecret,
-					token : at,
-					token_type_hint : 'access_token'
-				}).then(function(r) {
+				OpenIdClient.getUserInformation(at).then(function(r) {
 					sessionStorage.setItem(Constants.sessionName, at);
-					console.log(r);
 					GameStateStore.setUser(r);
 					self.game.state.start('Menu');
 				}).fail(function() {
@@ -29,13 +23,9 @@ Connect.prototype = {
 
 		var session = sessionStorage.getItem(Constants.sessionName);
 		if (session && session !== null) {
-			OpenIdClient.introspect({
-				client_id : Constants.ClientId,
-				client_secret : Constants.ClientSecret,
-				token : session,
-				token_type_hint : 'access_token'
-			}).then(function(r) {
+			OpenIdClient.getUserInformation(session).then(function(r) {
 				GameStateStore.setUser(r);
+				console.log(r);
 	 			self.game.state.start('Menu');
 			}).fail(function() {
 				sessionStorage.removeItem(Constants.sessionName);
