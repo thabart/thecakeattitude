@@ -6,11 +6,6 @@ MyShops.prototype = {
 	create: function() {
 		var self = this;
 		self.game.add.tileSprite(0, 0, 980, 600, 'bg4');
-		self.profileMenuFloating = new ProfileMenuFloating(); // Add floating profile menu.
-		self.profileMenuFloating.init();
-		$(self.profileMenuFloating).on('disconnect', function() {
-			self.game.state.start('Connect');
-		});
 		self.myShopsSelector = new MyShopsSelectorModal(); // Add my shops modal selector.
 		self.myShopsSelector.init();
 		self.myShopsSelector.toggle();
@@ -21,6 +16,11 @@ MyShops.prototype = {
 		self.backMenuFloating.init();
 		$(self.backMenuFloating).on('back', function() {
 			self.game.state.start('Menu');
+		});
+		self.profileMenuFloating = new ProfileMenuFloating(); // Add floating profile menu.
+		self.profileMenuFloating.init();
+		$(self.profileMenuFloating).on('disconnect', function() {
+			self.game.state.start('Connect');
 		});
 	},
 	shutdown: function() {

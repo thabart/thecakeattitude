@@ -48,6 +48,7 @@ Splash.prototype = {
 			self.game.load.script('HrefUtils', 'public/utils/href.js');
 			// Load modal windows.
 			self.game.load.script('BaseModal', 'public/modals/baseModal.js');
+			self.game.load.script('EditProfileModal', 'public/modals/editProfileModal.js');
 			self.game.load.script('TchatModal', 'public/modals/tchatModal.js');
 			self.game.load.script('MapModal', 'public/modals/mapModal.js');
 			self.game.load.script('SettingsModal', 'public/modals/settingsModal.js');
@@ -69,6 +70,8 @@ Splash.prototype = {
 			// Load floating menu.
 			self.game.load.script('ProfileMenuFloating', 'public/floating/profile.js');
 			self.game.load.script('BackMenuFloating', 'public/floating/back.js');
+			// Load the components.
+			self.game.load.script('AddressSearch', 'public/components/addressSearch.js');
 			// Load the NPCs.
 			self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 			self.game.load.script('Warper', 'public/characters/warper.js');

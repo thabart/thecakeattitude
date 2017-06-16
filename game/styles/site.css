@@ -572,12 +572,12 @@ ul.floating-options {
   width: 50px;
 }
 
-#free-place-modal .google-map {
+.adr-search .google-map {
   width: 300px;
-  height: 300px;
+  height: 200px;
 }
 
-#free-place-modal .google-map-searchbox {
+.adr-search .google-map-searchbox {
   top: 7px !important;
   width: 150px;
 }
@@ -638,6 +638,11 @@ ul.floating-options {
 
 #shop-chooser-modal .take-the-place {
   float: right;
+}
+
+/* Edit profile modal style */
+#edit-profile-modal {
+
 }
 
 .map-overview .place {
