@@ -11,7 +11,7 @@ Connect.prototype = {
 			self.loginModal.init();
 			self.loginModal.toggle();
 			$(self.loginModal).on('authenticated', function(e, at) {
-				OpenIdClient.getUserInformation(at).then(function(r) {
+				UserClient.getClaims(at).then(function(r) {
 					sessionStorage.setItem(Constants.sessionName, at);
 					GameStateStore.setUser(r);
 					self.game.state.start('Menu');
@@ -23,9 +23,8 @@ Connect.prototype = {
 
 		var session = sessionStorage.getItem(Constants.sessionName);
 		if (session && session !== null) {
-			OpenIdClient.getUserInformation(session).then(function(r) {
+			UserClient.getClaims(session).then(function(r) {
 				GameStateStore.setUser(r);
-				console.log(r);
 	 			self.game.state.start('Menu');
 			}).fail(function() {
 				sessionStorage.removeItem(Constants.sessionName);

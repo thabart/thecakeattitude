@@ -84,6 +84,7 @@ Splash.prototype = {
 			self.game.load.script('TagsClient', 'public/clients/tagsClient.js');
 			self.game.load.script('GoogleMapService', 'public/clients/googleMapService.js');
 			self.game.load.script('OpenIdClient', 'public/clients/openIdClient.js');
+			self.game.load.script('UserClient', 'public/clients/userClient.js');
 			// Load the emoticons.
 			self.game.load.spritesheet('sorry', 'styles/emoticons/sorry.png', 32, 50, 25);
 			self.game.load.spritesheet('love-eyes', 'styles/emoticons/love-eyes.png', 31, 24, 5);

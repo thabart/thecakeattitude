@@ -61,19 +61,43 @@ AddressSearch.prototype = {
 
     $(this).trigger('success');
   },
+  getAddress: function() {
+    var self = this;
+    return {
+      street_address: $(self.component).find('.streetAdr').val(),
+      postal_code: $(self.component).find('.postalCode').val(),
+      locality: $(self.component).find('.locality').val(),
+      country: $(self.component).find('.country').val()
+    };
+  },
+  getGooglePlaceId: function() {
+    return this.marker.placeId;
+  },
   init: function() {
     var self = this;
     var getLocation = function() { // Get geolocation.
       var dfd = jQuery.Deferred();
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var coordinates = position.coords;
-          dfd.resolve({lat: coordinates.latitude, lng: coordinates.longitude});
-        }, function() {
+      var getDefaultLocation = function() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var coordinates = position.coords;
+            dfd.resolve({lat: coordinates.latitude, lng: coordinates.longitude});
+          }, function() {
+            dfd.resolve({lat: 50, lng: 50});
+          });
+        } else {
           dfd.resolve({lat: 50, lng: 50});
+        }
+      };
+      var googlePlaceId = GameStateStore.getUser().google_place_id;
+      if (googlePlaceId) {
+        GoogleMapService.getPlaceById(googlePlaceId).then(function(r) {
+          dfd.resolve(r.geometry.location)
+        }).fail(function() {
+          getDefaultLocation();
         });
       } else {
-        dfd.resolve({lat: 50, lng: 50});
+        getDefaultLocation();
       }
 
       return dfd;
@@ -81,49 +105,56 @@ AddressSearch.prototype = {
 
     getLocation().then(function(position) { // Get current location and display it.
       GoogleMapService.getPlaceByLocation(position.lat, position.lng).then(function(l) {
-        self.updateAddress(l.adr);
-      });
-      var googleMap = $(self.component).find('.google-map')[0];
-      self.map = new google.maps.Map(googleMap, { center: position, scrollwheel: true, zoom: 8 });
-      self.marker = new google.maps.Marker({
-        map: self.map,
-        position: position
-      });
-      var input = $(self.component).find('.google-map-searchbox')[0];
-      self.searchBox = new google.maps.places.SearchBox(input);
-      self.searchBox.addListener('places_changed', function() { // Search places.
-        self.hideError();
-        var places = self.searchBox.getPlaces();
-        if (places.length === 0) return;
-        if (places.length > 1) {
-          self.displayError($.i18n('error-onlyOneAdr'));
-          return;
-        }
-
-        self.marker.setMap(null);
-        var place = places[0];
-        var adr = GoogleMapUtils.getAddress(place.address_components);
-        if (place.geometry) {
-          self.marker = new google.maps.Marker({
-            map: self.map,
-            position: place.geometry.location
-          });
-
-          var bounds = new google.maps.LatLngBounds();
-          if (place.geometry.viewport) {
-            bounds.union(place.geometry.viewport);
-          } else {
-            bounds.extend(place.geometry.location);
+        var googleMap = $(self.component).find('.google-map')[0];
+        self.map = new google.maps.Map(googleMap, { center: position, scrollwheel: true, zoom: 8 });
+        self.marker = new google.maps.Marker({
+          map: self.map,
+          placeId: l.place_id,
+          position: position
+        });
+        var input = $(self.component).find('.google-map-searchbox')[0];
+        $(input).on('keydown', function(e) {
+          if (e.which == 13) {
+            return false;
+          }
+        });
+        self.searchBox = new google.maps.places.SearchBox(input);
+        self.searchBox.addListener('places_changed', function(e) { // Search places.
+          self.hideError();
+          var places = self.searchBox.getPlaces();
+          if (places.length === 0) return;
+          if (places.length > 1) {
+            self.displayError($.i18n('error-onlyOneAdr'));
+            return;
           }
 
-          self.map.fitBounds(bounds);
-        }
+          self.marker.setMap(null);
+          var place = places[0];
+          var adr = GoogleMapUtils.getAddress(place.address_components);
+          if (place.geometry) {
+            self.marker = new google.maps.Marker({
+              map: self.map,
+              placeId: place.place_id,
+              position: place.geometry.location
+            });
 
-        self.updateAddress(adr);
+            var bounds = new google.maps.LatLngBounds();
+            if (place.geometry.viewport) {
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+
+            self.map.fitBounds(bounds);
+          }
+
+          self.updateAddress(adr);
+        });
+
+        self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        $(self).trigger('initialized');
+        self.updateAddress(l.adr);
       });
-
-      self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-      $(self).trigger('initialized');
     });
   }
 };

@@ -75,7 +75,20 @@ ul.no-style {
   padding: 10px;
 }
 
+.alert-success {
+  display: none;
+  border: 1px solid #d6e9c6;
+  background-color: #dff0d8;
+  border-radius: 5px;
+  padding: 10px;
+}
+
 .alert-error .close {
+  float: right;
+  cursor: pointer;
+}
+
+.alert-success .close {
   float: right;
   cursor: pointer;
 }
@@ -641,8 +654,8 @@ ul.floating-options {
 }
 
 /* Edit profile modal style */
-#edit-profile-modal {
-
+#edit-profile-modal .profile-picture {
+  max-width: 50px;
 }
 
 .map-overview .place {

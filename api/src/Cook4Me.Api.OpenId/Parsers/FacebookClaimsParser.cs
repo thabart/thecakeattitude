@@ -15,6 +15,7 @@
 #endregion
 
 using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
@@ -24,50 +25,41 @@ namespace Cook4Me.Api.OpenId.Parsers
     {
         private static Dictionary<string, string> _mappingFacebookClaimToOpenId = new Dictionary<string, string>
         {
-            {
-                "id",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject
-            },
-            {
-                "name",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name
-            },
-            {
-                "first_name",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.GivenName
-            },
-            {
-                "last_name",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.FamilyName
-            },
-            {
-                "gender",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Gender
-            },
-            {
-                "locale",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Locale
-            },
-            {
-                "picture",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture
-            },
-            {
-                "updated_at",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.UpdatedAt
-            },
-            {
-                "email",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email
-            },
-            {
-                "birthday",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.BirthDate
-            },
-            {
-                "link",
-                SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.WebSite
-            }
+            { "id", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject },
+            { "name", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name },
+            { "first_name", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.GivenName },
+            { "last_name", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.FamilyName },
+            { "gender", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Gender },
+            { "locale", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Locale },
+            { "picture", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture },
+            { "updated_at", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.UpdatedAt },
+            { "email", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email },
+            { "birthday", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.BirthDate },
+            { "link", SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.WebSite }
+        };
+
+        private static Dictionary<string, Func<JToken, string>> _mappingTransformationClaimToOpenId = new Dictionary<string, Func<JToken, string>>
+        {
+            { "id", (t) => t.ToString() },
+            { "name", (t) => t.ToString() },
+            { "first_name", (t) => t.ToString() },
+            { "last_name", (t) => t.ToString() },
+            { "gender", (t) => t.ToString() },
+            { "locale", (t) => t.ToString() },
+            { "picture", (t) => {
+                var obj = t as JObject;
+                if (obj == null)
+                {
+                    return null;
+                }
+
+                var url = obj.SelectToken("data.url");
+                return url == null ? null : url.ToString();
+            }},
+            { "updated_at", (t) => t.ToString() },
+            { "email", (t) => t.ToString() },
+            { "birthday", (t) => t.ToString() },
+            { "link", (t) => t.ToString() },
         };
 
         public static List<Claim> Process(JObject jObj)
@@ -75,13 +67,14 @@ namespace Cook4Me.Api.OpenId.Parsers
             var result = new List<Claim>();
             foreach (var claim in jObj)
             {
-                string key = claim.Key;
-                if (_mappingFacebookClaimToOpenId.ContainsKey(claim.Key))
+                if (!_mappingFacebookClaimToOpenId.ContainsKey(claim.Key))
                 {
-                    key = _mappingFacebookClaimToOpenId[claim.Key];
+                    continue;
                 }
 
-                result.Add(new Claim(key, claim.Value.ToString()));
+                var key = _mappingFacebookClaimToOpenId[claim.Key];
+                var transformation = _mappingTransformationClaimToOpenId[claim.Key];
+                result.Add(new Claim(key, transformation(claim.Value)));
             }
 
             return result;

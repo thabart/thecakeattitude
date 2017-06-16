@@ -3,6 +3,7 @@ var Constants = {
 	ClientId : 'game',
 	ClientSecret: 'game',
 	sessionName: 'shopInGame-2-AccessToken',
+  googleMapKey: 'AIzaSyBN72d3ipuyzbqhJgjwav5HnnKkLqp3KCU',
 	callbackUrl: 'http://localhost:3000/callback',
 	googleMapUrl: 'http://maps.googleapis.com/maps/api',
 	apiUrl: 'http://localhost:5000',

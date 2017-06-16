@@ -29,6 +29,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using SimpleIdentityServer.DataAccess.SqlServer;
 using SimpleIdentityServer.Host;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace Cook4Me.Api.OpenId
@@ -153,15 +154,16 @@ namespace Cook4Me.Api.OpenId
                 ClaimsIssuer = "Facebook",
                 SignInScheme = Constants.ExternalCookieName,
                 CallbackPath = "/signin-facebook",
-                AuthorizationEndpoint = "https://www.facebook.com/v2.6/dialog/oauth",
-                TokenEndpoint = "https://graph.facebook.com/v2.6/oauth/access_token",
-                UserInformationEndpoint = "https://graph.facebook.com/v2.6/me",
+                AuthorizationEndpoint = "https://www.facebook.com/v2.9/dialog/oauth",
+                TokenEndpoint = "https://graph.facebook.com/v2.9/oauth/access_token",
+                UserInformationEndpoint = "https://graph.facebook.com/v2.9/me",
                 StateDataFormat = new PropertiesDataFormat(protector),
                 Events = new OAuthEvents
                 {
                     OnCreatingTicket = async context =>
                     {
                         var endpoint = QueryHelpers.AddQueryString(context.Options.UserInformationEndpoint, "access_token", context.AccessToken);
+                        endpoint = QueryHelpers.AddQueryString(endpoint, "fields", string.Join(",", new[] { "first_name", "last_name", "name", "picture", "gender", "email", "locale", "updated_time" }));
                         var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
                         request.Headers.Add("User-Agent", "SimpleIdentityServer");
                         request.Headers.Add("Authorization", "Bearer " + context.AccessToken);

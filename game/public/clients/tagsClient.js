@@ -19,7 +19,7 @@ var TagsClient = {
       }).then(function (r) {
 				dfd.resolve(r);
       }).fail(function (e) {
-        dfd.fail(e);
+        dfd.reject(e);
       });
 		});
 
