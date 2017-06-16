@@ -1,6 +1,7 @@
 (function() {
   var _currentMap = null;
   var _mapChanged = 'mapChanged';
+  var _userChanged = 'userChanged';
   var _lastPlayerPosition = null;
   var _user = null;
   window.GameStateStore = {
@@ -22,9 +23,13 @@
     },
     setUser: function(user) {
       _user = user;
+      $(this).trigger(_userChanged, [ { user: user } ]);
     },
     onCurrentMapChanged: function(callback) {
       $(this).on(_mapChanged, callback);
+    },
+    onUserChanged: function(callback) {
+      $(this).on(_userChanged, callback);
     }
   };
 })();

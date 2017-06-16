@@ -15,7 +15,7 @@ ProfileMenuFloating.prototype = {
   		"</ul>"+
   		"<div class='tooltip tooltip-top'>"+
   			"<div class='tooltip-content'>"+
-  				"<span>"+welcome+"</span>"+
+  				"<span class='pseudo'>"+welcome+"</span>"+
   				"<ul class='no-style'>"+
   					"<li><button class='action-btn lg-action-btn edit-profile'>"+editYourAccount+"</button></li>"+
   					"<li><button class='action-btn lg-action-btn disconnect'>"+disconnect+"</button></li>"+
@@ -37,6 +37,10 @@ ProfileMenuFloating.prototype = {
       $(self).trigger('disconnect');
     });
     $(Constants.gameSelector).append(self.floatingMenu);
+    GameStateStore.onUserChanged(function(e, obj) {
+      var welcomeMsg = $.i18n('welcome').replace('{0}', obj.user.name);
+      $(self.floatingMenu).find('.pseudo').html(welcomeMsg);
+    });
   },
   remove: function() {
     $(this.floatingMenu).remove();

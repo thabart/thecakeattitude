@@ -107,6 +107,8 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
         self.displayProfileUpdater(false);
         self.hideError();
         self.displaySuccess($.i18n('success-profileUpdated'));
+        var userClaims = $.extend({}, GameStateStore.getUser(), json);
+        GameStateStore.setUser(userClaims);
       }).fail(function() {
         self.displayProfileUpdater(false);
         self.hideSuccess();
@@ -126,6 +128,7 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
     });
     self.displayProfileUpdater(false);
     self.hideError();
+    self.hideSuccess();
   },
   disableUpdateBtn: function(b) {
     $(this.modal).find('.update').prop('disabled', b);
@@ -167,6 +170,9 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
   },
   show: function() {
     var self = this;
+    self.displayProfileUpdater(false);
+    self.hideError();
+    self.hideSuccess();
     self.toggle();
     this.setUserInformation();
     self.adrSearch.init();
