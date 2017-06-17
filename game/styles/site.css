@@ -24,21 +24,43 @@ ul.no-style {
 }
 
 /* Game */
-#game-container {
-  width:980px;
-  margin: 0 auto;
+
+@media screen and (min-width: 1501px) {
+  #game-container {
+    width:1470px;
+    margin: 0 auto;
+  }
+
+  #game, .game-tchat {
+    max-width:1470px;
+  }
+
+  #game {
+    position: relative;
+    overflow: hidden;
+    width:1470px;
+    height: 600px;
+    min-height: 600px;
+  }
 }
 
-#game, .game-tchat {
-  max-width: 980px;
-}
+@media screen and (max-width: 1500px), screen and (max-height: 870px) {
+  #game-container {
+    width:980px;
+    margin: 0 auto;
+  }
 
-#game {
-  position: relative;
-  overflow: hidden;
-  width: 980px;
-  height: 600px;
-  min-height: 600px;
+  #game, .game-tchat {
+    max-width: 980px;
+  }
+
+  #game {
+    position: relative;
+    overflow: hidden;
+    width: 980px;
+    height: 600px;
+    min-height: 600px;
+  }
 }
 
 /* Errors */

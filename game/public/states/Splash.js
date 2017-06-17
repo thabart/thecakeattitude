@@ -12,7 +12,7 @@ Splash.prototype = {
 		self.game.load.image('bg3', 'styles/backgrounds/bg3.jpg');
 		self.game.load.image('bg4', 'styles/backgrounds/bg4.jpg');
 		bg1Loader.onFileComplete.add(function() {
-			bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg1'));
+			bgGroup.add(self.game.add.tileSprite(0, 0, self.game.world.width, self.game.world.height, 'bg1'));
 			txtGroup.add(self.loadingBar);
 			self.game.world.bringToTop(txtGroup);
 			// Load all NPCs & animations.

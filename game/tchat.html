@@ -69,13 +69,17 @@
 
 				function create() {
 					this.game.state.add('Splash', Splash);
-					var s = this.game.state.start('Splash', true, true);
+					this.game.state.start('Splash', true, true);
 				}
 
 				// Initialize the game.
 				this.init = function() {
-					var self = this;
-					this.game = new Phaser.Game(980, 600, Phaser.CANVAS, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
+					var self = this,
+						gameContainer = $("#game-container");
+					self.game = new Phaser.Game(gameContainer.width(), gameContainer.height(), Phaser.CANVAS, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
+					window.addEventListener('resize', function () {
+						self.game.scale.setGameSize(gameContainer.width(), gameContainer.height());
+					});
 				};
 			};
 			var i18n = $.i18n();

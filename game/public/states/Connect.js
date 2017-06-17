@@ -5,7 +5,7 @@ Connect.prototype = {
 	init: function() { },
 	create: function() {
 		var self = this;
-		self.game.add.tileSprite(0, 0, 980, 600, 'bg2');
+		self.game.add.tileSprite(0, 0, self.game.world.width, self.game.world.height, 'bg2');
 		var createLoginModal = function() {
 			self.loginModal = new LoginModal();
 			self.loginModal.init();
