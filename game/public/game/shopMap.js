@@ -28,8 +28,10 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.layers.groundDecorations = self.tileMap.createLayer('GroundDecorations');
 		self.layers.decorations = self.tileMap.createLayer('Decorations');
 		// Add overview image
-		self.addOverviewPlayersGroup();
 		self.addNpcsGroup();
+		self.addOverviewImage();
+		self.addOverviewPlayersGroup();
+		self.trackSizeChanged();
 		self.addWarpsGroup('category', categoryId);
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);

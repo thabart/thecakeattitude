@@ -8,20 +8,22 @@ FreePlaceModalDescriptionTab.prototype = {
       profilePicture = $.i18n('profilePicture'),
       next = $.i18n('next'),
       self = this;
-    var result = $("<div class='container'>"+
+    self.tab = $("<form class='container'>"+
       "<div>"+
         "<section class='col-6'>"+
           "<div>"+
             "<label>"+name+"</label>"+
-            "<input type='text' class='input-control' />"+
+            "<span class='error-message'></span>"+
+            "<input type='text' name='name' class='input-control' required />"+
           "</div>"+
           "<div>"+
             "<label>"+description+"</label>"+
-            "<textarea class='input-control' />"+
+            "<span class='error-message'></span>"+
+            "<textarea name='description' class='input-control' required />"+
           "</div>"+
           "<div>"+
             "<label>"+tags+"</label>"+
-            "<input type='text' class='input-control tags' />"+
+            "<input type='text' name='tags' class='input-control tags' />"+
           "</div>"+
         "</section>"+
         "<section class='col-6 images'>"+
@@ -40,7 +42,7 @@ FreePlaceModalDescriptionTab.prototype = {
       "<div class='footer'>"+
         "<button class='action-btn next'>"+next+"</button>"+
       "</div>"+
-    "</div>");
+    "</form>");
     var uploadImage = function(e, callback) {
       e.preventDefault();
       var file = e.target.files[0];
@@ -50,7 +52,7 @@ FreePlaceModalDescriptionTab.prototype = {
       };
       reader.readAsDataURL(file);
     };
-    $(result).find('.tags').selectize({
+    self.tags = $(self.tab).find('.tags').selectize({
       create: false,
       labelField: 'name',
       searchField: 'name',
@@ -73,19 +75,65 @@ FreePlaceModalDescriptionTab.prototype = {
         });
       }
     });
-    $(result).find('.banner-image-up').change(function(e) {
+    self.tab.validate({
+      rules: {
+        name: {
+          required: true,
+          minlength: 1,
+          maxlength: 15
+        },
+        description: {
+          required: true,
+          minlength: 1,
+          maxlength: 255
+        }
+      },
+      errorPlacement: function(error, elt) {
+        error.appendTo(elt.prev());
+      }
+    });
+    $(self.tab).find('.banner-image-up').change(function(e) {
       uploadImage(e, function(b64Img) {
-        $(result).find('.banner-image').html("<img src='"+b64Img+"' />");
+        $(self.tab).find('.banner-image').html("<img src='"+b64Img+"' />");
       });
     });
-    $(result).find('.profile-picture-up').change(function(e) {
+    $(self.tab).find('.profile-picture-up').change(function(e) {
       uploadImage(e, function(b64Img) {
-        $(result).find('.profile-picture').html("<img src='"+b64Img+"' />");
+        $(self.tab).find('.profile-picture').html("<img src='"+b64Img+"' />");
       });
     });
-    $(result).find('.next').click(function() {
-      $(self).trigger('next');
+    $(self.tab).submit(function(e) {
+      e.preventDefault();
+      self.tab.form();
+      if (!self.tab.valid()) {
+        return;
+      }
+
+      var bannerImage = $(self.tab).find(".banner-image img").attr('src'),
+        profileImage = $(self.tab).find(".profile-picture img").attr('src');
+      var json = {
+        name: $(self.tab).find("input[name='name']").val(),
+        description: $(self.tab).find("textarea[name='description']").val(),
+        tags: self.tags[0].selectize.items
+      };
+      if (bannerImage) {
+        json['banner_image'] = bannerImage;
+      }
+
+      if (profileImage) {
+        json['profile_image'] = profileImage;
+      }
+
+      $(self).trigger('next', [json]);
     });
-    return result;
+    return self.tab;
+  },
+  clean: function() {
+    var self = this;
+    $(self.tab).find("input[name='name']").val('');
+    $(self.tab).find("textarea[name='description']").val('');
+    $(self.tab).find("input[name='tags']").val('');
+    $(self.tab).find(".banner-image").empty();
+    $(self.tab).find(".profile-picture").empty();
   }
 };

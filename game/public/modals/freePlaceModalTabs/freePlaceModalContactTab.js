@@ -11,27 +11,21 @@ FreePlaceModalContactTab.prototype = {
       yesNo = $.i18n('yesNo'),
       self = this;
     self.tab = $("<div class='container'>"+
-      "<form class='contact-form'>"+
-        "<p><i class='fa fa-exclamation-triangle'/> "+informationAreComingFromYourProfile+" <input type='checkbox' class='updateInformation' /> "+yesNo+"</p>"+
-        "<div>"+
-          "<label>"+email+"</label>"+
-          "<span class='error-message'></span>"+
-          "<input type='text' class='input-control email' name='email' readonly required />"+
-        "</div>"+
-        "<div>"+
-          "<label>"+mobilePhone+"</label>"+
-          "<span class='error-message'></span>"+
-          "<input type='text' class='input-control mobile-phone' name='mobilePhone' readonly required />"+
-        "</div>"+
-        "<div>"+
-          "<label>"+homePhone+"</label>"+
-          "<span class='error-message'></span>"+
-          "<input type='text' class='input-control home-phone' name='homePhone' readonly required />"+
-        "</div>"+
-      "</form>"+
+      "<p><i class='fa fa-exclamation-triangle'/> "+informationAreComingFromYourProfile+"</p>"+
+      "<div>"+
+        "<label>"+email+"</label>"+
+        "<input type='text' class='input-control email' name='email' readonly />"+
+      "</div>"+
+      "<div>"+
+        "<label>"+mobilePhone+"</label>"+
+        "<input type='text' class='input-control mobile-phone' name='mobilePhone' readonly  />"+
+      "</div>"+
+      "<div>"+
+        "<label>"+homePhone+"</label>"+
+        "<input type='text' class='input-control home-phone' name='homePhone' readonly />"+
+      "</div>"+
       "<div class='footer'>"+
         "<button class='action-btn previous'>"+previous+"</button>"+
-        "<button class='action-btn update' disabled>"+update+"</button>"+
         "<button class='action-btn next'>"+next+"</button>"+
       "</div>"+
     "</div>");
@@ -39,50 +33,29 @@ FreePlaceModalContactTab.prototype = {
       $(self).trigger('previous');
     });
     $(self.tab).find('.next').click(function() {
-      self.contactFormValidation.form();
-      if (!self.contactFormValidation.valid()) {
-        return;
-      }
-
+      var user = GameStateStore.getUser();
       var json = {
-        email: $(self.tab).find('.email').val(),
-        mobile_phone: $(self.tab).find('.mobile-phone').val(),
-        home_home: $(self.tab).find('.home-phone').val()
+        email: user.email,
+        mobile_phone: user.mobile_phone_number,
+        home_home: user.home_phone_number
       };
       $(self).trigger('next', [json]);
     });
-    $(self.tab).find('.update').click(function() {
-
-    });
-    $(self.tab).find('.updateInformation').change(function() {
-      $(self.tab).find('.email').prop('readOnly', !this.checked);
-      $(self.tab).find('.mobile-phone').prop('readOnly', !this.checked);
-      $(self.tab).find('.home-phone').prop('readOnly', !this.checked);
-      $(self.tab).find('.update').prop('disabled', !this.checked);
-    });
-    $(self.tab).find('.contact-form').submit(function(e) {
-      e.preventDefault();
-    });
-    self.contactFormValidation = $(self.tab).find('.contact-form');
-    self.contactFormValidation.validate({
-      rules: {
-        email: {
-          required: true,
-          email: true
-        },
-        mobilePhone: {
-          required: true,
-          phone: true
-        },
-        homePhone: {
-          required: true,
-          phone: true
-        }
-      },
-      errorPlacement: function(error, elt) {
-        error.appendTo(elt.prev());
-      }
+    self.setUserInformation();
+    GameStateStore.onUserChanged.call(self, function() {
+      if (!self.tab) return;
+      self.setUserInformation();
     });
     return self.tab;
+  },
+  setUserInformation: function() {
+    var self = this;
+    var user = GameStateStore.getUser();
+    $(self.tab).find("input[name='email']").val(user.email);
+    $(self.tab).find("input[name='mobilePhone']").val(user.mobile_phone_number);
+    $(self.tab).find("input[name='homePhone']").val(user.home_phone_number);
+  },
+  destroy: function() {
+    GameStateStore.offUserChanged.call(this);
   }
 };

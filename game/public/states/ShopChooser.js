@@ -21,12 +21,12 @@ ShopChooser.prototype = {
 		self.shopChooserModal.init();
 		self.shopChooserModal.toggle();
 		$(self.shopChooserModal).on('freePlace', function() { // Display free modal window.
-			self.freePlaceModal.toggle();
+			self.freePlaceModal.show();
 		});
 		$(self.shopChooserModal).on('goToTheShop', function(e, data) {
 			self.game.state.start("SplashGame", true, false, data);
 		});
-		self.freePlaceModal = new FreePlaceModal();
+		self.freePlaceModal = new FreePlaceModal(); // Add free place modal.
 		self.freePlaceModal.init();
 		self.profileMenuFloating = new ProfileMenuFloating(); // Add floating profile menu.
 		self.profileMenuFloating.init();

@@ -111,6 +111,7 @@ BaseMap.prototype = {
   trackSizeChanged: function() { // Update overview map on size changed.
     var self = this;
     GameStateStore.onSizeChanged.call(this, function(d) {
+      console.log(d);
       var overviewCoordinate = Calculator.getOverviewImageCoordinate(self.game);
       var overviewSize = Configuration.getOverviewSize();
       self.overview.cameraOffset.x = overviewCoordinate.x;
@@ -118,7 +119,7 @@ BaseMap.prototype = {
       for(var key in self.layers) {
         var layer = self.layers[key];
         if (layer === null || !layer) continue;
-        layer.resize(d.size.w, d.size.h);
+        layer.resize(d.w, d.h);
       }
 
       if (self.currentPlayer && self.currentPlayer !== null) {

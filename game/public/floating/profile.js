@@ -37,14 +37,15 @@ ProfileMenuFloating.prototype = {
       $(self).trigger('disconnect');
     });
     $(Constants.gameSelector).append(self.floatingMenu);
-    GameStateStore.onUserChanged(function(e, obj) {
-      if (!obj.user) return;
-      var welcomeMsg = $.i18n('welcome').replace('{0}', obj.user.name);
+    GameStateStore.onUserChanged.call(self, function(user) {
+      if (!user) return;
+      var welcomeMsg = $.i18n('welcome').replace('{0}', user.name);
       $(self.floatingMenu).find('.pseudo').html(welcomeMsg);
     });
   },
   remove: function() {
     $(this.floatingMenu).remove();
     this.editProfileModal.remove();
+    GameStateStore.offUserChanged.call(this);
   }
 };

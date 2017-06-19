@@ -7,10 +7,16 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
       description = $.i18n('description'),
       contactInformation = $.i18n('contactInformation'),
       payment = $.i18n('payment');
-    var descriptionTab = new FreePlaceModalDescriptionTab();
-    var addressTab = new FreePlaceModalAddressTab();
-    var contactInfoTab = new FreePlaceModalContactTab();
-    var paymentTab = new FreePlaceModalPaymentTab();
+    self.descriptionTab = new FreePlaceModalDescriptionTab();
+    self.addressTab = new FreePlaceModalAddressTab();
+    self.contactInfoTab = new FreePlaceModalContactTab();
+    self.paymentTab = new FreePlaceModalPaymentTab();
+    self.formResult = {
+      descriptionTabResult: null,
+      addressTabResult: null,
+      contactInfoTabResult: null,
+      paymentTabResult: null
+    };
     self.create("<div class='modal modal-lg md-effect-1' id='free-place-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -33,50 +39,67 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
         "</div>"+
       "</div>"+
     "</div>");
-    var showTab = function(indice) {
-      var progressBarLi = $(self.modal).find('.progressbar li');
-      for (var i = 0; i <= 3; i++) {
-        var li = progressBarLi.get(i),
-          tab = $(self.modal).find('.tab'+i);
-        if (i <= indice) {
-          $(li).addClass('active');
-        } else {
-          $(li).removeClass('active');
-        }
-
-        if (i === indice) {
-          $(tab).show();
-        } else {
-          $(tab).hide();
-        }
-      }
-    };
-    $(self.modal).find('.tab0').append(descriptionTab.render());
-    $(self.modal).find('.tab1').append(addressTab.render());
-    $(self.modal).find('.tab2').append(contactInfoTab.render());
-    $(self.modal).find('.tab3').append(paymentTab.render());
-    showTab(0);
-    $(descriptionTab).on('next', function() {
-      showTab(1);
-      addressTab.init();
+    $(self.modal).find('.tab0').append(self.descriptionTab.render());
+    $(self.modal).find('.tab1').append(self.addressTab.render());
+    $(self.modal).find('.tab2').append(self.contactInfoTab.render());
+    $(self.modal).find('.tab3').append(self.paymentTab.render());
+    self.showTab(0);
+    $(self.descriptionTab).on('next', function(e, data) {
+      self.showTab(1);
+      self.formResult.descriptionTabResult = data;
+      self.addressTab.init();
     });
-    $(addressTab).on('previous', function() { // Address.
-      showTab(0);
+    $(self.addressTab).on('previous', function() { // Address.
+      self.showTab(0);
     });
-    $(addressTab).on('next', function() {
-      showTab(2);
+    $(self.addressTab).on('next', function(e, data) {
+      self.showTab(2);
+      self.formResult.addressTab = data;
     });
-    $(contactInfoTab).on('previous', function() { // Contact information.
-      showTab(1);
+    $(self.contactInfoTab).on('previous', function() { // Contact information.
+      self.showTab(1);
     });
-    $(contactInfoTab).on('next', function() {
-      showTab(3)
+    $(self.contactInfoTab).on('next', function(e, data) {
+      self.showTab(3)
+      self.formResult.contactInfoTab = data;
     });
-    $(paymentTab).on('previous', function() { // Payment.
-      showTab(2);
+    $(self.paymentTab).on('previous', function() { // Payment.
+      self.showTab(2);
     });
-    $(paymentTab).on('confirm', function() {
+    $(self.paymentTab).on('confirm', function() {
       console.log('confirm');
     });
+  },
+  showTab: function(indice) {
+    var self = this;
+    var progressBarLi = $(self.modal).find('.progressbar li');
+    for (var i = 0; i <= 3; i++) {
+      var li = progressBarLi.get(i),
+        tab = $(self.modal).find('.tab'+i);
+      if (i <= indice) {
+        $(li).addClass('active');
+      } else {
+        $(li).removeClass('active');
+      }
+
+      if (i === indice) {
+        $(tab).show();
+      } else {
+        $(tab).hide();
+      }
+    }
+  },
+  show: function() {
+    var self = this;
+    self.showTab(0);
+    self.descriptionTab.clean(); // Clean description tab.
+    self.paymentTab.clean(); // Clean payment tab.
+    self.toggle();
+  },
+  remove() {
+    var self = this;
+    $(self.modal).remove();
+    self.contactInfoTab.destroy();
+    self.addressTab.destroy();
   }
 });

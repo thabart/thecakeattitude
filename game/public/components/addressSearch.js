@@ -73,8 +73,30 @@ AddressSearch.prototype = {
   getGooglePlaceId: function() {
     return this.marker.placeId;
   },
+  setGooglePlaceId: function(googlePlaceId) {
+    var self = this;
+    GoogleMapService.getPlaceById(googlePlaceId).then(function(r) {
+      self.marker.setMap(null);
+      if (r.geometry) {
+        self.marker = new google.maps.Marker({
+          map: self.map,
+          placeId: r.place_id,
+          position: r.geometry.location
+        });
+        var bounds = null;
+        if (r.geometry.viewport) {
+          bounds = new google.maps.LatLngBounds(r.geometry.viewport.southwest, r.geometry.viewport.northeast);
+        } else {
+          bounds = new google.maps.LatLngBounds(r.geometry.location.southwest, r.geometry.location.northeast);
+        }
+        self.map.fitBounds(bounds);
+      }
+      self.updateAddress(r.adr);
+    });
+  },
   init: function() {
     var self = this;
+    if (self.isInit) return;
     var getLocation = function() { // Get geolocation.
       var dfd = jQuery.Deferred();
       var getDefaultLocation = function() {
@@ -102,7 +124,6 @@ AddressSearch.prototype = {
 
       return dfd;
     };
-
     getLocation().then(function(position) { // Get current location and display it.
       GoogleMapService.getPlaceByLocation(position.lat, position.lng).then(function(l) {
         var googleMap = $(self.component).find('.google-map')[0];
@@ -152,6 +173,7 @@ AddressSearch.prototype = {
         });
 
         self.map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+        self.isInit = true;
         $(self).trigger('initialized');
         self.updateAddress(l.adr);
       });

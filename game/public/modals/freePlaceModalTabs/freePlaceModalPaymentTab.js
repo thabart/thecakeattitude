@@ -37,6 +37,7 @@ FreePlaceModalPaymentTab.prototype = {
       $(self).trigger('previous');
     });
     $(self.tab).find('.confirm').click(function() {
+      
       $(self).trigger('confirm');
     });
     $(self.tab).find('li').click(function() {
@@ -47,5 +48,8 @@ FreePlaceModalPaymentTab.prototype = {
       e.stopPropagation();
     });
     return self.tab;
+  },
+  clean: function() {
+    $(this.tab).find('.list-group-item').removeClass('list-group-item-active');
   }
 };

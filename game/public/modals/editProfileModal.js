@@ -130,11 +130,13 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
     self.updateProfileForm.validate({
       rules: {
         name: {
-          required: true
+          required: true,
+          minlength: 5,
+          maxlength: 30
         },
         email: {
           required: true,
-          email: true
+          email: true          
         },
         mobile_phone_number: {
           phone: true

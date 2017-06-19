@@ -7,6 +7,7 @@
   var _user = null;
   var _size = null;
   var _sizeChangedListeners = [];
+  var _userChangedListeners = [];
   window.GameStateStore = {
     getCurrentMap: function() {
       return _currentMap;
@@ -26,7 +27,9 @@
     },
     setUser: function(user) {
       _user = user;
-      $(this).trigger(_userChanged, [ { user: user } ]);
+      _userChangedListeners.forEach(function(record) {
+        record.callback(user);
+      });
     },
     getSize: function() {
       return _size;
@@ -41,7 +44,15 @@
       $(this).on(_mapChanged, callback);
     },
     onUserChanged: function(callback) {
-      $(this).on(_userChanged, callback);
+      var self = this;
+      _userChangedListeners.push({instance: self, callback: callback});
+    },
+    offUserChanged: function() {
+      var self = this;
+      var instances = _userChangedListeners.filter(function(rec) { return rec.instance === self });
+      if (instances && instances.length === 1) {
+        _userChangedListeners.splice($.inArray(self, _userChangedListeners), 1);
+      }
     },
     onSizeChanged: function(callback) {
       var self = this;
