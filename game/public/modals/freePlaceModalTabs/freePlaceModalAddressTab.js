@@ -31,6 +31,7 @@ FreePlaceModalAddressTab.prototype = {
       self.isInit = true;
     });
     GameStateStore.onUserChanged.call(self, function(user) {
+      if (!user) return;
       self.adrSearch.setGooglePlaceId(user.google_place_id);
     });
     return self.tab;

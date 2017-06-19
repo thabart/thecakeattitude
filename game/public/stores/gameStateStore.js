@@ -51,8 +51,10 @@
       var self = this;
       var instances = _userChangedListeners.filter(function(rec) { return rec.instance === self });
       if (instances && instances.length === 1) {
-        _userChangedListeners.splice($.inArray(self, _userChangedListeners), 1);
+        _userChangedListeners.splice($.inArray(instances[0], _userChangedListeners), 1);
       }
+
+      console.log(_userChangedListeners);
     },
     onSizeChanged: function(callback) {
       var self = this;
@@ -62,7 +64,7 @@
       var self = this;
       var instances = _sizeChangedListeners.filter(function(rec) { return rec.instance === self });
       if (instances && instances.length === 1) {
-        _sizeChangedListeners.splice($.inArray(self, _sizeChangedListeners), 1);
+        _sizeChangedListeners.splice($.inArray(instances[0], _sizeChangedListeners), 1);
       }
     }
   };

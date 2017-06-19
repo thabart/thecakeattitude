@@ -14,8 +14,7 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
     self.formResult = {
       descriptionTabResult: null,
       addressTabResult: null,
-      contactInfoTabResult: null,
-      paymentTabResult: null
+      contactInfoTabResult: null
     };
     self.create("<div class='modal modal-lg md-effect-1' id='free-place-modal'>"+
       "<div class='modal-content'>"+
@@ -54,20 +53,21 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
     });
     $(self.addressTab).on('next', function(e, data) {
       self.showTab(2);
-      self.formResult.addressTab = data;
+      self.formResult.addressTabResult = data;
     });
     $(self.contactInfoTab).on('previous', function() { // Contact information.
       self.showTab(1);
     });
     $(self.contactInfoTab).on('next', function(e, data) {
       self.showTab(3)
-      self.formResult.contactInfoTab = data;
+      self.formResult.contactInfoTabResult = data;
     });
     $(self.paymentTab).on('previous', function() { // Payment.
       self.showTab(2);
     });
-    $(self.paymentTab).on('confirm', function() {
-      console.log('confirm');
+    $(self.paymentTab).on('confirm', function(e, data) {
+      var paymentTabResult = {payments: data};
+      var json = $.extend({}, self.formResult.descriptionTabResult, self.formResult.addressTabResult, self.formResult.contactInfoTabResult, paymentTabResult);
     });
   },
   showTab: function(indice) {

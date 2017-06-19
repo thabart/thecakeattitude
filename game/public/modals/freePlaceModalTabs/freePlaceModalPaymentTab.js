@@ -13,8 +13,8 @@ FreePlaceModalPaymentTab.prototype = {
       "<p><i class='fa fa-exclamation-circle' /> "+chooseOneOreMorePaymentMethods+"</p>"+
       "<div>"+
         "<ul class='list-group payments'>"+
-          "<li class='list-group-item'><div class='checkbox-container'><i class='fa fa-check checkbox' /></div><i class='fa fa-money' /> "+cash+"</li>"+
-          "<li class='list-group-item'>"+
+          "<li class='list-group-item cash-payment-method'><div class='checkbox-container'><i class='fa fa-check checkbox' /></div><i class='fa fa-money' /> "+cash+"</li>"+
+          "<li class='list-group-item bank-transfer-payment-method'>"+
             "<div class='checkbox-container'><i class='fa fa-check checkbox' /></div>"+
             "<i class='fa fa-credit-card-alt' /> "+bankTransfer+
             "<p>"+insertIban+"</p>"+
@@ -25,7 +25,7 @@ FreePlaceModalPaymentTab.prototype = {
               "<input type='text' class='input-control col-3 iban' maxLength='4' placeholder='0000' name='fourthIban' />"+
             "</div>"+
           "</li>"+
-          "<li class='list-group-item'><div class='checkbox-container'><i class='fa fa-check checkbox' /></div><i class='fa fa-paypal' /> "+bankTransfer+"</li>"+
+          "<li class='list-group-item paypal-payment-method'><div class='checkbox-container'><i class='fa fa-check checkbox' /></div><i class='fa fa-paypal' /> "+paypal+"</li>"+
         "</ul>"+
       "</div>"+
       "<div class='footer'>"+
@@ -37,8 +37,24 @@ FreePlaceModalPaymentTab.prototype = {
       $(self).trigger('previous');
     });
     $(self.tab).find('.confirm').click(function() {
-      
-      $(self).trigger('confirm');
+      var isCashMethod = $(self.tab).find('.cash-payment-method').hasClass('list-group-item-active');
+      var isBankTransferMethod = $(self.tab).find('.bank-transfer-payment-method').hasClass('list-group-item-active');
+      var isPaypalMethod = $(self.tab).find('.paypal-payment-method').hasClass('list-group-item-active');
+      var json = [];
+      if (isCashMethod) {
+        json.push({method : 'cash'});
+      }
+      if (isBankTransferMethod) {
+        var iban = $(self.tab).find("input[name='firstIban']").val() + $(self.tab).find("input[name='secondIban']").val()
+          + $(self.tab).find("input[name='thirdIban']").val() + $(self.tab).find("input[name='fourthIban']").val();
+        json.push({method: 'bank_transfer', iban: iban});
+      }
+
+      if (isPaypalMethod) {
+        json.push({method: 'paypal'});
+      }
+
+      $(self).trigger('confirm', [ json ]);
     });
     $(self.tab).find('li').click(function() {
       if ($(this).hasClass('list-group-item-active')) $(this).removeClass('list-group-item-active');
