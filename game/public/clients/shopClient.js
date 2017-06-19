@@ -15,5 +15,22 @@ var ShopClient = {
 		});
 
 		return dfd;
+	},
+	getMineShops: function(accessToken) {
+		var dfd = jQuery.Deferred();
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.ajax(conf.shops_endpoint + '/me', {
+	      method: 'GET',
+	      headers: {
+	        'Authorization': 'Bearer ' + accessToken
+	      }
+			}).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.fail(e);
+			});
+		});
+
+		return dfd;
 	}
 };

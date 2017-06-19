@@ -61,6 +61,7 @@
   "success": "Success",
   "loadingAssets": "Loading assets ...",
   "loadingMap": "Loading map ...",
+  "shopCategory": "Category : {0}",
   "error-cannotAuthenticate": "Either the login and / or password are invalid",
   "error-adrMustBeComplete": "The address must be complete",
   "error-onlyOneAdr": "Select only one address",

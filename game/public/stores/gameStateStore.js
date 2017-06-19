@@ -53,8 +53,6 @@
       if (instances && instances.length === 1) {
         _userChangedListeners.splice($.inArray(instances[0], _userChangedListeners), 1);
       }
-
-      console.log(_userChangedListeners);
     },
     onSizeChanged: function(callback) {
       var self = this;

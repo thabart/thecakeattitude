@@ -19,6 +19,9 @@ MyShops.prototype = {
 		$(self.myShopsSelector).on('createShop', function() {
 			self.game.state.start('ShopChooser');
 		});
+		$(self.myShopsSelector).on('goToTheShop', function(e, json) {
+			self.game.state.start("SplashGame", true, false, json);
+		});
 		self.backMenuFloating = new BackMenuFloating(); // Add back menu floating.
 		self.backMenuFloating.init();
 		$(self.backMenuFloating).on('back', function() {
