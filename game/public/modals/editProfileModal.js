@@ -41,16 +41,19 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
               "<div>"+ // Display name + email
                 "<div class='col-6'>"+
                   "<label>"+displayedName+"</label>"+
-                  "<input type='text' class='input-control'  name='name' />" +
+                  "<span class='error-message'></span>"+
+                  "<input type='text' class='input-control'  name='name' required />" +
                 "</div>"+
                 "<div class='col-6'>"+
                   "<label>"+email+"</label>"+
-                  "<input type='text' class='input-control' name='email' />" +
+                  "<span class='error-message'></span>"+
+                  "<input type='text' class='input-control' name='email' required />" +
                 "</div>"+
               "</div>"+
               "<div>"+ // Picture
                 "<div class='col-6'>"+
                   "<label>"+picture+"</label>"+
+                  "<span class='error-message'></span>"+
                   "<input type='file' accept='image/*' class='input-control profile-picture-upload' />"+
                 "</div>"+
                 "<div class='col-6'>"+
@@ -60,10 +63,12 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
               "<div>"+ // Phone (mobile + home)
                 "<div class='col-6'>"+
                   "<label>"+homePhoneNumber+"</label>"+
+                  "<span class='error-message'></span>"+
                   "<input type='text' class='input-control' name='home_phone_number' />" +
                 "</div>"+
                 "<div class='col-6'>"+
                   "<label>"+mobilePhoneNumber+"</label>"+
+                  "<span class='error-message'></span>"+
                   "<input type='text' class='input-control' name='mobile_phone_number' />" +
                 "</div>"+
               "</div>"+
@@ -79,6 +84,7 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
         "</form>"+
       "</div>"+
     "</div>");
+    self.updateProfileForm = $(self.modal).find('.update-profile-form');
     var uploadImage = function(e, callback) {
       e.preventDefault();
       var file = e.target.files[0];
@@ -95,8 +101,13 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
       self.hideSuccess();
     });
     $(self.modal).find('.adr-container').append(self.adrSearch.render());
-    $(self.modal).find('.update-profile-form').submit(function(e) {
+    self.updateProfileForm.submit(function(e) {
       e.preventDefault();
+      self.updateProfileForm.form();
+      if (!self.updateProfileForm.valid()) {
+        return;
+      }
+
       var json = {
         google_place_id: self.adrSearch.getGooglePlaceId(),
         address: self.adrSearch.getAddress(),
@@ -115,6 +126,26 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
         self.hideSuccess();
         self.displayError($.i18n('error-updateUserInformation'));
       });
+    });
+    self.updateProfileForm.validate({
+      rules: {
+        name: {
+          required: true
+        },
+        email: {
+          required: true,
+          email: true
+        },
+        mobile_phone_number: {
+          phone: true
+        },
+        home_phone_number: {
+          phone: true
+        }
+      },
+      errorPlacement: function(error, elt) {
+        error.appendTo(elt.prev());
+      }
     });
     $(self.adrSearch).on('error', function() {
       self.disableUpdateBtn(true);
