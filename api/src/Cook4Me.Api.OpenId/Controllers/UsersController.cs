@@ -152,7 +152,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             // 2. Construct the request and update user information.
             var newClaims = _requestBuilder.GetUpdateUserParameter(json);
             var assignedClaims = new List<Claim>();
-            foreach (var claim in user.Claims)
+            foreach (var claim in user.Claims.Where(c => c.Type != SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture))
             {
                 var record = newClaims.FirstOrDefault(c => c.Type == claim.Type);
                 if (record == null || record.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject)
@@ -162,6 +162,20 @@ namespace Cook4Me.Api.OpenId.Controllers
                 }
 
                 assignedClaims.Add(record);
+            }
+
+            var pictureClaim = newClaims.FirstOrDefault(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture);
+            if (pictureClaim != null)
+            {
+                string path;
+                if (AddImage(pictureClaim.Value, user.Id, out path))
+                {
+                    assignedClaims.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, path));
+                }
+                else
+                {
+                    assignedClaims.Add(pictureClaim);
+                }
             }
 
             user.Claims = assignedClaims;
@@ -270,7 +284,7 @@ namespace Cook4Me.Api.OpenId.Controllers
                 return false;
             }
 
-            var picturePath = Path.Combine(_hostingEnvironment.WebRootPath, "users/" + subject + ".jpg");
+            var picturePath = Path.Combine(_hostingEnvironment.WebRootPath, "img/users/" + subject + ".jpg");
             if (System.IO.File.Exists(picturePath))
             {
                 System.IO.File.Delete(picturePath);
@@ -282,10 +296,10 @@ namespace Cook4Me.Api.OpenId.Controllers
                 base64Encoded = base64Encoded.Trim('\0');
                 var imageBytes = Convert.FromBase64String(base64Encoded);
                 System.IO.File.WriteAllBytes(picturePath, imageBytes);
-                path = Request.GetAbsoluteUriWithVirtualPath()+ "/users/" + subject + ".jpg";
+                path = Request.GetAbsoluteUriWithVirtualPath()+ "/img/users/" + subject + ".jpg";
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
                 return false;
             }

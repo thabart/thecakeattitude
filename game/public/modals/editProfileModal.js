@@ -99,7 +99,8 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
       e.preventDefault();
       var json = {
         google_place_id: self.adrSearch.getGooglePlaceId(),
-        address: self.adrSearch.getAddress()
+        address: self.adrSearch.getAddress(),
+        picture: $(self.modal).find('.profile-picture').attr('src')
       };
       $(this).serializeArray().map(function(x){json[x.name] = x.value;});
       self.displayProfileUpdater(true);
@@ -153,7 +154,7 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
     }
   },
   displayError: function(message) {
-    var errorElt = $(this.modal).find('.alert-error');
+    var errorElt = $(this.modal).find('.modal-window > .alert-error');
     errorElt.find('.message').html(message);
     errorElt.show();
   },
@@ -163,7 +164,7 @@ EditProfileModal.prototype = $.extend({}, BaseModal.prototype, {
     successElt.show();
   },
   hideError: function() {
-    $(this.modal).find('.alert-error').hide();
+    $(this.modal).find('.modal-window > .alert-error').hide();
   },
   hideSuccess: function() {
     $(this.modal).find('.alert-success').hide();
