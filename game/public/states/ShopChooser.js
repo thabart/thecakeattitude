@@ -1,10 +1,17 @@
 var ShopChooser = function () {  };
 ShopChooser.prototype = {
 	preload: function() { },
-	init: function() { },
+	init: function() {
+		var self = this;
+		GameStateStore.onSizeChanged.call(this, function(size) {
+			var coordinate = Calculator.getBgCoordinate(size, self.game, 'bg2');
+			if (self.bg && self.bg !== null) self.bg.x = coordinate.x;
+		});
+	},
 	create: function() {
 		var self = this;
-		self.game.add.tileSprite(0, 0, 980, 600, 'bg2');
+		var coordinate = Calculator.getBgCoordinate(GameStateStore.getSize(), self.game, 'bg2');
+		self.bg = self.game.add.tileSprite(coordinate.x, 0, coordinate.w, self.game.world.height, 'bg2');
 		self.backMenuFloating = new BackMenuFloating(); // Add back menu floating.
 		self.backMenuFloating.init();
 		$(self.backMenuFloating).on('back', function() {
@@ -32,5 +39,6 @@ ShopChooser.prototype = {
 		this.shopChooserModal.remove();
 		this.freePlaceModal.remove();
 		this.profileMenuFloating.remove();
+		GameStateStore.offSizeChanged.call(this);
 	}
 };

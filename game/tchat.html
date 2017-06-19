@@ -28,6 +28,8 @@
 		<script src="/public/Constants.js"></script>
 		<!-- Add stores -->
 		<script src="/public/stores/gameStateStore.js"></script>
+		<!-- Calculator utils -->
+		<script src="/public/utils/calculator.js"></script>
 		<!-- CSS Libraries -->
 		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" >
 		<link rel="stylesheet" type="text/css" href="/styles/site.css" >
@@ -76,9 +78,12 @@
 				this.init = function() {
 					var self = this,
 						gameContainer = $("#game-container");
-					self.game = new Phaser.Game(gameContainer.width(), gameContainer.height(), Phaser.CANVAS, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } });
+					GameStateStore.setSize({ w: gameContainer.width(), h : gameContainer.height() });
+					self.game = new Phaser.Game(gameContainer.width(), gameContainer.height(), Phaser.CANVAS, 'game', { preload : function() { preload.call(self); }, create : function() { create.call(self); } }); // Set max WIDTH
 					window.addEventListener('resize', function () {
 						self.game.scale.setGameSize(gameContainer.width(), gameContainer.height());
+						self.game.scale.refresh();
+						GameStateStore.setSize({ w: gameContainer.width(), h : gameContainer.height() });
 					});
 				};
 			};

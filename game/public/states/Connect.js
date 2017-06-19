@@ -2,10 +2,17 @@
 var Connect = function() {};
 Connect.prototype = {
 	preload: function() { },
-	init: function() { },
+	init: function() {
+		var self = this;
+		GameStateStore.onSizeChanged.call(this, function(size) {
+			var coordinate = Calculator.getBgCoordinate(size, self.game, 'bg2');
+			if (self.bg && self.bg !== null) self.bg.x = coordinate.x;
+		});
+	},
 	create: function() {
 		var self = this;
-		self.game.add.tileSprite(0, 0, self.game.world.width, self.game.world.height, 'bg2');
+		var coordinate = Calculator.getBgCoordinate(GameStateStore.getSize(), self.game, 'bg2');
+		self.bg = self.game.add.tileSprite(coordinate.x, 0, coordinate.w, self.game.world.height, 'bg2');
 		var createLoginModal = function() {
 			self.loginModal = new LoginModal();
 			self.loginModal.init();
@@ -36,5 +43,6 @@ Connect.prototype = {
 	},
 	shutdown() {
 		if (this.loginModal) this.loginModal.remove();
+		GameStateStore.offSizeChanged.call(this);
 	}
 };

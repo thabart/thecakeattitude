@@ -26,5 +26,26 @@ var Calculator = {
       w: (house.width * overviewMapSize.w) / tileMap.widthInPixels,
       h: (house.height * overviewMapSize.h) / tileMap.heightInPixels
     };
+  },
+  // Get BG coordinates.
+  getBgCoordinate: function(size, game, name) {
+    var width = game.cache.getImage(name).width,
+      worldWidth = size.w,
+      xCoordinate = 0;
+    if (width < worldWidth) {
+      xCoordinate = (worldWidth / 2) - (width / 2);
+    }
+
+    return {
+      x: xCoordinate,
+      w: width
+    };
+  },
+  // Get the loading message coordinate.
+  getLoadingMessageCoordinage: function(game) {
+    return {
+      x: game.world.width -600,
+      y : 380
+    };
   }
 };

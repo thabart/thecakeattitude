@@ -2,10 +2,17 @@ var MyShops = function() { };
 MyShops.prototype = {
 	preload: function() {
 	},
-	init: function(user) { },
+	init: function(user) {
+		var self = this;
+		GameStateStore.onSizeChanged.call(this, function(size) {
+			var coordinate = Calculator.getBgCoordinate(size, self.game, 'bg4');
+			if (self.bg && self.bg !== null) self.bg.x = coordinate.x;
+		});
+	},
 	create: function() {
 		var self = this;
-		self.game.add.tileSprite(0, 0, 980, 600, 'bg4');
+		var coordinate = Calculator.getBgCoordinate(GameStateStore.getSize(), self.game, 'bg4');
+		self.bg = self.game.add.tileSprite(coordinate.x, 0, coordinate.w, self.game.world.height, 'bg4');
 		self.myShopsSelector = new MyShopsSelectorModal(); // Add my shops modal selector.
 		self.myShopsSelector.init();
 		self.myShopsSelector.toggle();
@@ -27,5 +34,6 @@ MyShops.prototype = {
 		this.profileMenuFloating.remove();
 		this.myShopsSelector.remove();
 		this.backMenuFloating.remove();
+		GameStateStore.offSizeChanged.call(this);
 	}
 };

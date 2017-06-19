@@ -32,6 +32,7 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 		// Add overview image
 		self.addNpcsGroup();
 		self.addOverviewImage();
+		self.trackSizeChanged();
 		self.addOverviewPlayersGroup();
 
 		// Resize the world & set boundaries.

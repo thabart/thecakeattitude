@@ -1,8 +1,14 @@
 var SplashGame = function () {};
 SplashGame.prototype = {
 	init: function(options) {
-		this.loadingBar = this.game.make.text(this.game.world.centerX, 380, 'Loading Map ...', {fill: 'white'});
-		this.options = options;
+		var self = this;
+		var messageCoordinage = Calculator.getLoadingMessageCoordinage(self.game);
+		self.loadingBar = self.game.make.text(messageCoordinage.x, 380, $.i18n('loadingMap'), {fill: 'white'});
+		self.options = options;
+		GameStateStore.onSizeChanged.call(self, function(size) {
+			var coordinate = Calculator.getBgCoordinate(size, self.game, 'bg3');
+			if (self.bg && self.bg !== null) self.bg.x = coordinate.x;
+		});
 	},
 	preload: function() {
 		var self = this;
@@ -11,7 +17,9 @@ SplashGame.prototype = {
 		self.typeMap = self.options.typeMap || 'main';
 		var txtGroup = self.game.add.group();
 		var bgGroup = self.game.add.group();
-		bgGroup.add(self.game.add.tileSprite(0, 0, 980, 600, 'bg3'));
+		var coordinate = Calculator.getBgCoordinate(GameStateStore.getSize(), self.game, 'bg3');
+		self.bg = self.game.add.tileSprite(coordinate.x, 0, coordinate.w, self.game.world.height, 'bg3');
+		bgGroup.add(self.bg);
 		txtGroup.add(self.loadingBar);
 		self.game.world.bringToTop(txtGroup);
 		if (self.options.isMainMap) {
@@ -41,5 +49,8 @@ SplashGame.prototype = {
 
 			self.game.state.start("Game", true, false, options);
 		}, 1000);
+	},
+	shutdown: function() {
+		GameStateStore.offSizeChanged.call(this);
 	}
 };

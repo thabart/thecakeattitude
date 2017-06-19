@@ -108,6 +108,24 @@ BaseMap.prototype = {
     y = y - playerFrame.height;
     return { x : x, y : y };
   },
+  trackSizeChanged: function() { // Update overview map on size changed.
+    var self = this;
+    GameStateStore.onSizeChanged.call(this, function(d) {
+      var overviewCoordinate = Calculator.getOverviewImageCoordinate(self.game);
+      var overviewSize = Configuration.getOverviewSize();
+      self.overview.cameraOffset.x = overviewCoordinate.x;
+      self.overview.cameraOffset.y = overviewCoordinate.y;
+      for(var key in self.layers) {
+        var layer = self.layers[key];
+        if (layer === null || !layer) continue;
+        layer.resize(d.size.w, d.size.h);
+      }
+
+      if (self.currentPlayer && self.currentPlayer !== null) {
+        self.currentPlayer.updateOverviewPosition(self.currentPlayer.getX(), self.currentPlayer.getY());
+      }
+    });
+  },
 	destroy: function() {
 		for (var layer in this.layers) {
 			if (this.layers[layer]) this.layers[layer].destroy();
@@ -120,5 +138,6 @@ BaseMap.prototype = {
 		this.players.forEach(function(p) { p.destroy() });
 		this.currentPlayer.destroy();
 		this.npcs.forEach(function(npc) { npc.destroy(); });
+    GameStateStore.offSizeChanged.call(this);
 	}
 };

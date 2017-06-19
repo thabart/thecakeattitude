@@ -81,6 +81,7 @@ CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
 		}
 
 		self.addOverviewImage();
+		self.trackSizeChanged();
 		self.addOverviewPlayersGroup();
 
 		// Resize the world & set boundaries.

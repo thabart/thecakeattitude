@@ -59,6 +59,8 @@
   "unknown": "Unknown",
   "displayedName": "Displayed name",
   "success": "Success",
+  "loadingAssets": "Loading assets ...",
+  "loadingMap": "Loading map ...",
   "error-cannotAuthenticate": "Either the login and / or password are invalid",
   "error-adrMustBeComplete": "The address must be complete",
   "error-onlyOneAdr": "Select only one address",
