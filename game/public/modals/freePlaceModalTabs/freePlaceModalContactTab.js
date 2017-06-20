@@ -51,6 +51,7 @@ FreePlaceModalContactTab.prototype = {
   setUserInformation: function() {
     var self = this;
     var user = GameStateStore.getUser();
+    if (!user) return;
     $(self.tab).find("input[name='email']").val(user.email);
     $(self.tab).find("input[name='mobilePhone']").val(user.mobile_phone_number);
     $(self.tab).find("input[name='homePhone']").val(user.home_phone_number);
