@@ -6,6 +6,7 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
       createShop = $.i18n('createShop'),
       goToTheShop = $.i18n('goToTheShop'),
       error = $.i18n('error'),
+      success = $.i18n('success'),
       remove = $.i18n('remove');
     self.create("<div class='modal modal-lg modal-transparent md-effect-2' id='my-shops-selector-modal'>"+
       "<div class='modal-content'>"+
@@ -15,6 +16,7 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
           "</div>"+
           "<div class='content'>"+
             "<div class='alert-error'><b>"+error+" </b><span class='message'></span><span class='close'><i class='fa fa-times'></i></span></div>"+
+            "<div class='alert-success'><b>"+success+" </b><span class='message'></span><span class='close'><i class='fa fa-times'></i></span></div>"+
             "<div class='sk-cube-grid mine-shops-loader'>"+
               "<div class='sk-cube sk-cube1'></div>"+
               "<div class='sk-cube sk-cube2'></div>"+
@@ -61,6 +63,7 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
       var accessToken = sessionStorage.getItem(Constants.sessionName);
       ShopClient.removeShop(accessToken, shopId).then(function() {
         self.isShopsLoading(false);
+        self.displaySuccess($.i18n('success-shopRemoved'));
         self.refresh();
       }).fail(function() {
         self.displayError($.i18n('error-removeShop'));
@@ -69,6 +72,9 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
     });
     $(self.modal).find('.alert-error .close').click(function() { // Hide the error message.
       self.hideError();
+    });
+    $(self.modal).find('.alert-success .close').click(function() { // Hide the success message.
+      self.hideSuccess();
     });
     self.refresh();
   },
@@ -133,5 +139,13 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
     var errorElt = $(this.modal).find('.alert-error');
     errorElt.find('.message').html(message);
     errorElt.show();
+  },
+  displaySuccess: function(message) {
+    var successElt = $(this.modal).find('.alert-success');
+    successElt.find('.message').html(message);
+    successElt.show();
+  },
+  hideSuccess: function() {
+    $(this.modal).find('.alert-success').hide();
   }
 });

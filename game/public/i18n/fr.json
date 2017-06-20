@@ -69,5 +69,6 @@
   "error-updateUserInformation": "Les informations n'ont pas été mises à jour",
   "error-removeShop": "Le magasin n'a pas pu être supprimé",
   "error": "Erreur",
-  "success-profileUpdated": "Profil a été mis à jour"
+  "success-profileUpdated": "Profil a été mis à jour",
+  "success-shopRemoved": "Le magasin a été supprimé"
 }

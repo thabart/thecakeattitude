@@ -69,5 +69,6 @@
   "error-updateUserInformation": "An error occured while trying to update the user information",
   "error-removeShop": "An error occured while trying to remove the shop",
   "error": "Error",
-  "success-profileUpdated": "Profile has been updated"
+  "success-profileUpdated": "Profile has been updated",
+  "success-shopRemove": "Shop has been removed"
 }
