@@ -62,10 +62,12 @@
   "loadingAssets": "Loading assets ...",
   "loadingMap": "Loading map ...",
   "shopCategory": "Category : {0}",
+  "remove": "Remove",
   "error-cannotAuthenticate": "Either the login and / or password are invalid",
   "error-adrMustBeComplete": "The address must be complete",
   "error-onlyOneAdr": "Select only one address",
   "error-updateUserInformation": "An error occured while trying to update the user information",
+  "error-removeShop": "An error occured while trying to remove the shop",
   "error": "Error",
   "success-profileUpdated": "Profile has been updated"
 }

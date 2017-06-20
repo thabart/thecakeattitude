@@ -62,10 +62,12 @@
   "loadingAssets": "Charger les fichiers ...",
   "loadingMap": "Charger la map ...",
   "shopCategory": "Catégorie : {0}",
+  "remove": "Supprimer",
   "error-cannotAuthenticate": "Soit le login et / ou mot de passe sont invalides",
   "error-adrMustBeComplete": "L'addresse doit être complète",
   "error-onlyOneAdr": "Sélectionner seulement une adresse",
   "error-updateUserInformation": "Les informations n'ont pas été mises à jour",
+  "error-removeShop": "Le magasin n'a pas pu être supprimé",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour"
 }

@@ -1,5 +1,5 @@
 var ShopClient = {
-	searchShops: function(content) {
+	searchShops: function(content) { // Search shops.
 		var dfd = jQuery.Deferred();
 		$.get(Constants.apiConfigurationUrl).then(function(conf) {
       $.ajax(conf.shops_endpoint + '/.search', {
@@ -10,13 +10,15 @@ var ShopClient = {
 				dfd.resolve(r);
       }).fail(function (e) {
 				if (e.status === 404) dfd.resolve({_embedded: []});
-        dfd.fail(e);
+        dfd.reject(e);
       });
+		}).fail(function(e) {
+			dfd.reject(e);
 		});
 
 		return dfd;
 	},
-	getMineShops: function(accessToken) {
+	getMineShops: function(accessToken) { // Get shops of current user.
 		var dfd = jQuery.Deferred();
 		$.get(Constants.apiConfigurationUrl).then(function(conf) {
 			$.ajax(conf.shops_endpoint + '/me', {
@@ -27,10 +29,31 @@ var ShopClient = {
 			}).then(function(r) {
 				dfd.resolve(r);
 			}).fail(function(e) {
-				dfd.fail(e);
+				dfd.reject(e);
 			});
+		}).fail(function(e) {
+			dfd.reject(e);
 		});
 
+		return dfd;
+	},
+	removeShop: function(accessToken, shopId) { // Remove shop.
+		var dfd = jQuery.Deferred();
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.ajax(conf.shops_endpoint + '/' + shopId, {
+	      method: 'DELETE',
+	      headers: {
+	        'Authorization': 'Bearer ' + accessToken
+	      }
+			}).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+		
 		return dfd;
 	}
 };
