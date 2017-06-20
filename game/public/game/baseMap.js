@@ -59,7 +59,7 @@ BaseMap.prototype = {
 			});
 		}
   },
-  addWarpsGroup: function(typeMap, categoryId) {
+  addWarpsGroup: function(categoryId, typeMap) {
     var self = this;
     self.groups.warps = self.game.add.group();
 		var warpObjs = self.tileMap.objects['Warps'];
@@ -74,7 +74,9 @@ BaseMap.prototype = {
 					self.groups.warps.set(warp, property, warpObj.properties[property], false, false, 0, true);
 				}
 
-        self.groups.warps.set(warp, 'typeMap', typeMap, false, false, 0, true);
+        if (typeMap) {
+          self.groups.warps.set(warp, 'typeMap', typeMap, false, false, 0, true);
+        }
         if (categoryId) {
           self.groups.warps.set(warp, 'categoryId', categoryId, false, false, 0, true);
         }

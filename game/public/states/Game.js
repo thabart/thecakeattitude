@@ -91,6 +91,9 @@ Game.prototype = {
 		} else if (self.options.typeMap === 'category') {
 			self.map = new CategoryMap();
 			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
+		} else if (self.options.typeMap === 'underground') {
+			self.map = new UndergroundMap();
+			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
 		} else {
 			self.map = new MainMap();
 			self.map.init(self.options.overviewKey, tileMap, self.game);
@@ -199,7 +202,7 @@ Game.prototype = {
 		}
 	},
 	render: function() {
-		if (this.map.player) this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
+		if (this.map.currentPlayer) this.game.debug.spriteInfo(this.map.currentPlayer.sprite, 32, 32);
 	},
 	shutdown: function() {
 		this.modals.tchat.remove();

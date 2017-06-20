@@ -51,6 +51,7 @@ Splash.prototype = {
 		// Load main objects.
 		self.game.load.script('BaseMap', 'public/game/baseMap.js');
 		self.game.load.script('ShopMap', 'public/game/shopMap.js');
+		self.game.load.script('UndergroundMap', 'public/game/undergroundMap.js');
 		self.game.load.script('CategoryMap', 'public/game/categoryMap.js');
 		self.game.load.script('MainMap', 'public/game/mainMap.js');
 		self.game.load.script('Player', 'public/game/Player.js');

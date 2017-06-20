@@ -1,6 +1,6 @@
 'use strict';
-var ShopMap = function() { };
-ShopMap.prototype = $.extend({}, BaseMap.prototype, {
+var UndergroundMap = function() { };
+UndergroundMap.prototype = $.extend({}, BaseMap.prototype, {
 	init: function(overviewKey, tileMap, game, categoryId) {
 		var self = this;
 		self.create(overviewKey, tileMap, game);
@@ -37,5 +37,11 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addWarpsGroup(categoryId);
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);
+  },
+  getDefaultPlayerCoordinate() {
+    return {
+      x: 342,
+      y: 213
+    };
   }
 });
