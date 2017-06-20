@@ -53,7 +53,28 @@ var ShopClient = {
 		}).fail(function(e) {
 			dfd.reject(e);
 		});
-		
+
+		return dfd;
+	},
+	addShop: function(accessToken, content) { // Add a shop.
+		var dfd = jQuery.Deferred();
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.ajax(conf.shops_endpoint, {
+	      method: 'POST',
+	      headers: {
+	        'Authorization': 'Bearer ' + accessToken
+	      },
+				data: content,
+        dataType: 'json'
+			}).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+
 		return dfd;
 	}
 };

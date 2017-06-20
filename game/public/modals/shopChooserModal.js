@@ -9,6 +9,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       goToTheShop = $.i18n('goToTheShop'),
       takeThePlace = $.i18n('takeThePlace'),
       viewShop = $.i18n('viewShop'),
+      selectPlaceLegendary = $.i18n('selectPlaceLegendary'),
       selectMap = $.i18n('selectMap');
     self.create("<div class='modal modal-lg modal-transparent md-effect-2' id='shop-chooser-modal'>"+
       "<div class='modal-content'>"+
@@ -74,6 +75,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
               "</div>"+
             "</div>"+
             "<div>"+
+              "<p>"+selectPlaceLegendary+"</p>"+
               "<div class='sk-cube-grid overview-loader'>"+
                 "<div class='sk-cube sk-cube1'></div>"+
                 "<div class='sk-cube sk-cube2'></div>"+

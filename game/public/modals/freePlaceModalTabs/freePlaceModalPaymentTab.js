@@ -2,16 +2,18 @@ var FreePlaceModalPaymentTab = function() {};
 FreePlaceModalPaymentTab.prototype = {
   render: function() {
     var confirm = $.i18n('confirm'),
-    previous = $.i18n('previous'),
-    cash = $.i18n('cash'),
-    paypal = $.i18n('paypal'),
-    bankTransfer = $.i18n('bankTransfer'),
-    insertIban = $.i18n('insertIban'),
-    chooseOneOreMorePaymentMethods = $.i18n('chooseOneOreMorePaymentMethods'),
-    self = this;
+      previous = $.i18n('previous'),
+      cash = $.i18n('cash'),
+      paypal = $.i18n('paypal'),
+      bankTransfer = $.i18n('bankTransfer'),
+      insertIban = $.i18n('insertIban'),
+      chooseOneOreMorePaymentMethods = $.i18n('chooseOneOreMorePaymentMethods'),
+      error = $.i18n('error'),
+      self = this;
     self.tab = $("<div class='container'>"+
       "<p><i class='fa fa-exclamation-circle' /> "+chooseOneOreMorePaymentMethods+"</p>"+
       "<div>"+
+        "<div class='alert-error'><b>"+error+" </b><span class='message'></span><span class='close'><i class='fa fa-times'></i></span></div>"+
         "<ul class='list-group payments'>"+
           "<li class='list-group-item cash-payment-method'><div class='checkbox-container'><i class='fa fa-check checkbox' /></div><i class='fa fa-money' /> "+cash+"</li>"+
           "<li class='list-group-item bank-transfer-payment-method'>"+
@@ -33,6 +35,9 @@ FreePlaceModalPaymentTab.prototype = {
         "<button class='action-btn green-action-btn confirm'>"+confirm+"</button>"+
       "</div>"+
     "</div>");
+    $(self.tab).find('.alert-error .close').click(function() {
+      self.hideError();
+    });
     $(self.tab).find('.previous').click(function() {
       $(self).trigger('previous');
     });
@@ -40,6 +45,11 @@ FreePlaceModalPaymentTab.prototype = {
       var isCashMethod = $(self.tab).find('.cash-payment-method').hasClass('list-group-item-active');
       var isBankTransferMethod = $(self.tab).find('.bank-transfer-payment-method').hasClass('list-group-item-active');
       var isPaypalMethod = $(self.tab).find('.paypal-payment-method').hasClass('list-group-item-active');
+      if (!isCashMethod && !isBankTransferMethod && !isPaypalMethod) {
+        self.displayError($.i18n('error-selectAtLeastOnePaymentMethod'));
+        return;
+      }
+
       var json = [];
       if (isCashMethod) {
         json.push({method : 'cash'});
@@ -47,6 +57,12 @@ FreePlaceModalPaymentTab.prototype = {
       if (isBankTransferMethod) {
         var iban = $(self.tab).find("input[name='firstIban']").val() + $(self.tab).find("input[name='secondIban']").val()
           + $(self.tab).find("input[name='thirdIban']").val() + $(self.tab).find("input[name='fourthIban']").val();
+        var regex = new RegExp("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}");
+        if (!regex.test(iban)) {
+          self.displayError($.i18n('error-iban'));
+          return;
+        }
+
         json.push({method: 'bank_transfer', iban: iban});
       }
 
@@ -54,6 +70,7 @@ FreePlaceModalPaymentTab.prototype = {
         json.push({method: 'paypal'});
       }
 
+      self.hideError();
       $(self).trigger('confirm', [ json ]);
     });
     $(self.tab).find('li').click(function() {
@@ -67,5 +84,13 @@ FreePlaceModalPaymentTab.prototype = {
   },
   clean: function() {
     $(this.tab).find('.list-group-item').removeClass('list-group-item-active');
+  },
+  hideError: function() {
+    $(this.tab).find('.alert-error').hide();
+  },
+  displayError: function(message) {
+    var errorElt = $(this.tab).find('.alert-error');
+    errorElt.find('.message').html(message);
+    errorElt.show();
   }
 };
