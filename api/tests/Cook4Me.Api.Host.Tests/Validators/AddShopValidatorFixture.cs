@@ -16,7 +16,6 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Shop;
-using Cook4Me.Api.Core.Models;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Validators;
 using Moq;
