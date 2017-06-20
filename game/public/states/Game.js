@@ -66,7 +66,7 @@ Game.prototype = {
 		};
 		buildMenuOptions();
 		GameStateStore.onUserChanged.call(this, function(user) { // Track the user changes.
-			if (!self.map || !self.map.currentPlayer) {
+			if (!self.map || !self.map.currentPlayer || !user) {
 				return;
 			}
 

@@ -10,7 +10,8 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 			shadows : null,
 			walls: null,
 			stairs: null,
-			groundDecorations: null,
+			floorDecorations: null,
+			furnitures: null,
 			decorations: null
 		});
 		// Load the images.
@@ -21,11 +22,12 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addCollisionLayer();
 		self.layers.ground = self.tileMap.createLayer('Ground');
 		self.layers.subFloor = self.tileMap.createLayer('SubFloor');
-		self.addPlayersGroup('category');
-		self.layers.shadows = self.tileMap.createLayer('Shadows');
 		self.layers.walls = self.tileMap.createLayer('Walls');
 		self.layers.stairs = self.tileMap.createLayer('Stairs');
-		self.layers.groundDecorations = self.tileMap.createLayer('GroundDecorations');
+		self.layers.floorDecorations = self.tileMap.createLayer('FloorDecorations');
+		self.addPlayersGroup();
+		self.layers.shadows = self.tileMap.createLayer('Shadows');
+		self.layers.furnitures = self.tileMap.createLayer('Furnitures');
 		self.layers.decorations = self.tileMap.createLayer('Decorations');
 		// Add overview image
 		self.addNpcsGroup();
