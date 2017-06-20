@@ -107,7 +107,7 @@ namespace Cook4Me.Api.Host.Builders
             result.TagNames = ts;
             result.BannerImage = jObj.Value<string>(Constants.DtoNames.Shop.BannerImage);
             result.ProfileImage = jObj.Value<string>(Constants.DtoNames.Shop.ProfileImage);
-            result.MapName = jObj.Value<string>(Constants.DtoNames.Shop.MapName);
+            result.CategoryMapName = jObj.Value<string>(Constants.DtoNames.Shop.CategoryMapName);
             result.CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId);
             result.PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place);
             result.StreetAddress = jObj.Value<string>(Constants.DtoNames.Shop.StreetAddress); // Street address
@@ -403,6 +403,7 @@ namespace Cook4Me.Api.Host.Builders
             var result = new SearchShopsParameter
             {
                 CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.CategoryId),
+                CategoryMapNames = jObj.TryGetStringArray(Constants.DtoNames.Shop.CategoryMapName),
                 PlaceIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.Place),
                 Subjects = jObj.TryGetStringArray(Constants.DtoNames.SearchShop.Subject),
                 Name = jObj.Value<string>(Constants.DtoNames.Shop.Name),

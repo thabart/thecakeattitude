@@ -90,7 +90,7 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
       var json = $.extend({
         place: self.place.id,
         category_id: self.place.categoryId,
-        map_name: self.place.mapName
+        category_map_name: self.place.mapName
       }, self.formResult.descriptionTabResult, self.formResult.addressTabResult, self.formResult.contactInfoTabResult, paymentTabResult);
       self.displayLoading(true);
       var accessToken = sessionStorage.getItem(Constants.sessionName);

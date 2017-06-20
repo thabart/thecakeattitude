@@ -1,7 +1,7 @@
 'use strict';
 var CategoryMap = function() { };
 CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
-	init: function(overviewKey, tileMap, game, categoryId) {
+	init: function(overviewKey, tileMap, game, categoryId, mapName) {
 		var self = this;
 		self.create(overviewKey, tileMap, game);
 		self.layers = $.extend({}, self.layers, {
@@ -41,7 +41,7 @@ CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
 			var freePlaceImage = self.game.cache.getImage('freePlace'),
 				shopImage = self.game.cache.getImage('shop'),
 				warpFrame = self.game.cache.getFrameData('warp').getFrame(0);
-			ShopClient.searchShops({category_id : [ categoryId ] }).then(function(r) {
+			ShopClient.searchShops({category_id : [ categoryId ], category_map_name: [ mapName ] }).then(function(r) {
 				var embeddedShops = r._embedded;
 				if (!(embeddedShops instanceof Array)) {
 					embeddedShops = [embeddedShops];
@@ -61,8 +61,8 @@ CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
 						warp.animations.play('stay', 10, true);
 						self.game.physics.enable(warp, Phaser.Physics.ARCADE); // Add warp.
 						self.groups.warps.add(warp);
-						var targetMapPath = Constants.apiUrl + f[0].map.map_link,
-							targetOverviewPath = Constants.apiUrl + f[0].map.overview_link;
+						var targetMapPath = Constants.apiUrl + f[0].shop_map.map_link,
+							targetOverviewPath = Constants.apiUrl + f[0].shop_map.overview_link;
 						self.groups.warps.set(warp, 'target_map_path', targetMapPath, false, false, 0, true);
 						self.groups.warps.set(warp, 'target_overview_path', targetOverviewPath, false, false, 0, true);
 						self.groups.warps.set(warp, 'typeMap', 'shop', false, false, 0, true);

@@ -27,6 +27,7 @@ namespace Cook4Me.Api.EF.Models
         public string PartialOverviewUrl { get; set; }
         public bool IsMain { get; set; }
         public virtual Category Category { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
+        public virtual ICollection<Shop> ShopMaps { get; set; }
+        public virtual ICollection<Shop> ShopCategoryMaps { get; set; }
     }
 }

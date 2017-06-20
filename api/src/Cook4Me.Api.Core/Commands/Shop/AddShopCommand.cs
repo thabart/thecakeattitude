@@ -46,6 +46,15 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string Iban { get; set; }
     }
 
+    public class AddShopMapCommand
+    {
+        public string MapName { get; set; }
+        public string PartialMapUrl { get; set; }
+        public string PartialOverviewUrl { get; set; }
+        public string OverviewName { get; set; }
+
+    }
+
     public class AddShopCommand : Command
     {
         public string Id { get; set; }
@@ -54,20 +63,19 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string Description { get; set; }
         public string BannerImage { get; set; }
         public string ProfileImage { get; set; }
-        public string MapName { get; set; }
+        public string CategoryMapName { get; set; }
         public string CategoryId { get; set; }
         public string PlaceId { get; set; }
         public string StreetAddress { get; set; }
         public string PostalCode { get; set; }
         public string Locality { get; set; }
         public string Country { get; set; }
-        public string ShopRelativePath { get; set; }
-        public string UndergroundRelativePath { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public string GooglePlaceId { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
+        public AddShopMapCommand ShopMap { get; set; }
         public IEnumerable<string> TagNames { get; set; }
         public IEnumerable<AddPaymentInformation> PaymentMethods { get; set; }
         public IEnumerable<AddShopProductCategory> ProductCategories { get; set; }

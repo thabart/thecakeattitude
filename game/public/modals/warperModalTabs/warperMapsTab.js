@@ -96,7 +96,7 @@ WarperMapsTab.prototype = {
       self.isMapLoading(true);
       CategoryClient.getCategory(categoryId).then(function(cat) {
         mapSelector.empty();
-        var maps = cat._embedded.maps.map(function(map) { return "<li data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'><span>"+map.map_name+"</span><img src='"+ Constants.apiUrl + map.overview_link+"' /></li>"; });
+        var maps = cat._embedded.maps.map(function(map) { return "<li data-mapname='"+map.map_name+"' data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'><span>"+map.map_name+"</span><img src='"+ Constants.apiUrl + map.overview_link+"' /></li>"; });
         maps.forEach(function(map) { mapSelector.append(map); });
         self.isMapLoading(false);
         // Enable the OK button + add ".selected" class to li.
@@ -115,7 +115,8 @@ WarperMapsTab.prototype = {
         overview_link: selectedMap.data('overview'),
         isMainMap: false,
         categoryId: selectedMap.data('categoryid'),
-        typeMap: 'category'
+        typeMap: 'category',
+        mapName: selectedMap.data('mapname')
       };
   		self.game.state.start("SplashGame", true, false, json);
     });

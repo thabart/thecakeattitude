@@ -27,7 +27,6 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _shoesCategoryId = "a20ab67b-f046-40c5-b5cd-566b3fca2749"; //Guid.NewGuid().ToString();
         private static string _bakeryCategoryId = Guid.NewGuid().ToString();
         private static string _firstShopId = Guid.NewGuid().ToString();
-        private static string _secondShopId = Guid.NewGuid().ToString();
         private static string _ecoTagName = "eco";
         private static string _secondHandTagName = "second hand";
         private static string _womenProductCategory = Guid.NewGuid().ToString();
@@ -152,7 +151,7 @@ namespace Cook4Me.Api.Host.Extensions
                         Name = "shop 1",
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
-                        MapName = "first_shop",
+                        CategoryMapName = "first_shoes_map",
                         StreetAddress = "street adr 1",
                         PostalCode = "postal code 1",
                         Locality = "locality 1",
@@ -182,46 +181,12 @@ namespace Cook4Me.Api.Host.Extensions
                                 Method = 2
                             }
                         },
-                        Map = new Map
+                        ShopMap = new Map
                         {
                             MapName = "first_shop",
                             PartialMapUrl = "/shops/first_shop.json",
                             OverviewName = "first_shop_overview",
-                            PartialOverviewUrl = "/shops/first_shop_overview.png"
-                        }
-                    },
-                    new Shop
-                    {
-                        Id = _secondShopId,
-                        Subject = "administrator",
-                        Name = "shop 2",
-                        Description = "description 2",
-                        CategoryId = _shoesCategoryId,
-                        MapName = "second_shop",
-                        StreetAddress = "street adr 2",
-                        PostalCode = "postal code 2",
-                        Locality = "locality 2",
-                        Country = "country 2",
-                        PlaceId = "place4",
-                        GooglePlaceId = "EjVBdmVudWUgZGVzIENyb2l4IGR1IEZldSAyMjgsIDEwMjAgQnJ1eGVsbGVzLCBCZWxnaXF1ZQ",
-                        Longitude = 4.3677565F,
-                        Latitude = 50.8919259F,
-                        TotalScore = 4,
-                        AverageScore = 4,
-                        PaymentMethods = new List<PaymentMethod>
-                        {
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 0
-                            }
-                        },
-                        Map = new Map
-                        {
-                            MapName = "second_shop",
-                            PartialMapUrl = "/shops/second_shop.json",
-                            OverviewName = "first_shop_overview",
-                            PartialOverviewUrl = "/shops/second_shop_overview.png"
+                            PartialOverviewUrl = "/shops/shop_overview.png"
                         }
                     }
                 });
@@ -341,16 +306,6 @@ namespace Cook4Me.Api.Host.Extensions
                     UpdateDateTime = DateTime.UtcNow,
                     Subject = "laetitia",
                     Score = 4
-                },
-                new Comment
-                {
-                    Content = "comment1",
-                    Id = Guid.NewGuid().ToString(),
-                    ShopId = _secondShopId,
-                    CreateDateTime = DateTime.UtcNow,
-                    UpdateDateTime = DateTime.UtcNow,
-                    Subject = "laetitia",
-                    Score = 4
                 }
             });
         }
@@ -370,12 +325,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _firstShopId,
                     TagName = _secondHandTagName
-                },
-                new ShopTag
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ShopId = _secondShopId,
-                    TagName = _ecoTagName
                 }
             });
         }

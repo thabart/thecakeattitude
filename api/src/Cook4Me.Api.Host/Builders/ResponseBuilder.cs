@@ -91,7 +91,7 @@ namespace Cook4Me.Api.Host.Builders
 
             result.Add(Constants.DtoNames.Shop.BannerImage, shop.BannerImage);
             result.Add(Constants.DtoNames.Shop.ProfileImage, shop.ProfileImage);
-            result.Add(Constants.DtoNames.Shop.MapName, shop.MapName);
+            result.Add(Constants.DtoNames.Shop.CategoryMapName, shop.CategoryMapName);
             result.Add(Constants.DtoNames.Shop.CategoryId, shop.CategoryId);
             if (shop.ShopCategory != null)
             {
@@ -142,9 +142,14 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
-            if (shop.Map != null) // Map
+            if (shop.CategoryMap != null) // Category Map
             {
-                result.Add(Constants.DtoNames.Shop.Map, GetMap(shop.Map));
+                result.Add(Constants.DtoNames.Shop.CategoryMap, GetMap(shop.CategoryMap));
+            }
+
+            if (shop.ShopMap != null) // Shop map.
+            {
+                result.Add(Constants.DtoNames.Shop.ShopMap, GetMap(shop.ShopMap));
             }
             
             result.Add(Constants.DtoNames.Shop.Filters, filters);

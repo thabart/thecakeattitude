@@ -33,7 +33,8 @@ namespace Cook4Me.Api.Core.Aggregates
         public string Description { get; set; }
         public string BannerImage { get; set; }
         public string ProfileImage { get; set; }
-        public string MapName { get; set; }
+        public string ShopMapName { get; set; }
+        public string CategoryMapName { get; set; }
         public string CategoryId { get; set; }
         public string PlaceId { get; set; }
         public string StreetAddress { get; set; }
@@ -49,7 +50,8 @@ namespace Cook4Me.Api.Core.Aggregates
         public DateTime UpdateDateTime { get; set; }
         public int TotalScore { get; set; }
         public double AverageScore { get; set; }
-        public ShopMap Map { get; set; }
+        public ShopMap ShopMap { get; set; }
+        public ShopMap CategoryMap { get; set; }
         public ShopCategory ShopCategory { get; set; }
         public IEnumerable<string> TagNames { get; set; }
         public IEnumerable<ShopPaymentMethod> ShopPaymentMethods { get; set; }

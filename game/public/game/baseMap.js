@@ -77,6 +77,7 @@ BaseMap.prototype = {
         if (typeMap) {
           self.groups.warps.set(warp, 'typeMap', typeMap, false, false, 0, true);
         }
+
         if (categoryId) {
           self.groups.warps.set(warp, 'categoryId', categoryId, false, false, 0, true);
         }

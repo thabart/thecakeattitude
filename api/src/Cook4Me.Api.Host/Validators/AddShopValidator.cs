@@ -40,17 +40,17 @@ namespace Cook4Me.Api.Host.Validators
             Message = message;
         }
 
-        public AddShopValidationResult(ShopCategoryAggregate category, ShopMap map)
+        public AddShopValidationResult(ShopCategoryAggregate category, ShopMap categoryMap)
         {
             IsValid = true;
             Category = category;
-            Map = map;
+            CategoryMap = categoryMap;
         }
 
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
         public ShopCategoryAggregate Category { get; private set; }
-        public ShopMap Map { get; private set; }
+        public ShopMap CategoryMap { get; private set; }
     }
 
     public class AddShopValidator : IAddShopValidator
@@ -86,7 +86,7 @@ namespace Cook4Me.Api.Host.Validators
             }
 
             // 2. Check map
-            var map = await _mapRepository.Get(shop.MapName);
+            var map = await _mapRepository.Get(shop.CategoryMapName);
             if (map == null)
             {
                 return new AddShopValidationResult(ErrorDescriptions.TheMapDoesntExist);

@@ -103,10 +103,10 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
         var shopCategory = $.i18n('shopCategory').replace('{0}', shop.category.name);
         myShopsSlider.append("<div><div class='shop-cell-container'>"+
           "<div class='shop-cell'"+
-            " data-map='"+Constants.apiUrl + shop.map.map_link+"'"+
+            " data-map='"+Constants.apiUrl + shop.shop_map.map_link+"'"+
             " data-id='"+shop.id+"'"+
-            " data-overview='"+Constants.apiUrl + shop.map.overview_link+"'"+
-            " data-category='"+Constants.apiUrl + shop.category_id+"'>"+shop.name+"<br /><img src='"+profileImage+"' /><br/><span>"+shopCategory+"</span></div>"+
+            " data-overview='"+Constants.apiUrl + shop.shop_map.overview_link+"'"+
+            " data-category='"+shop.category_id+"'>"+shop.name+"<br /><img src='"+profileImage+"' /><br/><span>"+shopCategory+"</span></div>"+
           "</div>"+
         "</div>");
       });

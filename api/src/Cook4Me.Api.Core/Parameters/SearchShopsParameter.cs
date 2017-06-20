@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Core.Parameters
         public IEnumerable<string> PlaceIds { get; set; }
         public IEnumerable<string> CategoryIds { get; set; }
         public IEnumerable<string> Subjects { get; set; }
+        public IEnumerable<string> CategoryMapNames { get; set; }
         public string Name { get; set; }
         public string TagName { get; set; }
         public Location NorthEast { get; set; }

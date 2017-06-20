@@ -113,7 +113,7 @@
                     {
                      "is_entry":"true",
                      "target_map_path":"http:\/\/localhost:5000\/shops\/first_shop.json",
-                     "target_overview_path":"http:\/\/localhost:5000\/shops\/first_shop_overview.png",
+                     "target_overview_path":"http:\/\/localhost:5000\/shops\/shop_overview.png",
                      "typeMap":"shop"
                     },
                  "propertytypes":

@@ -18,8 +18,8 @@ namespace Cook4Me.Api.Core.Aggregates
 {
     public class ShopMap
     {
-        public string MapName { get; set; }
         public string CategoryId { get; set; }
+        public string MapName { get; set; }
         public string OverviewName { get; set; }
         public string PartialMapUrl { get; set; }
         public string PartialOverviewUrl { get; set; }

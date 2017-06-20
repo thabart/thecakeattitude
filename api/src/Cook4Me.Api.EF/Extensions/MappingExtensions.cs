@@ -169,6 +169,7 @@ namespace Cook4Me.Api.EF.Extensions
 
             ShopCategory shopCategory = null;
             ShopMap shopMap = null;
+            ShopMap categoryMap = null;
             var tagNames = new List<string>();
             var paymentMethods = new List<ShopPaymentMethod>();
             var comments = new List<ShopComment>();
@@ -237,16 +238,28 @@ namespace Cook4Me.Api.EF.Extensions
                 }).ToList();
             }
 
-            if (shop.Map != null)
+            if (shop.CategoryMap != null)
+            {
+                categoryMap = new ShopMap
+                {
+                    MapName = shop.CategoryMap.MapName,
+                    OverviewName = shop.CategoryMap.OverviewName,
+                    PartialOverviewUrl = shop.CategoryMap.PartialOverviewUrl,
+                    PartialMapUrl = shop.CategoryMap.PartialMapUrl,
+                    CategoryId = shop.CategoryMap.CategoryId,
+                    IsMain = shop.CategoryMap.IsMain
+                };
+            }
+
+            if (shop.ShopMap != null)
             {
                 shopMap = new ShopMap
                 {
-                    MapName = shop.Map.MapName,
-                    OverviewName = shop.Map.OverviewName,
-                    PartialOverviewUrl = shop.Map.PartialOverviewUrl,
-                    PartialMapUrl = shop.Map.PartialMapUrl,
-                    CategoryId = shop.Map.CategoryId,
-                    IsMain = shop.Map.IsMain
+                    MapName = shop.ShopMap.MapName,
+                    OverviewName = shop.ShopMap.OverviewName,
+                    PartialOverviewUrl = shop.ShopMap.PartialOverviewUrl,
+                    PartialMapUrl = shop.ShopMap.PartialMapUrl,
+                    IsMain = shop.ShopMap.IsMain
                 };
             }
 
@@ -258,15 +271,14 @@ namespace Cook4Me.Api.EF.Extensions
                 Description = shop.Description,
                 BannerImage = shop.BannerImage,
                 ProfileImage = shop.ProfileImage,
-                MapName = shop.MapName,
+                ShopMapName = shop.ShopMapName,
+                CategoryMapName = shop.CategoryMapName,
                 CategoryId = shop.CategoryId,
                 PlaceId = shop.PlaceId,
                 StreetAddress = shop.StreetAddress,
                 PostalCode = shop.PostalCode,
                 Locality = shop.Locality,
                 Country = shop.Country,
-                ShopRelativePath = shop.ShopRelativePath,
-                UndergroundRelativePath = shop.UndergroundRelativePath,
                 CreateDateTime = shop.CreateDateTime,
                 UpdateDateTime = shop.UpdateDateTime,
                 GooglePlaceId = shop.GooglePlaceId,
@@ -280,7 +292,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Comments = comments,
                 ShopFilters = filters,
                 ProductCategories = productCategories,
-                Map = shopMap
+                ShopMap = shopMap,
+                CategoryMap = categoryMap
             };
         }
 
@@ -289,6 +302,12 @@ namespace Cook4Me.Api.EF.Extensions
             if (shop == null)
             {
                 throw new ArgumentNullException(nameof(shop));
+            }
+
+            var shopMap = new Map();
+            if (shop.ShopMap != null)
+            {
+                shopMap = shop.ShopMap.ToModel();
             }
 
             var paymentMethods = new List<PaymentMethod>();
@@ -310,22 +329,21 @@ namespace Cook4Me.Api.EF.Extensions
                 Description = shop.Description,
                 BannerImage = shop.BannerImage,
                 ProfileImage = shop.ProfileImage,
-                MapName = shop.MapName,
+                CategoryMapName = shop.CategoryMapName,
                 CategoryId = shop.CategoryId,
                 PlaceId = shop.PlaceId,
                 StreetAddress = shop.StreetAddress,
                 PostalCode = shop.PostalCode,
                 Locality = shop.Locality,
                 Country = shop.Country,
-                ShopRelativePath = shop.ShopRelativePath,
-                UndergroundRelativePath = shop.UndergroundRelativePath,
                 CreateDateTime = shop.CreateDateTime,
                 UpdateDateTime = shop.UpdateDateTime,
                 GooglePlaceId = shop.GooglePlaceId,
                 Latitude = shop.Latitude,
                 Longitude = shop.Longitude,
                 TotalScore = shop.TotalScore,
-                PaymentMethods = paymentMethods
+                PaymentMethods = paymentMethods,
+                ShopMap = shopMap
             };
         }
         

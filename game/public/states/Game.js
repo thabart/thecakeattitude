@@ -90,7 +90,7 @@ Game.prototype = {
 			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
 		} else if (self.options.typeMap === 'category') {
 			self.map = new CategoryMap();
-			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
+			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId, self.options.mapName);
 		} else if (self.options.typeMap === 'underground') {
 			self.map = new UndergroundMap();
 			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
@@ -173,7 +173,8 @@ Game.prototype = {
 					categoryId : warp.categoryId,
 					typeMap: warp.typeMap,
 					playerPosition: playerPosition,
-		      isMainMap: false
+		      isMainMap: false,
+					mapName: warp.map_name
 		    };
 		  	self.game.state.start("SplashGame", true, false, json);
 				GameStateStore.saveLastPlayerPosition({ x: self.map.currentPlayer.getX(), y: self.map.currentPlayer.getY() });

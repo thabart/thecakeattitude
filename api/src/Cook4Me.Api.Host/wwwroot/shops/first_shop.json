@@ -113,6 +113,7 @@
                      "is_entry":"true",
                      "target_map_path":"http:\/\/localhost:5000\/maps\/first_shoes_map.json",
                      "target_overview_path":"http:\/\/localhost:5000\/maps\/first_shoes_map_overview.png",
+					 "map_name": "first_shoes_map",
                      "typeMap":"category"
                     },
                  "propertytypes":
@@ -137,7 +138,7 @@
                     {
                      "is_entry":"false",
                      "target_map_path":"http:\/\/localhost:5000\/shops\/first_shop_underground.json",
-                     "target_overview_path":"http:\/\/localhost:5000\/shops\/first_shop_underground_overview.png",
+                     "target_overview_path":"http:\/\/localhost:5000\/shops\/underground_overview.png",
                      "typeMap":"underground"
                     },
                  "propertytypes":

@@ -63,7 +63,7 @@ namespace Cook4Me.Api.Handlers
                 Description = message.Description,
                 BannerImage = message.BannerImage,
                 ProfileImage = message.ProfileImage,
-                MapName = message.MapName,
+                CategoryMapName = message.CategoryMapName,
                 CategoryId = message.CategoryId,
                 PlaceId = message.PlaceId,
                 StreetAddress = message.StreetAddress,
@@ -73,13 +73,22 @@ namespace Cook4Me.Api.Handlers
                 GooglePlaceId = message.GooglePlaceId,
                 Longitude = message.Longitude,
                 Latitude = message.Latitude,
-                ShopRelativePath = message.ShopRelativePath,
-                UndergroundRelativePath = message.UndergroundRelativePath,
                 CreateDateTime = message.CreateDateTime,
                 UpdateDateTime = message.UpdateDateTime,
                 ShopPaymentMethods = paymentMethods,
                 TagNames = message.TagNames
             };
+            if (message.ShopMap != null)
+            {
+                aggregate.ShopMap = new ShopMap
+                {
+                    MapName = message.ShopMap.MapName,
+                    OverviewName = message.ShopMap.OverviewName,
+                    PartialMapUrl = message.ShopMap.PartialMapUrl,
+                    PartialOverviewUrl = message.ShopMap.PartialOverviewUrl
+                };
+            }
+
             if (message.ProductCategories != null)
             {
                 aggregate.ProductCategories = message.ProductCategories.Select(p => new ShopProductCategory

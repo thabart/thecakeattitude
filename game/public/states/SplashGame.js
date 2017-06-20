@@ -42,6 +42,10 @@ SplashGame.prototype = {
 				options.categoryId = self.options.categoryId;
 			}
 
+			if (self.options.mapName) {
+				options.mapName = self.options.mapName;
+			}
+
 			if (self.options.playerPosition) {
 				options.playerPosition = self.options.playerPosition;
 			}

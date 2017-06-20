@@ -72,8 +72,9 @@ namespace Cook4Me.Api.Host
                 public const string Tags = "tags";
                 public const string BannerImage = "banner_image";
                 public const string ProfileImage = "profile_image";
-                public const string MapName = "map_name";
-                public const string Map = "map";
+                public const string CategoryMapName = "category_map_name";
+                public const string CategoryMap = "category_map";
+                public const string ShopMap = "shop_map";
                 public const string CategoryId = "category_id";
                 public const string Category = "category";
                 public const string Place = "place";
