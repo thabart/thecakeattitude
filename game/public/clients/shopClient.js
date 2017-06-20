@@ -37,13 +37,14 @@ var ShopClient = {
 
 		return dfd;
 	},
-	removeShop: function(accessToken, shopId) { // Remove shop.
+	removeShop: function(accessToken, shopId, commonId) { // Remove shop.
 		var dfd = jQuery.Deferred();
 		$.get(Constants.apiConfigurationUrl).then(function(conf) {
 			$.ajax(conf.shops_endpoint + '/' + shopId, {
 	      method: 'DELETE',
 	      headers: {
-	        'Authorization': 'Bearer ' + accessToken
+	        'Authorization': 'Bearer ' + accessToken,
+					'CommonId': commonId
 	      }
 			}).then(function(r) {
 				dfd.resolve(r);
@@ -56,16 +57,17 @@ var ShopClient = {
 
 		return dfd;
 	},
-	addShop: function(accessToken, content) { // Add a shop.
+	addShop: function(accessToken, content, commonId) { // Add a shop.
 		var dfd = jQuery.Deferred();
 		$.get(Constants.apiConfigurationUrl).then(function(conf) {
 			$.ajax(conf.shops_endpoint, {
 	      method: 'POST',
 	      headers: {
-	        'Authorization': 'Bearer ' + accessToken
+	        'Authorization': 'Bearer ' + accessToken,
+					'CommonId': commonId
 	      },
-				data: content,
-        dataType: 'json'
+				data: JSON.stringify(content),
+        contentType: 'application/json'
 			}).then(function(r) {
 				dfd.resolve(r);
 			}).fail(function(e) {

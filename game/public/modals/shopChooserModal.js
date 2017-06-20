@@ -132,7 +132,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
         self.disableGoToTheShop(true);
         self.disableTakeThePlace(true);
         self.disableViewShop(true);
-        var maps = cat._embedded.maps.map(function(map) { return "<option data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'>"+map.map_name+"</option>"; });
+        var maps = cat._embedded.maps.map(function(map) { return "<option data-name='"+map.map_name+"' data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'>"+map.map_name+"</option>"; });
         maps.forEach(function(map) { mapSelector.append(map); });
         self.isMapLoading(false);
       });
@@ -141,6 +141,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       var selected = $(this).find(':selected');
       var overviewImage = selected.data('overview'),
         categoryid = selected.data('categoryid'),
+        mapName = selected.data('name'),
         mapLink = selected.data('map');
       mapOverview.empty();
       self.disableGoToTheShop(true);
@@ -179,9 +180,12 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
             $(square).css('left', coordinate.x - 2);
             $(square).css('width', overviewHouseSize.w + "px");
             $(square).css('height', overviewHouseSize.h + "px");
+            $(square).data('category', categoryid);
             var shop = embeddedShops.filter(function(s) { return s.place === house.name });
             if (shop.length === 0) { // Free place.
               $(square).addClass('free-place');
+              $(square).data('id', house.name);
+              $(square).data('mapName', mapName);
               $(square).click(function() {
                 mapOverview.find('.place').removeClass('selected-place');
                 $(this).addClass('selected-place');
@@ -192,7 +196,6 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
             } else if (shop[0].map) { // Shop exists.
               $(square).data('map', Constants.apiUrl + shop[0].map.map_link);
               $(square).data('overview', Constants.apiUrl + shop[0].map.overview_link);
-              $(square).data('category', categoryid);
               $(square).click(function() {
                 mapOverview.find('.place').removeClass('selected-place');
                 $(this).addClass('selected-place');
@@ -209,7 +212,12 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       });
     });
     takeThePlace.click(function() { // Send an event "takeThePlace".
-      $(self).trigger('freePlace');
+      var selectedPlace = $(self.modal).find('.selected-place');
+      $(self).trigger('freePlace', [{
+        categoryId: selectedPlace.data('category'),
+        mapName: selectedPlace.data('mapName'),
+        id: selectedPlace.data('id')
+      }]);
     });
     goToTheShop.click(function() { // Go to the shop.
       var selectedPlace = mapOverview.find('.selected-place');

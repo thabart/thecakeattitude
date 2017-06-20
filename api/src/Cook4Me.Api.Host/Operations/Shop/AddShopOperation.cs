@@ -34,7 +34,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
 {
     public interface IAddShopOperation
     {
-        Task<IActionResult> Execute(JObject obj, HttpRequest request, string subject);
+        Task<IActionResult> Execute(JObject obj, HttpRequest request, string subject, string commonId);
     }
 
     internal class AddShopOperation : IAddShopOperation
@@ -58,7 +58,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
             _commandSender = commandSender;
         }
 
-        public async Task<IActionResult> Execute(JObject obj, HttpRequest request, string subject)
+        public async Task<IActionResult> Execute(JObject obj, HttpRequest request, string subject, string commonId)
         {
             if (obj == null)
             {
@@ -98,6 +98,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
             command.CreateDateTime = DateTime.UtcNow;
             command.UpdateDateTime = DateTime.UtcNow;
             command.Subject = subject;
+            command.CommonId = commonId;
             command.ShopRelativePath = GetRelativeShopPath(command.Id);
             command.UndergroundRelativePath = GetRelativeUndergroundPath(command.Id);
             if (!string.IsNullOrWhiteSpace(command.BannerImage))

@@ -98,7 +98,7 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            return await _addShopOperation.Execute(obj, this.Request, subject);
+            return await _addShopOperation.Execute(obj, this.Request, subject, this.GetCommonId());
         }
         
         [HttpPut("{id}")]

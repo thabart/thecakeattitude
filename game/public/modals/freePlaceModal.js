@@ -7,7 +7,8 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
       description = $.i18n('description'),
       error = $.i18n('error'),
       contactInformation = $.i18n('contactInformation'),
-      payment = $.i18n('payment');
+      payment = $.i18n('payment'),
+      place = null;
     self.descriptionTab = new FreePlaceModalDescriptionTab();
     self.addressTab = new FreePlaceModalAddressTab();
     self.contactInfoTab = new FreePlaceModalContactTab();
@@ -86,9 +87,24 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
     });
     $(self.paymentTab).on('confirm', function(e, data) {
       var paymentTabResult = {payments: data};
-      var json = $.extend({}, self.formResult.descriptionTabResult, self.formResult.addressTabResult, self.formResult.contactInfoTabResult, paymentTabResult);
+      var json = $.extend({
+        place: self.place.id,
+        category_id: self.place.categoryId,
+        map_name: self.place.mapName
+      }, self.formResult.descriptionTabResult, self.formResult.addressTabResult, self.formResult.contactInfoTabResult, paymentTabResult);
       self.displayLoading(true);
+      var accessToken = sessionStorage.getItem(Constants.sessionName);
+      self.commonId = Guid.generate();
+      ShopClient.addShop(accessToken, json, self.commonId).then(function(e) {
+        self.displayLoading(false);
+      }).fail(function() {
+        self.displayError($.i18n('error-addShop'));
+        self.displayLoading(false);
+      });
     });
+  },
+  getCommonId: function() {
+    return this.commonId;
   },
   showTab: function(indice) {
     var self = this;
@@ -109,8 +125,9 @@ FreePlaceModal.prototype = $.extend({}, BaseModal.prototype, {
       }
     }
   },
-  show: function() {
+  show: function(place) {
     var self = this;
+    self.place = place;
     self.showTab(0);
     self.descriptionTab.clean(); // Clean description tab.
     self.paymentTab.clean(); // Clean payment tab.

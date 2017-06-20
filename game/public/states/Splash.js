@@ -58,6 +58,7 @@ Splash.prototype = {
 		self.game.load.script('Configuration', 'public/utils/configuration.js');
 		self.game.load.script('GoogleMapUtils', 'public/utils/GoogleMapUtils.js');
 		self.game.load.script('HrefUtils', 'public/utils/href.js');
+		self.game.load.script('Guid', 'public/utils/guid.js');
 		// Load modal windows.
 		self.game.load.script('BaseModal', 'public/modals/baseModal.js');
 		self.game.load.script('EditProfileModal', 'public/modals/editProfileModal.js');

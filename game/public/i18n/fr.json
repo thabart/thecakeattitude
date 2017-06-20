@@ -71,6 +71,7 @@
   "error-selectAtLeastOnePaymentMethod": "Au moins un moyen de paiement doit être sélectionné",
   "error-removeShop": "Le magasin n'a pas pu être supprimé",
   "error-iban": "Le numéro IBAN est invalide",
+  "error-addShop": "Le magasin ne peut pas être ajouté",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour",
   "success-shopRemoved": "Le magasin a été supprimé"

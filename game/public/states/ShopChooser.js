@@ -20,14 +20,21 @@ ShopChooser.prototype = {
 		self.shopChooserModal = new ShopChooserModal(); // Add shop chooser modal.
 		self.shopChooserModal.init();
 		self.shopChooserModal.toggle();
-		$(self.shopChooserModal).on('freePlace', function() { // Display free modal window.
-			self.freePlaceModal.show();
+		$(self.shopChooserModal).on('freePlace', function(e, data) { // Display free modal window.
+			self.freePlaceModal.show(data);
 		});
 		$(self.shopChooserModal).on('goToTheShop', function(e, data) {
 			self.game.state.start("SplashGame", true, false, data);
 		});
 		self.freePlaceModal = new FreePlaceModal(); // Add free place modal.
 		self.freePlaceModal.init();
+		AppDispatcher.register(function(message) {
+			if (message.actionName === 'new-shop' && message.data && message.data.common_id === self.freePlaceModal.getCommonId()) {
+				self.game.state.start("MyShops");
+			}
+		});
+		$(self.freePlaceModal).on('shopAdded', function() {
+		});
 		self.profileMenuFloating = new ProfileMenuFloating(); // Add floating profile menu.
 		self.profileMenuFloating.init();
 		$(self.profileMenuFloating).on('disconnect', function() {
@@ -40,5 +47,6 @@ ShopChooser.prototype = {
 		this.freePlaceModal.remove();
 		this.profileMenuFloating.remove();
 		GameStateStore.offSizeChanged.call(this);
+		AppDispatcher.remove();
 	}
 };

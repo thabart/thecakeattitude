@@ -104,7 +104,7 @@ namespace Cook4Me.Api.Host.Validators
                 using (var reader = new JsonTextReader(stream))
                 {
                     var obj = JObject.Load(reader);
-                    if (obj.SelectToken(@"$..layers[?(@.name == 'Npcs')].objects[?(@.name == '" + shop.PlaceId + "')]") == null)
+                    if (obj.SelectToken(@"$..layers[?(@.name == 'Houses')].objects[?(@.name == '" + shop.PlaceId + "')]") == null)
                     {
                         return new AddShopValidationResult(ErrorDescriptions.ThePlaceDoesntExist);
                     }

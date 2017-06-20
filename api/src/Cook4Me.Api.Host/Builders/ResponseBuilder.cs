@@ -225,6 +225,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.Id, evt.ShopId);
             result.Add(Constants.DtoNames.Shop.Location, location);
             result.Add(Constants.DtoNames.Shop.Name, evt.Name);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return result;
         }
 

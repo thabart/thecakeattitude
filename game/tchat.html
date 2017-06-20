@@ -18,6 +18,8 @@
 		<script src="/libs/jquery.i18n.emitter.js"></script>
 		<script src="/libs/jquery.i18n.language.js"></script>
 		<script src="/libs/slick.js"></script>
+		<script src="/libs/jquery.signalR.js"></script>
+		<script src="/libs/app-dispatcher.js"></script>
 		<!-- Phaser lib -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.6.2/phaser.js"></script>
 		<!-- Socket IO -->
@@ -87,13 +89,35 @@
 					});
 				};
 			};
-			var i18n = $.i18n();
+			var i18n = $.i18n(); // Initialize translations.
 			i18n.locale = 'en';
 			i18n.load('/public/i18n/'+ i18n.locale +'.json', i18n.locale).done(function() {
 				var c = new canvas();
 				c.init();
 			});
 			$.i18n.debug = true;
+
+			var connection = $.hubConnection(Constants.apiUrl); // Initialize SignalR connection.
+			var proxy = connection.createHubProxy('notifier');
+      proxy.on('shopAdded', function (message) {
+        AppDispatcher.dispatch({
+          actionName: 'new-shop',
+          data: message
+        });
+      });
+      proxy.on('shopRemoved', function (message) {
+        AppDispatcher.dispatch({
+          actionName: 'remove-shop',
+          data: message
+        });
+      });
+			connection.start({jsonp: false})
+      	.done(function () {
+        	console.log('Now connected, connection ID=' + connection.id);
+        })
+        .fail(function () {
+        	console.log('Could not connect');
+       });
 		});
 	</script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN72d3ipuyzbqhJgjwav5HnnKkLqp3KCU&libraries=places"></script>

@@ -115,7 +115,7 @@ namespace Cook4Me.Api.Handlers
                 Name = message.Name,
                 Longitude = message.Longitude,
                 Latitude = message.Latitude,
-                CommonId = message.CommonId,
+                CommonId = message.CommonId
             });
         }
 

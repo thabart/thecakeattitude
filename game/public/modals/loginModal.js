@@ -8,8 +8,7 @@ LoginModal.prototype = $.extend({}, BaseModal.prototype, {
       useOtherIdProviders = $.i18n('useOtherIdProviders'),
       cannotAuthenticate = $.i18n('error-cannotAuthenticate'),
       error = $.i18n('error'),
-      login = $.i18n('authenticate'),
-      sessionName = "shopInGame-Game";
+      login = $.i18n('authenticate');
     self.create("<div class='modal modal-lg md-effect-2' id='login-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+

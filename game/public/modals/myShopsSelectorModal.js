@@ -61,10 +61,9 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
       var shopId = $(selectedShop).data('id');
       self.isShopsLoading(true);
       var accessToken = sessionStorage.getItem(Constants.sessionName);
-      ShopClient.removeShop(accessToken, shopId).then(function() {
+      self.commonId = Guid.generate();
+      ShopClient.removeShop(accessToken, shopId, self.commonId).then(function() {
         self.isShopsLoading(false);
-        self.displaySuccess($.i18n('success-shopRemoved'));
-        self.refresh();
       }).fail(function() {
         self.displayError($.i18n('error-removeShop'));
         self.isShopsLoading(false);
@@ -76,6 +75,12 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
     $(self.modal).find('.alert-success .close').click(function() { // Hide the success message.
       self.hideSuccess();
     });
+		AppDispatcher.register(function(message) {
+			if (message.actionName === 'remove-shop' && message.data && message.data.common_id === self.commonId) {
+        self.displaySuccess($.i18n('success-shopRemoved'));
+        self.refresh();
+			}
+		});
     self.refresh();
   },
   refresh: function() {
@@ -147,5 +152,9 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
   },
   hideSuccess: function() {
     $(this.modal).find('.alert-success').hide();
+  },
+  remove: function() {
+    $(this.modal).remove();
+    AppDispatcher.remove();
   }
 });

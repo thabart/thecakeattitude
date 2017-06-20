@@ -71,6 +71,7 @@
   "error-removeShop": "An error occured while trying to remove the shop",
   "error-selectAtLeastOnePaymentMethod": "At least one payment method should be selected",
   "error-iban": "Invalid IBAN",
+  "error-addShop": "The shop cannot be added",
   "error": "Error",
   "success-profileUpdated": "Profile has been updated",
   "success-shopRemoved": "Shop has been removed"
