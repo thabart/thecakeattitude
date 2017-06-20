@@ -34,7 +34,6 @@ SplashGame.prototype = {
 		var self = this;
 		 setTimeout(function () {
 			var options = {
-				pseudo: 'test',
 				mapKey : self.mapKey,
 				overviewKey: self.overviewKey,
 				typeMap: self.typeMap

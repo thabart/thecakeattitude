@@ -190,6 +190,12 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.getPseudo = function() {
 		return pseudo;
 	}
+
+	// Set the pseudo
+	this.setPseudo = function(p) {
+		this.pseudo.setText(p);
+	}
+
 	// Get direction.
 	this.getDirection = function() {
 		return this.direction;

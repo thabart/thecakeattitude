@@ -8,88 +8,6 @@ var Game = function () {
 		currentNpc = null,
 		worldScale = null,
 		previousScale = null;
-	this.getPlayerPosition = function(warp, wps, playerHeight, playerWidth) {
-		var map = warp.map;
-		var warpEntryName = warp.warp_entry;
-		var padding = 20;
-		var result = {
-			x : 0,
-			y : 0
-		};
-
-		if (warpEntryName) {
-			if (wps) {
-				wps.children.forEach(function(wp) {
-					if (wp.name == warpEntryName && (wp.entry_dir == "top" || wp.entry_dir == "bottom"  || wp.entry_dir == "right" || wp.entry_dir == "left")) {
-						var x = wp.x,
-							y = wp.y;
-						switch(wp.entry_dir) {
-							case "top":
-								y -= playerHeight + padding;
-								x += wp.width / 2;
-							break;
-							case "bottom":
-								y += wp.height + playerHeight + padding;
-								x += wp.width / 2;
-							break;
-							case "right":
-								y += wp.height / 2;
-								x += playerWidth + wp.width + padding;
-							break;
-							case "left":
-								y += wp.height / 2;
-								x -= playerWidth + padding;
-							break;
-						}
-
-						result.x = x;
-						result.y = y;
-					}
-				});
-			}
-		}
-
-		return result;
-	};
-	this.getPlayer = function(id) {
-		var i;
-		for (i = 0; i < this.map.players.length; i++) {
-			if (this.map.players[i].id === id) {
-				return this.map.players[i];
-			}
-		}
-
-		return false
-	};
-	this.addPlayer = function(id, x, y, direction, pseudo) {
-		var newPlayer = new Player(id, x, y, this.game, false, pseudo);
-		newPlayer.direction = direction;
-		this.map.players.push(newPlayer);
-	};
-	this.removePlayer = function(id) {
-		var player = this.getPlayer(id);
-		if (!player) {
-			return;
-		}
-
-		player.remove();
-		this.map.players.splice(this.map.players.indexOf(player), 1);
-	};
-	this.cleanPlayers = function() {
-		this.map.players.forEach(function(player) {
-			player.remove();
-		});
-
-		this.map.players = [];
-	};
-	this.updatePlayer = function(id, x, y, direction) {
-		var player = this.getPlayer(id);
-		if (!player) {
-			return;
-		}
-
-		player.update(x, y, direction);
-	};
 };
 Game.prototype = {
 	init: function(options) {
@@ -147,6 +65,13 @@ Game.prototype = {
 			return self.optionsMenu;
 		};
 		buildMenuOptions();
+		GameStateStore.onUserChanged.call(this, function(user) { // Track the user changes.
+			if (!self.map || !self.map.currentPlayer) {
+				return;
+			}
+
+			self.map.currentPlayer.setPseudo(user.name);
+		});
 	},
 	create: function() {
 		var self = this;
@@ -173,7 +98,7 @@ Game.prototype = {
 
 		self.store.setCurrentMap(self.map);
 		var playerPosition = self.options.playerPosition || self.map.getDefaultPlayerCoordinate() || {x: 300, y: 300}; // Set player position.
-		self.map.setCurrentPlayer(playerPosition.x, playerPosition.y, self.options.pseudo);
+		self.map.setCurrentPlayer(playerPosition.x, playerPosition.y, GameStateStore.getUser().name);
 
 		self.cursors = self.game.input.keyboard.createCursorKeys();
 		// Connect to socket server
@@ -276,13 +201,14 @@ Game.prototype = {
 	render: function() {
 		if (this.map.player) this.game.debug.spriteInfo(this.map.player.sprite, 32, 32);
 	},
-	shutdown() {
+	shutdown: function() {
 		this.modals.tchat.remove();
 		this.modals.map.remove();
 		this.modals.pause.remove();
 		this.modals.settings.remove();
 		this.floating.profileMenu.remove();
 		this.optionsMenu.remove();
+		GameStateStore.offUserChanged.call(this);
 		this.map.destroy();
 	}
 };
