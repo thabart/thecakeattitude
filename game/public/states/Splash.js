@@ -29,7 +29,8 @@ Splash.prototype = {
 			}
 		}, this);
 		// Load all NPCs & animations.
-		self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/npc.png', 'public/sprites/warper.json');
+		self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/warper.json');
+		self.game.load.atlasJSONHash('stockManager', Constants.apiUrl + '/characters/npc-women.png', 'public/sprites/stockManager.json');
 		self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
 		// Load tilesets
 		self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
