@@ -47,8 +47,11 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
       var json = {
         map_link: selectedShop.data('map'),
         overview_link: selectedShop.data('overview'),
-        categoryId : selectedShop.data('category'),
-        typeMap: 'shop',
+        others: {
+          categoryId : selectedShop.data('category'),
+          place: selectedShop.data('place'),
+          typeMap: 'shop'
+        },
         isMainMap: false
       };
       $(self).trigger('goToTheShop', [json]);
@@ -105,6 +108,7 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
           "<div class='shop-cell'"+
             " data-map='"+Constants.apiUrl + shop.shop_map.map_link+"'"+
             " data-id='"+shop.id+"'"+
+            " data-place='"+shop.place+"'"+
             " data-overview='"+Constants.apiUrl + shop.shop_map.overview_link+"'"+
             " data-category='"+shop.category_id+"'>"+shop.name+"<br /><img src='"+profileImage+"' /><br/><span>"+shopCategory+"</span></div>"+
           "</div>"+

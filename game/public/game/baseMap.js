@@ -59,12 +59,13 @@ BaseMap.prototype = {
 			});
 		}
   },
-  addWarpsGroup: function(categoryId, typeMap) {
+  addWarpsGroup: function(opts) {
     var self = this;
     self.groups.warps = self.game.add.group();
 		var warpObjs = self.tileMap.objects['Warps'];
 		if (warpObjs) { // Create the warps.
 			warpObjs.forEach(function(warpObj) {
+        var newOpts = $.extend({}, opts);
 				var warp = self.game.add.sprite(warpObj.x, warpObj.y, 'warp');
         warp.animations.add('stay');
         warp.animations.play('stay', 10, true);
@@ -72,14 +73,17 @@ BaseMap.prototype = {
 				self.groups.warps.add(warp);
 				for (var property in warpObj.properties) {
 					self.groups.warps.set(warp, property, warpObj.properties[property], false, false, 0, true);
+          if (property === 'typeMap') {
+            newOpts.typeMap = warpObj.properties[property];
+          }
+
+          if (property === 'map_name') {
+            newOpts.mapName = warpObj.properties[property];
+          }
 				}
 
-        if (typeMap) {
-          self.groups.warps.set(warp, 'typeMap', typeMap, false, false, 0, true);
-        }
-
-        if (categoryId) {
-          self.groups.warps.set(warp, 'categoryId', categoryId, false, false, 0, true);
+        if (opts) {
+          self.groups.warps.set(warp, 'others', newOpts, false, false, 0, true);
         }
 			});
 		}
@@ -97,10 +101,16 @@ BaseMap.prototype = {
     self.groups.players.add(self.currentPlayer.sprite);
 	},
   getDefaultPlayerCoordinate: function() {
+    return this.getEntryWarpCoordinate();
+  },
+  getEntryWarpCoordinate: function() {
+    return this.getWarpCoordinate('entry_portal');
+  },
+  getWarpCoordinate: function(name) {
     var self = this;
 		var warpObjs = self.tileMap.objects['Warps'];
     if (!warpObjs) return null;
-    var filteredWarps = warpObjs.filter(function(warp) { return warp.properties && warp.properties['is_entry']; });
+    var filteredWarps = warpObjs.filter(function(warp) { return warp.name === name });
     if (!filteredWarps || filteredWarps.length === 0) {
       return null;
     }

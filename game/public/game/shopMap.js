@@ -1,8 +1,9 @@
 'use strict';
 var ShopMap = function() { };
 ShopMap.prototype = $.extend({}, BaseMap.prototype, {
-	init: function(overviewKey, tileMap, game, categoryId) {
+	init: function(overviewKey, tileMap, game, opts) {
 		var self = this;
+		self.opts = opts;
 		self.create(overviewKey, tileMap, game);
 		self.layers = $.extend({}, self.layers, {
 			ground: null,
@@ -34,8 +35,20 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addOverviewImage();
 		self.addOverviewPlayersGroup();
 		self.trackSizeChanged();
-		self.addWarpsGroup(categoryId);
+		self.addWarpsGroup({categoryId: opts.categoryId, place: opts.place});
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);
-  }
+  },
+	getDefaultPlayerCoordinate() {
+		var self = this;
+		if (self.opts.entry === 'underground') {
+			var warpFrame = self.game.cache.getFrameData('warp').getFrame(0);
+			var result = self.getWarpCoordinate('underground_portal');
+			result.x = result.x + warpFrame.width / 2;
+			result.y = result.y + warpFrame.height + 60;
+			return result;
+		} else {
+			return self.getEntryWarpCoordinate();
+		}
+	}
 });

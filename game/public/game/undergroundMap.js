@@ -1,7 +1,7 @@
 'use strict';
 var UndergroundMap = function() { };
 UndergroundMap.prototype = $.extend({}, BaseMap.prototype, {
-	init: function(overviewKey, tileMap, game, categoryId) {
+	init: function(overviewKey, tileMap, game, opts) {
 		var self = this;
 		self.create(overviewKey, tileMap, game);
 		self.layers = $.extend({}, self.layers, {
@@ -34,7 +34,7 @@ UndergroundMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addOverviewImage();
 		self.addOverviewPlayersGroup();
 		self.trackSizeChanged();
-		self.addWarpsGroup(categoryId);
+		self.addWarpsGroup({categoryId : opts.categoryId, place: opts.place, entry: 'underground'});
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);
   },

@@ -14,7 +14,6 @@ SplashGame.prototype = {
 		var self = this;
 		self.mapKey = 'main_map';
 		self.overviewKey = 'overview_main_map';
-		self.typeMap = self.options.typeMap || 'main';
 		var txtGroup = self.game.add.group();
 		var bgGroup = self.game.add.group();
 		var coordinate = Calculator.getBgCoordinate(GameStateStore.getSize(), self.game, 'bg3');
@@ -35,19 +34,13 @@ SplashGame.prototype = {
 		 setTimeout(function () {
 			var options = {
 				mapKey : self.mapKey,
-				overviewKey: self.overviewKey,
-				typeMap: self.typeMap
+				overviewKey: self.overviewKey
 			};
-			if (self.options.categoryId) {
-				options.categoryId = self.options.categoryId;
-			}
 
-			if (self.options.mapName) {
-				options.mapName = self.options.mapName;
-			}
-
-			if (self.options.playerPosition) {
-				options.playerPosition = self.options.playerPosition;
+			if (self.options.others) {
+				options.others = self.options.others;
+			} else {
+				options.others = { typeMap: 'main'  };
 			}
 
 			self.game.state.start("Game", true, false, options);

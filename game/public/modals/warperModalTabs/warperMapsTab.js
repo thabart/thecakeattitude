@@ -114,9 +114,11 @@ WarperMapsTab.prototype = {
         map_link: selectedMap.data('map'),
         overview_link: selectedMap.data('overview'),
         isMainMap: false,
-        categoryId: selectedMap.data('categoryid'),
-        typeMap: 'category',
-        mapName: selectedMap.data('mapname')
+        others: {
+          categoryId: selectedMap.data('categoryid'),
+          typeMap: 'category',
+          mapName: selectedMap.data('mapname')
+        }
       };
   		self.game.state.start("SplashGame", true, false, json);
     });

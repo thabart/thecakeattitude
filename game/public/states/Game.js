@@ -85,22 +85,22 @@ Game.prototype = {
 		// Add tile map and tile set image.
 		var tileMap = self.game.add.tilemap(self.options.mapKey);
 		var position = GameStateStore.getLastPlayerPosition();
-		if (self.options.typeMap === 'shop') {
+		if (self.options.others.typeMap === 'shop') {
 			self.map = new ShopMap();
-			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
-		} else if (self.options.typeMap === 'category') {
+			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.others);
+		} else if (self.options.others.typeMap === 'category') {
 			self.map = new CategoryMap();
-			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId, self.options.mapName);
-		} else if (self.options.typeMap === 'underground') {
+			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.others);
+		} else if (self.options.others.typeMap === 'underground') {
 			self.map = new UndergroundMap();
-			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.categoryId);
+			self.map.init(self.options.overviewKey, tileMap, self.game, self.options.others);
 		} else {
 			self.map = new MainMap();
 			self.map.init(self.options.overviewKey, tileMap, self.game);
 		}
 
 		self.store.setCurrentMap(self.map);
-		var playerPosition = self.options.playerPosition || self.map.getDefaultPlayerCoordinate() || {x: 300, y: 300}; // Set player position.
+		var playerPosition = self.map.getDefaultPlayerCoordinate() || {x: 300, y: 300}; // Set player position.
 		self.map.setCurrentPlayer(playerPosition.x, playerPosition.y, GameStateStore.getUser().name);
 
 		self.cursors = self.game.input.keyboard.createCursorKeys();
@@ -170,9 +170,7 @@ Game.prototype = {
 		    var json = {
 		      map_link: warp.target_map_path,
 		      overview_link: warp.target_overview_path,
-					categoryId : warp.categoryId,
-					typeMap: warp.typeMap,
-					playerPosition: playerPosition,
+					others: warp.others,
 		      isMainMap: false,
 					mapName: warp.map_name
 		    };
