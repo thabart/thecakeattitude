@@ -4,7 +4,6 @@ Warper.prototype = $.extend({}, BaseCharacter.prototype, {
 		var name = 'warper';
 		this.create(game, npc, 'warper', 1);
 		this.modal = new WarperModal();
-		// this.modal = new FreePlaceModal();
 		this.modal.init(game);
 	},
 	interact() {

@@ -54,6 +54,10 @@ BaseMap.prototype = {
             o = new ShopSection();
             o.init(self.game, npc);
           break;
+          case "stockManager":
+            o = new StockManager();
+            o.init(self.game, npc);
+          break;
 				}
 
 				if (o !== null) {

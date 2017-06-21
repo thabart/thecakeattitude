@@ -30,7 +30,7 @@ Splash.prototype = {
 		}, this);
 		// Load all NPCs & animations.
 		self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/warper.json');
-		self.game.load.atlasJSONHash('stockManager', Constants.apiUrl + '/characters/npc-women.png', 'public/sprites/stockManager.json');
+		self.game.load.atlasJSONHash('stockManager', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/stockManager.json');
 		self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
 		// Load tilesets
 		self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
@@ -78,6 +78,8 @@ Splash.prototype = {
 		self.game.load.script('ShopChooserModal', 'public/modals/shopChooserModal.js');
 		self.game.load.script('EmoticonsSelectorModal', 'public/modals/emoticonsSelectorModal.js');
 		self.game.load.script('MyShopsSelectorModal', 'public/modals/myShopsSelectorModal.js');
+		self.game.load.script('StockManagerModal', 'public/modals/stockManagerModal.js');
+		self.game.load.script('AddProductModal', 'public/modals/addProductModal.js');
 		self.game.load.script('ShopSectionPresentationTab', 'public/modals/shopSectionModalTabs/presentation.js');
 		self.game.load.script('ShopSectionSearchProductsTab', 'public/modals/shopSectionModalTabs/searchProducts.js');
 		self.game.load.script('FreePlaceModalDescriptionTab', 'public/modals/freePlaceModalTabs/freePlaceModalDescriptionTab.js');
@@ -97,6 +99,7 @@ Splash.prototype = {
 		self.game.load.script('Warper', 'public/characters/warper.js');
 		self.game.load.script('FreePlace', 'public/characters/freePlace.js');
 		self.game.load.script('ShopSection', 'public/characters/shopSection.js');
+		self.game.load.script('StockManager', 'public/characters/stockManager.js');
 		// Load the animations
 		self.game.load.script('WarpAnimation', 'public/animations/warpAnimation.js');
 		// Load the clients
