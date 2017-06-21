@@ -9,6 +9,8 @@
   "myShopsSelectorModalTitle": "Mes magasins",
   "shopChooserModalTitle": "Choisissez un emplacement",
   "editProfileModalTitle": "Editer votre profil",
+  "shopSectionModalTitle": "Rayon",
+  "addProductcategoryModalTitle": "Ajouter une nouvelle catégorie de produit",
   "exit": "Quitter",
   "navToMainMap": "Aller vers la map principale",
   "selectCategory": "Sélectionner une catégorie",

@@ -39,7 +39,7 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);
   },
-	getDefaultPlayerCoordinate() {
+	getDefaultPlayerCoordinate: function() {
 		var self = this;
 		if (self.opts.entry === 'underground') {
 			var warpFrame = self.game.cache.getFrameData('warp').getFrame(0);

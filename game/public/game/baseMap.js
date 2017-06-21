@@ -50,6 +50,10 @@ BaseMap.prototype = {
 						o = new Warper();
 						o.init(self.game, npc);
 					break;
+          case "shop-section":
+            o = new ShopSection();
+            o.init(self.game, npc);
+          break;
 				}
 
 				if (o !== null) {

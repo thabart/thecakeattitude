@@ -33,6 +33,13 @@ ul.no-style {
   list-style-type: none;
 }
 
+.price {
+  border: 1px solid #129cc5;
+  border-radius: 3px;
+  background-color: #129cc5;
+  color: white;
+}
+
 /* Game */
 
 #game-container {
@@ -211,7 +218,8 @@ ul.floating-options,
 ul.list-selector,
 ul.list-group,
 ul.tab,
-ul.tooltip-actions  {
+ul.tooltip-actions,
+ul.product-list  {
   list-style-type: none;
 }
 
@@ -737,6 +745,22 @@ ul.floating-options {
   padding-top: 5px;
 }
 
+/* Shop section modal window */
+.shop-section-modal .search-products-content {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.shop-section-modal .form-group {
+  padding-top: 5px;
+}
+
+.shop-section-modal .slider-range {
+  margin-top: 10px;
+}
+
 /* Display tooltip */
 .tooltip {
   position: relative;
@@ -876,6 +900,12 @@ ul.floating-options {
   display: inline-block;
 }
 
+.col-8 {
+  width: 67% !important;
+  vertical-align: top;
+  display: inline-block;
+}
+
 .col-9 {
   width: 75% !important;
   vertical-align: top;
@@ -922,6 +952,36 @@ ul.floating-options {
 
 ul.payments li {
   cursor: pointer;
+}
+
+/*Product list */
+ul.product-list {
+  padding: 0;
+  margin: 0;
+}
+
+ul.product-list li {
+  padding: 5px;
+  background-color: #ebebeb;
+}
+
+ul.product-list li > div{
+  display: inline-block;
+  vertical-align: top;
+}
+
+ul.product-list li > div h3 {
+  margin: 0;
+  padding: 0;
+}
+
+ul.product-list li .buy {
+  float: right;
+}
+
+ul.product-list li.active {
+  background-color: #129cc5 !important;
+  color: white !important;
 }
 
 /* Tabulation */
