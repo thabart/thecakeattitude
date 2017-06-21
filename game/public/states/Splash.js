@@ -32,6 +32,7 @@ Splash.prototype = {
 		self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/warper.json');
 		self.game.load.atlasJSONHash('stockManager', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/stockManager.json');
 		self.game.load.atlasJSONHash('crier', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/crier.json');
+		self.game.load.atlasJSONHash('informer', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/informer.json');
 		self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
 		// Load tilesets
 		self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
@@ -103,6 +104,7 @@ Splash.prototype = {
 		self.game.load.script('ShopSection', 'public/characters/shopSection.js');
 		self.game.load.script('StockManager', 'public/characters/stockManager.js');
 		self.game.load.script('Crier', 'public/characters/crier.js');
+		self.game.load.script('Informer', 'public/characters/informer.js');
 		// Load the animations
 		self.game.load.script('WarpAnimation', 'public/animations/warpAnimation.js');
 		// Load the clients

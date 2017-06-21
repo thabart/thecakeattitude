@@ -62,6 +62,10 @@ BaseMap.prototype = {
             o = new Crier();
             o.init(self.game, npc);
           break;
+          case "informer":
+            o = new Informer();
+            o.init(self.game, npc);
+          break;
 				}
 
 				if (o !== null) {

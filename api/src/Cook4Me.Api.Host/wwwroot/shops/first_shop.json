@@ -175,6 +175,18 @@
                  "width":170,
                  "x":1180,
                  "y":479.75
+                }, 
+                {
+                 "gid":3070,
+                 "height":32,
+                 "id":10,
+                 "name":"",
+                 "rotation":0,
+                 "type":"informer",
+                 "visible":true,
+                 "width":32,
+                 "x":992.083333333333,
+                 "y":447.75
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -247,7 +259,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":10,
+ "nextobjectid":12,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
@@ -303,6 +315,19 @@
          "tilecount":1,
          "tileheight":160,
          "tilewidth":170
+        }, 
+        {
+         "columns":60,
+         "firstgid":3070,
+         "image":"tilesets\/npcs.png",
+         "imageheight":1080,
+         "imagewidth":1920,
+         "margin":0,
+         "name":"npcs",
+         "spacing":0,
+         "tilecount":1980,
+         "tileheight":32,
+         "tilewidth":32
         }],
  "tilewidth":32,
  "version":1,
