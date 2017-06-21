@@ -58,6 +58,10 @@ BaseMap.prototype = {
             o = new StockManager();
             o.init(self.game, npc);
           break;
+          case "crier":
+            o = new Crier();
+            o.init(self.game, npc);
+          break;
 				}
 
 				if (o !== null) {
