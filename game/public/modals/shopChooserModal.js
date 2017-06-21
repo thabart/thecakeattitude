@@ -193,9 +193,10 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
                 self.disableViewShop(true);
                 self.disableTakeThePlace(false);
               });
-            } else if (shop[0].map) { // Shop exists.
-              $(square).data('map', Constants.apiUrl + shop[0].map.map_link);
-              $(square).data('overview', Constants.apiUrl + shop[0].map.overview_link);
+            } else if (shop[0].shop_map) { // Shop exists.
+              $(square).data('map', Constants.apiUrl + shop[0].shop_map.map_link);
+              $(square).data('overview', Constants.apiUrl + shop[0].shop_map.overview_link);
+              $(square).data('place', shop[0].place);
               $(square).click(function() {
                 mapOverview.find('.place').removeClass('selected-place');
                 $(this).addClass('selected-place');
@@ -224,8 +225,11 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       var json = {
         map_link: selectedPlace.data('map'),
         overview_link: selectedPlace.data('overview'),
-        categoryId : selectedPlace.data('category'),
-        typeMap: 'shop',
+        others: {
+          categoryId : selectedPlace.data('category'),
+          typeMap: 'shop',
+          place: selectedPlace.data('place')
+        },
         isMainMap: false
       };
       $(self).trigger('goToTheShop', [json]);
