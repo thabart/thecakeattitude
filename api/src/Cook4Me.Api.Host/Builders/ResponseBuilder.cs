@@ -176,6 +176,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.ProductCategory.Id, category.Id);
             result.Add(Constants.DtoNames.ProductCategory.Name, category.Name);
             result.Add(Constants.DtoNames.ProductCategory.Description, category.Description);
+            result.Add(Constants.DtoNames.ProductCategory.ShopSectionName, category.ShopSectionName);
             return result;
         }
 

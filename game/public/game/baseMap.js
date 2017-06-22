@@ -38,10 +38,14 @@ BaseMap.prototype = {
     self.groups.overviewPlayers = self.game.add.group();
     self.groups.overviewPlayers.fixedToCamera = true;
   },
+  getNpcObjs: function(npcName) {
+    var self = this;
+    return self.tileMap.objects['Npcs'];
+  },
   addNpcsGroup: function() {
     var self = this;
     self.groups.npcs = self.game.add.group();
-		var npcObjs = self.tileMap.objects['Npcs'];
+		var npcObjs = self.getNpcObjs();
 		if (npcObjs) { // Create the NPCs.
 			npcObjs.forEach(function(npc) {
 				var o = null;
@@ -59,10 +63,8 @@ BaseMap.prototype = {
             o.init(self.game, npc);
           break;
           case "crier":
-           o = new StockManager();
-           o.init(self.game, npc);
-            // o = new Crier();
-            // o.init(self.game, npc);
+            o = new Crier();
+            o.init(self.game, npc);
           break;
           case "informer":
             o = new Informer();

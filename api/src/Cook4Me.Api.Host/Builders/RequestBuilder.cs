@@ -224,7 +224,8 @@ namespace Cook4Me.Api.Host.Builders
             return new AddShopProductCategory
             {
                 Name = jObj.TryGetString(Constants.DtoNames.ProductCategory.Name),
-                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description)
+                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description),
+                ShopSectionName = jObj.TryGetString(Constants.DtoNames.ProductCategory.ShopSectionName)
             };
         }
 

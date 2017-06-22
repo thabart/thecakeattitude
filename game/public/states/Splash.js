@@ -34,13 +34,14 @@ Splash.prototype = {
 		self.game.load.atlasJSONHash('crier', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/crier.json');
 		self.game.load.atlasJSONHash('informer', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/informer.json');
 		self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
+		self.game.load.spritesheet('freeShopSection', Constants.apiUrl + '/characters/shadow_npc.png', 72, 39, 35);
 		// Load tilesets
 		self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
 		self.game.load.image('TownInterior@64x64', Constants.apiUrl + '/shops/tilesets/TownInterior@64x64.png');
 		self.game.load.image('Shadows@64x64', Constants.apiUrl + '/maps/tilesets/Shadows@64x64.png');
 		self.game.load.image('ShopShadows@64x64', Constants.apiUrl + '/shops/tilesets/Shadows@64x64.png');
 		self.game.load.image('freePlace', Constants.apiUrl + '/maps/tilesets/freePlace.png');
-		self.game.load.image('shopSection', Constants.apiUrl + '/shops/tilesets/shop-section.png');
+		self.game.load.image('takenShopSection', Constants.apiUrl + '/shops/tilesets/shop-section.png');
 		self.game.load.image('shop', Constants.apiUrl + '/maps/tilesets/shop.png');
 		self.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
 		// Load player

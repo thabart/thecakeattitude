@@ -70,7 +70,8 @@ CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
 							categoryId: opts.categoryId,
 							typeMap: 'shop',
 							place: shopObj.name,
-							entry: 'entry'
+							entry: 'entry',
+							shop: f[0]
 						}, false, false, 0, true);
 					} else {
 						var npcJson = {

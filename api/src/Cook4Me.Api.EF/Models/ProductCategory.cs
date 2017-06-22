@@ -26,6 +26,7 @@ namespace Cook4Me.Api.EF.Models
         public string Description { get; set; }
         public string ParentProductCategoryId { get; set; }
         public string ShopId { get; set; }
+        public string ShopSectionName { get; set; }
         public virtual ProductCategory Parent { get; set; }
         public virtual ICollection<ProductCategory> Children { get; set; }
         public virtual Shop Shop { get; set; }

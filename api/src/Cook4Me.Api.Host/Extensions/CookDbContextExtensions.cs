@@ -340,6 +340,7 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Women",
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
+                    ShopSectionName = "thirdSection",
                     ShopId = _firstShopId
                 },
                 new ProductCategory
@@ -349,6 +350,7 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Man",
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
+                    ShopSectionName = "secondSection",
                     ShopId = _firstShopId
                 }
             });

@@ -3,7 +3,10 @@ var AddProductcategoryModal = function() { };
 AddProductcategoryModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function() {
     var self = this;
-    var title = $.i18n('addProductcategoryModalTitle');
+    var title = $.i18n('addProductcategoryModalTitle'),
+      name = $.i18n('name'),
+      description = $.i18n('description'),
+      addProductCategory = $.i18n('addProductCategory');
     self.create("<div class='modal modal-lg md-effect-2'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -15,16 +18,16 @@ AddProductcategoryModal.prototype = $.extend({}, BaseModal.prototype, {
           "</div>"+
           "<div class='content'>"+
             "<div>"+
-              "<label>Name</label>"+
+              "<label>"+name+"</label>"+
               "<input type='text' class='input-control' />"+
             "</div>"+
             "<div>"+
-              "<label>Description</label>"+
+              "<label>"+description+"</label>"+
               "<textarea class='input-control' />"+
             "</div>"+
           "</div>"+
           "<div class='footer'>"+
-            "<button class='action-btn'>Add</button>"+
+            "<button class='action-btn'>"+addProductCategory+"</button>"+
           "</div>"+
         "</div>"+
       "</div>"+

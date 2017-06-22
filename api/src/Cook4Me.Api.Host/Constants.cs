@@ -60,6 +60,7 @@ namespace Cook4Me.Api.Host
                 public const string Id = "id";
                 public const string Name = "name";
                 public const string Description = "description";
+                public const string ShopSectionName = "shop_section_name";
             }
 
             public static class Shop

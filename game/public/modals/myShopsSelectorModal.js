@@ -44,13 +44,15 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
     $(self.modal).find('.slick-prev').trigger('click');
     $(self.modal).find('.go-to-the-shop').click(function() {
       var selectedShop = $(self.modal).find('.shop-cell-active');
+      var shop = selectedShop[0].shop;
       var json = {
         map_link: selectedShop.data('map'),
         overview_link: selectedShop.data('overview'),
         others: {
           categoryId : selectedShop.data('category'),
           place: selectedShop.data('place'),
-          typeMap: 'shop'
+          typeMap: 'shop',
+          shop: shop
         },
         isMainMap: false
       };
@@ -104,7 +106,7 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
       shops.forEach(function(shop) {
         var profileImage = shop.profile_image || '/styles/images/default-store.png';
         var shopCategory = $.i18n('shopCategory').replace('{0}', shop.category.name);
-        myShopsSlider.append("<div><div class='shop-cell-container'>"+
+        var cell = $("<div><div class='shop-cell-container'>"+
           "<div class='shop-cell'"+
             " data-map='"+Constants.apiUrl + shop.shop_map.map_link+"'"+
             " data-id='"+shop.id+"'"+
@@ -113,6 +115,8 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
             " data-category='"+shop.category_id+"'>"+shop.name+"<br /><img src='"+profileImage+"' /><br/><span>"+shopCategory+"</span></div>"+
           "</div>"+
         "</div>");
+        $(cell).find('.shop-cell')[0].shop = shop;
+        myShopsSlider.append(cell);
       });
       var slick = myShopsSlider.slick({
         infinite: false,

@@ -31,6 +31,7 @@ namespace Cook4Me.Api.Core.Commands.Shop
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public string ShopSectionName { get; set; }
     }
 
     public class AddProductShopFilter

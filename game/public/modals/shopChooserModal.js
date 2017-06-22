@@ -122,6 +122,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
                 self.disableTakeThePlace(false);
               });
             } else if (shop[0].shop_map) { // Shop exists.
+              $(square)[0].shop = shop[0];
               $(square).data('map', Constants.apiUrl + shop[0].shop_map.map_link);
               $(square).data('overview', Constants.apiUrl + shop[0].shop_map.overview_link);
               $(square).data('place', shop[0].place);
@@ -150,13 +151,15 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
     });
     goToTheShop.click(function() { // Go to the shop.
       var selectedPlace = mapOverview.find('.selected-place');
+      var shop = selectedPlace[0].shop;
       var json = {
         map_link: selectedPlace.data('map'),
         overview_link: selectedPlace.data('overview'),
         others: {
           categoryId : selectedPlace.data('category'),
           typeMap: 'shop',
-          place: selectedPlace.data('place')
+          place: selectedPlace.data('place'),
+          shop: shop
         },
         isMainMap: false
       };

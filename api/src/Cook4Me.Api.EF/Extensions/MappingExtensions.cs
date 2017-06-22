@@ -234,7 +234,8 @@ namespace Cook4Me.Api.EF.Extensions
                 {
                     Id = c.Id,
                     Name = c.Name,
-                    Description = c.Description
+                    Description = c.Description,
+                    ShopSectionName = c.ShopSectionName
                 }).ToList();
             }
 
@@ -637,7 +638,8 @@ namespace Cook4Me.Api.EF.Extensions
             {
                 Id = productCategory.Id,
                 Description = productCategory.Description,
-                Name = productCategory.Name
+                Name = productCategory.Name,
+                ShopSectionName = productCategory.ShopSectionName
             };
         }
 

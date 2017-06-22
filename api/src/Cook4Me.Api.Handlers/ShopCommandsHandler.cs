@@ -95,6 +95,7 @@ namespace Cook4Me.Api.Handlers
                 {
                     Id = Guid.NewGuid().ToString(),
                     Name = p.Name,
+                    ShopSectionName = p.ShopSectionName,
                     Description = p.Description,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow

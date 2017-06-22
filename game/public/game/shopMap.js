@@ -31,7 +31,35 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.layers.furnitures = self.tileMap.createLayer('Furnitures');
 		self.layers.decorations = self.tileMap.createLayer('Decorations');
 		// Add overview image
-		self.addNpcsGroup();
+		// self.addNpcsGroup();
+		var npcObjs = self.getNpcObjs(); // Add NPCS.
+    self.groups.npcs = self.game.add.group();
+		if (npcObjs) {
+			npcObjs.forEach(function(npc) {
+				var o = null;
+				switch(npc.type) {
+					case "shop-section":
+            o = new ShopSection();
+						var productCategories = self.opts.shop.product_categories.filter(function(productCategory) { return npc.name === productCategory.shop_section_name });
+						if (productCategories && productCategories.length === 0) {
+							o.initFree(self.game, npc);
+						} else {
+							o.initTaken(self.game, npc);
+						}
+					break;
+					case "informer":
+            o = new Informer();
+            o.init(self.game, npc);
+					break;
+				}
+
+				if (o !== null) {
+					self.npcs.push(o);
+					self.groups.npcs.add(o.getSprite());
+				}
+			});
+		}
+
 		self.addOverviewImage();
 		self.addOverviewPlayersGroup();
 		self.trackSizeChanged();

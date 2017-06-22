@@ -1,20 +1,32 @@
 'use strict';
 var ShopSection = function() {};
 ShopSection.prototype = $.extend({}, BaseCharacter.prototype, {
-	init: function(game, npc) {
-		var imageName = 'shopSection';
+	initTaken: function(game, npc) {
+		var self = this;
+		var imageName =  'takenShopSection';
 		var shopSectionImage = game.cache.getImage(imageName);
 		npc.y = npc.y - shopSectionImage.height;
-  	this.create(game, npc, imageName);
-		// this.modal = new ShopSectionModal();
-		this.modal = new AddProductcategoryModal();
-		this.modal.init();
+  	self.create(game, npc, imageName);
+		self.modal = new ShopSectionModal();
+		self.modal.init();
+	},
+	initFree: function(game, npc) {
+		var self = this;
+		var imageName =  'freeShopSection';
+		var shopSectionImage = game.cache.getImage('takenShopSection');
+		npc.y = npc.y - shopSectionImage.height / 2;
+		npc.x = npc.x + 30;
+  	self.create(game, npc, imageName, 12);
+		self.modal = new AddProductcategoryModal();
+		self.modal.init();
 	},
 	interact: function() {
-		this.modal.toggle();
+		var self = this;
+		self.modal.toggle();
 	},
 	destroy: function() {
-	  this.sprite.destroy();
-		this.modal.remove();
+		var self = this;
+	  self.sprite.destroy();
+		self.modal.remove();
 	}
 });
