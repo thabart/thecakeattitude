@@ -11,6 +11,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       viewShop = $.i18n('viewShop'),
       selectPlaceLegendary = $.i18n('selectPlaceLegendary'),
       selectMap = $.i18n('selectMap');
+    self.selectCategory = new SelectCategory();
     self.create("<div class='modal modal-lg modal-transparent md-effect-2' id='shop-chooser-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -18,62 +19,7 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
             "<span class='title'>"+title+"</span>"+
           "</div>"+
           "<div class='container'>"+
-            "<div>"+
-              "<div class='col-4'>"+
-                "<div class='sk-cube-grid category-loader'>"+
-                  "<div class='sk-cube sk-cube1'></div>"+
-                  "<div class='sk-cube sk-cube2'></div>"+
-                  "<div class='sk-cube sk-cube3'></div>"+
-                  "<div class='sk-cube sk-cube4'></div>"+
-                  "<div class='sk-cube sk-cube5'></div>"+
-                  "<div class='sk-cube sk-cube6'></div>"+
-                  "<div class='sk-cube sk-cube7'></div>"+
-                  "<div class='sk-cube sk-cube8'></div>"+
-                  "<div class='sk-cube sk-cube9'></div>"+
-                "</div>"+
-                "<div class='category-selector-container'>"+
-                  "<label>"+selectCategory+"</label>"+
-                  "<select size='4' class='selector category-selector'>"+
-                  "</select>"+
-                "</div>"+
-              "</div>"+
-              "<div class='col-4'>"+
-                "<div class='sk-cube-grid sub-category-loader'>"+
-                  "<div class='sk-cube sk-cube1'></div>"+
-                  "<div class='sk-cube sk-cube2'></div>"+
-                  "<div class='sk-cube sk-cube3'></div>"+
-                  "<div class='sk-cube sk-cube4'></div>"+
-                  "<div class='sk-cube sk-cube5'></div>"+
-                  "<div class='sk-cube sk-cube6'></div>"+
-                  "<div class='sk-cube sk-cube7'></div>"+
-                  "<div class='sk-cube sk-cube8'></div>"+
-                  "<div class='sk-cube sk-cube9'></div>"+
-                "</div>"+
-                "<div class='sub-category-selector-container'>"+
-                  "<label>"+selectSubCategory+"</label>"+
-                  "<select size='4' class='sub-category-selector selector'>"+
-                  "</select>"+
-                "</div>"+
-              "</div>"+
-              "<div class='col-4'>"+
-                "<div class='sk-cube-grid map-loader'>"+
-                  "<div class='sk-cube sk-cube1'></div>"+
-                  "<div class='sk-cube sk-cube2'></div>"+
-                  "<div class='sk-cube sk-cube3'></div>"+
-                  "<div class='sk-cube sk-cube4'></div>"+
-                  "<div class='sk-cube sk-cube5'></div>"+
-                  "<div class='sk-cube sk-cube6'></div>"+
-                  "<div class='sk-cube sk-cube7'></div>"+
-                  "<div class='sk-cube sk-cube8'></div>"+
-                  "<div class='sk-cube sk-cube9'></div>"+
-                "</div>"+
-                "<div class='map-selector-container'>"+
-                  "<label>"+selectMap+"</label>"+
-                  "<select size='4' class='map-selector selector'>"+
-                  "</select>"+
-                "</div>"+
-              "</div>"+
-            "</div>"+
+            "<div class='select-category-container'></div>"+
             "<div>"+
               "<p>"+selectPlaceLegendary+"</p>"+
               "<div class='sk-cube-grid overview-loader'>"+
@@ -98,51 +44,33 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
         "</div>"+
       "</div>"+
     "</div>");
-    var categorySelector = $(self.modal).find('.category-selector'),
-      subCategorySelector = $(self.modal).find('.sub-category-selector'),
-      mapSelector = $(self.modal).find('.map-selector'),
-      mapOverview = $(self.modal).find('.map-overview'),
+    var mapOverview = $(self.modal).find('.map-overview'),
       takeThePlace = $(self.modal).find('.take-the-place')
       goToTheShop = $(self.modal).find('.go-to-the-shop');
-    categorySelector.change(function() { // Display sub category when category changed.
-      var categoryId = $(this).find(':selected').val();
+    $(self.modal).find('.select-category-container').append(self.selectCategory.render());
+    $(self.selectCategory).on('initialized', function() {
+      self.isOverviewLoading(false);
       self.disableGoToTheShop(true);
-      if (!categoryId) {
-        return;
-      }
-
-      subCategorySelector.empty();
-      mapSelector.empty();
-      mapOverview.empty();
-      self.isSubCategoryLoading(true);
       self.disableTakeThePlace(true);
       self.disableViewShop(true);
-      CategoryClient.getCategory(categoryId).then(function(cat) {
-        var subCategories = cat._embedded.children.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
-        subCategories.forEach(function(category) { subCategorySelector.append(category); });
-        self.isSubCategoryLoading(false);
-      });
     });
-    subCategorySelector.change(function() { // Display maps when the sub category changed.
-      var categoryId = $(this).find(':selected').val();
-      self.isMapLoading(true);
-      CategoryClient.getCategory(categoryId).then(function(cat) {
-        mapSelector.empty();
-        mapOverview.empty();
-        self.disableGoToTheShop(true);
-        self.disableTakeThePlace(true);
-        self.disableViewShop(true);
-        var maps = cat._embedded.maps.map(function(map) { return "<option data-name='"+map.map_name+"' data-map='"+Constants.apiUrl + map.map_link+"' data-categoryid='"+cat._embedded.id+"' data-overview='"+Constants.apiUrl + map.overview_link+"'>"+map.map_name+"</option>"; });
-        maps.forEach(function(map) { mapSelector.append(map); });
-        self.isMapLoading(false);
-      });
+    $(self.selectCategory).on('categorySelected', function() {
+      self.disableGoToTheShop(true);
+      self.disableViewShop(true);
+      self.disableTakeThePlace(true);
+      mapOverview.empty();
     });
-    mapSelector.change(function() { // Display the image when the map is selected.
-      var selected = $(this).find(':selected');
-      var overviewImage = selected.data('overview'),
-        categoryid = selected.data('categoryid'),
-        mapName = selected.data('name'),
-        mapLink = selected.data('map');
+    $(self.selectCategory).on('mapsLoaded', function() {
+      self.disableGoToTheShop(true);
+      self.disableTakeThePlace(true);
+      self.disableViewShop(true);
+      mapOverview.empty();
+    });
+    $(self.selectCategory).on('mapSelected', function(e, data) { // Display the image when the map is selected.
+      var categoryid = data.categoryid,
+        overviewImage = data.overviewImage,
+        mapName = data.mapName,
+        mapLink = data.mapLink;
       mapOverview.empty();
       self.disableGoToTheShop(true);
       self.disableTakeThePlace(true);
@@ -235,34 +163,9 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       $(self).trigger('goToTheShop', [json]);
     });
 
-    categorySelector.empty();
-    subCategorySelector.empty();
-    mapSelector.empty();
-    self.isCategoryLoading(true);
     self.disableGoToTheShop(true);
     self.disableTakeThePlace(true);
     self.disableViewShop(true);
-    CategoryClient.getCategoryParents().then(function(r) { // Display the categories.
-      var categories = r._embedded.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
-      categorySelector.append("<option></option>");
-      categories.forEach(function(category) { categorySelector.append(category); });
-      self.isCategoryLoading(false);
-      self.isSubCategoryLoading(false);
-      self.isMapLoading(false);
-      self.isOverviewLoading(false);
-      self.disableGoToTheShop(true);
-      self.disableTakeThePlace(true);
-      self.disableViewShop(true);
-    });
-  },
-  isCategoryLoading: function(b) { // Display or hide category loader.
-    this.isLoading(b, ".category-loader", ".category-selector-container");
-  },
-  isSubCategoryLoading: function(b) { // Display or hide sub category loader.
-    this.isLoading(b, '.sub-category-loader', '.sub-category-selector-container');
-  },
-  isMapLoading: function(b) { // Display or hide map loader.
-    this.isLoading(b, '.map-loader', '.map-selector-container');
   },
   isOverviewLoading: function(b) { // Display or hide overview image.
     this.isLoading(b, '.overview-loader', '.map-overview');

@@ -70,6 +70,7 @@
   "addProduct": "Ajouter un produit",
   "addAnnounce": "Ajouter annonce",
   "manageYourProducts": "Gérer vos produits",
+  "price": "Prix",
   "manageShopSettings": "Gérer les paramètres de votre magasin",
   "selectPlaceLegendary": "Sélectionnez un emplacement libre<span class='green'>(vert)</span> ou un magasin existant<span class='gray'>(gris)</span>",
   "error-cannotAuthenticate": "Soit le login et / ou mot de passe sont invalides",

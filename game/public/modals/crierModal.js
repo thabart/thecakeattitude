@@ -1,4 +1,3 @@
-'use strict';
 var CrierModal = function() {};
 CrierModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function() {
@@ -6,8 +5,11 @@ CrierModal.prototype = $.extend({}, BaseModal.prototype, {
     var title = $.i18n('crierModalTitle'),
       addAnnounce = $.i18n('addAnnounce'),
       description = $.i18n('description'),
-      address = $.i18n('address');
-    self.create("<div class='modal modal-lg md-effect-2' id='map-modal'>"+
+      address = $.i18n('address'),
+      error = $.i18n('error');
+    self.descriptionTab = new CrierModalDescriptionTab();
+    self.addressTab = new CrierModalAddressTab();
+    self.create("<div class='modal modal-lg md-effect-2'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+
@@ -31,18 +33,30 @@ CrierModal.prototype = $.extend({}, BaseModal.prototype, {
             "<div class='sk-cube sk-cube8'></div>"+
             "<div class='sk-cube sk-cube9'></div>"+
           "</div>"+
+          "<div class='alert-error'><b>"+error+" </b><span class='message'></span><span class='close'><i class='fa fa-times'></i></span></div>"+
           "<div class='tab-content'>"+
-
-          "</div>"+
-          "<div class='footer'>"+
-            "<button class='action-btn'>"+addAnnounce+"</button>"+
+            "<div class='tab0'></div>"+
+            "<div class='tab1'></div>"+
           "</div>"+
         "</div>"+
       "</div>"+
     "</div>");
-    self.displayLoading(false);
+    self.displayLoader(false);
+    self.showTab(0);
+    $(self.modal).find('.tab0').append(self.descriptionTab.render());
+    $(self.modal).find('.tab1').append(self.addressTab.render());
+    $(self.descriptionTab).on('next', function(e, data) {
+      self.showTab(1);
+      self.addressTab.init();
+    });
+    $(self.addressTab).on('previous', function(e, data) {
+      self.showTab(0);
+    });
+    $(self.addressTab).on('confirm', function() {
+
+    });
   },
-  displayLoading: function(b) {
+  displayLoader: function(b) { // Display loader.
     var self = this;
     var loader = $(self.modal).find('.crier-loader'),
       tabContent = $(self.modal).find('.tab-content');
@@ -52,6 +66,25 @@ CrierModal.prototype = $.extend({}, BaseModal.prototype, {
     } else {
       loader.hide();
       tabContent.show();
+    }
+  },
+  showTab: function(indice) { // Show tab.
+    var self = this;
+    var progressBarLi = $(self.modal).find('.progressbar li');
+    for (var i = 0; i <= 3; i++) {
+      var li = progressBarLi.get(i),
+        tab = $(self.modal).find('.tab'+i);
+      if (i <= indice) {
+        $(li).addClass('active');
+      } else {
+        $(li).removeClass('active');
+      }
+
+      if (i === indice) {
+        $(tab).show();
+      } else {
+        $(tab).hide();
+      }
     }
   }
 });

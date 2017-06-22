@@ -92,11 +92,14 @@ Splash.prototype = {
 		self.game.load.script('WarperCurrentUserShopsTab', 'public/modals/warperModalTabs/warperCurrentUserShopsTab.js');
 		self.game.load.script('WarperMapsTab', 'public/modals/warperModalTabs/warperMapsTab.js');
 		self.game.load.script('WarperShopsTab', 'public/modals/warperModalTabs/warperShopsTab.js');
+		self.game.load.script('CrierModalDescriptionTab', 'public/modals/crierModalTabs/description.js');
+		self.game.load.script('CrierModalAddressTab', 'public/modals/crierModalTabs/address.js');
 		// Load floating menu.
 		self.game.load.script('ProfileMenuFloating', 'public/floating/profile.js');
 		self.game.load.script('BackMenuFloating', 'public/floating/back.js');
 		// Load the components.
 		self.game.load.script('AddressSearch', 'public/components/addressSearch.js');
+		self.game.load.script('SelectCategory', 'public/components/selectCategory.js');
 		// Load the NPCs.
 		self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 		self.game.load.script('Warper', 'public/characters/warper.js');
