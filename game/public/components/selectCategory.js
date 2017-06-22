@@ -2,48 +2,54 @@
 var SelectCategory = function() { };
 SelectCategory.prototype = {
   render: function(opts) {
+    opts = opts || { isMapEnabled : true };
     var self = this,
       selectCategory = $.i18n('selectCategory'),
       selectSubCategory = $.i18n('selectSubCategory'),
       selectMap = $.i18n('selectMap');
-    self.component = $("<div>"+
-      "<div class='col-4'>"+
-        "<div class='sk-cube-grid category-loader'>"+
-          "<div class='sk-cube sk-cube1'></div>"+
-          "<div class='sk-cube sk-cube2'></div>"+
-          "<div class='sk-cube sk-cube3'></div>"+
-          "<div class='sk-cube sk-cube4'></div>"+
-          "<div class='sk-cube sk-cube5'></div>"+
-          "<div class='sk-cube sk-cube6'></div>"+
-          "<div class='sk-cube sk-cube7'></div>"+
-          "<div class='sk-cube sk-cube8'></div>"+
-          "<div class='sk-cube sk-cube9'></div>"+
-        "</div>"+
-        "<div class='category-selector-container'>"+
-          "<label>"+selectCategory+"</label>"+
-          "<select size='4' class='selector category-selector'>"+
-          "</select>"+
-        "</div>"+
+    var clName = 'col-6';
+    if (opts.isMapEnabled) {
+      clName = 'col-4';
+    }
+
+    var strComponent = "<div class='"+clName+"'>"+
+      "<div class='sk-cube-grid category-loader'>"+
+        "<div class='sk-cube sk-cube1'></div>"+
+        "<div class='sk-cube sk-cube2'></div>"+
+        "<div class='sk-cube sk-cube3'></div>"+
+        "<div class='sk-cube sk-cube4'></div>"+
+        "<div class='sk-cube sk-cube5'></div>"+
+        "<div class='sk-cube sk-cube6'></div>"+
+        "<div class='sk-cube sk-cube7'></div>"+
+        "<div class='sk-cube sk-cube8'></div>"+
+        "<div class='sk-cube sk-cube9'></div>"+
       "</div>"+
-      "<div class='col-4'>"+
-        "<div class='sk-cube-grid sub-category-loader'>"+
-          "<div class='sk-cube sk-cube1'></div>"+
-          "<div class='sk-cube sk-cube2'></div>"+
-          "<div class='sk-cube sk-cube3'></div>"+
-          "<div class='sk-cube sk-cube4'></div>"+
-          "<div class='sk-cube sk-cube5'></div>"+
-          "<div class='sk-cube sk-cube6'></div>"+
-          "<div class='sk-cube sk-cube7'></div>"+
-          "<div class='sk-cube sk-cube8'></div>"+
-          "<div class='sk-cube sk-cube9'></div>"+
-        "</div>"+
-        "<div class='sub-category-selector-container'>"+
-          "<label>"+selectSubCategory+"</label>"+
-          "<select size='4' class='sub-category-selector selector'>"+
-          "</select>"+
-        "</div>"+
+      "<div class='category-selector-container'>"+
+        "<label>"+selectCategory+"</label>"+
+        "<select size='4' class='selector category-selector'>"+
+        "</select>"+
       "</div>"+
-      "<div class='col-4'>"+
+    "</div>"+
+    "<div class='"+clName+"'>"+
+      "<div class='sk-cube-grid sub-category-loader'>"+
+        "<div class='sk-cube sk-cube1'></div>"+
+        "<div class='sk-cube sk-cube2'></div>"+
+        "<div class='sk-cube sk-cube3'></div>"+
+        "<div class='sk-cube sk-cube4'></div>"+
+        "<div class='sk-cube sk-cube5'></div>"+
+        "<div class='sk-cube sk-cube6'></div>"+
+        "<div class='sk-cube sk-cube7'></div>"+
+        "<div class='sk-cube sk-cube8'></div>"+
+        "<div class='sk-cube sk-cube9'></div>"+
+      "</div>"+
+      "<div class='sub-category-selector-container'>"+
+        "<label>"+selectSubCategory+"</label>"+
+        "<select size='4' class='sub-category-selector selector'>"+
+        "</select>"+
+      "</div>"+
+    "</div>";
+    if (opts.isMapEnabled) {
+      strComponent += "<div class='"+clName+"'>"+
         "<div class='sk-cube-grid map-loader'>"+
           "<div class='sk-cube sk-cube1'></div>"+
           "<div class='sk-cube sk-cube2'></div>"+
@@ -60,8 +66,10 @@ SelectCategory.prototype = {
           "<select size='4' class='map-selector selector'>"+
           "</select>"+
         "</div>"+
-      "</div>"+
-    "</div>");
+      "</div>";
+    }
+
+    self.component = $("<div>"+strComponent+"</div>");
     var categorySelector = $(self.component).find('.category-selector'),
       subCategorySelector = $(self.component).find('.sub-category-selector'),
       mapSelector = $(self.component).find('.map-selector');
@@ -82,12 +90,12 @@ SelectCategory.prototype = {
     self.isCategoryLoading(true);
     categorySelector.change(function() { // Display sub category when category changed.
       var categoryId = $(this).find(':selected').val();
+      subCategorySelector.empty();
       if (!categoryId) {
         return;
       }
 
       $(self).trigger('categorySelected');
-      subCategorySelector.empty();
       mapSelector.empty();
       self.isSubCategoryLoading(true);
       CategoryClient.getCategory(categoryId).then(function(cat) {
@@ -99,6 +107,10 @@ SelectCategory.prototype = {
     });
     subCategorySelector.change(function() { // Display maps when the sub category changed.
       var categoryId = $(this).find(':selected').val();
+      if (!opts.isMapEnabled) {
+        return;
+      }
+
       self.isMapLoading(true);
       CategoryClient.getCategory(categoryId).then(function(cat) {
         mapSelector.empty();
@@ -108,15 +120,17 @@ SelectCategory.prototype = {
         $(self).trigger('mapsLoaded', [ cat ]);
       });
     });
-    mapSelector.change(function() {
-      var selected = $(this).find(':selected');
-      $(self).trigger('mapSelected', [ {
-        overviewImage: selected.data('overview'),
-        categoryid: selected.data('categoryid'),
-        mapName: selected.data('name'),
-        mapLink: selected.data('map')
-      }]);
-    });
+    if (opts.isMapEnabled) {
+      mapSelector.change(function() {
+        var selected = $(this).find(':selected');
+        $(self).trigger('mapSelected', [ {
+          overviewImage: selected.data('overview'),
+          categoryid: selected.data('categoryid'),
+          mapName: selected.data('name'),
+          mapLink: selected.data('map')
+        }]);
+      });
+    }
     init();
     return self.component;
   },

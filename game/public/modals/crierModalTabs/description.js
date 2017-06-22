@@ -7,6 +7,7 @@ CrierModalDescriptionTab.prototype = {
       price = $.i18n('price'),
       description = $.i18n('description'),
       self = this;
+    self.selectCategory = new SelectCategory();
     self.tab = $("<div>"+
       "<div class='container'>"+
         "<div class='content'>"+
@@ -18,9 +19,7 @@ CrierModalDescriptionTab.prototype = {
             "<label>"+description+"</label>"+
             "<textarea class='input-control' />"+
           "</div>"+
-          "<div>"+
-
-          "</div>"+
+          "<div class='select-category-container'></div>"+
           "<div>"+
             "<label>"+price+"</label>"+
             "<input type='number' class='input-control' />"+
@@ -34,6 +33,7 @@ CrierModalDescriptionTab.prototype = {
     $(self.tab).find('.next').click(function() {
       $(self).trigger('next');
     });
+    $(self.tab).find('.select-category-container').append(self.selectCategory.render({isMapEnabled: false}));
     return self.tab;
   }
 };
