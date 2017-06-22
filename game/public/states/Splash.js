@@ -94,6 +94,8 @@ Splash.prototype = {
 		self.game.load.script('WarperShopsTab', 'public/modals/warperModalTabs/warperShopsTab.js');
 		self.game.load.script('CrierModalDescriptionTab', 'public/modals/crierModalTabs/description.js');
 		self.game.load.script('CrierModalAddressTab', 'public/modals/crierModalTabs/address.js');
+		self.game.load.script('AddProductDescriptionTab', 'public/modals/addProductModalTabs/description.js');
+		self.game.load.script('AddProductCharacteristicTab', 'public/modals/addProductModalTabs/characteristics.js');
 		// Load floating menu.
 		self.game.load.script('ProfileMenuFloating', 'public/floating/profile.js');
 		self.game.load.script('BackMenuFloating', 'public/floating/back.js');

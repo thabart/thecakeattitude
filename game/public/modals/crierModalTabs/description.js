@@ -27,7 +27,7 @@ CrierModalDescriptionTab.prototype = {
         "</div>"+
       "</div>"+
       "<div class='footer'>"+
-          "<button class='action-btn next'>next</button>"+
+          "<button class='action-btn next'>"+next+"</button>"+
       "</div>"+
     "</div>");
     $(self.tab).find('.next').click(function() {
