@@ -17,7 +17,8 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.overviewSprite.drawCircle(0, 0, 2);
 	this.direction = [];
 	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2)); // Draw hit zone.
-	this.hitZone.lineStyle(2, 0x0000FF, 1);
+	// TH : Hide the RECTANGLE.
+	// this.hitZone.lineStyle(2, 0x0000FF, 1);
 	this.hitZone.drawRect(0, 0, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
 	var interactionSprite = game.add.sprite(0, game.camera.height - 50, 'spacebar');
 	interactionSprite.fixedToCamera = true;
@@ -28,12 +29,12 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	$(Constants.gameSelector).append(this.tchatBubble);
 
 	// TODO : MAX : Characters in pseudo = 10
-	var pseudoStyle = { font: '15px', wordWrap: true, wordWrapWidth: 60, align: 'center' };
+	var pseudoStyle = { font: '12px', wordWrap: true, wordWrapWidth: 60, align: 'center', fill: 'white' };
 	if (currentUser) {
-		pseudoStyle.fill = '#FFA500';
+		pseudoStyle.fill = 'red';
 	}
 
-	this.pseudo = game.add.text(-this.sprite.width / 2, -15, pseudo, pseudoStyle); // Draw pseudo.
+	this.pseudo = game.add.text(-this.sprite.width / 2, this.sprite.height, pseudo, pseudoStyle); // Draw pseudo.
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
 

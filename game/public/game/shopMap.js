@@ -63,7 +63,7 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addOverviewImage();
 		self.addOverviewPlayersGroup();
 		self.trackSizeChanged();
-		self.addWarpsGroup({categoryId: opts.categoryId, place: opts.place});
+		self.addWarpsGroup({categoryId: opts.categoryId, place: opts.place, shop: opts.shop});
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);
   },

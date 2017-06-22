@@ -16,7 +16,7 @@ ShopSection.prototype = $.extend({}, BaseCharacter.prototype, {
 		var shopSectionImage = game.cache.getImage('takenShopSection');
 		npc.y = npc.y - shopSectionImage.height / 2;
 		npc.x = npc.x + 30;
-  	self.create(game, npc, imageName, 12);
+  	self.create(game, npc, imageName, null, 12);
 		self.modal = new AddProductcategoryModal();
 		self.modal.init();
 	},

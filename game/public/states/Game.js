@@ -201,7 +201,7 @@ Game.prototype = {
 		}
 	},
 	render: function() {
-		if (this.map.currentPlayer) this.game.debug.spriteInfo(this.map.currentPlayer.sprite, 32, 32);
+		// if (this.map.currentPlayer) this.game.debug.spriteInfo(this.map.currentPlayer.sprite, 32, 32);
 	},
 	shutdown: function() {
 		this.modals.tchat.remove();

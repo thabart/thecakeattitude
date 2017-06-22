@@ -2,7 +2,7 @@ var StockManager = function() {};
 StockManager.prototype = $.extend({}, BaseCharacter.prototype, {
 	init: function(game, npc) {
 		var name = 'stockManager';
-		this.create(game, npc, 'stockManager', 1);
+		this.create(game, npc, 'stockManager', $.i18n('stockManagerName'), 1);
 		this.modal = new StockManagerModal();
 		this.modal.init();
 	},

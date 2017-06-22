@@ -84,6 +84,7 @@ Splash.prototype = {
 		self.game.load.script('StockManagerModal', 'public/modals/stockManagerModal.js');
 		self.game.load.script('AddProductModal', 'public/modals/addProductModal.js');
 		self.game.load.script('CrierModal', 'public/modals/crierModal.js');
+		self.game.load.script('InformerModal', 'public/modals/informerModal.js');
 		self.game.load.script('ShopSectionPresentationTab', 'public/modals/shopSectionModalTabs/presentation.js');
 		self.game.load.script('ShopSectionSearchProductsTab', 'public/modals/shopSectionModalTabs/searchProducts.js');
 		self.game.load.script('FreePlaceModalDescriptionTab', 'public/modals/freePlaceModalTabs/freePlaceModalDescriptionTab.js');

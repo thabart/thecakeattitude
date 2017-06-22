@@ -46,7 +46,10 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
     "</div>");
     var mapOverview = $(self.modal).find('.map-overview'),
       takeThePlace = $(self.modal).find('.take-the-place')
-      goToTheShop = $(self.modal).find('.go-to-the-shop');
+      goToTheShop = $(self.modal).find('.go-to-the-shop'),
+      viewTheShop = $(self.modal).find('.view-shop');
+    self.informerModal = new InformerModal();
+    self.informerModal.init();
     $(self.modal).find('.select-category-container').append(self.selectCategory.render());
     $(self.selectCategory).on('initialized', function() {
       self.isOverviewLoading(false);
@@ -165,6 +168,9 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       };
       $(self).trigger('goToTheShop', [json]);
     });
+    viewTheShop.click(function() { // View the shop.
+      self.informerModal.toggle();
+    });
 
     self.disableGoToTheShop(true);
     self.disableTakeThePlace(true);
@@ -193,5 +199,10 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
 
     loader.hide();
     content.show();
+  },
+  remove() {
+    var self = this;
+    $(self.modal).remove();
+    self.informerModal.remove();
   }
 });
