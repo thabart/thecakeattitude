@@ -29,12 +29,16 @@ Splash.prototype = {
 			}
 		}, this);
 		// Load all NPCs & animations.
-		self.game.load.atlasJSONHash('warper', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/warper.json');
-		self.game.load.atlasJSONHash('stockManager', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/stockManager.json');
-		self.game.load.atlasJSONHash('crier', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/crier.json');
-		self.game.load.atlasJSONHash('informer', Constants.apiUrl + '/characters/npc-men.png', 'public/sprites/informer.json');
+		self.game.load.atlasJSONHash('warper', '/styles/characters/npc-men.png', 'public/sprites/warper.json');
+		self.game.load.atlasJSONHash('stockManager', '/styles/characters/npc-men.png', 'public/sprites/stockManager.json');
+		self.game.load.atlasJSONHash('crier', '/styles/characters/npc-men.png', 'public/sprites/crier.json');
+		self.game.load.atlasJSONHash('informer', '/styles/characters/npc-men.png', 'public/sprites/informer.json');
+		self.game.load.atlasJSONHash('acolyte', '/styles/players/acolyte_m.png', 'public/sprites/acolyte.json');
+		self.game.load.atlasJSONHash('blackHeadsWomen', '/styles/players/black-heads-women.png', 'public/sprites/blackHeadsWomen.json');
+		self.game.load.atlasJSONHash('blackHeadsMen', '/styles/players/black-heads-men.png', 'public/sprites/blackHeadsMen.json');
+		self.game.load.image('player', '/styles/characters/phaser-dude.png');
 		self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
-		self.game.load.spritesheet('freeShopSection', Constants.apiUrl + '/characters/shadow_npc.png', 72, 39, 35);
+		self.game.load.spritesheet('freeShopSection', '/styles/characters/shadow_npc.png', 72, 39, 35);
 		// Load tilesets
 		self.game.load.image('Town@64x64', Constants.apiUrl + '/maps/tilesets/Town@64x64.png');
 		self.game.load.image('TownInterior@64x64', Constants.apiUrl + '/shops/tilesets/TownInterior@64x64.png');
@@ -44,8 +48,6 @@ Splash.prototype = {
 		self.game.load.image('takenShopSection', Constants.apiUrl + '/shops/tilesets/shop-section.png');
 		self.game.load.image('shop', Constants.apiUrl + '/maps/tilesets/shop.png');
 		self.game.load.image('tiles', Constants.apiUrl + '/maps/tilesets/tiles.png');
-		// Load player
-		self.game.load.image('player', Constants.apiUrl + '/characters/phaser-dude.png');
 		// Load states
 		self.game.load.script('SplashGame', 'public/states/SplashGame.js');
 		self.game.load.script('Connect', 'public/states/Connect.js');
@@ -147,7 +149,8 @@ Splash.prototype = {
 			var options = {
 				isMainMap: true
 			};
-			self.game.state.start("SplashGame", true, false, options);*/
+			self.game.state.start("SplashGame", true, false, options);
+			*/
 		}, 1000);
 	},
 	shutdown: function() {

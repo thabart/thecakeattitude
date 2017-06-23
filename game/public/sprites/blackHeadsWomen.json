@@ -1,0 +1,13 @@
+{
+	"frames": [
+		{
+			"filename": "bottom",
+			"frame": {"x":17,"y":15,"w":25,"h":29},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":25,"h":29},
+			"sourceSize": {"w":25,"h":29}
+		}
+	],
+	"meta": {}
+}
