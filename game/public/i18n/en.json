@@ -51,6 +51,7 @@
   "bankTransfer": "Bank transfer",
   "insertIban": "Please insert your IBAN",
   "chooseOneOreMorePaymentMethods": "Choose one or more payment method(s)",
+  "acceptedPaymentMethods": "Accepted payment methods",
   "maps": "Maps",
   "shops": "Shops",
   "yourShops": "Your shops",
@@ -83,6 +84,7 @@
   "pricePerPortion": "Price per portion",
   "unitOfMeasure": "Unit of measure",
   "quantity": "Quantity",
+  "comments" : "Comments",
   "addProductFiltersHelp": "Add some filters to your product for example : <i>Color = Blue, Size = Medium</i>",
   "numberOfPortionsAvailableInStocks": "Number of portions available in your stocks",
   "unlimitedStock": "Unlimited stock",
@@ -95,6 +97,7 @@
   "error-selectAtLeastOnePaymentMethod": "At least one payment method should be selected",
   "error-iban": "Invalid IBAN",
   "error-addShop": "The shop cannot be added",
+  "error-getShopInformation": "The shop information cannot be retrieved",
   "error": "Error",
   "success-profileUpdated": "Profile has been updated",
   "success-shopRemoved": "Shop has been removed"

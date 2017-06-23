@@ -1,0 +1,319 @@
+
+
+/* Modal window */
+.modal {
+  background-color: rgba(14, 14, 14, 0.33);
+  z-index: 1000;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: table;
+}
+
+.modal-transparent {
+  background-color: transparent !important;
+}
+
+.modal-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-window-circle {
+  border-radius: 50%;
+  height: 350px;
+}
+
+.modal-window {
+  width: 350px;
+  background-color: white;
+  margin: 0 auto;
+  box-shadow : 3px 3px 5px rgba(136, 136, 136, 0.82);
+  -moz-box-shadow : 3px 3px 5px rgba(136, 136, 136, 0.82);
+  -webkit-box-shadow : 3px 3px 5px rgba(136, 136, 136, 0.82);
+  -o-box-shadow : 3px 3px 5px rgba(136, 136, 136, 0.82);
+}
+
+.modal-lg .modal-window {
+  width: 650px;
+}
+
+.modal-window-circle .header {
+  border-bottom: none !important;
+  box-shadow: none  !important;
+  padding-top: 40px;
+  text-align: center;
+}
+
+.modal-window .header {
+  padding: 5px;
+  position: relative;
+  border-bottom: 1px solid gray;
+  box-shadow: 0px 3px 5px rgba(101, 101, 101, 0.57);
+  -moz-box-shadow : 0px 3px 5px rgba(101, 101, 101, 0.57);
+  -webkit-box-shadow : 0px 3px 5px rgba(101, 101, 101, 0.57);
+  -o-box-shadow : 0px 3px 5px rgba(101, 101, 101, 0.57);
+}
+
+.modal-window .header .title {
+  font-size: 15pt;
+}
+
+.modal-window .header .options {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.modal-window .header .options .option {
+  height: 30px;
+  width: 30px;
+  font-size: 15pt;
+}
+
+.modal-window .content {
+  padding: 5px;
+  word-break: break-all;
+}
+
+.modal-window .content ul.list  {
+  padding: 0;
+}
+
+.modal-window .content ul.list li {
+  padding: 10px;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.modal-window .content ul.no-border li {
+  border: none;
+}
+
+.modal-window .content ul.center-text li {
+  text-align: center;
+}
+
+.modal-window .footer {
+  border-top: 1px solid gray;
+  padding: 5px;
+}
+
+#map-modal .container {
+  text-align: center;
+}
+
+#map-modal img {
+  max-width: 500px;
+}
+
+/* Pause modal window */
+#pause-modal .floating-options {
+  text-align: center;
+}
+
+#pause-modal .floating-options li {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+#pause-modal .floating-options li i {
+  padding-top: 17px;
+}
+
+/* Free place modal window */
+#free-place-modal .container {
+  padding: 10px;
+}
+
+#free-place-modal .images img {
+  width: 50px;
+}
+
+.adr-search .google-map {
+  width: 300px;
+  height: 200px;
+}
+
+.adr-search .google-map-searchbox {
+  top: 7px !important;
+  width: 150px;
+}
+
+/* Emoticons selector modal */
+#emoticons-selector-modal .emoticon {
+  text-align: center;
+}
+
+#emoticons-selector-modal .emoticon img {
+  border: 1px solid rgb(195, 195, 195);
+}
+
+/* My shops selector modal style */
+
+#my-shops-selector-modal .slider-container {
+  padding: 40px;
+}
+
+#my-shops-selector-modal .shop-cell-container {
+  padding: 10px;
+  text-align: center;
+}
+
+#my-shops-selector-modal .shop-cell {
+  border: 2px solid #dfdee3;
+  border-radius: 3px;
+  min-height: 200px;
+}
+
+#my-shops-selector-modal .shop-cell img {
+  max-width: 150px;
+  margin: 0 auto;
+}
+
+#my-shops-selector-modal .shop-cell-active {
+  border: 2px solid #129cc5;
+}
+
+#my-shops-selector-modal .go-to-the-shop,
+#my-shops-selector-modal .remove {
+  float: right;
+}
+
+/* Login modal */
+#login-modal .local-login {
+  padding: 15px;
+}
+
+#login-modal .local-login-btn {
+  float: right;
+}
+
+/* Shop chooser modal */
+#shop-chooser-modal .map-overview {
+  margin: 0 auto;
+  position: relative;
+}
+
+#shop-chooser-modal .map-overview,
+#shop-chooser-modal .map-overview img {
+  width: 500px;
+}
+
+#shop-chooser-modal .take-the-place {
+  float: right;
+}
+
+/* Edit profile modal style */
+#edit-profile-modal .profile-picture {
+  max-width: 50px;
+}
+
+.map-overview .place {
+  border: 2px solid gray;
+  position: absolute;
+  cursor: pointer;
+}
+
+.map-overview .free-place {
+  border: 2px solid green !important;
+}
+
+.map-overview .selected-place {
+  border: 2px solid red !important;
+}
+
+/* Warper modal */
+.warper-modal .first-column,
+.warper-modal .second-column {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.warper-modal .first-column {
+  padding-right: 10px;
+}
+
+.warper-modal .second-column {
+  border-left: 1px solid rgb(222, 214, 214);
+  padding-left: 10px;
+  padding-bottom: 5px;
+  min-height: 160px;
+}
+
+.warper-modal .map-row {
+  border-top: 1px solid rgb(222, 214, 214);
+  padding-top: 5px;
+}
+
+/* Shop section modal window */
+.shop-section-modal .search-products-content {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.shop-section-modal .form-group {
+  padding-top: 5px;
+}
+
+.shop-section-modal .slider-range {
+  margin-top: 10px;
+}
+
+/* Informer modal window */
+.informer-modal .shop-profile {
+  width: 50px;
+  max-height: 50px;
+  border: 2px solid #ebebeb;
+  border-radius: 4px;
+}
+
+.informer-modal .shop-name {
+  margin: 0;
+  padding: 0;
+}
+
+.informer-modal .info-table {
+  width: 100%;
+  border-spacing:0;
+  border-collapse: collapse;
+}
+
+.informer-modal tr:nth-child(odd) {
+  color: white;
+  background-color: #129cc5;
+}
+
+.informer-modal .info-table td {
+  padding: 10px;
+}
+
+.informer-modal .info-table .key {
+  font-weight: bold;
+}
+
+.informer-modal .info-table .value {
+  font-style: italic;
+}
+
+.informer-modal .payment-methods > div,
+.informer-modal .contact-information > div {
+  display: inline-block;
+  text-align: center;
+  border: 1px solid #dbdbdb;
+  border-radius: 4px;
+  padding: 5px;
+  margin-right: 3px;
+}
+
+.informer-modal .contact-information > div {
+  max-width: 200px;
+}
+
+.informer-modal .payment-methods .fa,
+.informer-modal .contact-information .fa {
+  font-size: 20pt;
+}

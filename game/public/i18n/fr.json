@@ -51,6 +51,7 @@
   "bankTransfer": "Virement bancaire",
   "insertIban": "Insérez votre IBAN",
   "chooseOneOreMorePaymentMethods": "Choisissez un ou plusieurs moyens de paiement",
+  "acceptedPaymentMethods": "Moyens de paiement acceptés",
   "maps": "Maps",
   "shops": "Magasins",
   "yourShops": "Vos magasins",
@@ -82,6 +83,7 @@
   "pricePerPortion": "Prix par portion",
   "unitOfMeasure": "Unité de mesure",
   "quantity": "Quantité",
+  "comments": "Commentaires",
   "addProductFiltersHelp": "Ajouter des filters à votre produit par exemple <i>Couleur = Bleu, Taille = Médium</i>",
   "numberOfPortionsAvailableInStocks": "Nombre de portions disponibles dans votre stock",
   "unlimitedStock": "Stock illimité",
@@ -95,6 +97,7 @@
   "error-removeShop": "Le magasin n'a pas pu être supprimé",
   "error-iban": "Le numéro IBAN est invalide",
   "error-addShop": "Le magasin ne peut pas être ajouté",
+  "error-getShopInformation": "Les informations du magasin n'ont pu être récupérées",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour",
   "success-shopRemoved": "Le magasin a été supprimé"

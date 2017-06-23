@@ -78,5 +78,37 @@ var ShopClient = {
 		});
 
 		return dfd;
+	},
+	getShop: function(shopId) { // Get a shop.
+		var dfd = jQuery.Deferred();
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.get(conf.shops_endpoint + '/' + shopId).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+
+		return dfd;
+	},
+	searchComments: function(shopId, content) { // Search comments.
+		var dfd = jQuery.Deferred();
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.ajax(conf.shops_endpoint + '/' + shopId + '/comments', {
+	      method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(content)
+			}).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function() {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+
+		return dfd;
 	}
 };

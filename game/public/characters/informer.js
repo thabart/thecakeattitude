@@ -1,13 +1,13 @@
 'use strict';
 var Informer = function() {};
 Informer.prototype = $.extend({}, BaseCharacter.prototype, {
-	init: function(game, npc) {
+	init: function(game, npc, shopId) {
 		this.create(game, npc, 'informer', $.i18n('informerName'), 1);
-		this.modal = new InformerModal();
+		this.modal = new InformerModal(shopId);
 		this.modal.init();
 	},
 	interact: function() {
-		this.modal.toggle();
+		this.modal.show();
 	},
 	destroy: function() {
 	  this.sprite.destroy();

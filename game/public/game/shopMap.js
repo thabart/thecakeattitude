@@ -49,7 +49,7 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 					break;
 					case "informer":
             o = new Informer();
-            o.init(self.game, npc);
+            o.init(self.game, npc, opts.shop.id);
 					break;
 				}
 
