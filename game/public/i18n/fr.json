@@ -55,6 +55,7 @@
   "maps": "Maps",
   "shops": "Magasins",
   "yourShops": "Vos magasins",
+  "owner": "Propriétaire",
   "login": "Login",
   "password": "Mot de passe",
   "authenticate": "S'authentifier",
@@ -84,6 +85,7 @@
   "unitOfMeasure": "Unité de mesure",
   "quantity": "Quantité",
   "comments": "Commentaires",
+  "nbComments": "Nb. commentaires",
   "addProductFiltersHelp": "Ajouter des filters à votre produit par exemple <i>Couleur = Bleu, Taille = Médium</i>",
   "numberOfPortionsAvailableInStocks": "Nombre de portions disponibles dans votre stock",
   "unlimitedStock": "Stock illimité",
@@ -98,6 +100,7 @@
   "error-iban": "Le numéro IBAN est invalide",
   "error-addShop": "Le magasin ne peut pas être ajouté",
   "error-getShopInformation": "Les informations du magasin n'ont pu être récupérées",
+  "error-getUserInformation": "Les informations de l'utilisateur n'ont pu être récupérées",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour",
   "success-shopRemoved": "Le magasin a été supprimé"

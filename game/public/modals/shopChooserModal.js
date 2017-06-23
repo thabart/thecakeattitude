@@ -169,7 +169,9 @@ ShopChooserModal.prototype = $.extend({}, BaseModal.prototype, {
       $(self).trigger('goToTheShop', [json]);
     });
     viewTheShop.click(function() { // View the shop.
-      self.informerModal.toggle();
+      var selectedPlace = $(self.modal).find('.selected-place');
+      var shopId = selectedPlace[0].shop.id;
+      self.informerModal.show(shopId);
     });
 
     self.disableGoToTheShop(true);

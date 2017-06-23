@@ -24,9 +24,19 @@ var UserClient = {
       }
     }).then(function(r) {
       dfd.resolve(r);
-    }).fail(function() {
-      dfd.reject();
+    }).fail(function(e) {
+      dfd.reject(e);
     });
+    return dfd;
+  },
+  getPublicClaims: function(sub) { // Get public claims.
+    var dfd = jQuery.Deferred();
+    $.get(Constants.userPublicClaims.replace('{id}', sub)).then(function(r) {
+      dfd.resolve(r);
+    }).fail(function(e) {
+      dfd.reject(e);
+    });
+
     return dfd;
   }
 };

@@ -76,6 +76,8 @@
 .modal-window .content {
   padding: 5px;
   word-break: break-all;
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .modal-window .content ul.list  {
@@ -280,6 +282,10 @@
   width: 100%;
   border-spacing:0;
   border-collapse: collapse;
+}
+
+.informer-modal .info-table td:first-child {
+  min-width: 100px;
 }
 
 .informer-modal tr:nth-child(odd) {

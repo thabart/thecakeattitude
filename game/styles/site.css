@@ -28,11 +28,20 @@ body {
 }
 
 .progress-bar-label {
-  position: absolute;
-  left: 50%;
+  position: absolute !important;
+  left: 2%;
   top: 4px;
   font-weight: bold;
   text-shadow: 1px 1px 0 #fff;
+}
+
+.progress-bar-label .title {
+  display: inline-block;
+}
+
+.progress-bar-label .rating {
+  display: inline-block;
+  width: auto !important;
 }
 
 .green {
