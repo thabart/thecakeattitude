@@ -36,7 +36,7 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addOverviewPlayersGroup();
 
 		var player = game.add.sprite(200, 200, 'acolyte'); // Add sprites.
-		var animationName = "secondBottom";
+		var animationName = "thirdBottom";
 		var heads = {
 			"firstBottom": {
 				"indexes": [1],
@@ -55,10 +55,12 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 			}
 		};
 		var headProperties = heads[animationName];
-		var blackHead = game.add.sprite(headProperties.relativeX, headProperties.relativeY, 'blackHeadsMen');
-		blackHead.animations.add(animationName, headProperties.indexes);
+		// var blackHead = game.add.sprite(headProperties.relativeX, headProperties.relativeY, 'blackHeadsMen');
+		// blackHead.animations.add(animationName, headProperties.indexes);
 		player.animations.add('stay', [0]);
 		var goDown = player.animations.add('goDown', [1, 2, 3, 4, 5, 6, 7, 8]);
+		var goLeft = player.animations.add('goLeft', [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+		/*
 		goDown.enableUpdate = true;
 		goDown.onUpdate.add(function() {
 			var relativeX = headProperties.relativeX;
@@ -70,9 +72,10 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 				blackHead.x = relativeX - 1;
 			}
 		}, self);
-    player.animations.play('goDown', 10, true); // Play animtions. // FPS = 10
-		blackHead.animations.play(animationName);
-		player.addChild(blackHead);
+		*/
+    player.animations.play('goLeft', 10, true); // Play animtions. // FPS = 10
+		// blackHead.animations.play(animationName);
+		// player.addChild(blackHead);
 
 		// Resize the world & set boundaries.
 		self.layers.ground.resizeWorld();

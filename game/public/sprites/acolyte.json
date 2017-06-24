@@ -71,7 +71,79 @@
 			"trimmed": true,
 			"spriteSourceSize": {"x":0,"y":0,"w":34,"h":68},
 			"sourceSize": {"w":34,"h":68}
-    }
+    },
+		{
+      "filename": "goLeft01",
+			"frame": {"x":1,"y":74,"w":26,"h":68},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":26,"h":68},
+			"sourceSize": {"w":26,"h":68}
+		},
+		{
+      "filename": "goLeft02",
+			"frame": {"x":30,"y":74,"w":32,"h":67},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":32,"h":67},
+			"sourceSize": {"w":32,"h":67}
+		},
+		{
+      "filename": "goLeft03",
+			"frame": {"x":65,"y":74,"w":41,"h":65},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":41,"h":65},
+			"sourceSize": {"w":41,"h":65}
+		},
+		{
+      "filename": "goLeft04",
+			"frame": {"x":109,"y":74,"w":39,"h":67},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":39,"h":67},
+			"sourceSize": {"w":39,"h":67}
+		},
+		{
+      "filename": "goLeft05",
+			"frame": {"x":151,"y":74,"w":25,"h":65},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":25,"h":65},
+			"sourceSize": {"w":25,"h":65}
+		},
+		{
+      "filename": "goLeft06",
+			"frame": {"x":179,"y":74,"w":31,"h":64},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":31,"h":64},
+			"sourceSize": {"w":31,"h":64}
+		},
+		{
+      "filename": "goLeft07",
+			"frame": {"x":213,"y":74,"w":41,"h":65},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":41,"h":65},
+			"sourceSize": {"w":41,"h":65}
+		},
+		{
+      "filename": "goLeft08",
+			"frame": {"x":213,"y":74,"w":41,"h":65},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":41,"h":65},
+			"sourceSize": {"w":41,"h":65}
+		},
+		{
+      "filename": "goLeft09",
+			"frame": {"x":257,"y":74,"w":35,"h":66},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":35,"h":66},
+			"sourceSize": {"w":35,"h":66}
+		}
 	],
 	"meta": {}
 }
