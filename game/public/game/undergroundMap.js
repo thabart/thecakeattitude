@@ -41,7 +41,7 @@ UndergroundMap.prototype = $.extend({}, BaseMap.prototype, {
   getDefaultPlayerCoordinate() {
     return {
       x: 342,
-      y: 213
+      y: 260
     };
   }
 });

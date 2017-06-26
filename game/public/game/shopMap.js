@@ -72,7 +72,7 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		if (self.opts.entry === 'underground') {
 			var warpFrame = self.game.cache.getFrameData('warp').getFrame(0);
 			var result = self.getWarpCoordinate('underground_portal');
-			result.x = result.x + warpFrame.width / 2;
+			result.x = result.x + warpFrame.width + 20;
 			result.y = result.y + warpFrame.height + 60;
 			return result;
 		} else {

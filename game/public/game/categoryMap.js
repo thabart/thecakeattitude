@@ -116,7 +116,7 @@ CategoryMap.prototype = $.extend({}, BaseMap.prototype, {
 		var warpX = shopX + (shopImage.width / 2) - warpFrame.width / 2;
 		var warpY = shopY + (shopImage.height);
 		var playerX = warpX + warpFrame.width / 2;
-		var playerY = warpY + warpFrame.height + 10;
+		var playerY = warpY + warpFrame.height + 30;
 		return { x : playerX, y : playerY };
 	}
 });

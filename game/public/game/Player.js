@@ -1,6 +1,6 @@
 var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
-	var hitPadding = 30,
-		messageTimeoutMs = 5000; // Hide the message after 5 seconds.
+	var messageTimeoutMs = 5000; // Hide the message after 5 seconds.
+	var paddingYHeader = -20;
 	this.id = id;
 	this.sprite = game.add.sprite(x, y, 'player');
 	this.sprite.animations.add('goDown', [0, 1, 2, 3, 4, 5, 6, 7], 10, true); // Add animations.
@@ -19,7 +19,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.sprite.animations.add('stayTopLeft', [69]);
 	this.sprite.animations.add('stayLeft', [70]);
 	this.sprite.animations.add('stayBottomLeft', [71]);
-	this.header = game.add.sprite(-1, -20, 'blackHeadsMen'); // Add head.
+	this.header = game.add.sprite(-1, paddingYHeader, 'blackHeadsMen'); // Add head.
 	this.header.animations.add('bottom', [0]);
 	this.header.animations.add('bottomRight', [1]);
 	this.header.animations.add('right', [2]);
@@ -29,8 +29,8 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.header.animations.add('left', [6]);
 	this.header.animations.add('bottomLeft', [7]);
 	this.sprite.addChild(this.header);
-	this.sprite.play('stayBottomLeft');
-	this.header.play('bottomLeft');
+	this.sprite.play('stayDown');
+	this.header.play('bottom');
 
 	this.spriteEmoticon = null;
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
@@ -45,14 +45,9 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 
 	this.overviewSprite.drawCircle(0, 0, 2);
 	this.direction = [];
-	this.hitZone = game.add.graphics(-(hitPadding / 2), -(hitPadding / 2)); // Draw hit zone.
-	// TH : Hide the RECTANGLE.
-	// this.hitZone.lineStyle(2, 0x0000FF, 1);
-	this.hitZone.drawRect(0, 0, this.sprite.width + hitPadding, this.sprite.height + hitPadding);
 	var interactionSprite = game.add.sprite(0, game.camera.height - 50, 'spacebar');
 	interactionSprite.fixedToCamera = true;
 	interactionSprite.visible = false;
-	this.sprite.addChild(this.hitZone);
 	this.tchatBubble = $("<p class='tchat-bubble' style='display:none;'></p>");
 	this.messageTimeout = null;
 	$(Constants.gameSelector).append(this.tchatBubble);
@@ -66,6 +61,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.pseudo = game.add.text(-this.sprite.width / 2, this.sprite.height, pseudo, pseudoStyle); // Draw pseudo.
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
+	this.sprite.body.setSize(this.sprite.width, this.sprite.height - paddingYHeader, 0, paddingYHeader);
 
 	function updateDirection(dir, val) {
 		var result = false;
@@ -94,15 +90,14 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 			return;
 		}
 
-		var relativeX = this.sprite.x - game.camera.x - this.sprite.width / 2 - $(this.tchatBubble).outerWidth() / 2;
-		var relativeY = this.sprite.y - game.camera.y - this.sprite.height - $(this.tchatBubble).outerHeight();
+		var relativeX = this.sprite.x - game.camera.x + this.sprite.width / 2 - $(this.tchatBubble).outerWidth() / 2;
+		var relativeY = this.sprite.y - game.camera.y - this.sprite.height / 2 - $(this.tchatBubble).outerHeight() - 20;
 		$(this.tchatBubble).css('top', relativeY + 'px');
 		$(this.tchatBubble).css('left', relativeX + 'px');
 	};
 	// Remove the player.
 	this.remove = function() {
 		this.sprite.destroy();
-		this.hitZone.destroy();
 		this.overviewSprite.destroy();
 		this.pseudo.destroy();
 		interactionSprite.destroy();
@@ -114,7 +109,6 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	// Hide or display the player
 	this.display = function(isVisible) {
 		if (this.sprite) this.sprite.visible = isVisible;
-		if (this.hitZone) this.hitZone.visible = isVisible;
 		if (this.pseudo) this.pseudo.visible = isVisible;
 		if (this.overviewSprite) this.overviewSprite.visible = isVisible;
 	};
@@ -212,7 +206,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		if (emoticon.length === 1) {
 			var spriteName = emoticon[0].sprite;
 			var frame = game.cache.getFrameData(spriteName).getFrame(0);
-			self.spriteEmoticon = game.add.sprite(-frame.width, -frame.height, spriteName);
+			self.spriteEmoticon = game.add.sprite(-frame.width / 2, -frame.height, spriteName);
 	    var walkAnim = self.spriteEmoticon.animations.add('walk');
 	    self.spriteEmoticon.animations.play('walk', emoticon[0].fps, false);
 			walkAnim.onComplete.add(function() {

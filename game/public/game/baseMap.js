@@ -137,7 +137,7 @@ BaseMap.prototype = {
 
     var x = filteredWarps[0].x,
       y = filteredWarps[0].y,
-      playerFrame = self.game.cache.getImage('player');
+      playerFrame = self.game.cache.getFrameData('player').getFrame(0);
     y = y - playerFrame.height;
     return { x : x, y : y };
   },
