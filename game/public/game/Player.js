@@ -11,6 +11,14 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.sprite.animations.add('goTopLeft', [40, 41, 42, 43, 44, 45, 46, 47], 10, true);
 	this.sprite.animations.add('goLeft', [48, 49, 50, 51, 52, 53, 54, 55], 10, true);
 	this.sprite.animations.add('goBottomLeft', [56, 57, 58, 59, 60, 61, 62, 63], 10, true);
+	this.sprite.animations.add('stayDown', [64]);
+	this.sprite.animations.add('stayBottomRight', [65]);
+	this.sprite.animations.add('stayRight', [66]);
+	this.sprite.animations.add('stayTopRight', [67]);
+	this.sprite.animations.add('stayTop', [68]);
+	this.sprite.animations.add('stayTopRight', [69]);
+	this.sprite.animations.add('stayLeft', [70]);
+	this.sprite.animations.add('stayBottomLeft', [71]);
 
 	this.spriteEmoticon = null;
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
@@ -124,6 +132,35 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 			} else if (cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Top
 				this.sprite.play('goTop');
 			} else {
+				switch(this.sprite.animations.currentAnim.name) {
+					case "goDown":
+						this.sprite.play('stayDown');
+					break;
+					case "goBottomRight":
+						this.sprite.play('stayBottomRight');
+					break;
+					case "goRight":
+						this.sprite.play('stayRight');
+					break;
+					case "goTopRight":
+						this.sprite.play('stayTopRight');
+					break;
+					case "goTop":
+						this.sprite.play('stayTop');
+					break;
+					case "goTopLeft":
+						this.sprite.play('stayTopLeft');
+					break;
+					case "goLeft":
+						this.sprite.play('stayLeft');
+					break;
+					case "goBottomLeft":
+						this.sprite.play('stayBottomLeft');
+					break;
+					default:
+						this.sprite.animations.stop();
+					break;
+				}
 				this.sprite.animations.stop();
 			}
 		}
