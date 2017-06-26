@@ -58,8 +58,15 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 		// var blackHead = game.add.sprite(headProperties.relativeX, headProperties.relativeY, 'blackHeadsMen');
 		// blackHead.animations.add(animationName, headProperties.indexes);
 		player.animations.add('stay', [0]);
-		var goDown = player.animations.add('goDown', [1, 2, 3, 4, 5, 6, 7, 8]);
-		var goLeft = player.animations.add('goLeft', [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+		var goDown = player.animations.add('goDown', [0, 1, 2, 3, 4, 5, 6, 7]);
+		var goBottomRight = player.animations.add('goBottomRight', [8, 9, 10, 11, 12, 13, 14, 15]);
+		var goRight = player.animations.add('goRight', [16, 17, 18, 19, 20, 21, 22, 23]);
+		var goTopRight = player.animations.add('goTopRight', [24, 25, 26, 27, 28, 29, 30, 31]);
+		var goTop = player.animations.add('goTop', [32, 33, 34, 35, 36, 37, 38, 39]);
+		var goTopLeft = player.animations.add('goTopLeft', [40, 41, 42, 43, 44, 45, 46, 47]);
+		var goLeft = player.animations.add('goLeft', [48, 49, 50, 51, 52, 53, 54, 55]);
+		var goBottomLeft = player.animations.add('goBottomLeft', [56, 57, 58, 59, 60, 61, 62, 63]);
+		// var goLeft = player.animations.add('goLeft', [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
 		/*
 		goDown.enableUpdate = true;
 		goDown.onUpdate.add(function() {
@@ -73,7 +80,7 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 			}
 		}, self);
 		*/
-    player.animations.play('goLeft', 10, true); // Play animtions. // FPS = 10
+    player.animations.play('goBottomLeft', 10, true); // Play animtions. // FPS = 10
 		// blackHead.animations.play(animationName);
 		// player.addChild(blackHead);
 

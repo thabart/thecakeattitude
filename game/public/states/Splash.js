@@ -33,7 +33,7 @@ Splash.prototype = {
 		self.game.load.atlasJSONHash('stockManager', '/styles/characters/npc-men.png', 'public/sprites/stockManager.json');
 		self.game.load.atlasJSONHash('crier', '/styles/characters/npc-men.png', 'public/sprites/crier.json');
 		self.game.load.atlasJSONHash('informer', '/styles/characters/npc-men.png', 'public/sprites/informer.json');
-		self.game.load.atlasJSONHash('acolyte', '/styles/players/acolyte_m.png', 'public/sprites/acolyte.json');
+		self.game.load.atlasJSONHash('acolyte', '/styles/players/acolyte-m.png', 'public/sprites/acolyte.json');
 		self.game.load.atlasJSONHash('blackHeadsWomen', '/styles/players/black-heads-women.png', 'public/sprites/blackHeadsWomen.json');
 		self.game.load.atlasJSONHash('blackHeadsMen', '/styles/players/black-heads-men.png', 'public/sprites/blackHeadsMen.json');
 		self.game.load.image('player', '/styles/characters/phaser-dude.png');
