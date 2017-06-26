@@ -35,7 +35,6 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.trackSizeChanged();
 		self.addOverviewPlayersGroup();
 
-		var player = game.add.sprite(200, 200, 'acolyte'); // Add sprites.
 		var animationName = "thirdBottom";
 		var heads = {
 			"firstBottom": {
@@ -57,6 +56,7 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 		var headProperties = heads[animationName];
 		// var blackHead = game.add.sprite(headProperties.relativeX, headProperties.relativeY, 'blackHeadsMen');
 		// blackHead.animations.add(animationName, headProperties.indexes);
+		/*
 		player.animations.add('stay', [0]);
 		var goDown = player.animations.add('goDown', [0, 1, 2, 3, 4, 5, 6, 7]);
 		var goBottomRight = player.animations.add('goBottomRight', [8, 9, 10, 11, 12, 13, 14, 15]);
@@ -79,8 +79,8 @@ MainMap.prototype = $.extend({}, BaseMap.prototype, {
 				blackHead.x = relativeX - 1;
 			}
 		}, self);
-		*/
     player.animations.play('goBottomLeft', 10, true); // Play animtions. // FPS = 10
+		*/
 		// blackHead.animations.play(animationName);
 		// player.addChild(blackHead);
 

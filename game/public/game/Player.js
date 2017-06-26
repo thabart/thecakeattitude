@@ -3,6 +3,15 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		messageTimeoutMs = 5000; // Hide the message after 5 seconds.
 	this.id = id;
 	this.sprite = game.add.sprite(x, y, 'player');
+	this.sprite.animations.add('goDown', [0, 1, 2, 3, 4, 5, 6, 7], 10, true); // Add animations.
+	this.sprite.animations.add('goBottomRight', [8, 9, 10, 11, 12, 13, 14, 15], 10, true);
+	this.sprite.animations.add('goRight', [16, 17, 18, 19, 20, 21, 22, 23], 10, true);
+	this.sprite.animations.add('goTopRight', [24, 25, 26, 27, 28, 29, 30, 31], 10, true);
+	this.sprite.animations.add('goTop', [32, 33, 34, 35, 36, 37, 38, 39], 10, true);
+	this.sprite.animations.add('goTopLeft', [40, 41, 42, 43, 44, 45, 46, 47], 10, true);
+	this.sprite.animations.add('goLeft', [48, 49, 50, 51, 52, 53, 54, 55], 10, true);
+	this.sprite.animations.add('goBottomLeft', [56, 57, 58, 59, 60, 61, 62, 63], 10, true);
+
 	this.spriteEmoticon = null;
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
 	var overviewSize = Configuration.getOverviewSize();
@@ -97,6 +106,28 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		result = result || updateDirection.call(this, cursors.right, 1);
 		result = result || updateDirection.call(this, cursors.down, 2);
 		result = result || updateDirection.call(this, cursors.left, 3);
+		if (result) {
+			if (cursors.up.isDown && cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Top + Right
+				this.sprite.play('goTopRight');
+			} else if (!cursors.up.isDown && cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Right
+				this.sprite.play('goRight');
+			} else if (!cursors.up.isDown && cursors.right.isDown && cursors.down.isDown && !cursors.left.isDown) { // Bottom + Right
+				this.sprite.play('goBottomRight');
+			} else if (!cursors.up.isDown && !cursors.right.isDown && cursors.down.isDown && !cursors.left.isDown) { // Bottom
+				this.sprite.play('goDown');
+			} else if (!cursors.up.isDown && !cursors.right.isDown && cursors.down.isDown && cursors.left.isDown) { // Bottom + Left
+				this.sprite.play('goBottomLeft');
+			} else if (!cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && cursors.left.isDown) { // Left
+				this.sprite.play('goLeft');
+			} else if (cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && cursors.left.isDown) { // Left + Top
+				this.sprite.play('goTopLeft');
+			} else if (cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Top
+				this.sprite.play('goTop');
+			} else {
+				this.sprite.animations.stop();
+			}
+		}
+
 		return result;
 	};
 	// Update the properties.
