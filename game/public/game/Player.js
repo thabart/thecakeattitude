@@ -16,9 +16,21 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.sprite.animations.add('stayRight', [66]);
 	this.sprite.animations.add('stayTopRight', [67]);
 	this.sprite.animations.add('stayTop', [68]);
-	this.sprite.animations.add('stayTopRight', [69]);
+	this.sprite.animations.add('stayTopLeft', [69]);
 	this.sprite.animations.add('stayLeft', [70]);
 	this.sprite.animations.add('stayBottomLeft', [71]);
+	this.header = game.add.sprite(-1, -20, 'blackHeadsMen'); // Add head.
+	this.header.animations.add('bottom', [0]);
+	this.header.animations.add('bottomRight', [1]);
+	this.header.animations.add('right', [2]);
+	this.header.animations.add('topRight', [3]);
+	this.header.animations.add('top', [4]);
+	this.header.animations.add('topLeft', [5]);
+	this.header.animations.add('left', [6]);
+	this.header.animations.add('bottomLeft', [7]);
+	this.sprite.addChild(this.header);
+	this.sprite.play('stayBottomLeft');
+	this.header.play('bottomLeft');
 
 	this.spriteEmoticon = null;
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
@@ -117,20 +129,28 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		if (result) {
 			if (cursors.up.isDown && cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Top + Right
 				this.sprite.play('goTopRight');
+				this.header.play('topRight');
 			} else if (!cursors.up.isDown && cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Right
 				this.sprite.play('goRight');
+				this.header.play('right');
 			} else if (!cursors.up.isDown && cursors.right.isDown && cursors.down.isDown && !cursors.left.isDown) { // Bottom + Right
 				this.sprite.play('goBottomRight');
+				this.header.play('bottomRight');
 			} else if (!cursors.up.isDown && !cursors.right.isDown && cursors.down.isDown && !cursors.left.isDown) { // Bottom
 				this.sprite.play('goDown');
+				this.header.play('bottom');
 			} else if (!cursors.up.isDown && !cursors.right.isDown && cursors.down.isDown && cursors.left.isDown) { // Bottom + Left
 				this.sprite.play('goBottomLeft');
+				this.header.play('bottomLeft');
 			} else if (!cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && cursors.left.isDown) { // Left
 				this.sprite.play('goLeft');
+				this.header.play('left');
 			} else if (cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && cursors.left.isDown) { // Left + Top
 				this.sprite.play('goTopLeft');
+				this.header.play('topLeft');
 			} else if (cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Top
 				this.sprite.play('goTop');
+				this.header.play('top');
 			} else {
 				switch(this.sprite.animations.currentAnim.name) {
 					case "goDown":
