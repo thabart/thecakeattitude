@@ -138,10 +138,41 @@ var Constants = {
 						{
 							name: "thirdBlack",
 							overviewImage: '/styles/heads/men/third-hc-black-overview.png',
-							paddingY : -22,
+							paddingY : -20,
 							paddingX : -1,
 							animations: [
-								
+									{
+										name: 'down',
+										tiles: [16]
+									},
+									{
+										name: 'bottomRight',
+										tiles: [17]
+									},
+									{
+										name: 'right',
+										tiles: [18]
+									},
+									{
+										name: 'topRight',
+										tiles: [19]
+									},
+									{
+										name: 'top',
+										tiles: [20]
+									},
+									{
+										name: 'topLeft',
+										tiles: [21]
+									},
+									{
+										name: 'left',
+										tiles: [22]
+									},
+									{
+										name: 'bottomLeft',
+										tiles: [23]
+									}
 							]
 						},
 						{
