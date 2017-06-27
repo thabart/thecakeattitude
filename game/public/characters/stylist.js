@@ -7,7 +7,7 @@ Stylist.prototype = $.extend({}, BaseCharacter.prototype, {
 		this.modal.init();
 	},
 	interact: function() {
-		this.modal.toggle();
+		this.modal.show();
 	},
 	destroy: function() {
 	  this.sprite.destroy();

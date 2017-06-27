@@ -323,3 +323,28 @@
 .informer-modal .contact-information .fa {
   font-size: 20pt;
 }
+
+/* Stylist modal window */
+.stylist-modal .slider-container {
+  padding: 0 40px 0 40px;
+}
+
+.stylist-modal .cell-container {
+  padding: 10px;
+  text-align: center;
+}
+
+.stylist-modal img {
+  margin: 0 auto;
+}
+
+
+.stylist-modal .cell {
+  border: 2px solid #dfdee3;
+  border-radius: 3px;
+  min-height: 50px;
+}
+
+.stylist-modal .cell-active {
+  border: 2px solid #129cc5;
+}

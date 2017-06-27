@@ -45,5 +45,61 @@ var Constants = {
 			"fps": 12,
 			"img": "/styles/emoticons/thx-overview.png"
 		}
-	]
+	],
+	playerConfiguration: {
+		male: { // Configure male player.
+			hairCuts: [
+				{ // Black.
+					image: '/styles/heads/men/black.png',
+					atlasJson: 'public/sprites/blackHeadsMen.json',
+					name: 'blackHeadsMen',
+					colorKey: 'black',
+					faces: [
+						{
+							name: 'first',
+							overviewImage: '/styles/heads/men/first-hc-black-overview.png',
+							animations: [
+								{
+									name: 'bottom',
+									tiles: [0]
+								},
+								{
+									name: 'bottomRight',
+									tiles: [1]
+								},
+								{
+									name: 'right',
+									tiles: [2]
+								},
+								{
+									name: 'topRight',
+									tiles: [3]
+								},
+								{
+									name: 'top',
+									tiles: [4]
+								},
+								{
+									name: 'topLeft',
+									tiles: [5]
+								},
+								{
+									name: 'left',
+									tiles: [6]
+								},
+								{
+									name: 'bottomLeft',
+									tiles: [7]
+								}
+							]
+						},
+						{
+							name: 'second',
+							overviewImage: '/styles/heads/men/second-hc-black-overview.png'
+						}
+					]
+				}
+			]
+		}
+	}
 };

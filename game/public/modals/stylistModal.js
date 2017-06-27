@@ -5,10 +5,13 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
     var self = this;
     var title = $.i18n('stylistModalTitle'),
       chooseHead = $.i18n('chooseHead'),
-      chooseBody = $.i18n('chooseBody');
+      chooseBody = $.i18n('chooseBody'),
+      chooseSex = $.i18n('chooseSex'),
+      chooseMale = $.i18n('chooseMale'),
+      chooseFemal = $.i18n('chooseFemale');
     self.chooseHeadTab = new StylistModalChooseHeadTab();
     self.chooseBodyTab = new StylistModalChooseBodyTab();
-    self.create("<div class='modal modal-lg md-effect-2' id='map-modal'>"+
+    self.create("<div class='modal modal-lg md-effect-2 stylist-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+
@@ -17,12 +20,21 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
               "<button class='option close'><i class='fa fa-times'></i></button>"+
             "</div>"+
           "</div>"+
+          "<div class='content'>"+
+            "<label>"+chooseSex+"</label>"+
+            "<select class='input-control'>"+
+              "<option>"+chooseMale+"</option>"+
+              "<option>"+chooseFemal+"</option>"+
+            "</select>"+
+          "</div>"+
           "<ul class='tab'>"+
             "<li class='tab-item'>"+chooseHead+"</li>"+
             "<li class='tab-item'>"+chooseBody+"</li>"+
           "</ul>"+
-          "<div class='tab0'></div>"+
-          "<div class='tab1'></div>"+
+          "<div class='content'>"+
+            "<div class='tab0'></div>"+
+            "<div class='tab1'></div>"+
+          "</div>"+
         "</div>"+
       "</div>"+
     "</div>");
@@ -48,5 +60,10 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
         $(tab).hide();
       }
     }
+  },
+  show: function() {
+    var self = this;
+    self.toggle();
+    self.chooseHeadTab.show();
   }
 });
