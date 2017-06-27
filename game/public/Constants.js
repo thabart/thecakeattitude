@@ -218,9 +218,42 @@ var Constants = {
 						{
 							name: "fifthBlack",
 							overviewImage: '/styles/heads/men/fifth-hc-black-overview.png',
-							paddingY : -22,
+							paddingY : -20,
 							paddingX : -1,
-							animations: []
+							animations: [
+									{
+										name: 'down',
+										tiles: [32]
+									},
+									{
+										name: 'bottomRight',
+										tiles: [33]
+									},
+									{
+										name: 'right',
+										tiles: [34]
+									},
+									{
+										name: 'topRight',
+										tiles: [35]
+									},
+									{
+										name: 'top',
+										tiles: [36]
+									},
+									{
+										name: 'topLeft',
+										tiles: [37]
+									},
+									{
+										name: 'left',
+										tiles: [38]
+									},
+									{
+										name: 'bottomLeft',
+										tiles: [39]
+									}
+							]
 						}
 					]
 				}
