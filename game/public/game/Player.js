@@ -1,9 +1,10 @@
 var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	var messageTimeoutMs = 5000; // Hide the message after 5 seconds.
-	var paddingYHeader = -20;
-	this.id = id;
-	this.sprite = game.add.sprite(x, y, 'player');
-	this.sprite.animations.add('goDown', [0, 1, 2, 3, 4, 5, 6, 7], 10, true); // Add animations.
+	var self = this;
+	this.id = id;;
+	var maleConfiguration = Constants.playerConfiguration['male'];
+	this.sprite = game.add.sprite(x, y, maleConfiguration.classes[0].name); // Add BODY.
+	this.sprite.animations.add('goDown', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
 	this.sprite.animations.add('goBottomRight', [8, 9, 10, 11, 12, 13, 14, 15], 10, true);
 	this.sprite.animations.add('goRight', [16, 17, 18, 19, 20, 21, 22, 23], 10, true);
 	this.sprite.animations.add('goTopRight', [24, 25, 26, 27, 28, 29, 30, 31], 10, true);
@@ -19,15 +20,12 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.sprite.animations.add('stayTopLeft', [69]);
 	this.sprite.animations.add('stayLeft', [70]);
 	this.sprite.animations.add('stayBottomLeft', [71]);
-	this.header = game.add.sprite(-1, paddingYHeader, 'blackHeadsMen'); // Add head.
-	this.header.animations.add('bottom', [0]);
-	this.header.animations.add('bottomRight', [1]);
-	this.header.animations.add('right', [2]);
-	this.header.animations.add('topRight', [3]);
-	this.header.animations.add('top', [4]);
-	this.header.animations.add('topLeft', [5]);
-	this.header.animations.add('left', [6]);
-	this.header.animations.add('bottomLeft', [7]);
+	var blackHairCut = maleConfiguration.hairCuts[0];
+	var face = blackHairCut.faces[1];
+	this.header = game.add.sprite(face.paddingX, face.paddingY, blackHairCut.name); // Add HEAD.
+	face.animations.forEach(function(anim) {
+		self.header.animations.add(anim.name, anim.tiles);
+	});
 	this.sprite.addChild(this.header);
 	this.sprite.play('stayDown');
 	this.header.play('bottom');
@@ -61,7 +59,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.pseudo = game.add.text(-this.sprite.width / 2, this.sprite.height, pseudo, pseudoStyle); // Draw pseudo.
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	this.sprite.body.setSize(this.sprite.width, this.sprite.height - paddingYHeader, 0, paddingYHeader);
+	this.sprite.body.setSize(this.sprite.width, this.sprite.height + 25, 0, 25); // Set MAX padding header.
 
 	function updateDirection(dir, val) {
 		var result = false;

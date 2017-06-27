@@ -34,9 +34,14 @@ Splash.prototype = {
 		self.game.load.atlasJSONHash('crier', '/styles/characters/npc-men.png', 'public/sprites/crier.json');
 		self.game.load.atlasJSONHash('informer', '/styles/characters/npc-men.png', 'public/sprites/informer.json');
 		self.game.load.atlasJSONHash('stylist', '/styles/characters/npc-men-not-animated.png', 'public/sprites/stylist.json');
-		self.game.load.atlasJSONHash('player', '/styles/players/acolyte-m.png', 'public/sprites/acolyte.json');
-		self.game.load.atlasJSONHash('blackHeadsWomen', '/styles/players/black-heads-women.png', 'public/sprites/blackHeadsWomen.json');
-		self.game.load.atlasJSONHash('blackHeadsMen', '/styles/players/blackHeadsMen.png', 'public/sprites/blackHeadsMen.json');
+		var maleConfiguration = Constants.playerConfiguration['male'];
+		maleConfiguration.classes.forEach(function(cl) {
+			self.game.load.atlasJSONHash(cl.name, cl.image, cl.atlasJson);
+		});
+		maleConfiguration.hairCuts.forEach(function(hairCut) {
+			self.game.load.atlasJSONHash(hairCut.name, hairCut.image, hairCut.atlasJson);
+		});
+		
 		// self.game.load.image('player', '/styles/characters/phaser-dude.png');
 		self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
 		self.game.load.spritesheet('freeShopSection', '/styles/characters/shadow_npc.png', 72, 39, 35);

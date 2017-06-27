@@ -56,8 +56,10 @@ var Constants = {
 					colorKey: 'black',
 					faces: [
 						{
-							name: 'first',
+							name: 'firstBlack',
 							overviewImage: '/styles/heads/men/first-hc-black-overview.png',
+							paddingY : -20,
+							paddingX : -1,
 							animations: [
 								{
 									name: 'bottom',
@@ -94,10 +96,53 @@ var Constants = {
 							]
 						},
 						{
-							name: 'second',
-							overviewImage: '/styles/heads/men/second-hc-black-overview.png'
+							name: 'secondBlack',
+							overviewImage: '/styles/heads/men/second-hc-black-overview.png',
+							paddingY : -22,
+							paddingX : -1,
+							animations: [
+								{
+									name: 'bottom',
+									tiles: [8]
+								},
+								{
+									name: 'bottomRight',
+									tiles: [9]
+								},
+								{
+									name: 'right',
+									tiles: [10]
+								},
+								{
+									name: 'topRight',
+									tiles: [11]
+								},
+								{
+									name: 'top',
+									tiles: [12]
+								},
+								{
+									name: 'topLeft',
+									tiles: [13]
+								},
+								{
+									name: 'left',
+									tiles: [14]
+								},
+								{
+									name: 'bottomLeft',
+									tiles: [15]
+								}
+							]
 						}
 					]
+				}
+			],
+			classes: [
+				{
+					name: "acolyte",
+					image: '/styles/players/acolyte-m.png',
+					atlasJson: 'public/sprites/acolyte.json'
 				}
 			]
 		}
