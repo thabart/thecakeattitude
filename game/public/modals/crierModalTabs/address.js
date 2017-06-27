@@ -14,14 +14,33 @@ CrierModalAddressTab.prototype = {
         "<button class='action-btn add'>"+addAnnounce+"</button>"+
       "</div>"+
     "</div>");
+    $(self.addressSearch).on('error', function() {
+      self.setDisableAddAnnounce(true);
+    });
+    $(self.addressSearch).on('success', function() {
+      self.setDisableAddAnnounce(false);
+    });
     $(self.tab).find('.container').append(self.addressSearch.render());
     $(self.tab).find('.previous').click(function() {
       $(self).trigger('previous');
     });
     $(self.tab).find('.add').click(function() {
-      $(self).trigger('confirm');
+      var adr = self.addressSearch.getAddress();
+      var location = self.addressSearch.getLocation();
+      var json = {
+        place_id: self.addressSearch.getGooglePlaceId(),
+        street_address: adr.street_address,
+        location: {
+          lat: location.lat(),
+          lng: location.lng()
+        }
+      };
+      $(self).trigger('confirm', [ { obj: json } ]);
     });
     return self.tab;
+  },
+  setDisableAddAnnounce: function(b) {
+    $(this.tab).find('.add').prop('disabled', b);
   },
   init: function() {
     this.addressSearch.init();

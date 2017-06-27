@@ -9,6 +9,7 @@ CrierModal.prototype = $.extend({}, BaseModal.prototype, {
       error = $.i18n('error');
     self.descriptionTab = new CrierModalDescriptionTab();
     self.addressTab = new CrierModalAddressTab();
+    self.descriptionJson = null;
     self.create("<div class='modal modal-lg md-effect-2'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -45,15 +46,37 @@ CrierModal.prototype = $.extend({}, BaseModal.prototype, {
     self.showTab(0);
     $(self.modal).find('.tab0').append(self.descriptionTab.render());
     $(self.modal).find('.tab1').append(self.addressTab.render());
-    $(self.descriptionTab).on('next', function(e, data) {
+    $(self.modal).find('.alert-error .close').click(function() {
+      self.hideError();
+    });
+    $(self.descriptionTab).on('next', function(e, obj) {
+      self.descriptionJson = obj.data;
+      self.hideError();
       self.showTab(1);
       self.addressTab.init();
     });
     $(self.addressTab).on('previous', function(e, data) {
       self.showTab(0);
     });
-    $(self.addressTab).on('confirm', function() {
-
+    $(self.descriptionTab).on('error', function(e, data) {
+      self.displayError(data.msg);
+    });
+    $(self.addressTab).on('confirm', function(e, data) {
+      var json = $.extend({}, self.descriptionJson, data.obj);
+      self.displayLoader(true);
+      var accessToken = sessionStorage.getItem(Constants.sessionName);
+      self.commonId = Guid.generate();
+      AnnounceClient.addAnnounce(accessToken, json, self.commonId).then(function() {
+        self.displayLoader(false);
+      }).fail(function() {
+        self.displayError($.i18n('error-addAnnounce'));
+        self.displayLoader(false);
+      });
+    });
+    AppDispatcher.register(function(obj) {
+      if (obj.actionName === 'add-announce' && obj.data.common_id === self.commonId) {
+        self.toggle();
+      }
     });
   },
   displayLoader: function(b) { // Display loader.
@@ -86,5 +109,24 @@ CrierModal.prototype = $.extend({}, BaseModal.prototype, {
         $(tab).hide();
       }
     }
+  },
+  hideError: function() { // Hide the error.
+    $(this.modal).find('.alert-error').hide();
+  },
+  displayError: function(message) { // Display the error.
+    var errorElt = $(this.modal).find('.alert-error');
+    errorElt.find('.message').html(message);
+    errorElt.show();
+  },
+  show: function() { // Show the modal window.
+    var self = this;
+    self.showTab(0);
+    self.hideError();
+    self.descriptionTab.reset();
+    self.toggle();
+  },
+  remove: function() { // Correctly remove the crier modal window.
+    $(this.modal).remove();
+    AppDispatcher.remove();
   }
 });

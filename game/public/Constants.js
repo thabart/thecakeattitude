@@ -134,6 +134,29 @@ var Constants = {
 									tiles: [15]
 								}
 							]
+						},
+						{
+							name: "thirdBlack",
+							overviewImage: '/styles/heads/men/third-hc-black-overview.png',
+							paddingY : -22,
+							paddingX : -1,
+							animations: [
+								
+							]
+						},
+						{
+							name: "fourthBlack",
+							overviewImage: '/styles/heads/men/fourth-hc-black-overview.png',
+							paddingY : -22,
+							paddingX : -1,
+							animations: []
+						},
+						{
+							name: "fifthBlack",
+							overviewImage: '/styles/heads/men/fifth-hc-black-overview.png',
+							paddingY : -22,
+							paddingX : -1,
+							animations: []
 						}
 					]
 				}

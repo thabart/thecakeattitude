@@ -28,7 +28,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
 {
     public interface IAddAnnouncementOperation
     {
-        Task<IActionResult> Execute(JObject jObj, string subject);
+        Task<IActionResult> Execute(JObject jObj, string subject, string commonId);
     }
 
     public class AddAnnouncementOperation : IAddAnnouncementOperation
@@ -49,7 +49,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
             _commandSender = commandSender;
         }
                 
-        public async Task<IActionResult> Execute(JObject jObj, string subject)
+        public async Task<IActionResult> Execute(JObject jObj, string subject, string commonId)
         {
             if (jObj == null)
             {
@@ -65,6 +65,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
             command.CreateDateTime = DateTime.UtcNow;
             command.UpdateDateTime = DateTime.UtcNow;
             command.Id = Guid.NewGuid().ToString();
+            command.CommonId = commonId;
             command.Subject = subject;
             var validationResult = await _validator.Validate(command);
             if (!validationResult.IsValid)

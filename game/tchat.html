@@ -114,6 +114,12 @@
           data: message
         });
       });
+			proxy.on('announcementAdded', function(message) {
+				AppDispatcher.dispatch({
+					actionName: 'add-announce',
+					data: message
+				});
+			});
 			connection.start({jsonp: false})
       	.done(function () {
         	console.log('Now connected, connection ID=' + connection.id);

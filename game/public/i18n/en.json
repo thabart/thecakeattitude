@@ -111,6 +111,8 @@
   "error-addShop": "The shop cannot be added",
   "error-getShopInformation": "The shop information cannot be retrieved",
   "error-getUserInformation": "The user information cannot be retrieved",
+  "error-categoryMustBeSelected": "The category must be selected",
+  "error-addAnnounce": "The announce cannot be added",
   "error": "Error",
   "success-profileUpdated": "Profile has been updated",
   "success-shopRemoved": "Shop has been removed"

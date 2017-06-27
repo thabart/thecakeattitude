@@ -41,7 +41,7 @@ Splash.prototype = {
 		maleConfiguration.hairCuts.forEach(function(hairCut) {
 			self.game.load.atlasJSONHash(hairCut.name, hairCut.image, hairCut.atlasJson);
 		});
-		
+
 		// self.game.load.image('player', '/styles/characters/phaser-dude.png');
 		self.game.load.atlasJSONHash('warp', Constants.apiUrl + '/maps/tilesets/warp.png', 'public/sprites/warp.json');
 		self.game.load.spritesheet('freeShopSection', '/styles/characters/shadow_npc.png', 72, 39, 35);
@@ -133,6 +133,7 @@ Splash.prototype = {
 		self.game.load.script('GoogleMapService', 'public/clients/googleMapService.js');
 		self.game.load.script('OpenIdClient', 'public/clients/openIdClient.js');
 		self.game.load.script('UserClient', 'public/clients/userClient.js');
+		self.game.load.script('AnnounceClient', 'public/clients/announceClient.js');
 		// Load the emoticons.
 		self.game.load.spritesheet('sorry', 'styles/emoticons/sorry.png', 32, 50, 25);
 		self.game.load.spritesheet('love-eyes', 'styles/emoticons/love-eyes.png', 31, 24, 5);

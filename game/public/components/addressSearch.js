@@ -73,6 +73,9 @@ AddressSearch.prototype = {
   getGooglePlaceId: function() {
     return this.marker.placeId;
   },
+  getLocation: function() {
+    return this.marker.position;
+  },
   setGooglePlaceId: function(googlePlaceId) {
     var self = this;
     GoogleMapService.getPlaceById(googlePlaceId).then(function(r) {

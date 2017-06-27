@@ -79,7 +79,7 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> Add([FromBody] JObject jObj)
         {
-            return await _addOperation.Execute(jObj, User.GetSubject());
+            return await _addOperation.Execute(jObj, User.GetSubject(), this.GetCommonId());
         }
 
         [HttpDelete("{id}")]

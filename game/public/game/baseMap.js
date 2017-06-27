@@ -143,9 +143,10 @@ BaseMap.prototype = {
       return null;
     }
 
+    var male = Constants.playerConfiguration['male'].classes[0]; // TODO : Get the sex from the GameStateStore.
     var x = filteredWarps[0].x,
       y = filteredWarps[0].y,
-      playerFrame = self.game.cache.getFrameData('player').getFrame(0);
+      playerFrame = self.game.cache.getFrameData(male.name).getFrame(0);
     y = y - playerFrame.height;
     return { x : x, y : y };
   },

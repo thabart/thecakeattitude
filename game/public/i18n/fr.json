@@ -111,6 +111,8 @@
   "error-addShop": "Le magasin ne peut pas être ajouté",
   "error-getShopInformation": "Les informations du magasin n'ont pu être récupérées",
   "error-getUserInformation": "Les informations de l'utilisateur n'ont pu être récupérées",
+  "error-categoryMustBeSelected": "La catégorie doit être sélectionnée",
+  "error-addAnnounce": "L'annonce n'a pu être ajoutée",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour",
   "success-shopRemoved": "Le magasin a été supprimé"

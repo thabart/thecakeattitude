@@ -73,20 +73,6 @@ SelectCategory.prototype = {
     var categorySelector = $(self.component).find('.category-selector'),
       subCategorySelector = $(self.component).find('.sub-category-selector'),
       mapSelector = $(self.component).find('.map-selector');
-    var init = function() {
-      CategoryClient.getCategoryParents().then(function(r) { // Display the categories.
-        var categories = r._embedded.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
-        categorySelector.append("<option></option>");
-        categories.forEach(function(category) { categorySelector.append(category); });
-        self.isCategoryLoading(false);
-        self.isSubCategoryLoading(false);
-        self.isMapLoading(false);
-        $(self).trigger('initialized');
-      });
-    };
-    categorySelector.empty();
-    subCategorySelector.empty();
-    mapSelector.empty();
     self.isCategoryLoading(true);
     categorySelector.change(function() { // Display sub category when category changed.
       var categoryId = $(this).find(':selected').val();
@@ -131,8 +117,30 @@ SelectCategory.prototype = {
         }]);
       });
     }
-    init();
+    self.init();
     return self.component;
+  },
+  init: function() {
+    var self = this;
+    var categorySelector = $(self.component).find('.category-selector'),
+      subCategorySelector = $(self.component).find('.sub-category-selector'),
+      mapSelector = $(self.component).find('.map-selector');
+    categorySelector.empty();
+    subCategorySelector.empty();
+    mapSelector.empty();
+    CategoryClient.getCategoryParents().then(function(r) { // Display the categories.
+      var categories = r._embedded.map(function(c) { return "<option value='"+c.id+"'>"+c.name+"</option>"; });
+      categorySelector.append("<option></option>");
+      categories.forEach(function(category) { categorySelector.append(category); });
+      self.isCategoryLoading(false);
+      self.isSubCategoryLoading(false);
+      self.isMapLoading(false);
+      $(self).trigger('initialized');
+    });
+  },
+  getSelectedSubCategoryId: function() { // Get the sub category.
+    var self = this;
+    return $(self.component).find('.sub-category-selector :selected').val();
   },
   isCategoryLoading: function(b) { // Display or hide category loader.
     this.isLoading(b, ".category-loader", ".category-selector-container");
