@@ -1,34 +1,61 @@
 var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	var messageTimeoutMs = 5000; // Hide the message after 5 seconds.
 	var self = this;
-	this.id = id;;
+	this.id = id;
+	var getStayName = function(dir) {
+		return "stay" + dir;
+	};
+		// Set face.
+	this.setFace = function(opts) {
+		var maleConfiguration = Constants.playerConfiguration['male'];
+		var blackHairCut = maleConfiguration.hairCuts[0];
+		var faces = blackHairCut.faces.filter(function(f) { return f.name ===  opts.face});
+		if (!faces || faces.length !== 1) {
+			return;
+		}
+
+		var animName;
+
+		var face = faces[0];
+		if (!this.header) {
+			this.header = game.add.sprite(face.paddingX, face.paddingY, blackHairCut.name); // Add HEAD.
+		} else {
+			this.header.x = face.paddingX;
+			this.header.y = face.paddingY;
+			animName = this.header.animations.currentAnim.name;
+		}
+
+		face.animations.forEach(function(anim) {
+			self.header.animations.add(anim.name, anim.tiles);
+		});
+
+		if (animName) {
+			this.header.play(animName);
+		}
+	};
+
 	var maleConfiguration = Constants.playerConfiguration['male'];
 	this.sprite = game.add.sprite(x, y, maleConfiguration.classes[0].name); // Add BODY.
-	this.sprite.animations.add('goDown', [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
-	this.sprite.animations.add('goBottomRight', [8, 9, 10, 11, 12, 13, 14, 15], 10, true);
-	this.sprite.animations.add('goRight', [16, 17, 18, 19, 20, 21, 22, 23], 10, true);
-	this.sprite.animations.add('goTopRight', [24, 25, 26, 27, 28, 29, 30, 31], 10, true);
-	this.sprite.animations.add('goTop', [32, 33, 34, 35, 36, 37, 38, 39], 10, true);
-	this.sprite.animations.add('goTopLeft', [40, 41, 42, 43, 44, 45, 46, 47], 10, true);
-	this.sprite.animations.add('goLeft', [48, 49, 50, 51, 52, 53, 54, 55], 10, true);
-	this.sprite.animations.add('goBottomLeft', [56, 57, 58, 59, 60, 61, 62, 63], 10, true);
-	this.sprite.animations.add('stayDown', [64]);
-	this.sprite.animations.add('stayBottomRight', [65]);
-	this.sprite.animations.add('stayRight', [66]);
-	this.sprite.animations.add('stayTopRight', [67]);
-	this.sprite.animations.add('stayTop', [68]);
-	this.sprite.animations.add('stayTopLeft', [69]);
-	this.sprite.animations.add('stayLeft', [70]);
-	this.sprite.animations.add('stayBottomLeft', [71]);
-	var blackHairCut = maleConfiguration.hairCuts[0];
-	var face = blackHairCut.faces[1];
-	this.header = game.add.sprite(face.paddingX, face.paddingY, blackHairCut.name); // Add HEAD.
-	face.animations.forEach(function(anim) {
-		self.header.animations.add(anim.name, anim.tiles);
-	});
+	this.sprite.animations.add("down", [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
+	this.sprite.animations.add("bottomRight", [8, 9, 10, 11, 12, 13, 14, 15], 10, true);
+	this.sprite.animations.add("right", [16, 17, 18, 19, 20, 21, 22, 23], 10, true);
+	this.sprite.animations.add("topRight", [24, 25, 26, 27, 28, 29, 30, 31], 10, true);
+	this.sprite.animations.add("top", [32, 33, 34, 35, 36, 37, 38, 39], 10, true);
+	this.sprite.animations.add("topLeft", [40, 41, 42, 43, 44, 45, 46, 47], 10, true);
+	this.sprite.animations.add("left", [48, 49, 50, 51, 52, 53, 54, 55], 10, true);
+	this.sprite.animations.add("bottomLeft", [56, 57, 58, 59, 60, 61, 62, 63], 10, true);
+	this.sprite.animations.add(getStayName("down"), [64]);
+	this.sprite.animations.add(getStayName("bottomRight"), [65]);
+	this.sprite.animations.add(getStayName("right"), [66]);
+	this.sprite.animations.add(getStayName("topRight"), [67]);
+	this.sprite.animations.add(getStayName("top"), [68]);
+	this.sprite.animations.add(getStayName("topLeft"), [69]);
+	this.sprite.animations.add(getStayName("left"), [70]);
+	this.sprite.animations.add(getStayName("bottomLeft"), [71]);
+	this.setFace(GameStateStore.getCurrentPlayerStyle());
 	this.sprite.addChild(this.header);
-	this.sprite.play('stayDown');
-	this.header.play('bottom');
+	this.sprite.play(getStayName("down"));
+	this.header.play("down");
 
 	this.spriteEmoticon = null;
 	var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
@@ -59,7 +86,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.pseudo = game.add.text(-this.sprite.width / 2, this.sprite.height, pseudo, pseudoStyle); // Draw pseudo.
 	this.sprite.addChild(this.pseudo);
 	game.physics.enable(this.sprite, Phaser.Physics.ARCADE);
-	this.sprite.body.setSize(this.sprite.width, this.sprite.height + 25, 0, 25); // Set MAX padding header.
+	this.sprite.body.setSize(this.sprite.width, this.sprite.height + 25, 0, -25); // Set MAX padding header.
 
 	function updateDirection(dir, val) {
 		var result = false;
@@ -73,7 +100,11 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 
 		return result;
 	}
-
+	// Set the stay position.
+	this.setStayPosition = function() {
+		var stayPosition = getStayName(this.sprite.animations.currentAnim.name);
+		this.sprite.play(stayPosition);
+	};
 	// Display the player position in the overview map.
 	this.updateOverviewPosition = function(x, y) {
 		var overviewCoordinate = Calculator.getOverviewImageCoordinate(game);
@@ -120,60 +151,31 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		result = result || updateDirection.call(this, cursors.left, 3);
 		if (result) {
 			if (cursors.up.isDown && cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Top + Right
-				this.sprite.play('goTopRight');
-				this.header.play('topRight');
+				this.sprite.play("topRight");
+				this.header.play("topRight");
 			} else if (!cursors.up.isDown && cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Right
-				this.sprite.play('goRight');
-				this.header.play('right');
+				this.sprite.play("right");
+				this.header.play("right");
 			} else if (!cursors.up.isDown && cursors.right.isDown && cursors.down.isDown && !cursors.left.isDown) { // Bottom + Right
-				this.sprite.play('goBottomRight');
-				this.header.play('bottomRight');
+				this.sprite.play("bottomRight");
+				this.header.play("bottomRight");
 			} else if (!cursors.up.isDown && !cursors.right.isDown && cursors.down.isDown && !cursors.left.isDown) { // Bottom
-				this.sprite.play('goDown');
-				this.header.play('bottom');
+				this.sprite.play("down");
+				this.header.play("down");
 			} else if (!cursors.up.isDown && !cursors.right.isDown && cursors.down.isDown && cursors.left.isDown) { // Bottom + Left
-				this.sprite.play('goBottomLeft');
-				this.header.play('bottomLeft');
+				this.sprite.play("bottomLeft");
+				this.header.play("bottomLeft");
 			} else if (!cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && cursors.left.isDown) { // Left
-				this.sprite.play('goLeft');
-				this.header.play('left');
+				this.sprite.play("left");
+				this.header.play("left");
 			} else if (cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && cursors.left.isDown) { // Left + Top
-				this.sprite.play('goTopLeft');
-				this.header.play('topLeft');
+				this.sprite.play("topLeft");
+				this.header.play("topLeft");
 			} else if (cursors.up.isDown && !cursors.right.isDown && !cursors.down.isDown && !cursors.left.isDown) { // Top
-				this.sprite.play('goTop');
-				this.header.play('top');
+				this.sprite.play("top");
+				this.header.play("top");
 			} else {
-				switch(this.sprite.animations.currentAnim.name) {
-					case "goDown":
-						this.sprite.play('stayDown');
-					break;
-					case "goBottomRight":
-						this.sprite.play('stayBottomRight');
-					break;
-					case "goRight":
-						this.sprite.play('stayRight');
-					break;
-					case "goTopRight":
-						this.sprite.play('stayTopRight');
-					break;
-					case "goTop":
-						this.sprite.play('stayTop');
-					break;
-					case "goTopLeft":
-						this.sprite.play('stayTopLeft');
-					break;
-					case "goLeft":
-						this.sprite.play('stayLeft');
-					break;
-					case "goBottomLeft":
-						this.sprite.play('stayBottomLeft');
-					break;
-					default:
-						this.sprite.animations.stop();
-					break;
-				}
-				this.sprite.animations.stop();
+				this.setStayPosition();
 			}
 		}
 
@@ -271,12 +273,10 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	this.getPseudo = function() {
 		return pseudo;
 	}
-
 	// Set the pseudo
 	this.setPseudo = function(p) {
 		this.pseudo.setText(p);
 	}
-
 	// Get direction.
 	this.getDirection = function() {
 		return this.direction;

@@ -123,6 +123,10 @@ BaseMap.prototype = {
 		self.game.camera.focusOnXY(playerX, playerY);
 		self.game.camera.follow(self.currentPlayer.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
     self.groups.players.add(self.currentPlayer.sprite);
+    GameStateStore.onPlayerStyleChanged.call(self, function(opts) {
+      self.currentPlayer.setFace(opts);
+    });
+    // Track changes on style.
 	},
   getDefaultPlayerCoordinate: function() {
     return this.getEntryWarpCoordinate();
@@ -176,5 +180,6 @@ BaseMap.prototype = {
 		this.currentPlayer.destroy();
 		this.npcs.forEach(function(npc) { npc.destroy(); });
     GameStateStore.offSizeChanged.call(this);
+    GameStateStore.offPlayerStyleChanged.call(this);
 	}
 };

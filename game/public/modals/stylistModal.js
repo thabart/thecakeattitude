@@ -8,7 +8,8 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
       chooseBody = $.i18n('chooseBody'),
       chooseSex = $.i18n('chooseSex'),
       chooseMale = $.i18n('chooseMale'),
-      chooseFemal = $.i18n('chooseFemale');
+      chooseFemal = $.i18n('chooseFemale'),
+      ok = $.i18n('ok');
     self.chooseHeadTab = new StylistModalChooseHeadTab();
     self.chooseBodyTab = new StylistModalChooseBodyTab();
     self.create("<div class='modal modal-lg md-effect-2 stylist-modal'>"+
@@ -35,6 +36,9 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
             "<div class='tab0'></div>"+
             "<div class='tab1'></div>"+
           "</div>"+
+          "<div class='footer'>"+
+            "<button class='action-btn confirm'>"+ok+"</button>"+
+          "</div>"+
         "</div>"+
       "</div>"+
     "</div>");
@@ -45,6 +49,11 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
     $(self.modal).find('.tab-item').click(function() {
       var index = $(self.modal).find('.tab-item').index(this);
       self.showTab(index);
+    });
+    $(self.modal).find('.confirm').click(function() {
+      var head = self.chooseHeadTab.getHead();
+      GameStateStore.setCurrentPlayerStyle(head);
+      self.toggle();
     });
   },
   showTab : function(indice) {

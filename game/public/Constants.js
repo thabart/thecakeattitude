@@ -62,7 +62,7 @@ var Constants = {
 							paddingX : -1,
 							animations: [
 								{
-									name: 'bottom',
+									name: 'down',
 									tiles: [0]
 								},
 								{
@@ -102,7 +102,7 @@ var Constants = {
 							paddingX : -1,
 							animations: [
 								{
-									name: 'bottom',
+									name: 'down',
 									tiles: [8]
 								},
 								{

@@ -11,13 +11,13 @@ StylistModalChooseHeadTab.prototype = {
     var i = 0;
     hairCuts.forEach(function(hairCut) { // Set hair cuts.
       var cl = i === 0 ? "cell cell-active" : "cell";
-      hairColorsSliderContent += "<div><div class='cell-container'><div class='"+cl+"'>"+$.i18n(hairCut.colorKey)+"</div></div></div>";
+      hairColorsSliderContent += "<div><div class='cell-container'><div class='"+cl+"' data-haircut='"+hairCut.name+"'>"+$.i18n(hairCut.colorKey)+"</div></div></div>";
       i++;
     });
     i = 0;
     hairCuts[0].faces.forEach(function(face) { // Set faces.
       var cl = i === 0 ? "cell cell-active" : "cell";
-      hairCutsSliderContent += "<div><div class='cell-container'><div class='"+cl+"'><img src='"+face.overviewImage+"' /></div></div></div>";
+      hairCutsSliderContent += "<div><div class='cell-container'><div class='"+cl+"' data-face='"+face.name+"'><img src='"+face.overviewImage+"' /></div></div></div>";
       i++;
     });
     self.tab = $("<div>"+
@@ -63,5 +63,14 @@ StylistModalChooseHeadTab.prototype = {
     });
     $(self.modal).find('.slick-prev').trigger('click');
     self.isInit = true;
+  },
+  getHead: function() {
+    var self = this;
+    var hairCut = $(self.tab).find('.haircolors-slider .cell-active').data('haircut');
+    var face = $(self.tab).find('.haircuts-slider .cell-active').data('face');
+    return {
+      hairCut: hairCut,
+      face: face
+    };
   }
 };

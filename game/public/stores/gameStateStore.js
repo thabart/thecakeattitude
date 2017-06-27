@@ -4,10 +4,15 @@
   var _userChanged = 'userChanged';
   var _onSizeChanged = 'sizeChanged';
   var _lastPlayerPosition = null;
+  var _playerStyle = {
+    hairCut: 'blackHeadsMen',
+    face: 'firstBlack'
+  };
   var _user = null;
   var _size = null;
   var _sizeChangedListeners = [];
   var _userChangedListeners = [];
+  var _playerStyleChangedListeners = [];
   window.GameStateStore = {
     getCurrentMap: function() {
       return _currentMap;
@@ -40,6 +45,15 @@
         record.callback(size);
       });
     },
+    getCurrentPlayerStyle: function() {
+      return _playerStyle;
+    },
+    setCurrentPlayerStyle: function(style) {
+      _playerStyle = style;
+      _playerStyleChangedListeners.forEach(function(record) {
+        record.callback(style);
+      });
+    },
     onCurrentMapChanged: function(callback) {
       $(this).on(_mapChanged, callback);
     },
@@ -63,6 +77,17 @@
       var instances = _sizeChangedListeners.filter(function(rec) { return rec.instance === self });
       if (instances && instances.length === 1) {
         _sizeChangedListeners.splice($.inArray(instances[0], _sizeChangedListeners), 1);
+      }
+    },
+    onPlayerStyleChanged: function(callback) {
+      var self = this;
+      _playerStyleChangedListeners.push({instance: self, callback: callback});
+    },
+    offPlayerStyleChanged: function() {
+      var self = this;
+      var instances = _playerStyleChangedListeners.filter(function(rec) { return rec.instance === self });
+      if (instances && instances.length === 1) {
+        _playerStyleChangedListeners.splice($.inArray(instances[0], _playerStyleChangedListeners), 1);
       }
     }
   };
