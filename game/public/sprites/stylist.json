@@ -1,0 +1,13 @@
+{
+	"frames": [
+		{
+			"filename": "stay",
+			"frame": {"x":397,"y":854,"w":56,"h":112},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":56,"h":112},
+			"sourceSize": {"w":56,"h":112}
+		}
+	],
+	"meta": {}
+}

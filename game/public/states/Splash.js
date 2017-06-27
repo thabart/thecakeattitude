@@ -33,6 +33,7 @@ Splash.prototype = {
 		self.game.load.atlasJSONHash('stockManager', '/styles/characters/npc-men.png', 'public/sprites/stockManager.json');
 		self.game.load.atlasJSONHash('crier', '/styles/characters/npc-men.png', 'public/sprites/crier.json');
 		self.game.load.atlasJSONHash('informer', '/styles/characters/npc-men.png', 'public/sprites/informer.json');
+		self.game.load.atlasJSONHash('stylist', '/styles/characters/npc-men-not-animated.png', 'public/sprites/stylist.json');
 		self.game.load.atlasJSONHash('player', '/styles/players/acolyte-m.png', 'public/sprites/acolyte.json');
 		self.game.load.atlasJSONHash('blackHeadsWomen', '/styles/players/black-heads-women.png', 'public/sprites/blackHeadsWomen.json');
 		self.game.load.atlasJSONHash('blackHeadsMen', '/styles/players/blackHeadsMen.png', 'public/sprites/blackHeadsMen.json');
@@ -85,6 +86,7 @@ Splash.prototype = {
 		self.game.load.script('MyShopsSelectorModal', 'public/modals/myShopsSelectorModal.js');
 		self.game.load.script('StockManagerModal', 'public/modals/stockManagerModal.js');
 		self.game.load.script('AddProductModal', 'public/modals/addProductModal.js');
+		self.game.load.script('StylistModal', 'public/modals/stylistModal.js');
 		self.game.load.script('CrierModal', 'public/modals/crierModal.js');
 		self.game.load.script('InformerModal', 'public/modals/informerModal.js');
 		self.game.load.script('ShopSectionPresentationTab', 'public/modals/shopSectionModalTabs/presentation.js');
@@ -100,6 +102,8 @@ Splash.prototype = {
 		self.game.load.script('CrierModalAddressTab', 'public/modals/crierModalTabs/address.js');
 		self.game.load.script('AddProductDescriptionTab', 'public/modals/addProductModalTabs/description.js');
 		self.game.load.script('AddProductCharacteristicTab', 'public/modals/addProductModalTabs/characteristics.js');
+		self.game.load.script('StylistModalChooseHeadTab', 'public/modals/stylistModalTabs/chooseHead.js');
+		self.game.load.script('StylistModalChooseBodyTab', 'public/modals/stylistModalTabs/chooseBody.js');
 		// Load floating menu.
 		self.game.load.script('ProfileMenuFloating', 'public/floating/profile.js');
 		self.game.load.script('BackMenuFloating', 'public/floating/back.js');
@@ -114,6 +118,7 @@ Splash.prototype = {
 		self.game.load.script('StockManager', 'public/characters/stockManager.js');
 		self.game.load.script('Crier', 'public/characters/crier.js');
 		self.game.load.script('Informer', 'public/characters/informer.js');
+		self.game.load.script('Stylist', 'public/characters/stylist.js');
 		// Load the animations
 		self.game.load.script('WarpAnimation', 'public/animations/warpAnimation.js');
 		// Load the clients

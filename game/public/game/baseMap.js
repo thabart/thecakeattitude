@@ -70,6 +70,10 @@ BaseMap.prototype = {
             o = new Informer();
             o.init(self.game, npc);
           break;
+          case "stylist":
+            o = new Stylist();
+            o.init(self.game, npc);
+          break;
 				}
 
 				if (o !== null) {
