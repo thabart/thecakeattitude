@@ -7,8 +7,8 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 	};
 		// Set face.
 	this.setFace = function(opts) {
-		var maleConfiguration = Constants.playerConfiguration['male'];
-		var blackHairCut = maleConfiguration.hairCuts[0];
+		var configuration = Constants.playerConfiguration[opts.gender];
+		var blackHairCut = configuration.hairCuts[0]; // TODO : Should be possible to customize the color.
 		var faces = blackHairCut.faces.filter(function(f) { return f.name ===  opts.face});
 		if (!faces || faces.length !== 1) {
 			return;
@@ -22,6 +22,7 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		} else {
 			this.header.x = face.paddingX;
 			this.header.y = face.paddingY;
+			this.header.loadTexture(blackHairCut.name);
 			animName = this.header.animations.currentAnim.name;
 		}
 
@@ -34,25 +35,44 @@ var Player = function(id, x, y, game, currentUser, pseudo, tileMap) {
 		}
 	};
 
-	var maleConfiguration = Constants.playerConfiguration['male'];
-	this.sprite = game.add.sprite(x, y, maleConfiguration.classes[0].name); // Add BODY.
-	this.sprite.animations.add("down", [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
-	this.sprite.animations.add("bottomRight", [8, 9, 10, 11, 12, 13, 14, 15], 10, true);
-	this.sprite.animations.add("right", [16, 17, 18, 19, 20, 21, 22, 23], 10, true);
-	this.sprite.animations.add("topRight", [24, 25, 26, 27, 28, 29, 30, 31], 10, true);
-	this.sprite.animations.add("top", [32, 33, 34, 35, 36, 37, 38, 39], 10, true);
-	this.sprite.animations.add("topLeft", [40, 41, 42, 43, 44, 45, 46, 47], 10, true);
-	this.sprite.animations.add("left", [48, 49, 50, 51, 52, 53, 54, 55], 10, true);
-	this.sprite.animations.add("bottomLeft", [56, 57, 58, 59, 60, 61, 62, 63], 10, true);
-	this.sprite.animations.add(getStayName("down"), [64]);
-	this.sprite.animations.add(getStayName("bottomRight"), [65]);
-	this.sprite.animations.add(getStayName("right"), [66]);
-	this.sprite.animations.add(getStayName("topRight"), [67]);
-	this.sprite.animations.add(getStayName("top"), [68]);
-	this.sprite.animations.add(getStayName("topLeft"), [69]);
-	this.sprite.animations.add(getStayName("left"), [70]);
-	this.sprite.animations.add(getStayName("bottomLeft"), [71]);
-	this.setFace(GameStateStore.getCurrentPlayerStyle());
+	// Set the body.
+	this.setBody = function(opts, x , y) {
+		var configuration = Constants.playerConfiguration[opts.gender];
+		var name = configuration.classes[0].name; // TODO : It should be possible to customize the CLASS.
+		var animName;
+		if (!this.sprite) {
+			this.sprite = game.add.sprite(x, y, name);
+		}
+		else {
+			this.sprite.loadTexture(name, 0);
+			animName = this.sprite.animations.currentAnim.name;
+		}
+
+		this.sprite.animations.add("down", [0, 1, 2, 3, 4, 5, 6, 7], 10, true);
+		this.sprite.animations.add("bottomRight", [8, 9, 10, 11, 12, 13, 14, 15], 10, true);
+		this.sprite.animations.add("right", [16, 17, 18, 19, 20, 21, 22, 23], 10, true);
+		this.sprite.animations.add("topRight", [24, 25, 26, 27, 28, 29, 30, 31], 10, true);
+		this.sprite.animations.add("top", [32, 33, 34, 35, 36, 37, 38, 39], 10, true);
+		this.sprite.animations.add("topLeft", [40, 41, 42, 43, 44, 45, 46, 47], 10, true);
+		this.sprite.animations.add("left", [48, 49, 50, 51, 52, 53, 54, 55], 10, true);
+		this.sprite.animations.add("bottomLeft", [56, 57, 58, 59, 60, 61, 62, 63], 10, true);
+		this.sprite.animations.add(getStayName("down"), [64]);
+		this.sprite.animations.add(getStayName("bottomRight"), [65]);
+		this.sprite.animations.add(getStayName("right"), [66]);
+		this.sprite.animations.add(getStayName("topRight"), [67]);
+		this.sprite.animations.add(getStayName("top"), [68]);
+		this.sprite.animations.add(getStayName("topLeft"), [69]);
+		this.sprite.animations.add(getStayName("left"), [70]);
+		this.sprite.animations.add(getStayName("bottomLeft"), [71]);
+		if (animName) {
+			this.sprite.play(animName);
+		}
+	};
+
+
+	var playerStyle = GameStateStore.getCurrentPlayerStyle();
+	this.setBody(playerStyle, x, y);
+	this.setFace(playerStyle);
 	this.sprite.addChild(this.header);
 	this.sprite.play(getStayName("down"));
 	this.header.play("down");

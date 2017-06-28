@@ -23,9 +23,9 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
           "</div>"+
           "<div class='content'>"+
             "<label>"+chooseSex+"</label>"+
-            "<select class='input-control'>"+
-              "<option>"+chooseMale+"</option>"+
-              "<option>"+chooseFemal+"</option>"+
+            "<select class='input-control choose-gender'>"+
+              "<option value='male'>"+chooseMale+"</option>"+
+              "<option value='female'>"+chooseFemal+"</option>"+
             "</select>"+
           "</div>"+
           "<ul class='tab'>"+
@@ -42,17 +42,26 @@ StylistModal.prototype = $.extend({}, BaseModal.prototype, {
         "</div>"+
       "</div>"+
     "</div>");
-
+    var playerStyle = GameStateStore.getCurrentPlayerStyle();
+    var chooseGender = $(self.modal).find('.choose-gender');
     self.modal.find('.tab0').append(self.chooseHeadTab.render());
     self.modal.find('.tab1').append(self.chooseBodyTab.render());
+    chooseGender.val(playerStyle.gender);
+    self.chooseHeadTab.refresh(playerStyle.gender);
+    chooseGender.change(function() {
+      var val = $(this).val();
+      self.chooseHeadTab.refresh(val);
+      self.chooseHeadTab.forceInit();
+    });
     self.showTab(0);
     $(self.modal).find('.tab-item').click(function() {
       var index = $(self.modal).find('.tab-item').index(this);
       self.showTab(index);
     });
     $(self.modal).find('.confirm').click(function() {
-      var head = self.chooseHeadTab.getHead();
-      GameStateStore.setCurrentPlayerStyle(head);
+      var style = self.chooseHeadTab.getHead();
+      style['gender'] = chooseGender.val();
+      GameStateStore.setCurrentPlayerStyle(style);
       self.toggle();
     });
   },

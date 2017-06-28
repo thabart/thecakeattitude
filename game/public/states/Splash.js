@@ -35,10 +35,17 @@ Splash.prototype = {
 		self.game.load.atlasJSONHash('informer', '/styles/characters/npc-men.png', 'public/sprites/informer.json');
 		self.game.load.atlasJSONHash('stylist', '/styles/characters/npc-men-not-animated.png', 'public/sprites/stylist.json');
 		var maleConfiguration = Constants.playerConfiguration['male'];
-		maleConfiguration.classes.forEach(function(cl) {
+		var femaleConfiguration = Constants.playerConfiguration['female'];
+		maleConfiguration.classes.forEach(function(cl) { // Load male players.
 			self.game.load.atlasJSONHash(cl.name, cl.image, cl.atlasJson);
 		});
 		maleConfiguration.hairCuts.forEach(function(hairCut) {
+			self.game.load.atlasJSONHash(hairCut.name, hairCut.image, hairCut.atlasJson);
+		});
+		femaleConfiguration.classes.forEach(function(cl) { // Load female players.
+			self.game.load.atlasJSONHash(cl.name, cl.image, cl.atlasJson);
+		});
+		femaleConfiguration.hairCuts.forEach(function(hairCut) {
 			self.game.load.atlasJSONHash(hairCut.name, hairCut.image, hairCut.atlasJson);
 		});
 

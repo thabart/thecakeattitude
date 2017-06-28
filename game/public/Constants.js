@@ -56,7 +56,7 @@ var Constants = {
 					colorKey: 'black',
 					faces: [
 						{
-							name: 'firstBlack',
+							name: 'firstBlackMen',
 							overviewImage: '/styles/heads/men/first-hc-black-overview.png',
 							paddingY : -20,
 							paddingX : -1,
@@ -96,7 +96,7 @@ var Constants = {
 							]
 						},
 						{
-							name: 'secondBlack',
+							name: 'secondBlackMen',
 							overviewImage: '/styles/heads/men/second-hc-black-overview.png',
 							paddingY : -22,
 							paddingX : -1,
@@ -136,7 +136,7 @@ var Constants = {
 							]
 						},
 						{
-							name: "thirdBlack",
+							name: "thirdBlackMen",
 							overviewImage: '/styles/heads/men/third-hc-black-overview.png',
 							paddingY : -20,
 							paddingX : -1,
@@ -176,7 +176,7 @@ var Constants = {
 							]
 						},
 						{
-							name: "fourthBlack",
+							name: "fourthBlackMen",
 							overviewImage: '/styles/heads/men/fourth-hc-black-overview.png',
 							paddingY : -20,
 							paddingX : -1,
@@ -216,7 +216,7 @@ var Constants = {
 							]
 						},
 						{
-							name: "fifthBlack",
+							name: "fifthBlackMen",
 							overviewImage: '/styles/heads/men/fifth-hc-black-overview.png',
 							paddingY : -20,
 							paddingX : -1,
@@ -260,8 +260,67 @@ var Constants = {
 			],
 			classes: [
 				{
-					name: "acolyte",
+					name: "acolyte-m",
 					image: '/styles/players/acolyte-m.png',
+					atlasJson: 'public/sprites/acolyte.json'
+				}
+			]
+		},
+		female: { // Configure female player.
+			hairCuts: [
+				{ // Black.
+					image: '/styles/heads/women/black.png',
+					atlasJson: 'public/sprites/blackHeadsWomen.json',
+					name: 'blackHeadsWomen',
+					colorKey: 'black',
+					faces: [
+						{
+							name: 'firstBlackWomen',
+							overviewImage: '/styles/heads/women/first-hc-black-overview.png',
+							paddingY : -20,
+							paddingX : -1,
+							animations: [
+								{
+									name: 'down',
+									tiles: [0]
+								},
+								{
+									name: 'bottomRight',
+									tiles: [1]
+								},
+								{
+									name: 'right',
+									tiles: [2]
+								},
+								{
+									name: 'topRight',
+									tiles: [3]
+								},
+								{
+									name: 'top',
+									tiles: [4]
+								},
+								{
+									name: 'topLeft',
+									tiles: [5]
+								},
+								{
+									name: 'left',
+									tiles: [6]
+								},
+								{
+									name: 'bottomLeft',
+									tiles: [7]
+								}
+							]
+						}
+					]
+				}
+			],
+			classes: [
+				{
+					name: "acolyte-f",
+					image: '/styles/players/acolyte-f.png',
 					atlasJson: 'public/sprites/acolyte.json'
 				}
 			]

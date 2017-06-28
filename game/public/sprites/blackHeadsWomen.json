@@ -1,12 +1,76 @@
 {
 	"frames": [
 		{
-			"filename": "bottom",
-			"frame": {"x":17,"y":15,"w":25,"h":29},
+			"filename": "first01",
+			"frame": {"x":0,"y":0,"w":50,"h":50},
 			"rotated": false,
 			"trimmed": true,
-			"spriteSourceSize": {"x":0,"y":0,"w":25,"h":29},
-			"sourceSize": {"w":25,"h":29}
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
+		},
+		{
+			"filename": "first02",
+			"frame": {"x":50,"y":0,"w":50,"h":50},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
+		},
+		{
+			"filename": "first03",
+			"frame": {"x":100,"y":0,"w":50,"h":50},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
+		},
+		{
+			"filename": "first04",
+			"frame": {"x":150,"y":0,"w":50,"h":50},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
+		},
+		{
+			"filename": "first05",
+			"frame": {"x":200,"y":0,"w":50,"h":50},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
+		},
+		{
+			"filename": "first06",
+			"frame": {"x":250,"y":0,"w":50,"h":50},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
+		},
+		{
+			"filename": "first07",
+			"frame": {"x":300,"y":0,"w":50,"h":50},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
+		},
+		{
+			"filename": "first08",
+			"frame": {"x":350,"y":0,"w":50,"h":50},
+			"rotated": false,
+			"trimmed": true,
+			"spriteSourceSize": {"x":0,"y":0,"w":50,"h":50},
+			"sourceSize": {"w":50,"h":50},
+			"paddingX": 0
 		}
 	],
 	"meta": {}

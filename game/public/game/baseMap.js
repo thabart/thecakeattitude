@@ -124,6 +124,7 @@ BaseMap.prototype = {
 		self.game.camera.follow(self.currentPlayer.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
     self.groups.players.add(self.currentPlayer.sprite);
     GameStateStore.onPlayerStyleChanged.call(self, function(opts) {
+      self.currentPlayer.setBody(opts);
       self.currentPlayer.setFace(opts);
     });
     // Track changes on style.

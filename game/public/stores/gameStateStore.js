@@ -5,8 +5,9 @@
   var _onSizeChanged = 'sizeChanged';
   var _lastPlayerPosition = null;
   var _playerStyle = {
-    hairCut: 'blackHeadsMen',
-    face: 'firstBlack'
+    hairCut: 'blackHeadsWomen',
+    face: 'firstBlackWomen',
+    gender: 'female'
   };
   var _user = null;
   var _size = null;
