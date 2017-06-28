@@ -313,6 +313,46 @@ var Constants = {
 									tiles: [7]
 								}
 							]
+						},
+						{
+							name: 'secondBlackWomen',
+							overviewImage: '/styles/heads/women/second-hc-black-overview.png',
+							paddingY : -20,
+							paddingX : -1,
+							animations: [
+								{
+									name: 'down',
+									tiles: [8]
+								},
+								{
+									name: 'bottomRight',
+									tiles: [9]
+								},
+								{
+									name: 'right',
+									tiles: [10]
+								},
+								{
+									name: 'topRight',
+									tiles: [11]
+								},
+								{
+									name: 'top',
+									tiles: [12]
+								},
+								{
+									name: 'topLeft',
+									tiles: [13]
+								},
+								{
+									name: 'left',
+									tiles: [14]
+								},
+								{
+									name: 'bottomLeft',
+									tiles: [15]
+								}
+							]
 						}
 					]
 				}
