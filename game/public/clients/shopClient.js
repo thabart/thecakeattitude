@@ -110,5 +110,27 @@ var ShopClient = {
 		});
 
 		return dfd;
+	},
+	updateShop: function(shopId, content, accessToken, commonId) { // Update the shop.
+		var dfd = jQuery.Deferred();
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.ajax(conf.shops_endpoint + '/' + shopId, {
+	      method: 'PUT',
+	      headers: {
+	        'Authorization': 'Bearer ' + accessToken,
+					'CommonId': commonId
+	      },
+				data: JSON.stringify(content),
+        contentType: 'application/json'
+			}).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+
+		return dfd;
 	}
 };

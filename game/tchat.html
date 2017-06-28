@@ -31,6 +31,7 @@
 		<script src="/public/Constants.js"></script>
 		<!-- Add stores -->
 		<script src="/public/stores/gameStateStore.js"></script>
+		<script src="/public/stores/shopMapStateStore.js"></script>
 		<!-- Calculator utils -->
 		<script src="/public/utils/calculator.js"></script>
 		<!-- CSS Libraries -->
@@ -117,6 +118,12 @@
 			proxy.on('announcementAdded', function(message) {
 				AppDispatcher.dispatch({
 					actionName: 'add-announce',
+					data: message
+				});
+			});
+			proxy.on('shopUpdated', function(message) {
+				AppDispatcher.dispatch({
+					actionName: 'update-shop',
 					data: message
 				});
 			});

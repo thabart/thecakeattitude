@@ -112,6 +112,7 @@
   "error-getShopInformation": "Les informations du magasin n'ont pu être récupérées",
   "error-getUserInformation": "Les informations de l'utilisateur n'ont pu être récupérées",
   "error-categoryMustBeSelected": "La catégorie doit être sélectionnée",
+  "error-addProductCategory": "La catégorie de produit n'a pas pu être ajoutée",
   "error-addAnnounce": "L'annonce n'a pu être ajoutée",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour",

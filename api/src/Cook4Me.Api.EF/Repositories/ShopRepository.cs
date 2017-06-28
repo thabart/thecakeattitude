@@ -283,6 +283,7 @@ namespace Cook4Me.Api.EF.Repositories
                         productCategoryToUpdate.Name = productCategory.Name;
                         productCategoryToUpdate.UpdateDateTime = productCategory.UpdateDateTime;
                         productCategoryToUpdate.Description = productCategory.Description;
+                        productCategoryToUpdate.ShopSectionName = productCategory.ShopSectionName;
                     }
 
                     foreach(var productCategoryToRemove in productCategoriesToRemove)
@@ -299,7 +300,8 @@ namespace Cook4Me.Api.EF.Repositories
                             Name = productCategoryToAdd.Name,
                             CreateDateTime = productCategoryToAdd.CreateDateTime,
                             UpdateDateTime = productCategoryToAdd.UpdateDateTime,
-                            ShopId = shop.Id
+                            ShopId = shop.Id,
+                            ShopSectionName = productCategoryToAdd.ShopSectionName
                         };
                         _context.ProductCategories.Add(rec);
                     }

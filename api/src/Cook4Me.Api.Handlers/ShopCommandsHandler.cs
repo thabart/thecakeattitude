@@ -266,6 +266,7 @@ namespace Cook4Me.Api.Handlers
                     Id = p.Id,
                     Name = p.Name,
                     Description = p.Description,
+                    ShopSectionName = p.ShopSectionName,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow
                 }).ToList();

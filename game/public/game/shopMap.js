@@ -4,6 +4,7 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 	init: function(overviewKey, tileMap, game, opts) {
 		var self = this;
 		self.opts = opts;
+		ShopMapStateStore.setShop(opts.shop); // Store the shop into the store.
 		self.create(overviewKey, tileMap, game);
 		self.layers = $.extend({}, self.layers, {
 			ground: null,
@@ -66,6 +67,11 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.addWarpsGroup({categoryId: opts.categoryId, place: opts.place, shop: opts.shop});
 		self.layers.ground.resizeWorld();
 		game.world.setBounds(0, 0, self.game.world.width, self.game.world.height);
+		AppDispatcher.register(function(obj) {
+			if (obj.actionName === 'update-shop' && obj.data && obj.data.id === opts.shop.id) {
+				console.log('shop has been updated');
+			}
+		});
   },
 	getDefaultPlayerCoordinate: function() {
 		var self = this;
@@ -78,5 +84,10 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		} else {
 			return self.getEntryWarpCoordinate();
 		}
+	},
+	destroy: function() {
+		var self = this;
+		self.commonDestroy();
+
 	}
 });

@@ -18,11 +18,11 @@ ShopSection.prototype = $.extend({}, BaseCharacter.prototype, {
 		npc.x = npc.x + 30;
   	self.create(game, npc, imageName, null, 12);
 		self.modal = new AddProductcategoryModal();
-		self.modal.init();
+		self.modal.init(npc.name);
 	},
 	interact: function() {
 		var self = this;
-		self.modal.toggle();
+		self.modal.show();
 	},
 	destroy: function() {
 		var self = this;

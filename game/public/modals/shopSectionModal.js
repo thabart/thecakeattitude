@@ -47,5 +47,8 @@ ShopSectionModal.prototype = $.extend({}, BaseModal.prototype, {
         $(tab).hide();
       }
     }
+  },
+  show: function() {
+    this.toggle();
   }
 });

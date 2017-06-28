@@ -170,6 +170,9 @@ BaseMap.prototype = {
     });
   },
 	destroy: function() {
+    this.commonDestroy();
+	},
+  commonDestroy: function() {
 		for (var layer in this.layers) {
 			if (this.layers[layer]) this.layers[layer].destroy();
 		}
@@ -183,5 +186,5 @@ BaseMap.prototype = {
 		this.npcs.forEach(function(npc) { npc.destroy(); });
     GameStateStore.offSizeChanged.call(this);
     GameStateStore.offPlayerStyleChanged.call(this);
-	}
+  }
 };

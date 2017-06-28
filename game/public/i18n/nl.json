@@ -112,6 +112,7 @@
   "error-getShopInformation": "The shop information cannot be retrieved",
   "error-getUserInformation": "The user information cannot be retrieved",
   "error-categoryMustBeSelected": "The category must be selected",
+  "error-addProductCategory": "The product category cannot be added",
   "error-addAnnounce": "The announce cannot be added",
   "error": "Error",
   "success-profileUpdated": "Profile has been updated",
