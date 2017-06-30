@@ -353,6 +353,92 @@ var Constants = {
 									tiles: [15]
 								}
 							]
+						},
+						{
+							name: 'thirdBlackWomen',
+							overviewImage: '/styles/heads/women/third-hc-black-overview.png',
+							paddingY : -20,
+							paddingX : -1,
+							animations: [
+								{
+									name: 'down',
+									tiles: [16]
+								},
+								{
+									name: 'bottomRight',
+									tiles: [17]
+								},
+								{
+									name: 'right',
+									tiles: [18]
+								},
+								{
+									name: 'topRight',
+									tiles: [19]
+								},
+								{
+									name: 'top',
+									tiles: [20]
+								},
+								{
+									name: 'topLeft',
+									tiles: [21]
+								},
+								{
+									name: 'left',
+									tiles: [22]
+								},
+								{
+									name: 'bottomLeft',
+									tiles: [23]
+								}
+							]
+						},
+						{
+							name: 'fourthBlackWomen',
+							overviewImage: '/styles/heads/women/fourth-hc-black-overview.png',
+							paddingY : -20,
+							paddingX : -1,
+							animations: [
+								{
+									name: 'down',
+									tiles: [24]
+								},
+								{
+									name: 'bottomRight',
+									tiles: [25]
+								},
+								{
+									name: 'right',
+									tiles: [26]
+								},
+								{
+									name: 'topRight',
+									tiles: [27]
+								},
+								{
+									name: 'top',
+									tiles: [28]
+								},
+								{
+									name: 'topLeft',
+									tiles: [29]
+								},
+								{
+									name: 'left',
+									tiles: [30]
+								},
+								{
+									name: 'bottomLeft',
+									tiles: [31]
+								}
+							]
+						},
+						{
+							name: 'fifthBlackWomen',
+							overviewImage: '/styles/heads/women/fifth-hc-black-overview.png',
+							paddingY : -20,
+							paddingX : -1
 						}
 					]
 				}
