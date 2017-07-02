@@ -19,6 +19,21 @@ body {
   margin: 0;
 }
 
+canvas, body {
+  cursor: url(cursors/mouse_cursor_halt/mouse_cursor_halt0000.png) 0 0, auto;
+  cursor: url(cursors/mouse_cursor_halt/mouse_cursor_halt0000.png) 0 0, pointer;
+}
+
+button {
+  cursor: url(cursors/link_auswahl/link_auswahl0000.png) 0 0, auto;
+  cursor: url(cursors/link_auswahl/link_auswahl0000.png) 0 0, pointer;
+}
+
+button:active {
+  cursor: url(cursors/link_auswahl/link_auswahl0001.png) 0 0, auto;
+  cursor: url(cursors/link_auswahl/link_auswahl0001.png) 0 0, pointer;
+}
+
 .ui-tooltip {
   min-width: 300px;
 }
