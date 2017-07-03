@@ -1,23 +1,28 @@
 'use strict';
 var ShopSectionModal = function() { };
 ShopSectionModal.prototype = $.extend({}, BaseModal.prototype, {
-  init: function() {
+  init: function(shopCategory, shopFilters) {
     var self = this;
-    var title = $.i18n('shopSectionModalTitle');
+    var title = $.i18n('shopSectionModalTitle'),
+      presentationTabTitle = $.i18n('shopSectionPresentationTabTitle'),
+      searchProductsTabTitle = $.i18n('shopSectionSearchProductsTabTitle');
+    title = title.replace('{0}', shopCategory.name);
+    self.shopCategory = shopCategory;
+    self.shopFilters = shopFilters;
     self.presentationTab = new ShopSectionPresentationTab();
     self.searchProductsTab = new ShopSectionSearchProductsTab();
     self.create("<div class='modal modal-lg shop-section-modal md-effect-1'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+
-            "<span class='title'>Women category</span>"+
+            "<span class='title'>"+title+"</span>"+
             "<div class='options'>"+
               "<button class='option close'><i class='fa fa-times'></i></button>"+
             "</div>"+
           "</div>"+
           "<ul class='tab'>"+
-            "<li class='tab-item'>Presentation</li>"+
-            "<li class='tab-item'>Search products</li>"+
+            "<li class='tab-item'>"+presentationTabTitle+"</li>"+
+            "<li class='tab-item'>"+searchProductsTabTitle+"</li>"+
           "</ul>"+
           "<div class='tab-content'>"+
             "<div class='tab0'></div>"+
@@ -26,11 +31,15 @@ ShopSectionModal.prototype = $.extend({}, BaseModal.prototype, {
         "</div>"+
       "</div>"+
     "</div>");
-    $(self.modal).find('.tab0').append(self.presentationTab.render());
-    $(self.modal).find('.tab1').append(self.searchProductsTab.render());
+    $(self.modal).find('.tab0').append(self.presentationTab.render(shopCategory));
+    $(self.modal).find('.tab1').append(self.searchProductsTab.render(shopCategory, shopFilters));
     self.showTab(0);
     $(self.modal).find('.tab-item').click(function() {
       var index = $(self.modal).find('.tab-item').index(this);
+      if (index === 1) {
+        self.searchProductsTab.refresh();
+      }
+
       self.showTab(index);
     });
   },

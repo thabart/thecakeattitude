@@ -141,6 +141,7 @@ Splash.prototype = {
 		self.game.load.script('OpenIdClient', 'public/clients/openIdClient.js');
 		self.game.load.script('UserClient', 'public/clients/userClient.js');
 		self.game.load.script('AnnounceClient', 'public/clients/announceClient.js');
+		self.game.load.script('ProductClient', 'public/clients/productClient.js');
 		// Load the emoticons.
 		self.game.load.spritesheet('sorry', 'styles/emoticons/sorry.png', 32, 50, 25);
 		self.game.load.spritesheet('love-eyes', 'styles/emoticons/love-eyes.png', 31, 24, 5);

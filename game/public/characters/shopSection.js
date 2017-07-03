@@ -1,14 +1,14 @@
 'use strict';
 var ShopSection = function() {};
 ShopSection.prototype = $.extend({}, BaseCharacter.prototype, {
-	initTaken: function(game, npc) {
+	initTaken: function(game, npc, shopCategory, shopFilters) {
 		var self = this;
 		var imageName =  'takenShopSection';
 		var shopSectionImage = game.cache.getImage(imageName);
 		npc.y = npc.y - shopSectionImage.height;
   	self.create(game, npc, imageName);
 		self.modal = new ShopSectionModal();
-		self.modal.init();
+		self.modal.init(shopCategory, shopFilters);
 	},
 	initFree: function(game, npc) {
 		var self = this;
@@ -18,7 +18,7 @@ ShopSection.prototype = $.extend({}, BaseCharacter.prototype, {
 		npc.x = npc.x + 30;
   	self.create(game, npc, imageName, null, 12);
 		self.modal = new AddProductcategoryModal();
-		self.modal.init(npc.name);
+		self.modal.init();
 	},
 	interact: function() {
 		var self = this;

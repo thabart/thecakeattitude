@@ -42,10 +42,11 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 					case "shop-section":
             o = new ShopSection();
 						var productCategories = self.opts.shop.product_categories.filter(function(productCategory) { return npc.name === productCategory.shop_section_name });
-						if (productCategories && productCategories.length === 0) {
+						if (productCategories && productCategories.length !== 1) {
 							o.initFree(self.game, npc);
 						} else {
-							o.initTaken(self.game, npc);
+							var productCategory = productCategories[0];
+							o.initTaken(self.game, npc, productCategory, self.opts.shop.filters);
 						}
 					break;
 					case "informer":
