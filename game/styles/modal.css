@@ -265,6 +265,15 @@
   margin-top: 10px;
 }
 
+.shop-section-modal .search-products-content {
+  max-height: 430px;
+  overflow-y: auto;
+}
+
+.shop-section-modal .search-form {
+  margin-right: 15px;
+}
+
 /* Informer modal window */
 .informer-modal .shop-profile {
   width: 50px;

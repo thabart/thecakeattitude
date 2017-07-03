@@ -543,6 +543,37 @@ ul.floating-options {
   float : right;
 }
 
+/* Display navigation toolbar */
+ul.navigation {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.navigation li {
+  display: inline-block;
+  border-radius: 5px;
+  border: 1px solid #c5c5c5;
+  margin-right: 5px;
+  padding: 5px;
+  min-width: 15px;
+  text-align: center;
+}
+
+ul.navigation li a {
+  text-decoration: none !important;
+  color: black;
+}
+
+ul.navigation li.active {
+  background-color: #129cc5;
+  border-color: #1e7b96;
+}
+
+ul.navigation li.active a {
+  color: white !important;
+}
+
 /* Display tooltip */
 .tooltip {
   position: relative;
