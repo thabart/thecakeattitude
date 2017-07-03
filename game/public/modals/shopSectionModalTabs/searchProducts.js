@@ -1,7 +1,7 @@
 'use strict';
 const minPrice = 1;
 const maxPrice = 30000;
-const defaultCount = 3;
+const defaultCount = 2;
 var ShopSectionSearchProductsTab = function() { };
 ShopSectionSearchProductsTab.prototype = {
   render: function(shopCategory, shopFilters) {
@@ -38,7 +38,7 @@ ShopSectionSearchProductsTab.prototype = {
       "</div>"+
       "<div class='alert-error'><b>"+error+" </b><span class='message'></span><span class='close'><i class='fa fa-times'></i></span></div>"+
       "<div class='search-products-content'>"+
-        "<div class='col-4'>"+
+        "<div class='col-3 search-form'>"+
           "<form class='product-name-form'>"+
             "<div class='form-group'>"+
               "<label>"+productName+"</label>"+
@@ -65,9 +65,10 @@ ShopSectionSearchProductsTab.prototype = {
           "</div>"+
           "<div class='filter-container'></div>"+
         "</div>"+
-        "<div class='col-8'>"+
+        "<div class='col-8 search-result'>"+
           "<ul class='product-list'>"+
           "</ul>"+
+          "<ul class='navigation'></ul>"+
         "</div>"+
      "</div>"+
      "<div class='footer'>"+
@@ -79,7 +80,35 @@ ShopSectionSearchProductsTab.prototype = {
         var filter = $("<div class='form-group'><label>"+shopFilter.name+"</label><div class='filter-values'></div></div>");
         if (shopFilter.values) {
           shopFilter.values.forEach(function(shopFilterValue) {
-            $(filter).find('.filter-values').append("<div><input type='checkbox' data-valueid='"+shopFilterValue.id+"' data-filterid='"+shopFilter.id+"' /> <span>"+shopFilterValue.content+"</span></div>");
+            var elt = $("<div><input type='checkbox' data-filtervalue='"+shopFilterValue.content+"' data-filterid='"+shopFilter.id+"' /> <span>"+shopFilterValue.content+"</span></div>");
+            $(filter).find('.filter-values').append(elt);
+            elt.find("input[type='checkbox']").change(function() {
+              var filterValue = $(this).data('filtervalue'),
+                filterId = $(this).data('filterid'),
+                indice = -1,
+                filter = null;
+              if (!$(this).is(':checked')) {
+                self.filterJson.filters.forEach(function (f, e) {
+                  if (f.id === filterId) {
+                    filter = f;
+                    indice = e;
+                  }
+                });
+
+                if (indice > -1) {
+                  self.filterJson.filters.splice(indice, 1);
+                }
+              }
+              else {
+                self.filterJson.filters.push({
+                  id: filterId,
+                  value: filterValue
+                });
+              }
+
+              self.filterJson['start_index'] = 0;
+              self.refresh();
+            });
           });
         }
 
@@ -104,14 +133,10 @@ ShopSectionSearchProductsTab.prototype = {
     $(self.tab).find("input[name='min']").change(function() {
       var val = $(this).val();
       $(self.tab).find('.slider-range').slider("values", 0, val);
-      self.filterJson['min_price'] = val;
-      self.refresh();
     });
     $(self.tab).find("input[name='max']").change(function() {
       var val = $(this).val();
       $(self.tab).find('.slider-range').slider("values", 1, val);
-      self.filterJson['max_price'] = val;
-      self.refresh();
     });
     $(self.tab).find('.product-name-form').submit(function(e) {
       e.preventDefault();
@@ -128,12 +153,14 @@ ShopSectionSearchProductsTab.prototype = {
     var self = this;
     self.displayLoader(true);
     $(self.tab).find('.product-list').empty();
+    $(self.tab).find('.navigation').empty();
     ProductClient.search(self.filterJson).then(function(result) {
       self.displayLoader(false);
       var commentsLabel = $.i18n('comments'),
         buyLabel = $.i18n('buy');
       var products = result['_embedded'];
-      if (!products instanceof Array) {
+      var links = result['_links'];
+      if (!products || !(products instanceof Array)) {
         products = [products];
       }
 
@@ -155,7 +182,7 @@ ShopSectionSearchProductsTab.prototype = {
             "<div>"+
               "<h3>"+product.name+"</h3>"+
               "<div>"+
-                commentsLabel + " : <div class='rating'></div>"+
+                commentsLabel + " ("+product.nb_comments+") : <div class='rating'></div>"+
               "</div>"+
             "</div>"+
             "<div>"+
@@ -176,6 +203,24 @@ ShopSectionSearchProductsTab.prototype = {
         $(self.tab).find('.product-list li').removeClass('active');
         $(this).addClass('active');
       });
+      if (links) {
+        var navigation = links['navigation'];
+        if (navigation) {
+          var indice = 0;
+          navigation.forEach(function(nav) {
+            var currentIndex = (parseInt(nav.name) - 1) * defaultCount;
+            var cl = (currentIndex === self.filterJson['start_index']) ? 'active' : '';
+            var link = $("<li class='"+cl+"'><a href='#'>"+nav.name+"</a></li>");
+            $(self.tab).find('.navigation').append(link);
+            $(link).click(function(e) {
+              e.preventDefault();
+              var index = (parseInt($(this).find('a').html()) - 1) * defaultCount;
+              self.filterJson['start_index'] = index;
+              self.refresh();
+            });
+          });
+        }
+      }
     }).fail(function() {
       self.displayLoader(false);
       self.displayError($.i18n('error-searchProducts'));
