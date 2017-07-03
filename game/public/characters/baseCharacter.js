@@ -9,10 +9,10 @@ BaseCharacter.prototype = {
 
     this.sprite.inputEnabled = true;
     this.sprite.events.onInputOver.add(function() {
-      game.canvas.style.cursor = "pointer";
+      game.canvas.style.cursor = "url(/styles/cursors/help_select/help_select0003.png) 0 0, auto";
     });
     this.sprite.events.onInputOut.add(function() {
-      game.canvas.style.cursor = "default";
+      game.canvas.style.cursor = "url(/styles/cursors/mouse_cursor_halt/mouse_cursor_halt0000.png) 0 0, auto";
     });
     this.sprite.events.onInputDown.add(function() {
 		  this.interact();

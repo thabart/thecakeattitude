@@ -604,18 +604,23 @@ button.ui-button::-moz-focus-inner {
 	left: 0;
 }
 .ui-resizable-s {
-	cursor: s-resize;
+  cursor: url(cursors/vertical_resize/vertical_resize0000.png) 0 0, auto;
 	height: 7px;
-	width: 100%;
-	bottom: -5px;
 	left: 0;
+	right: 16px;
+}
+.ui-resizable-s:active {
+  cursor: url(cursors/vertical_resize/vertical_resize0001.png) 0 0, auto;
 }
 .ui-resizable-e {
-	cursor: e-resize;
+	cursor: url(cursors/horizontal_resize/horizontal_resize0000.png) 0 0, auto;
 	width: 7px;
 	right: -5px;
 	top: 0;
 	height: 100%;
+}
+.ui-resizable-e:active {
+	cursor: url(cursors/horizontal_resize/horizontal_resize0001.png) 0 0, auto;
 }
 .ui-resizable-w {
 	cursor: w-resize;
@@ -625,11 +630,14 @@ button.ui-button::-moz-focus-inner {
 	height: 100%;
 }
 .ui-resizable-se {
-	cursor: se-resize;
+	cursor: url(cursors/diagonal_resize_1/diagonal_resize_10000.png) 0 0, auto;
 	width: 12px;
 	height: 12px;
 	right: 1px;
-	bottom: 1px;
+}
+
+.ui-resizable-se:active {
+	cursor: url(cursors/diagonal_resize_1/diagonal_resize_10001.png) 0 0, auto;
 }
 .ui-resizable-sw {
 	cursor: sw-resize;

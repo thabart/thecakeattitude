@@ -17,21 +17,55 @@ body {
   font-family: 'QuicksandLight', sans-serif;
   background-image: url("backgrounds/backgroundWebsite.jpg");
   margin: 0;
+  user-select: none;
 }
 
-canvas, body {
+/* Set the CURSOR */
+canvas, body, input:read-only, .modal .content {
   cursor: url(cursors/mouse_cursor_halt/mouse_cursor_halt0000.png) 0 0, auto;
-  cursor: url(cursors/mouse_cursor_halt/mouse_cursor_halt0000.png) 0 0, pointer;
 }
 
-button {
+button,
+a,
+input[type="checkbox"],
+select,
+select option,
+.alert-error .close,
+.alert-success .close,
+.floating-options .floating-option,
+.game-tchat .header .options .option,
+.modal-window .header .options .option,
+.map-selector li,
+ul.payments li,
+.tab-item,
+.map-overview .place,
+input[type="file"] {
   cursor: url(cursors/link_auswahl/link_auswahl0000.png) 0 0, auto;
-  cursor: url(cursors/link_auswahl/link_auswahl0000.png) 0 0, pointer;
 }
 
-button:active {
+button:active,
+a:active,
+select option:active,
+.map-overview .place:active,
+.floating-options .floating-option:active,
+input[type="file"]:active,
+input[type="checkbox"]:active,
+.modal-window .header .options .option:active,
+.game-tchat .header .options .option:active,
+.map-selector li:active,
+ul.payments li:active,
+.tab-item:active,
+.alert-error .close:active,
+.alert-success .close:active {
   cursor: url(cursors/link_auswahl/link_auswahl0001.png) 0 0, auto;
-  cursor: url(cursors/link_auswahl/link_auswahl0001.png) 0 0, pointer;
+}
+
+.game-tchat .header {
+  cursor: url(cursors/move/move0000.png) 0 0, auto;
+}
+
+.game-tchat .header:active {
+  cursor: url(cursors/move/move0001.png) 0 0, auto;
 }
 
 .ui-tooltip {
@@ -172,12 +206,10 @@ ul.no-style {
 
 .alert-error .close {
   float: right;
-  cursor: pointer;
 }
 
 .alert-success .close {
   float: right;
-  cursor: pointer;
 }
 
 .error-message { /* Message displayed in the form */
@@ -306,10 +338,6 @@ ul.floating-options {
   margin-top: 10px;
 }
 
-.floating-options .floating-option:hover {
-  cursor: pointer;
-}
-
 .floating-options div.floating-option {
   padding-top: 17px;
 }
@@ -369,7 +397,6 @@ ul.floating-options {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   background-color: rgb(232, 228, 228);
-  cursor: move;
   height: 27px;
 }
 
@@ -398,7 +425,6 @@ ul.floating-options {
   border-radius: 50%;
   padding: 0;
   opacity: 0.5;
-  cursor: pointer;
 }
 
 .game-tchat .header .options .option {
@@ -529,7 +555,6 @@ ul.floating-options {
 
 .map-selector li {
   display: table;
-  cursor: pointer;
   width: 100%;
 }
 
@@ -763,10 +788,6 @@ ul.navigation li.active a {
   border-bottom-left-radius: 0.25rem;
 }
 
-ul.payments li {
-  cursor: pointer;
-}
-
 /*Product list */
 ul.product-list {
   padding: 0;
@@ -815,8 +836,4 @@ ul.product-list li.active {
   border: 1px solid #167794 !important;
   color: white;
   font-weight: bold;
-}
-
-.tab-item {
-  cursor: pointer;
 }
