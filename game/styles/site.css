@@ -21,7 +21,7 @@ body {
 }
 
 /* Set the CURSOR */
-canvas, body, input:read-only, .modal .content {
+canvas, body, input:read-only, .modal {
   cursor: url(cursors/mouse_cursor_halt/mouse_cursor_halt0000.png) 0 0, auto;
 }
 

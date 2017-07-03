@@ -59,5 +59,9 @@ ShopSectionModal.prototype = $.extend({}, BaseModal.prototype, {
   },
   show: function() {
     this.toggle();
+  },
+  remove() {
+    $(this.modal).remove();
+    this.searchProductsTab.remove();
   }
 });

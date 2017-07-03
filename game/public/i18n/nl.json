@@ -13,6 +13,7 @@
   "addProductcategoryModalTitle": "Add product category",
   "shopSectionPresentationTabTitle": "Presentation",
   "shopSectionSearchProductsTabTitle": "Search products",
+  "viewProductModalTitle": "Product",
   "stylistModalTitle": "Stylist",
   "addProductCategory": "Add product category",
   "stockManagerModalTitle": "Manage your stock",
@@ -23,6 +24,7 @@
   "chooseFemale": "Female",
   "chooseHairCut": "Choose haircut",
   "chooseHairColor": "Choose color",
+  "viewProduct": "View product",
   "black": "Black",
   "stylistName": "Stylist",
   "informerName": "Informer",
@@ -123,8 +125,9 @@
   "error-categoryMustBeSelected": "The category must be selected",
   "error-addProductCategory": "The product category cannot be added",
   "error-addAnnounce": "The announce cannot be added",
+  "error-viewProduct": "The product cannot be displayed",
+  "error-searchProducts": "An error occured while trying to retrieve the products",
   "error": "Error",
   "success-profileUpdated": "Profile has been updated",
   "success-shopRemoved": "Shop has been removed",
-  "error-searchProducts": "An error occured while trying to retrieve the products"
 }

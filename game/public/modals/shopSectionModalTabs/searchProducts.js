@@ -1,7 +1,7 @@
 'use strict';
 const minPrice = 1;
 const maxPrice = 30000;
-const defaultCount = 2;
+const defaultCount = 3;
 var ShopSectionSearchProductsTab = function() { };
 ShopSectionSearchProductsTab.prototype = {
   render: function(shopCategory, shopFilters) {
@@ -12,7 +12,8 @@ ShopSectionSearchProductsTab.prototype = {
       min = $.i18n('min'),
       max = $.i18n('max'),
       error = $.i18n('error'),
-      search = $.i18n('search');
+      search = $.i18n('search'),
+      viewProduct = $.i18n('viewProduct');
     self.filterJson = {
         orders: [{target: 'update_datetime', method: 'desc'}],
         start_index: 0,
@@ -24,6 +25,8 @@ ShopSectionSearchProductsTab.prototype = {
     };
     self.shopCategory = shopCategory;
     self.shopFilters = shopFilters;
+    self.viewProductModal = new ViewProductModal();
+    self.viewProductModal.init();
     self.tab = $("<div>"+
       "<div class='sk-cube-grid search-products-loader'>"+
         "<div class='sk-cube sk-cube1'></div>"+
@@ -72,7 +75,7 @@ ShopSectionSearchProductsTab.prototype = {
         "</div>"+
      "</div>"+
      "<div class='footer'>"+
-      "<button class='action-btn'>View product</button>"+
+      "<button class='action-btn view-product'>"+viewProduct+"</button>"+
      "</div>"+
     "</div>");
     if (shopFilters) {
@@ -144,7 +147,15 @@ ShopSectionSearchProductsTab.prototype = {
       self.filterJson['name'] = productName;
       self.refresh();
     });
+    $(self.tab).find('.view-product').click(function() {
+      var selectedProduct = $(self.tab).find('.product-list li.active');
+      var selectedProductId = $(selectedProduct).data('id');
+      self.viewProductModal.show(selectedProductId);
+    });
     return self.tab;
+  },
+  disableViewProduct: function(b) {
+    $(this.tab).find('.view-product').prop('disabled', b);
   },
   reset: function() {
     var self = this;
@@ -154,6 +165,7 @@ ShopSectionSearchProductsTab.prototype = {
     self.displayLoader(true);
     $(self.tab).find('.product-list').empty();
     $(self.tab).find('.navigation').empty();
+    self.disableViewProduct(true);
     ProductClient.search(self.filterJson).then(function(result) {
       self.displayLoader(false);
       var commentsLabel = $.i18n('comments'),
@@ -175,7 +187,7 @@ ShopSectionSearchProductsTab.prototype = {
           imgSrc = product.images[0];
         }
 
-        var line = $("<li>"+
+        var line = $("<li data-id='"+product.id+"'>"+
             "<div>"+
               "<img src='"+imgSrc+"' style='width:50px; float:left;' />"+
             "</div>"+
@@ -202,6 +214,7 @@ ShopSectionSearchProductsTab.prototype = {
       $(self.tab).find('.product-list li').click(function() {
         $(self.tab).find('.product-list li').removeClass('active');
         $(this).addClass('active');
+        self.disableViewProduct(false);
       });
       if (links) {
         var navigation = links['navigation'];
@@ -246,4 +259,7 @@ ShopSectionSearchProductsTab.prototype = {
     errorElt.find('.message').html(message);
     errorElt.show();
   },
+  remove: function() {
+    this.viewProductModal.remove();
+  }
 };

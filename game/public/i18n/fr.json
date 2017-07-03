@@ -13,6 +13,7 @@
   "shopSectionPresentationTabTitle": "Présentation",
   "shopSectionSearchProductsTabTitle": "Chercher produits",
   "addProductcategoryModalTitle": "Ajouter une nouvelle catégorie de produit",
+  "viewProductModalTitle": "Produit",
   "addProductCategory": "Ajouter la catégorie",
   "stylistModalTitle": "Styliste",
   "stockManagerModalTitle": "Gérer votre stock",
@@ -30,6 +31,7 @@
   "warperName": "Téléportateur",
   "search": "Chercher",
   "informerModalTitle": "Information",
+  "viewProduct": "Voir produit",
   "stockManagerName": "Gestionnaire de stock",
   "chooseHead": "Choisir la tête",
   "chooseBody": "Choisir le corps",
@@ -123,8 +125,9 @@
   "error-categoryMustBeSelected": "La catégorie doit être sélectionnée",
   "error-addProductCategory": "La catégorie de produit n'a pas pu être ajoutée",
   "error-addAnnounce": "L'annonce n'a pu être ajoutée",
+  "error-viewProduct": "Le produit n'a pas pu être affiché",
+  "error-searchProducts": "Les produits n'ont pu être récupérés",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour",
-  "success-shopRemoved": "Le magasin a été supprimé",
-  "error-searchProducts": "Les produits n'ont pu être récupérés"
+  "success-shopRemoved": "Le magasin a été supprimé"
 }

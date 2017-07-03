@@ -17,5 +17,19 @@ var ProductClient = {
 		});
 
 		return dfd;
-	}
+	},
+  get: function(id) { // Get the product.
+    var dfd = jQuery.Deferred();
+    $.get(Constants.apiConfigurationUrl).then(function(conf) {
+      $.get(conf.products_endpoint + '/' + id).then(function(obj) {
+        dfd.resolve(obj);
+      }).fail(function(e) {
+        dfd.reject(e);
+      });
+    }).fail(function(e) {
+      dfd.reject(e);
+    });
+
+    return dfd;
+  }
 };
