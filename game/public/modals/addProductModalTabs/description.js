@@ -89,7 +89,8 @@ AddProductDescriptionTab.prototype = {
       reader.readAsDataURL(file);
     };
     self.tags = $(self.tab).find('.tags').selectize({
-      create: false,
+      create: true,
+      persist: false,
       labelField: 'name',
       searchField: 'name',
       valueField: 'name',
