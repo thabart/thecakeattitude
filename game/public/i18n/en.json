@@ -29,6 +29,8 @@
   "stockManagerName": "Stock manager",
   "informerName": "Informer",
   "noProduct": "No product",
+  "noFilters": "No characteristics",
+  "noTags": "No tags",
   "warperName": "Warper",
   "informerModalTitle": "Information",
   "exit": "Exit",

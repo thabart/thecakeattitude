@@ -23,6 +23,7 @@ InformerModal.prototype = $.extend({}, BaseModal.prototype, {
         "icon": "<i class='fa fa-paypal' aria-hidden='true'></i>"
       }
     };
+    self.comment = new Comment();
     self.create("<div class='modal modal-lg md-effect-1 informer-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
@@ -52,7 +53,7 @@ InformerModal.prototype = $.extend({}, BaseModal.prototype, {
                 "</div>"+
                 "<div class='col-9'>"+
                   "<h3 class='shop-name'></h3>"+
-                  "<div class='rating'></div>"+
+                  "<div class='rating-container'></div>"+
                 "</div>"+
               "</div>"+
               "<table class='info-table'>"+
@@ -97,69 +98,11 @@ InformerModal.prototype = $.extend({}, BaseModal.prototype, {
         "</div>"+
     "</div>");
   },
-  displayComments: function(commentsObj) { // Display comments
-    var comments = commentsObj['_embedded'],
-      average = null,
-      scores = null,
-      nbComments = 0;
-
-    if(comments) {
-      if (!(comments instanceof Array)) {
-        comments = [comments];
-      }
-
-      var total = 0;
-      scores = {
-        "1": 0,
-        "2": 0,
-        "3": 0,
-        "4": 0,
-        "5": 0
-      };
-      comments.forEach(function (comment) {
-        total += comment.score;
-        scores["" + comment.score + ""] += 1;
-      });
-
-      var average = Math.round((total / comments.length) * 1000) / 1000;
-      nbComments = comments.length;
-    }
-
-    $(this.modal).tooltip({
-      items: '.rating > div',
-      content: function() {
-        var result = $("<div>"+
-          "<div class='progressbar-5 progress-bar'></div>"+
-          "<div class='progressbar-4 progress-bar'></div>"+
-          "<div class='progressbar-3 progress-bar'></div>"+
-          "<div class='progressbar-2 progress-bar'></div>"+
-          "<div class='progressbar-1 progress-bar'></div>"+
-        "</div>");
-        for(var score in scores) {
-          var progressBar = result.find('.progressbar-'+score);
-          var nbComments = scores[score];
-          var progressBarContent = $("<div class='progress-bar-label'><span class='title'>"+$.i18n('nbComments')+" : <i>"+nbComments+"</i></span><div class='rating'></div></div>");
-          $(progressBarContent).find('.rating').rateYo({
-            rating: score,
-            numStars: 5,
-            readOnly: true,
-            starWidth: "20px"
-          });
-          progressBar.append(progressBarContent);
-          progressBar.progressbar({
-            value: scores[score],
-            max: 5
-          });
-        }
-        return result;
-      }
-    });
-  },
   reset: function() { // Reset all the fields.
     var self = this;
     $(self.modal).find('.shop-profile').attr('src', '/styles/images/default-store.png');
     $(self.modal).find('.shop-name').empty();
-    $(self.modal).find('.rating').empty();
+    $(self.modal).find('.rating-container').empty();
     $(self.modal).find('.pseudo').empty();
     $(self.modal).find('.description').empty();
     $(self.modal).find('.payment-methods').empty();
@@ -170,8 +113,9 @@ InformerModal.prototype = $.extend({}, BaseModal.prototype, {
   },
   show: function(shopId) { // Show the modal window.
     var self = this;
-    $(self.modal).toggleClass('md-show');
     self.reset();
+    $(self.modal).toggleClass('md-show');
+    $(self.modal).find('.rating-container').append(self.comment.render());
     self.displayLoader(true);
     $.when(ShopClient.searchComments(shopId, {}), ShopClient.getShop(shopId)).then(function(commentsObj, shopObj) {
       var shop = shopObj._embedded;
@@ -183,14 +127,6 @@ InformerModal.prototype = $.extend({}, BaseModal.prototype, {
         $(self.modal).find('.shop-profile').attr('src', shopProfileImg);
         $(self.modal).find('.shop-name').html(shop.name);
         $(self.modal).find('.pseudo').html(userObj.name);
-        var rating = $("<div></div>");
-        rating.rateYo({
-          rating: shop.average_score,
-          numStars: 5,
-          readOnly: true,
-          starWidth: "20px"
-        });
-        $(self.modal).find('.rating').append(rating);
         $(self.modal).find('.description').html(shop.description);
         $(self.modal).find('.email').html(userObj.email);
         $(self.modal).find('.home-phone').html(userObj.home_phone_number);
@@ -207,7 +143,7 @@ InformerModal.prototype = $.extend({}, BaseModal.prototype, {
           });
         }
 
-        self.displayComments(commentsObj);
+        self.comment.display(shop.average_score, commentsObj);
       }).fail(function() {
         self.displayLoader(false);
         self.displayError($.i18n('error-getUserInformation'));

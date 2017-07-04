@@ -426,7 +426,7 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             Content = "first-comment-product",
-                            Score = 0,
+                            Score = 1,
                             CreateDateTime = DateTime.UtcNow,
                             UpdateDateTime = DateTime.UtcNow,
                             Subject = "administrator"
@@ -498,7 +498,7 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             Content = "first-comment-product",
-                            Score = 0,
+                            Score = 1,
                             CreateDateTime = DateTime.UtcNow,
                             UpdateDateTime = DateTime.UtcNow,
                             Subject = "administrator"

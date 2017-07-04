@@ -28,6 +28,8 @@
   "stylistName": "Styliste",
   "informerName": "Informateur",
   "noProduct": "Aucun produit",
+  "noFilters": "Aucune charactéristique",
+  "noTags": "Aucun tag",
   "warperName": "Téléportateur",
   "search": "Chercher",
   "informerModalTitle": "Information",

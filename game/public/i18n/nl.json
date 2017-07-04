@@ -30,6 +30,8 @@
   "informerName": "Informer",
   "warperName": "Warper",
   "noProduct": "No product",
+  "noFilters": "No characteristics",
+  "noTags": "No tags",
   "stockManagerName": "Stock manager",
   "informerModalTitle": "Information",
   "exit": "Exit",

@@ -123,6 +123,7 @@ Splash.prototype = {
 		// Load the components.
 		self.game.load.script('AddressSearch', 'public/components/addressSearch.js');
 		self.game.load.script('SelectCategory', 'public/components/selectCategory.js');
+		self.game.load.script('Comment', 'public/components/comments.js');
 		// Load the NPCs.
 		self.game.load.script('BaseCharacter', 'public/characters/baseCharacter.js');
 		self.game.load.script('Warper', 'public/characters/warper.js');

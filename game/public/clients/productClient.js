@@ -31,5 +31,24 @@ var ProductClient = {
     });
 
     return dfd;
+  },
+  searchComments: function(productId, content) { // Search the comments.
+		var dfd = jQuery.Deferred();
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.ajax(conf.products_endpoint + '/' + productId + '/comments', {
+	      method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(content)
+			}).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function() {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+
+		return dfd;
+
   }
 };
