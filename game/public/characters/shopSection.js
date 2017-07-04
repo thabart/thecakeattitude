@@ -1,14 +1,14 @@
 'use strict';
 var ShopSection = function() {};
 ShopSection.prototype = $.extend({}, BaseCharacter.prototype, {
-	initTaken: function(game, npc, shopCategory, shopFilters) {
+	initTaken: function(game, npc) {
 		var self = this;
 		var imageName =  'takenShopSection';
 		var shopSectionImage = game.cache.getImage(imageName);
 		npc.y = npc.y - shopSectionImage.height;
   	self.create(game, npc, imageName);
 		self.modal = new ShopSectionModal();
-		self.modal.init(shopCategory, shopFilters);
+		self.modal.init(npc);
 	},
 	initFree: function(game, npc) {
 		var self = this;

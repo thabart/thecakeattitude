@@ -1,8 +1,12 @@
 'use strict';
 var ShopSectionModal = function() { };
 ShopSectionModal.prototype = $.extend({}, BaseModal.prototype, {
-  init: function(shopCategory, shopFilters) {
+  init: function(npc) {
     var self = this;
+    var shop = ShopMapStateStore.getShop();
+    var productCategories = shop.product_categories.filter(function(productCategory) { return npc.name === productCategory.shop_section_name });
+    var shopCategory = productCategories[0];
+    var shopFilters = shop.filters;
     var title = $.i18n('shopSectionModalTitle'),
       presentationTabTitle = $.i18n('shopSectionPresentationTabTitle'),
       searchProductsTabTitle = $.i18n('shopSectionSearchProductsTabTitle');

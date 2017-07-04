@@ -53,6 +53,8 @@ AddProductModal.prototype = $.extend({}, BaseModal.prototype, {
     $(self.characteristicsTab).on('confirm', function() {
 
     });
+    
+    self.descriptionTab.display();
   },
   displayLoader: function(b) { // Display loader.
     var self = this;

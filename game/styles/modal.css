@@ -417,3 +417,38 @@
 .view-product-modal .rating-container {
   display: inline-block;
 }
+
+/* Set Add product description style */
+.add-product-description-tab ul.product-images {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.add-product-description-tab ul.product-images li {
+  display: inline-block;
+  border: 1px solid #b0b0b0;
+  border-radius: 5px;
+  padding: 5px;
+  text-align: center;
+  position: relative;
+  cursor: url(cursors/link_auswahl/link_auswahl0000.png) 0 0, auto;
+}
+
+.add-product-description-tab ul.product-images li:active {
+  cursor: url(cursors/link_auswahl/link_auswahl0001.png) 0 0, auto;
+}
+
+.add-product-description-tab ul.product-images li.active {
+  border: 1px solid #129cc5;
+}
+
+.add-product-description-tab ul.product-images li img {
+  width: 50px;
+}
+
+.add-product-description-tab ul.product-images li .close {
+  top: 0;
+  right: 0;
+  position: absolute;
+}

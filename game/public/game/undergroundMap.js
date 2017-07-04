@@ -29,8 +29,8 @@ UndergroundMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.layers.shadows = self.tileMap.createLayer('Shadows');
 		self.layers.furnitures = self.tileMap.createLayer('Furnitures');
 		self.layers.decorations = self.tileMap.createLayer('Decorations');
-		// Add overview image
 		self.addNpcsGroup();
+		// Add overview image
 		self.addOverviewImage();
 		self.addOverviewPlayersGroup();
 		self.trackSizeChanged();

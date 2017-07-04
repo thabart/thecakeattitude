@@ -46,12 +46,12 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 							o.initFree(self.game, npc);
 						} else {
 							var productCategory = productCategories[0];
-							o.initTaken(self.game, npc, productCategory, self.opts.shop.filters);
+							o.initTaken(self.game, npc);
 						}
 					break;
 					case "informer":
             o = new Informer();
-            o.init(self.game, npc, opts.shop.id);
+            o.init(self.game, npc);
 					break;
 				}
 
