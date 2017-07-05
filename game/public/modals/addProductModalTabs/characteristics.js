@@ -34,11 +34,6 @@ AddProductCharacteristicTab.prototype = {
         "<button class='action-btn add'>"+addProduct+"</button>"+
       "</div>"+
     "</div>");
-    if (self.shop.filters) {
-      self.shop.filters.forEach(function(filter) {
-        $(self.tab).find('.characteristic-selector').append("<option value='"+filter.id+"'>"+filter.name+"</option>");
-      });
-    }
     $(self.tab).find('.add-characteristic').click(function() {
       var selectedOption = $(self.tab).find('.characteristic-selector option:selected');
       var characteristicId = $(selectedOption).attr('value');
@@ -104,12 +99,22 @@ AddProductCharacteristicTab.prototype = {
         });
       });
 
-      $(self).trigger('confirm', [ { data: filters }]);
+      $(self).trigger('confirm', [ { obj: filters }]);
     });
     return self.tab;
   },
   reset: function() {
     var self = this;
-    $(self.tab).find('.characteristics-container').empty();
+    $(self.tab).find('.product-characteristics-container').empty();
+    $(self.tab).find('.characteristic-selector').empty();
+  },
+  display: function() {
+    var self = this;
+    self.reset();
+    if (self.shop.filters) {
+      self.shop.filters.forEach(function(filter) {
+        $(self.tab).find('.characteristic-selector').append("<option value='"+filter.id+"'>"+filter.name+"</option>");
+      });
+    }
   }
 };

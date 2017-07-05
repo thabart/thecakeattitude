@@ -72,6 +72,7 @@ namespace Cook4Me.Api.Handlers
                 UpdateDateTime = message.UpdateDateTime,
                 ShopId = record.ShopId,
                 AverageScore = record.AverageScore,
+                CommonId = message.CommonId,
                 NbComments = record.Comments == null ? 0 : record.Comments.Count()
             });
         }
@@ -103,6 +104,7 @@ namespace Cook4Me.Api.Handlers
                 ProductId = message.ProductId,
                 AverageScore = record.AverageScore,
                 ShopId = record.ShopId,
+                CommonId = message.CommonId,
                 NbComments = record.Comments == null ? 0 : record.Comments.Count()
             });
         }

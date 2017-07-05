@@ -127,6 +127,12 @@
 					data: message
 				});
 			});
+			proxy.on('productAdded', function(message) {
+				AppDispatcher.dispatch({
+					actionName: 'add-product',
+					data: message
+				});
+			});
 			connection.start({jsonp: false})
       	.done(function () {
         	console.log('Now connected, connection ID=' + connection.id);

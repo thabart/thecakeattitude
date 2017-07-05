@@ -45,16 +45,31 @@ AddProductModal.prototype = $.extend({}, BaseModal.prototype, {
     $(self.modal).find('.tab0').append(self.descriptionTab.render());
     $(self.modal).find('.tab1').append(self.characteristicsTab.render());
     $(self.descriptionTab).on('next', function(e, data) {
+      self.json = data.obj;
       self.showTab(1);
     });
-    $(self.characteristicsTab).on('previous', function(e, data) {
+    $(self.characteristicsTab).on('previous', function(e) {
       self.showTab(0);
     });
-    $(self.characteristicsTab).on('confirm', function() {
-
+    $(self.characteristicsTab).on('confirm', function(e, data) {
+      self.json['filters'] = data.obj;
+      self.displayLoader(true);
+      var accessToken = sessionStorage.getItem(Constants.sessionName);
+      self.commonId = Guid.generate();
+      ProductClient.add(accessToken, self.json, self.commonId).then(function() {
+        self.displayLoader(false);
+      }).fail(function() {
+        self.displayLoader(false);
+        self.displayError($.i18n('error-addProduct'));
+      });
     });
 
     self.descriptionTab.display();
+    AppDispatcher.register(function(obj) {
+      if (obj.actionName === 'add-product' && obj.data.common_id === self.commonId) {
+        self.toggle();
+      }
+    });
   },
   displayLoader: function(b) { // Display loader.
     var self = this;
@@ -86,5 +101,29 @@ AddProductModal.prototype = $.extend({}, BaseModal.prototype, {
         $(tab).hide();
       }
     }
+  },
+  hideError: function() { // Hide the error.
+    $(this.modal).find('.alert-error').hide();
+  },
+  displayError: function(message) { // Display the error.
+    var errorElt = $(this.modal).find('.alert-error');
+    errorElt.find('.message').html(message);
+    errorElt.show();
+  },
+  reset: function() {
+    var self = this;
+    self.descriptionTab.display();
+    self.characteristicsTab.display();
+  },
+  show: function() { // Show the modal.
+    var self = this;
+    self.reset();
+    self.showTab(0);
+    self.toggle();
+  },
+  remove: function() { // Remove the modal.
+    var self = this;
+    AppDispatcher.remove();
+    $(self.modal).remove();
   }
 });

@@ -30,13 +30,13 @@ StockManagerModal.prototype = $.extend({}, BaseModal.prototype, {
     "</div>");
     $(self.modal).find('.add-product').click(function() {
       self.toggle();
-      self.addProductModal.toggle();
+      self.addProductModal.show();
     });
-    $(self.modal).find('.manage-products').click(function(){
-
+    $(self.modal).find('.manage-products').click(function() {
+      // TODO : IMPLEMENT
     });
     $(self.modal).find('.manage-settings').click(function() {
-
+      // TODO : IMPLEMENT
     });
   },
   remove() {

@@ -585,6 +585,7 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Product.Id, evt.Id);
             jObj.Add(Constants.DtoNames.Product.Name, evt.Name);
+            jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             jObj.Add(Constants.DtoNames.Product.Description, evt.Description);
             jObj.Add(Constants.DtoNames.Product.CategoryId, evt.CategoryId);
             jObj.Add(Constants.DtoNames.Product.Price, evt.Price);

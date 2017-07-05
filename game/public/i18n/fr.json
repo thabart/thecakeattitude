@@ -136,6 +136,7 @@
   "error-addAnnounce": "L'annonce n'a pu être ajoutée",
   "error-viewProduct": "Le produit n'a pas pu être affiché",
   "error-searchProducts": "Les produits n'ont pu être récupérés",
+  "error-addProduct": "Le produit n'a pu être ajouté",
   "error": "Erreur",
   "success-profileUpdated": "Profil a été mis à jour",
   "success-shopRemoved": "Le magasin a été supprimé"

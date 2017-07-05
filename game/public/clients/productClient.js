@@ -49,6 +49,27 @@ var ProductClient = {
 		});
 
 		return dfd;
+  },
+  add: function(accessToken, content, commonId) { // Add a product.
+		var dfd = jQuery.Deferred();
+    $.get(Constants.apiConfigurationUrl).then(function(conf) {
+      $.ajax(conf.products_endpoint, {
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(content),
+	      headers: {
+	        'Authorization': 'Bearer ' + accessToken,
+					'CommonId': commonId
+	      }
+      }).then(function(r) {
+        dfd.resolve(r);
+      }).fail(function(e) {
+        dfd.reject(e);
+      });
+    }).fail(function(e) {
+      dfd.reject(e);
+    });
 
+    return dfd;
   }
 };
