@@ -8,7 +8,7 @@ AddProductModal.prototype = $.extend({}, BaseModal.prototype, {
       error = $.i18n('error');
     self.descriptionTab = new AddProductDescriptionTab();
     self.characteristicsTab = new AddProductCharacteristicTab();
-    self.create("<div class='modal modal-lg md-effect-1'>"+
+    self.create("<div class='modal modal-lg md-effect-1 add-product-modal'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window'>"+
           "<div class='header'>"+
@@ -53,7 +53,7 @@ AddProductModal.prototype = $.extend({}, BaseModal.prototype, {
     $(self.characteristicsTab).on('confirm', function() {
 
     });
-    
+
     self.descriptionTab.display();
   },
   displayLoader: function(b) { // Display loader.

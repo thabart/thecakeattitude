@@ -452,3 +452,7 @@
   right: 0;
   position: absolute;
 }
+
+.add-product-characteristic-tab .content {
+    padding-bottom: 60px;
+}

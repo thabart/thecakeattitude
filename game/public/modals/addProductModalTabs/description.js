@@ -20,7 +20,7 @@ AddProductDescriptionTab.prototype = {
     self.tab = $("<form class='add-product-description-tab'>"+
       "<div class='container'>"+
         "<div class='content'>"+
-          "<div class='col-6'>"+
+          "<div class='col-6 padding10'>"+
             "<div>"+ // Name
               "<label>"+name+"</label>"+
               "<span class='error-message'></span>"+
@@ -45,7 +45,7 @@ AddProductDescriptionTab.prototype = {
               "<ul class='product-images'></ul>"+
             "</div>"+
           "</div>"+
-          "<div class='col-6'>"+
+          "<div class='col-6 padding10'>"+
             "<div>"+ // Price per portion
               "<label>"+pricePerPortion+"</label>"+
               "<span class='error-message'></span>"+

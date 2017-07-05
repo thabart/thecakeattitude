@@ -20,6 +20,14 @@ body {
   user-select: none;
 }
 
+.floatRight {
+  float: right;
+}
+
+.padding10 {
+  padding: 10px;
+}
+
 /* Set the CURSOR */
 canvas, body, input:read-only, .modal {
   cursor: url(cursors/mouse_cursor_halt/mouse_cursor_halt0000.png) 0 0, auto;
@@ -721,7 +729,6 @@ ul.navigation li.active a {
 /* Grid system */
 .col-6 {
   width: 45%;
-  padding: 10px;
   vertical-align: top;
   display: inline-block;
 }
