@@ -7,7 +7,7 @@ Crier.prototype = $.extend({}, BaseCharacter.prototype, {
 		this.modal.init();
 	},
 	interact: function() {
-		this.modal.show();
+		this.modal.toggle();
 	},
 	destroy: function() {
 	  this.sprite.destroy();

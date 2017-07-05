@@ -1,16 +1,18 @@
 'use strict';
-var CrierModalDescriptionTab = function() { };
-CrierModalDescriptionTab.prototype = {
+var AddOfferModalDescriptionTab = function() { };
+AddOfferModalDescriptionTab.prototype = {
   render: function() {
     var next = $.i18n('next'),
       name = $.i18n('name'),
       price = $.i18n('price'),
       description = $.i18n('description'),
+      addOfferModalDescription = $.i18n('addOfferModalDescription'),
       self = this;
     self.selectCategory = new SelectCategory();
     self.tab = $("<form>"+
       "<div class='container'>"+
         "<div class='content'>"+
+          "<p>"+addOfferModalDescription+"</p>"+
           "<div>"+
             "<label>"+name+"</label>"+
             "<span class='error-message'></span>"+

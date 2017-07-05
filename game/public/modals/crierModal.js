@@ -1,132 +1,54 @@
-var CrierModal = function() {};
+'use strict';
+var CrierModal = function() { };
 CrierModal.prototype = $.extend({}, BaseModal.prototype, {
   init: function() {
     var self = this;
     var title = $.i18n('crierModalTitle'),
-      addAnnounce = $.i18n('addAnnounce'),
-      description = $.i18n('description'),
-      address = $.i18n('address'),
-      error = $.i18n('error');
-    self.descriptionTab = new CrierModalDescriptionTab();
-    self.addressTab = new CrierModalAddressTab();
-    self.descriptionJson = null;
-    self.create("<div class='modal modal-lg md-effect-2'>"+
+      addOffer = $.i18n('addOffer'),
+      manageOffers = $.i18n('manageOffers'),
+      searchOffers = $.i18n('searchOffers');
+    self.addOfferModal = new AddOfferModal();
+    self.manageOffersModal = new ManageOffersModal();
+    self.searchOffersModal = new SearchOffersModal();
+    self.addOfferModal.init();
+    self.manageOffersModal.init();
+    self.searchOffersModal.init();
+    self.create("<div class='modal modal-lg md-effect-1'>"+
       "<div class='modal-content'>"+
-        "<div class='modal-window'>"+
+        "<div class='modal-window modal-window-circle'>"+
           "<div class='header'>"+
             "<span class='title'>"+title+"</span>"+
             "<div class='options'>"+
               "<button class='option close'><i class='fa fa-times'></i></button>"+
             "</div>"+
           "</div>"+
-          "<ul class='progressbar'>"+
-            "<li class='col-3'>"+description+"</li>"+
-            "<li class='col-3'>"+address+"</li>"+
-          "</ul>"+
-          "<div class='sk-cube-grid crier-loader'>"+
-            "<div class='sk-cube sk-cube1'></div>"+
-            "<div class='sk-cube sk-cube2'></div>"+
-            "<div class='sk-cube sk-cube3'></div>"+
-            "<div class='sk-cube sk-cube4'></div>"+
-            "<div class='sk-cube sk-cube5'></div>"+
-            "<div class='sk-cube sk-cube6'></div>"+
-            "<div class='sk-cube sk-cube7'></div>"+
-            "<div class='sk-cube sk-cube8'></div>"+
-            "<div class='sk-cube sk-cube9'></div>"+
-          "</div>"+
-          "<div class='alert-error'><b>"+error+" </b><span class='message'></span><span class='close'><i class='fa fa-times'></i></span></div>"+
-          "<div class='tab-content'>"+
-            "<div class='tab0'></div>"+
-            "<div class='tab1'></div>"+
+          "<div class='content'>"+
+            "<ul class='list no-border center-text'>"+
+              "<li><button class='action-btn lg-action-btn add-offer'>"+addOffer+"</button></li>"+
+              "<li><button class='action-btn lg-action-btn manage-offers'>"+manageOffers+"</button></li>"+
+              "<li><button class='action-btn lg-action-btn search-offers'>"+searchOffers+"</button></li>"+
+            "</ul>"+
           "</div>"+
         "</div>"+
       "</div>"+
     "</div>");
-    self.displayLoader(false);
-    self.showTab(0);
-    $(self.modal).find('.tab0').append(self.descriptionTab.render());
-    $(self.modal).find('.tab1').append(self.addressTab.render());
-    $(self.modal).find('.alert-error .close').click(function() {
-      self.hideError();
+    $(self.modal).find('.add-offer').click(function() {
+      self.toggle();
+      self.addOfferModal.show();
     });
-    $(self.descriptionTab).on('next', function(e, obj) {
-      self.descriptionJson = obj.data;
-      self.hideError();
-      self.showTab(1);
-      self.addressTab.init();
+    $(self.modal).find('.manage-offers').click(function() {
+      self.toggle();
+      self.manageOffersModal.toggle();
     });
-    $(self.addressTab).on('previous', function(e, data) {
-      self.showTab(0);
-    });
-    $(self.descriptionTab).on('error', function(e, data) {
-      self.displayError(data.msg);
-    });
-    $(self.addressTab).on('confirm', function(e, data) {
-      var json = $.extend({}, self.descriptionJson, data.obj);
-      self.displayLoader(true);
-      var accessToken = sessionStorage.getItem(Constants.sessionName);
-      self.commonId = Guid.generate();
-      AnnounceClient.addAnnounce(accessToken, json, self.commonId).then(function() {
-        self.displayLoader(false);
-      }).fail(function() {
-        self.displayError($.i18n('error-addAnnounce'));
-        self.displayLoader(false);
-      });
-    });
-    AppDispatcher.register(function(obj) {
-      if (obj.actionName === 'add-announce' && obj.data.common_id === self.commonId) {
-        self.toggle();
-      }
+    $(self.modal).find('.search-offers').click(function() {
+      self.toggle();
+      self.searchOffersModal.toggle();
     });
   },
-  displayLoader: function(b) { // Display loader.
-    var self = this;
-    var loader = $(self.modal).find('.crier-loader'),
-      tabContent = $(self.modal).find('.tab-content');
-    if (b) {
-      loader.show();
-      tabContent.hide();
-    } else {
-      loader.hide();
-      tabContent.show();
-    }
-  },
-  showTab: function(indice) { // Show tab.
-    var self = this;
-    var progressBarLi = $(self.modal).find('.progressbar li');
-    for (var i = 0; i <= 3; i++) {
-      var li = progressBarLi.get(i),
-        tab = $(self.modal).find('.tab'+i);
-      if (i <= indice) {
-        $(li).addClass('active');
-      } else {
-        $(li).removeClass('active');
-      }
-
-      if (i === indice) {
-        $(tab).show();
-      } else {
-        $(tab).hide();
-      }
-    }
-  },
-  hideError: function() { // Hide the error.
-    $(this.modal).find('.alert-error').hide();
-  },
-  displayError: function(message) { // Display the error.
-    var errorElt = $(this.modal).find('.alert-error');
-    errorElt.find('.message').html(message);
-    errorElt.show();
-  },
-  show: function() { // Show the modal window.
-    var self = this;
-    self.showTab(0);
-    self.hideError();
-    self.descriptionTab.reset();
-    self.toggle();
-  },
-  remove: function() { // Correctly remove the crier modal window.
+  remove() {
+    this.addOfferModal.remove();
+    this.manageOffersModal.remove();
+    this.searchOffersModal.remove();
     $(this.modal).remove();
-    AppDispatcher.remove();
   }
 });

@@ -1,6 +1,6 @@
 'use strict';
-var CrierModalAddressTab = function() { };
-CrierModalAddressTab.prototype = {
+var AddOfferModalAddressTab = function() { };
+AddOfferModalAddressTab.prototype = {
   render: function() {
     var previous = $.i18n('previous'),
       addAnnounce = $.i18n('addAnnounce'),

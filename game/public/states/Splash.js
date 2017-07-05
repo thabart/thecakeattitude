@@ -91,6 +91,7 @@ Splash.prototype = {
 		self.game.load.script('FreePlaceModal', 'public/modals/freePlaceModal.js');
 		self.game.load.script('LoginModal', 'public/modals/loginModal.js');
 		self.game.load.script('MenuModal', 'public/modals/menuModal.js');
+		self.game.load.script('CrierModal', 'public/modals/crierModal.js');
 		self.game.load.script('ShopSectionModal', 'public/modals/shopSectionModal.js');
 		self.game.load.script('AddProductcategoryModal', 'public/modals/addProductcategoryModal.js');
 		self.game.load.script('ShopChooserModal', 'public/modals/shopChooserModal.js');
@@ -99,7 +100,9 @@ Splash.prototype = {
 		self.game.load.script('StockManagerModal', 'public/modals/stockManagerModal.js');
 		self.game.load.script('AddProductModal', 'public/modals/addProductModal.js');
 		self.game.load.script('StylistModal', 'public/modals/stylistModal.js');
-		self.game.load.script('CrierModal', 'public/modals/crierModal.js');
+		self.game.load.script('AddOfferModal', 'public/modals/addOfferModal.js');
+		self.game.load.script('ManageOffersModal', 'public/modals/manageOffersModal.js');
+		self.game.load.script('SearchOffersModal', 'public/modals/searchOffersModal.js');
 		self.game.load.script('InformerModal', 'public/modals/informerModal.js');
 		self.game.load.script('ViewProductModal', 'public/modals/viewProductModal.js');
 		self.game.load.script('ManageShopSettingsModal', 'public/modals/manageShopSettingsModal.js');
@@ -113,8 +116,8 @@ Splash.prototype = {
 		self.game.load.script('WarperCurrentUserShopsTab', 'public/modals/warperModalTabs/warperCurrentUserShopsTab.js');
 		self.game.load.script('WarperMapsTab', 'public/modals/warperModalTabs/warperMapsTab.js');
 		self.game.load.script('WarperShopsTab', 'public/modals/warperModalTabs/warperShopsTab.js');
-		self.game.load.script('CrierModalDescriptionTab', 'public/modals/crierModalTabs/description.js');
-		self.game.load.script('CrierModalAddressTab', 'public/modals/crierModalTabs/address.js');
+		self.game.load.script('AddOfferModalDescriptionTab', 'public/modals/addOfferTabs/description.js');
+		self.game.load.script('AddOfferModalAddressTab', 'public/modals/addOfferTabs/address.js');
 		self.game.load.script('AddProductDescriptionTab', 'public/modals/addProductModalTabs/description.js');
 		self.game.load.script('AddProductCharacteristicTab', 'public/modals/addProductModalTabs/characteristics.js');
 		self.game.load.script('StylistModalChooseHeadTab', 'public/modals/stylistModalTabs/chooseHead.js');
