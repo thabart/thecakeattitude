@@ -9,6 +9,8 @@
   "myShopsSelectorModalTitle": "Mes magasins",
   "shopChooserModalTitle": "Choisissez un emplacement",
   "editProfileModalTitle": "Editer votre profil",
+  "manageProductModalTitle": "Gérer vos produits",
+  "manageShopsSettingsModalTitle": "Gérer votre magasin",
   "add": "Ajouter",
   "shopSectionModalTitle": "Catégorie de produit : {0}",
   "addCharacteristic": "Ajouter une caractéristique",

@@ -10,6 +10,8 @@
   "shopChooserModalTitle": "Choose place",
   "editProfileModalTitle": "Edit profile",
   "shopSectionModalTitle": "Product category : {0}",
+  "manageProductModalTitle": "Manage your products",
+  "manageShopsSettingsModalTitle": "Manage the shop",
   "add": "Add",
   "addCharacteristic": "Add characteristic",
   "characteristicName": "Characteristic name",

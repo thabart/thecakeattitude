@@ -8,7 +8,11 @@ StockManagerModal.prototype = $.extend({}, BaseModal.prototype, {
       manageYourProducts = $.i18n('manageYourProducts'),
       manageShopSettings = $.i18n('manageShopSettings');
     self.addProductModal = new AddProductModal();
+    self.manageShopSettingsModal = new ManageShopSettingsModal();
+    self.manageProductsModal = new ManageProductsModal();
     self.addProductModal.init();
+    self.manageShopSettingsModal.init();
+    self.manageProductsModal.init();
     self.create("<div class='modal modal-lg md-effect-1'>"+
       "<div class='modal-content'>"+
         "<div class='modal-window modal-window-circle'>"+
@@ -21,8 +25,8 @@ StockManagerModal.prototype = $.extend({}, BaseModal.prototype, {
           "<div class='content'>"+
             "<ul class='list no-border center-text'>"+
               "<li><button class='action-btn lg-action-btn add-product'>"+addProduct+"</button></li>"+
-              "<li><button class='action-btn lg-action-btn manage-products' disabled>"+manageYourProducts+"</button></li>"+
-              "<li><button class='action-btn lg-action-btn manage-settings' disabled>"+manageShopSettings+"</button></li>"+
+              "<li><button class='action-btn lg-action-btn manage-products'>"+manageYourProducts+"</button></li>"+
+              "<li><button class='action-btn lg-action-btn manage-settings'>"+manageShopSettings+"</button></li>"+
             "</ul>"+
           "</div>"+
         "</div>"+
@@ -33,14 +37,18 @@ StockManagerModal.prototype = $.extend({}, BaseModal.prototype, {
       self.addProductModal.show();
     });
     $(self.modal).find('.manage-products').click(function() {
-      // TODO : IMPLEMENT
+      self.toggle();
+      self.manageProductsModal.toggle();
     });
     $(self.modal).find('.manage-settings').click(function() {
-      // TODO : IMPLEMENT
+      self.toggle();
+      self.manageShopSettingsModal.toggle();
     });
   },
   remove() {
-    $(this.modal).remove();
     this.addProductModal.remove();
+    this.manageProductsModal.remove();
+    this.manageShopSettingsModal.remove();
+    $(this.modal).remove();
   }
 });
