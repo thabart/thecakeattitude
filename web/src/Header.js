@@ -92,7 +92,6 @@ class Header extends Component {
           actionName: Constants.events.USER_LOGGED_IN,
           data: i
         });
-        self.props.history.push('/');
     }
 
     // Authenticate with login and password
@@ -104,9 +103,9 @@ class Header extends Component {
         });
         OpenIdService.passwordAuthentication(this.state.login, this.state.password).then(function (resp) {
             AuthenticateService.authenticate(resp.access_token).then(function (i) {
-                self.handeAuthenticationSuccess(i);
+              self.handeAuthenticationSuccess(i);
             }).catch(function () {
-                self.handleAuthenticationError();
+              self.handleAuthenticationError();
             });
         }).catch(function (e) {
             self.handleAuthenticationError();
