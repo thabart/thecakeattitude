@@ -38,6 +38,7 @@ class Header extends Component {
         this.manageProfile = this.manageProfile.bind(this);
         this.manageShops = this.manageShops.bind(this);
         this.manageAnnounces = this.manageAnnounces.bind(this);
+        this.switchLanguage = this.switchLanguage.bind(this);
         this.state = {
             user: null,
             activeItem: null,
@@ -202,6 +203,10 @@ class Header extends Component {
         });
     }
 
+    switchLanguage(lng) {
+      i18n.changeLanguage(lng);
+    }
+
     componentWillMount() {
         var self = this;
         this.setState({
@@ -260,11 +265,11 @@ class Header extends Component {
                       <Nav navbar>
                         <NavItem><a href="#" className="nav-link"></a></NavItem>
                         <NavDropdown isOpen={this.state.isChooseLanguageOpened} toggle={() => { this.toggle('isChooseLanguageOpened'); }}>
-                          <DropdownToggle nav caret>{t('chooseLanguage')}</DropdownToggle>
+                          <DropdownToggle nav caret>{t('chooseLanguage') + " (" + i18n.language + ")"}</DropdownToggle>
                           <DropdownMenu>
-                            <DropdownItem>{t('chooseFr')}</DropdownItem>
-                            <DropdownItem>{t('chooseEn')}</DropdownItem>
-                            <DropdownItem>{t('chooseNl')}</DropdownItem>
+                            <DropdownItem onClick={() => this.switchLanguage('fr')}>{t('chooseFr')}</DropdownItem>
+                            <DropdownItem onClick={() => this.switchLanguage('en')}>{t('chooseEn')}</DropdownItem>
+                            <DropdownItem onClick={() => this.switchLanguage('nl')}>{t('chooseNl')}</DropdownItem>
                           </DropdownMenu>
                         </NavDropdown>
                       </Nav>
@@ -275,36 +280,35 @@ class Header extends Component {
                 <Modal isOpen={this.state.isAuthenticateOpened}>
                     <ModalHeader toggle={() => {
                         this.toggle('isAuthenticateOpened');
-                    }}>Authenticate</ModalHeader>
+                    }}>{t('authenticateModalTitle')}</ModalHeader>
                     <ModalBody>
-                        <div
-                            className={this.state.isErrorDisplayed ? 'alert alert-danger' : 'alert alert-danger hidden'}>
-                            <strong>Error !</strong> Either your login or your password is invalid
+                        <div className={this.state.isErrorDisplayed ? 'alert alert-danger' : 'alert alert-danger hidden'}>
+                            {t('errorLogin')}
                         </div>
                         <div className={this.state.isLoading ? 'loading' : 'loading hidden'}><i
                             className='fa fa-spinner fa-spin'></i></div>
                         <div className={this.state.isLoading ? 'hidden' : ''}>
                             <form onSubmit={this.authenticate}>
                                 <div className="form-group">
-                                    <label className="">Login</label>
+                                    <label className="">{t('loginField')}</label>
                                     <input type='text' className='form-control' name='login'
                                            onChange={this.handleInputChange}/>
                                 </div>
                                 <div className="form-group">
-                                    <label className="">Password</label>
+                                    <label className="">{t('passwordField')}</label>
                                     <input type='password' className='form-control' name='password'
                                            onChange={this.handleInputChange}/>
                                 </div>
                                 <div className="form-group">
-                                    <input type="submit" className="btn btn-success" value="Login"/>
+                                    <input type="submit" className="btn btn-success" value={t('loginBtn')}/>
                                 </div>
                             </form>
                             <div className="separator">
-                                <p>or</p>
+                                <p>{t('or')}</p>
                             </div>
                             <div className="form-group">
-                                <button className="btn btn-default" onClick={this.externalAuthenticate}>Use external
-                                    provider
+                                <button className="btn btn-default" onClick={this.externalAuthenticate}>
+                                  {t('useExternalProvider')}
                                 </button>
                             </div>
                         </div>

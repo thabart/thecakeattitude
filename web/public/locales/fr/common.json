@@ -12,5 +12,12 @@
   "chooseFr": "Français",
   "chooseEn": "Anglais",
   "chooseNl": "Néerlandais",
-  "welcome": "Bienvenue"
+  "welcome": "Bienvenue",
+  "errorLogin": "Soit votre login ou mot de passe est incorrect",
+  "loginField": "Login",
+  "passwordField": "Mot de passe",
+  "loginBtn": "Se connecter",
+  "useExternalProvider": "Utiliser un autre fournisseur d'identité",
+  "or": "Ou",
+  "authenticateModalTitle": "S'authentifier"
 }

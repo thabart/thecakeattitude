@@ -13,5 +13,12 @@
   "chooseFr": "French",
   "chooseEn": "English",
   "chooseNl": "Dutch",
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "errorLogin": "Either your login or your password is invalid",
+  "loginField": "Login",
+  "passwordField": "Password",
+  "loginBtn": "Login",
+  "useExternalProvider": "Use external identity provider",
+  "or": "Or",
+  "authenticateModalTitle": "Authenticate"
 }
