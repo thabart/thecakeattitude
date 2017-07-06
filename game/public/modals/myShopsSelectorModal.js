@@ -103,6 +103,11 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
         shops = [shops];
       }
 
+      if (shops.length === 0) {
+        myShopsSlider.append("<span>"+$.i18n('noShop')+"</span>");
+        return;
+      }
+
       shops.forEach(function(shop) {
         var profileImage = shop.profile_image || '/styles/images/default-store.png';
         var shopCategory = $.i18n('shopCategory').replace('{0}', shop.category.name);
@@ -130,8 +135,10 @@ MyShopsSelectorModal.prototype = $.extend({}, BaseModal.prototype, {
         $(self.modal).find('.shop-cell').removeClass('shop-cell-active');
         $(this).addClass('shop-cell-active');
       });
+    }).fail(function() {
+      self.isShopsLoading(false);
+      myShopsSlider.append("<span>"+$.i18n('noShop')+"</span>");
     });
-
   },
   isShopsLoading: function(b) {
     var self = this;
