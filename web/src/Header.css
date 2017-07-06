@@ -16,3 +16,7 @@
     width: 24px;
     height: 24px;
 }
+
+.website-header .nav-link {
+  text-transform: uppercase;
+}

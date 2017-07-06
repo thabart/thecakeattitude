@@ -1,0 +1,17 @@
+{
+  "homeMenuItem": "Home",
+  "explorerMenuItem": "Explorer",
+  "addShopMenuItem": "Add shop",
+  "addOfferMenuItem": "Ask for a service",
+  "connectMenuItem": "Connect",
+  "disconnectMenuItem": "Disconnect",
+  "manageMenuItem": "Manage",
+  "manageYourProfileMenuItem": "Manage your profile",
+  "manageYourOffersMenuItem": "Manage your offers",
+  "manageYourShopsMenuItem": "Manage your shops",
+  "chooseLanguage": "Choose language",
+  "chooseFr": "French",
+  "chooseEn": "English",
+  "chooseNl": "Dutch",
+  "welcome": "Welcome"
+}

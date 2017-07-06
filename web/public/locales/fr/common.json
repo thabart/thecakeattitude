@@ -1,0 +1,16 @@
+{
+  "homeMenuItem": "Accueil",
+  "explorerMenuItem": "Explorer",
+  "addShopMenuItem": "Ajouter un magasin",
+  "addOfferMenuItem": "Demander un service",
+  "connectMenuItem": "Se connecter",
+  "manageMenuItem": "Gérer",
+  "manageYourProfileMenuItem": "Gérer votre profil",
+  "manageYourOffersMenuItem": "Gérer vos offres",
+  "manageYourShopsMenuItem": "Gérer vos magasins",
+  "chooseLanguage": "Choisir la langue",
+  "chooseFr": "Français",
+  "chooseEn": "Anglais",
+  "chooseNl": "Néerlandais",
+  "welcome": "Bienvenue"
+}

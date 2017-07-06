@@ -22,6 +22,8 @@ import AuthenticateService from "./services/Authenticate";
 import SessionService from "./services/Session";
 import AppDispatcher from "./appDispatcher";
 import Constants from '../Constants';
+import { translate } from 'react-i18next';
+import i18n from './i18n';
 import "./Header.css";
 import "./styles/Palette.css";
 
@@ -46,7 +48,8 @@ class Header extends Component {
             isLoading: false,
             isAccountOpened: false,
             isLoggedIn: false,
-            isConnectHidden: false
+            isConnectHidden: false,
+            isChooseLanguageOpened: false
         };
     }
 
@@ -216,39 +219,54 @@ class Header extends Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <div>
-                <Navbar color="faded" light toggleable fixed="top">
+                <Navbar color="faded" light toggleable fixed="top" className="website-header">
                     <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
                     <NavLink to="/home" className="navbar-brand">SHOP IN GAME</NavLink>
                     <Collapse isOpen={this.state.isMenuOpen} navbar>
                       <Nav className="mr-auto" navbar>
                         <NavItem>
-                          <NavLink to="/home" className="nav-link" activeClassName="text-white rounded bg-info">EXPLORER</NavLink>
+                          <NavLink to="/home" className="nav-link" activeClassName="text-white rounded bg-info">{t('homeMenuItem')}</NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink to="/map" className="nav-link" activeClassName="text-white rounded bg-info">{t('explorerMenuItem')}</NavLink>
                         </NavItem>
                         {
-                          (this.state.isLoggedIn) ? <NavItem><NavLink to="/addshop" className="nav-link"  activeClassName="text-white rounded bg-info">ADD SHOP</NavLink></NavItem> : ''
+                          (this.state.isLoggedIn) ? <NavItem><NavLink to="/addshop" className="nav-link"  activeClassName="text-white rounded bg-info">{t('addShopMenuItem')}</NavLink></NavItem> : ''
                         }
                         {
-                          (this.state.isLoggedIn) ? <NavItem><NavLink to="/addAnnounce" className="nav-link"  activeClassName="text-white rounded bg-info">ADD ANNOUNCE</NavLink></NavItem> : ''
+                          (this.state.isLoggedIn) ? <NavItem><NavLink to="/addAnnounce" className="nav-link"  activeClassName="text-white rounded bg-info">{t('addOfferMenuItem')}</NavLink></NavItem> : ''
                         }
                       </Nav>
-                      <Nav className={(this.state.isConnectHidden ? 'hidden' : 'ml-auto')} navbar>
+                      <Nav className={(this.state.isConnectHidden ? 'hidden' : '')} navbar>
                         {
-                          (!this.state.isLoggedIn) ? <NavItem><a href="#" className="nav-link" onClick={() => { this.toggle('isAuthenticateOpened'); }}>Connect</a></NavItem> : ''
+                          (!this.state.isLoggedIn) ? <NavItem><a href="#" className="nav-link" onClick={() => { this.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></NavItem> : ''
                         }
                         {
                           (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={() => { this.toggle('isAccountOpened'); }}>
-                            <DropdownToggle nav caret>Welcome <strong>{this.state.user.name}</strong></DropdownToggle>
+                            <DropdownToggle nav caret>{t('welcome')} <strong>{this.state.user.name}</strong></DropdownToggle>
                             <DropdownMenu>
-                              <DropdownItem onClick={this.disconnect}>Disconnect</DropdownItem>
-                              <DropdownItem header>Manage</DropdownItem>
-                              <DropdownItem onClick={this.manageProfile}>Profile</DropdownItem>
-                              <DropdownItem onClick={this.manageAnnounces}>Announces</DropdownItem>
-                              <DropdownItem onClick={this.manageShops}>Shops</DropdownItem>
+                              <DropdownItem onClick={this.disconnect}>{t('disconnectMenuItem')}</DropdownItem>
+                              <DropdownItem header>{t('manageMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={this.manageProfile}>{t('manageYourProfileMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={this.manageAnnounces}>{t('manageYourOffersMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={this.manageShops}>{t('manageYourShopsMenuItem')}</DropdownItem>
                             </DropdownMenu>
                           </NavDropdown> : ''
                         }
+                      </Nav>
+                      <Nav navbar>
+                        <NavItem><a href="#" className="nav-link"></a></NavItem>
+                        <NavDropdown isOpen={this.state.isChooseLanguageOpened} toggle={() => { this.toggle('isChooseLanguageOpened'); }}>
+                          <DropdownToggle nav caret>{t('chooseLanguage')}</DropdownToggle>
+                          <DropdownMenu>
+                            <DropdownItem>{t('chooseFr')}</DropdownItem>
+                            <DropdownItem>{t('chooseEn')}</DropdownItem>
+                            <DropdownItem>{t('chooseNl')}</DropdownItem>
+                          </DropdownMenu>
+                        </NavDropdown>
                       </Nav>
                     </Collapse>
                 </Navbar>
@@ -297,4 +315,4 @@ class Header extends Component {
     }
 }
 
-export default withRouter(Header);
+export default translate('common', { wait: process && !process.release })(Header);

@@ -12,6 +12,7 @@ import Manage from './Manage';
 import AddProduct from './AddProduct';
 import AddAnnouncement from "./AddAnnouncement";
 import AddService from './AddService';
+import Home from './Home';
 import {OpenIdService, SessionService} from "./services/index";
 import {ApplicationStore} from './stores';
 import Constants from '../Constants';
@@ -168,8 +169,9 @@ class App extends Component {
                 <div id="app-container">
                     <Header />
                     <div id="app-body">
-                        <Route exact path="/" component={Map}/>
-                        <Route path="/home" component={Map}/>
+                        <Route exact path="/" component={Home}/>
+                        <Route path="/home" component={Home} />
+                        <Route path="/map" component={Map}/>
                         <Route path="/sellers" component={Sellers}/>
                         <Route path="/shops/:id/:paction/:action/:subaction?" component={Shop}/>
                         <Route path="/products/:id/:action?" component={Products}/>
