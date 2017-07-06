@@ -318,4 +318,4 @@ class Header extends Component {
     }
 }
 
-export default translate('common', { wait: process && !process.release })(Header);
+export default translate('common', { wait: process && !process.release })(withRouter(Header));

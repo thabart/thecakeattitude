@@ -29,11 +29,13 @@
     "react-rater": "^0.4.1",
     "react-router": "latest",
     "react-router-dom": "^4.1.1",
+    "react-slick": "^0.14.11",
     "react-stepper-horizontal": "^1.0.7",
     "react-tagsinput": "^3.16.1",
     "reactstrap": "^4.5.0",
     "request": "^2.81.0",
-    "signalr": "^2.2.1"
+    "signalr": "^2.2.1",
+    "slick-carousel": "^1.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
