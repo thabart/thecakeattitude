@@ -10,31 +10,99 @@
   src: url("/fonts/Bestlovers.ttf");
 }
 
-.navbar-default .navbar-nav .nav-link {
+.navbar-default {
+  height: 100px;
+  align-items: flex-start;
+  transition: all .5s ease;
+}
+
+@media (max-width: 1200px) {
+  .navbar-default {
+    background-color: white;
+    background-size: 0;
+  }
+
+  .navbar-default .toggler {
+    opacity: 1;
+  }
+
+  .navbar-default .primary-menu {
+    opacity: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navbar-default {
+    background-image: url('/images/sketch-header.png');
+    background-size: auto 100%;
+    background-position: center bottom;
+  }
+
+  .navbar-default .primary-menu {
+    opacity: 1;
+  }
+
+  .navbar-default .toggler {
+    opacity: 0;
+  }
+}
+
+.navbar-default .primary-menu {
+  padding-top: 22px;
+  transition: opacity .2s .2s ease,top .4s ease;
+}
+
+.navbar-default .primary-menu ul {
+  list-style: none;
+  margin: 0;
+}
+
+.navbar-default .primary-menu > ul > li {
+  float: left;
+  margin-left: 2px;
+}
+
+.navbar-default .primary-menu > ul > li {
+  margin-left: 0;
+}
+
+.navbar-default .primary-menu ul:last-child {
+  float: right;
+}
+
+.navbar-default .primary-menu .nav-link {
   color: #444;
   text-transform: uppercase;
   font-weight: 700;
-  padding-top: 22px;
 }
 
-.navbar-default .navbar-nav .active-nav-link {
+.navbar-default .primary-menu .active-nav-link {
   color: #e7272d !important;
 }
 
-.navbar-default .navbar-brand {
+.navbar-default .brand {
   position: absolute;
-  width: 100%;
-  text-align: center;
   margin: 0 auto;
-  z-index: 1;
   font-family: "Bestlovers";
   font-size: 22pt;
+  top: 22px;
+  left: 35%;
 }
 
-.navbar-default .navbar-brand a {
+.navbar-default .brand a {
   color: black;
 }
 
-.navbar-default .navbar-collapse {
-  z-index: 2;
+.navbar-default .brand a:hover,
+.navbar-default .brand a:active,
+.navbar-default .brand a:visited,
+.navbar-default .brand a:link {
+  text-decoration: none;
+}
+
+.navbar-default .toggler {
+  top: 25px;
+  left: 50px;
+  position: absolute;
+  transition: opacity .2s .2s ease,top .4s ease;
 }

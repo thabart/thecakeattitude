@@ -224,40 +224,31 @@ class Header extends Component {
 
     render() {
         const { t } = this.props;
-        const headerStyle = {
-          backgroundImage: "url('/images/sketch-header.png')",
-          backgroundSize: "auto 100%",
-          height: "100px",
-          alignItems: "flex-start"
-        };
         return (
             <div>
-              <Navbar toggleable fixed="top" className="website-header navbar-default" style={headerStyle}>
-                  <NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />
-                  <div className="navbar-brand">
-                    <NavLink to="/home"><i className="fa fa-shopping-cart"></i>SHOP IN GAME<i className="fa fa-shopping-cart"></i></NavLink>
+              <div className="fixed-top website-header navbar-default">
+                  <div className="toggler">
+                    <i className="fa fa-bars"></i>
                   </div>
-                  <Collapse isOpen={this.state.isMenuOpen} navbar>
-                    <Nav className="mr-auto" navbar>
-                      <NavItem>
-                        <NavLink to="/home" className="nav-link" activeClassName="active-nav-link">{t('homeMenuItem')}</NavLink>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink to="/map" className="nav-link" activeClassName="active-nav-link">{t('explorerMenuItem')}</NavLink>
-                      </NavItem>
+                  {/*<NavbarToggler right onClick={() => { this.toggle('isMenuOpen'); }} />*/}
+                  {/* Display menu */}
+                  <nav className="primary-menu">
+                    <ul>
+                      <li><NavLink to="/home" className="nav-link" activeClassName="active-nav-link">{t('homeMenuItem')}</NavLink></li>
+                      <li><NavLink to="/map" className="nav-link" activeClassName="active-nav-link">{t('explorerMenuItem')}</NavLink></li>
                       {
-                        (this.state.isLoggedIn) ? <NavItem><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></NavItem> : ''
+                        (this.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
                       }
                       {
-                        (this.state.isLoggedIn) ? <NavItem><NavLink to="/addAnnounce" className="nav-link"  activeClassName="text-white rounded bg-info">{t('addOfferMenuItem')}</NavLink></NavItem> : ''
+                        (this.state.isLoggedIn) ? <li><NavLink to="/addAnnounce" className="nav-link"  activeClassName="text-white rounded bg-info">{t('addOfferMenuItem')}</NavLink></li> : ''
                       }
-                    </Nav>
-                    <Nav className={(this.state.isConnectHidden ? 'hidden' : '')} navbar>
+                    </ul>
+                    <ul>
                       {
-                        (!this.state.isLoggedIn) ? <NavItem><a href="#" className="nav-link" onClick={() => { this.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></NavItem> : ''
+                        (!this.state.isLoggedIn) ? <li><a href="#" className="nav-link" onClick={() => { this.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></li> : ''
                       }
                       {
-                      (this.state.isLoggedIn) ? <NavDropdown isOpen={this.state.isAccountOpened} toggle={() => { this.toggle('isAccountOpened'); }}>
+                      (this.state.isLoggedIn) ? <li><NavDropdown isOpen={this.state.isAccountOpened} toggle={() => { this.toggle('isAccountOpened'); }}>
                         <DropdownToggle nav caret>{t('welcome')} <strong>{this.state.user.name}</strong></DropdownToggle>
                           <DropdownMenu>
                             <DropdownItem onClick={this.disconnect}>{t('disconnectMenuItem')}</DropdownItem>
@@ -266,11 +257,9 @@ class Header extends Component {
                             <DropdownItem onClick={this.manageAnnounces}>{t('manageYourOffersMenuItem')}</DropdownItem>
                             <DropdownItem onClick={this.manageShops}>{t('manageYourShopsMenuItem')}</DropdownItem>
                           </DropdownMenu>
-                        </NavDropdown> : ''
+                        </NavDropdown></li> : ''
                       }
-                    </Nav>
-                    <Nav navbar>
-                      <NavItem><a href="#" className="nav-link"></a></NavItem>
+                      <li>
                         <NavDropdown isOpen={this.state.isChooseLanguageOpened} toggle={() => { this.toggle('isChooseLanguageOpened'); }}>
                           <DropdownToggle nav caret>{t('chooseLanguage') + " (" + i18n.language + ")"}</DropdownToggle>
                             <DropdownMenu>
@@ -279,9 +268,14 @@ class Header extends Component {
                               <DropdownItem onClick={() => this.switchLanguage('nl')}>{t('chooseNl')}</DropdownItem>
                             </DropdownMenu>
                         </NavDropdown>
-                      </Nav>
-                  </Collapse>
-              </Navbar>
+                      </li>
+                    </ul>
+                  </nav>
+                  {/* Display title */}
+                  <div className="brand">
+                    <NavLink to="/home"><i className="fa fa-shopping-basket"></i>SHOP IN GAME<i className="fa fa-shopping-basket"></i></NavLink>
+                  </div>
+                </div>
               {/* modal part */}
               <Modal isOpen={this.state.isAuthenticateOpened}>
                 <ModalHeader toggle={() => {
