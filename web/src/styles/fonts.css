@@ -1,0 +1,26 @@
+@font-face {
+	font-family: "Mysterious Lovers";
+  src: url("/fonts/Mysterious Lovers.ttf")
+}
+
+@font-face {
+  font-family: "Bestlovers";
+  src: url("/fonts/Bestlovers.ttf");
+}
+
+body {
+	font-family: 'Open Sans', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6  {
+  font-family: 'Poppins', sans-serif;
+}
+
+.font-secondary {
+	font-family: 'Cookie', cursive; font-weight: 400 !important;
+}

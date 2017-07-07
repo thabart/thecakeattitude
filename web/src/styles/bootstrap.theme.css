@@ -1,27 +1,7 @@
 /* Navbar default theme */
-
 .nav-link {
-  color: #444;
   text-transform: uppercase;
   font-weight: 700;
-}
-
-.active-nav-link {
-  color: #e7272d !important;
-}
-
-.nav-link:hover {
-  color: #e7272d !important;
-}
-
-@font-face {
-	font-family: "Mysterious Lovers";
-  src: url("/fonts/Mysterious Lovers.ttf")
-}
-
-@font-face {
-  font-family: "Bestlovers";
-  src: url("/fonts/Bestlovers.ttf");
 }
 
 .navbar-default, .website-header {
@@ -98,14 +78,10 @@
 .navbar-default .brand {
   position: absolute;
   margin: 0 auto;
-  font-family: "Bestlovers";
   font-size: 22pt;
   top: 22px;
   left: 35%;
-}
-
-.navbar-default .brand a {
-  color: black;
+  font-family: "Bestlovers";
 }
 
 a.no-style:hover,

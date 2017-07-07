@@ -24,8 +24,7 @@ import AppDispatcher from "./appDispatcher";
 import Constants from '../Constants';
 import { translate } from 'react-i18next';
 import i18n from './i18n';
-import "./Header.css";
-import "./styles/Palette.css";
+import "./styles/Header.css";
 
 class Header extends Component {
     constructor(props) {

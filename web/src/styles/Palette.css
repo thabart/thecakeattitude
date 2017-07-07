@@ -1,27 +1,17 @@
-.colorPrimary {
-    background-color: #3F51B5;
+body {
+  color: #555 !important;
 }
 
-.colorPrimaryDark {
-    background-color: #283593;
+.nav-link {
+  color: #444;
 }
 
-.colorAccent {
-    background-color: #536DFE;
+.active-nav-link,
+.nav-link:hover,
+.redColor {
+  color: #e7272d !important;
 }
 
-.windowBackground {
-    background-color: #E8EAF6;
-}
-
-.textColorPrimary {
-    color: #F1F1F1;
-}
-
-.textColorSecondary {
-    color: #000000;
-}
-
-.textColorHint {
-    color: rgba(0, 0, 0, 0.6);
+.navbar-default .brand a {
+  color: black;
 }
