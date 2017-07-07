@@ -1,5 +1,19 @@
 /* Navbar default theme */
 
+.nav-link {
+  color: #444;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.active-nav-link {
+  color: #e7272d !important;
+}
+
+.nav-link:hover {
+  color: #e7272d !important;
+}
+
 @font-face {
 	font-family: "Mysterious Lovers";
   src: url("/fonts/Mysterious Lovers.ttf")
@@ -10,8 +24,11 @@
   src: url("/fonts/Bestlovers.ttf");
 }
 
-.navbar-default {
+.navbar-default, .website-header {
   height: 100px;
+}
+
+.navbar-default {
   align-items: flex-start;
   transition: all .5s ease;
 }
@@ -24,10 +41,12 @@
 
   .navbar-default .toggler {
     opacity: 1;
+    visibility: visible;
   }
 
   .navbar-default .primary-menu {
     opacity: 0;
+    visibility: collapse;
   }
 }
 
@@ -40,10 +59,16 @@
 
   .navbar-default .primary-menu {
     opacity: 1;
+    visibility: visible;
   }
 
   .navbar-default .toggler {
     opacity: 0;
+    visibility: collapse;
+  }
+
+  .secondary-menu {
+    visibility: collapse;
   }
 }
 
@@ -70,16 +95,6 @@
   float: right;
 }
 
-.navbar-default .primary-menu .nav-link {
-  color: #444;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-.navbar-default .primary-menu .active-nav-link {
-  color: #e7272d !important;
-}
-
 .navbar-default .brand {
   position: absolute;
   margin: 0 auto;
@@ -93,10 +108,10 @@
   color: black;
 }
 
-.navbar-default .brand a:hover,
-.navbar-default .brand a:active,
-.navbar-default .brand a:visited,
-.navbar-default .brand a:link {
+a.no-style:hover,
+a.no-style:active,
+a.no-style:visited,
+a.no-style:link {
   text-decoration: none;
 }
 
@@ -105,4 +120,13 @@
   left: 50px;
   position: absolute;
   transition: opacity .2s .2s ease,top .4s ease;
+}
+
+ul.list-group-default li {
+  border-top: 1px solid #EEE;
+  text-transform: uppercase;
+}
+
+ul.list-group-default li:first-child {
+  border-top: none;
 }

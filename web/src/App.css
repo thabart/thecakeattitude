@@ -11,10 +11,6 @@ a.no-decoration {
   text-decoration: none !important;
 }
 
-#app-container {
-    padding-top: 56px;
-}
-
 .hidden {
     display: none !important;
 }
