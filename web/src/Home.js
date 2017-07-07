@@ -17,7 +17,7 @@ class Home extends Component {
         slidesToScroll: 1
       };
       return (<div>
-        <div className="jumbotron">
+        <section className="jumbotron">
           <Slider {...settings}>
             <div>
               <div className="col-xs-12 col-md-8 col-md-offset-2 col-xl-6 col-xl-offset-6">
@@ -30,20 +30,29 @@ class Home extends Component {
               </div>
             </div>
           </Slider>
-        </div>
+        </section>
+        <section>
+          <div className="container">
+            <div className="row">
+              <div className="col-md-5">
+                <h2>Comment utiliser ShopInGame ?</h2>
+              </div>
+              <div className="col-md-7">
+                <div className="">
+                  <span>Qui êtes vous ?</span>
+                  <select>
+                    <option>Un vendeur</option>
+                    <option>Un acheteur</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="">
+              
+            </div>
+          </div>
+        </section>
         <div>
-          <img src="/images/computer-presentation.png" width="600" />
-        </div>
-        <div>
-          <p>Comment utiliser ShopInGame ?</p>
-          <ul>
-            <li>
-              En tant que vendeur
-            </li>
-            <li>
-              En tant qu acheteur
-            </li>
-          </ul>
           <div>
             <ul>
               <li>

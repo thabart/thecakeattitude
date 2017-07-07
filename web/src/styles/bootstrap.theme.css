@@ -1,0 +1,40 @@
+/* Navbar default theme */
+
+@font-face {
+	font-family: "Mysterious Lovers";
+  src: url("/fonts/Mysterious Lovers.ttf")
+}
+
+@font-face {
+  font-family: "Bestlovers";
+  src: url("/fonts/Bestlovers.ttf");
+}
+
+.navbar-default .navbar-nav .nav-link {
+  color: #444;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding-top: 22px;
+}
+
+.navbar-default .navbar-nav .active-nav-link {
+  color: #e7272d !important;
+}
+
+.navbar-default .navbar-brand {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  z-index: 1;
+  font-family: "Bestlovers";
+  font-size: 22pt;
+}
+
+.navbar-default .navbar-brand a {
+  color: black;
+}
+
+.navbar-default .navbar-collapse {
+  z-index: 2;
+}
