@@ -10,15 +10,3 @@ h2 {
 h3 {
   font-size: 22px !important;
 }
-
-.uppercase {
-  text-transform: uppercase !important;
-}
-
-.center {
-  text-align: center;
-}
-
-.i-large {
-  font-size: 56px !important;
-}

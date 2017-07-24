@@ -22,9 +22,14 @@ import $ from "jquery";
 import "ms-signalr-client";
 import AppDispatcher from "./appDispatcher";
 import NotificationSystem from 'react-notification-system';
-import "./App.css";
-import "./styles/progressBar.css";
+import "./styles/app.css"; // Import all the styles.
+import "./styles/index.css";
+import './styles/fonts.css';
 import "./styles/common.css";
+import "./styles/progressBar.css";
+import './styles/bootstrap.theme.css';
+import "./styles/palette.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 var history = createBrowserHistory();
 

@@ -14,7 +14,6 @@ import {
 } from "reactstrap";
 import $ from "jquery";
 import "./widget.css";
-import "../styles/Palette.css";
 window.jQuery = $;
 
 class Widget extends Component {

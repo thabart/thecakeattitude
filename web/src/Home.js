@@ -8,13 +8,21 @@ class Home extends Component {
     constructor(props) {
       super(props);
       this.handleChangeUserType = this.handleChangeUserType.bind(this);
+      this.toggleTab = this.toggleTab.bind(this);
       this.state = {
-        isSellerExplanationVisible : true
+        isSellerExplanationVisible : true,
+        activeTab : '1'
       };
     }
     handleChangeUserType() {
       this.setState({
         isSellerExplanationVisible: !this.state.isSellerExplanationVisible
+      });
+    }
+    toggleTab(e, activeTab) {
+      e.preventDefault();
+      this.setState({
+        activeTab: activeTab
       });
     }
     render() {
@@ -102,10 +110,77 @@ class Home extends Component {
         <section>
           <div className="container">
             <h2 className="font-secondary redColor">Pourquoi ShopInGame ?</h2>
-            <div className="row">
-
+            <div className="row vertical-tabs-container">
+              <div className="col-md-3 col-lg-3 col-sm-3 col-xs-3 vertical-tabs-menu">
+                <div className="list-group">
+                  <a href="#" className={this.state.activeTab === '1' ? "list-group-item text-center active" : "list-group-item text-center"} onClick={(e) => { this.toggleTab(e, '1') }}>
+                    {this.state.activeTab === '1' ? (<img src="/images/shopCart-White.png" />) : (<img src="/images/shopCart.png" />)}
+                    <br />
+                    <span>Courses</span>
+                  </a>
+                  <a href="#" className={this.state.activeTab === '2' ? "list-group-item text-center active" : "list-group-item text-center"}  onClick={(e) => { this.toggleTab(e, '2') }}>
+                    {this.state.activeTab === '2' ? (<img src="/images/user-White.png" />) : (<img src="/images/user.png" />)}
+                    <br />
+                    <span>Pensé pour les clients</span>
+                  </a>
+                  <a href="#" className={this.state.activeTab === '3' ? "list-group-item text-center active" : "list-group-item text-center"}  onClick={(e) => { this.toggleTab(e, '3') }}>
+                    {this.state.activeTab === '3' ? (<img src="/images/shop-White.png" />) : (<img src="/images/shop.png" />)}
+                    <br />
+                    <span>Pensé pour les vendeurs</span>
+                  </a>
+                </div>
+              </div>
+              <div className="col-md-9 col-lg-9 col-sm-9 col-xs-9">
+                {this.state.activeTab === '1' ? (
+                  <div className="tab-1">
+                    <h2 className="font-secondary">Navigation</h2>
+                    <p>ShopInGame réinvente la façon de faire ses achats en ligne en ajoutant une dimension ludique sous forme de jeux multi-joueur.</p>
+                  </div>
+                ) : (this.state.activeTab === '2' ? (
+                  <div className="tab-2">
+                    <h2 className="font-secondary">Pensé pour les clients</h2>
+                    <p>
+                      ShopInGame a été conçu pour les clients en offrant les services suivant :
+                      <ul className="with-default-style">
+                        <li>
+                          Rechercher des magasins selon différents critères de recherche
+                          <ul className="with-default-style">
+                            <li>Géographique (par exemple : les magasins les plus proches)</li>
+                            <li>Tags (par exemple : les magasins écologique)</li>
+                            <li>Produits</li>
+                            <li>Ou simplement en se baladant et discutant dans le jeux</li>
+                          </ul>
+                        </li>
+                        <li>
+                          Soumettre une demande à une communauté de vendeurs par exemple : je veux un gâteau d anniversaire pour mon fils, cette demande sera envoyée aux magasins de pâtisserie.
+                        </li>
+                      </ul>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="tab-3">
+                    <h2 className="font-secondary">Pensé pour les vendeurs</h2>
+                    <p>
+                      ShopInGame a été conçu pour les vendeurs en offrant les services suivants :
+                      <ul className="with-default-style">
+                        <li>Créer une vitrine virtuelle et y ajouter des produits.</li>
+                        <li>Rentrer facilement en contact avec les clients.</li>
+                        <li>Une gestion end-to-end du processus d achat.</li>
+                      </ul>
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+        </section>
+        <section>
+          <div className="container">
+            <h2 className="font-secondary redColor">Dernières nouveautés</h2>
+          </div>
+        </section>
+        <section>
+
         </section>
       </div>);
     }

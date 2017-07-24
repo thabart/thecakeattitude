@@ -9,7 +9,6 @@ import {ProductsService, ShopsService} from "./services/index";
 import {DescriptionTab, ProductComment} from "./productabs";
 import $ from "jquery";
 import classnames from "classnames";
-import "./styles/Palette.css";
 
 class Products extends Component {
     constructor(props) {

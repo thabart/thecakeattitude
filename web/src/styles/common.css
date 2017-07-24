@@ -1,7 +1,27 @@
+/* Define common functions */
+.uppercase {
+  text-transform: uppercase !important;
+}
+
+.center {
+  text-align: center;
+}
+
+.i-large {
+  font-size: 56px !important;
+}
+
+
+/* Define columns */
 .col-4 {
   width: 25%;
 }
 
 .col-6 {
   width: 50%;
+}
+
+/* Default style of a list */
+ul.with-default-style {
+  padding-left: 15px;
 }

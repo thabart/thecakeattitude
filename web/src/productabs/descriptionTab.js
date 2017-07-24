@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import "../styles/Palette.css";
 
 class DescriptionTab extends Component {
     constructor(props) {

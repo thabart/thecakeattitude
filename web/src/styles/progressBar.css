@@ -2,12 +2,6 @@
   min-height: 50px;
 }
 
-.progressbar-red-theme li:before,
-.progressbar-red-theme li:after,
-.progressbar-red-theme .counter-rounded {
-  background-color: rgba(231, 39, 45, 0.44) !important;
-}
-
 .progressbar-withimage-counter .counter-rounded-img {
   width: 80px;
   height: 80px;
@@ -69,9 +63,4 @@
 
 .progressbar li:first-child:before {
   content: none;
-}
-
-.progressbar li.active:before,
-.progressbar li.active:after {
-  background: #129cc5;
 }
