@@ -14,3 +14,7 @@
 .footer #copyrights {
   padding: 40px 0;
 }
+
+.footer #copyrights a {
+  font-size: 14px;
+}

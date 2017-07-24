@@ -38,12 +38,22 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isAccessTokenChecked: false,
-            isLoggedIn: false
+          isAccessTokenChecked: false,
+          isLoggedIn: false,
+          isLoading: true
         };
     }
 
     componentWillMount() {
+        var self = this;
+        $(document).ready(function() {
+          setTimeout(function() {
+            self.setState({
+              isLoading: false
+            });
+          }, 1000);
+        });
+
         var connection = $.hubConnection(Constants.apiUrl);
         var proxy = connection.createHubProxy("notifier");
         proxy.on('serviceAdded', function(message) {
@@ -168,8 +178,13 @@ class App extends Component {
 
     render() {
         var self = this;
-        if (!self.state.isAccessTokenChecked) {
-            return (<div>Loading ...</div>);
+        if (!self.state.isAccessTokenChecked || self.state.isLoading) {
+            return (<div className="loader-container">
+              <div className="loader-spinner">
+                <h2 className="font-secondary redColor">Loading ...</h2>
+                <img src="/images/loader-spinner.gif" />
+              </div>
+            </div>);
         }
 
         return (

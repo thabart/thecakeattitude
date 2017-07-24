@@ -3,14 +3,22 @@
   text-transform: uppercase !important;
 }
 
-.center {
-  text-align: center;
-}
-
 .i-large {
   font-size: 56px !important;
 }
 
+.hidden {
+    display: none !important;
+}
+
+.invalid {
+    border: 1px solid red !important;
+}
+
+a.no-decoration {
+  color: inherit !important;
+  text-decoration: none !important;
+}
 
 /* Define columns */
 .col-4 {

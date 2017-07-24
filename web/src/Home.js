@@ -151,7 +151,7 @@ class Home extends Component {
                             <li>Géographique (par exemple : les magasins les plus proches)</li>
                             <li>Tags (par exemple : les magasins écologique)</li>
                             <li>Produits</li>
-                            <li>Ou simplement en se baladant et discutant dans le jeux</li>
+                            <li>Ou simplement en se baladant et discutant sur le jeux</li>
                           </ul>
                         </li>
                         <li>
@@ -167,6 +167,7 @@ class Home extends Component {
                       ShopInGame a été conçu pour les vendeurs en offrant les services suivants :
                       <ul className="with-default-style">
                         <li>Créer une vitrine virtuelle et y ajouter des produits.</li>
+                        <li>Proposer des services aux clients par exemple : <i>Tous les samedis matin je propose de rénover vos chaussures.</i></li>
                         <li>Rentrer facilement en contact avec les clients.</li>
                         <li>Une gestion end-to-end du processus d achat.</li>
                       </ul>
@@ -182,11 +183,20 @@ class Home extends Component {
           <div className="container">
             <h2 className="font-secondary redColor">Quelques chiffres</h2>
             <div className="row">
-              <div className="col-md-4">
-                <h3>Nombre de magasins ajoutés</h3>
+              <div className="col-md-4 text-center">
+                <img src="/images/shop.png" />
+                <h3 className="counter-title">Magasins</h3>
+                <span className="counter-number">100</span>
               </div>
-              <div className="col-md-4">
-                <h3>Nombre de services</h3>
+              <div className="col-md-4 text-center">
+                <img src="/images/product.png" />
+                <h3>Produits</h3>
+                <span className="counter-number">200</span>
+              </div>
+              <div className="col-md-4 text-center">
+                <img src="/images/information.png" />
+                <h3>Services</h3>
+                <span  className="counter-number">300</span>
               </div>
             </div>
           </div>
@@ -194,11 +204,33 @@ class Home extends Component {
         {/* News */}
         <section>
           <div className="container">
-            <h2 className="font-secondary redColor">Actualités</h2>
+            <h2 className="font-secondary redColor">
+              Actualités <a href="#"><img src="/images/rss.png" /></a>
+            </h2>
             <ul className="list-group">
-              <li className="list-group-item">
-                <span>Ajouté par Thierry Habart (24-07-2017)</span><p>Pouvez vous désabonner de certains feeds</p>
+              <li className="list-group-item row">
+                <div className="col-md-3">
+                  <b>Thierry Habart</b><br/>
+                  Date : 24-07-2017
+                </div>
+                <div className="col-md-9">
+                  Vous pouvez dorénavant vous désabonner de certains feeds.
+                </div>
               </li>
+              <li className="list-group-item row">
+                <div className="col-md-3">
+                  <b>Laetitia Buyse</b><br/>
+                  Date : 24-07-2017
+                </div>
+                <div className="col-md-9">
+                  Paypal est maintenant supporté.
+                </div>
+              </li>
+            </ul>
+            <ul className="pagination">
+              <li className="page-item"><a className="page-link" href="#">1</a></li>
+              <li className="page-item"><a className="page-link" href="#">2</a></li>
+              <li className="page-item"><a className="page-link" href="#">3</a></li>
             </ul>
           </div>
         </section>

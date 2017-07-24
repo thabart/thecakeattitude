@@ -2,3 +2,8 @@
   background-image: url("/images/background-slider.jpg");
   color: white;
 }
+
+.counter-number {
+  font-size: 21pt;
+  font-weight: 700;
+}
