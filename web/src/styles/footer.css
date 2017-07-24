@@ -1,0 +1,16 @@
+.footer {
+  background: url(/images/footer-bg.jpg) repeat center center / cover;
+  background-size: auto 100%;
+  padding: 50px 0 22px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  top: auto;
+  left: 0;
+  z-index: 1;
+  border-top: 5px solid rgba(0,0,0,.2);
+}
+
+.footer #copyrights {
+  padding: 40px 0;
+}

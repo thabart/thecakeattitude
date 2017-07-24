@@ -6,6 +6,26 @@ body,
     height: 100% !important;
 }
 
+#app-container {
+  margin-bottom: 192px;
+  z-index: 2;
+  overflow: visible;
+  position: relative;
+  background-color: #FFF;
+}
+
+.footerBg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 3;
+  background: url(/images/sketch-header.png) repeat center bottom;
+  background-size: auto 100%;
+  height: 40px;
+  margin-bottom: -40px;
+}
+
 a.no-decoration {
   color: inherit !important;
   text-decoration: none !important;

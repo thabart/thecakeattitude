@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Redirect} from "react-router-dom";
 import Header from "./Header";
+import Footer from './Footer';
 import Map from "./Map";
 import Sellers from "./Sellers";
 import AddShop from "./AddShop";
@@ -173,6 +174,7 @@ class App extends Component {
 
         return (
             <Router history={history}>
+              <div>
                 <div id="app-container">
                     <Header />
                     <div id="app-body">
@@ -194,8 +196,11 @@ class App extends Component {
                                render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
                         <Route path="/error/:type" component={Error}/>
                     </div>
+                    <div className="footerBg"></div>
                     <NotificationSystem ref="notificationSystem" />
                 </div>
+                <Footer />
+              </div>
             </Router>
         );
     }

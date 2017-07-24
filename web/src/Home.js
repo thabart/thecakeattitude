@@ -34,6 +34,7 @@ class Home extends Component {
         slidesToScroll: 1
       };
       return (<div>
+        {/* Slider */}
         <section className="jumbotron slider">
           <Slider {...settings}>
             <div>
@@ -48,6 +49,7 @@ class Home extends Component {
             </div>
           </Slider>
         </section>
+        {/* How to use ShopInGame ? */}
         <section>
           <div className="container">
             <div className="row">
@@ -107,6 +109,7 @@ class Home extends Component {
             )}
           </div>
         </section>
+        {/* Why ShopInGame ? */ }
         <section>
           <div className="container">
             <h2 className="font-secondary redColor">Pourquoi ShopInGame ?</h2>
@@ -174,13 +177,30 @@ class Home extends Component {
             </div>
           </div>
         </section>
+        {/* Some figures */}
         <section>
           <div className="container">
-            <h2 className="font-secondary redColor">Dernières nouveautés</h2>
+            <h2 className="font-secondary redColor">Quelques chiffres</h2>
+            <div className="row">
+              <div className="col-md-4">
+                <h3>Nombre de magasins ajoutés</h3>
+              </div>
+              <div className="col-md-4">
+                <h3>Nombre de services</h3>
+              </div>
+            </div>
           </div>
         </section>
+        {/* News */}
         <section>
-
+          <div className="container">
+            <h2 className="font-secondary redColor">Actualités</h2>
+            <ul className="list-group">
+              <li className="list-group-item">
+                <span>Ajouté par Thierry Habart (24-07-2017)</span><p>Pouvez vous désabonner de certains feeds</p>
+              </li>
+            </ul>
+          </div>
         </section>
       </div>);
     }
