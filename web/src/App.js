@@ -18,11 +18,13 @@ import {ApplicationStore} from './stores';
 import Constants from '../Constants';
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
-import "./App.css";
 import $ from "jquery";
 import "ms-signalr-client";
 import AppDispatcher from "./appDispatcher";
 import NotificationSystem from 'react-notification-system';
+import "./App.css";
+import "./styles/progressBar.css";
+import "./styles/common.css";
 
 var history = createBrowserHistory();
 
