@@ -39,12 +39,12 @@ class Home extends Component {
           <Slider {...settings}>
             <div>
               <div className="col-xs-12 col-md-8 col-md-offset-2 col-xl-6 col-xl-offset-6">
-                <h2 className="font-secondary">Vous pensez qu il serait temps de vendre des produits ou même vos services? Venez vite ouvrir votre vitrine virtuelle !</h2>
+                <h2 className="white">Vous pensez qu il serait temps de vendre des produits ou même vos services? Venez vite ouvrir votre vitrine virtuelle !</h2>
               </div>
             </div>
             <div>
               <div className="col-xs-12 col-md-8 col-md-offset-2 col-xl-6 col-xl-offset-6">
-                <h2 className="font-secondary">Un site pensé pour les vendeurs particuliers ou professionels mais aussi les acheteurs</h2>
+                <h2 className="white">Un site pensé pour les vendeurs particuliers ou professionels mais aussi les acheteurs</h2>
               </div>
             </div>
           </Slider>
@@ -54,7 +54,7 @@ class Home extends Component {
           <div className="container">
             <div className="row">
               <div className="col-md-7">
-                <h2 className="font-secondary redColor">Comment utiliser ShopInGame ?</h2>
+                <h2>Comment utiliser ShopInGame ?</h2>
               </div>
               <div className="col-md-4">
                 <div className="">
@@ -68,7 +68,7 @@ class Home extends Component {
             </div>
             {this.state.isSellerExplanationVisible ? (
               <div className="container">
-                <ul className="progressbar progressbar-withimage-counter progressbar-red-theme row">
+                <ul className="progressbar progressbar-withimage-counter row">
                   <li className="col-4"><div className="counter-rounded-img counter-rounded"><img src="/images/shop.png" /></div></li>
                   <li className="col-4"><div className="counter-rounded-img counter-rounded"><img src="/images/shelf.png" /></div></li>
                   <li className="col-4"><div className="counter-rounded-img counter-rounded"><img src="/images/listening.png" /></div></li>
@@ -112,7 +112,7 @@ class Home extends Component {
         {/* Why ShopInGame ? */ }
         <section>
           <div className="container">
-            <h2 className="font-secondary redColor">Pourquoi ShopInGame ?</h2>
+            <h2>Pourquoi ShopInGame ?</h2>
             <div className="row vertical-tabs-container">
               <div className="col-md-3 col-lg-3 col-sm-3 col-xs-3 vertical-tabs-menu">
                 <div className="list-group">
@@ -136,12 +136,12 @@ class Home extends Component {
               <div className="col-md-9 col-lg-9 col-sm-9 col-xs-9">
                 {this.state.activeTab === '1' ? (
                   <div className="tab-1">
-                    <h2 className="font-secondary">Navigation</h2>
+                    <h2>Navigation</h2>
                     <p>ShopInGame réinvente la façon de faire ses achats en ligne en ajoutant une dimension ludique sous forme de jeux multi-joueur.</p>
                   </div>
                 ) : (this.state.activeTab === '2' ? (
                   <div className="tab-2">
-                    <h2 className="font-secondary">Pensé pour les clients</h2>
+                    <h2>Pensé pour les clients</h2>
                     <p>
                       ShopInGame a été conçu pour les clients en offrant les services suivant :
                       <ul className="with-default-style">
@@ -162,7 +162,7 @@ class Home extends Component {
                   </div>
                 ) : (
                   <div className="tab-3">
-                    <h2 className="font-secondary">Pensé pour les vendeurs</h2>
+                    <h2>Pensé pour les vendeurs</h2>
                     <p>
                       ShopInGame a été conçu pour les vendeurs en offrant les services suivants :
                       <ul className="with-default-style">
@@ -181,21 +181,21 @@ class Home extends Component {
         {/* Some figures */}
         <section>
           <div className="container">
-            <h2 className="font-secondary redColor">Quelques chiffres</h2>
+            <h2>Quelques chiffres</h2>
             <div className="row">
               <div className="col-md-4 text-center">
                 <img src="/images/shop.png" />
-                <h3 className="counter-title">Magasins</h3>
+                <h3 className="uppercase">Magasins</h3>
                 <span className="counter-number">100</span>
               </div>
               <div className="col-md-4 text-center">
                 <img src="/images/product.png" />
-                <h3>Produits</h3>
+                <h3 className="uppercase">Produits</h3>
                 <span className="counter-number">200</span>
               </div>
               <div className="col-md-4 text-center">
                 <img src="/images/information.png" />
-                <h3>Services</h3>
+                <h3 className="uppercase">Services</h3>
                 <span  className="counter-number">300</span>
               </div>
             </div>
@@ -204,7 +204,7 @@ class Home extends Component {
         {/* News */}
         <section>
           <div className="container">
-            <h2 className="font-secondary redColor">
+            <h2>
               Actualités <a href="#"><img src="/images/rss.png" /></a>
             </h2>
             <ul className="list-group">

@@ -155,3 +155,27 @@ ul.list-group-default li:first-child {
   border-left: none;
   border-right: none;
 }
+
+/* Modal window */
+.modal-content {
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+/* Button style */
+.btn {
+  border-radius: 0 !important;
+  border-bottom: 3px solid gray !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}
+
+.btn.btn-default {
+  background-color: rgba(231, 39, 45, 0.7) !important;
+  color: white !important;
+}
+
+.btn.btn-default {
+  border-bottom: 3px solid rgb(231, 39, 45) !important;
+}

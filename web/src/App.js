@@ -190,7 +190,7 @@ class App extends Component {
         return (
             <Router history={history}>
               <div>
-                <div id="app-container">
+                <div id="app-container" className="red-theme">
                     <Header />
                     <div id="app-body">
                         <Route exact path="/" component={Home}/>

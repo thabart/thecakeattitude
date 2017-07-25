@@ -24,7 +24,7 @@ import AppDispatcher from "./appDispatcher";
 import Constants from '../Constants';
 import { translate } from 'react-i18next';
 import i18n from './i18n';
-import "./styles/Header.css";
+import "./styles/header.css";
 
 class Header extends Component {
     constructor(props) {
@@ -227,7 +227,7 @@ class Header extends Component {
         const { t } = this.props;
         return (
             <div>
-              <div className="website-header">
+              <div className="navigation">
                 <div className="fixed-top navbar-default">
                     <div className="toggler">
                       <i className="fa fa-bars" onClick={() => { this.toggle('isMobileMenuOpened'); }}></i>
@@ -281,12 +281,12 @@ class Header extends Component {
                 <Modal isOpen={this.state.isAuthenticateOpened}>
                   <ModalHeader toggle={() => {
                     this.toggle('isAuthenticateOpened');
-                  }}>{t('authenticateModalTitle')}</ModalHeader>
+                  }} className="redColor"><h2>{t('authenticateModalTitle')}</h2></ModalHeader>
                   <ModalBody>
                     <div className={this.state.isErrorDisplayed ? 'alert alert-danger' : 'alert alert-danger hidden'}>
                       {t('errorLogin')}
                     </div>
-                    <div className={this.state.isLoading ? 'loading' : 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
+                    <div className={this.state.isLoading ? 'text-center authenticate-spinner' : 'text-center authenticate-spinner hidden'}><i className='fa fa-spinner fa-spin'></i></div>
                     <div className={this.state.isLoading ? 'hidden' : ''}>
                       <form onSubmit={this.authenticate}>
                         <div className="form-group">
@@ -298,7 +298,7 @@ class Header extends Component {
                           <input type='password' className='form-control' name='password' onChange={this.handleInputChange}/>
                         </div>
                         <div className="form-group">
-                          <input type="submit" className="btn btn-success" value={t('loginBtn')}/>
+                          <input type="submit" className="btn btn-default" value={t('loginBtn')}/>
                         </div>
                       </form>
                       <div className="separator">

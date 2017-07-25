@@ -6,6 +6,14 @@ body,
     height: 100% !important;
 }
 
+p {
+  line-height: 1.8;
+}
+
+#app-body {
+  padding-top: 100px;
+}
+
 #app-container {
   margin-bottom: 192px;
   z-index: 2;
@@ -27,7 +35,6 @@ body,
 }
 
 /* Display loading spinner */
-
 .loader-container {
   height: 100%;
   width: 100%;

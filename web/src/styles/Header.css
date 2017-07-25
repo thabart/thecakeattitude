@@ -1,22 +1,19 @@
-.nav-height {
-    height: 6%;
-}
-
-.separator {
-    text-align: center;
-    color: gray;
-}
-
-.loading {
-    text-align: center;
-}
-
-.loading .fa-spinner {
+/* Authentication spinner style */
+.authenticate-spinner .fa-spinner {
     font-size: 24px;
     width: 24px;
     height: 24px;
 }
 
-.website-header .nav-link {
+/* Navigation style */
+.navigation .nav-link {
   text-transform: uppercase;
+}
+
+/* Secondarly menu style */
+.secondary-menu {
+  position: fixed;
+  width: 100%;
+  top: 100px;
+  z-index: 1030;
 }
