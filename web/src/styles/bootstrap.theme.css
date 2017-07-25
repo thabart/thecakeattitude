@@ -77,10 +77,22 @@
 .navbar-default .brand {
   position: absolute;
   margin: 0 auto;
-  font-size: 22pt;
-  top: 22px;
   left: 35%;
-  font-family: "Bestlovers";
+  font-family: "BlueLineParadise";
+}
+
+@media (max-width: 512px) {
+  .navbar-default .brand {
+    font-size: 30pt;
+    top: 10px;
+  }
+}
+
+@media (min-width: 512px) {
+  .navbar-default .brand {
+    font-size: 70pt;
+    top: -25px;
+  }
 }
 
 a.no-style:hover,

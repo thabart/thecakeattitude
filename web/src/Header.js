@@ -55,7 +55,6 @@ class Header extends Component {
     }
 
     toggle(name) {
-      console.log(name);
         var value = !this.state[name];
         this.setState({
             [name]: value
@@ -279,7 +278,7 @@ class Header extends Component {
                     </nav>
                     {/* Display title */}
                     <div className="brand">
-                      <NavLink to="/home" className="no-style"><i className="fa fa-shopping-basket"></i>SHOP IN GAME<i className="fa fa-shopping-basket"></i></NavLink>
+                      <NavLink to="/home" className="no-style">ShopInGame</NavLink>
                     </div>
                 </div>
                 {/* modal part */}

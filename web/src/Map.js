@@ -560,8 +560,20 @@ class Map extends Component {
         return (
             <MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
               <div className={cl} id="widget-container">
-                  <div className="col-md-8 hidden-sm-down">
-                      <form className="row col-md-8 offset-md-1" onSubmit={(e) => {
+                  <div className="col-md-1">
+                    <div style={{ boxShadow: "2px 0px 5px 0px rgba(0,0,0,0.30)", position: "fixed", top: "100px", bottom: "0", borderRight: "1px solid rgba(0, 0, 0, 0.125)", borderTop: "1px solid rgba(0, 0, 0, 0.125)"}}>
+                      <div style={{textAlign: "right", backgroundColor: "#ee676b", color: "white", padding: "5px"}}><i className="fa fa-bars"></i></div>
+                      <div style={{padding: "5px"}}>
+                        <h3 className="uppercase">Catégories</h3>
+                        <ul>
+                          <li><h3>Habits</h3></li>
+                          <li><h3>Alimentation</h3></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-7 hidden-sm-down">
+                      <form className="row col-md-8" onSubmit={(e) => {
                           e.preventDefault();
                           this.refreshMap();
                       }}>

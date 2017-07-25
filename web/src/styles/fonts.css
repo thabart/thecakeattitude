@@ -8,6 +8,11 @@
   src: url("/fonts/Bestlovers.ttf");
 }
 
+@font-face {
+	font-family: "BlueLineParadise";
+	src: url("/fonts/Blueline Paradise.ttf");
+}
+
 body {
 	font-family: 'Open Sans', sans-serif;
 }
