@@ -1,7 +1,8 @@
 import React, {Component} from "react";
 import {Modal, ModalHeader, ModalBody, Alert} from "reactstrap";
 import {CategoryService} from './services/index';
-import './FilterModal.css';
+import { translate } from 'react-i18next';
+import './styles/filterModal.css';
 
 function getFilter() {
   let ls = {
@@ -213,6 +214,7 @@ class FilterModal extends Component {
     var categories = [],
       categoriesInFilter = [],
       self = this;
+    const {t} = this.props;
     if (this.state.categories && this.state.categories.length > 0) {
       this.state.categories.forEach(function(category) {
         var children = [];
@@ -244,18 +246,19 @@ class FilterModal extends Component {
     return ( <Modal isOpen={this.state.isOpened} size="lg">
         <ModalHeader toggle={() => {
             this.close();
-        }}>Filter</ModalHeader>
+        }}>{t('filterModalTitle')}</ModalHeader>
         <ModalBody>
             <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
+            <p>{t('filterModalDescription')}</p>
             <div className="form-group">
-                <input type="checkbox" name="includeAnnounces" onChange={this.handleInputChange} checked={this.state.includeAnnounces} /><label>Include the announces</label>
+                <input type="checkbox" name="includeAnnounces" onChange={this.handleInputChange} checked={this.state.includeAnnounces} /><label>{t('includeServicesLabel')}</label>
             </div>
             <div className="form-group">
-                <input type="checkbox" name="includeShops" onChange={this.handleInputChange} checked={this.state.includeShops} /><label>Include the shops</label>
+                <input type="checkbox" name="includeShops" onChange={this.handleInputChange} checked={this.state.includeShops} /><label>{t('includeShopsLabel')}</label>
             </div>
             {this.state.isCategoriesLoading ? (<div><i className='fa fa-spinner fa-spin'></i></div>) : (
               <div className="form-group categories-selector">
-                  <label>Select certain categories</label>
+                  <label>{t('includeCategoriesLabel')}</label>
                   <div className="row">
                       <div className="col-md-5 selector">
                         {categories}
@@ -277,7 +280,7 @@ class FilterModal extends Component {
               </div>
             )}
             <div className="form-group">
-                <button className="btn btn-success" onClick={(e) => {this.confirm(); }}>Confirm</button>
+                <button className="btn btn-default" onClick={(e) => {this.confirm(); }}>{t('confirm')}</button>
             </div>
         </ModalBody>
     </Modal> );
@@ -287,5 +290,4 @@ class FilterModal extends Component {
   }
 }
 
-
-export default FilterModal;
+export default translate('common', { wait: process && !process.release, withRef: true })(FilterModal);

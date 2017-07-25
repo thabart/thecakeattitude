@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import MainLayout from './MainLayout';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -33,7 +34,7 @@ class Home extends Component {
         slidesToShow: 1,
         slidesToScroll: 1
       };
-      return (<div>
+      return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         {/* Slider */}
         <section className="jumbotron slider">
           <Slider {...settings}>
@@ -137,7 +138,7 @@ class Home extends Component {
                 {this.state.activeTab === '1' ? (
                   <div className="tab-1">
                     <h2>Navigation</h2>
-                    <p>ShopInGame réinvente la façon de faire ses achats en ligne en ajoutant une dimension ludique sous forme de jeux multi-joueur.</p>
+                    <p>ShopInGame réinvente la façon de faire ses achats en ligne en ajoutant une dimension ludique sous forme de <i>jeux multi-joueur</i> ainsi qu un <i>tableau de bord</i> qui s adapte à vos besoins.</p>
                   </div>
                 ) : (this.state.activeTab === '2' ? (
                   <div className="tab-2">
@@ -234,7 +235,7 @@ class Home extends Component {
             </ul>
           </div>
         </section>
-      </div>);
+      </MainLayout>);
     }
 
     componentDidMount() {

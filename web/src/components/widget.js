@@ -12,8 +12,9 @@ import {
     CardSubtitle,
     CardText
 } from "reactstrap";
+import { translate } from 'react-i18next';
 import $ from "jquery";
-import "./widget.css";
+import "../styles/widget.css";
 window.jQuery = $;
 
 class Widget extends Component {
@@ -61,6 +62,7 @@ class Widget extends Component {
     }
 
     render() {
+        const { t } = this.props;
         return (
             <div className="card-container"ref={(elt) => {
                 this.container = elt;
@@ -90,11 +92,11 @@ class Widget extends Component {
                         {this.props.children}
                     </div>
                 </div>
-                <Modal isOpen={this.state.isCloseOpened}>
-                    <ModalHeader toggle={this.toggleClose}>Do-you want to close the widget?</ModalHeader>
+                <Modal isOpen={this.state.isCloseOpened} size="lg">
+                    <ModalHeader toggle={this.toggleClose}><h2>{t('closeWidgetModalTitle')}</h2></ModalHeader>
                     <ModalFooter>
-                        <Button color='success' onClick={this.close}>Yes</Button>
-                        <Button color='danger' onClick={this.toggleClose}>No</Button>
+                        <Button color='default' onClick={this.close}>{t('yes')}</Button>
+                        <Button color='default' onClick={this.toggleClose}>{t('no')}</Button>
                     </ModalFooter>
                 </Modal>
             </div>
@@ -102,4 +104,4 @@ class Widget extends Component {
     }
 }
 
-export default Widget;
+export default translate('common', { wait: process && !process.release })(Widget);

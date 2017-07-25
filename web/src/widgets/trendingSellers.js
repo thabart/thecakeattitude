@@ -4,6 +4,7 @@ import {NavLink} from "react-router-dom";
 import Widget from "../components/widget";
 import Rater from "react-rater";
 import {Button} from 'reactstrap';
+import { translate } from 'react-i18next';
 import $ from "jquery";
 import AppDispatcher from "../appDispatcher";
 
@@ -93,10 +94,11 @@ class TrendingSellers extends Component {
 
     // Render the view
     render() {
+        const {t} = this.props;
         var content = [],
             navigations = [],
             self = this,
-            title = "Trending shops";
+            title = t('trendingSellersWidgetTitle');
         if (this.state.isLoading) {
             return (
                 <Widget title={title} onClose={this.props.onClose} ref="widget">
@@ -108,7 +110,7 @@ class TrendingSellers extends Component {
             this.state.shops.forEach(function (shop) {
                 var profileImage = shop.profile_image;
                 if (!profileImage) {
-                    profileImage = "/images/profile-picture.png";
+                    profileImage = "/images/default-shop.png";
                 }
                 var tags = [];
                 if (shop.tags && shop.tags.length > 0) {
@@ -125,7 +127,7 @@ class TrendingSellers extends Component {
                         <div className="second-column">
                             <div>{shop.name}</div>
                             <div>
-                                <Rater total={5} rating={shop.average_score} interactive={false}/><i>Comments
+                                <Rater total={5} rating={shop.average_score} interactive={false}/><i>{t('comments')}
                                 : {shop.nb_comments}</i>
                             </div>
                         </div>
@@ -190,4 +192,4 @@ class TrendingSellers extends Component {
     }
 }
 
-export default TrendingSellers;
+export default translate('common', { wait: process && !process.release, withRef: true })(TrendingSellers);

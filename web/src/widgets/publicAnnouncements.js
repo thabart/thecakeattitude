@@ -3,6 +3,7 @@ import Widget from "../components/widget";
 import { AnnouncementsService } from '../services/index';
 import {Button} from 'reactstrap';
 import $ from 'jquery';
+import { translate } from 'react-i18next';
 import AppDispatcher from "../appDispatcher";
 
 class PublicAnnouncements extends Component {
@@ -92,7 +93,8 @@ class PublicAnnouncements extends Component {
       this.props.history.push('/announces/' + id);
     }
     render() {
-        var title = "Public announcements",
+        const {t} = this.props;
+        var title = t('lastClientServicesWidgetTitle'),
           content = [],
           navigations = [],
           self = this;
@@ -105,8 +107,8 @@ class PublicAnnouncements extends Component {
 
         if (self.state.announcements && self.state.announcements.length > 0) {
           self.state.announcements.forEach(function (announcement) {
-            var image = "/images/default-announcement.jpg";
-            var days = (<span>No announces</span>);
+            var image = "/images/default-client-service.png";
+            var days = (<p>{t('noClientServicesMsg')}</p>);
             var isDetailsDisplayed = self.state.details[announcement.id] && self.state.details[announcement.id] !== null;
             content.push((
               <li key={announcement.id} className="list-group-item list-group-item-action no-padding row">
@@ -114,7 +116,7 @@ class PublicAnnouncements extends Component {
                   <div className="first-column"><img src={image} className="img-thumbnail rounded picture image-small"/></div>
                   <div className="second-column">
                     <div>{announcement.name}</div>
-                    {announcement.category && announcement.category !== null && <div>Belongs to the category <b>{announcement.category.name}</b></div>}
+                    {announcement.category && announcement.category !== null && <p>{t('belongsToTheCategoryTxt')} <b>{announcement.category.name}</b></p>}
                   </div>
                     <div className="last-column">
                       <Button outline color="secondary" size="sm"  onClick={(e) => { self.navigateToAnnounce(announcement.id);}}>
@@ -124,11 +126,11 @@ class PublicAnnouncements extends Component {
                         <i className="fa fa-map-marker localize"></i>
                       </Button>
                       {announcement.price > 0 && (
-                        <h5 className="price">Proposed price € {announcement.price}</h5>
+                        <h5 className="price">{t('proposedPriceLabel')} {announcement.price}</h5>
                       )}
                     </div>
                   <div className="expander" onClick={(e) => { e.preventDefault(); self.showDetails(announcement.id, isDetailsDisplayed); }}>
-                    {isDetailsDisplayed ? (<span>Close details</span>) : (<span>More details</span>)}
+                    {isDetailsDisplayed ? (<span>{t('closeDetailsTxt')}</span>) : (<span>{t('moreDetailsTxt')}</span>)}
                   </div>
                 </div>
                 {isDetailsDisplayed && (
@@ -136,7 +138,7 @@ class PublicAnnouncements extends Component {
                     <table className="table">
                       <tbody>
                         <tr>
-                          <td>Description</td>
+                          <td>{t('description')}</td>
                           <td>{announcement.description}</td>
                         </tr>
                       </tbody>
@@ -193,4 +195,4 @@ class PublicAnnouncements extends Component {
     }
 }
 
-export default PublicAnnouncements;
+export default translate('common', { wait: process && !process.release, withRef: true })(PublicAnnouncements);

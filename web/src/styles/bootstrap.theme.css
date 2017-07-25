@@ -165,10 +165,7 @@ ul.list-group-default li:first-child {
 /* Button style */
 .btn {
   border-radius: 0 !important;
-  border-bottom: 3px solid gray !important;
-  border-left: none !important;
-  border-right: none !important;
-  border-top: none !important;
+  border: none !important;
 }
 
 .btn.btn-default {

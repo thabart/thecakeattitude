@@ -1,7 +1,5 @@
 import React, {Component} from "react";
 import {BrowserRouter as Router, Route, Redirect} from "react-router-dom";
-import Header from "./Header";
-import Footer from './Footer';
 import Map from "./Map";
 import Sellers from "./Sellers";
 import AddShop from "./AddShop";
@@ -15,14 +13,12 @@ import AddAnnouncement from "./AddAnnouncement";
 import AddService from './AddService';
 import Home from './Home';
 import {OpenIdService, SessionService} from "./services/index";
-import {ApplicationStore} from './stores';
 import Constants from '../Constants';
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
 import $ from "jquery";
 import "ms-signalr-client";
 import AppDispatcher from "./appDispatcher";
-import NotificationSystem from 'react-notification-system';
 import "./styles/app.css"; // Import all the styles.
 import "./styles/index.css";
 import './styles/fonts.css';
@@ -190,42 +186,26 @@ class App extends Component {
         return (
             <Router history={history}>
               <div>
-                <div id="app-container" className="red-theme">
-                    <Header />
-                    <div id="app-body">
-                        <Route exact path="/" component={Home}/>
-                        <Route path="/home" component={Home} />
-                        <Route path="/map" component={Map}/>
-                        <Route path="/sellers" component={Sellers}/>
-                        <Route path="/shops/:id/:paction/:action/:subaction?" component={Shop}/>
-                        <Route path="/products/:id/:action?" component={Products}/>
-                        <Route path="/services/:id/:action?" component={Services}/>
-                        <Route path="/announces/:id" component={Announces} />
-                        <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
-                        <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
-                        <Route path="/addservice/:id"
-                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
-                        <Route path="/addAnnounce"
-                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
-                        <Route path="/manage/:action"
-                               render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
-                        <Route path="/error/:type" component={Error}/>
-                    </div>
-                    <div className="footerBg"></div>
-                    <NotificationSystem ref="notificationSystem" />
-                </div>
-                <Footer />
+                <Route exact path="/" component={Home}/>
+                <Route path="/home" component={Home} />
+                <Route path="/map" component={Map}/>
+                <Route path="/sellers" component={Sellers}/>
+                <Route path="/shops/:id/:paction/:action/:subaction?" component={Shop}/>
+                <Route path="/products/:id/:action?" component={Products}/>
+                <Route path="/services/:id/:action?" component={Services}/>
+                <Route path="/announces/:id" component={Announces} />
+                <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
+                <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                <Route path="/addservice/:id"
+                       render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
+                <Route path="/addAnnounce"
+                       render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
+                <Route path="/manage/:action"
+                       render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
+                <Route path="/error/:type" component={Error}/>
               </div>
             </Router>
         );
-    }
-
-    componentDidMount() {
-      var self = this;
-      ApplicationStore.addMessageListener(function() {
-        var message = ApplicationStore.getMessage();
-        self.refs.notificationSystem.addNotification(message);
-      });
     }
 }
 

@@ -5,6 +5,7 @@ import Widget from "../components/widget";
 import Constants from "../../Constants";
 import {Button} from 'reactstrap';
 import $ from "jquery";
+import { translate } from 'react-i18next';
 import AppDispatcher from "../appDispatcher";
 
 class BestDeals extends Component {
@@ -100,7 +101,8 @@ class BestDeals extends Component {
 
     // Render the view
     render() {
-        var title = "Best deals",
+      const {t} = this.props;
+        var title = t('bestDealsWidgetTitle'),
             content = [],
             navigations = [],
             self = this;
@@ -116,7 +118,7 @@ class BestDeals extends Component {
                 var productImage = product['images'];
                 var firstPromotion = product['promotions'][0];
                 if (!productImage || productImage.length === 0) {
-                    productImage = "/images/jean.jpg";
+                    productImage = "/images/default-product.jpg";
                 } else {
                     productImage = productImage[0];
                 }
@@ -194,4 +196,4 @@ class BestDeals extends Component {
     }
 }
 
-export default BestDeals;
+export default translate('common', { wait: process && !process.release, withRef: true })(BestDeals);

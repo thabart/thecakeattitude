@@ -11,14 +11,16 @@ import SearchBox from "react-google-maps/lib/places/SearchBox";
 import FilterModal from './FilterModal';
 import {MAP} from "react-google-maps/lib/constants";
 import Constants from '../Constants';
-import "./Map.css";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
 import AppDispatcher from "./appDispatcher";
 import "react-grid-layout/css/styles.css";
 import {Responsive, WidthProvider} from "react-grid-layout";
 import NotificationSystem from 'react-notification-system';
+import MainLayout from './MainLayout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
+import { translate } from 'react-i18next';
+import "./styles/map.css";
 
 function getLayoutFromLocalStorage() {
     let ls = null;
@@ -172,7 +174,7 @@ class Map extends Component {
     }
 
     openModal() {
-      this.refs.filterModal.show();
+      this.refs.filterModal.getWrappedInstance().show();
     }
 
     onLayoutChange(layout, layouts) {
@@ -275,6 +277,7 @@ class Map extends Component {
 
     refreshMap() {
         var self = this;
+        const {t} = this.props;
         var bounds = self._googleMap.getBounds();
         if (!bounds) {
             return;
@@ -324,15 +327,15 @@ class Map extends Component {
 
         if (this._isShopsDisplayed) {
           if (self.state.activeWidgets.includes('a')) {
-            self.refs.trendingSellers.refresh(searchShopsRequest);
+            self.refs.trendingSellers.getWrappedInstance().refresh(searchShopsRequest);
           }
 
           if (self.state.activeWidgets.includes('b')) {
-            self.refs.bestDeals.refresh(searchProductsRequest);
+            self.refs.bestDeals.getWrappedInstance().refresh(searchProductsRequest);
           }
 
           if (self.state.activeWidgets.includes('c')) {
-            self.refs.shopServices.refresh(searchServicesRequest);
+            self.refs.shopServices.getWrappedInstance().refresh(searchServicesRequest);
           }
 
           ShopsService.search(searchShopsRequest).then(function (shopsResult) {
@@ -352,7 +355,7 @@ class Map extends Component {
                       location: shop.location, name: shop.name, showInfo: false, id: shop.id, opts: opts, info: (
                           <div>
                               <strong>{shop.name}</strong><br />
-                              <NavLink to={"/shops/" + shop.id+ '/view/profile' }>View profile</NavLink>
+                              <NavLink to={"/shops/" + shop.id+ '/view/profile' }>{t('viewShop')}</NavLink>
                           </div>)
                   });
               });
@@ -367,21 +370,21 @@ class Map extends Component {
           });
         } else {
           if (self.state.activeWidgets.includes('a')) {
-            self.refs.trendingSellers.reset();
+            self.refs.trendingSellers.getWrappedInstance().reset();
           }
 
           if (self.state.activeWidgets.includes('b')) {
-            self.refs.bestDeals.reset();
+            self.refs.bestDeals.getWrappedInstance().reset();
           }
 
           if (self.state.activeWidgets.includes('c')) {
-            self.refs.shopServices.reset();
+            self.refs.shopServices.getWrappedInstance().reset();
           }
         }
 
         if (this._isAnnounceDisplayed) {
           if (self.state.activeWidgets.includes('d')) {
-            self.refs.publicAnnouncements.refresh(searchAnnounces);
+            self.refs.publicAnnouncements.getWrappedInstance().refresh(searchAnnounces);
           }
           AnnouncementsService.search(searchAnnounces).then(function (announcesResult) {
               var announcesEmbedded = announcesResult['_embedded'];
@@ -399,7 +402,7 @@ class Map extends Component {
                       opts: announceOpts,
                       info: (<div>
                         <strong>{announce.name}</strong><br />
-                        <NavLink to={"/announces/" + announce.id }>View announce</NavLink>
+                        <NavLink to={"/announces/" + announce.id }>{t('viewClientService')}</NavLink>
                       </div>)
                   });
               });
@@ -416,7 +419,7 @@ class Map extends Component {
         else
         {
           if (self.state.activeWidgets.includes('d')) {
-            self.refs.publicAnnouncements.reset();
+            self.refs.publicAnnouncements.getWrappedInstance().reset();
           }
         }
 
@@ -452,7 +455,7 @@ class Map extends Component {
       this._category_ids = result.categories.map(function(category) {
         return category.id;
       });
-      this.refs.filterModal.close();
+      this.refs.filterModal.getWrappedInstance().close();
       this.refreshMap();
     }
 
@@ -515,6 +518,7 @@ class Map extends Component {
     }
 
     render() {
+        const { t } = this.props;
         var self = this,
           internalItems = {
             'a' : (<div key={'a'}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('a'); }}/></div>),
@@ -554,87 +558,89 @@ class Map extends Component {
         }
 
         return (
-            <div className={cl} id="widget-container">
-                <div className="col-md-8 hidden-sm-down">
-                    <form className="row col-md-8 offset-md-1" onSubmit={(e) => {
-                        e.preventDefault();
-                        this.refreshMap();
-                    }}>
-                        <select className="form-control col-md-2" onChange={(e) => {
-                            this.changeFilter(e);
-                        }}>
-                            <option data-target="name">Name</option>
-                            <option data-target="tag_name">Tag</option>
-                        </select>
-                        <input type="text" className="form-control col-md-8" name="searchValue"
-                               placeholder="Shop, product, service, etc."
-                               onChange={this.handleInputChange}
-                        />
-                        <button className="btn btn-info col-md-2" onClick={this.refreshMap}>search</button>
-                    </form>
-                    <ResponsiveReactGridLayout className="layout"
-                                               layouts={gridLayout} rowHeight={300}
-                                               cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
-                                               onLayoutChange={this.onLayoutChange}>
-                                               {items}
-                    </ResponsiveReactGridLayout >
-                </div>
-                <div className="col-md-4" id="map-container">
-                    <GettingStartedGoogleMap
-                        currentPosition={this.state.currentPosition}
-                        center={this.state.center}
-                        onMapLoad={this.onMapLoad}
-                        onDragStart={this.onDragStart}
-                        onDragEnd={this.onDragEnd}
-                        onZoomChanged={this.onZoomChanged}
-                        onMarkerClick={this.onMarkerClick}
-                        onMarkerClose={this.onMarkerClose}
-                        markers={this.state.markers}
-                        onSearchBoxCreated={this.onSearchBoxCreated}
-                        onPlacesChanged={this.onPlacesChanged}
-                        bounds={this.state.bounds}
-                        containerElement={
-                            <div style={{height: `100%`}}/>
-                        }
-                        mapElement={
-                            <div style={{height: `100%`}}/>
-                        }>
-                    </GettingStartedGoogleMap>
-                </div>
-                <div className="options">
-                    <a href="/" onClick={(e) => {
-                      e.preventDefault();
-                      this.openAddingWidgets();
-                    }}><i className="fa fa-bars"></i></a>
-                    <a href="/" onClick={(e) => {
-                      e.preventDefault();
-                      this.openModal();
-                    }}><i className="fa fa-filter"></i></a>
-                    {isLoggedIn && (<NavLink to="/addAnnounce"><i className="fa fa-bullhorn"></i></NavLink>)}
-                </div>
-                <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
-                {this.state.isAddingWidgets && (
-                  <div className="add-widgets">
-                    <h5>Active widgets</h5>
-                    <div className="form-group">
-                      <input type="checkbox" name="isTrendingShopsActive" checked={this.state.isTrendingShopsActive} onChange={this.handleInputChange}/><label>Trending shops</label>
-                    </div>
-                    <div className="form-group">
-                      <input type="checkbox" name="isBestDealsActive" checked={this.state.isBestDealsActive} onChange={this.handleInputChange}/><label>Best deals</label>
-                    </div>
-                    <div className="form-group">
-                      <input type="checkbox" name="isBestServicesActive" checked={this.state.isBestServicesActive} onChange={this.handleInputChange}/><label>Best services</label>
-                    </div>
-                    <div className="form-group">
-                      <input type="checkbox" name="isPublicAnnouncementsActive" checked={this.state.isPublicAnnouncementsActive} onChange={this.handleInputChange}/><label>Public announcement</label>
-                    </div>
-                    <div className="form-group">
-                      <button className="btn btn-success" onClick={this.filterWidgets}>UPDATE</button>
-                    </div>
+            <MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
+              <div className={cl} id="widget-container">
+                  <div className="col-md-8 hidden-sm-down">
+                      <form className="row col-md-8 offset-md-1" onSubmit={(e) => {
+                          e.preventDefault();
+                          this.refreshMap();
+                      }}>
+                          <select className="form-control col-md-2 col-lg-2" onChange={(e) => {
+                              this.changeFilter(e);
+                          }}>
+                              <option data-target="name">Name</option>
+                              <option data-target="tag_name">Tag</option>
+                          </select>
+                          <input type="text" className="form-control col-md-7 col-lg-7" name="searchValue"
+                                 placeholder="Shop, product, service, etc."
+                                 onChange={this.handleInputChange}
+                          />
+                          <button className="btn btn-default col-md-3 col-lg-3" onClick={this.refreshMap}>search</button>
+                      </form>
+                      <ResponsiveReactGridLayout className="layout"
+                                                 layouts={gridLayout} rowHeight={300}
+                                                 cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
+                                                 onLayoutChange={this.onLayoutChange}>
+                                                 {items}
+                      </ResponsiveReactGridLayout >
                   </div>
-                )}
-                <NotificationSystem ref="notificationSystem" />
-            </div>
+                  <div className="col-md-4" id="map-container">
+                      <GettingStartedGoogleMap
+                          currentPosition={this.state.currentPosition}
+                          center={this.state.center}
+                          onMapLoad={this.onMapLoad}
+                          onDragStart={this.onDragStart}
+                          onDragEnd={this.onDragEnd}
+                          onZoomChanged={this.onZoomChanged}
+                          onMarkerClick={this.onMarkerClick}
+                          onMarkerClose={this.onMarkerClose}
+                          markers={this.state.markers}
+                          onSearchBoxCreated={this.onSearchBoxCreated}
+                          onPlacesChanged={this.onPlacesChanged}
+                          bounds={this.state.bounds}
+                          containerElement={
+                              <div style={{height: `100%`}}/>
+                          }
+                          mapElement={
+                              <div style={{height: `100%`}}/>
+                          }>
+                      </GettingStartedGoogleMap>
+                  </div>
+                  <div className="float-btns">
+                      <a href="/" onClick={(e) => {
+                        e.preventDefault();
+                        this.openAddingWidgets();
+                      }}><i className="fa fa-bars"></i></a>
+                      <a href="/" onClick={(e) => {
+                        e.preventDefault();
+                        this.openModal();
+                      }}><i className="fa fa-filter"></i></a>
+                      {isLoggedIn && (<NavLink to="/addAnnounce"><i className="fa fa-bullhorn"></i></NavLink>)}
+                  </div>
+                  <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
+                  {this.state.isAddingWidgets && (
+                    <div className="add-widgets">
+                      <h5>{t('enableWidgetsTitle')}</h5>
+                      <div className="form-group">
+                        <input type="checkbox" name="isTrendingShopsActive" checked={this.state.isTrendingShopsActive} onChange={this.handleInputChange}/><label>Trending shops</label>
+                      </div>
+                      <div className="form-group">
+                        <input type="checkbox" name="isBestDealsActive" checked={this.state.isBestDealsActive} onChange={this.handleInputChange}/><label>Best deals</label>
+                      </div>
+                      <div className="form-group">
+                        <input type="checkbox" name="isBestServicesActive" checked={this.state.isBestServicesActive} onChange={this.handleInputChange}/><label>Best services</label>
+                      </div>
+                      <div className="form-group">
+                        <input type="checkbox" name="isPublicAnnouncementsActive" checked={this.state.isPublicAnnouncementsActive} onChange={this.handleInputChange}/><label>Public announcement</label>
+                      </div>
+                      <div className="form-group">
+                        <button className="btn btn-default uppercase" onClick={this.filterWidgets}>{t('update')}</button>
+                      </div>
+                    </div>
+                  )}
+                  <NotificationSystem ref="notificationSystem" />
+              </div>
+            </MainLayout>
         );
     }
 
@@ -650,7 +656,6 @@ class Map extends Component {
                       self.setState(shops);
                     }
 
-                    console.log(self.refs);
                     self.refs.notificationSystem.addNotification({
                       message: 'A new shop has been added',
                       level: 'success',
@@ -686,4 +691,4 @@ class Map extends Component {
 }
 
 
-export default withRouter(Map);
+export default translate('common', { wait: process && !process.release })(withRouter(Map));

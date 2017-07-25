@@ -3,29 +3,23 @@
     border: 1px dashed #ddd;
 }
 
-.options {
+/* Display floating buttons */
+.float-btns {
   position: fixed;
   bottom: 10px;
   left: 10px;
 }
 
-.options a {
+.float-btns a {
   display: inline-block;
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  color: white;
   font-size: 30pt;
   line-height: 60px;
   text-align: center;
   cursor: pointer;
   margin-right: 10px;
-  background: #5bc0de;
-}
-
-.options a,
-.options a:hover {
-  color: white;
 }
 
 .add-widgets {
@@ -34,7 +28,6 @@
   left: 10px;
   width: 200px;
   background-color: white;
-  border-radius: 5px;
   box-shadow: 2px 2px 10px #888888;
   padding: 5px;
 }
@@ -55,6 +48,7 @@
     right: 0;
 }
 
+/* Google map searching circle */
 .pending-search .search-circle-overlay, .searching .searching-overlay {
     visibility: visible;
     opacity: 1;

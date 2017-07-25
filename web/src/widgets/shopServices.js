@@ -5,6 +5,7 @@ import moment from "moment";
 import {Button} from 'reactstrap';
 import Rater from "react-rater";
 import $ from "jquery";
+import { translate } from 'react-i18next';
 import AppDispatcher from "../appDispatcher";
 
 var daysMapping = {
@@ -103,7 +104,8 @@ class ShopServices extends Component {
     }
 
     render() {
-        var title = "Best services",
+        const {t} = this.props;
+        var title = t('bestServicesWidgetTitle'),
             content = [],
             navigations = [],
             self = this;
@@ -116,7 +118,7 @@ class ShopServices extends Component {
 
         if (self.state.services && self.state.services.length > 0) {
             self.state.services.forEach(function (service) {
-                var image = "/images/default-service.jpg";
+                var image = "/images/default-shop-service.png";
                 if (!service.images && service.images.length > 0) {
                     image = service.images[0];
                 }
@@ -140,7 +142,7 @@ class ShopServices extends Component {
                        <div className="second-column">
                         <div>{service.name}</div>
                         <div>
-                            <Rater total={5} rating={service.average_score} interactive={false}/><i>Comments: {service.nb_comments}</i>
+                            <Rater total={5} rating={service.average_score} interactive={false}/><i>{t('comments')}: {service.nb_comments}</i>
                         </div>
                         <div>
                           {days}
@@ -203,4 +205,4 @@ class ShopServices extends Component {
     }
 }
 
-export default ShopServices;
+export default translate('common', { wait: process && !process.release, withRef: true })(ShopServices);
