@@ -144,6 +144,9 @@ class BestDeals extends Component {
                         <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, product); }}>
                           <i className="fa fa-map-marker localize" aria-hidden="true"></i>
                         </Button>
+                        <Button outline color="secondary" size="sm">
+                          <i className="fa fa-gamepad gamepad"></i>
+                        </Button>
                        </div>
                     </a>));
             });

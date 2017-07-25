@@ -237,6 +237,7 @@ class Header extends Component {
                       <ul>
                         <li><NavLink to="/home" className="nav-link no-style" activeClassName="active-nav-link">{t('homeMenuItem')}</NavLink></li>
                         <li><NavLink to="/map" className="nav-link no-style" activeClassName="active-nav-link">{t('explorerMenuItem')}</NavLink></li>
+                        <li><NavLink to="/game" className="nav-link no-style" activeClassName="active-nav-link">{t('gameMenuItem')}</NavLink></li>
                         {
                           (this.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
                         }
@@ -245,6 +246,10 @@ class Header extends Component {
                         }
                       </ul>
                       <ul>
+                        <li><NavLink to="/help" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-question-circle"></i></NavLink></li>
+                        {
+                          (this.state.isLoggedIn ? (<li><NavLink to="/notifications" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-bell-o"></i></NavLink></li>) : '')
+                        }
                         {
                           (!this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={() => { this.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></li> : ''
                         }

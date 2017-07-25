@@ -57,7 +57,8 @@
   text-align: right;
 }
 
-.card .localize {
+.card .localize,
+.card .gamepad {
   cursor: pointer;
   font-size: 17pt;
 }

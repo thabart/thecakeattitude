@@ -136,7 +136,11 @@ class TrendingSellers extends Component {
                               <i className="fa fa-map-marker localize" onClick={(e) => {
                                   self.localize(e, shop);
                               }}></i>
-                            </Button><br />
+                            </Button>
+                            <Button outline color="secondary" size="sm">
+                              <i className="fa fa-gamepad gamepad"></i>
+                            </Button>
+                            <br />
                             <i>{shop.category.name}</i><br/>
                         </div>
                     </NavLink>));

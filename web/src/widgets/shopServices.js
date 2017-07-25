@@ -152,6 +152,9 @@ class ShopServices extends Component {
                         <Button outline color="secondary" size="sm"  onClick={(e) => { self.localize(e, service); }}>
                           <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, service); }}></i>
                         </Button>
+                        <Button outline color="secondary" size="sm">
+                          <i className="fa fa-gamepad gamepad"></i>
+                        </Button>
                        </div>
                     </a>));
             });

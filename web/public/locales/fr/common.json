@@ -43,5 +43,6 @@
   "description": "Description",
   "comments": "Commentaires",
   "viewShop": "Vister le magasin",
-  "viewClientService": "Voir le service demandé par le client"
+  "viewClientService": "Voir le service demandé par le client",
+  "gameMenuItem": "Jeux"
 }
