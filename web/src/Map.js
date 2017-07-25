@@ -566,8 +566,13 @@ class Map extends Component {
                       <div style={{padding: "5px"}}>
                         <h3 className="uppercase">Catégories</h3>
                         <ul>
-                          <li><h3>Habits</h3></li>
-                          <li><h3>Alimentation</h3></li>
+                          <li><h6 style={{display: "inline-block"}}>Habits</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
+                          <li><h6 style={{display: "inline-block"}}>Alimentation</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
+                        </ul>
+                        <h3 className="uppercase">Layers</h3>
+                        <ul>
+                          <li><h6 style={{display: "inline-block"}}>Magasins</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
+                          <li><h6 style={{display: "inline-block"}}>Services</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
                         </ul>
                       </div>
                     </div>
