@@ -103,9 +103,6 @@
 @media (max-width: 768px) {
   #vertical-menu-map {
     width: 200px;
-    position: fixed;
-    top: 100px;
-    bottom: 0;
   }
 
   #vertical-menu-map.min {

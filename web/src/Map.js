@@ -648,11 +648,7 @@ class Map extends Component {
                       {i: 'd', x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
                   ]
               },
-          shopCategories = self.state.shopCategories,
-          shopLayerCl = self.state.isShopsLayerDisplayed ? "fa fa-eye" : "fa fa-eye-slash",
-          serviceLayerCl = self.state.isServicesLayerDisplayed ? "fa fa-eye" : "fa fa-eye-slash",
-          verticalMenuCl = self.state.isVerticalMenuDisplayed ? "col-md-2 vertical-menu" : "vertical-menu min",
-          mapContainerCl = self.state.isVerticalMenuDisplayed ? "col-md-4" : "col-sm-11 col-md-5 max";
+          shopCategories = self.state.shopCategories;
         if (this.state.isSearching) {
             cl = "row searching";
         } else if (this.state.isDragging) {
@@ -704,7 +700,7 @@ class Map extends Component {
             <MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
               <div className={cl} id="widget-container">
                   {/* Vertical menu */}
-                  <div id="vertical-menu-map" className={verticalMenuCl}>
+                  <div id="vertical-menu-map" className={self.state.isVerticalMenuDisplayed ? "col-md-2 vertical-menu fixed" : "vertical-menu min fixed"}>
                       <div className="header"><i className="fa fa-bars" onClick={() => self.toggle('isVerticalMenuDisplayed')}></i></div>
                       {self.state.isVerticalMenuDisplayed ? (
                         <div className="content">
@@ -717,13 +713,13 @@ class Map extends Component {
                             <li className="menu-item">
                               <h6 className="title">Magasins</h6>
                               <div className="actions">
-                                <i className={shopLayerCl} onClick={() => self.toggle('isShopsLayerDisplayed')}></i>
+                                <i className={self.state.isShopsLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => self.toggle('isShopsLayerDisplayed')}></i>
                               </div>
                             </li>
                             <li className="menu-item">
                               <h6 className="title">Services</h6>
                               <div className="actions">
-                                <i className={serviceLayerCl} onClick={() => self.toggle('isServicesLayerDisplayed')}></i>
+                                <i className={self.state.isServicesLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => self.toggle('isServicesLayerDisplayed')}></i>
                               </div>
                             </li>
                           </ul>
@@ -732,25 +728,25 @@ class Map extends Component {
                             <li className="menu-item">
                               <h6 className="title">{t('trendingSellersWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isTrendingSellersWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isTrendingSellersWidgetDisplayed')}></i>
+                                <i className={self.state.isTrendingSellersWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isTrendingSellersWidgetDisplayed')}></i>
                               </div>
                             </li>
                             <li className="menu-item">
                               <h6 className="title">{t('bestDealsWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isBestDealsWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isBestDealsWidgetDisplayed')}></i>
+                                <i className={self.state.isBestDealsWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isBestDealsWidgetDisplayed')}></i>
                               </div>
                             </li>
                             <li className="menu-item">
                               <h6 className="title">{t('bestServicesWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isBestServicesWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isBestServicesWidgetDisplayed')}></i>
+                                <i className={self.state.isBestServicesWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isBestServicesWidgetDisplayed')}></i>
                               </div>
                             </li>
                             <li className="menu-item">
                               <h6 className="title">{t('lastClientServicesWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isLastServicesWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isLastServicesWidgetDisplayed')}></i>
+                                <i className={self.state.isLastServicesWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isLastServicesWidgetDisplayed')}></i>
                               </div>
                             </li>
                           </ul>
@@ -766,7 +762,7 @@ class Map extends Component {
                       )}
                   </div>
                   {/* Widgets container */}
-                  <div className="col-md-6 hidden-sm-down">
+                  <div className={self.state.isVerticalMenuDisplayed ? "col-md-6 offset-md-2 hidden-sm-down" : "col-md-6 hidden-sm-down"} style={!self.state.isVerticalMenuDisplayed ? {marginLeft: "60px"} : {}}>
                       <form className="row col-md-8" onSubmit={(e) => {
                           e.preventDefault();
                           this.refreshMap();
@@ -791,7 +787,7 @@ class Map extends Component {
                       </ResponsiveReactGridLayout >
                   </div>
                   {/* Map container */}
-                  <div className={mapContainerCl} id="map-container">
+                  <div className={self.state.isVerticalMenuDisplayed ? "col-md-4" : "col-sm-11 col-md-5 max"} id="map-container">
                       <GettingStartedGoogleMap
                           currentPosition={this.state.currentPosition}
                           center={this.state.center}
