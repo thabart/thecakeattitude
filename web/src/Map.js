@@ -167,7 +167,6 @@ class Map extends Component {
         this._category_ids = null;
         this._isAnnounceDisplayed = true;
         this._isShopsDisplayed = true;
-        this.openModal = this.openModal.bind(this);
         this.onLayoutChange = this.onLayoutChange.bind(this);
         this.setCurrentMarker = this.setCurrentMarker.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
@@ -182,9 +181,7 @@ class Map extends Component {
         this.changeFilter = this.changeFilter.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.filter = this.filter.bind(this);
-        this.filterWidgets = this.filterWidgets.bind(this);
         this.openAddingWidgets = this.openAddingWidgets.bind(this);
-        this.refreshActiveWidgets = this.refreshActiveWidgets.bind(this);
         this.toggleCategory = this.toggleCategory.bind(this);
         this.toggleEye = this.toggleEye.bind(this);
         this.toggle = this.toggle.bind(this);
@@ -245,10 +242,6 @@ class Map extends Component {
         };
     }
 
-    openModal() {
-      this.refs.filterModal.getWrappedInstance().show();
-    }
-
     onLayoutChange(layout, layouts) {
       saveLayout(layouts);
     }
@@ -285,7 +278,7 @@ class Map extends Component {
         this._searchTarget = $(selected).data('target');
     }
 
-    onMapLoad(map) {
+    onMapLoad(map) { // This method is called when the map is loaded.
         var self = this;
         self._googleMap = map;
         if (!map) {
@@ -301,7 +294,6 @@ class Map extends Component {
     onFilterLoad(filter) {
       var self = this;
       setTimeout(function () {
-          self.refreshActiveWidgets();
           self.filter(filter);
       }, 1000);
     }
@@ -313,14 +305,16 @@ class Map extends Component {
     }
 
     onDragEnd() { // This method is called when the user has finished to drag the map.
-      this.setState({
+      var self = this;
+      self.setState({
         isDragging: false
       });
-      this.refreshMap();
+      self.refreshMap();
     }
 
-    onZoomChanged() {
-        this.refreshMap();
+    onZoomChanged() { // This method is called when the zoom has changed.
+      var self = this;
+      self.refreshMap();
     }
 
     onMarkerClick(marker) {
@@ -398,6 +392,7 @@ class Map extends Component {
         });
 
         if (this._isShopsDisplayed) {
+          /*
           if (self.state.activeWidgets.includes('a')) {
             self.refs.trendingSellers.getWrappedInstance().refresh(searchShopsRequest);
           }
@@ -409,7 +404,8 @@ class Map extends Component {
           if (self.state.activeWidgets.includes('c')) {
             self.refs.shopServices.getWrappedInstance().refresh(searchServicesRequest);
           }
-
+          */
+          console.log(searchShopsRequest);
           ShopsService.search(searchShopsRequest).then(function (shopsResult) {
               var shopsEmbedded = shopsResult['_embedded'];
               if (!(shopsEmbedded instanceof Array)) {
@@ -453,7 +449,7 @@ class Map extends Component {
             self.refs.shopServices.getWrappedInstance().reset();
           }
         }
-
+        /*
         if (this._isAnnounceDisplayed) {
           if (self.state.activeWidgets.includes('d')) {
             self.refs.publicAnnouncements.getWrappedInstance().refresh(searchAnnounces);
@@ -500,6 +496,7 @@ class Map extends Component {
               isSearching: false
           });
         }
+        */
     }
 
     onSearchBoxCreated(searchBox) {
@@ -529,41 +526,6 @@ class Map extends Component {
       });
       this.refs.filterModal.getWrappedInstance().close();
       this.refreshMap();
-    }
-
-    refreshActiveWidgets() {
-      var self = this;
-      self.setState({
-        isTrendingShopsActive: self.state.activeWidgets.includes('a'),
-        isBestDealsActive: self.state.activeWidgets.includes('b'),
-        isBestServicesActive: self.state.activeWidgets.includes('c'),
-        isPublicAnnouncementsActive: self.state.activeWidgets.includes('d')
-      });
-    }
-
-    filterWidgets() {
-      var activeWidgets = [];
-      if (this.state.isTrendingShopsActive) {
-        activeWidgets.push('a');
-      }
-
-      if (this.state.isBestDealsActive) {
-        activeWidgets.push('b')
-      }
-
-      if (this.state.isBestServicesActive) {
-        activeWidgets.push('c');
-      }
-
-      if (this.state.isPublicAnnouncementsActive) {
-        activeWidgets.push('d');
-      }
-
-      saveActiveWidgets(activeWidgets);
-      this.setState({
-        activeWidgets: activeWidgets,
-        isAddingWidgets: false
-      });
     }
 
     openAddingWidgets() {
