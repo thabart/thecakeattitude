@@ -164,13 +164,9 @@ class Map extends Component {
         this._waitForToken = null;
         this._searchBox = null;
         this._searchTarget = "name";
-        this._category_ids = null;
-        this._isAnnounceDisplayed = true;
-        this._isShopsDisplayed = true;
         this.onLayoutChange = this.onLayoutChange.bind(this);
         this.setCurrentMarker = this.setCurrentMarker.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
-        this.onFilterLoad = this.onFilterLoad.bind(this);
         this.onDragStart = this.onDragStart.bind(this);
         this.onDragEnd = this.onDragEnd.bind(this);
         this.onZoomChanged = this.onZoomChanged.bind(this);
@@ -179,9 +175,6 @@ class Map extends Component {
         this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
         this.onPlacesChanged = this.onPlacesChanged.bind(this);
         this.changeFilter = this.changeFilter.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.filter = this.filter.bind(this);
-        this.openAddingWidgets = this.openAddingWidgets.bind(this);
         this.toggleCategory = this.toggleCategory.bind(this);
         this.toggleEye = this.toggleEye.bind(this);
         this.toggle = this.toggle.bind(this);
@@ -192,6 +185,7 @@ class Map extends Component {
         }
 
         var activeWidgets = getActiveWidgets() || keys;
+        var filter = getFilter();
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
@@ -201,21 +195,21 @@ class Map extends Component {
             bounds: null,
             searchValue: null,
             activeWidgets: activeWidgets,
-            isTrendingShopsActive: true,
-            isBestDealsActive: true,
-            isBestServicesActive: true,
-            isPublicAnnouncementsActive: true,
-            isAddingWidgets: false,
             isVerticalMenuDisplayed: true,
-            isShopsLayerDisplayed : true,
-            isServicesLayerDisplayed: true,
+            isShopsLayerDisplayed : filter.include_shops,
+            isServicesLayerDisplayed: filter.include_announces,
             shopCategories: []
         };
     }
 
+    changeFilter(e) { // Change type of filter.
+        var selected = $(e.target).find(':selected');
+        this._searchTarget = $(selected).data('target');
+    }
+
     onLayoutChange(layout, layouts) {
       saveLayout(layouts);
-    }
+    } // Save the GRID layout.
 
     setCurrentMarker(id) {
         var markers = this.state.markers;
@@ -233,21 +227,7 @@ class Map extends Component {
             center: selectedMarker.location,
             markers: markers
         });
-    }
-
-    handleInputChange(e) {
-        const target = e.target;
-        const value = target.type === 'checkbox' ? target.checked : target.value;
-        const name = target.name;
-        this.setState({
-            [name]: value
-        });
-    }
-
-    changeFilter(e) {
-        var selected = $(e.target).find(':selected');
-        this._searchTarget = $(selected).data('target');
-    }
+    } // Set current marker on the map.
 
     onMapLoad(map) { // This method is called when the map is loaded.
         var self = this;
@@ -288,7 +268,7 @@ class Map extends Component {
       self.refreshMap();
     }
 
-    onMarkerClick(marker) {
+    onMarkerClick(marker) { // Display information when click on the marker.
         var markers = this.state.markers;
         markers.forEach(function (m) {
             if (m === marker) {
@@ -300,7 +280,7 @@ class Map extends Component {
         });
     }
 
-    onMarkerClose(marker) {
+    onMarkerClose(marker) { // Hide the marker.
         var markers = this.state.markers;
         markers.forEach(function (m) {
             if (m === marker) {
@@ -313,11 +293,20 @@ class Map extends Component {
     }
 
     refreshMap() { // Refresh the map : Display shops and announces.
-        var self = this;
         const {t} = this.props;
+        var self = this;
+        var categoryIds = [];
         var bounds = self._googleMap.getBounds();
         if (!bounds) {
             return;
+        }
+
+        self.state.shopCategories.forEach(function(shopCategory) {
+          categoryIds = categoryIds.concat(shopCategory.children.filter(function(c)  { return c.isEyeOpened; }).map(function(c) { return c.id; }));
+        });
+
+        if (categoryIds.length === 0) {
+          categoryIds = null;
         }
 
         self.setState({
@@ -350,32 +339,31 @@ class Map extends Component {
         }
 
         var searchShopsRequest = $.extend({}, json, {
-          category_id: self._category_ids
+          category_id: categoryIds
         });
         var searchProductsRequest = $.extend({}, json, {
-          shop_category_ids: self._category_ids
+          shop_category_ids: categoryIds
         });
         var searchServicesRequest = $.extend({}, json, {
-          shop_category_ids: self._category_ids
+          shop_category_ids: categoryIds
         });
         var searchAnnounces = $.extend({}, json, {
-          category_id: self._category_ids
+          category_id: categoryIds
         });
 
-        if (this._isShopsDisplayed) {
-          /*
-          if (self.state.activeWidgets.includes('a')) {
+        if (self.state.isShopsLayerDisplayed) { // Shops LAYER.
+          if (self.state.activeWidgets.includes(widgetKeys.trendingSellers)) {
             self.refs.trendingSellers.getWrappedInstance().refresh(searchShopsRequest);
           }
 
-          if (self.state.activeWidgets.includes('b')) {
+          if (self.state.activeWidgets.includes(widgetKeys.bestDeals)) {
             self.refs.bestDeals.getWrappedInstance().refresh(searchProductsRequest);
           }
 
-          if (self.state.activeWidgets.includes('c')) {
+          if (self.state.activeWidgets.includes(widgetKeys.shopServices)) {
             self.refs.shopServices.getWrappedInstance().refresh(searchServicesRequest);
           }
-          */
+
           ShopsService.search(searchShopsRequest).then(function (shopsResult) {
               var shopsEmbedded = shopsResult['_embedded'];
               if (!(shopsEmbedded instanceof Array)) {
@@ -407,21 +395,21 @@ class Map extends Component {
             });
           });
         } else {
-          if (self.state.activeWidgets.includes('a')) {
+          if (self.state.activeWidgets.includes(widgetKeys.trendingSellers)) {
             self.refs.trendingSellers.getWrappedInstance().reset();
           }
 
-          if (self.state.activeWidgets.includes('b')) {
+          if (self.state.activeWidgets.includes(widgetKeys.bestDeals)) {
             self.refs.bestDeals.getWrappedInstance().reset();
           }
 
-          if (self.state.activeWidgets.includes('c')) {
+          if (self.state.activeWidgets.includes(widgetKeys.shopServices)) {
             self.refs.shopServices.getWrappedInstance().reset();
           }
         }
-        /*
-        if (this._isAnnounceDisplayed) {
-          if (self.state.activeWidgets.includes('d')) {
+
+        if (self.state.isServicesLayerDisplayed) { // Client services LAYER.
+          if (self.state.activeWidgets.includes(widgetKeys.announces)) {
             self.refs.publicAnnouncements.getWrappedInstance().refresh(searchAnnounces);
           }
           AnnouncementsService.search(searchAnnounces).then(function (announcesResult) {
@@ -456,24 +444,23 @@ class Map extends Component {
         }
         else
         {
-          if (self.state.activeWidgets.includes('d')) {
+          if (self.state.activeWidgets.includes(widgetKeys.announces)) {
             self.refs.publicAnnouncements.getWrappedInstance().reset();
           }
         }
 
-        if (!this._isAnnounceDisplayed && !this._isShopsDisplayed) {
+        if (!self.state.isServicesLayerDisplayed && !self.state.isShopsLayerDisplayed) {
           self.setState({
-              isSearching: false
+            isSearching: false
           });
         }
-        */
     }
 
-    onSearchBoxCreated(searchBox) {
-        this._searchBox = searchBox;
+    onSearchBoxCreated(searchBox) { // Set a reference of the search box.
+      this._searchBox = searchBox;
     }
 
-    onPlacesChanged() {
+    onPlacesChanged() { // Refresh the map when the place change.
         var self = this;
         const places = this._searchBox.getPlaces();
         if (places.length !== 1) {
@@ -486,23 +473,6 @@ class Map extends Component {
             center: location
         });
         self.refreshMap();
-    }
-
-    filter(result) {
-      this._isAnnounceDisplayed = result.include_announces;
-      this._isShopsDisplayed = result.include_shops;
-      this._category_ids = result.categories.map(function(category) {
-        return category.id;
-      });
-      this.refs.filterModal.getWrappedInstance().close();
-      this.refreshMap();
-    }
-
-    openAddingWidgets() {
-      var isAddingWidgets = !this.state.isAddingWidgets;
-      this.setState({
-        isAddingWidgets: isAddingWidgets
-      });
     }
 
     toggleCategory(shopCategory) { // Toggle the category.
@@ -518,7 +488,7 @@ class Map extends Component {
       });
     }
 
-    toggleEye(shopCategory) { // Toggle the eye.
+    toggleEye(shopCategory) { // Toggle the eye (shop categories).
       var self = this;
       var category = self.getShopCategory(shopCategory);
       if (category === null) {
@@ -556,10 +526,12 @@ class Map extends Component {
       var filter = getFilter();
       filter.excludedCategories = categoryIds;
       saveFilter(filter);
+      self.refreshMap();
     }
 
     toggle(propName) { // Toggle a property.
       var value = !this.state[propName];
+      this.state[propName] = value;
       this.setState({
         [propName]: value
       });
@@ -699,13 +671,13 @@ class Map extends Component {
                             <li className="menu-item">
                               <h6 className="title">Magasins</h6>
                               <div className="actions">
-                                <i className={self.state.isShopsLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => self.toggle('isShopsLayerDisplayed')}></i>
+                                <i className={self.state.isShopsLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => {  self.toggle('isShopsLayerDisplayed'); var filter = getFilter(); filter.include_shops = self.state.isShopsLayerDisplayed; saveFilter(filter); self.refreshMap(); }}></i>
                               </div>
                             </li>
                             <li className="menu-item">
-                              <h6 className="title">Services</h6>
+                              <h6 className="title">Clients</h6>
                               <div className="actions">
-                                <i className={self.state.isServicesLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => self.toggle('isServicesLayerDisplayed')}></i>
+                                <i className={self.state.isServicesLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => { self.toggle('isServicesLayerDisplayed'); var filter = getFilter(); filter.include_announces = self.state.isServicesLayerDisplayed; saveFilter(filter); self.refreshMap(); }}></i>
                               </div>
                             </li>
                           </ul>
@@ -796,39 +768,6 @@ class Map extends Component {
                           }>
                       </GettingStartedGoogleMap>
                   </div>
-                  {/*
-                  <div className="float-btns">
-                      <a href="/" onClick={(e) => {
-                        e.preventDefault();
-                        this.openAddingWidgets();
-                      }}><i className="fa fa-bars"></i></a>
-                      <a href="/" onClick={(e) => {
-                        e.preventDefault();
-                        this.openModal();
-                      }}><i className="fa fa-filter"></i></a>
-                      {isLoggedIn && (<NavLink to="/addAnnounce"><i className="fa fa-bullhorn"></i></NavLink>)}
-                  </div>
-                  <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
-                  {this.state.isAddingWidgets && (div className="add-widgets">
-                      <h5>{t('enableWidgetsTitle')}</h5>
-                      <div className="form-group">
-                        <input type="checkbox" name="isTrendingShopsActive" checked={this.state.isTrendingShopsActive} onChange={this.handleInputChange}/><label>Trending shops</label>
-                      </div>
-                      <div className="form-group">
-                        <input type="checkbox" name="isBestDealsActive" checked={this.state.isBestDealsActive} onChange={this.handleInputChange}/><label>Best deals</label>
-                      </div>
-                      <div className="form-group">
-                        <input type="checkbox" name="isBestServicesActive" checked={this.state.isBestServicesActive} onChange={this.handleInputChange}/><label>Best services</label>
-                      </div>
-                      <div className="form-group">
-                        <input type="checkbox" name="isPublicAnnouncementsActive" checked={this.state.isPublicAnnouncementsActive} onChange={this.handleInputChange}/><label>Public announcement</label>
-                      </div>
-                      <div className="form-group">
-                        <button className="btn btn-default uppercase" onClick={this.filterWidgets}>{t('update')}</button>
-                      </div>
-                    </div>
-                    )}
-                    */}
                   <NotificationSystem ref="notificationSystem" />
               </div>
             </MainLayout>
@@ -873,7 +812,7 @@ class Map extends Component {
             // TODO : Geolocation is not possible.
         }
 
-        CategoryService.getParents().then(function(result) { // Display the categories.
+        CategoryService.getParents().then(function(result) { // Display the categories & refresh the map with their windows.
           var categories = result['_embedded'];
           var filter = getFilter();
           categories.forEach(function(category) {
@@ -900,6 +839,7 @@ class Map extends Component {
           self.setState({
             shopCategories: categories
           });
+          self.refreshMap();
         });
     }
 

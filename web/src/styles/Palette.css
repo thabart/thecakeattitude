@@ -28,8 +28,23 @@ h2 {
 .red-theme .progressbar li:after,
 .red-theme .progressbar .counter-rounded,
 .red-theme .progressbar li.active:before,
-.red-theme .progressbar li.active:after {
-  background-color: rgba(231, 39, 45, 0.44);
+.red-theme .progressbar li.active:after,
+.red-theme .card-header {
+  background-color: rgba(231, 39, 45, 0.22);
+}
+
+.red-theme .card {
+  border: 1px solid #e0e0e0;
+}
+
+.red-theme .card-header .btn,
+.red-theme .card-header .btn:active {
+  color: white;
+  border: none !important;
+}
+.red-theme .card-header .btn:hover {
+  color: #ee676b;
+  background-color: transparent;
 }
 
 .red-theme .float-btns a {
@@ -41,7 +56,7 @@ h2 {
 .progressbar-red-theme .counter-rounded,
 .red-theme .progressbar li.active:before,
 .red-theme .progressbar li.active:after {
-  background-color: rgba(231, 39, 45, 0.44) !important;
+  background-color: rgba(231, 39, 45, 0.22) !important;
 }
 
 .red-theme .vertical-tabs-menu .list-group a.active:after {
