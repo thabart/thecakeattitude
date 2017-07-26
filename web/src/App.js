@@ -26,6 +26,7 @@ import "./styles/common.css";
 import "./styles/progressBar.css";
 import './styles/bootstrap.theme.css';
 import "./styles/palette.css";
+import "./styles/verticalMenu.css";
 import "bootstrap/dist/css/bootstrap.css";
 
 var history = createBrowserHistory();

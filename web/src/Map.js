@@ -154,6 +154,10 @@ class Map extends Component {
         this.onCloseWidget = this.onCloseWidget.bind(this);
         this.openAddingWidgets = this.openAddingWidgets.bind(this);
         this.refreshActiveWidgets = this.refreshActiveWidgets.bind(this);
+        this.toggleCategory = this.toggleCategory.bind(this);
+        this.toggleEye = this.toggleEye.bind(this);
+        this.toggleShopsLayer = this.toggleShopsLayer.bind(this);
+        this.toggleServicesLayer = this.toggleServicesLayer.bind(this);
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
@@ -169,7 +173,37 @@ class Map extends Component {
             isBestDealsActive: true,
             isBestServicesActive: true,
             isPublicAnnouncementsActive: true,
-            isAddingWidgets: false
+            isAddingWidgets: false,
+            isShopsLayerDisplayed : true,
+            isServicesLayerDisplayed: true,
+            shopCategories: [
+              {
+                id: "1e3f515b-c5b0-4d74-91a8-fcf14a783293",
+                name: "Clothes",
+                description: "Clothes",
+                isDeployed: false,
+                isEyeOpened: true,
+                children: [{
+                  id: "a20ab67b-f046-40c5-b5cd-566b3fca2749",
+                  name: "Shoes",
+                  description: "Shoes",
+                  isEyeOpened: true
+                }]
+              },
+              {
+                id: "80e24016-df50-46f4-b11c-4e3b6bb07340",
+                name: "Alimentation",
+                description: "Alimentation",
+                isDeployed: false,
+                isEyeOpened: true,
+                children: [{
+                    id: "da4ef2db-13b9-4f8b-97e9-245a00cde383",
+                    name: "Pastry & Bakery",
+                    description: "Pastry & Bakery",
+                    isEyeOpened: true
+                }]
+              }
+            ]
         };
     }
 
@@ -517,7 +551,86 @@ class Map extends Component {
       });
     }
 
-    render() {
+    toggleCategory(shopCategory) { // Toggle the category.
+      var self = this;
+      var cat = self.getShopCategory(shopCategory);
+      if (cat === null) {
+        return;
+      }
+
+      cat.isDeployed = !cat.isDeployed;
+      self.setState({
+        shopCategories: self.state.shopCategories
+      });
+    }
+
+    toggleEye(shopCategory) { // Toggle the eye.
+      var self = this;
+      var category = self.getShopCategory(shopCategory);
+      if (category === null) {
+        return;
+      }
+
+      var isEyeOpened = !category.isEyeOpened;
+      category.isEyeOpened = isEyeOpened;
+      if (category.children && category.children.length > 0) {
+        category.children.forEach(function(c) { c.isEyeOpened = isEyeOpened });
+      }
+
+      self.setState({
+        shopCategories: self.state.shopCategories
+      });
+    }
+
+    toggleShopsLayer() { // Toggle the shops layer.
+      var self = this;
+      self.setState({
+        isShopsLayerDisplayed: !self.state.isShopsLayerDisplayed
+      });
+    }
+
+    toggleServicesLayer() { // Toggle the services layer.
+      var self = this;
+      self.setState({
+        isServicesLayerDisplayed: !self.state.isServicesLayerDisplayed
+      });
+    }
+
+    getShopCategory(shopCategory) { /// Get shop category.
+      var self = this;
+      var category = self.getElement(shopCategory, self.state.shopCategories);
+      if (category !== null) {
+        return category;
+      }
+
+      var subCategory = null;
+      self.state.shopCategories.forEach(function(cat) {
+        if (subCategory === null) {
+          subCategory = self.getElement(shopCategory, cat.children);
+        }
+      });
+
+      return subCategory;
+    }
+
+    getElement(elt, arr) { // Get element from collection.
+      var self = this;
+      if (!arr || arr.length === 0) {
+        return null;
+      }
+
+      var filtered = arr.filter(function(s) {
+        return s === elt;
+      });
+
+      if (!filtered || filtered.length !== 1) {
+        return null;
+      }
+
+      return filtered[0];
+    }
+
+    render() { // Render the view.
         const { t } = this.props;
         var self = this,
           internalItems = {
@@ -535,7 +648,10 @@ class Map extends Component {
                       {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
                       {i: 'd', x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
                   ]
-              };
+              },
+          shopCategories = self.state.shopCategories,
+          shopLayerCl = self.state.isShopsLayerDisplayed ? "fa fa-eye" : "fa fa-eye-slash",
+          serviceLayerCl = self.state.isServicesLayerDisplayed ? "fa fa-eye" : "fa fa-eye-slash"
         if (this.state.isSearching) {
             cl = "row searching";
         } else if (this.state.isDragging) {
@@ -557,27 +673,60 @@ class Map extends Component {
           });
         }
 
+        var shopCategoryElts = [];
+        shopCategories.forEach(function(shopCategory) {
+          var subShopCategoriesElts = [];
+          shopCategory.children.forEach(function(subShopCategory) {
+            var eyeCl = subShopCategory.isEyeOpened ? "fa fa-eye action" : "fa fa-eye-slash action";
+            subShopCategoriesElts.push((<li className="sub-menu-item">
+              {subShopCategory.name}
+              <div className="actions">
+                <i className={eyeCl} onClick={() => { self.toggleEye(subShopCategory); }}></i>
+              </div>
+            </li>));
+          });
+
+          var arrowCl = shopCategory.isDeployed ? "fa fa-arrow-down action": "fa fa-arrow-left action";
+          var eyeCl = shopCategory.isEyeOpened ? "fa fa-eye action" : "fa fa-eye-slash action";
+          shopCategoryElts.push((
+            <li className="menu-item">
+              <h6 className="title">{shopCategory.name}</h6>
+              <div className="actions">
+                <i className={eyeCl} onClick={() => { self.toggleEye(shopCategory); }}></i>
+                <i className={arrowCl} onClick={() => { self.toggleCategory(shopCategory); }}></i>
+              </div>
+              {shopCategory.isDeployed ? (<ul>{subShopCategoriesElts}</ul>) : '' }
+            </li>));
+        });
+
         return (
             <MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
               <div className={cl} id="widget-container">
-                  <div className="col-md-1">
-                    <div style={{ boxShadow: "2px 0px 5px 0px rgba(0,0,0,0.30)", position: "fixed", top: "100px", bottom: "0", borderRight: "1px solid rgba(0, 0, 0, 0.125)", borderTop: "1px solid rgba(0, 0, 0, 0.125)"}}>
-                      <div style={{textAlign: "right", backgroundColor: "#ee676b", color: "white", padding: "5px"}}><i className="fa fa-bars"></i></div>
-                      <div style={{padding: "5px"}}>
+                  <div className="col-md-2 vertical-menu">
+                      <div className="header"><i className="fa fa-bars"></i></div>
+                      <div className="content">
                         <h3 className="uppercase">Catégories</h3>
                         <ul>
-                          <li><h6 style={{display: "inline-block"}}>Habits</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
-                          <li><h6 style={{display: "inline-block"}}>Alimentation</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
+                          {shopCategoryElts}
                         </ul>
                         <h3 className="uppercase">Layers</h3>
                         <ul>
-                          <li><h6 style={{display: "inline-block"}}>Magasins</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
-                          <li><h6 style={{display: "inline-block"}}>Services</h6><i style={{float: "right"}} className="fa fa-eye"></i></li>
+                          <li className="menu-item">
+                            <h6 className="title">Magasins</h6>
+                            <div className="actions">
+                              <i className={shopLayerCl} onClick={() => self.toggleShopsLayer()}></i>
+                            </div>
+                          </li>
+                          <li className="menu-item">
+                            <h6 className="title">Services</h6>
+                            <div className="actions">
+                              <i className={serviceLayerCl} onClick={() => self.toggleServicesLayer()}></i>
+                            </div>
+                          </li>
                         </ul>
                       </div>
-                    </div>
                   </div>
-                  <div className="col-md-7 hidden-sm-down">
+                  <div className="col-md-6 hidden-sm-down">
                       <form className="row col-md-8" onSubmit={(e) => {
                           e.preventDefault();
                           this.refreshMap();
@@ -596,7 +745,7 @@ class Map extends Component {
                       </form>
                       <ResponsiveReactGridLayout className="layout"
                                                  layouts={gridLayout} rowHeight={300}
-                                                 cols={{lg: 3, md: 3, sm: 1, xs: 1, xxs: 1}} draggableHandle=".move"
+                                                 cols={{lg: 2, md: 2, sm: 2, xs: 1, xxs: 1}} draggableHandle=".move"
                                                  onLayoutChange={this.onLayoutChange}>
                                                  {items}
                       </ResponsiveReactGridLayout >

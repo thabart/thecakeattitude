@@ -95,3 +95,12 @@ p {
 .float-btns a:hover {
   color: white !important;
 }
+
+.vertical-menu {
+  border-right: 1px solid rgba(0, 0, 0, 0.125);
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.vertical-menu .sub-menu-item {
+  border-left: 1px solid gray;
+}

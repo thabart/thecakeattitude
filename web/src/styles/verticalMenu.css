@@ -1,0 +1,37 @@
+.vertical-menu {
+  box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.30);
+  padding-right: 0 !important;
+}
+
+.vertical-menu.fixed {
+  position: fixed;
+  top: 100px;
+  bottom: 0;
+}
+
+.vertical-menu .header {
+  text-align: right;
+  background-color: #ee676b;
+  color: white;
+}
+
+.vertical-menu .menu-item .title {
+  display: inline-block;
+}
+
+.vertical-menu .actions {
+  float: right;
+}
+
+.vertical-menu .actions .action {
+  padding-right: 3px;
+}
+
+.vertical-menu .sub-menu-item {
+  padding-left: 5px;
+}
+
+.vertical-menu .content,
+.vertical-menu .header {
+  padding: 5px;
+}
