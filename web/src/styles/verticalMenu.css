@@ -1,6 +1,13 @@
 .vertical-menu {
   box-shadow: 2px 0px 5px 0px rgba(0,0,0,0.30);
   padding-right: 0 !important;
+  margin-left: 15px !important;
+  padding-left: 0 !important;
+  background-color: white;
+}
+
+.vertical-menu ul li {
+  list-style-type: none;
 }
 
 .vertical-menu.fixed {
@@ -15,6 +22,10 @@
   color: white;
 }
 
+.vertical-menu .header .fa-bars {
+  cursor: pointer;
+}
+
 .vertical-menu .menu-item .title {
   display: inline-block;
 }
@@ -25,6 +36,7 @@
 
 .vertical-menu .actions .action {
   padding-right: 3px;
+  cursor: pointer;
 }
 
 .vertical-menu .sub-menu-item {
@@ -34,4 +46,8 @@
 .vertical-menu .content,
 .vertical-menu .header {
   padding: 5px;
+}
+
+.vertical-menu.min .header{
+  text-align: center;
 }

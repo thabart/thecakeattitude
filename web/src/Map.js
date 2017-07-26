@@ -156,8 +156,7 @@ class Map extends Component {
         this.refreshActiveWidgets = this.refreshActiveWidgets.bind(this);
         this.toggleCategory = this.toggleCategory.bind(this);
         this.toggleEye = this.toggleEye.bind(this);
-        this.toggleShopsLayer = this.toggleShopsLayer.bind(this);
-        this.toggleServicesLayer = this.toggleServicesLayer.bind(this);
+        this.toggle = this.toggle.bind(this);
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
@@ -174,8 +173,13 @@ class Map extends Component {
             isBestServicesActive: true,
             isPublicAnnouncementsActive: true,
             isAddingWidgets: false,
+            isVerticalMenuDisplayed: true,
             isShopsLayerDisplayed : true,
             isServicesLayerDisplayed: true,
+            isTrendingSellersWidgetDisplayed: true,
+            isBestDealsWidgetDisplayed: true,
+            isLastServicesWidgetDisplayed: true,
+            isBestServicesWidgetDisplayed: true,
             shopCategories: [
               {
                 id: "1e3f515b-c5b0-4d74-91a8-fcf14a783293",
@@ -188,6 +192,8 @@ class Map extends Component {
                   name: "Shoes",
                   description: "Shoes",
                   isEyeOpened: true
+                }, {
+                  name: "coucou"
                 }]
               },
               {
@@ -582,17 +588,10 @@ class Map extends Component {
       });
     }
 
-    toggleShopsLayer() { // Toggle the shops layer.
-      var self = this;
-      self.setState({
-        isShopsLayerDisplayed: !self.state.isShopsLayerDisplayed
-      });
-    }
-
-    toggleServicesLayer() { // Toggle the services layer.
-      var self = this;
-      self.setState({
-        isServicesLayerDisplayed: !self.state.isServicesLayerDisplayed
+    toggle(propName) {
+      var value = !this.state[propName];
+      this.setState({
+        [propName]: value
       });
     }
 
@@ -651,7 +650,9 @@ class Map extends Component {
               },
           shopCategories = self.state.shopCategories,
           shopLayerCl = self.state.isShopsLayerDisplayed ? "fa fa-eye" : "fa fa-eye-slash",
-          serviceLayerCl = self.state.isServicesLayerDisplayed ? "fa fa-eye" : "fa fa-eye-slash"
+          serviceLayerCl = self.state.isServicesLayerDisplayed ? "fa fa-eye" : "fa fa-eye-slash",
+          verticalMenuCl = self.state.isVerticalMenuDisplayed ? "col-md-2 vertical-menu" : "vertical-menu min",
+          mapContainerCl = self.state.isVerticalMenuDisplayed ? "col-md-4" : "col-sm-11 col-md-5 max";
         if (this.state.isSearching) {
             cl = "row searching";
         } else if (this.state.isDragging) {
@@ -702,30 +703,69 @@ class Map extends Component {
         return (
             <MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
               <div className={cl} id="widget-container">
-                  <div className="col-md-2 vertical-menu">
-                      <div className="header"><i className="fa fa-bars"></i></div>
-                      <div className="content">
-                        <h3 className="uppercase">Catégories</h3>
-                        <ul>
-                          {shopCategoryElts}
-                        </ul>
-                        <h3 className="uppercase">Layers</h3>
-                        <ul>
-                          <li className="menu-item">
-                            <h6 className="title">Magasins</h6>
-                            <div className="actions">
-                              <i className={shopLayerCl} onClick={() => self.toggleShopsLayer()}></i>
-                            </div>
-                          </li>
-                          <li className="menu-item">
-                            <h6 className="title">Services</h6>
-                            <div className="actions">
-                              <i className={serviceLayerCl} onClick={() => self.toggleServicesLayer()}></i>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
+                  {/* Vertical menu */}
+                  <div id="vertical-menu-map" className={verticalMenuCl}>
+                      <div className="header"><i className="fa fa-bars" onClick={() => self.toggle('isVerticalMenuDisplayed')}></i></div>
+                      {self.state.isVerticalMenuDisplayed ? (
+                        <div className="content">
+                          <h3 className="uppercase"><img src="/images/shop.png" width="30" />Catégories</h3>
+                          <ul>
+                            {shopCategoryElts}
+                          </ul>
+                          <h3 className="uppercase"><img src="/images/layers.png" width="30" />Layers</h3>
+                          <ul>
+                            <li className="menu-item">
+                              <h6 className="title">Magasins</h6>
+                              <div className="actions">
+                                <i className={shopLayerCl} onClick={() => self.toggle('isShopsLayerDisplayed')}></i>
+                              </div>
+                            </li>
+                            <li className="menu-item">
+                              <h6 className="title">Services</h6>
+                              <div className="actions">
+                                <i className={serviceLayerCl} onClick={() => self.toggle('isServicesLayerDisplayed')}></i>
+                              </div>
+                            </li>
+                          </ul>
+                          <h3 className="uppercase"><img src="/images/windows.png" width="30" />Windows</h3>
+                          <ul>
+                            <li className="menu-item">
+                              <h6 className="title">{t('trendingSellersWidgetTitle')}</h6>
+                              <div className="actions">
+                                <i className={self.state.isTrendingSellersWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isTrendingSellersWidgetDisplayed')}></i>
+                              </div>
+                            </li>
+                            <li className="menu-item">
+                              <h6 className="title">{t('bestDealsWidgetTitle')}</h6>
+                              <div className="actions">
+                                <i className={self.state.isBestDealsWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isBestDealsWidgetDisplayed')}></i>
+                              </div>
+                            </li>
+                            <li className="menu-item">
+                              <h6 className="title">{t('bestServicesWidgetTitle')}</h6>
+                              <div className="actions">
+                                <i className={self.state.isBestServicesWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isBestServicesWidgetDisplayed')}></i>
+                              </div>
+                            </li>
+                            <li className="menu-item">
+                              <h6 className="title">{t('lastClientServicesWidgetTitle')}</h6>
+                              <div className="actions">
+                                <i className={self.state.isLastServicesWidgetDisplayed ? 'fa fa-eye' : 'fa fa-eye-slash'} onClick={() => self.toggle('isLastServicesWidgetDisplayed')}></i>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      ) : (
+                        <div className="content">
+                          <ul>
+                            <li><img src="/images/shop.png" width="30" /></li>
+                            <li><img src="/images/layers.png" width="30" /></li>
+                            <li><img src="/images/windows.png" width="30" /></li>
+                          </ul>
+                        </div>
+                      )}
                   </div>
+                  {/* Widgets container */}
                   <div className="col-md-6 hidden-sm-down">
                       <form className="row col-md-8" onSubmit={(e) => {
                           e.preventDefault();
@@ -750,7 +790,8 @@ class Map extends Component {
                                                  {items}
                       </ResponsiveReactGridLayout >
                   </div>
-                  <div className="col-md-4" id="map-container">
+                  {/* Map container */}
+                  <div className={mapContainerCl} id="map-container">
                       <GettingStartedGoogleMap
                           currentPosition={this.state.currentPosition}
                           center={this.state.center}
@@ -772,6 +813,7 @@ class Map extends Component {
                           }>
                       </GettingStartedGoogleMap>
                   </div>
+                  {/*
                   <div className="float-btns">
                       <a href="/" onClick={(e) => {
                         e.preventDefault();
@@ -784,8 +826,7 @@ class Map extends Component {
                       {isLoggedIn && (<NavLink to="/addAnnounce"><i className="fa fa-bullhorn"></i></NavLink>)}
                   </div>
                   <FilterModal ref="filterModal" filter={this.filter} onFilterLoad={this.onFilterLoad} />
-                  {this.state.isAddingWidgets && (
-                    <div className="add-widgets">
+                  {this.state.isAddingWidgets && (div className="add-widgets">
                       <h5>{t('enableWidgetsTitle')}</h5>
                       <div className="form-group">
                         <input type="checkbox" name="isTrendingShopsActive" checked={this.state.isTrendingShopsActive} onChange={this.handleInputChange}/><label>Trending shops</label>
@@ -803,7 +844,8 @@ class Map extends Component {
                         <button className="btn btn-default uppercase" onClick={this.filterWidgets}>{t('update')}</button>
                       </div>
                     </div>
-                  )}
+                    )}
+                    */}
                   <NotificationSystem ref="notificationSystem" />
               </div>
             </MainLayout>

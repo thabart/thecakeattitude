@@ -42,7 +42,7 @@
 
 #map-container {
     position: fixed;
-    top: 6%;
+    top: 100px;
     bottom: 0;
     left: auto;
     right: 0;
@@ -97,4 +97,26 @@
     right: 0;
     border-radius: 100%;
     box-shadow: 0px 0px 0px 256px rgba(0, 0, 0, 0.35)
+}
+
+/* Mobile design of the vertical menu */
+@media (max-width: 768px) {
+  #vertical-menu-map {
+    width: 200px;
+    position: fixed;
+    top: 100px;
+    bottom: 0;
+  }
+
+  #vertical-menu-map.min {
+    width: auto;
+  }
+
+  #map-container {
+    left: 200px;
+  }
+
+  #map-container.max {
+    left: 41px;
+  }
 }
