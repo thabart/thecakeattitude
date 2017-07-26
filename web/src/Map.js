@@ -5,7 +5,7 @@ import ShopServices from "./widgets/shopServices";
 import PublicAnnouncements from "./widgets/publicAnnouncements";
 import {withRouter} from "react-router";
 import BestDeals from "./widgets/bestDeals";
-import {ShopsService, SessionService, AnnouncementsService} from "./services/index";
+import {ShopsService, SessionService, AnnouncementsService, CategoryService} from "./services/index";
 import {withGoogleMap, GoogleMap, InfoWindow, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import {MAP} from "react-google-maps/lib/constants";
@@ -34,14 +34,14 @@ function getFilter() { // Get the filter from the local storage.
   let ls = {
     include_shops : true,
     include_announces : true,
-    categories : []
+    excludedCategories : []
   };
   if (global.localStorage) {
     try {
       ls = JSON.parse(global.localStorage.getItem(filterStorageKey)) || {
         include_shops : true,
         include_announces : true,
-        categories : []
+        excludedCategories : []
       };
     } catch (e) { }
   }
@@ -209,36 +209,7 @@ class Map extends Component {
             isVerticalMenuDisplayed: true,
             isShopsLayerDisplayed : true,
             isServicesLayerDisplayed: true,
-            shopCategories: [
-              {
-                id: "1e3f515b-c5b0-4d74-91a8-fcf14a783293",
-                name: "Clothes",
-                description: "Clothes",
-                isDeployed: false,
-                isEyeOpened: true,
-                children: [{
-                  id: "a20ab67b-f046-40c5-b5cd-566b3fca2749",
-                  name: "Shoes",
-                  description: "Shoes",
-                  isEyeOpened: true
-                }, {
-                  name: "coucou"
-                }]
-              },
-              {
-                id: "80e24016-df50-46f4-b11c-4e3b6bb07340",
-                name: "Alimentation",
-                description: "Alimentation",
-                isDeployed: false,
-                isEyeOpened: true,
-                children: [{
-                    id: "da4ef2db-13b9-4f8b-97e9-245a00cde383",
-                    name: "Pastry & Bakery",
-                    description: "Pastry & Bakery",
-                    isEyeOpened: true
-                }]
-              }
-            ]
+            shopCategories: []
         };
     }
 
@@ -405,7 +376,6 @@ class Map extends Component {
             self.refs.shopServices.getWrappedInstance().refresh(searchServicesRequest);
           }
           */
-          console.log(searchShopsRequest);
           ShopsService.search(searchShopsRequest).then(function (shopsResult) {
               var shopsEmbedded = shopsResult['_embedded'];
               if (!(shopsEmbedded instanceof Array)) {
@@ -561,9 +531,31 @@ class Map extends Component {
         category.children.forEach(function(c) { c.isEyeOpened = isEyeOpened });
       }
 
+      if (category.parent_id) {
+        var parentCategory = self.state.shopCategories.filter(function(c) { return c.id === category.parent_id });
+        if (parentCategory.length === 1) {
+          parentCategory[0].isEyeOpened = parentCategory[0].children.filter(function(c) { return c.isEyeOpened; }).length === parentCategory[0].children.length;
+        }
+      }
+
       self.setState({
         shopCategories: self.state.shopCategories
       });
+      var categoryIds = []; // Retrieve and persist the not visible shop categories.
+      self.state.shopCategories.forEach(function(category) {
+        if (!category.children || category.children.length === 0) {
+          return;
+        }
+
+        category.children.forEach(function(subCategory) {
+          if (!subCategory.isEyeOpened) {
+            categoryIds.push(subCategory.id);
+          }
+        });
+      });
+      var filter = getFilter();
+      filter.excludedCategories = categoryIds;
+      saveFilter(filter);
     }
 
     toggle(propName) { // Toggle a property.
@@ -880,6 +872,35 @@ class Map extends Component {
         } else {
             // TODO : Geolocation is not possible.
         }
+
+        CategoryService.getParents().then(function(result) { // Display the categories.
+          var categories = result['_embedded'];
+          var filter = getFilter();
+          categories.forEach(function(category) {
+            if (category.children && category.children.length > 0) {
+              category.isDeployed = false;
+              category.children.forEach(function(child) { child.isEyeOpened = true; });
+              if (filter.excludedCategories.length === 0) {
+                category.isEyeOpened = true;
+                return;
+              }
+
+              var filteredCategories = category.children.filter(function(child) { return (filter.excludedCategories.filter(function(c) { return child.id === c })).length > 0; });
+              filteredCategories.forEach(function(fileredCategory) {
+                fileredCategory.isEyeOpened = false;
+              });
+              if (filteredCategories.length === 0) {
+                category.isEyeOpened = true;
+              } else {
+                category.isEyeOpened = false;
+              }
+            }
+          });
+
+          self.setState({
+            shopCategories: categories
+          });
+        });
     }
 
     componentWillUnmount() { // Remove the registration.
