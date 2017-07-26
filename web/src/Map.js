@@ -8,7 +8,6 @@ import BestDeals from "./widgets/bestDeals";
 import {ShopsService, SessionService, AnnouncementsService} from "./services/index";
 import {withGoogleMap, GoogleMap, InfoWindow, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
-import FilterModal from './FilterModal';
 import {MAP} from "react-google-maps/lib/constants";
 import Constants from '../Constants';
 import $ from "jquery";
@@ -21,6 +20,57 @@ import MainLayout from './MainLayout';
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 import { translate } from 'react-i18next';
 import "./styles/map.css";
+
+const filterStorageKey = "shopingame_filter";
+const widgetStorageKey = "shopingame_widgets";
+const widgetKeys = {
+  trendingSellers: 'a',
+  shopServices: 'b',
+  bestDeals: 'c',
+  announces: 'd'
+};
+
+function getFilter() { // Get the filter from the local storage.
+  let ls = {
+    include_shops : true,
+    include_announces : true,
+    categories : []
+  };
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem(filterStorageKey)) || {
+        include_shops : true,
+        include_announces : true,
+        categories : []
+      };
+    } catch (e) { }
+  }
+
+  return ls;
+}
+
+function saveFilter(value) { // Persist the filter into the global storage.
+    if (global.localStorage) {
+      global.localStorage.setItem(filterStorageKey, JSON.stringify(value));
+    }
+}
+
+function getActiveWidgets() { // Get active widgets from the storage.
+    let ls = null;
+    if (global.localStorage) {
+        try {
+            ls = JSON.parse(global.localStorage.getItem(widgetStorageKey)) || null;
+        } catch (e) { }
+    }
+
+    return ls;
+}
+
+function saveActiveWidgets(value) { // Persist the active widgets into the storage.
+    if (global.localStorage) {
+        global.localStorage.setItem(widgetStorageKey, JSON.stringify(value));
+    }
+}
 
 function getLayoutFromLocalStorage() {
     let ls = null;
@@ -37,24 +87,6 @@ function getLayoutFromLocalStorage() {
 function saveLayout(value) {
     if (global.localStorage) {
         global.localStorage.setItem('gameinshop_layouts', JSON.stringify(value));
-    }
-}
-
-function getActiveWidgets() {
-    let ls = null;
-    if (global.localStorage) {
-        try {
-            ls = JSON.parse(global.localStorage.getItem('gameinshop_widgets')) || null;
-        } catch (e) {/*Ignore*/
-        }
-    }
-
-    return ls;
-}
-
-function saveActiveWidgets(value) {
-    if (global.localStorage) {
-        global.localStorage.setItem('gameinshop_widgets', JSON.stringify(value));
     }
 }
 
@@ -151,12 +183,18 @@ class Map extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.filter = this.filter.bind(this);
         this.filterWidgets = this.filterWidgets.bind(this);
-        this.onCloseWidget = this.onCloseWidget.bind(this);
         this.openAddingWidgets = this.openAddingWidgets.bind(this);
         this.refreshActiveWidgets = this.refreshActiveWidgets.bind(this);
         this.toggleCategory = this.toggleCategory.bind(this);
         this.toggleEye = this.toggleEye.bind(this);
         this.toggle = this.toggle.bind(this);
+        this.toggleWidget = this.toggleWidget.bind(this);
+        var keys = [];
+        for(var name in widgetKeys) {
+          keys.push(widgetKeys[name]);
+        }
+
+        var activeWidgets = getActiveWidgets() || keys;
         this.state = {
             markers: [],
             center: {lat: 50.8503, lng: 4.3517},
@@ -165,9 +203,7 @@ class Map extends Component {
             isSearching: false,
             bounds: null,
             searchValue: null,
-            activeWidgets: getActiveWidgets() || [
-              'a', 'b', 'c', 'd'
-            ],
+            activeWidgets: activeWidgets,
             isTrendingShopsActive: true,
             isBestDealsActive: true,
             isBestServicesActive: true,
@@ -176,10 +212,6 @@ class Map extends Component {
             isVerticalMenuDisplayed: true,
             isShopsLayerDisplayed : true,
             isServicesLayerDisplayed: true,
-            isTrendingSellersWidgetDisplayed: true,
-            isBestDealsWidgetDisplayed: true,
-            isLastServicesWidgetDisplayed: true,
-            isBestServicesWidgetDisplayed: true,
             shopCategories: [
               {
                 id: "1e3f515b-c5b0-4d74-91a8-fcf14a783293",
@@ -274,13 +306,13 @@ class Map extends Component {
       }, 1000);
     }
 
-    onDragStart() {
-        this.setState({
-            isDragging: true
-        });
+    onDragStart() { // This method is called when starting to drag the map.
+      this.setState({
+        isDragging: true
+      });
     }
 
-    onDragEnd() {
+    onDragEnd() { // This method is called when the user has finished to drag the map.
       this.setState({
         isDragging: false
       });
@@ -315,7 +347,7 @@ class Map extends Component {
         });
     }
 
-    refreshMap() {
+    refreshMap() { // Refresh the map : Display shops and announces.
         var self = this;
         const {t} = this.props;
         var bounds = self._googleMap.getBounds();
@@ -532,22 +564,6 @@ class Map extends Component {
         activeWidgets: activeWidgets,
         isAddingWidgets: false
       });
-
-    }
-
-    onCloseWidget(key) {
-      var activeWidgets = this.state.activeWidgets;
-      var index = activeWidgets.indexOf(key);
-      if (index === -1) {
-        return;
-      }
-
-      activeWidgets.splice(index, 1);
-      saveActiveWidgets(this.state.activeWidgets);
-      this.setState({
-        activeWidgets: activeWidgets
-      });
-      this.refreshActiveWidgets();
     }
 
     openAddingWidgets() {
@@ -588,10 +604,25 @@ class Map extends Component {
       });
     }
 
-    toggle(propName) {
+    toggle(propName) { // Toggle a property.
       var value = !this.state[propName];
       this.setState({
         [propName]: value
+      });
+    }
+
+    toggleWidget(widgetKey) { // Toggle the widget.
+      var self = this;
+      var activeWidgets = self.state.activeWidgets;
+      if (activeWidgets.includes(widgetKey)) {
+        activeWidgets.splice(activeWidgets.indexOf(widgetKey), 1);
+      } else {
+        activeWidgets.push(widgetKey);
+      }
+
+      saveActiveWidgets(activeWidgets);
+      self.setState({
+        activeWidgets: activeWidgets
       });
     }
 
@@ -632,23 +663,22 @@ class Map extends Component {
     render() { // Render the view.
         const { t } = this.props;
         var self = this,
-          internalItems = {
-            'a' : (<div key={'a'}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('a'); }}/></div>),
-            'b':  (<div key={'b'}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('b'); }} /></div>),
-            'c':  (<div key={'c'}><ShopServices ref="shopServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('c'); }}/></div>),
-            'd': (<div key={'d'}><PublicAnnouncements ref="publicAnnouncements" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.onCloseWidget('d'); }}/></div>)
-          },
+          internalItems = {},
           cl = "row",
           items = [ ],
           gridLayout = getLayoutFromLocalStorage() || {
                   lg: [
-                      {i: 'a', x: 0, y: 0, w: 1, h: 1, isResizable: true},
-                      {i: 'b', x: 1, y: 0, w: 1, h: 1, isResizable: true},
-                      {i: 'c', x: 2, y: 0, w: 1, h: 1, isResizable: true},
-                      {i: 'd', x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
+                      {i: widgetKeys.trendingSellers, x: 0, y: 0, w: 1, h: 1, isResizable: true},
+                      {i: widgetKeys.bestDeals, x: 1, y: 0, w: 1, h: 1, isResizable: true},
+                      {i: widgetKeys.shopServices, x: 2, y: 0, w: 1, h: 1, isResizable: true},
+                      {i: widgetKeys.announces, x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
                   ]
               },
           shopCategories = self.state.shopCategories;
+        internalItems[widgetKeys.trendingSellers] = (<div key={widgetKeys.trendingSellers}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.trendingSellers); }}/></div>);
+        internalItems[widgetKeys.bestDeals] = (<div key={widgetKeys.bestDeals}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.bestDeals); }} /></div>);
+        internalItems[widgetKeys.shopServices] = (<div key={widgetKeys.shopServices}><ShopServices ref="shopServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.shopServices); }}/></div>);
+        internalItems[widgetKeys.announces] = (<div key={widgetKeys.announces}><PublicAnnouncements ref="publicAnnouncements" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.announces); }}/></div>);
         if (this.state.isSearching) {
             cl = "row searching";
         } else if (this.state.isDragging) {
@@ -704,10 +734,12 @@ class Map extends Component {
                       <div className="header"><i className="fa fa-bars" onClick={() => self.toggle('isVerticalMenuDisplayed')}></i></div>
                       {self.state.isVerticalMenuDisplayed ? (
                         <div className="content">
+                          {/* Categories */}
                           <h3 className="uppercase"><img src="/images/shop.png" width="30" />Catégories</h3>
                           <ul>
                             {shopCategoryElts}
                           </ul>
+                          {/* Layers */}
                           <h3 className="uppercase"><img src="/images/layers.png" width="30" />Layers</h3>
                           <ul>
                             <li className="menu-item">
@@ -723,30 +755,31 @@ class Map extends Component {
                               </div>
                             </li>
                           </ul>
+                          {/* Widgets */}
                           <h3 className="uppercase"><img src="/images/windows.png" width="30" />Windows</h3>
                           <ul>
                             <li className="menu-item">
                               <h6 className="title">{t('trendingSellersWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isTrendingSellersWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isTrendingSellersWidgetDisplayed')}></i>
+                                <i className={self.state.activeWidgets.includes(widgetKeys.trendingSellers) ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => { self.toggleWidget(widgetKeys.trendingSellers); }}></i>
                               </div>
                             </li>
                             <li className="menu-item">
                               <h6 className="title">{t('bestDealsWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isBestDealsWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isBestDealsWidgetDisplayed')}></i>
+                                <i className={self.state.activeWidgets.includes(widgetKeys.bestDeals) ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => { self.toggleWidget(widgetKeys.bestDeals); }}></i>
                               </div>
                             </li>
                             <li className="menu-item">
                               <h6 className="title">{t('bestServicesWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isBestServicesWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isBestServicesWidgetDisplayed')}></i>
+                                <i className={self.state.activeWidgets.includes(widgetKeys.shopServices) ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => { self.toggleWidget(widgetKeys.shopServices); }}></i>
                               </div>
                             </li>
                             <li className="menu-item">
                               <h6 className="title">{t('lastClientServicesWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.isLastServicesWidgetDisplayed ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => self.toggle('isLastServicesWidgetDisplayed')}></i>
+                                <i className={self.state.activeWidgets.includes(widgetKeys.announces) ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => { self.toggleWidget(widgetKeys.announces); }}></i>
                               </div>
                             </li>
                           </ul>
@@ -850,8 +883,7 @@ class Map extends Component {
 
     componentDidMount() {
         var self = this;
-        // Refresh the map when a new shop arrived.
-        this._waitForToken = AppDispatcher.register(function (payload) {
+        this._waitForToken = AppDispatcher.register(function (payload) { // Refresh the map when a new shop arrived.
             switch (payload.actionName) {
                 case 'new-shop':
                     var shops = self.state.shops;
@@ -870,9 +902,7 @@ class Map extends Component {
         });
 
         this._searchShopsRequest = {};
-
-        // Get the current location and display it.
-        if ("geolocation" in navigator) {
+        if ("geolocation" in navigator) { // Get the current location and display it.
             navigator.geolocation.getCurrentPosition(function (position) {
                 self.setState({
                     currentPosition: {
@@ -889,7 +919,8 @@ class Map extends Component {
             // TODO : Geolocation is not possible.
         }
     }
-    componentWillUnmount() {
+
+    componentWillUnmount() { // Remove the registration.
       AppDispatcher.unregister(this._waitForToken);
     }
 }
