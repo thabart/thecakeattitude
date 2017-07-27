@@ -5,6 +5,7 @@ import {CategorySelector, TagsSelector} from "../components";
 import Game from "../game/game";
 import "react-tagsinput/react-tagsinput.css";
 import $ from "jquery";
+import { translate } from 'react-i18next';
 
 class DescriptionForm extends Component {
     constructor(props) {
@@ -220,20 +221,20 @@ class DescriptionForm extends Component {
     }
 
     render() {
-
-        const txtToolTipName = 'Name displayed in the shop s profile';
-        const txtToolTipDescription = 'Description displayed in the shop s profile';
-        const txtToolTipTags = 'Add some tags to enrich the description of your shop';
-        const txtToolTipBanner = 'Banner image displayed on your profile';
-        const txtToolTipPicture = 'Profile s picture';
-        const txtToolTipGame = 'Placement in the game';
+        const {t} = this.props;
+        const txtToolTipName = t('shopNameAddFormTooltip');;
+        const txtToolTipDescription = t('shopDescriptionAddFormTooltip');
+        const txtToolTipTags = t('shopTagsAddFormTooltip');
+        const txtToolTipBanner = t('shopBannerAddFormTooltip');
+        const txtToolTipPicture = t('shopProfilePictureAddFormTooltip');
+        const txtToolTipGame = t('shopPlaceAddFormTooltip');
         const bannerImagePreview = this.state.bannerImage && (
                 <div><img className='img-thumbnail' src={this.state.bannerImage} width='50' height='50'/></div>);
         const pictureImagePreview = this.state.pictureImage && (
                 <div><img className='img-thumbnail' src={this.state.pictureImage} width='100' height='100'/></div>);
-        const nameError = this.buildError('isNameInvalid', 'Should contains 1 to 15 characters');
-        const descriptionError = this.buildError('isDescriptionInvalid', 'Should contains 1 to 255 characters');
-        const placeError = this.buildError('isPlaceInvalid', 'A place should be selected');
+        const nameError = this.buildError('isNameInvalid', t('contains1To15CharsError'));
+        const descriptionError = this.buildError('isDescriptionInvalid', t('contains1To255CharsError'));
+        const placeError = this.buildError('isPlaceInvalid', t('placeShouldBeSelected'));
         const feedbackName = nameError ? "warning" : undefined;
         const feedbackDescription = descriptionError ? "warning" : undefined;
         const feedbackPlace = placeError ? "warning" : undefined;
@@ -268,7 +269,7 @@ class DescriptionForm extends Component {
                     <div className="col-md-6">
                         <Form>
                             <FormGroup color={feedbackName}>
-                                <Label sm={12}>Name <i className="fa fa-info-circle text-info"
+                                <Label sm={12}>{t('name')} <i className="fa fa-info-circle text-info"
                                                        id="toolTipName"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipName">
                                     {txtToolTipName}
@@ -296,7 +297,7 @@ class DescriptionForm extends Component {
                                 self.displayMaps(e);
                             }}/>
                             <FormGroup>
-                                <Label sm={12}>Tags <i className="fa fa-info-circle text-info"
+                                <Label sm={12}>{t('tags')} <i className="fa fa-info-circle text-info"
                                                        id="toolTipTags"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipTags">
                                     {txtToolTipTags}
@@ -306,7 +307,7 @@ class DescriptionForm extends Component {
                                 </Col>
                             </FormGroup>
                             <FormGroup color={feedbackDescription}>
-                                <Label sm={12}>Description <i
+                                <Label sm={12}>{t('description')} <i
                                     className="fa fa-info-circle text-info"
                                     id="toolTipDescription"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipDescription">
@@ -321,7 +322,7 @@ class DescriptionForm extends Component {
                                 </Col>
                             </FormGroup>
                             <FormGroup>
-                                <Label sm={12}>Banner image <i className="fa fa-info-circle text-info"
+                                <Label sm={12}>{t('bannerImage')} <i className="fa fa-info-circle text-info"
                                                                id="toolTipBanner"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipBanner">
                                     {txtToolTipBanner}
@@ -338,7 +339,7 @@ class DescriptionForm extends Component {
                                 </Row>
                             </FormGroup>
                             <FormGroup>
-                                <Label sm={12}>Profile picture <i
+                                <Label sm={12}>{t('profilePicture')} <i
                                     className="fa fa-info-circle text-info"
                                     id="toolTipPicture"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipPicture">
@@ -386,11 +387,11 @@ class DescriptionForm extends Component {
                     </div>
                 </section>
                 <section className="row p-1">
-                    <Button outline color="info" onClick={this.validate}>Next</Button>
+                    <Button outline color="info" onClick={this.validate}>{t('next')}</Button>
                 </section>
             </div>
         );
     }
 }
 
-export default DescriptionForm;
+export default translate('common', { wait: process && !process.release })(DescriptionForm);

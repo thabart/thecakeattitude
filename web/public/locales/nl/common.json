@@ -57,5 +57,18 @@
   "address": "Address",
   "contact": "Contact",
   "products": "Products",
-  "payment": "Payment"
+  "payment": "Payment",
+  "shopNameAddFormTooltip": "This name will be displayed in the shop's profile",
+  "shopDescriptionAddFormTooltip": "The description will be displayed in the shop's profile",
+  "shopTagsAddFormTooltip": "Add some tags to enrich the description of your shop",
+  "shopBannerAddFormTooltip": "Banner image displayed in the shop's profile",
+  "shopProfilePictureAddFormTooltip": "Shop's profile picture",
+  "shopPlaceAddFormTooltip": "Place in the game",
+  "contains1To15CharsError": "Should contains 1 to 15 characters",
+  "contains1To255CharsError": "Should contains 1 to 255 characters",
+  "placeShouldBeSelected": "A place should be selected",
+  "tags": "Tags",
+  "bannerImage": "Banner image",
+  "profilePicture": "Profile picture",
+  "next": "Next"
 }
