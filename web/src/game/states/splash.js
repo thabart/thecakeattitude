@@ -1,5 +1,6 @@
 import Constants from "../../../Constants";
 import ShopChooser from "./shopchooser";
+import { translate } from 'react-i18next';
 
 class Splash extends window.Phaser.State {
     init(category, component) {
@@ -14,7 +15,7 @@ class Splash extends window.Phaser.State {
         var tileMapLoader = self.game.load.tilemap(this.category.map_name, Constants.apiUrl + this.category.map_link, null, window.Phaser.Tilemap.TILED_JSON);
         imageLoader.start();
         tileMapLoader.start();
-        this.game.load.image('house', Constants.apiUrl + '/maps/tilesets/house.png');
+        this.game.load.image('house', Constants.apiUrl + '/maps/tilesets/shop.png');
         this.game.load.image('freePlace', Constants.apiUrl + '/maps/tilesets/freePlace.png');
         this.game.add.existing(this.loadingBar);
     }

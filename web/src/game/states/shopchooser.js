@@ -36,13 +36,10 @@ class ShopChooser extends window.Phaser.State {
                 return;
             }
 
-            if (layer.name === 'Npcs') {
-
-                objects.forEach(function (obj) {
-                    if (obj.type === 'shop') {
-                        shops.push(obj);
-                    }
-                });
+            if (layer.name === 'Houses') {
+              objects.forEach(function (obj) {
+                shops.push(obj);
+              });
             }
 
             if (layer.name === 'Wraps') {
@@ -56,9 +53,8 @@ class ShopChooser extends window.Phaser.State {
             }
         });
 
-        // Retrieve all the links.
         var i = 0;
-        warps.forEach(function (warp) {
+        warps.forEach(function (warp) {  // Retrieve all the links.
             var text = self.game.add.text(titlePaddingLeft + titleRectWidth, (i * heightTitle) + titleRectWidth + titlePaddingTop, warp, textStyle);
             var gr = self.game.add.graphics(titlePaddingLeft, (i * heightTitle) + titlePaddingTop);
             gr.lineStyle(titleRectWidth, 0xaea8a8, 1);
@@ -81,12 +77,11 @@ class ShopChooser extends window.Phaser.State {
             i++;
         });
 
-        // Display all the shops.
-        shops.forEach(function (shop) {
-            var newX = scaleX * shop.x,
-                newY = scaleY * shop.y,
-                newWidth = scaleX * shop.width,
-                newHeight = scaleY * shop.height;
+        shops.forEach(function (shop) { // Display all the shops.
+            var  newWidth = scaleX * shop.width,
+                newHeight = scaleY * shop.height,
+                newX = scaleX * shop.x,
+                newY = (scaleY * shop.y) - newHeight;
             var house = self.game.add.sprite(newX, newY, 'freePlace');
             house.inputEnabled = true;
             house.width = newWidth;

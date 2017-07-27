@@ -8,28 +8,24 @@ class Game extends Component {
         this._game = null;
     }
 
-    preload() {
-
-    }
-
-    create() {
+    create() { // Add states to the game.
         this._game.state.add('Splash', Splash, false);
         this._game.state.add('Nothing', Nothing, false);
     }
 
-    render() {
+    render() { // Display the map shops chooser.
         return (<div ref="game"></div>);
     }
 
-    reset() {
+    reset() { // Reset the game.
       this._game.state.start('Nothing', true, true);
     }
 
-    loadMap(category) {
+    loadMap(category) { // Load a map.
         this._game.state.start('Splash', true, true, category, this);
     }
 
-    componentDidMount() {
+    componentDidMount() { // Construct and display the canvas.
         var game = this.refs.game;
         var self = this;
         this._game = new window.Phaser.Game(500, 400, window.Phaser.CANVAS, game, {
