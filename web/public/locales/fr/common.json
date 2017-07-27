@@ -44,5 +44,14 @@
   "comments": "Commentaires",
   "viewShop": "Vister le magasin",
   "viewClientService": "Voir le service demandé par le client",
-  "gameMenuItem": "Jeux"
+  "gameMenuItem": "Jeux",
+  "name": "Nom",
+  "tag": "Tag",
+  "categories": "Catégories",
+  "layers": "Couches",
+  "windows": "Fenêtres",
+  "shops": "Magasins",
+  "clients": "Clients",
+  "search": "Chercher",
+  "searchValuePlaceHolder": "Magasin, produit, service, etc ..."
 }

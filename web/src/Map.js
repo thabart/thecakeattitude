@@ -164,6 +164,7 @@ class Map extends Component {
         this._waitForToken = null;
         this._searchBox = null;
         this._searchTarget = "name";
+        this.handleInputChange = this.handleInputChange.bind(this);
         this.onLayoutChange = this.onLayoutChange.bind(this);
         this.setCurrentMarker = this.setCurrentMarker.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
@@ -202,16 +203,25 @@ class Map extends Component {
         };
     }
 
+    handleInputChange(e) { // Handle the input change.
+      const target = e.target;
+      const value = target.type === 'checkbox' ? target.checked : target.value;
+      const name = target.name;
+      this.setState({
+        [name]: value
+      });
+    }
+
     changeFilter(e) { // Change type of filter.
         var selected = $(e.target).find(':selected');
         this._searchTarget = $(selected).data('target');
     }
 
-    onLayoutChange(layout, layouts) {
+    onLayoutChange(layout, layouts) { // Save the GRID layout.
       saveLayout(layouts);
-    } // Save the GRID layout.
+    }
 
-    setCurrentMarker(id) {
+    setCurrentMarker(id) {  // Set current marker on the map.
         var markers = this.state.markers;
         var selectedMarker = null;
         markers.forEach(function (marker) {
@@ -227,10 +237,11 @@ class Map extends Component {
             center: selectedMarker.location,
             markers: markers
         });
-    } // Set current marker on the map.
+    }
 
     onMapLoad(map) { // This method is called when the map is loaded.
         var self = this;
+        const {t} = this.props;
         self._googleMap = map;
         if (!map) {
             return;
@@ -238,7 +249,7 @@ class Map extends Component {
 
         var mapInstance = self._googleMap.context[MAP];
         var div = mapInstance.getDiv();
-        $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>Search</h3></div></div></div>");
+        $(div).append("<div class='search-circle-overlay'><div class='searching-circle'><div class='searching-message'><h3>"+t('search')+"</h3></div></div></div>");
         $(div).append("<div class='searching-overlay'><div class='searching-message'><i class='fa fa-spinner fa-spin'></i></div></div>");
     }
 
@@ -661,28 +672,28 @@ class Map extends Component {
                       {self.state.isVerticalMenuDisplayed ? (
                         <div className="content">
                           {/* Categories */}
-                          <h3 className="uppercase"><img src="/images/shop.png" width="30" />Catégories</h3>
+                          <h3 className="uppercase"><img src="/images/shop.png" width="30" />{t('categories')}</h3>
                           <ul>
                             {shopCategoryElts}
                           </ul>
                           {/* Layers */}
-                          <h3 className="uppercase"><img src="/images/layers.png" width="30" />Layers</h3>
+                          <h3 className="uppercase"><img src="/images/layers.png" width="30" />{t('layers')}</h3>
                           <ul>
                             <li className="menu-item">
-                              <h6 className="title">Magasins</h6>
+                              <h6 className="title">{t('shops')}</h6>
                               <div className="actions">
                                 <i className={self.state.isShopsLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => {  self.toggle('isShopsLayerDisplayed'); var filter = getFilter(); filter.include_shops = self.state.isShopsLayerDisplayed; saveFilter(filter); self.refreshMap(); }}></i>
                               </div>
                             </li>
                             <li className="menu-item">
-                              <h6 className="title">Clients</h6>
+                              <h6 className="title">{t('clients')}</h6>
                               <div className="actions">
                                 <i className={self.state.isServicesLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => { self.toggle('isServicesLayerDisplayed'); var filter = getFilter(); filter.include_announces = self.state.isServicesLayerDisplayed; saveFilter(filter); self.refreshMap(); }}></i>
                               </div>
                             </li>
                           </ul>
                           {/* Widgets */}
-                          <h3 className="uppercase"><img src="/images/windows.png" width="30" />Windows</h3>
+                          <h3 className="uppercase"><img src="/images/windows.png" width="30" />{t('windows')}</h3>
                           <ul>
                             <li className="menu-item">
                               <h6 className="title">{t('trendingSellersWidgetTitle')}</h6>
@@ -722,21 +733,21 @@ class Map extends Component {
                   </div>
                   {/* Widgets container */}
                   <div className={self.state.isVerticalMenuDisplayed ? "col-md-6 offset-md-2 hidden-sm-down" : "col-md-6 hidden-sm-down"} style={!self.state.isVerticalMenuDisplayed ? {marginLeft: "60px"} : {}}>
-                      <form className="row col-md-8" onSubmit={(e) => {
+                      <form className="row col-md-12" onSubmit={(e) => {
                           e.preventDefault();
                           this.refreshMap();
                       }}>
                           <select className="form-control col-md-2 col-lg-2" onChange={(e) => {
                               this.changeFilter(e);
                           }}>
-                              <option data-target="name">Name</option>
-                              <option data-target="tag_name">Tag</option>
+                              <option data-target="name">{t('name')}</option>
+                              <option data-target="tag_name">{t('tag')}</option>
                           </select>
                           <input type="text" className="form-control col-md-7 col-lg-7" name="searchValue"
-                                 placeholder="Shop, product, service, etc."
+                                 placeholder={t('searchValuePlaceHolder')}
                                  onChange={this.handleInputChange}
                           />
-                          <button className="btn btn-default col-md-3 col-lg-3" onClick={this.refreshMap}>search</button>
+                          <button className="btn btn-default col-md-3 col-lg-3" onClick={this.refreshMap}>{t('search')}</button>
                       </form>
                       <ResponsiveReactGridLayout className="layout"
                                                  layouts={gridLayout} rowHeight={300}

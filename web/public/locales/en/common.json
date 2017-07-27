@@ -45,5 +45,14 @@
   "comments": "Comments",
   "viewShop": "Visit the shop",
   "viewClientService": "View the requested service",
-  "gameMenuItem": "Game"
+  "gameMenuItem": "Game",
+  "name": "Name",
+  "tag": "Tag",
+  "categories": "Categories",
+  "layers": "Layers",
+  "windows": "Windows",
+  "shops": "Shops",
+  "clients": "Clients",
+  "search": "Search",
+  "searchValuePlaceHolder": "Shop, product, service, etc ..."
 }
