@@ -208,7 +208,7 @@ class DescriptionForm extends Component {
         });
     }
 
-    buildError(validName, description) {
+    buildError(validName, description) { // Build an error.
         var result;
         if (this.state.valid[validName]) {
             result = (
@@ -220,7 +220,7 @@ class DescriptionForm extends Component {
         return result;
     }
 
-    render() {
+    render() { // Return the view.
         const {t} = this.props;
         const txtToolTipName = t('shopNameAddFormTooltip');;
         const txtToolTipDescription = t('shopDescriptionAddFormTooltip');
@@ -235,9 +235,9 @@ class DescriptionForm extends Component {
         const nameError = this.buildError('isNameInvalid', t('contains1To15CharsError'));
         const descriptionError = this.buildError('isDescriptionInvalid', t('contains1To255CharsError'));
         const placeError = this.buildError('isPlaceInvalid', t('placeShouldBeSelected'));
-        const feedbackName = nameError ? "warning" : undefined;
-        const feedbackDescription = descriptionError ? "warning" : undefined;
-        const feedbackPlace = placeError ? "warning" : undefined;
+        const feedbackName = nameError ? "danger" : undefined;
+        const feedbackDescription = descriptionError ? "danger" : undefined;
+        const feedbackPlace = placeError ? "danger" : undefined;
         let categories = [];
         let subCategories = [];
         let maps = [];
@@ -269,7 +269,7 @@ class DescriptionForm extends Component {
                     <div className="col-md-6">
                         <Form>
                             <FormGroup color={feedbackName}>
-                                <Label sm={12}>{t('name')} <i className="fa fa-info-circle text-info"
+                                <Label sm={12}>{t('name')} <i className="fa fa-info-circle txt-info"
                                                        id="toolTipName"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipName">
                                     {txtToolTipName}
@@ -297,7 +297,7 @@ class DescriptionForm extends Component {
                                 self.displayMaps(e);
                             }}/>
                             <FormGroup>
-                                <Label sm={12}>{t('tags')} <i className="fa fa-info-circle text-info"
+                                <Label sm={12}>{t('tags')} <i className="fa fa-info-circle txt-info"
                                                        id="toolTipTags"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipTags">
                                     {txtToolTipTags}
@@ -308,7 +308,7 @@ class DescriptionForm extends Component {
                             </FormGroup>
                             <FormGroup color={feedbackDescription}>
                                 <Label sm={12}>{t('description')} <i
-                                    className="fa fa-info-circle text-info"
+                                    className="fa fa-info-circle txt-info"
                                     id="toolTipDescription"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipDescription">
                                     {txtToolTipDescription}
@@ -322,7 +322,7 @@ class DescriptionForm extends Component {
                                 </Col>
                             </FormGroup>
                             <FormGroup>
-                                <Label sm={12}>{t('bannerImage')} <i className="fa fa-info-circle text-info"
+                                <Label sm={12}>{t('bannerImage')} <i className="fa fa-info-circle txt-info"
                                                                id="toolTipBanner"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipBanner">
                                     {txtToolTipBanner}
@@ -340,7 +340,7 @@ class DescriptionForm extends Component {
                             </FormGroup>
                             <FormGroup>
                                 <Label sm={12}>{t('profilePicture')} <i
-                                    className="fa fa-info-circle text-info"
+                                    className="fa fa-info-circle txt-info"
                                     id="toolTipPicture"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipPicture">
                                     {txtToolTipPicture}
@@ -361,8 +361,8 @@ class DescriptionForm extends Component {
                     <div className="col-md-6">
                         <Form>
                             <FormGroup color={feedbackPlace}>
-                                <Label sm={12}>Choose a place <i
-                                    className="fa fa-info-circle text-info"
+                                <Label sm={12}>{t('choosePlace')} <i
+                                    className="fa fa-info-circle txt-info"
                                     id="toolTipGame"/></Label>
                                 <UncontrolledTooltip placement="right" target="toolTipGame">
                                     {txtToolTipGame}
@@ -387,7 +387,7 @@ class DescriptionForm extends Component {
                     </div>
                 </section>
                 <section className="row p-1">
-                    <Button outline color="info" onClick={this.validate}>{t('next')}</Button>
+                    <Button color="default" onClick={this.validate}>{t('next')}</Button>
                 </section>
             </div>
         );

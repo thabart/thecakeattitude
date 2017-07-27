@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {FormGroup, Col, Label, Input} from "reactstrap";
 import {CategoryService} from "../services/index";
 import $ from "jquery";
+import { translate } from 'react-i18next';
 
 class CategorySelector extends Component {
     constructor(props) {
@@ -18,11 +19,11 @@ class CategorySelector extends Component {
         };
     }
 
-    selectCategory(e) {
+    selectCategory(e) { // This method is called when a category is selected.
         this.displaySubCategory(e.target.value);
     }
 
-    selectSubCategory(e) {
+    selectSubCategory(e) { // This method is called when a subcategory is selected.
         var obj = {
             id: e.target.value,
             name: $(e.target).find(':selected').html()
@@ -31,11 +32,11 @@ class CategorySelector extends Component {
         if (this.props.onSubCategory) this.props.onSubCategory(obj.id);
     }
 
-    getCategory() {
+    getCategory() { // Return the selected category.
         return this._selectedCategory;
     }
 
-    displaySubCategory(categoryId) {
+    displaySubCategory(categoryId) { // Callback used to display the subcategories.
         var self = this;
         if (!categoryId || categoryId === null) {
             self._selectedCategory = null;
@@ -70,10 +71,11 @@ class CategorySelector extends Component {
         });
     }
 
-    render() {
+    render() { // Display the view.
         const self = this,
             categories = [(<option></option>)],
-            subCategories = [];
+            subCategories = [],
+            {t} = this.props;
         if (this.state.categories) {
             this.state.categories.forEach(function (category) {
                 categories.push(<option value={category.id}>{category.name}</option>);
@@ -90,7 +92,7 @@ class CategorySelector extends Component {
             <div>
                 <FormGroup row>
                     <Col sm={6}>
-                        <Label sm={12}>Categories</Label>
+                        <Label sm={12}>{t('categories')}</Label>
                         <Col sm={12}>
                             {
                                 this.state.isCategoryLoading &&
@@ -109,7 +111,7 @@ class CategorySelector extends Component {
                         </Col>
                     </Col>
                     <Col sm={6}>
-                        <Label sm={12}>Sub categories</Label>
+                        <Label sm={12}>{t('subCategories')}</Label>
                         <Col sm={12}>
                             {
                                 this.state.isSubCategoryLoading &&
@@ -134,7 +136,7 @@ class CategorySelector extends Component {
         );
     }
 
-    componentWillMount() {
+    componentWillMount() { // Execute when the component is displayed.
         var self = this;
         self.setState({
             isCategoryLoading: true,
@@ -160,4 +162,4 @@ class CategorySelector extends Component {
     }
 }
 
-export default CategorySelector;
+export default translate('common', { wait: process && !process.release })(CategorySelector);

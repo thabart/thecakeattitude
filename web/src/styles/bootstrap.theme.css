@@ -188,3 +188,16 @@ ul.list-group-default li:first-child {
 .btn.btn-default {
   border-bottom: 3px solid rgb(231, 39, 45) !important;
 }
+
+/* Tooltip */
+.txt-info {
+  color: #ea4248 !important;
+}
+
+.tooltip-inner {
+  background-color: #ea4248 !important;
+}
+
+.tooltip-inner:before {
+  border-right-color: #ea4248 !important;
+}

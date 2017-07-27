@@ -70,5 +70,7 @@
   "tags": "Tags",
   "bannerImage": "Banner image",
   "profilePicture": "Profile picture",
-  "next": "Next"
+  "next": "Next",
+  "choosePlace": "Choose a place in the game",
+  "subCategories": "Subcategories"
 }
