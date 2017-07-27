@@ -1,33 +1,6 @@
+/* Global */
 .progressbar {
   min-height: 50px;
-}
-
-.progressbar-withimage-counter .counter-rounded-img {
-  width: 80px;
-  height: 80px;
-}
-
-.progressbar-withimage-counter li:after {
-  margin-left: 50px;
-}
-
-.progressbar-withimage-counter li::before {
-  margin-right: 50px;
-}
-
-.progressbar-withcounter {
-  counter-reset: step;
-}
-
-.progressbar-withcounter li:before {
-  content: counter(step);
-  counter-increment: step;
-}
-
-.progressbar .counter-rounded {
-  border-radius: 50%;
-  padding-top: 12px;
-  margin: 0 auto;
 }
 
 .progressbar li {
@@ -37,6 +10,12 @@
   position: relative;
 }
 
+.progressbar .counter-rounded {
+  border-radius: 50%;
+  margin: 0 auto;
+  font-weight: bold;
+}
+
 .progressbar li:before,
 .progressbar li:after {
   content: '';
@@ -44,7 +23,6 @@
   background: rgb(216, 216, 216);
   display: block;
   position: absolute;
-  top: 40px;
 }
 
 .progressbar li:after {
@@ -63,4 +41,44 @@
 
 .progressbar li:first-child:before {
   content: none;
+}
+
+/* With counter */
+.progressbar-with-counter .counter-rounded {
+  width: 40px;
+  height: 40px;
+  padding-top: 7px;
+}
+
+.progressbar-with-counter li:before,
+.progressbar-with-counter li:after {
+  top: 20px;
+}
+
+.progressbar-with-counter li:after {
+  margin-left: 30px;
+}
+
+.progressbar-with-counter li::before {
+  margin-right: 30px;
+}
+
+/* Image */
+.progressbar-withimage-counter .counter-rounded-img {
+  width: 80px;
+  height: 80px;
+  padding-top: 12px;
+}
+
+.progressbar-withimage-counter li:after {
+  margin-left: 50px;
+}
+
+.progressbar-withimage-counter li::before {
+  margin-right: 50px;
+}
+
+.progressbar-withimage-counter li:before,
+.progressbar-withimage-counter li:after {
+  top: 40px;
 }

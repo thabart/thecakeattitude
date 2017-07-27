@@ -25,6 +25,11 @@ a.no-decoration {
 }
 
 /* Define columns */
+.col-2 {
+  width: 20% !important;
+  max-width: 20% !important;
+}
+
 .col-4 {
   width: 25%;
 }

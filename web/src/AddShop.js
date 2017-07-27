@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import Stepper from "react-stepper-horizontal";
 import {TabContent, TabPane, Alert} from "reactstrap";
 import {withRouter} from "react-router";
 import {DescriptionForm, ContactInfoForm, PaymentForm, AddressForm, ProductForm} from "./addshoptabs";
 import {ShopsService} from "./services/index";
+import { translate } from 'react-i18next';
 import $ from "jquery";
-import "./AddShop.css";
+import MainLayout from './MainLayout';
 
 class AddShop extends Component {
     constructor(props) {
@@ -19,26 +19,15 @@ class AddShop extends Component {
         this._searchBox = null;
         this.data = {};
         this.state = {
-            activeTab: '5',
+            activeTab: '1',
             errorMessage: null,
             warningMessage: null,
             isAddressCorrect: false,
-            isLoading: false,
-            steps: [{
-                title: 'Description'
-            }, {
-                title: 'Address'
-            }, {
-                title: 'Contact'
-            }, {
-                title: 'Products'
-            }, {
-                title: 'Payment'
-            }]
+            isLoading: false
         };
     }
 
-    toggle(tab, json) {
+    toggle(tab, json) { // Change tab.
         var self = this;
         if (json) {
             self.data[self.state.activeTab] = json;
@@ -113,76 +102,81 @@ class AddShop extends Component {
     }
 
     render() {
+      const {t} = this.props;
         return (
-            <div className="container">
-                <div className="mt-1 mb-1 p-1 bg-white rounded">
-                    <Stepper steps={this.state.steps} activeStep={this.state.activeTab}/>
-                </div>
-
-                <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>
-                    {this.state.errorMessage}
-                </Alert>
-
-                <Alert color="warning" isOpen={this.state.warningMessage !== null} toggle={this.toggleWarning}>
-                    {this.state.warningMessage}
-                </Alert>
-
-                <TabContent activeTab={this.state.activeTab}>
-                    <div className={this.state.isLoading ? 'loading' : 'loading hidden'}>
-                        <i className='fa fa-spinner fa-spin'/>
-                    </div>
-                    <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
-                        <DescriptionForm onNext={(json) => {
-                            this.toggle('2', json);
-                        }} onLoading={(l) => {
-                            this.loading(l);
-                        }} onError={(msg) => {
-                            this.displayError(msg);
-                        }}/>
-                    </TabPane>
-                    <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-                        <AddressForm ref="addressForm" onPrevious={() => {
-                            this.toggle('1');
-                        }} onNext={(json) => {
-                            this.toggle('3', json);
-                        }} onLoading={(l) => {
-                            this.loading(l);
-                        }} onWarning={(msg) => {
-                            this.displayWarning(msg);
-                        }} onError={(msg) => {
-                            this.displayError(msg);
-                        }}/>
-                    </TabPane>
-                    <TabPane tabId='3' className={this.state.isLoading ? 'hidden' : ''}>
-                        <ContactInfoForm onError={(msg) => {
-                            this.displayError(msg);
-                        }} onPrevious={() => {
-                            this.toggle('2');
-                        }} onNext={() => {
-                            this.toggle('4');
-                        }}/>
-                    </TabPane>
-                    <TabPane tabId='4' className={this.state.isLoading ? 'hidden' : ''}>
-                        <ProductForm onPrevious={() => {
-                            this.toggle('3');
-                        }} onNext={(json) => {
-                            this.toggle('5', json);
-                        }}/>
-                    </TabPane>
-                    <TabPane tabId='5' className={this.state.isLoading ? 'hidden' : ''}>
-                        <PaymentForm onError={(msg) => {
-                            this.displayError(msg);
-                        }} onPrevious={() => {
-                            this.toggle('4');
-                        }} onConfirm={ (json) => {
-                            this.save(json);
-                        }}/>
-                    </TabPane>
-                </TabContent>
-
-            </div>
+            <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+              <div className="container">
+                  <div className="mt-1 mb-1 p-1 bg-white rounded">
+                      <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
+                        <li className="col-2 active"><div className="counter-rounded">1</div>{t('description')}</li>
+                        <li className="col-2"><div className="counter-rounded">2</div>{t('address')}</li>
+                        <li className="col-2"><div className="counter-rounded">3</div>{t('contact')}</li>
+                        <li className="col-2"><div className="counter-rounded">4</div>{t('products')}</li>
+                        <li className="col-2"><div className="counter-rounded">5</div>{t('payment')}</li>
+                      </ul>
+                  </div>
+                  <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>
+                      {this.state.errorMessage}
+                  </Alert>
+                  <Alert color="warning" isOpen={this.state.warningMessage !== null} toggle={this.toggleWarning}>
+                      {this.state.warningMessage}
+                  </Alert>
+                  <TabContent activeTab={this.state.activeTab}>
+                      <div className={this.state.isLoading ? 'loading' : 'loading hidden'}>
+                          <i className='fa fa-spinner fa-spin'/>
+                      </div>
+                      <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
+                          <DescriptionForm onNext={(json) => {
+                              this.toggle('2', json);
+                          }} onLoading={(l) => {
+                              this.loading(l);
+                          }} onError={(msg) => {
+                              this.displayError(msg);
+                          }}/>
+                      </TabPane>
+                      <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
+                          <AddressForm ref="addressForm" onPrevious={() => {
+                              this.toggle('1');
+                          }} onNext={(json) => {
+                              this.toggle('3', json);
+                          }} onLoading={(l) => {
+                              this.loading(l);
+                          }} onWarning={(msg) => {
+                              this.displayWarning(msg);
+                          }} onError={(msg) => {
+                              this.displayError(msg);
+                          }}/>
+                      </TabPane>
+                      <TabPane tabId='3' className={this.state.isLoading ? 'hidden' : ''}>
+                          <ContactInfoForm onError={(msg) => {
+                              this.displayError(msg);
+                          }} onPrevious={() => {
+                              this.toggle('2');
+                          }} onNext={() => {
+                              this.toggle('4');
+                          }}/>
+                      </TabPane>
+                      <TabPane tabId='4' className={this.state.isLoading ? 'hidden' : ''}>
+                          <ProductForm onPrevious={() => {
+                              this.toggle('3');
+                          }} onNext={(json) => {
+                              this.toggle('5', json);
+                          }}/>
+                      </TabPane>
+                      <TabPane tabId='5' className={this.state.isLoading ? 'hidden' : ''}>
+                          <PaymentForm onError={(msg) => {
+                              this.displayError(msg);
+                          }} onPrevious={() => {
+                              this.toggle('4');
+                          }} onConfirm={ (json) => {
+                              this.save(json);
+                          }}/>
+                      </TabPane>
+                  </TabContent>
+              </div>
+            </MainLayout>
         );
     }
 }
 
-export default withRouter(AddShop);
+export default translate('common', { wait: process && !process.release })(withRouter(AddShop));

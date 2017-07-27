@@ -53,5 +53,9 @@
   "shops": "Magasins",
   "clients": "Clients",
   "search": "Chercher",
-  "searchValuePlaceHolder": "Magasin, produit, service, etc ..."
+  "searchValuePlaceHolder": "Magasin, produit, service, etc ...",
+  "address": "Adresse",
+  "contact": "Contact",
+  "products": "Produits",
+  "payment": "Paiement"
 }

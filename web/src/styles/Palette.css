@@ -24,13 +24,22 @@ h2 {
   }
 }
 
-.red-theme .progressbar li:before,
-.red-theme .progressbar li:after,
 .red-theme .progressbar .counter-rounded,
-.red-theme .progressbar li.active:before,
-.red-theme .progressbar li.active:after,
 .red-theme .card-header {
   background-color: rgba(231, 39, 45, 0.22);
+}
+
+.red-theme .progressbar-with-counter li.active .counter-rounded {
+  background-color: rgba(231, 39, 45, 0.87);
+}
+
+.red-theme .progressbar-with-counter li.active:before,
+.red-theme .progressbar-with-counter li.active:after {
+  background-color: rgba(231, 39, 45, 0.87) !important;
+}
+
+.red-theme .progressbar .counter-rounded {
+  color: white;
 }
 
 .red-theme .card {
@@ -53,9 +62,7 @@ h2 {
 
 .progressbar-red-theme li:before,
 .progressbar-red-theme li:after,
-.progressbar-red-theme .counter-rounded,
-.red-theme .progressbar li.active:before,
-.red-theme .progressbar li.active:after {
+.progressbar-red-theme .counter-rounded {
   background-color: rgba(231, 39, 45, 0.22) !important;
 }
 

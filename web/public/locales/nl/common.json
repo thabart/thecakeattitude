@@ -53,5 +53,9 @@
   "shops": "Shops",
   "clients": "Clients",
   "search": "Search",
-  "searchValuePlaceHolder": "Shop, product, service, etc ..."
+  "searchValuePlaceHolder": "Shop, product, service, etc ...",
+  "address": "Address",
+  "contact": "Contact",
+  "products": "Products",
+  "payment": "Payment"
 }
