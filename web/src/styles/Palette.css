@@ -80,6 +80,22 @@ h2 {
   background-color: #ee676b;
 }
 
+.red-theme .react-tagsinput--focused,
+.red-theme .form-control:focus,
+.react-tagsinput-popup {
+  border: 1px solid #facfd1 !important;
+}
+
+.react-tagsinput-popup li:hover {
+  background-color: rgba(250, 207, 209, 0.34);
+}
+
+.red-theme .react-tagsinput-tag {
+  border: 1px solid rgba(234, 66, 72, 0.38) !important;
+  color: white !important;
+  background-color: rgba(231, 39, 45, 0.22) !important;
+}
+
 /* Global theme */
 .footer #copyrights a {
   color: rgba(255,255,255,.25);
