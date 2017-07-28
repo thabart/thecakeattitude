@@ -97,5 +97,15 @@
   "processingUpdate": "Mise à jour ...",
   "mobilePhone": "Numéro GSM",
   "homePhone": "Numéro du domicile",
-  "email": "Email"
+  "email": "Email",
+  "profileUpdated": "Le profil a été mis à jour",
+  "productCategories": "Les catégories de produit",
+  "productAddShopDescription": "Ajoutez des méta-données à vos produits. Classifiez les par catégorie et définissez des caractéristiques qui seront utilisées plus tard par les clients pour filtrer les produits. Par exemple : catégorie = Femme et filtre = taille.",
+  "productAddShopReminder": "Une catégorie de produit correspond à un rayon de votre magasin",
+  "productFilters": "Les filtres",
+  "addFilter": "Ajouter un filtre",
+  "filterName": "Nom du filtre",
+  "filterValues": "Les valeurs du filtre",
+  "maxEightProductCategories": "Au maximum 8 catégories peuvent être spécifiées",
+  "filterRowInfoTooltip": "Au moins un tag doit être spécifié et le nom doit être rempli"
 }

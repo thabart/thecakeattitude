@@ -90,6 +90,7 @@ class ContactInfoForm extends Component {
             self.setState({
                 isUpdating: false
             });
+            self.props.onSuccess(t('profileUpdated'));
         }).catch(function () {
             self.props.onError(t('uploadProfileError'));
             self.setState({
@@ -129,9 +130,14 @@ class ContactInfoForm extends Component {
         }
 
         var isInvalid = this.state.isEmailInvalid || this.state.isMobilePhoneInvalid || this.state.isHomePhoneInvalid;
-        var optsActions = {};
+        var updateBtnParams = {};
+        var nextBtnParams = {};
         if (isInvalid) {
-            optsActions['disabled'] = 'disabled';
+            nextBtnParams['disabled'] = 'disabled';
+        }
+
+        if (isInvalid || !this.state.isEnabled) {
+          updateBtnParams['disabled'] = 'disabled';
         }
 
         /** Errors **/
@@ -143,7 +149,7 @@ class ContactInfoForm extends Component {
         const feedbackHomePhone = homePhoneError ? "danger" : undefined;
 
         return (
-            <div className="container bg-white rounded">
+            <div className="container rounded">
                 <section className="row p-1">
                     <div className="col-md-12">
                         <Form>
@@ -200,7 +206,7 @@ class ContactInfoForm extends Component {
                 <section className="row p-1">
                     <Button color="default" onClick={this.previous}>{t('previous')}</Button>
                     {!this.state.isUpdating ?
-                        (<Button color="default" style={{marginLeft: "5px"}} onClick={this.update} {...optsActions}>{t('update')}</Button>) :
+                        (<Button color="default" style={{marginLeft: "5px"}} onClick={this.update} {...updateBtnParams}>{t('update')}</Button>) :
                         (<Button color="default" style={{marginLeft: "5px"}} disabled>
                                 <i className='fa fa-spinner fa-spin'/>
                                 {t('processingUpdate')}
@@ -208,7 +214,7 @@ class ContactInfoForm extends Component {
                         )
                     }
                     {!this.state.isUpdating ?
-                        (<Button color="default" style={{marginLeft: "5px"}} onClick={this.next} {...optsActions}>{t('next')}</Button>) :
+                        (<Button color="default" style={{marginLeft: "5px"}} onClick={this.next} {...nextBtnParams}>{t('next')}</Button>) :
                         (<Button color="default" style={{marginLeft: "5px"}} disabled>t('next')</Button>)
                     }
                 </section>

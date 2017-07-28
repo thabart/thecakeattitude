@@ -3,6 +3,7 @@ import {Tooltip} from "reactstrap";
 import TagsInput from "react-tagsinput";
 import $ from 'jquery';
 import {Guid} from '../utils';
+import { translate } from 'react-i18next';
 
 class ShopProductFilter extends Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class ShopProductFilter extends Component {
       filters: props.filters || []
     };
   }
+
   toggleTooltip(name) {
       var tooltip = this.state.tooltip;
       tooltip[name] = !tooltip[name];
@@ -23,6 +25,7 @@ class ShopProductFilter extends Component {
           tooltip: tooltip
       });
   }
+
   addFilterLine() {
     var filters = this.state.filters;
     filters.push({
@@ -37,6 +40,7 @@ class ShopProductFilter extends Component {
     });
     this._indexFilter++;
   }
+
   isTagsExist(tags, changed, changedIndexes, innerTags) {
     if (changedIndexes[0] === innerTags.length ) {
       var changedValue = changed[0].toLowerCase();
@@ -51,6 +55,7 @@ class ShopProductFilter extends Component {
 
     return false;
   }
+
   getFilter(filter, filters) {
     var sf = null;
     filters.forEach(function(f) {
@@ -62,9 +67,11 @@ class ShopProductFilter extends Component {
 
     return sf;
   }
+
   getFilters() {
     return this.state.filters;
   }
+
   renderTag(props) {
     let {tag, key, disabled, onRemove, classNameRemove, getTagDisplayValue, ...other} = props;
     return (<span key={key} {...other}>
@@ -74,13 +81,15 @@ class ShopProductFilter extends Component {
       }
     </span>);
   }
+
   render() {
     var filters = [],
       self = this;
+    const {t} = this.props;
     if (this.state.filters && this.state.filters.length > 0) {
       this.state.filters.forEach(function(filter) {
         filters.push(<div className="row col-md-12">
-          <div className="col-md-4"><input type="text" className="form-control" value={filter.name} placeholder="Filter name" onChange={(e) => {
+          <div className="col-md-4"><input type="text" className="form-control" value={filter.name} placeholder={t('filterName')} onChange={(e) => {
             var fs = self.state.filters.slice(0);
             var sf = self.getFilter(filter, fs);
             if (sf === null) {
@@ -123,7 +132,7 @@ class ShopProductFilter extends Component {
             self.setState({
               filters: fs
             });
-          }}   inputProps={{placeholder: "Values"}} renderTag={self.renderTag} /></div>
+          }}   inputProps={{placeholder: t('filterValues')}} renderTag={self.renderTag} /></div>
           <div className="col-md-2"><button className="btn btn-outline-secondary btn-sm" data-target={filter.id} onClick={(e) => {
             var id = parseInt($(e.target).attr('data-target'));
             var fs = self.state.filters.slice(0);
@@ -158,11 +167,11 @@ class ShopProductFilter extends Component {
              </Tooltip>
            </span>) }
            { filter.isNotComplete && (<span>
-            <i className="fa fa-exclamation" id={"warningError"+filter.id}></i>
+            <i className="fa fa-exclamation-triangle txt-info" id={"warningError"+filter.id}></i>
             <Tooltip placement="right" target={"warningError"+filter.id} isOpen={self.state.tooltip["warningError"+filter.id]} toggle={() => {
                 self.toggleTooltip("warningError"+filter.id);
             }}>
-             At least one tag must be specified and the name must be filled-in
+             {t('filterRowInfoTooltip')}
             </Tooltip>
            </span>) }
           </div>
@@ -171,12 +180,10 @@ class ShopProductFilter extends Component {
     }
 
     return (<div className="col-md-12 row">
-      <div className="col-md-12"><button className="btn btn-success" onClick={this.addFilterLine}><i className="fa fa-plus"></i> Add filter</button></div>
+      <div className="col-md-12"><button className="btn btn-default" onClick={this.addFilterLine}><i className="fa fa-plus"></i> {t('addFilter')}</button></div>
       {filters}
     </div>);
   }
-  componentWillMount() {
-  }
 }
 
-export default ShopProductFilter;
+export default translate('common', { wait: process && !process.release, withRef: true })(ShopProductFilter);

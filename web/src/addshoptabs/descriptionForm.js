@@ -278,7 +278,7 @@ class DescriptionForm extends Component {
         }
 
         return (
-            <div className="container bg-white rounded">
+            <div className="container rounded">
                 <section className="row p-1">
                     <div className="col-md-6">
                         <Form>

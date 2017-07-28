@@ -10,18 +10,22 @@ import MainLayout from './MainLayout';
 class AddShop extends Component {
     constructor(props) {
         super(props);
-        this.toggle = this.toggle.bind(this);
-        this.displayError = this.displayError.bind(this);
-        this.toggleWarning = this.toggleWarning.bind(this);
-        this.toggleError = this.toggleError.bind(this);
-        this.save = this.save.bind(this);
         this._googleMap = null;
         this._searchBox = null;
+        this.save = this.save.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.displaySuccess = this.displaySuccess.bind(this); // Display methods.
+        this.displayWarning = this.displayWarning.bind(this);
+        this.displayError = this.displayError.bind(this);
+        this.toggleSuccess = this.toggleSuccess.bind(this); // Toggle methods.
+        this.toggleWarning = this.toggleWarning.bind(this);
+        this.toggleError = this.toggleError.bind(this);
         this.data = {};
         this.state = {
-            activeTab: '3',
-            errorMessage: null,
+            activeTab: '4',
+            successMessage: null,
             warningMessage: null,
+            errorMessage: null,
             isAddressCorrect: false,
             isLoading: false
         };
@@ -44,16 +48,22 @@ class AddShop extends Component {
         }
     }
 
-    displayError(msg) {
-        this.setState({
-            errorMessage: msg
-        });
+    displaySuccess(msg) { // Display success message.
+      this.setState({
+        successMessage: msg
+      });
     }
 
-    displayWarning(msg) {
-        this.setState({
-            warningMessage: msg
-        });
+    displayWarning(msg) { // Display warning message.
+      this.setState({
+        warningMessage: msg
+      });
+    }
+
+    displayError(msg) { // Display error message.
+      this.setState({
+        errorMessage: msg
+      });
     }
 
     loading(isLoading) {
@@ -62,16 +72,22 @@ class AddShop extends Component {
         });
     }
 
-    toggleError() {
-        this.setState({
-            errorMessage: null
-        });
+    toggleSuccess() { // Toggle success message.
+      this.setState({
+        successMessage: null
+      })
     }
 
-    toggleWarning() {
-        this.setState({
-            warningMessage: null
-        });
+    toggleWarning() { // Toggle warning message.
+      this.setState({
+        warningMessage: null
+      });
+    }
+
+    toggleError() { // Toggle error message.
+      this.setState({
+        errorMessage: null
+      });
     }
 
     save(json) {
@@ -115,6 +131,9 @@ class AddShop extends Component {
                         <li className={this.state.activeTab === 5 ? "col-2 active" : "col-2"}><div className="counter-rounded">5</div>{t('payment')}</li>
                       </ul>
                   </div>
+                  <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.toggleSuccess}>
+                    {this.state.successMessage}
+                  </Alert>
                   <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>
                       {this.state.errorMessage}
                   </Alert>
@@ -150,11 +169,13 @@ class AddShop extends Component {
                       <TabPane tabId='3' className={this.state.isLoading ? 'hidden' : ''}>
                           <ContactInfoForm onError={(msg) => {
                               this.displayError(msg);
+                          }} onSuccess={(msg) => {
+                            this.displaySuccess(msg);
                           }} onPrevious={() => {
                               this.toggle('2');
                           }} onNext={() => {
                               this.toggle('4');
-                          }}/>
+                          }} />
                       </TabPane>
                       <TabPane tabId='4' className={this.state.isLoading ? 'hidden' : ''}>
                           <ProductForm onPrevious={() => {
