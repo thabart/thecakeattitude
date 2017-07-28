@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Tooltip} from "reactstrap";
 import TagsInput from "react-tagsinput";
 import { translate } from 'react-i18next';
+import ShelfChooser from '../game/shelfChooser';
 import {ShopProductFilter, ProductCategories} from '../components';
 
 class ProductForm extends Component {
@@ -107,6 +108,7 @@ class ProductForm extends Component {
                   {t('maxEightProductCategories')}
               </Tooltip>
               <ProductCategories ref="productCategories" />
+              <ShelfChooser ref="shelfChooser"/>
             </div>
             {/* Product filters */}
             <div className="form-group">
@@ -129,6 +131,10 @@ class ProductForm extends Component {
             </button>
         </div>
       </div>);
+  }
+
+  componentDidMount() { // This method is execute after the render.
+    // this.refs.shelfChooser.display();
   }
 }
 

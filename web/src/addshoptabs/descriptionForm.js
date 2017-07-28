@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Form, FormGroup, Label, Col, Row, Input, Button, FormFeedback, UncontrolledTooltip, Modal, ModalHeader, ModalBody} from "reactstrap";
 import {CategoryService, ShopsService, OpenIdService, SessionService} from "../services/index";
 import {CategorySelector, TagsSelector} from "../components";
-import Game from "../game/game";
+import ShopChooser from "../game/shopChooser";
 import "react-tagsinput/react-tagsinput.css";
 import $ from "jquery";
 import { translate } from 'react-i18next';
@@ -390,7 +390,7 @@ class DescriptionForm extends Component {
                                     <FormFeedback>{placeError}</FormFeedback>
                                 </Col>
                             </FormGroup>
-                            <Game
+                            <ShopChooser
                                 ref="game"
                                 onHouseSelected={this.onHouseSelected}
                                 onLoadMap={(mapName) => {

@@ -1,6 +1,5 @@
 import Constants from "../../../Constants";
 import ShopChooser from "./shopchooser";
-import { translate } from 'react-i18next';
 
 class Splash extends window.Phaser.State {
     init(category, component) {

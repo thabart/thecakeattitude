@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import Splash from "./states/splash";
-import Nothing from './states/nothing';
+import Splash from "./shopChooserStates/splash";
+import Nothing from './shopChooserStates/nothing';
 
-class Game extends Component {
+class ShopChooser extends Component {
     constructor(props) {
         super(props);
         this._game = null;
@@ -37,4 +37,4 @@ class Game extends Component {
     }
 }
 
-export default Game;
+export default ShopChooser;
