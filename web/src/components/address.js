@@ -7,7 +7,6 @@ import SearchBox from "react-google-maps/lib/places/SearchBox";
 import Constants from "../../Constants";
 import Promise from "bluebird";
 import { translate } from 'react-i18next';
-import "./address.css";
 
 const INPUT_STYLE = {
     boxSizing: `border-box`,

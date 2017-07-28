@@ -30,6 +30,7 @@ import "./styles/verticalMenu.css";
 import "./styles/formTab.css";
 import './styles/tags.css';
 import "bootstrap/dist/css/bootstrap.css";
+import { translate } from 'react-i18next';
 
 var history = createBrowserHistory();
 
@@ -176,11 +177,12 @@ class App extends Component {
     }
 
     render() {
+        const {t} = this.props;
         var self = this;
         if (!self.state.isAccessTokenChecked || self.state.isLoading) {
             return (<div className="loader-container">
               <div className="loader-spinner">
-                <h2 className="font-secondary redColor">Loading ...</h2>
+                <h2 className="font-secondary redColor">{t('loadingMessage')}</h2>
                 <img src="/images/loader-spinner.gif" />
               </div>
             </div>);
@@ -212,4 +214,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default translate('common', { wait: process && !process.release })(App);

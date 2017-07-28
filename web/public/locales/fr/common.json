@@ -84,5 +84,18 @@
   "uniqueAddressError": "L'adresse doit être unique",
   "completeAddressError": "L'adresse doit être complète",
   "addressDetailsError": "Les details de l'adresse n'ont pas pu être récupérés",
-  "shopAddressDescription": "Spécifiez l'adresse de votre magasin. Par défault l'adresse est la même que celle spécifiée dans votre profil."
+  "shopAddressDescription": "Spécifiez l'adresse de votre magasin. Par défault l'adresse est la même que celle spécifiée dans votre profil.",
+  "uploadProfileError": "Le profil n'a pas pu être mis à jour. Veuillez prendre contact avec l'administrateur.",
+  "retrieveProfileInfoError": "Les informations de votre profil n'ont pas pu être récupérées. Veuillez prendre contact avec l'administrateur.",
+  "invalidEmailError": "L'email n'est pas valide",
+  "invalidMobilePhoneError": "Le numéro de GSM n'est pas valide",
+  "invalidHomePhoneError": "Le numéro du domicile n'est pas valide",
+  "contactInfoAddShopFormDescription": "Ces informations proviennent de votre profil",
+  "updateInfoQuestion": "Souhaitez-vous mettre à jour les informations ?",
+  "yesOrNo": "Oui ou Non ?",
+  "previous": "Précédent",
+  "processingUpdate": "Mise à jour ...",
+  "mobilePhone": "Numéro GSM",
+  "homePhone": "Numéro du domicile",
+  "email": "Email"
 }

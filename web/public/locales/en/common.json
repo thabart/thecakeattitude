@@ -87,5 +87,18 @@
   "uniqueAddressError": "The address must be unique",
   "completeAddressError": "The address must be complete",
   "addressDetailsError": "The address details cannot be fetched",
-  "shopAddressDescription": "Specify the address where your shop is located. By default the address is the same than the one specified in your profile."
+  "shopAddressDescription": "Specify the address where your shop is located. By default the address is the same than the one specified in your profile.",
+  "uploadProfileError": "The profile cannot be update. Please contact the administrator",
+  "retrieveProfileInfoError": "The profile information cannot be fecthed. Please contact the administrator",
+  "invalidEmailError": "The email is not valid",
+  "invalidMobilePhoneError": "The mobile phone is not valid",
+  "invalidHomePhoneError": "The home phone is not valid",
+  "contactInfoAddShopFormDescription": "Those information are coming from your profile",
+  "updateInfoQuestion": "Do-you want to update them ?",
+  "yesOrNo": "Yes or No ?",
+  "previous": "Previous",
+  "processingUpdate": "Processing update ...",
+  "mobilePhone": "Mobile phone",
+  "homePhone": "Home phone",
+  "email": "Email"
 }

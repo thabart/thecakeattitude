@@ -38,7 +38,7 @@ class AddressForm extends Component {
         return (
             <div className="container bg-white rounded">
                 <section className="row p-1">
-                    <div className="col-md-12"><p>{t('shopAddressDescription')}</p></div>
+                    <div className="col-md-12"><p><i className="fa fa-exclamation-triangle txt-info"></i>{t('shopAddressDescription')}</p></div>
                     <Address ref="address"
                              onLoading={(e) => {
                                  this.props.onLoading(e);

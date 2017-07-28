@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import {Form, FormGroup, Col, Label, Input, FormFeedback, Button} from "reactstrap";
 import {UserService} from "../services/index";
+import { translate } from 'react-i18next';
 
 class ContactInfoForm extends Component {
     constructor(props) {
@@ -21,7 +22,7 @@ class ContactInfoForm extends Component {
         };
     }
 
-    handleInputChange(e) {
+    handleInputChange(e) { // This method is called when a change occures in a field.
         var self = this;
         const target = e.target;
         const name = target.name;
@@ -60,21 +61,22 @@ class ContactInfoForm extends Component {
         });
     }
 
-    previous() {
+    previous() { // This method is called when the user clicks on the "previous" button.
         this.props.onPrevious();
     }
 
-    next() {
+    next() { // This method is called when the user clicks on the "next" button.
         this.props.onNext();
     }
 
-    toggle(e) {
+    toggle(e) { // Enable / disable the form.
         this.setState({
             isEnabled: e.target.checked
         });
     }
 
-    update() {
+    update() { // Update the profile information.
+        const {t} = this.props;
         var json = {
             home_phone_number: this.state.userInfo.home_phone_number,
             mobile_phone_number: this.state.userInfo.mobile_phone_number,
@@ -89,15 +91,16 @@ class ContactInfoForm extends Component {
                 isUpdating: false
             });
         }).catch(function () {
-            self.props.onError('an error occured while trying to update the profile');
+            self.props.onError(t('uploadProfileError'));
             self.setState({
                 isUpdating: false
             });
         });
     }
 
-    componentWillMount() {
+    componentWillMount() { // Initialize the view.
         var self = this;
+        const {t} = this.props;
         this.setState({
             isContactInfoHidden: true
         });
@@ -107,7 +110,7 @@ class ContactInfoForm extends Component {
                 userInfo: userInfo
             });
         }).catch(function () {
-            self.props.onError('user information cannot be retrieved');
+            self.props.onError(t('retrieveProfileInfoError'));
             self.setState({
                 isContactInfoHidden: false
             });
@@ -115,8 +118,9 @@ class ContactInfoForm extends Component {
     }
 
     render() {
+        const {t} = this.props;
         if (this.state.isContactInfoHidden) {
-            return (<section className="col-md-12 section">Loading ...</section>)
+            return (<section className="col-md-12 section">{t('loadingMessage')}</section>)
         }
 
         var opts = {};
@@ -131,12 +135,12 @@ class ContactInfoForm extends Component {
         }
 
         /** Errors **/
-        const emailError = this.state.isEmailInvalid ? "The email is not valid" : null;
-        const mobilePhoneError = this.state.isMobilePhoneInvalid ? "The mobile phone is not valid" : null;
-        const homePhoneError = this.state.isHomePhoneInvalid ? "The home phone is not valid" : null;
-        const feedbackEmail = emailError ? "warning" : undefined;
-        const feedbackMobilePhone = mobilePhoneError ? "warning" : undefined;
-        const feedbackHomePhone = homePhoneError ? "warning" : undefined;
+        const emailError = this.state.isEmailInvalid ? t('invalidEmailError') : null;
+        const mobilePhoneError = this.state.isMobilePhoneInvalid ? t('invalidMobilePhoneError') : null;
+        const homePhoneError = this.state.isHomePhoneInvalid ? t('invalidHomePhoneError') : null;
+        const feedbackEmail = emailError ? "danger" : undefined;
+        const feedbackMobilePhone = mobilePhoneError ? "danger" : undefined;
+        const feedbackHomePhone = homePhoneError ? "danger" : undefined;
 
         return (
             <div className="container bg-white rounded">
@@ -145,18 +149,18 @@ class ContactInfoForm extends Component {
                         <Form>
                             <FormGroup>
                                 <p>
-                                    <i className="fa fa-exclamation-triangle text-info"/>
-                                    Those information are coming from your profile.
+                                    <i className="fa fa-exclamation-triangle txt-info"/>
+                                    {t('contactInfoAddShopFormDescription')}
                                 </p>
-                                <p>Do-you want to update them ?{' '}
+                                <p>{t('updateInfoQuestion')}{' '}
                                     <Label check>
                                         <Input type="checkbox" onClick={this.toggle}/>{' '}
-                                        Yes or No
+                                        {t("yesOrNo")}
                                     </Label>
                                 </p>
                             </FormGroup>
                             <FormGroup color={feedbackEmail}>
-                                <Label sm={12}>Email</Label>
+                                <Label sm={12}>{t('Email')}</Label>
                                 <Col sm={12}>
                                     <Input state={feedbackEmail}
                                            type="email"
@@ -167,7 +171,7 @@ class ContactInfoForm extends Component {
                                 </Col>
                             </FormGroup>
                             <FormGroup color={feedbackMobilePhone}>
-                                <Label sm={12}>Mobile phone</Label>
+                                <Label sm={12}>{t('mobilePhone')}</Label>
                                 <Col sm={12}>
                                     <Input state={feedbackMobilePhone}
                                            type="text"
@@ -179,7 +183,7 @@ class ContactInfoForm extends Component {
                                 </Col>
                             </FormGroup>
                             <FormGroup color={feedbackHomePhone}>
-                                <Label sm={12}>Home phone</Label>
+                                <Label sm={12}>{t('homePhone')}</Label>
                                 <Col sm={12}>
                                     <Input state={feedbackHomePhone}
                                            type="text"
@@ -194,19 +198,18 @@ class ContactInfoForm extends Component {
                     </div>
                 </section>
                 <section className="row p-1">
-
-                    <Button outline color="info" onClick={this.previous}>Previous</Button>
+                    <Button color="default" onClick={this.previous}>{t('previous')}</Button>
                     {!this.state.isUpdating ?
-                        (<Button outline color="info" onClick={this.update} {...optsActions}>Update</Button>) :
-                        (<Button outline color="info" disabled>
+                        (<Button color="default" style={{marginLeft: "5px"}} onClick={this.update} {...optsActions}>{t('update')}</Button>) :
+                        (<Button color="default" style={{marginLeft: "5px"}} disabled>
                                 <i className='fa fa-spinner fa-spin'/>
-                                Processing update ...
+                                {t('processingUpdate')}
                             </Button>
                         )
                     }
                     {!this.state.isUpdating ?
-                        (<Button outline color="info" onClick={this.next} {...optsActions}>Next</Button>) :
-                        (<Button outline color="info" disabled>Next</Button>)
+                        (<Button color="default" style={{marginLeft: "5px"}} onClick={this.next} {...optsActions}>{t('next')}</Button>) :
+                        (<Button color="default" style={{marginLeft: "5px"}} disabled>t('next')</Button>)
                     }
                 </section>
             </div>
@@ -214,4 +217,4 @@ class ContactInfoForm extends Component {
     }
 }
 
-export default ContactInfoForm;
+export default translate('common', { wait: process && !process.release, withRef: true })(ContactInfoForm);
