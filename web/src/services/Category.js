@@ -3,8 +3,7 @@ import Promise from "bluebird";
 import ConfigurationService from "./Configuration";
 
 module.exports = {
-    // Get all shop categories
-    getAll: function () {
+    getAll: function () { // Get all shop categories.
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (config) {
                 request({method: 'GET', url: config.shopcategories_endpoint}, function (error, response, body) {
@@ -20,8 +19,7 @@ module.exports = {
             });
         });
     },
-    // Get all shop categories (with no parent)
-    getParents: function () {
+    getParents: function () { // Get all shop categories (with no parent).
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (config) {
                 request({
@@ -40,8 +38,7 @@ module.exports = {
             });
         });
     },
-    // Get shop category
-    get: function (id) {
+    get: function (id) { // Get shop category.
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (config) {
                 request({
@@ -60,8 +57,7 @@ module.exports = {
             });
         });
     },
-    // Get map
-    getMap: function (categoryId, mapName) {
+    getMap: function (categoryId, mapName) { // Get map.
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (config) {
                 request({

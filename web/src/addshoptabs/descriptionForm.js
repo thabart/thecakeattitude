@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Form, FormGroup, Label, Col, Row, Input, Button, FormFeedback, UncontrolledTooltip} from "reactstrap";
+import {Form, FormGroup, Label, Col, Row, Input, Button, FormFeedback, UncontrolledTooltip, Modal, ModalHeader, ModalBody} from "reactstrap";
 import {CategoryService, ShopsService, OpenIdService, SessionService} from "../services/index";
 import {CategorySelector, TagsSelector} from "../components";
 import Game from "../game/game";
@@ -18,12 +18,11 @@ class DescriptionForm extends Component {
         this.selectMap = this.selectMap.bind(this);
         this.onHouseSelected = this.onHouseSelected.bind(this);
         this.changeMap = this.changeMap.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
         this.state = {
             name: null,
             description: null,
             place: null,
-            bannerImage: null,
-            pictureImage: null,
             isCategoryLoading: false,
             isSubCategoryLoading: false,
             categories: [],
@@ -31,6 +30,10 @@ class DescriptionForm extends Component {
             maps: [],
             subCategoryIdSelected: null,
             mapNameSelected: null,
+            bannerImage: null, // Images.
+            pictureImage: null,
+            isBannerImageModalOpened: false, // Modal windows.
+            isProfilePictureModalOpened: false,
             tooltip: {
                 toggleName: false,
                 toggleDescription: false,
@@ -49,7 +52,13 @@ class DescriptionForm extends Component {
         };
     }
 
-    toggleTooltip(name) {
+    toggleModal(name) { // Toggle modal window.
+      this.setState({
+        [name] : !this.state[name]
+      });
+    }
+
+    toggleTooltip(name) { // Toggle tooltips.
         var tooltip = this.state.tooltip;
         tooltip[name] = !tooltip[name];
         this.setState({
@@ -57,7 +66,7 @@ class DescriptionForm extends Component {
         });
     }
 
-    handleInputChange(e) {
+    handleInputChange(e) { // Handle the input change (set property values).
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -66,9 +75,13 @@ class DescriptionForm extends Component {
         });
     }
 
-    uploadImage(e, callback) {
+    uploadImage(e, callback) { // Common function used to upload the image.
         e.preventDefault();
         var file = e.target.files[0];
+        if (file.type !== 'image/png' && file.type !== 'image/jpg' && file.type !== 'image/jpeg') {
+          return;
+        }
+
         var reader = new FileReader();
         reader.onloadend = () => {
             callback(reader.result);
@@ -76,7 +89,7 @@ class DescriptionForm extends Component {
         reader.readAsDataURL(file);
     }
 
-    uploadBannerImage(e) {
+    uploadBannerImage(e) { // Upload banner image and display it.
         var self = this;
         self.uploadImage(e, function (result) {
             self.setState({
@@ -85,7 +98,7 @@ class DescriptionForm extends Component {
         });
     }
 
-    uploadPictureImage(e) {
+    uploadPictureImage(e) { // Upload the profile picture and display it.
         var self = this;
         self.uploadImage(e, function (result) {
             self.setState({
@@ -94,10 +107,11 @@ class DescriptionForm extends Component {
         });
     }
 
-    validate() {
+    validate() { // Execute the validation.
         var self = this,
             valid = self.state.valid,
-            isValid = true;
+            isValid = true,
+            {t} = this.props;
         // Check name
         if (!self.state.name || self.state.name.length < 1 || self.state.name.length > 15) {
             valid.isNameInvalid = true;
@@ -138,7 +152,7 @@ class DescriptionForm extends Component {
                 subject: userInfo.sub
             }).then(function () {
                 self.props.onLoading(false);
-                self.props.onError('you already have a shop on this category');
+                self.props.onError(t('shopExistsInCategoryError'));
             }).catch(function (e) {
                 var json = {
                     name: self.state.name,
@@ -156,11 +170,11 @@ class DescriptionForm extends Component {
             });
         }).catch(function () {
             self.props.onLoading(false);
-            self.props.onError('the subject cannot be retrieved');
+            self.props.onError(t('errorOccuredMsg'));
         });
     }
 
-    selectMap(e) {
+    selectMap(e) { // When the selected map change, display the overview.
         var target = $(e.target).find(':selected');
         var map = {
             map_link: $(target).data('maplink'),
@@ -171,7 +185,7 @@ class DescriptionForm extends Component {
         this.displayMap(map);
     }
 
-    displayMap(map) {
+    displayMap(map) { // Display the overview.
         map['category_id'] = this.state.subCategoryIdSelected;
         this.refs.game.loadMap(map);
         this.state.place = null;
@@ -181,11 +195,11 @@ class DescriptionForm extends Component {
         });
     }
 
-    changeMap(mapName) {
+    changeMap(mapName) { // Change selected map name.
         this.state.mapNameSelected = mapName;
     }
 
-    displayMaps(categoryId) {
+    displayMaps(categoryId) { // Display all the maps for the given category.
         var self = this;
         CategoryService.get(categoryId).then(function (r) {
             var maps = r['_embedded']['maps'];
@@ -202,7 +216,7 @@ class DescriptionForm extends Component {
         });
     }
 
-    onHouseSelected(place) {
+    onHouseSelected(place) { // Set the selected place.
         this.setState({
             place: place
         });
@@ -229,9 +243,9 @@ class DescriptionForm extends Component {
         const txtToolTipPicture = t('shopProfilePictureAddFormTooltip');
         const txtToolTipGame = t('shopPlaceAddFormTooltip');
         const bannerImagePreview = this.state.bannerImage && (
-                <div><img className='img-thumbnail' src={this.state.bannerImage} width='50' height='50'/></div>);
+                <div><a href="#" onClick={(e) => { e.preventDefault(); this.toggleModal('isBannerImageModalOpened')}}><img className='img-thumbnail' src={this.state.bannerImage} width='50' height='50'/></a></div>);
         const pictureImagePreview = this.state.pictureImage && (
-                <div><img className='img-thumbnail' src={this.state.pictureImage} width='100' height='100'/></div>);
+                <div><a href="#" onClick={(e) => { e.preventDefault(); this.toggleModal('isProfilePictureModalOpened'); }}><img className='img-thumbnail' src={this.state.pictureImage} width='100' height='100'/></a></div>);
         const nameError = this.buildError('isNameInvalid', t('contains1To15CharsError'));
         const descriptionError = this.buildError('isDescriptionInvalid', t('contains1To255CharsError'));
         const placeError = this.buildError('isPlaceInvalid', t('placeShouldBeSelected'));
@@ -330,7 +344,7 @@ class DescriptionForm extends Component {
                                 <Row>
                                     <Col sm={8}>
                                         <Input type="file"
-                                               accept="image/*"
+                                               accept=".png, .jpg, .jpeg"
                                                onChange={(e) => this.uploadBannerImage(e)}/>
                                     </Col>
                                     <Col sm={4}>
@@ -348,7 +362,7 @@ class DescriptionForm extends Component {
                                 <Row>
                                     <Col sm={8}>
                                         <Input type="file"
-                                               accept="image/*"
+                                               accept=".png, .jpg, .jpeg"
                                                onChange={(e) => this.uploadPictureImage(e)}/>
                                     </Col>
                                     <Col sm={4}>
@@ -383,12 +397,29 @@ class DescriptionForm extends Component {
                                     this.changeMap(mapName);
                                 }}/>
                         </Form>
-
                     </div>
                 </section>
                 <section className="row p-1">
                     <Button color="default" onClick={this.validate}>{t('next')}</Button>
                 </section>
+                {/* Modal : banner image */ }
+                <Modal isOpen={this.state.isBannerImageModalOpened} size="lg">
+                  <ModalHeader toggle={() => this.toggleModal('isBannerImageModalOpened')} className="redColor">
+                    <h2>{t('bannerImageModalTitle')}</h2>
+                  </ModalHeader>
+                  <ModalBody style={{overflow: "hidden", textAlign: "center"}}>
+                    <img src={self.state.bannerImage} />
+                  </ModalBody>
+                </Modal>
+                {/* Modal : profile picture */}
+                <Modal isOpen={this.state.isProfilePictureModalOpened} size="lg">
+                  <ModalHeader toggle={() => this.toggleModal('isProfilePictureModalOpened')} className="redColor">
+                    <h2>{t('profilePictureModalTitle')}</h2>
+                  </ModalHeader>
+                  <ModalBody style={{overflow: "hidden", textAlign: "center"}}>
+                    <img src={self.state.pictureImage} />
+                  </ModalBody>
+                </Modal>
             </div>
         );
     }

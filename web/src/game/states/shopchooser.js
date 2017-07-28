@@ -42,7 +42,7 @@ class ShopChooser extends window.Phaser.State {
               });
             }
 
-            if (layer.name === 'Wraps') {
+            if (layer.name === 'Warps') {
                 objects.forEach(function (obj) {
                     if (!obj.properties || !obj.properties.map || warps.indexOf(obj.properties.map) !== -1) {
                         return;

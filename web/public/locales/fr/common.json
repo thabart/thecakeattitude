@@ -1,7 +1,7 @@
 {
   "homeMenuItem": "Accueil",
   "explorerMenuItem": "Explorer",
-  "addShopMenuItem": "Ajouter un magasin",
+  "addShopMenuItem": "Ouvrir un magasin",
   "addOfferMenuItem": "Demander un service",
   "connectMenuItem": "Se connecter",
   "manageMenuItem": "Gérer",
@@ -68,9 +68,11 @@
   "contains1To255CharsError": "Doit contenir entre 1 et 255 caractères",
   "placeShouldBeSelected": "Une place doit être sélectionnée",
   "tags": "Tags",
-  "bannerImage": "Image de bannière",
-  "profilePicture": "Image de profil",
+  "bannerImage": "Image de bannière (longueur: 1140px, hauteur: 220px)",
+  "profilePicture": "Image de profil (longueur: 200px, hauteur: 200px)",
   "next": "Suivant",
   "choosePlace": "Choisir une place dans le jeux",
-  "subCategories": "Sous-catégories"
+  "subCategories": "Sous-catégories",
+  "shopExistsInCategoryError": "Vous avez déjà un magasin dans cette catégorie",
+  "errorOccuredMsg": "Une erreur est apparue, veuillez prendre contact avec l'administrateur"
 }

@@ -147,6 +147,25 @@
                  "width":62.6666666666661,
                  "x":5498.90909090909,
                  "y":3228.54545454545
+                }, 
+                {
+                 "height":158.666666666667,
+                 "id":8,
+                 "name":"",
+                 "properties":
+                    {
+                     "map":"second_shoes_map"
+                    },
+                 "propertytypes":
+                    {
+                     "map":"string"
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":128,
+                 "x":6047.33333333333,
+                 "y":3008
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -155,7 +174,7 @@
          "x":0,
          "y":0
         }],
- "nextobjectid":8,
+ "nextobjectid":9,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,

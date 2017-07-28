@@ -69,9 +69,13 @@
   "contains1To255CharsError": "Should contains 1 to 255 characters",
   "placeShouldBeSelected": "A place should be selected",
   "tags": "Tags",
-  "bannerImage": "Banner image",
-  "profilePicture": "Profile picture",
+  "bannerImage": "Banner image (width: 1140px, height: 220px)",
+  "profilePicture": "Profile picture (width: 200px, height: 200px)",
   "next": "Next",
   "choosePlace": "Choose a place in the game",
-  "subCategories": "Subcategories"
+  "subCategories": "Subcategories",
+  "shopExistsInCategoryError": "You already have a shop in this category",
+  "errorOccuredMsg": "An error occured please contact the administrator ...",
+  "profilePictureModalTitle": "Profile picture",
+  "bannerImageModalTitle": "Banner image"
 }
