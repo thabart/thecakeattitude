@@ -19,7 +19,7 @@ class AddShop extends Component {
         this._searchBox = null;
         this.data = {};
         this.state = {
-            activeTab: '1',
+            activeTab: '2',
             errorMessage: null,
             warningMessage: null,
             isAddressCorrect: false,
@@ -109,10 +109,10 @@ class AddShop extends Component {
                   <div className="mt-1 mb-1 p-1 bg-white rounded">
                       <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
                         <li className="col-2 active"><div className="counter-rounded">1</div>{t('description')}</li>
-                        <li className="col-2"><div className="counter-rounded">2</div>{t('address')}</li>
-                        <li className="col-2"><div className="counter-rounded">3</div>{t('contact')}</li>
-                        <li className="col-2"><div className="counter-rounded">4</div>{t('products')}</li>
-                        <li className="col-2"><div className="counter-rounded">5</div>{t('payment')}</li>
+                        <li className={this.state.activeTab >= 2 ? "col-2 active" : "col-2"}><div className="counter-rounded">2</div>{t('address')}</li>
+                        <li className={this.state.activeTab >= 3 ? "col-2 active" : "col-2"}><div className="counter-rounded">3</div>{t('contact')}</li>
+                        <li className={this.state.activeTab >= 4 ? "col-2 active" : "col-2"}><div className="counter-rounded">4</div>{t('products')}</li>
+                        <li className={this.state.activeTab === 5 ? "col-2 active" : "col-2"}><div className="counter-rounded">5</div>{t('payment')}</li>
                       </ul>
                   </div>
                   <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>

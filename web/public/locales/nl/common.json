@@ -74,5 +74,15 @@
   "choosePlace": "Choose a place in the game",
   "subCategories": "Subcategories",
   "shopExistsInCategoryError": "You already have a shop in this category",
-  "errorOccuredMsg": "An error occured please contact the administrator ..."
+  "errorOccuredMsg": "An error occured please contact the administrator ...",
+  "loadingMessage": "Loading ...",
+  "streetAddress": "Street address",
+  "postalCode": "Postal code",
+  "locality": "City",
+  "country": "Country",
+  "yourAddressCannotBeRetrievedError": "Your address cannot be retrieved",
+  "uniqueAddressError": "The address must be unique",
+  "completeAddressError": "The address must be complete",
+  "addressDetailsError": "The address details cannot be fetched",
+  "shopAddressDescription": "Specify the address where your shop is located. By default the address is the same than the one specified in your profile."
 }

@@ -74,5 +74,15 @@
   "choosePlace": "Choisir une place dans le jeux",
   "subCategories": "Sous-catégories",
   "shopExistsInCategoryError": "Vous avez déjà un magasin dans cette catégorie",
-  "errorOccuredMsg": "Une erreur est apparue, veuillez prendre contact avec l'administrateur"
+  "errorOccuredMsg": "Une erreur est apparue, veuillez prendre contact avec l'administrateur",
+  "loadingMessage": "Chargement ...",
+  "streetAddress": "Adresse de la rue",
+  "postalCode": "Code postal",
+  "locality": "Ville",
+  "country": "Pays",
+  "yourAddressCannotBeRetrievedError": "Votre adresse n'a pas pu être récupérée",
+  "uniqueAddressError": "L'adresse doit être unique",
+  "completeAddressError": "L'adresse doit être complète",
+  "addressDetailsError": "Les details de l'adresse n'ont pas pu être récupérés",
+  "shopAddressDescription": "Spécifiez l'adresse de votre magasin. Par défault l'adresse est la même que celle spécifiée dans votre profil."
 }

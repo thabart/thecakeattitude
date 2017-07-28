@@ -6,6 +6,7 @@ import {MAP} from "react-google-maps/lib/constants";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import Constants from "../../Constants";
 import Promise from "bluebird";
+import { translate } from 'react-i18next';
 import "./address.css";
 
 const INPUT_STYLE = {
@@ -65,16 +66,17 @@ class Address extends Component {
         }
     }
 
-    onMapLoad(map) {
+    onMapLoad(map) { // Save the google map reference.
         this._googleMap = map;
     }
 
-    onSearchBoxCreated(searchBox) {
+    onSearchBoxCreated(searchBox) { // Save the searchbox reference.
         this._searchBox = searchBox;
     }
 
-    onPlacesChanged() {
+    onPlacesChanged() { // This method is triggered when the place changes.
         var self = this;
+        const {t} = this.props;
         const places = this._searchBox.getPlaces();
         var enableNext = function (b) {
             if (self.props.addressCorrect) self.props.addressCorrect(b);
@@ -84,7 +86,7 @@ class Address extends Component {
         };
         // Only one address should be returned.
         if (places.length !== 1) {
-            if (self.props.onError) self.props.onError('The address must be unique !');
+            if (self.props.onError) self.props.onError(t('uniqueAddressError'));
             enableNext(false);
             return;
         }
@@ -104,19 +106,19 @@ class Address extends Component {
             });
             if (self.props.onLoading) self.props.onLoading(false);
             if (!adr.adr.postal_code || !adr.adr.locality || !adr.adr.country || !adr.adr.street_address) {
-                if (self.props.onError) self.props.onError('The address should be complete !');
+                if (self.props.onError) self.props.onError(t('completeAddressError'));
                 enableNext(false);
             } else {
                 enableNext(true);
             }
         }).catch(function () {
-            if (self.props.onError) self.props.onError('The address details cannot be fetched');
+            if (self.props.onError) self.props.onError(t('addressDetailsError'));
             if (self.props.onLoading) self.props.onLoading(false);
             enableNext(false);
         });
     }
 
-    display() {
+    display() { // Display the map.
         var self = this;
         setTimeout(function () {
             const mapInstance = self._googleMap.context[MAP];
@@ -124,7 +126,7 @@ class Address extends Component {
         }, 1000);
     }
 
-    getAddress() {
+    getAddress() { // Get the address.
         var json = {
             street_address: this.state.address.street_address,
             postal_code: this.state.address.postal_code,
@@ -136,32 +138,18 @@ class Address extends Component {
         return json;
     }
 
-    render() {
+    render() { // Return the view.
+        const {t} = this.props;
         if (this.state.isContactInfoHidden) {
-            return (<section className="col-md-12 section">Loading ...</section>)
+            return (<section className="col-md-12 section">{t('loadingMessage')}</section>)
         }
-
-        /*
-         var opts = {};
-         if (!this.state.isEnabled) {
-         opts['readOnly'] = 'readOnly';
-         }
-         */
-
-        /*
-         var isInvalid = this.state.isEmailInvalid || this.state.isMobilePhoneInvalid || this.state.isHomePhoneInvalid;
-         var optsActions = {};
-         if (isInvalid) {
-         optsActions['disabled'] = 'disabled';
-         }
-         */
 
         return (
             <div className="row col-md-12">
                 <div className="col-md-6">
                     <Form>
                         <FormGroup>
-                            <Label sm={12}>Street address</Label>
+                            <Label sm={12}>{t('streetAddress')}</Label>
                             <Col sm={12}>
                                 <Input type="text"
                                        className={this.state.address.street_address !== "" ? 'form-control' : 'form-control invalid'}
@@ -171,7 +159,7 @@ class Address extends Component {
                             </Col>
                         </FormGroup>
                         <FormGroup>
-                            <Label sm={12}>Postal code</Label>
+                            <Label sm={12}>{t('postalCode')}</Label>
                             <Col sm={12}>
                                 <Input type="text"
                                        className={this.state.address.postal_code !== "" ? 'form-control' : 'form-control invalid'}
@@ -181,7 +169,7 @@ class Address extends Component {
                             </Col>
                         </FormGroup>
                         <FormGroup>
-                            <Label sm={12}>Locality</Label>
+                            <Label sm={12}>{t('locality')}</Label>
                             <Col sm={12}>
                                 <Input type="text"
                                        className={this.state.address.locality !== "" ? 'form-control' : 'form-control invalid'}
@@ -191,7 +179,7 @@ class Address extends Component {
                             </Col>
                         </FormGroup>
                         <FormGroup>
-                            <Label sm={12}>Country</Label>
+                            <Label sm={12}>{t('country')}</Label>
                             <Col sm={12}>
                                 <Input type="text"
                                        className={this.state.address.country !== "" ? 'form-control' : 'form-control invalid'}
@@ -226,8 +214,9 @@ class Address extends Component {
         );
     }
 
-    componentDidMount() {
+    componentDidMount() { // Execute the the view is displayed.
         var self = this;
+        const {t} = this.props;
         if (self.props.onLoading) self.props.onLoading(true);
         var promise = null;
         if (self.props.position) { // Retrieve position from the parent.
@@ -266,7 +255,7 @@ class Address extends Component {
                 if (self.props.addressCorrect) self.props.addressCorrect(true);
                 if (self.props.onLoading) self.props.onLoading(false);
             }).catch(function () {
-                if (self.props.onWarning) self.props.onWarning('Current address cannot be retrieved');
+                if (self.props.onWarning) self.props.onWarning(t('yourAddressCannotBeRetrievedError'));
                 if (self.props.onLoading) self.props.onLoading(false);
                 if (self.props.addressCorrect) self.props.addressCorrect(false);
                 self.setState({
@@ -280,4 +269,4 @@ class Address extends Component {
     }
 }
 
-export default Address;
+export default translate('common', { wait: process && !process.release, withRef: true })(Address);
