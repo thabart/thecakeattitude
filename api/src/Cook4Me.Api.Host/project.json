@@ -67,8 +67,7 @@
     "include": [
       "appsettings*.json",
       "wwwroot",
-      "web.config",
-      "Assets"
+      "web.config"
     ]
   }
 }

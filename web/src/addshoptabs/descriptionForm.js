@@ -160,7 +160,7 @@ class DescriptionForm extends Component {
                     tags: self.refs.shopTags.getTags(),
                     banner_image: self.state.bannerImage,
                     profile_image: self.state.pictureImage,
-                    map_name: self.state.mapNameSelected,
+                    category_map_name: self.state.mapNameSelected,
                     category_id: self.state.subCategoryIdSelected,
                     place: self.state.place
                 };
@@ -408,7 +408,7 @@ class DescriptionForm extends Component {
                     <h2>{t('bannerImageModalTitle')}</h2>
                   </ModalHeader>
                   <ModalBody style={{overflow: "hidden", textAlign: "center"}}>
-                    <img src={self.state.bannerImage} />
+                    <img src={self.state.bannerImage} style={{maxWidth:"400px"}}/>
                   </ModalBody>
                 </Modal>
                 {/* Modal : profile picture */}
@@ -417,7 +417,7 @@ class DescriptionForm extends Component {
                     <h2>{t('profilePictureModalTitle')}</h2>
                   </ModalHeader>
                   <ModalBody style={{overflow: "hidden", textAlign: "center"}}>
-                    <img src={self.state.pictureImage} />
+                    <img src={self.state.pictureImage} style={{maxWidth:"400px"}} />
                   </ModalBody>
                 </Modal>
             </div>

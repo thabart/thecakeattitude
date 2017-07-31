@@ -21,6 +21,7 @@ namespace Cook4Me.Api.EF.Models
         public string Id { get; set; }
         public int Method { get; set; }
         public string Iban { get; set; }
+        public string PaypalAccount { get; set; }
         public string ShopId { get; set; }
         public virtual Shop Shop { get; set; }
     }

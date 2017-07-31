@@ -120,6 +120,11 @@ namespace Cook4Me.Api.Host.Builders
                         payment.Add(Constants.DtoNames.PaymentMethod.Iban, record.Iban);
                     }
 
+                    if (!string.IsNullOrWhiteSpace(record.PaypalAccount))
+                    {
+                        payment.Add(Constants.DtoNames.PaymentMethod.PaypalAccount, record.PaypalAccount);
+                    }
+
                     payments.Add(payment);
                 }
             }

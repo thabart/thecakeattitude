@@ -122,5 +122,10 @@
   "paypal": "Paypal",
   "noPaymentSelectedError": "A payment method should be selected",
   "mandatoryIbanError": "The IBAN must bee filled in",
-  "notValidIbanError": "The IBAN is not valid"
+  "notValidIbanError": "The IBAN is not valid",
+  "paypalDescription": "Please specify the email used by your Paypal account",
+  "mandatoryPaypalAccountError": "The paypal account must be specified",
+  "notValidPaypalAccountError": "The paypal account is not a valid address email",
+  "incompleteAddShopRequestError": "The information are not complete",
+  "addShopError": "An error occurred while trying to add the shop. Please contact the administrator"
 }

@@ -40,7 +40,7 @@ namespace Cook4Me.Api.EF.Repositories
         {
             if (string.IsNullOrWhiteSpace(id))
             {
-                throw new ArgumentNullException(nameof(id));
+                return null;
             }
 
             var result = await _context.Maps.FirstOrDefaultAsync(c => c.MapName == id).ConfigureAwait(false);

@@ -131,7 +131,7 @@ namespace Cook4Me.Api.Host.Operations.Shop
 
         private bool AddShopMap(AddShopCommand shop, ShopMap map, HttpRequest request)
         {
-            if (!File.Exists(Constants.Assets.PartialShop) || !System.IO.File.Exists(Constants.Assets.PartialUnderground))
+            if (!File.Exists(Constants.Assets.PartialShop) || !File.Exists(Constants.Assets.PartialUnderground))
             {
                 return false;
             }

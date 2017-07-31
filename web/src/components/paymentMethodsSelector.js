@@ -56,7 +56,18 @@ class PaymentMethodsSelector extends Component {
         }
 
         if (this.state.activatePaypal) {
-            arr.push({method: 'paypal'});
+            if (!this.state.paypal_account) {
+              if (self.props.onError) self.props.onError(t('mandatoryPaypalAccountError'));
+              return;
+            }
+
+            var regex = new RegExp("^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+            if (!regex.test(this.state.paypal_account)) {
+                if (self.props.onError) self.props.onError(t('notValidPaypalAccountError'));
+                return;
+            }
+
+            arr.push({method: 'paypal', paypal_account: this.state.paypal_account});
         }
 
         return arr;
@@ -140,6 +151,8 @@ class PaymentMethodsSelector extends Component {
                         </div>) : ''}
                     <div className="form-group">
                         <i className="fa fa-paypal txt-info"/> <label>{t('paypal')}</label>
+                        <p>{t('paypalDescription')}</p>
+                        <input type="text" onChange={this.handleInputChange} name="paypal_account" className="form-control" onClick={(e) => { e.stopPropagation(); }} />
                     </div>
                 </li>
             </div>

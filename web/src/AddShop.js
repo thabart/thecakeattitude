@@ -22,7 +22,7 @@ class AddShop extends Component {
         this.toggleError = this.toggleError.bind(this);
         this.data = {};
         this.state = {
-            activeTab: '5',
+            activeTab: '1',
             successMessage: null,
             warningMessage: null,
             errorMessage: null,
@@ -44,7 +44,7 @@ class AddShop extends Component {
         }
 
         if (tab === '2') {
-            self.refs.addressForm.display();
+            self.refs.addressForm.getWrappedInstance().display();
         }
     }
 
@@ -66,7 +66,7 @@ class AddShop extends Component {
       });
     }
 
-    loading(isLoading) {
+    loading(isLoading) { // Display / Hide loading.
         this.setState({
             isLoading: isLoading
         });
@@ -90,11 +90,12 @@ class AddShop extends Component {
       });
     }
 
-    save(json) {
+    save(json) { // Save the shop.
         var content = json,
-            self = this;
+            self = this,
+            {t} = this.props;
         if (!this.data || !this.data['1'] || !this.data['2']) {
-            this.displayError('The request cannot be saved because the information are not complete');
+            this.displayError(t('incompleteAddShopRequestError'));
             return;
         }
 
@@ -112,12 +113,12 @@ class AddShop extends Component {
             if (json && json.error_description) {
                 self.displayError(json.error_description);
             } else {
-                self.displayError('an error occurred while trying to add the shop');
+                self.displayError(t('addShopError'));
             }
         });
     }
 
-    render() {
+    render() { // Renders the view.
       const {t} = this.props;
         return (
             <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>

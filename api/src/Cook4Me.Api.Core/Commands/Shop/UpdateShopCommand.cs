@@ -53,6 +53,7 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string Id { get; set; }
         public AddPaymentInformationMethods Method { get; set; }
         public string Iban { get; set; }
+        public string PaypalAccount { get; set; }
     }
 
     public class UpdateShopCommand : Command

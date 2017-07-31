@@ -119,5 +119,10 @@
   "paypal": "Paypal",
   "noPaymentSelectedError": "Un moyen de paiement doit être sélectionné",
   "mandatoryIbanError": "Le numéro IBAN doit être rempli",
-  "notValidIbanError": "Le numéro IBAN n'est pas valide"
+  "notValidIbanError": "Le numéro IBAN n'est pas valide",
+  "paypalDescription": "Veuillez saisir l'adresse mail que vous utilisez comme compte Paypal",
+  "mandatoryPaypalAccountError": "Le compte paypal doit être spécifié",
+  "notValidPaypalAccountError": "L'adresse du compte paypal n'est pas une adresse email valide",
+  "incompleteAddShopRequestError": "Les informations ne sont pas complètes",
+  "addShopError": "Le magasin n'a pas pu être ajouté. Veuillez prendre contact avec l'adminisrateur"
 }

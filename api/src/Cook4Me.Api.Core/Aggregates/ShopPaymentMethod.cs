@@ -28,5 +28,6 @@ namespace Cook4Me.Api.Core.Aggregates
         public string Id { get; set; }
         public ShopPaymentMethods Method { get; set; }
         public string Iban { get; set; }
+        public string PaypalAccount { get; set; }
     }
 }

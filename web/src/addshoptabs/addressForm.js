@@ -65,4 +65,4 @@ class AddressForm extends Component {
     }
 }
 
-export default translate('common', { wait: process && !process.release })(AddressForm);
+export default translate('common', { wait: process && !process.release, withRef: true })(AddressForm);

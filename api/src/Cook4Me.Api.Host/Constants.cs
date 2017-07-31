@@ -20,8 +20,8 @@ namespace Cook4Me.Api.Host
     {
         public static class Assets
         {
-            public const string PartialShop = "./Assets/shop.json";
-            public const string PartialUnderground = "./Assets/underground.json";
+            public const string PartialShop = "./wwwroot/shops/shop_template.json";
+            public const string PartialUnderground = "./wwwroot/shops/underground_template.json";
         }
 
         public static class RouteNames
@@ -230,6 +230,7 @@ namespace Cook4Me.Api.Host
             {
                 public const string Method = "method";
                 public const string Iban = "iban";
+                public const string PaypalAccount = "paypal_account";
             }
 
             public static class Filter

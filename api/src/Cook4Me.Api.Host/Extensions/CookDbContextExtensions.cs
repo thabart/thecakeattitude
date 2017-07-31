@@ -52,7 +52,7 @@ namespace Cook4Me.Api.Host.Extensions
             
             InsertCategories(context);
             InsertTags(context);
-            InsertShops(context);
+            // InsertShops(context);
             InsertFilters(context);
             InsertComments(context);
             InsertShopTags(context);

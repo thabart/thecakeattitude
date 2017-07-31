@@ -197,7 +197,8 @@ namespace Cook4Me.Api.EF.Extensions
                 {
                     Id = s.Id,
                     Iban = s.Iban,
-                    Method = (ShopPaymentMethods)s.Method
+                    Method = (ShopPaymentMethods)s.Method,
+                    PaypalAccount = s.PaypalAccount
                 }).ToList();
             }
 
@@ -318,6 +319,7 @@ namespace Cook4Me.Api.EF.Extensions
                 {
                     Id = s.Id,
                     Iban = s.Iban,
+                    PaypalAccount = s.PaypalAccount,
                     Method = (int)s.Method
                 }).ToList();
             }

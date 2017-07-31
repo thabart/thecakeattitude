@@ -51,6 +51,7 @@ namespace Cook4Me.Api.Handlers
                 {
                     Id = m.Id,
                     Iban = m.Iban,
+                    PaypalAccount = m.PaypalAccount,
                     Method = (ShopPaymentMethods)m.Method
                 });
             }
@@ -235,6 +236,7 @@ namespace Cook4Me.Api.Handlers
                 {
                     Id = m.Id,
                     Iban = m.Iban,
+                    PaypalAccount = m.PaypalAccount,
                     Method = (ShopPaymentMethods)m.Method
                 });
             }

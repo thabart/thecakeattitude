@@ -470,7 +470,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Id = Guid.NewGuid().ToString(),
                 Method = (AddPaymentInformationMethods)methodEnum.Value,
-                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
+                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban),
+                PaypalAccount = jObj.Value<string>(Constants.DtoNames.PaymentMethod.PaypalAccount)
             };
         }
 
@@ -506,7 +507,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Id = Guid.NewGuid().ToString(),
                 Method = (AddPaymentInformationMethods)methodEnum.Value,
-                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
+                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban),
+                PaypalAccount = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban)
             };
         }
 

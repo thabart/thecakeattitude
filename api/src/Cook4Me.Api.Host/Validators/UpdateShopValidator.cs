@@ -19,6 +19,7 @@ using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Repositories;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Validators
@@ -117,6 +118,26 @@ namespace Cook4Me.Api.Host.Validators
                 return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Payments));
             }
 
+            foreach (var paymentMethod in shop.PaymentMethods)
+            {
+                if (paymentMethod.Method == AddPaymentInformationMethods.BankTransfer) // Check bank transfer.
+                {
+                    var regex = new Regex("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}", RegexOptions.IgnoreCase);
+                    if (!regex.IsMatch(paymentMethod.Iban))
+                    {
+                        return new UpdateShopValidationResult(ErrorDescriptions.TheIbanIsNotValid);
+                    }
+                }
+                else if (paymentMethod.Method == AddPaymentInformationMethods.PayPal) // Check paypal account.
+                {
+                    var regex = new Regex(@"^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", RegexOptions.IgnoreCase);
+                    if (!regex.IsMatch(paymentMethod.PaypalAccount))
+                    {
+                        return new UpdateShopValidationResult(ErrorDescriptions.ThePaypalAccountIsNotValid);
+                    }
+                }
+            }
+
             if (shop.ProductCategories != null)
             {
                 if (shop.ProductCategories.Any(f => string.IsNullOrWhiteSpace(f.Name)))
@@ -131,7 +152,7 @@ namespace Cook4Me.Api.Host.Validators
 
                 if (shop.ProductCategories.Count() > 5)
                 {
-                    return new UpdateShopValidationResult(ErrorDescriptions.OnlyFiveCategoriesCanBeAdded);
+                    return new UpdateShopValidationResult(ErrorDescriptions.OnlyEightCategoriesCanBeAdded);
                 }
             }
 
