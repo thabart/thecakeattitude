@@ -21,6 +21,11 @@ class ShelfChooser extends Component {
           }
       });
   }
+
+  setCurrentShelf(shelfId) { // Set the current shelf.
+    var self = this;
+    self._game.state.states.Chooser.setCurrentShelf(shelfId);
+  }
 }
 
 export default ShelfChooser;

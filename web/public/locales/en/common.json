@@ -104,12 +104,15 @@
   "profileUpdated": "Profile has been updated",
   "productCategories": "Product categories",
   "productAddShopDescription": "Specify the metadata of your products. Classify your products by categories and define characteristics, they will be used later by the clients to filter your products. For example : category = Women and filter = size",
-  "productAddShopReminder": "A product category matches a shelf in your shop",
-  "productFilters": "Product filters",
-  "addFilter": "Add filter",
-  "filterName": "Filter name",
-  "filterValues": "Filter values",
+  "productAddShopReminder": "A product category must corresponds to a shelf defined in your shop.",
+  "productFilters": "Product characteristics",
+  "addFilter": "Add characteristic",
+  "filterName": "Characteristic name",
+  "filterValues": "Characteristic values",
   "maxEightProductCategories": "8 product categories can be specified",
   "filterRowInfoTooltip": "At least one tag must be specified and the name must be filled-in",
-  "enterProductCategoryNamePlaceHolder": "Enter the product category name ..."
+  "enterProductCategoryNamePlaceHolder": "Enter the product category name ...",
+  "characteristicsTooltip": "Assign characteristics to the products and define some values",
+  "shelf": "Shelf",
+  "productCategoryName": "Product category name"
 }

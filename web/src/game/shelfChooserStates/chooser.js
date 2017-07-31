@@ -5,6 +5,7 @@ class Chooser extends window.Phaser.State {
 
     create() {
         var self = this;
+        self.shelfSprites = [];
         var tileMapData = self.game.cache.getTilemapData('tileMap');
         var data = tileMapData.data;
         var totalWidth = data.width * data.tilewidth,
@@ -24,7 +25,6 @@ class Chooser extends window.Phaser.State {
           return;
         }
 
-        var shelfSprites = [];
         shelves.forEach(function(obj) {
           var  newWidth = scaleX * obj.width,
             newHeight = scaleY * obj.height,
@@ -43,16 +43,28 @@ class Chooser extends window.Phaser.State {
           spr.rect = rect;
           // spr.rect.visible = false;
           spr.events.onInputDown.add(function () {
-            shelfSprites.forEach(function(s) { s.rect.alpha = 0.5 });
+            self.shelfSprites.map(function(shelf) { return shelf.sprite; }).forEach(function(s) { s.rect.alpha = 0.5 });
             rect.alpha = 1;
+            if (self.opts.onShelfClick) {
+              self.opts.onShelfClick(obj.id);
+            }
           });
 
-          shelfSprites.push(spr);
+          self.shelfSprites.push({id: obj.id, sprite: spr});
         });
 
         if (self.opts.loadedCallback) {
           self.opts.loadedCallback(shelves.map(function(shelf) { return { name: shelf.name, id: shelf.id }; }));
         }
+    }
+
+    setCurrentShelf(shelfId) { // Select the shelf.
+      var self = this;
+      self.shelfSprites.map(function(shelf) { return shelf.sprite; }).forEach(function(s) { s.rect.alpha = 0.5 });
+      var filtered = self.shelfSprites.filter(function(shelf) { return shelf.id === shelfId; }).map(function(shelf) { return shelf.sprite; });
+      if (filtered && filtered.length > 0) {
+        filtered[0].rect.alpha = 1;
+      }
     }
 }
 

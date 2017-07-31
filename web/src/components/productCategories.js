@@ -9,80 +9,82 @@ import { translate } from 'react-i18next';
 class ProductCategories extends Component {
   constructor(props) {
     super(props);
-    this.handleTags = this.handleTags.bind(this);
-    this.renderTag = this.renderTag.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.selectPlace = this.selectPlace.bind(this);
+    this.setCurrentShelf = this.setCurrentShelf.bind(this);
     this.state = {
-      tags: props.categories || [],
+      isLoading: true,
       shelves: []
     };
   }
 
-  handleTags(tags, changed, changedIndexes) {
-    if (this.isTagsExist(tags, changed, changedIndexes, this.state.tags)) {
+  handleInputChange(e, shelfId) { // Handle the input change.
+    var self = this;
+    const target = e.target;
+    const value = target.value;
+    var shelf = self.state.shelves.filter(function(shelf) { return shelf.id === shelfId; });
+    if (!shelf || shelf.length === 0) {
       return;
     }
 
-    var arr = [];
-    tags.forEach(function(t) {
-      if (typeof t === 'string') {
-        arr.push({
-          id: Guid.generate(),
-          name: t
-        });
-      } else {
-        arr.push(t);
-      }
-    });
-
+    shelf[0].category_name = value;
     this.setState({
-      tags: arr
+      shelves: self.state.shelves
     });
   }
 
-  isTagsExist(tags, changed, changedIndexes, innerTags) {
-    if (changedIndexes[0] === innerTags.length ) {
-      var changedValue = changed[0].toLowerCase();
-      var selectedValue = innerTags.filter(function(tag) {
-        return tag.name.toLowerCase() === changedValue;
-      });
-
-      if (selectedValue.length > 0) {
-        return true;
-      }
-    }
-
-    return false;
+  getCategories() { // Returns the categories.
+    return this.state.shelves.filter(function(shelf) { return shelf.category_name && shelf.category_name !== null; }).map(function(shelf) {
+      return {
+        shop_section_name: shelf.name,
+        name: shelf.category_name,
+        description: shelf.category_name
+      };
+    });
   }
 
-  getCategories() {
-    return this.state.tags;
+  selectPlace(shelfId) { // When an element is selected in the list then select the place in the map.
+    var self = this;
+    self.refs.shelfChooser.setCurrentShelf(shelfId);
+    self.setCurrentShelf(shelfId);
   }
 
-  renderTag(props) {
-    let {tag, key, disabled, onRemove, classNameRemove, getTagDisplayValue, ...other} = props;
-    return (<span key={key} {...other}>
-      {tag.name}
-      {!disabled &&
-        <a className={classNameRemove} onClick={(e) => onRemove(key)} />
+  setCurrentShelf(shelfId) { // Set the current shelf.
+    var self = this;
+    self.state.shelves.forEach(function(s) {
+      if (s.id === shelfId) {
+        s.isSelected = true;
+        return;
       }
-    </span>);
+
+      s.isSelected = false;
+    });
+
+    self.setState({
+      shelves: self.state.shelves
+    });
   }
 
   render() { // Display the view.
-    var self = this, shelves = [], {t} = this.props;
+    var self = this, {t} = this.props, shelves = [(<li className="list-group-item">
+      <div className="col-md-4"><b>{t('shelf')}</b></div>
+      <div className="col-md-8"><b>{t('productCategoryName')}</b></div>
+    </li>)];
     if (self.state.shelves) {
       self.state.shelves.forEach(function(shelf) {
-        shelves.push((<li className="list-group-item" data-id={shelf.id}>
+        shelves.push((<li className={shelf.isSelected ? "list-group-item active" : "list-group-item"} data-id={shelf.id} onClick={() => { self.selectPlace(shelf.id); }}>
           <div className="col-md-4">{shelf.name}</div>
-          <div className="col-md-8"><input type="text" className="form-control" placeholder={t('enterProductCategoryNamePlaceHolder')} /></div>
+          <div className="col-md-8"><input type="text" className="form-control" placeholder={t('enterProductCategoryNamePlaceHolder')} onChange={(e) => { self.handleInputChange(e, shelf.id); }} /></div>
         </li>));
       });
     }
     return (<div className="row">
       <div className="col-md-6">
-        <ul className="list-group-default clickable">
-          {shelves}
-        </ul>
+        { self.state.isLoading ? (<i className='fa fa-spinner fa-spin'/>) : (
+          <ul className="list-group-default clickable">
+            {shelves}
+          </ul>
+        )}
       </div>
       {/* <TagsInput value={this.state.tags} onChange={this.handleTags}  inputProps={{placeholder: "Category"}} renderTag={this.renderTag} maxTags={5} /> */}
       <div className="col-md-6">
@@ -93,12 +95,24 @@ class ProductCategories extends Component {
 
   componentDidMount() { // Execute after the view is rendered.
     var self = this;
-    self.refs.shelfChooser.display({loadedCallback: function(shelves) {
-      self.setState({
-        shelves: shelves
-      });
-    }})
+    self.setState({
+      isLoading: true
+    });
+    self.refs.shelfChooser.display(
+      {
+        loadedCallback: function(shelves) {
+          shelves.forEach(function(shelf) { shelf.isSelected = false; });
+          self.setState({
+            shelves: shelves,
+            isLoading: false
+          });
+        },
+        onShelfClick: function(shelfId) {
+          self.setCurrentShelf(shelfId);
+        }
+      }
+    );
   }
 }
 
-export default translate('common', { wait: process && !process.release })(ProductCategories);
+export default translate('common', { wait: process && !process.release, withRef: true })(ProductCategories);

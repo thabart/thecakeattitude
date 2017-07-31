@@ -96,7 +96,8 @@ h2 {
   background-color: rgba(231, 39, 45, 0.22) !important;
 }
 
-.red-theme .list-group-default.clickable .list-group-item:hover {
+.red-theme .list-group-default.clickable .list-group-item:hover,
+.list-group-item.active {
   background-color: #f0767a !important;
   color: white;
 }

@@ -44,11 +44,9 @@ class ProductForm extends Component {
   }
 
   next() {
-    var filters = this.refs.shopProductFilter.getFilters();
     var filtersJson = [],
-      productCategoriesJson = this.refs.productCategories.getCategories().map(function(cat) {
-        return { name: cat.name };
-      });
+      filters = this.refs.shopProductFilter.getWrappedInstance().getFilters(),
+      productCategoriesJson = this.refs.productCategories.getWrappedInstance().getCategories();
     filters = filters.filter(function(filter) {
       return filter.isCorrect === true && filter.isNotComplete === false;
     });
@@ -112,7 +110,7 @@ class ProductForm extends Component {
             <div className="form-group">
               <label className="form-label">{t('productFilters')}</label> <i className="fa fa-info-circle txt-info" id="productFilters"></i>
               <Tooltip placement="right" target="productFilters" isOpen={this.state.tooltip.toggleProductFilters} toggle={() => { this.toggleTooltip('toggleProductFilters');}}>
-                  Add product filters and their values
+                  {t('characteristicsTooltip')}
               </Tooltip>
               <ShopProductFilter ref="shopProductFilter" />
             </div>
@@ -129,10 +127,6 @@ class ProductForm extends Component {
             </button>
         </div>
       </div>);
-  }
-
-  componentDidMount() { // This method is execute after the render.
-    // this.refs.shelfChooser.display();
   }
 }
 
