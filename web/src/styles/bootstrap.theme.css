@@ -216,3 +216,22 @@ ul.list-group-default li:first-child {
 .list-group-default.clickable .list-group-item {
   cursor: pointer;
 }
+
+/* Dropdown */
+.dropdown-menu:before {
+  position: absolute;
+  top: -8px;
+  left: 15px;
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+  content: '';
+}
+
+.dropdown-menu {
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
+
+.dropdown-item {
+  font-size: 10pt !important;
+}

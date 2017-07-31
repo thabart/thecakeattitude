@@ -43,6 +43,7 @@ class Header extends Component {
             activeItem: null,
             isMenuOpen: false,
             isAccountOpen: false,
+            isNotificationOpened: false,
             isAuthenticateOpened: false,
             isErrorDisplayed: false,
             isLoading: false,
@@ -94,8 +95,7 @@ class Header extends Component {
         });
     }
 
-    // Authenticate with login and password
-    authenticate(e) {
+    authenticate(e) { // Authenticate with login and password
         e.preventDefault();
         var self = this;
         self.setState({
@@ -112,8 +112,7 @@ class Header extends Component {
         });
     }
 
-    // Authenticate with external identity providers.
-    externalAuthenticate() {
+    externalAuthenticate() { // Authenticate with external identity providers.
         var getParameterByName = function (name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, "\\$&");
@@ -147,8 +146,7 @@ class Header extends Component {
         });
     }
 
-    // Disconnect
-    disconnect() {
+    disconnect() { // Disconnect
         this.setState({
             isLoggedIn: false
         });
@@ -159,29 +157,26 @@ class Header extends Component {
         this.props.history.push('/');
     }
 
-    // Manage profile
-    manageProfile() {
+    manageProfile() { // Manage profile
       this.props.history.push('/manage/profile');
     }
 
-    manageShops() {
+    manageShops() { // Manage shops.
       this.props.history.push('/manage/shops');
     }
 
-    manageAnnounces() {
+    manageAnnounces() { // Manage announces.
       this.props.history.push('/manage/announces');
     }
 
-    // Display the user information.
-    displayUser(isLoggedIn, user) {
+    displayUser(isLoggedIn, user) { // Display the user information.
         this.setState({
             isLoggedIn: isLoggedIn,
             user: user
         });
     }
 
-    // Display username
-    displayUserName() {
+    displayUserName() { // Display username
         var self = this;
         return new Promise(function (resolve, reject) {
             var session = SessionService.getSession();
@@ -202,11 +197,11 @@ class Header extends Component {
         });
     }
 
-    switchLanguage(lng) {
+    switchLanguage(lng) { // Switch language.
       i18n.changeLanguage(lng);
     }
 
-    componentWillMount() {
+    componentWillMount() { // Execute before.
         var self = this;
         this.setState({
             isConnectHidden: true
@@ -222,7 +217,7 @@ class Header extends Component {
         });
     }
 
-    render() {
+    render() { // Renders the view.
         const { t } = this.props;
         return (
             <div>
@@ -247,7 +242,19 @@ class Header extends Component {
                       <ul>
                         <li><NavLink to="/help" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-question-circle"></i></NavLink></li>
                         {
-                          (this.state.isLoggedIn ? (<li><NavLink to="/notifications" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-bell-o"></i></NavLink></li>) : '')
+                          (this.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">
+                              <NavDropdown isOpen={this.state.isNotificationOpened} toggle={() => { this.toggle('isNotificationOpened'); }}>
+                                <DropdownToggle nav><i className="fa fa-bell-o"></i></DropdownToggle>
+                                <DropdownMenu>
+                                  <DropdownItem header>3 pending notifications</DropdownItem>
+                                  <DropdownItem nav><b>Thierry Habart</b> a créé un nouveau magasin</DropdownItem>
+                                  <DropdownItem nav><b>Vous</b> avez créé un nouveau magasin</DropdownItem>
+                                  <DropdownItem nav><b>Laetitia Buyse</b> a ajouté un commentaire dans votre magasin</DropdownItem>
+                                  <DropdownItem divider />
+                                  <DropdownItem style={{textAlign: "center"}}><a href="#">(View all)</a></DropdownItem>
+                                </DropdownMenu>
+                              </NavDropdown>
+                          </li>) : '')
                         }
                         {
                           (!this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={() => { this.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></li> : ''
@@ -256,6 +263,7 @@ class Header extends Component {
                         (this.state.isLoggedIn) ? <li><NavDropdown isOpen={this.state.isAccountOpened} toggle={() => { this.toggle('isAccountOpened'); }}>
                           <DropdownToggle nav caret>{t('welcome')} <strong>{this.state.user.name}</strong></DropdownToggle>
                             <DropdownMenu>
+                              <DropdownItem header>Menu</DropdownItem>
                               <DropdownItem onClick={this.disconnect}>{t('disconnectMenuItem')}</DropdownItem>
                               <DropdownItem header>{t('manageMenuItem')}</DropdownItem>
                               <DropdownItem onClick={this.manageProfile}>{t('manageYourProfileMenuItem')}</DropdownItem>
@@ -268,6 +276,7 @@ class Header extends Component {
                           <NavDropdown isOpen={this.state.isChooseLanguageOpened} toggle={() => { this.toggle('isChooseLanguageOpened'); }}>
                             <DropdownToggle nav caret>{t('chooseLanguage') + " (" + i18n.language + ")"}</DropdownToggle>
                               <DropdownMenu>
+                                <DropdownItem header>Languages</DropdownItem>
                                 <DropdownItem onClick={() => this.switchLanguage('fr')}>{t('chooseFr')}</DropdownItem>
                                 <DropdownItem onClick={() => this.switchLanguage('en')}>{t('chooseEn')}</DropdownItem>
                                 <DropdownItem onClick={() => this.switchLanguage('nl')}>{t('chooseNl')}</DropdownItem>

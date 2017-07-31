@@ -110,6 +110,19 @@ h2 {
   color: white !important;
 }
 
+.red-theme .dropdown-menu .dropdown-header {
+  background-color: #facfd1 !important;
+  color: white !important;
+}
+
+.red-theme .dropdown-menu {
+  border: 1px solid rgba(231, 39, 45, 0.22);
+}
+
+.red-theme .dropdown-menu:before {
+  border-bottom: 7px solid rgba(231, 39, 45, 0.22);
+}
+
 /* Global theme */
 .footer #copyrights a {
   color: rgba(255,255,255,.25);
