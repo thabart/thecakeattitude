@@ -96,6 +96,11 @@ h2 {
   background-color: rgba(231, 39, 45, 0.22) !important;
 }
 
+.red-theme .list-group-default.clickable .list-group-item:hover {
+  background-color: #f0767a !important;
+  color: white;
+}
+
 /* Global theme */
 .footer #copyrights a {
   color: rgba(255,255,255,.25);

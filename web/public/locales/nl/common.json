@@ -107,5 +107,6 @@
   "filterName": "Filter name",
   "filterValues": "Filter values",
   "maxEightProductCategories": "8 product categories can be specified",
-  "filterRowInfoTooltip": "At least one tag must be specified and the name must be filled-in"
+  "filterRowInfoTooltip": "At least one tag must be specified and the name must be filled-in",
+  "enterProductCategoryNamePlaceHolder": "Enter the product category name ..."
 }

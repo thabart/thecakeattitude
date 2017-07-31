@@ -1,4 +1,8 @@
 class Chooser extends window.Phaser.State {
+    init(opts) {
+      this.opts = opts;
+    }
+
     create() {
         var self = this;
         var tileMapData = self.game.cache.getTilemapData('tileMap');
@@ -40,13 +44,15 @@ class Chooser extends window.Phaser.State {
           // spr.rect.visible = false;
           spr.events.onInputDown.add(function () {
             shelfSprites.forEach(function(s) { s.rect.alpha = 0.5 });
-            // spr.rect.visible = true;
             rect.alpha = 1;
-            // spr.rect.graphicsData[0].fillColor = 0xFFFF33;
           });
 
           shelfSprites.push(spr);
         });
+
+        if (self.opts.loadedCallback) {
+          self.opts.loadedCallback(shelves.map(function(shelf) { return { name: shelf.name, id: shelf.id }; }));
+        }
     }
 }
 

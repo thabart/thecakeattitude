@@ -2,9 +2,8 @@ import Constants from "../../../Constants";
 import Chooser from "./chooser";
 
 class Splash extends window.Phaser.State {
-    init(category, component) {
-      this.category = category;
-      this.component = component;
+    init(opts) {
+      this.opts = opts;
       this.loadingBar = this.game.make.text(0, 0, 'Loading...', {fill: 'white'});
     }
 
@@ -19,7 +18,7 @@ class Splash extends window.Phaser.State {
       var self = this;
       this.game.state.add('Chooser', Chooser, false);
       setTimeout(function () {
-          self.game.state.start('Chooser', true, false);
+          self.game.state.start('Chooser', true, false, self.opts);
       }, 1000);
     }
 }

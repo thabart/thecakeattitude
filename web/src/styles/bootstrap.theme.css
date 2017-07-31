@@ -111,7 +111,6 @@ a.no-style:link {
 
 ul.list-group-default li {
   border-top: 1px solid #EEE;
-  text-transform: uppercase;
 }
 
 ul.list-group-default li:first-child {
@@ -200,4 +199,20 @@ ul.list-group-default li:first-child {
 
 .tooltip-inner:before {
   border-right-color: #ea4248 !important;
+}
+
+/* List group */
+.list-group-default {
+  box-shadow: 0 6px 12px rgba(0,0,0,.175);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.list-group-default .list-group-item {
+  border: none;
+  background-color: transparent;
+}
+
+.list-group-default.clickable .list-group-item {
+  cursor: pointer;
 }
