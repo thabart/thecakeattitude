@@ -111,5 +111,13 @@
   "enterProductCategoryNamePlaceHolder": "Rentrez le nom de la catégorie de produit ...",
   "characteristicsTooltip": "Ajouter des caractéristiques de produit ainsi  produits ainsi que leurs valeurs",
   "shelf": "Rayon",
-  "productCategoryName": "Nom de la catégorie de produit"
+  "productCategoryName": "Nom de la catégorie de produit",
+  "choosePaymentMethodDescription": "Choisir un ou plusieurs moyen(s) de paiement",
+  "cash": "Liquide",
+  "bankTransfer": "Transfère bancaire",
+  "pleaseInsertIban": "Insérez votre IBAN",
+  "paypal": "Paypal",
+  "noPaymentSelectedError": "Un moyen de paiement doit être sélectionné",
+  "mandatoryIbanError": "Le numéro IBAN doit être rempli",
+  "notValidIbanError": "Le numéro IBAN n'est pas valide"
 }

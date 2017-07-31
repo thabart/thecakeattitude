@@ -22,7 +22,7 @@ class AddShop extends Component {
         this.toggleError = this.toggleError.bind(this);
         this.data = {};
         this.state = {
-            activeTab: '4',
+            activeTab: '5',
             successMessage: null,
             warningMessage: null,
             errorMessage: null,
@@ -125,10 +125,10 @@ class AddShop extends Component {
                   <div className="mt-1 mb-1 p-1 bg-white rounded">
                       <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
                         <li className="col-2 active"><div className="counter-rounded">1</div>{t('description')}</li>
-                        <li className={this.state.activeTab >= 2 ? "col-2 active" : "col-2"}><div className="counter-rounded">2</div>{t('address')}</li>
-                        <li className={this.state.activeTab >= 3 ? "col-2 active" : "col-2"}><div className="counter-rounded">3</div>{t('contact')}</li>
-                        <li className={this.state.activeTab >= 4 ? "col-2 active" : "col-2"}><div className="counter-rounded">4</div>{t('products')}</li>
-                        <li className={this.state.activeTab === 5 ? "col-2 active" : "col-2"}><div className="counter-rounded">5</div>{t('payment')}</li>
+                        <li className={this.state.activeTab >= '2' ? "col-2 active" : "col-2"}><div className="counter-rounded">2</div>{t('address')}</li>
+                        <li className={this.state.activeTab >= '3' ? "col-2 active" : "col-2"}><div className="counter-rounded">3</div>{t('contact')}</li>
+                        <li className={this.state.activeTab >= '4' ? "col-2 active" : "col-2"}><div className="counter-rounded">4</div>{t('products')}</li>
+                        <li className={this.state.activeTab === '5' ? "col-2 active" : "col-2"}><div className="counter-rounded">5</div>{t('payment')}</li>
                       </ul>
                   </div>
                   <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.toggleSuccess}>

@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import "./paymentMethodsSelector.css";
+import { translate } from 'react-i18next';
 
 class PaymentMethodsSelector extends Component {
     constructor(props) {
@@ -18,7 +18,7 @@ class PaymentMethodsSelector extends Component {
         };
     }
 
-    activate(itemName, e) {
+    activate(itemName, e) { // Enable / Disable payment method.
         e.preventDefault();
         var self = this;
         this.setState({
@@ -26,10 +26,11 @@ class PaymentMethodsSelector extends Component {
         });
     }
 
-    validate() {
+    validate() { // Execute when the user click on "validate"
         var self = this;
+        const {t} = this.props;
         if (!this.state.activateCash && !this.state.activateBankTransfer && !this.state.activatePaypal) {
-            if (self.props.onError) self.props.onError('A payment method should be selected');
+            if (self.props.onError) self.props.onError(t('noPaymentSelectedError'));
             return;
         }
 
@@ -40,14 +41,14 @@ class PaymentMethodsSelector extends Component {
 
         if (this.state.activateBankTransfer) {
             if (!this.state.firstIban || !this.state.secondIban || !this.state.thirdIban || !this.state.fourthIban) {
-                if (self.props.onError) self.props.onError('The IBAN should bee filled in');
+                if (self.props.onError) self.props.onError(t('mandatoryIbanError'));
                 return;
             }
 
             var iban = this.state.firstIban + this.state.secondIban + this.state.thirdIban + this.state.fourthIban;
             var regex = new RegExp("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}");
             if (!regex.test(iban)) {
-                if (self.props.onError) self.props.onError('The IBAN is not valid');
+                if (self.props.onError) self.props.onError(t('notValidIbanError'));
                 return;
             }
 
@@ -61,7 +62,7 @@ class PaymentMethodsSelector extends Component {
         return arr;
     }
 
-    handleInputChange(e) {
+    handleInputChange(e) { // Handle the input change.
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -70,33 +71,36 @@ class PaymentMethodsSelector extends Component {
         });
     }
 
-    render() {
+    render() { // Display the view.
+        const {t} = this.props;
         return (
-            <div className="list-group col-md-12">
-                <a href="#"
+            <div className="list-group-default clickable">
+                {/* Cash */}
+                <li
                    className={this.state.activateCash ? 'list-group-item list-group-item-action active-payment' : 'list-group-item list-group-item-action'}
                    onClick={(e) => {
                        this.activate("activateCash", e);
                    }}>
                     {this.state.activateCash ? (
                         <div className="checkbox-container">
-                            <i className="fa fa-check checkbox text-info"/>
+                            <i className="fa fa-check checkbox txt-info"/>
                         </div>) : ''}
                     <div className="form-group">
-                        <i className="fa fa-money text-info"/> <label>Cash</label>
+                        <i className="fa fa-money txt-info"/> <label>{t('cash')}</label>
                     </div>
-                </a>
-                <a href="#"
+                </li>
+                {/* Bank transfer */}
+                <li
                    className={this.state.activateBankTransfer ? 'list-group-item list-group-item-action active-payment' : 'list-group-item list-group-item-action'}
                    onClick={(e) => {
                        this.activate("activateBankTransfer", e);
                    }}>
                     {this.state.activateBankTransfer ? (
-                        <div className="checkbox-container"><i className="fa fa-check checkbox text-info"/>
+                        <div className="checkbox-container"><i className="fa fa-check checkbox txt-info"/>
                         </div>) : ''}
                     <div className="form-group">
-                        <i className="fa fa-credit-card-alt text-info"/> <label>Bank transfer</label>
-                        <p>Please insert your IBAN</p>
+                        <i className="fa fa-credit-card-alt txt-info"/> <label>{t('bankTransfer')}</label>
+                        <p>{t('pleaseInsertIban')}</p>
                         <div className="row">
                             <div className="col-md-3">
                                 <input type="text" className="form-control" maxLength="4" placeholder="BE__"
@@ -124,24 +128,25 @@ class PaymentMethodsSelector extends Component {
                             </div>
                         </div>
                     </div>
-                </a>
-                <a href="#"
+                </li>
+                {/* Paypal */}
+                <li
                    className={this.state.activatePaypal ? 'list-group-item list-group-item-action active-payment' : 'list-group-item list-group-item-action'}
                    onClick={(e) => {
                        this.activate("activatePaypal", e);
                    }}>
                     {this.state.activatePaypal ? (
-                        <div className="checkbox-container"><i className="fa fa-check checkbox"></i>
+                        <div className="checkbox-container"><i className="fa fa-check checkbox txt-info"></i>
                         </div>) : ''}
                     <div className="form-group">
-                        <i className="fa fa-paypal text-info"/> <label>Paypal</label>
+                        <i className="fa fa-paypal txt-info"/> <label>{t('paypal')}</label>
                     </div>
-                </a>
+                </li>
             </div>
         );
     }
 
-    componentDidMount() {
+    componentDidMount() { // Execute after the view is rendered.
         if (!this.props.payments || !(this.props.payments instanceof Array)) {
             return;
         }
@@ -186,4 +191,4 @@ class PaymentMethodsSelector extends Component {
     }
 }
 
-export default PaymentMethodsSelector;
+export default translate('common', { wait: process && !process.release, withRef: true })(PaymentMethodsSelector);

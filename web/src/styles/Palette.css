@@ -97,9 +97,17 @@ h2 {
 }
 
 .red-theme .list-group-default.clickable .list-group-item:hover,
-.list-group-item.active {
+.red-theme .list-group-item.active {
   background-color: #f0767a !important;
-  color: white;
+}
+
+.red-theme .list-group-default.clickable .list-group-item:hover,
+.red-theme .list-group-default.clickable .list-group-item:hover p,
+.red-theme .list-group-default.clickable .list-group-item:hover i,
+.red-theme .list-group-item.active,
+.red-theme .list-group-item.active p,
+.red-theme .list-group-item.active i {
+  color: white !important;
 }
 
 /* Global theme */

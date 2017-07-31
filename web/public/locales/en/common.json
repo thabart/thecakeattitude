@@ -114,5 +114,13 @@
   "enterProductCategoryNamePlaceHolder": "Enter the product category name ...",
   "characteristicsTooltip": "Assign characteristics to the products and define some values",
   "shelf": "Shelf",
-  "productCategoryName": "Product category name"
+  "productCategoryName": "Product category name",
+  "choosePaymentMethodDescription": "Choose one or more payment method(s)",
+  "cash": "Cash",
+  "bankTransfer": "Bank transfer",
+  "pleaseInsertIban": "Please insert your IBAN",
+  "paypal": "Paypal",
+  "noPaymentSelectedError": "A payment method should be selected",
+  "mandatoryIbanError": "The IBAN must bee filled in",
+  "notValidIbanError": "The IBAN is not valid"
 }
