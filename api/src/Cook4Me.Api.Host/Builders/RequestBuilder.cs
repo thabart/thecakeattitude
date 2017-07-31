@@ -30,6 +30,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        SearchNotificationsParameter GetSearchNotifications(JObject jObj);
         AddAnnouncementCommand GetAnnouncement(JObject jObj);
         AddShopCommand GetAddShop(JObject jObj);
         AddServiceCommand GetAddService(JObject jObj);
@@ -56,6 +57,23 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public SearchNotificationsParameter GetSearchNotifications(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new SearchNotificationsParameter
+            {
+                From = jObj.TryGetString(Constants.DtoNames.Notification.From),
+                To = jObj.TryGetString(Constants.DtoNames.Notification.To),
+                StartDateTime = jObj.TryGetDateTime(Constants.DtoNames.Notification.StartDate),
+                EndDateTime = jObj.TryGetDateTime(Constants.DtoNames.Notification.EndDate)
+            };
+            return result;
+        }
+
         public AddAnnouncementCommand GetAnnouncement(JObject jObj)
         {
             if (jObj == null)

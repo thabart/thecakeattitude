@@ -26,6 +26,7 @@ namespace Cook4Me.Api.Host
 
         public static class RouteNames
         {
+            public const string Notifications = "notifications";
             public const string Announcements = "announcements";
             public const string Services = "services";
             public const string Products = "products";
@@ -153,6 +154,14 @@ namespace Cook4Me.Api.Host
                 public const string NbComments = "nb_comments";
                 public const string CreateDatetime = "create_datetime";
                 public const string UpdateDatetime = "update_datetime";
+            }
+
+            public static class Notification
+            {
+                public const string From = "from";
+                public const string To = "to";
+                public const string StartDate = "start_date";
+                public const string EndDate = "end_date";
             }
 
             public static class Announcement

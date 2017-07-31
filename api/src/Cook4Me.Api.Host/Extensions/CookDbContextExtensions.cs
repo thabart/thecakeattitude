@@ -852,6 +852,31 @@ namespace Cook4Me.Api.Host.Extensions
             });
         }
 
+        private static void InsertNotifications(CookDbContext context)
+        {
+            context.Notifications.AddRange(new[]
+            {
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "create_shop",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "add_comment",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
+                }
+            });
+        }
+
         private static void InsertAnnouncements(CookDbContext context)
         {
             context.Announcements.AddRange(new[]

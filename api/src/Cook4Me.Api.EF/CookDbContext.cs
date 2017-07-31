@@ -44,6 +44,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<ServiceDay> ServiceDays { get; set; }
         public virtual DbSet<Announcement> Announcements { get; set; }
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,7 +70,8 @@ namespace Cook4Me.Api.EF
                 .AddServiceOccurrence()
                 .AddServiceOccurrenceDay()
                 .AddServiceAddDayMapping()
-                .AddAnnouncement();
+                .AddAnnouncement()
+                .AddNotification();
         }
     }
 }

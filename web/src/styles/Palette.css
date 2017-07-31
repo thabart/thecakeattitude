@@ -60,6 +60,8 @@ h2 {
   background-color: rgba(231, 39, 45, 0.74);
 }
 
+.progressbar li:before,
+.progressbar li:after,
 .progressbar-red-theme li:before,
 .progressbar-red-theme li:after,
 .progressbar-red-theme .counter-rounded {
