@@ -235,3 +235,8 @@ ul.list-group-default li:first-child {
 .dropdown-item {
   font-size: 10pt !important;
 }
+
+/* Badge */
+.badge {
+  color: inherit !important;
+}

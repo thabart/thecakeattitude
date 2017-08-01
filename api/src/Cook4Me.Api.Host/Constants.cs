@@ -47,6 +47,7 @@ namespace Cook4Me.Api.Host
             public const string Filers = "filters";
             public const string Me = "me";
             public const string SearchMine = "me/.search";
+            public const string Status = "status";
         }
 
         public static class DtoNames
@@ -154,6 +155,12 @@ namespace Cook4Me.Api.Host
                 public const string NbComments = "nb_comments";
                 public const string CreateDatetime = "create_datetime";
                 public const string UpdateDatetime = "update_datetime";
+            }
+
+            public static class NotificationStatus
+            {
+                public const string NbRead = "nb_read";
+                public const string NbUnread = "nb_unread";
             }
 
             public static class Notification

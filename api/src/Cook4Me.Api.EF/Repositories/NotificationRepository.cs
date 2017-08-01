@@ -51,6 +51,36 @@ namespace Cook4Me.Api.EF.Repositories
             return result.ToAggregate();
         }
 
+        public async Task<GetNotificationStatusResult> Search(GetNotificationStatusParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.Notification> notifications = _context.Notifications;
+            if (!string.IsNullOrWhiteSpace(parameter.To))
+            {
+                notifications = notifications.Where(n => n.To == parameter.To);
+            }
+
+            if (parameter.StartDate != null)
+            {
+                notifications = notifications.Where(n => n.CreatedDateTime >= parameter.StartDate);
+            }
+
+            if (parameter.EndDate != null)
+            {
+                notifications = notifications.Where(n => n.CreatedDateTime <= parameter.EndDate);
+            }
+
+            return new GetNotificationStatusResult
+            {
+                NbRead = await notifications.Where(n => n.IsRead).CountAsync().ConfigureAwait(false),
+                NbUnread = await notifications.Where(n => !n.IsRead).CountAsync().ConfigureAwait(false)
+            };
+        }
+
         public async Task<SearchNotificationsResult> Search(SearchNotificationsParameter parameter)
         {
             if (parameter == null)

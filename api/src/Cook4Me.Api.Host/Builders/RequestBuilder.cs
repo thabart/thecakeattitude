@@ -31,6 +31,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        GetNotificationStatusParameter GetNotificationStatus(JObject jObj);
         UpdateNotificationCommand GetUpdateNotification(JObject jObj);
         SearchNotificationsParameter GetSearchNotifications(JObject jObj);
         AddAnnouncementCommand GetAnnouncement(JObject jObj);
@@ -59,6 +60,19 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public GetNotificationStatusParameter GetNotificationStatus(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new GetNotificationStatusParameter
+            {                
+                StartDate = jObj.TryGetNullableDateTime(Constants.DtoNames.Notification.StartDate),
+                EndDate = jObj.TryGetNullableDateTime(Constants.DtoNames.Notification.EndDate)
+            };
+        }
         public UpdateNotificationCommand GetUpdateNotification(JObject jObj)
         {
             if (jObj == null)

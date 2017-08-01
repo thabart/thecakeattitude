@@ -57,7 +57,8 @@ class Header extends Component {
             isChooseLanguageOpened: false,
             isMobileMenuOpened: false,
             isNotificationLoading: false,
-            notifications: []
+            notifications: [],
+            nbUnread: 0
         };
     }
 
@@ -208,42 +209,30 @@ class Header extends Component {
       moment.locale(i18n.language);
     }
 
-    componentWillMount() { // Execute before.
-        var self = this;
-        this.setState({
-            isConnectHidden: true
-        });
-        this.displayUserName().then(function () {
-            self.setState({
-                isConnectHidden: false
-            });
-        }).catch(function () {
-            self.setState({
-                isConnectHidden: false
-            });
-        });
-    }
-
     refreshNotifications() { // Refresh the notifications.
       var self = this;
       self.setState({
         isNotificationLoading: true
       });
-      NotificationService.search({
-        start_date: moment().subtract(7, 'd').format('YYYY-MM-DD'),
-        count: 1,
+      var startDate = moment().subtract(7, 'd').format('YYYY-MM-DD');
+      Promise.all([NotificationService.getStatus({start_date: startDate}), NotificationService.search({
+        start_date: startDate,
+        count: 5,
+        is_read: false,
         start_index: 0
-      }).then(function(result) {
-        var embedded = result['_embedded'];
-        if (!(embedded instanceof Array)) {
-          embedded = [embedded];
+      })]).then(function(r) {
+        var status = r[0]['_embedded'];
+        var notifications = r[1]['_embedded'];
+        if (!(notifications instanceof Array)) {
+          notifications = [notifications];
         }
 
         self.setState({
           isNotificationLoading: false,
-          notifications: embedded
+          notifications: notifications,
+          nbUnread: status.nb_unread
         });
-      }).catch(function(e) {
+      }).catch(function() {
         self.setState({
           isNotificationLoading: false,
           notifications: []
@@ -271,8 +260,7 @@ class Header extends Component {
         const { t } = self.props;
         var notificationLst = [];
         if (self.state.notifications) {
-            var pendingNotifications = self.state.notifications.filter(function(n) { return n.is_read; }).length;
-            var headerTitle = t('pendingNotifications').replace('{0}', pendingNotifications);
+            var headerTitle = t('pendingNotifications').replace('{0}', self.state.nbUnread);
             notificationLst.push((<DropdownItem header>{headerTitle}</DropdownItem>));
             self.state.notifications.map(function(notification) {
               notificationLst.push((<div>
@@ -310,10 +298,14 @@ class Header extends Component {
                       </ul>
                       <ul>
                         <li><NavLink to="/help" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-question-circle"></i></NavLink></li>
+                        {/* Notifications */}
                         {
                           (self.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">
                               <NavDropdown isOpen={self.state.isNotificationOpened} toggle={() => { if (self.state.isNotificationOpened) { self.toggle('isNotificationOpened'); return; }  self.toggle('isNotificationOpened'); self.refreshNotifications(); }}>
-                                <DropdownToggle nav><i className="fa fa-bell-o"></i></DropdownToggle>
+                                <DropdownToggle nav>
+                                  <i className="fa fa-bell-o"></i>
+                                  <span className="badge badge-notify">{self.state.nbUnread}</span>
+                                </DropdownToggle>
                                 {self.state.isNotificationLoading ? (
                                   <DropdownMenu style={{textAlign: "center"}}>
                                     <i className='fa fa-spinner fa-spin'></i>
@@ -424,7 +416,7 @@ class Header extends Component {
         );
     }
 
-    componentDidMount() {
+    componentDidMount() { // Execute before the view is displayed.
       var self = this;
       self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
@@ -436,6 +428,23 @@ class Header extends Component {
                   break;
           }
       });
+    }
+
+    componentWillMount() { // Execute after the view is displayed.
+        var self = this;
+        this.setState({
+            isConnectHidden: true
+        });
+        this.displayUserName().then(function () {
+            self.setState({
+                isConnectHidden: false
+            });
+            self.refreshNotifications();
+        }).catch(function () {
+            self.setState({
+                isConnectHidden: false
+            });
+        });
     }
 
     componentWillUnmount() { // Remove the registration.

@@ -14,18 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
+using System;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Parameters
 {
-    public interface INotificationRepository
+    public class GetNotificationStatusParameter
     {
-        Task<NotificationAggregate> Get(string id);
-        Task<SearchNotificationsResult> Search(SearchNotificationsParameter parameter);
-        Task<GetNotificationStatusResult> Search(GetNotificationStatusParameter parameter);
-        Task<bool> Update(NotificationAggregate notification);
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string To { get; set; }
     }
 }

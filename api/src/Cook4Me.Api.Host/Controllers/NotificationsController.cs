@@ -29,12 +29,14 @@ namespace Cook4Me.Api.Host.Controllers
     {
         private readonly ISearchNotificationsOperation _searchNotificationsOperation;
         private readonly IUpdateNotificationOperation _updateNotificationOperation;
+        private readonly IGetNotificationStatusOperation _getNotificationStatusOperation;
 
         public NotificationsController(ISearchNotificationsOperation searchNotificationsOperation, IUpdateNotificationOperation updateNotificationOperation,
-            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IGetNotificationStatusOperation getNotificationStatusOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchNotificationsOperation = searchNotificationsOperation;
             _updateNotificationOperation = updateNotificationOperation;
+            _getNotificationStatusOperation = getNotificationStatusOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -49,6 +51,13 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Update(string id, [FromBody] JObject jObj)
         {
             return await _updateNotificationOperation.Execute(jObj, id, User.GetSubject(), this.GetCommonId());
+        }
+
+        [HttpPost(Constants.RouteNames.Status)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Status([FromBody] JObject jObj)
+        {
+            return await _getNotificationStatusOperation.Execute(jObj, User.GetSubject());
         }
     }
 }
