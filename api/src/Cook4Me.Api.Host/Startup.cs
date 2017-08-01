@@ -143,6 +143,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IRemoveProductCommentValidator, RemoveProductCommentValidator>();
             services.AddTransient<IRemoveAnnouncementValidator, RemoveAnnouncementValidator>();
             services.AddTransient<IAddAnnouncementValidator, AddAnnouncementValidator>();
+            services.AddTransient<IUpdateNotificationValidator, UpdateNotificationValidator>();
             services.AddTransient<IRemoveShopValidator, RemoveShopValidator>();
             services.AddTransient<IAddProductValidator, AddProductValidator>();
             services.AddTransient<IAddServiceValidator, AddServiceValidator>();
@@ -202,6 +203,7 @@ namespace Cook4Me.Api.Host
             services.AddSingleton<ProductEventsHandler>();
             services.AddSingleton<ServiceEventsHandler>();
             services.AddSingleton<AnnouncementEventsHandler>();
+            services.AddSingleton<NotificationEventsHandler>();
         }
     }
 }

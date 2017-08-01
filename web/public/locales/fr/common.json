@@ -126,5 +126,7 @@
   "incompleteAddShopRequestError": "Les informations ne sont pas complètes",
   "addShopError": "Le magasin n'a pas pu être ajouté. Veuillez prendre contact avec l'adminisrateur",
   "add_comment": "Un nouveau commentaire a été ajouté sur un magasin",
-  "create_shop_by_you": "Un nouveau magasin a été ouvert par vous"
+  "create_shop_by_you": "Un nouveau magasin a été ouvert par vous",
+  "pendingNotifications": "{0} notifications en attente",
+  "viewAll": "Tout voir"
 }

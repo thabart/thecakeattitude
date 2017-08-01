@@ -112,8 +112,13 @@ h2 {
   color: white !important;
 }
 
-.red-theme .dropdown-menu .dropdown-header {
+.red-theme .dropdown-menu .dropdown-header,
+.red-theme .dropdown-item:active {
   background-color: #facfd1 !important;
+  color: white !important;
+}
+
+.red-theme .dropdown-item:active p {
   color: white !important;
 }
 

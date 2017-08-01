@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Events.Announcement;
+using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
@@ -28,6 +29,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetNotificationUpdatedEvent(NotificationUpdatedEvent evt);
         JObject GetNotification(NotificationAggregate notification);
         JObject GetShop(ShopAggregate shop);
         JObject GetFilter(ShopFilter filter);
@@ -61,6 +63,20 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetNotificationUpdatedEvent(NotificationUpdatedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.Notification.Id, evt.Id);
+            result.Add(Constants.DtoNames.Notification.IsRead, evt.IsRead);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return result;
+        }
+
         public JObject GetNotification(NotificationAggregate notification)
         {
             if (notification == null)

@@ -22,6 +22,7 @@ using Cook4Me.Api.Core.Results;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Cook4Me.Api.EF.Extensions;
+using Cook4Me.Api.Core.Aggregates;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -32,6 +33,22 @@ namespace Cook4Me.Api.EF.Repositories
         public NotificationRepository(CookDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<NotificationAggregate> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var result = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == id).ConfigureAwait(false);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToAggregate();
         }
 
         public async Task<SearchNotificationsResult> Search(SearchNotificationsParameter parameter)
@@ -76,6 +93,35 @@ namespace Cook4Me.Api.EF.Repositories
             notifications = notifications.Skip(parameter.StartIndex).Take(parameter.Count);
             result.Content = await notifications.Skip(parameter.StartIndex).Take(parameter.Count).Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
+        }
+
+        public async Task<bool> Update(NotificationAggregate notification)
+        {
+            if (notification == null)
+            {
+                throw new ArgumentNullException(nameof(notification));
+            }
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == notification.Id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        return false;
+                    }
+
+                    record.IsRead = notification.IsRead;
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
     }
 }

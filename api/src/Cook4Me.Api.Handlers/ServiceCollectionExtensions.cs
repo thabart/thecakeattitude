@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.Notifications;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
@@ -43,6 +44,7 @@ namespace Cook4Me.Api.Handlers
             var productCommandHandler = new ProductCommandsHandler(provider.GetService<IProductRepository>(), bus);
             var serviceCommandHandler = new ServiceCommandsHandler(provider.GetService<IServiceRepository>(), bus);
             var announcementCommandHandler = new AnnouncementCommandsHandler(provider.GetService<IAnnouncementRepository>(), bus);
+            var notificationCommandHandler = new NotificationCommandsHandler(provider.GetService<INotificationRepository>(), bus);
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddShopCommentCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<RemoveShopCommentCommand>(shopCommandHandler.Handle);
@@ -56,6 +58,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<RemoveServiceCommentCommand>(serviceCommandHandler.Handle);
             bus.RegisterHandler<AddAnnouncementCommand>(announcementCommandHandler.Handle);
             bus.RegisterHandler<RemoveAnnouncementCommand>(announcementCommandHandler.Handle);
+            bus.RegisterHandler<UpdateNotificationCommand>(notificationCommandHandler.Handle);
             return serviceCollection;
         }
     }

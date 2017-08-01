@@ -129,5 +129,7 @@
   "incompleteAddShopRequestError": "The information are not complete",
   "addShopError": "An error occurred while trying to add the shop. Please contact the administrator",
   "add_comment": "A new comment has been added to one of your shop",
-  "create_shop_by_you": "A new shop has been added by you"
+  "create_shop_by_you": "A new shop has been added by you",
+  "pendingNotifications": "{0} pending notifications",
+  "viewAll": "View all"
 }

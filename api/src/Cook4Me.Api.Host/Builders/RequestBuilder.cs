@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.Notifications;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
@@ -30,6 +31,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        UpdateNotificationCommand GetUpdateNotification(JObject jObj);
         SearchNotificationsParameter GetSearchNotifications(JObject jObj);
         AddAnnouncementCommand GetAnnouncement(JObject jObj);
         AddShopCommand GetAddShop(JObject jObj);
@@ -57,6 +59,19 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public UpdateNotificationCommand GetUpdateNotification(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpdateNotificationCommand
+            {
+                IsRead = jObj.TryGetBoolean(Constants.DtoNames.Notification.IsRead)
+            };
+        }
+
         public SearchNotificationsParameter GetSearchNotifications(JObject jObj)
         {
             if (jObj == null)

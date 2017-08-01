@@ -48,7 +48,7 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> Update(string id, [FromBody] JObject jObj)
         {
-            return null;
+            return await _updateNotificationOperation.Execute(jObj, id, User.GetSubject(), this.GetCommonId());
         }
     }
 }

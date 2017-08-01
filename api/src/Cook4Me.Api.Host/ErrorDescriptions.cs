@@ -58,5 +58,7 @@ namespace Cook4Me.Api.Host
         public const string TheOccurrenceTimePeriodIsNotValid = "the occurrence time period is not valid";
         public const string TheIbanIsNotValid = "the IBAN is not valid";
         public const string ThePaypalAccountIsNotValid = "the paypal account is not a valid email";
+        public const string TheNotificationDoesntExist = "the notification doesn't exist";
+        public const string TheNotificationCannotBeUpdated = "you don't have the correct right to update the notification";
     }
 }

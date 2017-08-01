@@ -23,11 +23,14 @@ import moment from 'moment';
 import Constants from '../Constants';
 import { translate } from 'react-i18next';
 import i18n from './i18n';
+import {Guid} from './utils/index';
 import "./styles/header.css";
 
 class Header extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
+        this._commonId = null;
         this.toggle = this.toggle.bind(this);
         this.authenticate = this.authenticate.bind(this);
         this.externalAuthenticate = this.externalAuthenticate.bind(this);
@@ -37,7 +40,7 @@ class Header extends Component {
         this.manageShops = this.manageShops.bind(this);
         this.manageAnnounces = this.manageAnnounces.bind(this);
         this.switchLanguage = this.switchLanguage.bind(this);
-        this.toggleNotifications = this.toggleNotifications.bind(this);
+        this.refreshNotifications = this.refreshNotifications.bind(this);
         this.readNotification = this.readNotification.bind(this);
         this.state = {
             user: null,
@@ -202,6 +205,7 @@ class Header extends Component {
 
     switchLanguage(lng) { // Switch language.
       i18n.changeLanguage(lng);
+      moment.locale(i18n.language);
     }
 
     componentWillMount() { // Execute before.
@@ -220,23 +224,24 @@ class Header extends Component {
         });
     }
 
-    toggleNotifications() { // Display the notifications.
+    refreshNotifications() { // Refresh the notifications.
       var self = this;
-      if (self.state.isNotificationOpened) {
-        self.toggle('isNotificationOpened');
-        return;
-      }
-
-      self.toggle('isNotificationOpened');
       self.setState({
         isNotificationLoading: true
       });
       NotificationService.search({
-        start_date: moment().subtract(7, 'd').format('YYYY-MM-DD')
+        start_date: moment().subtract(7, 'd').format('YYYY-MM-DD'),
+        count: 1,
+        start_index: 0
       }).then(function(result) {
+        var embedded = result['_embedded'];
+        if (!(embedded instanceof Array)) {
+          embedded = [embedded];
+        }
+
         self.setState({
           isNotificationLoading: false,
-          notifications: result['_embedded']
+          notifications: embedded
         });
       }).catch(function(e) {
         self.setState({
@@ -247,7 +252,18 @@ class Header extends Component {
     }
 
     readNotification(notificationId) { // Read the notification.
-      
+      var self = this;
+      self.setState({
+        isNotificationLoading: true
+      });
+      self._commonId = Guid.generate();
+      NotificationService.update(notificationId, {
+        is_read: true
+      }, self._commonId).catch(function() {
+        self.setState({
+          isNotificationLoading: false
+        });
+      });
     }
 
     render() { // Renders the view.
@@ -255,18 +271,21 @@ class Header extends Component {
         const { t } = self.props;
         var notificationLst = [];
         if (self.state.notifications) {
-            notificationLst.push((<DropdownItem header>{self.state.notifications.length} pending notifications</DropdownItem>));
+            var pendingNotifications = self.state.notifications.filter(function(n) { return n.is_read; }).length;
+            var headerTitle = t('pendingNotifications').replace('{0}', pendingNotifications);
+            notificationLst.push((<DropdownItem header>{headerTitle}</DropdownItem>));
             self.state.notifications.map(function(notification) {
-              notificationLst.push((<DropdownItem nav>
-                <div className="row" style={{width: "400px"}}>
-                  <b className="col-md-3">{notification.from}</b>
+              notificationLst.push((<div>
+                <div className="row" style={{width: "500px", fontSize: "10pt", paddingLeft: "10px"}}>
+                  <div className="col-md-3"><b>{notification.from}</b><br /><span>{moment(notification.create_date).format('lll')}</span></div>
                   <p className="col-md-7" style={{ maxWidth: "300px", overflowWarp: "break-word", whiteSpace: "normal"}}>{t(notification.content)}</p>
-                  <i className="fa fa-eye col-md-2" style={{cursor: "pointer"}} onClick={(e) => { e.stopPropagation(); self.readNotification(notification.id);  }}></i>
+                  {notification.is_read ? (<div className="col-md-2"><i className="fa fa-eye"></i><i className="fa fa-link" style={{cursor: "pointer"}}></i></div>)
+                  : (<i className="fa fa-eye-slash col-md-2" style={{cursor: "pointer"}} onClick={(e) => { e.stopPropagation(); self.readNotification(notification.id);  }}></i>)}
                 </div>
-              </DropdownItem>))
+              </div>))
             });
 
-            notificationLst.push((<DropdownItem style={{textAlign: "center"}}><a href="#">(View all)</a></DropdownItem>));
+            notificationLst.push((<DropdownItem style={{textAlign: "center"}}><a href="#">({t('viewAll')})</a></DropdownItem>));
         }
 
         return (
@@ -293,7 +312,7 @@ class Header extends Component {
                         <li><NavLink to="/help" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-question-circle"></i></NavLink></li>
                         {
                           (self.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">
-                              <NavDropdown isOpen={self.state.isNotificationOpened} toggle={() => { self.toggleNotifications(); }}>
+                              <NavDropdown isOpen={self.state.isNotificationOpened} toggle={() => { if (self.state.isNotificationOpened) { self.toggle('isNotificationOpened'); return; }  self.toggle('isNotificationOpened'); self.refreshNotifications(); }}>
                                 <DropdownToggle nav><i className="fa fa-bell-o"></i></DropdownToggle>
                                 {self.state.isNotificationLoading ? (
                                   <DropdownMenu style={{textAlign: "center"}}>
@@ -403,6 +422,24 @@ class Header extends Component {
               </nav>
             </div>
         );
+    }
+
+    componentDidMount() {
+      var self = this;
+      self._waitForToken = AppDispatcher.register(function (payload) {
+          switch (payload.actionName) {
+              case 'update-notification':
+                  if (payload.data.common_id === self._commonId) {
+                    self.refreshNotifications();
+                  }
+
+                  break;
+          }
+      });
+    }
+
+    componentWillUnmount() { // Remove the registration.
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 
