@@ -158,10 +158,14 @@ namespace Cook4Me.Api.Host
 
             public static class Notification
             {
+                public const string Id = "id";
                 public const string From = "from";
                 public const string To = "to";
                 public const string StartDate = "start_date";
                 public const string EndDate = "end_date";
+                public const string Content = "content";
+                public const string CreateDate = "create_date";
+                public const string IsRead = "is_read";
             }
 
             public static class Announcement

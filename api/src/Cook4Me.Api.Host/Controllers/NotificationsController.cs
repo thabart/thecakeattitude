@@ -14,9 +14,13 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Operations.Notifications;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
 {
@@ -24,15 +28,25 @@ namespace Cook4Me.Api.Host.Controllers
     public class NotificationsController : BaseController
     {
         private readonly ISearchNotificationsOperation _searchNotificationsOperation;
+        private readonly IUpdateNotificationOperation _updateNotificationOperation;
 
-        public NotificationsController(ISearchNotificationsOperation searchNotificationsOperation,
+        public NotificationsController(ISearchNotificationsOperation searchNotificationsOperation, IUpdateNotificationOperation updateNotificationOperation,
             IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchNotificationsOperation = searchNotificationsOperation;
+            _updateNotificationOperation = updateNotificationOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
-        public IActionResult Search()
+        [Authorize("Connected")]
+        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        {
+            return await _searchNotificationsOperation.Execute(jObj, User.GetSubject());
+        }
+
+        [HttpPut("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Update(string id, [FromBody] JObject jObj)
         {
             return null;
         }

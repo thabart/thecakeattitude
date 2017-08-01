@@ -73,6 +73,29 @@ namespace Cook4Me.Api.Host.Extensions
             return result;
         }
 
+        public static DateTime? TryGetNullableDateTime(this JObject jObj, string key)
+        {
+
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            JToken token;
+            if (!jObj.TryGetValue(key, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                return null;
+            }
+
+            DateTime result;
+            if (!DateTime.TryParse(token.ToString(), out result))
+            {
+                return null;
+            }
+
+            return result;
+        }
+
         public static TimeSpan TryGetTime(this JObject jObj, string key)
         {
 
@@ -168,6 +191,23 @@ namespace Cook4Me.Api.Host.Extensions
             if (!bool.TryParse(result, out res))
             {
                 return false;
+            }
+
+            return res;
+        }
+
+        public static bool? TryGetNullableBoolean(this JObject jObj, string key)
+        {
+            var result = jObj.TryGetString(key);
+            if (result == null)
+            {
+                return null;
+            }
+
+            bool res;
+            if (!bool.TryParse(result, out res))
+            {
+                return null;
             }
 
             return res;

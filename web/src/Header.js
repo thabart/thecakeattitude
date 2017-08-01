@@ -17,10 +17,9 @@ import {
 import {NavLink} from "react-router-dom";
 import {withRouter} from "react-router";
 import Promise from "bluebird";
-import OpenIdService from "./services/OpenId";
-import AuthenticateService from "./services/Authenticate";
-import SessionService from "./services/Session";
+import {OpenIdService, AuthenticateService, SessionService, NotificationService} from "./services/index";
 import AppDispatcher from "./appDispatcher";
+import moment from 'moment';
 import Constants from '../Constants';
 import { translate } from 'react-i18next';
 import i18n from './i18n';
@@ -38,6 +37,8 @@ class Header extends Component {
         this.manageShops = this.manageShops.bind(this);
         this.manageAnnounces = this.manageAnnounces.bind(this);
         this.switchLanguage = this.switchLanguage.bind(this);
+        this.toggleNotifications = this.toggleNotifications.bind(this);
+        this.readNotification = this.readNotification.bind(this);
         this.state = {
             user: null,
             activeItem: null,
@@ -51,7 +52,9 @@ class Header extends Component {
             isLoggedIn: false,
             isConnectHidden: false,
             isChooseLanguageOpened: false,
-            isMobileMenuOpened: false
+            isMobileMenuOpened: false,
+            isNotificationLoading: false,
+            notifications: []
         };
     }
 
@@ -217,14 +220,61 @@ class Header extends Component {
         });
     }
 
+    toggleNotifications() { // Display the notifications.
+      var self = this;
+      if (self.state.isNotificationOpened) {
+        self.toggle('isNotificationOpened');
+        return;
+      }
+
+      self.toggle('isNotificationOpened');
+      self.setState({
+        isNotificationLoading: true
+      });
+      NotificationService.search({
+        start_date: moment().subtract(7, 'd').format('YYYY-MM-DD')
+      }).then(function(result) {
+        self.setState({
+          isNotificationLoading: false,
+          notifications: result['_embedded']
+        });
+      }).catch(function(e) {
+        self.setState({
+          isNotificationLoading: false,
+          notifications: []
+        });
+      });
+    }
+
+    readNotification(notificationId) { // Read the notification.
+      
+    }
+
     render() { // Renders the view.
-        const { t } = this.props;
+        var self = this;
+        const { t } = self.props;
+        var notificationLst = [];
+        if (self.state.notifications) {
+            notificationLst.push((<DropdownItem header>{self.state.notifications.length} pending notifications</DropdownItem>));
+            self.state.notifications.map(function(notification) {
+              notificationLst.push((<DropdownItem nav>
+                <div className="row" style={{width: "400px"}}>
+                  <b className="col-md-3">{notification.from}</b>
+                  <p className="col-md-7" style={{ maxWidth: "300px", overflowWarp: "break-word", whiteSpace: "normal"}}>{t(notification.content)}</p>
+                  <i className="fa fa-eye col-md-2" style={{cursor: "pointer"}} onClick={(e) => { e.stopPropagation(); self.readNotification(notification.id);  }}></i>
+                </div>
+              </DropdownItem>))
+            });
+
+            notificationLst.push((<DropdownItem style={{textAlign: "center"}}><a href="#">(View all)</a></DropdownItem>));
+        }
+
         return (
             <div>
               <div className="navigation">
                 <div className="fixed-top navbar-default">
                     <div className="toggler">
-                      <i className="fa fa-bars" onClick={() => { this.toggle('isMobileMenuOpened'); }}></i>
+                      <i className="fa fa-bars" onClick={() => { self.toggle('isMobileMenuOpened'); }}></i>
                     </div>
                     {/* Display menu */}
                     <nav className="primary-menu">
@@ -233,53 +283,50 @@ class Header extends Component {
                         <li><NavLink to="/map" className="nav-link no-style" activeClassName="active-nav-link">{t('explorerMenuItem')}</NavLink></li>
                         <li><NavLink to="/game" className="nav-link no-style" activeClassName="active-nav-link">{t('gameMenuItem')}</NavLink></li>
                         {
-                          (this.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
+                          (self.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
                         }
                         {
-                          (this.state.isLoggedIn) ? <li><NavLink to="/addAnnounce" className="nav-link no-style"  activeClassName="active-nav-link">{t('addOfferMenuItem')}</NavLink></li> : ''
+                          (self.state.isLoggedIn) ? <li><NavLink to="/addAnnounce" className="nav-link no-style"  activeClassName="active-nav-link">{t('addOfferMenuItem')}</NavLink></li> : ''
                         }
                       </ul>
                       <ul>
                         <li><NavLink to="/help" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-question-circle"></i></NavLink></li>
                         {
-                          (this.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">
-                              <NavDropdown isOpen={this.state.isNotificationOpened} toggle={() => { this.toggle('isNotificationOpened'); }}>
+                          (self.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">
+                              <NavDropdown isOpen={self.state.isNotificationOpened} toggle={() => { self.toggleNotifications(); }}>
                                 <DropdownToggle nav><i className="fa fa-bell-o"></i></DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem header>3 pending notifications</DropdownItem>
-                                  <DropdownItem nav><b>Thierry Habart</b> a créé un nouveau magasin</DropdownItem>
-                                  <DropdownItem nav><b>Vous</b> avez créé un nouveau magasin</DropdownItem>
-                                  <DropdownItem nav><b>Laetitia Buyse</b> a ajouté un commentaire dans votre magasin</DropdownItem>
-                                  <DropdownItem divider />
-                                  <DropdownItem style={{textAlign: "center"}}><a href="#">(View all)</a></DropdownItem>
-                                </DropdownMenu>
+                                {self.state.isNotificationLoading ? (
+                                  <DropdownMenu style={{textAlign: "center"}}>
+                                    <i className='fa fa-spinner fa-spin'></i>
+                                  </DropdownMenu>
+                                ) : (<DropdownMenu>{notificationLst}</DropdownMenu>)}
                               </NavDropdown>
                           </li>) : '')
                         }
                         {
-                          (!this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={() => { this.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></li> : ''
+                          (!self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={() => { self.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></li> : ''
                         }
                         {
-                        (this.state.isLoggedIn) ? <li><NavDropdown isOpen={this.state.isAccountOpened} toggle={() => { this.toggle('isAccountOpened'); }}>
-                          <DropdownToggle nav caret>{t('welcome')} <strong>{this.state.user.name}</strong></DropdownToggle>
+                        (self.state.isLoggedIn) ? <li><NavDropdown isOpen={self.state.isAccountOpened} toggle={() => { self.toggle('isAccountOpened'); }}>
+                          <DropdownToggle nav caret>{t('welcome')} <strong>{self.state.user.name}</strong></DropdownToggle>
                             <DropdownMenu>
                               <DropdownItem header>Menu</DropdownItem>
-                              <DropdownItem onClick={this.disconnect}>{t('disconnectMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={self.disconnect}>{t('disconnectMenuItem')}</DropdownItem>
                               <DropdownItem header>{t('manageMenuItem')}</DropdownItem>
-                              <DropdownItem onClick={this.manageProfile}>{t('manageYourProfileMenuItem')}</DropdownItem>
-                              <DropdownItem onClick={this.manageAnnounces}>{t('manageYourOffersMenuItem')}</DropdownItem>
-                              <DropdownItem onClick={this.manageShops}>{t('manageYourShopsMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={self.manageProfile}>{t('manageYourProfileMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={self.manageAnnounces}>{t('manageYourOffersMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={self.manageShops}>{t('manageYourShopsMenuItem')}</DropdownItem>
                             </DropdownMenu>
                           </NavDropdown></li> : ''
                         }
                         <li>
-                          <NavDropdown isOpen={this.state.isChooseLanguageOpened} toggle={() => { this.toggle('isChooseLanguageOpened'); }}>
+                          <NavDropdown isOpen={self.state.isChooseLanguageOpened} toggle={() => { self.toggle('isChooseLanguageOpened'); }}>
                             <DropdownToggle nav caret>{t('chooseLanguage') + " (" + i18n.language + ")"}</DropdownToggle>
                               <DropdownMenu>
                                 <DropdownItem header>Languages</DropdownItem>
-                                <DropdownItem onClick={() => this.switchLanguage('fr')}>{t('chooseFr')}</DropdownItem>
-                                <DropdownItem onClick={() => this.switchLanguage('en')}>{t('chooseEn')}</DropdownItem>
-                                <DropdownItem onClick={() => this.switchLanguage('nl')}>{t('chooseNl')}</DropdownItem>
+                                <DropdownItem onClick={() => self.switchLanguage('fr')}>{t('chooseFr')}</DropdownItem>
+                                <DropdownItem onClick={() => self.switchLanguage('en')}>{t('chooseEn')}</DropdownItem>
+                                <DropdownItem onClick={() => self.switchLanguage('nl')}>{t('chooseNl')}</DropdownItem>
                               </DropdownMenu>
                           </NavDropdown>
                         </li>
@@ -291,24 +338,24 @@ class Header extends Component {
                     </div>
                 </div>
                 {/* modal part */}
-                <Modal isOpen={this.state.isAuthenticateOpened}>
+                <Modal isOpen={self.state.isAuthenticateOpened}>
                   <ModalHeader toggle={() => {
-                    this.toggle('isAuthenticateOpened');
+                    self.toggle('isAuthenticateOpened');
                   }} className="redColor"><h2>{t('authenticateModalTitle')}</h2></ModalHeader>
                   <ModalBody>
-                    <div className={this.state.isErrorDisplayed ? 'alert alert-danger' : 'alert alert-danger hidden'}>
+                    <div className={self.state.isErrorDisplayed ? 'alert alert-danger' : 'alert alert-danger hidden'}>
                       {t('errorLogin')}
                     </div>
-                    <div className={this.state.isLoading ? 'text-center authenticate-spinner' : 'text-center authenticate-spinner hidden'}><i className='fa fa-spinner fa-spin'></i></div>
-                    <div className={this.state.isLoading ? 'hidden' : ''}>
-                      <form onSubmit={this.authenticate}>
+                    <div className={self.state.isLoading ? 'text-center authenticate-spinner' : 'text-center authenticate-spinner hidden'}><i className='fa fa-spinner fa-spin'></i></div>
+                    <div className={self.state.isLoading ? 'hidden' : ''}>
+                      <form onSubmit={self.authenticate}>
                         <div className="form-group">
                           <label className="">{t('loginField')}</label>
-                          <input type='text' className='form-control' name='login' onChange={this.handleInputChange}/>
+                          <input type='text' className='form-control' name='login' onChange={self.handleInputChange}/>
                         </div>
                         <div className="form-group">
                           <label className="">{t('passwordField')}</label>
-                          <input type='password' className='form-control' name='password' onChange={this.handleInputChange}/>
+                          <input type='password' className='form-control' name='password' onChange={self.handleInputChange}/>
                         </div>
                         <div className="form-group">
                           <input type="submit" className="btn btn-default" value={t('loginBtn')}/>
@@ -318,7 +365,7 @@ class Header extends Component {
                         <p>{t('or')}</p>
                       </div>
                       <div className="form-group">
-                        <button className="btn btn-default" onClick={this.externalAuthenticate}>
+                        <button className="btn btn-default" onClick={self.externalAuthenticate}>
                           {t('useExternalProvider')}
                         </button>
                       </div>
@@ -327,30 +374,30 @@ class Header extends Component {
                 </Modal>
               </div>
               {/* Seconday menu */}
-              <nav className={this.state.isMobileMenuOpened ? "secondary-menu" : "secondary-menu hidden"}>
+              <nav className={self.state.isMobileMenuOpened ? "secondary-menu" : "secondary-menu hidden"}>
                 <ul className="list-group-default">
                   <li><NavLink to="/home" className="nav-link no-style" activeClassName="active-nav-link">{t('homeMenuItem')}</NavLink></li>
                   <li><NavLink to="/map" className="nav-link no-style" activeClassName="active-nav-link">{t('explorerMenuItem')}</NavLink></li>
                   {
-                    (this.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
+                    (self.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
                   }
                   {
-                    (this.state.isLoggedIn) ? <li><NavLink to="/addAnnounce" className="nav-link no-style"  activeClassName="active-nav-link">{t('addOfferMenuItem')}</NavLink></li> : ''
+                    (self.state.isLoggedIn) ? <li><NavLink to="/addAnnounce" className="nav-link no-style"  activeClassName="active-nav-link">{t('addOfferMenuItem')}</NavLink></li> : ''
                   }
                   {
-                    (!this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={() => { this.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></li> : ''
+                    (!self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={() => { self.toggle('isAuthenticateOpened'); }}>{t('connectMenuItem')}</a></li> : ''
                   }
                   {
-                    (this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={this.disconnect}>{t('disconnectMenuItem')}</a></li> : ''
+                    (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.disconnect}>{t('disconnectMenuItem')}</a></li> : ''
                   }
                   {
-                    (this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={this.manageProfile}>{t('manageYourProfileMenuItem')}</a></li> : ''
+                    (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.manageProfile}>{t('manageYourProfileMenuItem')}</a></li> : ''
                   }
                   {
-                    (this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={this.manageAnnounces}>{t('manageYourOffersMenuItem')}</a></li> : ''
+                    (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.manageAnnounces}>{t('manageYourOffersMenuItem')}</a></li> : ''
                   }
                   {
-                    (this.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={this.manageShops}>{t('manageYourShopsMenuItem')}</a></li> : ''
+                    (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.manageShops}>{t('manageYourShopsMenuItem')}</a></li> : ''
                   }
                 </ul>
               </nav>

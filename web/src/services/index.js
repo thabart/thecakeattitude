@@ -10,6 +10,8 @@ import ConfigurationService from "./Configuration";
 import ShopServices from "./ShopServices";
 import AnnouncementsService from './Announcement';
 import GoogleMapService from './GoogleMap';
+import NotificationService from './Notification';
+import AuthenticateService from './Authenticate';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -23,3 +25,5 @@ exports.ConfigurationService = ConfigurationService;
 exports.ShopServices = ShopServices;
 exports.AnnouncementsService = AnnouncementsService;
 exports.GoogleMapService = GoogleMapService;
+exports.NotificationService = NotificationService;
+exports.AuthenticateService = AuthenticateService;

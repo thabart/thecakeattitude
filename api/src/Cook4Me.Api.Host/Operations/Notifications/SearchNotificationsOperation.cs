@@ -16,9 +16,11 @@
 
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Enrichers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Notifications
@@ -32,10 +34,16 @@ namespace Cook4Me.Api.Host.Operations.Notifications
     {
         private readonly IRequestBuilder _requestBuilder;
         private readonly INotificationRepository _notificationRepository;
+        private readonly IHalResponseBuilder _halResponseBuilder;
+        private readonly INotificationEnricher _notificationEnricher;
 
-        public SearchNotificationsOperation(IRequestBuilder requestBuilder, INotificationRepository notificationRepository)
+        public SearchNotificationsOperation(IRequestBuilder requestBuilder, INotificationRepository notificationRepository, 
+            IHalResponseBuilder halResponseBuilder, INotificationEnricher notificationEnricher)
         {
             _requestBuilder = requestBuilder;
+            _notificationRepository = notificationRepository;
+            _halResponseBuilder = halResponseBuilder;
+            _notificationEnricher = notificationEnricher;
         }
         
         public async Task<IActionResult> Execute(JObject jObj, string subject)
@@ -49,10 +57,31 @@ namespace Cook4Me.Api.Host.Operations.Notifications
             {
                 throw new ArgumentNullException(nameof(subject));
             }
-            
+
+            var href = "/" + Constants.RouteNames.Notifications + "/" + Constants.RouteNames.Search;
             var request = _requestBuilder.GetSearchNotifications(jObj);
-            var result = await _notificationRepository.Search(request);
-            return null;
+            request.To = subject;
+            var searchResult = await _notificationRepository.Search(request);
+            if (searchResult.Content == null || !searchResult.Content.Any())
+            {
+                return new OkObjectResult(new { });
+            }
+
+            _halResponseBuilder.AddLinks(l => l.AddSelf(href));
+            foreach (var shop in searchResult.Content)
+            {
+                _notificationEnricher.Enrich(_halResponseBuilder, shop);
+            }
+
+            double r = (double)searchResult.TotalResults / (double)request.Count;
+            var nbPages = Math.Ceiling(r);
+            nbPages = nbPages == 0 ? 1 : nbPages;
+            for (var page = 1; page <= nbPages; page++)
+            {
+                _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(href, page.ToString())));
+            }
+
+            return new OkObjectResult(_halResponseBuilder.Build());
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Cook4Me.Api.Host.Controllers
             jObj.Add("services_endpoint", issuer + "/" + Constants.RouteNames.Services);
             jObj.Add("tags_endpoint", issuer + "/" + Constants.RouteNames.Tags);
             jObj.Add("shopcategories_endpoint", issuer + "/" + Constants.RouteNames.ShopCategories);
+            jObj.Add("notifications_endpoint", issuer + "/" + Constants.RouteNames.Notifications);
             return new OkObjectResult(jObj);
         }
     }

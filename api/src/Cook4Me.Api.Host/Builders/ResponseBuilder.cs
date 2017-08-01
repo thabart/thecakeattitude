@@ -28,6 +28,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetNotification(NotificationAggregate notification);
         JObject GetShop(ShopAggregate shop);
         JObject GetFilter(ShopFilter filter);
         JObject GetFilterValue(ShopFilterValue filterValue);
@@ -60,6 +61,23 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetNotification(NotificationAggregate notification)
+        {
+            if (notification == null)
+            {
+                throw new ArgumentNullException(nameof(notification));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.Notification.Id, notification.Id);
+            result.Add(Constants.DtoNames.Notification.From, notification.From);
+            result.Add(Constants.DtoNames.Notification.To, notification.To);
+            result.Add(Constants.DtoNames.Notification.Content, notification.Content);
+            result.Add(Constants.DtoNames.Notification.CreateDate, notification.CreatedDateTime);
+            result.Add(Constants.DtoNames.Notification.IsRead, notification.IsRead);
+            return result;
+        }
+
         public JObject GetShop(ShopAggregate shop)
         {
             if (shop == null)

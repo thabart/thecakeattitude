@@ -62,6 +62,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertDays(context);
             InsertServices(context);
             InsertAnnouncements(context);
+            InsertNotifications(context);
             context.SaveChanges();
         }
 

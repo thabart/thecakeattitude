@@ -20,6 +20,8 @@ using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Cook4Me.Api.EF.Extensions;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -32,7 +34,7 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public Task<SearchNotificationsResult> Search(SearchNotificationsParameter parameter)
+        public async Task<SearchNotificationsResult> Search(SearchNotificationsParameter parameter)
         {
             if (parameter == null)
             {
@@ -47,7 +49,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (!string.IsNullOrWhiteSpace(parameter.To))
             {
-                notifications = notifications.Where(n => n.To == parameter.To));
+                notifications = notifications.Where(n => n.To == parameter.To);
             }
 
             if (parameter.StartDateTime != null)
@@ -60,7 +62,20 @@ namespace Cook4Me.Api.EF.Repositories
                 notifications = notifications.Where(n => n.CreatedDateTime <= parameter.EndDateTime);
             }
 
-            return null;
+            if (parameter.IsRead != null)
+            {
+                notifications = notifications.Where(n => n.IsRead == parameter.IsRead);
+            }
+
+            notifications = notifications.OrderByDescending(n => n.CreatedDateTime);
+            var result = new SearchNotificationsResult
+            {
+                TotalResults = await notifications.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+            notifications = notifications.Skip(parameter.StartIndex).Take(parameter.Count);
+            result.Content = await notifications.Skip(parameter.StartIndex).Take(parameter.Count).Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
         }
     }
 }

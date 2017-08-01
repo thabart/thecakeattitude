@@ -67,10 +67,18 @@ namespace Cook4Me.Api.Host.Builders
             var result = new SearchNotificationsParameter
             {
                 From = jObj.TryGetString(Constants.DtoNames.Notification.From),
-                To = jObj.TryGetString(Constants.DtoNames.Notification.To),
-                StartDateTime = jObj.TryGetDateTime(Constants.DtoNames.Notification.StartDate),
-                EndDateTime = jObj.TryGetDateTime(Constants.DtoNames.Notification.EndDate)
+                StartDateTime = jObj.TryGetNullableDateTime(Constants.DtoNames.Notification.StartDate),
+                EndDateTime = jObj.TryGetNullableDateTime(Constants.DtoNames.Notification.EndDate),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                IsRead = jObj.TryGetNullableBoolean(Constants.DtoNames.Notification.IsRead)
             };
+
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
             return result;
         }
 

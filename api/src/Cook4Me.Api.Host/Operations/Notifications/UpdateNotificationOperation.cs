@@ -14,24 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System;
-
-namespace Cook4Me.Api.Core.Parameters
+namespace Cook4Me.Api.Host.Operations.Notifications
 {
-    public class SearchNotificationsParameter
+    public interface IUpdateNotificationOperation
     {
-        public SearchNotificationsParameter()
-        {
-            StartIndex = 0;
-            Count = 100;
-        }
 
-        public string From { get; set; }
-        public string To { get; set; }
-        public DateTime? StartDateTime { get; set; }
-        public DateTime? EndDateTime { get; set; }
-        public int StartIndex { get; set; }
-        public int Count { get; set; }
-        public bool? IsRead { get; set; }
+    }
+
+    internal class UpdateNotificationOperation : IUpdateNotificationOperation
+    {
     }
 }
