@@ -15,6 +15,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Aggregates
 {
@@ -26,5 +27,6 @@ namespace Cook4Me.Api.Core.Aggregates
         public DateTime CreatedDateTime { get; set; }
         public string Content { get; set; }
         public bool IsRead { get; set; }
+        public IEnumerable<NotificationParameter> Parameters { get; set; }
     }
 }

@@ -24,6 +24,7 @@ import Constants from '../Constants';
 import { translate } from 'react-i18next';
 import i18n from './i18n';
 import {Guid} from './utils/index';
+import {ApplicationStore} from './stores/index';
 import "./styles/header.css";
 
 class Header extends Component {
@@ -102,7 +103,7 @@ class Header extends Component {
         });
     }
 
-    authenticate(e) { // Authenticate with login and password
+    authenticate(e) { // Authenticate with login and password.
         e.preventDefault();
         var self = this;
         self.setState({
@@ -288,7 +289,6 @@ class Header extends Component {
                       <ul>
                         <li><NavLink to="/home" className="nav-link no-style" activeClassName="active-nav-link">{t('homeMenuItem')}</NavLink></li>
                         <li><NavLink to="/map" className="nav-link no-style" activeClassName="active-nav-link">{t('explorerMenuItem')}</NavLink></li>
-                        <li><NavLink to="/game" className="nav-link no-style" activeClassName="active-nav-link">{t('gameMenuItem')}</NavLink></li>
                         {
                           (self.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
                         }
@@ -422,6 +422,13 @@ class Header extends Component {
           switch (payload.actionName) {
               case 'update-notification':
                   if (payload.data.common_id === self._commonId) {
+                    self.refreshNotifications();
+                  }
+
+                  break;
+              case 'add-notification':
+                  var sub = ApplicationStore.getUser().sub;
+                  if (payload.data.to === sub) {
                     self.refreshNotifications();
                   }
 

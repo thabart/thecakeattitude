@@ -32,6 +32,10 @@ namespace Cook4Me.Api.EF.Mappings
 
             modelBuilder.Entity<Notification>()
                 .HasKey(a => a.Id);
+            modelBuilder.Entity<Notification>()
+                .HasMany(a => a.Parameters)
+                .WithOne(a => a.Notification)
+                .HasForeignKey(a => a.NotificationId);
             return modelBuilder;
         }
     }

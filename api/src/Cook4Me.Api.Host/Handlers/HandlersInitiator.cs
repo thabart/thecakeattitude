@@ -75,6 +75,7 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<AnnouncementAddedEvent>(_announcementEventsHandler.Handle);
                 _bus.RegisterHandler<AnnouncementRemovedEvent>(_announcementEventsHandler.Handle);
                 _bus.RegisterHandler<NotificationUpdatedEvent>(_notificationEventsHandler.Handle);
+                _bus.RegisterHandler<NotificationAddedEvent>(_notificationEventsHandler.Handle);
                 _isInitiated = true;
             }
         }

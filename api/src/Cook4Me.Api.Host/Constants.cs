@@ -163,6 +163,13 @@ namespace Cook4Me.Api.Host
                 public const string NbUnread = "nb_unread";
             }
 
+            public static class NotificationParameter
+            {
+                public const string Id = "id";
+                public const string Type = "type";
+                public const string Value = "value";
+            }
+
             public static class Notification
             {
                 public const string Id = "id";
@@ -173,6 +180,7 @@ namespace Cook4Me.Api.Host
                 public const string Content = "content";
                 public const string CreateDate = "create_date";
                 public const string IsRead = "is_read";
+                public const string Parameters = "parameters";
             }
 
             public static class Announcement

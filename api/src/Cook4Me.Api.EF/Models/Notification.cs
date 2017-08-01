@@ -15,6 +15,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.EF.Models
 {
@@ -26,5 +27,6 @@ namespace Cook4Me.Api.EF.Models
         public DateTime CreatedDateTime { get; set; }        
         public string Content { get; set; }
         public bool IsRead { get; set; }
+        public virtual ICollection<NotificationParameter> Parameters { get; set; }
     }
 }

@@ -46,5 +46,17 @@ namespace Cook4Me.Api.Host.Handlers
             notifier.Clients.All.notificationUpdated(_responseBuilder.GetNotificationUpdatedEvent(message));
             return Task.FromResult(0);
         }
+
+        public Task Handle(NotificationAddedEvent message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+            
+            var notifier = _connectionManager.GetHubContext<Notifier>();
+            notifier.Clients.All.notificationAdded(_responseBuilder.GetNotificationAddedEvent(message));
+            return Task.FromResult(0);
+        }
     }
 }

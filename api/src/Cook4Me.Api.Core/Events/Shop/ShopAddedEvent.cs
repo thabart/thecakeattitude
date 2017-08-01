@@ -15,16 +15,15 @@
 #endregion
 
 using Cook4Me.Api.Core.Bus;
-using System;
 
 namespace Cook4Me.Api.Core.Events.Shop
 {
     public class ShopAddedEvent : Event
     {
-        // { location: shop.location, name: shop.name, showInfo: false, id: shop.id }
         public string ShopId { get; set; }
         public string Name { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
+        public string Subject { get; set; }
     }
 }

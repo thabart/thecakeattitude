@@ -23,6 +23,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Cook4Me.Api.EF.Extensions;
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.EF.Models;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -35,6 +36,31 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
+        public async Task<bool> Add(NotificationAggregate notification)
+        {
+            if (notification == null)
+            {
+                throw new ArgumentNullException(nameof(notification));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = notification.ToModel();
+                    _context.Notifications.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+
         public async Task<NotificationAggregate> Get(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
@@ -42,7 +68,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(id));
             }
 
-            var result = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == id).ConfigureAwait(false);
+            var result = await _context.Notifications.Include(n => n.Parameters).FirstOrDefaultAsync(n => n.Id == id).ConfigureAwait(false);
             if (result == null)
             {
                 return null;
@@ -58,7 +84,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Notification> notifications = _context.Notifications;
+            IQueryable<Models.Notification> notifications = _context.Notifications.Include(n => n.Parameters);
             if (!string.IsNullOrWhiteSpace(parameter.To))
             {
                 notifications = notifications.Where(n => n.To == parameter.To);
@@ -88,7 +114,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Notification> notifications = _context.Notifications;
+            IQueryable<Models.Notification> notifications = _context.Notifications.Include(n => n.Parameters);
             if (!string.IsNullOrWhiteSpace(parameter.From))
             {
                 notifications = notifications.Where(n => n.From == parameter.From);
@@ -131,6 +157,7 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 throw new ArgumentNullException(nameof(notification));
             }
+
             using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
                 try

@@ -122,6 +122,7 @@ namespace Cook4Me.Api.Handlers
             await _shopRepository.Add(aggregate);
             _eventPublisher.Publish(new ShopAddedEvent
             {
+                Subject = aggregate.Subject,
                 ShopId = message.Id,
                 Name = message.Name,
                 Longitude = message.Longitude,

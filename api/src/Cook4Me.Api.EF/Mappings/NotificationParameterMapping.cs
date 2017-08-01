@@ -14,19 +14,25 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.EF.Mappings
 {
-    public interface INotificationRepository
+    internal static class NotificationParameterMapping
     {
-        Task<NotificationAggregate> Get(string id);
-        Task<SearchNotificationsResult> Search(SearchNotificationsParameter parameter);
-        Task<GetNotificationStatusResult> Search(GetNotificationStatusParameter parameter);
-        Task<bool> Update(NotificationAggregate notification);
-        Task<bool> Add(NotificationAggregate notification);
+        public static ModelBuilder AddNotificationParameter(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+
+            modelBuilder.Entity<NotificationParameter>()
+                .HasKey(a => a.Id);
+            return modelBuilder;
+        }
     }
 }

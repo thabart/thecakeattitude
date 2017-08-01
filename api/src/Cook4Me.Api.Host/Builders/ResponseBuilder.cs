@@ -29,6 +29,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetNotificationAddedEvent(NotificationAddedEvent evt);
         JObject GetNotificationStatus(GetNotificationStatusResult result);
         JObject GetNotificationUpdatedEvent(NotificationUpdatedEvent evt);
         JObject GetNotification(NotificationAggregate notification);
@@ -77,6 +78,22 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
+        public JObject GetNotificationAddedEvent(NotificationAddedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.Notification.Id, evt.Id);
+            result.Add(Constants.DtoNames.Notification.Content, evt.Content);
+            result.Add(Constants.DtoNames.Notification.IsRead, evt.IsRead);
+            result.Add(Constants.DtoNames.Notification.From, evt.From);
+            result.Add(Constants.DtoNames.Notification.To, evt.To);
+            return result;
+        }
+
         public JObject GetNotificationUpdatedEvent(NotificationUpdatedEvent evt)
         {
             if (evt == null)
@@ -105,6 +122,43 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Notification.Content, notification.Content);
             result.Add(Constants.DtoNames.Notification.CreateDate, notification.CreatedDateTime);
             result.Add(Constants.DtoNames.Notification.IsRead, notification.IsRead);
+            if (notification.Parameters != null)
+            {
+                var arr = new JArray();
+                foreach(var parameter in notification.Parameters)
+                {
+                    arr.Add(GetNotificationParameter(parameter));
+                }
+
+                result.Add(Constants.DtoNames.Notification.Parameters, arr);
+            }
+
+            return result;
+        }
+
+        public JObject GetNotificationParameter(NotificationParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            string type = null;
+            switch(parameter.Type)
+            {
+                case NotificationParameterTypes.ShopId:
+                    type = "shop_id";
+                    break;
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.NotificationParameter.Id, parameter.Id);
+            result.Add(Constants.DtoNames.NotificationParameter.Value, parameter.Value);
+            if (!string.IsNullOrWhiteSpace(type))
+            {
+                result.Add(Constants.DtoNames.NotificationParameter.Type, type);
+            }
+
             return result;
         }
 

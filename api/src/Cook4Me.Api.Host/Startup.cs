@@ -204,7 +204,7 @@ namespace Cook4Me.Api.Host
             services.AddSingleton<ProductEventsHandler>();
             services.AddSingleton<ServiceEventsHandler>();
             services.AddSingleton<AnnouncementEventsHandler>();
-            services.AddSingleton<NotificationEventsHandler>();
+            services.AddSingleton<Handlers.NotificationEventsHandler>();
         }
     }
 }

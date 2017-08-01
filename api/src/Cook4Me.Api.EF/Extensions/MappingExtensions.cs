@@ -25,6 +25,27 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static Notification ToModel(this NotificationAggregate notification)
+        {
+            if (notification == null)
+            {
+                throw new ArgumentNullException(nameof(notification));
+            }
+            
+
+            var parameters = notification.Parameters.Select(p => p.ToModel()).ToList();
+            return new Notification
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                CreatedDateTime = notification.CreatedDateTime,
+                From = notification.From,
+                To = notification.To,
+                IsRead = notification.IsRead,
+                Parameters = parameters
+            };
+        }
+
         public static NotificationAggregate ToAggregate(this Notification notification)
         {
             if (notification == null)
@@ -32,6 +53,7 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(notification));
             }
 
+            var parameters = notification.Parameters.Select(p => p.ToAggregate());
             return new NotificationAggregate
             {
                 Id = notification.Id,
@@ -39,7 +61,38 @@ namespace Cook4Me.Api.EF.Extensions
                 CreatedDateTime = notification.CreatedDateTime,
                 From = notification.From,
                 To = notification.To,
-                IsRead = notification.IsRead
+                IsRead = notification.IsRead,
+                Parameters = parameters
+            };
+        }
+
+        public static Core.Aggregates.NotificationParameter ToAggregate(this Models.NotificationParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            return new Core.Aggregates.NotificationParameter
+            {
+                Id = parameter.Id,
+                Type = (NotificationParameterTypes)parameter.Type,
+                Value = parameter.Value
+            };
+        }
+
+        public static Models.NotificationParameter ToModel(this Core.Aggregates.NotificationParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            return new Models.NotificationParameter
+            {
+                Id = parameter.Id,
+                Type = (int)parameter.Type,
+                Value = parameter.Value
             };
         }
 

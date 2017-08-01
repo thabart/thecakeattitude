@@ -140,6 +140,12 @@ class App extends Component {
                 data: message
             });
         });
+        proxy.on('notificationAdded', function(message) {
+            AppDispatcher.dispatch({
+                actionName: 'add-notification',
+                data: message
+            });
+        });
         connection.start({jsonp: false})
             .done(function () {
                 console.log('Now connected, connection ID=' + connection.id);

@@ -71,7 +71,8 @@ namespace Cook4Me.Api.EF
                 .AddServiceOccurrenceDay()
                 .AddServiceAddDayMapping()
                 .AddAnnouncement()
-                .AddNotification();
+                .AddNotification()
+                .AddNotificationParameter();
         }
     }
 }
