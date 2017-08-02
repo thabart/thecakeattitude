@@ -52,7 +52,7 @@ namespace Cook4Me.Api.Host.Extensions
             
             InsertCategories(context);
             InsertTags(context);
-            // InsertShops(context);
+            InsertShops(context);
             InsertFilters(context);
             InsertComments(context);
             InsertShopTags(context);
@@ -864,7 +864,16 @@ namespace Cook4Me.Api.Host.Extensions
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
                     From = "administrator",
-                    To = "administrator"
+                    To = "administrator",
+                    Parameters = new []
+                    {
+                        new NotificationParameter
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Type = 0,
+                            Value = _firstShopId
+                        }
+                    }
                 },
                 new Notification
                 {

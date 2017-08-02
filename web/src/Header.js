@@ -264,17 +264,25 @@ class Header extends Component {
             var headerTitle = t('pendingNotifications').replace('{0}', self.state.nbUnread);
             notificationLst.push((<DropdownItem header>{headerTitle}</DropdownItem>));
             self.state.notifications.map(function(notification) {
+              var link = '';
+              if (notification.parameters) { // construct the link.
+                var shopId = notification.parameters.filter(function(param) { return param.type === "shop_id"; }).map(function(param) { return param.value; });
+                if (shopId && shopId.length === 1) {
+                  link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/shops/'+shopId[0]+'/view/profile')}></i>);
+                }
+              }
+
               notificationLst.push((<div>
                 <div className="row" style={{width: "500px", fontSize: "10pt", paddingLeft: "10px"}}>
                   <div className="col-md-3"><b>{notification.from}</b><br /><span>{moment(notification.create_date).format('lll')}</span></div>
                   <p className="col-md-7" style={{ maxWidth: "300px", overflowWarp: "break-word", whiteSpace: "normal"}}>{t(notification.content)}</p>
-                  {notification.is_read ? (<div className="col-md-2"><i className="fa fa-eye"></i><i className="fa fa-link" style={{cursor: "pointer"}}></i></div>)
-                  : (<i className="fa fa-eye-slash col-md-2" style={{cursor: "pointer"}} onClick={(e) => { e.stopPropagation(); self.readNotification(notification.id);  }}></i>)}
+                  {notification.is_read ? (<div className="col-md-2"><i className="fa fa-eye"></i>{link}</div>)
+                  : (<div className="col-md-2"><i className="fa fa-eye-slash" style={{cursor: "pointer"}} onClick={(e) => { e.stopPropagation(); self.readNotification(notification.id);  }}></i>{link}</div>)}
                 </div>
               </div>))
             });
 
-            notificationLst.push((<DropdownItem style={{textAlign: "center"}}><a href="#">({t('viewAll')})</a></DropdownItem>));
+            notificationLst.push((<DropdownItem style={{textAlign: "center"}}><NavLink to="/notifications">({t('viewAll')})</NavLink></DropdownItem>));
         }
 
         return (

@@ -109,14 +109,6 @@ a.no-style:link {
   transition: opacity .2s .2s ease,top .4s ease;
 }
 
-ul.list-group-default li {
-  border-top: 1px solid #EEE;
-}
-
-ul.list-group-default li:first-child {
-  border-top: none;
-}
-
 /* Vertical tabulation theme */
 .vertical-tabs-container {
   border: 1px solid #ddd;
@@ -202,6 +194,19 @@ ul.list-group-default li:first-child {
 }
 
 /* List group */
+ul.list-group-default {
+  list-style-type: none;
+}
+
+ul.list-group-default li,
+.list-group-default-border li:not(:first-child):not(:last-child) {
+  border-top: 1px solid #EEE;
+}
+
+ul.list-group-default li:first-child {
+  border-top: none;
+}
+
 .list-group-default {
   box-shadow: 0 6px 12px rgba(0,0,0,.175);
   border: 1px solid #ddd;
@@ -215,6 +220,11 @@ ul.list-group-default li:first-child {
 
 .list-group-default.clickable .list-group-item {
   cursor: pointer;
+}
+
+.list-group-default-border li {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 /* Dropdown */
