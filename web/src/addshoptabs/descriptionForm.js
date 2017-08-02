@@ -285,7 +285,7 @@ class DescriptionForm extends Component {
                             <FormGroup color={feedbackName}>
                                 <Label sm={12}>{t('name')} <i className="fa fa-info-circle txt-info"
                                                        id="toolTipName"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipName">
+                                <UncontrolledTooltip placement="right" target="toolTipName" className="red-tooltip-inner">
                                     {txtToolTipName}
                                 </UncontrolledTooltip>
                                 <Col sm={12}>
@@ -313,7 +313,7 @@ class DescriptionForm extends Component {
                             <FormGroup>
                                 <Label sm={12}>{t('tags')} <i className="fa fa-info-circle txt-info"
                                                        id="toolTipTags"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipTags">
+                                <UncontrolledTooltip placement="right" target="toolTipTags" className="red-tooltip-inner">
                                     {txtToolTipTags}
                                 </UncontrolledTooltip>
                                 <Col sm={12}>
@@ -324,7 +324,7 @@ class DescriptionForm extends Component {
                                 <Label sm={12}>{t('description')} <i
                                     className="fa fa-info-circle txt-info"
                                     id="toolTipDescription"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipDescription">
+                                <UncontrolledTooltip placement="right" target="toolTipDescription" className="red-tooltip-inner">
                                     {txtToolTipDescription}
                                 </UncontrolledTooltip>
                                 <Col sm={12}>
@@ -338,7 +338,7 @@ class DescriptionForm extends Component {
                             <FormGroup>
                                 <Label sm={12}>{t('bannerImage')} <i className="fa fa-info-circle txt-info"
                                                                id="toolTipBanner"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipBanner">
+                                <UncontrolledTooltip placement="right" target="toolTipBanner" className="red-tooltip-inner">
                                     {txtToolTipBanner}
                                 </UncontrolledTooltip>
                                 <Row>
@@ -356,7 +356,7 @@ class DescriptionForm extends Component {
                                 <Label sm={12}>{t('profilePicture')} <i
                                     className="fa fa-info-circle txt-info"
                                     id="toolTipPicture"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipPicture">
+                                <UncontrolledTooltip placement="right" target="toolTipPicture" className="red-tooltip-inner">
                                     {txtToolTipPicture}
                                 </UncontrolledTooltip>
                                 <Row>
@@ -378,7 +378,7 @@ class DescriptionForm extends Component {
                                 <Label sm={12}>{t('choosePlace')} <i
                                     className="fa fa-info-circle txt-info"
                                     id="toolTipGame"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipGame">
+                                <UncontrolledTooltip placement="right" target="toolTipGame" className="red-tooltip-inner">
                                     {txtToolTipGame}
                                 </UncontrolledTooltip>
                                 <Col sm={12}>

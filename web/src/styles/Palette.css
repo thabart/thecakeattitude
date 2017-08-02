@@ -46,12 +46,13 @@ h2 {
   border: 1px solid #e0e0e0;
 }
 
-.red-theme .card-header .btn,
-.red-theme .card-header .btn:active {
+.red-theme .btn-icon,
+.red-theme .btn-icon:active {
   color: white;
   border: none !important;
 }
-.red-theme .card-header .btn:hover {
+
+.red-theme .btn-icon:hover {
   color: #ee676b;
   background-color: transparent;
 }
@@ -136,6 +137,13 @@ h2 {
   border-bottom: 7px solid rgba(231, 39, 45, 0.22);
 }
 
+.red-theme .active-nav-link {
+  background-color: transparent !important;
+}
+
+.progress-bar {
+  background-color: #e7272d !important;
+}
 
 /* Global theme */
 .footer #copyrights a {

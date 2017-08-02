@@ -160,7 +160,7 @@ class ShopProductFilter extends Component {
           }}><i className="fa fa-close" data-target={filter.id}></i></button>
            { filter.isCorrect === false && (<span>
              <i className="fa fa-exclamation-triangle validation-error" id={"validationError_"+filter.id}></i>
-             <Tooltip placement="right" target={"validationError_"+filter.id} isOpen={self.state.tooltip["validationError_"+filter.id]} toggle={() => {
+             <Tooltip className="red-tooltip-inner" placement="right" target={"validationError_"+filter.id} isOpen={self.state.tooltip["validationError_"+filter.id]} toggle={() => {
                  self.toggleTooltip("validationError_"+filter.id);
              }}>
               A filter with the same name has already been specified
@@ -168,7 +168,7 @@ class ShopProductFilter extends Component {
            </span>) }
            { filter.isNotComplete && (<span>
             <i className="fa fa-exclamation-triangle txt-info" id={"warningError"+filter.id}></i>
-            <Tooltip placement="right" target={"warningError"+filter.id} isOpen={self.state.tooltip["warningError"+filter.id]} toggle={() => {
+            <Tooltip className="red-tooltip-inner" placement="right" target={"warningError"+filter.id} isOpen={self.state.tooltip["warningError"+filter.id]} toggle={() => {
                 self.toggleTooltip("warningError"+filter.id);
             }}>
              {t('filterRowInfoTooltip')}

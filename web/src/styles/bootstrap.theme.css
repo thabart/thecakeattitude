@@ -185,12 +185,29 @@ a.no-style:link {
   color: #ea4248 !important;
 }
 
-.tooltip-inner {
+.red-tooltip-inner {
   background-color: #ea4248 !important;
 }
 
-.tooltip-inner:before {
+.bs-tether-target-attached-right .red-tooltip-inner:before {
   border-right-color: #ea4248 !important;
+}
+
+.bs-tether-target-attached-left .red-tooltip-inner:before {
+  border-left-color: #ea4248 !important;
+}
+
+.white-tooltip-inner {
+  background-color: white !important;
+  color: inherit !important;
+}
+
+.bs-tether-target-attached-top .white-tooltip-inner:before {
+  border-top-color: white !important;
+}
+
+.bs-tether-target-attached-bottom .white-tooltip-inner:before {
+  border-bottom-color: white !important;
 }
 
 /* List group */

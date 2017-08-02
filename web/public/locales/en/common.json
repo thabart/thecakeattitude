@@ -134,5 +134,8 @@
   "viewAll": "View all",
   "yourNotifications": "Your notifications",
   "unknown": "Unknown",
-  "noNotifications": "No notifications"
+  "noNotifications": "No notifications",
+  "shopProfile": "Profile",
+  "services": "Services",
+  "settings": "Settings"
 }

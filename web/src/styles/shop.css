@@ -1,3 +1,81 @@
+/* Shop cover */
+.cover {
+    position: relative;
+    height: 220px;
+}
+
+.cover .cover-banner {
+    overflow: hidden;
+}
+
+.cover .cover-banner img {
+  width: 1140px;
+  height: 220px;
+}
+
+.cover .profile-img {
+    position: absolute;
+    bottom: -10px;
+    left: 10px;
+}
+
+.cover .profile-img img {
+  width: 150px;
+  height: 150px;
+}
+
+.cover .profile-img .edit-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.cover .profile-information {
+    position: absolute;
+    left: 170px;
+    top: 75px;
+    right: 10px;
+    color: white;
+    height: 145px;
+    overflow: hidden;
+}
+
+.cover .upload-image {
+    display: none;
+}
+
+.cover .menu,
+.cover .menu-shop-options {
+    position: absolute;
+    top: 10px;
+}
+
+.cover .menu li a {
+  color: white;
+}
+
+.cover .menu {
+    left: 10px;
+}
+
+.cover .menu-shop-options {
+    right: 10px;
+}
+
+/* Rating popup */
+.rating-popup {
+    padding: 5px !important;
+    width: 300px !important;
+    max-width: 300px !important;
+    text-align: inherit !important;
+}
+
+.rating-popup ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
 .shop-section {
     margin-top: 20px;
 }
@@ -11,78 +89,8 @@
     border-bottom: 1px solid #f1f0f0;
 }
 
-.ratingPopup {
-    background-color: white !important;
-    color: black !important;
-    padding: 5px !important;
-    width: 300px !important;
-    max-width: 300px !important;
-    text-align: inherit !important;
-}
-
-.ratingPopup:before {
-    border-bottom-color: white !important;
-}
-
-.ratingPopup ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-}
-
 .shop-section-padding {
     padding: 20px;
-}
-
-.cover {
-    position: relative;
-    height: 220px;
-}
-
-.cover-banner {
-    overflow: hidden;
-}
-
-.cover .profile-img {
-    position: absolute;
-    bottom: -10px;
-    left: 10px;
-    width: 150px;
-    height: 150px;
-}
-
-.cover .profile-information {
-    position: absolute;
-    left: 170px;
-    top: 75px;
-    right: 10px;
-    color: white;
-    height: 145px;
-    overflow: hidden;
-}
-
-.cover .profile-img .edit-icon {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-}
-
-.cover .upload-image {
-    display: none;
-}
-
-.cover .menu,
-.cover .menu-shop-options {
-    position: absolute;
-    top: 10px;
-}
-
-.cover .menu {
-    left: 10px;
-}
-
-.cover .menu-shop-options {
-    right: 10px;
 }
 
 #rating .react-rater a {

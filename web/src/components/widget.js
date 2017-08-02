@@ -73,15 +73,15 @@ class Widget extends Component {
                     <div className="card-header colorAccent">
                         <h5 className="first-column">{this.props.title}</h5>
                         <ButtonGroup className="last-column">
-                          <Button outline color="secondary" size="sm" onClick={this.toggle}>
+                          <Button outline color="secondary" size="sm" className="btn-icon" onClick={this.toggle}>
                             <i className={this.state.isToggled ? "fa fa-arrow-up" : "fa fa-arrow-down"}/>
                           </Button>
                           {this.state.isMovedEnabled && (
-                            <Button outline color="secondary" size="sm">
+                            <Button outline color="secondary" size="sm" className="btn-icon">
                               <i className="fa fa-arrows-alt move"/>
                             </Button>
                           )}
-                          <Button outline color="secondary" size="sm" onClick={this.toggleClose}>
+                          <Button outline color="secondary" size="sm" className="btn-icon" onClick={this.toggleClose}>
                             <i className="fa fa-window-close-o"/>
                           </Button>
                         </ButtonGroup>

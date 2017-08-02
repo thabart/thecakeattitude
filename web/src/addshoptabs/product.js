@@ -109,7 +109,7 @@ class ProductForm extends Component {
             {/* Product filters */}
             <div className="form-group">
               <label className="form-label">{t('productFilters')}</label> <i className="fa fa-info-circle txt-info" id="productFilters"></i>
-              <Tooltip placement="right" target="productFilters" isOpen={this.state.tooltip.toggleProductFilters} toggle={() => { this.toggleTooltip('toggleProductFilters');}}>
+              <Tooltip placement="right" className="red-tooltip-inner" target="productFilters" isOpen={this.state.tooltip.toggleProductFilters} toggle={() => { this.toggleTooltip('toggleProductFilters');}}>
                   {t('characteristicsTooltip')}
               </Tooltip>
               <ShopProductFilter ref="shopProductFilter" />
