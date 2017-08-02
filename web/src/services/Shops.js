@@ -4,8 +4,7 @@ import ConfigurationService from "./Configuration";
 import $ from "jquery";
 
 module.exports = {
-    // Search shops
-    search: function (content) {
+    search: function (content) {   // Search shops
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
                 $.ajax(configuration.shops_endpoint + '/.search', {

@@ -4,8 +4,7 @@ import Promise from "bluebird";
 import $ from "jquery";
 
 module.exports = {
-    // Update claims.
-    updateClaims: function (json) {
+    updateClaims: function (json) {  // Update claims.
         return new Promise(function (resolve, reject) {
             var session = SessionService.getSession();
             if (!session || !session.access_token) {
@@ -26,8 +25,7 @@ module.exports = {
             });
         });
     },
-    // Get claims
-    getClaims: function () {
+    getClaims: function () { // Get claims
         return new Promise(function (resolve, reject) {
             var session = SessionService.getSession();
             if (!session || !session.access_token) {
@@ -46,8 +44,7 @@ module.exports = {
             });
         });
     },
-    // Get public claims
-    getPublicClaims: function (subject) {
+    getPublicClaims: function (subject) { // Get public claims
         return new Promise(function (resolve, reject) {
             $.get(Constants.openIdUrl + '/users/' + subject + '/public').then(function (r) {
                 resolve(r);
@@ -56,8 +53,7 @@ module.exports = {
             })
         });
     },
-    // Update image.
-    updateImage: function(img) {
+    updateImage: function(img) { // Update image.
         return new Promise(function (resolve, reject) {
             var session = SessionService.getSession();
             if (!session || !session.access_token) {
@@ -75,6 +71,19 @@ module.exports = {
                 resolve(r);
             }).fail(function (e) {
                 reject(e);
+            });
+        });
+    },
+    searchPublicClaims: function(content) { // Search public claims.
+        return new Promise(function (resolve, reject) {
+            $.ajax(Constants.openIdUrl + '/users/bulk/public', {
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(content)
+            }).then(function (r) {
+              resolve(r);
+            }).fail(function (e) {
+              reject(e);
             });
         });
     }

@@ -132,5 +132,6 @@
   "create_shop_by_you": "A new shop has been added by you",
   "pendingNotifications": "{0} pending notifications",
   "viewAll": "View all",
-  "yourNotifications": "Your notifications"
+  "yourNotifications": "Your notifications",
+  "unknown": "Unknown"
 }

@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
 using SimpleIdentityServer.Core.Errors;
+using SimpleIdentityServer.Core.Models;
 using SimpleIdentityServer.Core.Repositories;
 using SimpleIdentityServer.Core.Validators;
 using SimpleIdentityServer.Host.Extensions;
@@ -76,7 +77,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             _resourceOwnerRepository = resourceOwnerRepository;
         }
 
-        [HttpGet(Constants.RouteNames.UserClaims)]
+        [HttpGet(Constants.RouteNames.UserClaims)] // User Authentication enabled.
         public async Task<IActionResult> GetClaims()
         {
             // 1. Get the subject.
@@ -117,17 +118,34 @@ namespace Cook4Me.Api.OpenId.Controllers
                 return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
             }
 
-            var jObj = new JObject();
-            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject));
-            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email));
-            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture));
-            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name));
-            jObj.Add(Constants.Claims.HomePhoneNumber, TryGetValue(user.Claims, Constants.Claims.HomePhoneNumber));
-            jObj.Add(Constants.Claims.MobilePhoneNumber, TryGetValue(user.Claims, Constants.Claims.MobilePhoneNumber));
-            return new OkObjectResult(jObj);
+            return new OkObjectResult(ToDto(user));
         }
 
-        [HttpPut(Constants.RouteNames.UserClaims)]
+        [HttpPost(Constants.RouteNames.BulkPublicClaims)]
+        public async Task<IActionResult> GetBulkPublicClaims([FromBody] JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var parameter = _requestBuilder.GetSearchResourceOwner(jObj);
+            var result = await _resourceOwnerRepository.Search(parameter);
+            if (result == null)
+            {
+                return this.BuildError(ErrorCodes.InternalError, ErrorDescriptions.TheBulkPublicClaimsIsNotWorking, HttpStatusCode.InternalServerError);
+            }
+            
+            var arr = new JArray();
+            foreach(var resourceOwner in result.Content)
+            {
+                arr.Add(ToDto(resourceOwner));
+            }
+
+            return new OkObjectResult(arr);
+        }
+
+        [HttpPut(Constants.RouteNames.UserClaims)] // User Authentication enabled.
         public async Task<IActionResult> UpdateClaims([FromBody] JObject json)
         {
             if (json == null)
@@ -187,7 +205,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             return new OkResult();
         }
 
-        [HttpPut(Constants.RouteNames.Image)]
+        [HttpPut(Constants.RouteNames.Image)] // User Authentication enabled.
         public async Task<IActionResult> UpdateImage([FromBody] JObject json)
         {
             if (json == null)
@@ -315,6 +333,18 @@ namespace Cook4Me.Api.OpenId.Controllers
             }
 
             return claim.Value;
+        }
+
+        private static JObject ToDto(ResourceOwner resourceOwner)
+        {
+            var jObj = new JObject();
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject, TryGetValue(resourceOwner.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject));
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, TryGetValue(resourceOwner.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email));
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, TryGetValue(resourceOwner.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture));
+            jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, TryGetValue(resourceOwner.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name));
+            jObj.Add(Constants.Claims.HomePhoneNumber, TryGetValue(resourceOwner.Claims, Constants.Claims.HomePhoneNumber));
+            jObj.Add(Constants.Claims.MobilePhoneNumber, TryGetValue(resourceOwner.Claims, Constants.Claims.MobilePhoneNumber));
+            return jObj;
         }
     }
 }

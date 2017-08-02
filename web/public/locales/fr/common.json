@@ -129,5 +129,6 @@
   "create_shop_by_you": "Un nouveau magasin a été ouvert par vous",
   "pendingNotifications": "{0} notifications en attente",
   "viewAll": "Tout voir",
-  "yourNotifications": "Vos notifications"
+  "yourNotifications": "Vos notifications",
+  "unknown": "Inconnu"
 }

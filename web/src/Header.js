@@ -17,7 +17,7 @@ import {
 import {NavLink} from "react-router-dom";
 import {withRouter} from "react-router";
 import Promise from "bluebird";
-import {OpenIdService, AuthenticateService, SessionService, NotificationService} from "./services/index";
+import {OpenIdService, AuthenticateService, SessionService, NotificationService, UserService} from "./services/index";
 import AppDispatcher from "./appDispatcher";
 import moment from 'moment';
 import Constants from '../Constants';
@@ -228,10 +228,26 @@ class Header extends Component {
           notifications = [notifications];
         }
 
-        self.setState({
-          isNotificationLoading: false,
-          notifications: notifications,
-          nbUnread: status.nb_unread
+        var subs = notifications.map(function(notification) { return notification.from; });
+        UserService.searchPublicClaims({subs: subs}).then(function(users) {
+          notifications.forEach(function(notification) {
+            var user = users.filter(function(user) { return user.sub === notification.from; });
+            if (user && user.length === 1) {
+              notification.name = user[0].name;
+            }
+          });
+
+          self.setState({
+            isNotificationLoading: false,
+            notifications: notifications,
+            nbUnread: status.nb_unread
+          });
+        }).catch(function() {
+          self.setState({
+            isNotificationLoading: false,
+            notifications: notifications,
+            nbUnread: status.nb_unread
+          });
         });
       }).catch(function() {
         self.setState({
@@ -272,9 +288,10 @@ class Header extends Component {
                 }
               }
 
+              var name = notification.name ? notification.name : t('unknown');
               notificationLst.push((<div>
                 <div className="row" style={{width: "500px", fontSize: "10pt", paddingLeft: "10px"}}>
-                  <div className="col-md-3"><b>{notification.from}</b><br /><span>{moment(notification.create_date).format('lll')}</span></div>
+                  <div className="col-md-3"><b>{name}</b><br /><span>{moment(notification.create_date).format('lll')}</span></div>
                   <p className="col-md-7" style={{ maxWidth: "300px", overflowWarp: "break-word", whiteSpace: "normal"}}>{t(notification.content)}</p>
                   {notification.is_read ? (<div className="col-md-2"><i className="fa fa-eye"></i>{link}</div>)
                   : (<div className="col-md-2"><i className="fa fa-eye-slash" style={{cursor: "pointer"}} onClick={(e) => { e.stopPropagation(); self.readNotification(notification.id);  }}></i>{link}</div>)}

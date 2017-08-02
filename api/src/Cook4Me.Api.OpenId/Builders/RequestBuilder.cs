@@ -15,6 +15,7 @@
 #endregion
 
 using Newtonsoft.Json.Linq;
+using SimpleIdentityServer.Core.Parameters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace Cook4Me.Api.OpenId.Builders
     public interface IRequestBuilder
     {
         IList<Claim> GetUpdateUserParameter(JObject json);
+        SearchResourceOwnerParameter GetSearchResourceOwner(JObject json);
         string GetUploadImage(JObject json);
     }
 
@@ -48,6 +50,19 @@ namespace Cook4Me.Api.OpenId.Builders
             { Constants.Dtos.UpdateUser.Locality, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Locality, v) },
             { Constants.Dtos.UpdateUser.Country, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Country, v) }
         };
+
+        public SearchResourceOwnerParameter GetSearchResourceOwner(JObject json)
+        {
+            if (json == null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+
+            return new SearchResourceOwnerParameter
+            {
+                Subjects = TryGetStringArr(json, Constants.Dtos.SearchResourceOwner.Subjects)
+            };
+        }
 
         public IList<Claim> GetUpdateUserParameter(JObject json)
         {
@@ -101,6 +116,23 @@ namespace Cook4Me.Api.OpenId.Builders
             }
 
             return (T)Enum.Parse(typeof(T), name);
+        }
+
+        private IEnumerable<string> TryGetStringArr(JObject json, string key)
+        {
+            JToken token = null;
+            if (!json.TryGetValue(key, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                return null;
+            }
+
+            var arr = token as JArray;
+            if (arr == null)
+            {
+                return null;
+            }
+
+            return arr.Select(a => a.ToString());
         }
     }
 }

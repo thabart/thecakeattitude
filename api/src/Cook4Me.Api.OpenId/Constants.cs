@@ -27,6 +27,7 @@ namespace Cook4Me.Api.OpenId
             public const string UserClaims = "claims";
             public const string Image = "image";
             public const string PublicClaims = "{id}/public";
+            public const string BulkPublicClaims = "bulk/public";
         }
 
         public static class ErrorMessages
@@ -56,6 +57,11 @@ namespace Cook4Me.Api.OpenId
                 public const string Email = "email";
                 public const string PhoneNumber = "phone_number";
                 public const string Password = "password";
+            }
+
+            public static class SearchResourceOwner
+            {
+                public const string Subjects = "subs";
             }
         }
     }
