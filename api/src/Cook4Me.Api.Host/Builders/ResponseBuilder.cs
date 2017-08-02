@@ -104,6 +104,8 @@ namespace Cook4Me.Api.Host.Builders
             var result = new JObject();
             result.Add(Constants.DtoNames.Notification.Id, evt.Id);
             result.Add(Constants.DtoNames.Notification.IsRead, evt.IsRead);
+            result.Add(Constants.DtoNames.Notification.From, evt.From);
+            result.Add(Constants.DtoNames.Notification.To, evt.To);
             result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return result;
         }

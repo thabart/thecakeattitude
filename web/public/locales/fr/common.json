@@ -130,5 +130,6 @@
   "pendingNotifications": "{0} notifications en attente",
   "viewAll": "Tout voir",
   "yourNotifications": "Vos notifications",
-  "unknown": "Inconnu"
+  "unknown": "Inconnu",
+  "noNotifications": "Aucune notification"
 }

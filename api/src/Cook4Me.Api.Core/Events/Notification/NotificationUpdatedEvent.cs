@@ -22,5 +22,7 @@ namespace Cook4Me.Api.Core.Events.Notification
     {
         public string Id { get; set; }
         public bool IsRead { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
     }
 }

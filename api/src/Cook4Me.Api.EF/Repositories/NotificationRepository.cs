@@ -147,7 +147,7 @@ namespace Cook4Me.Api.EF.Repositories
                 StartIndex = parameter.StartIndex
             };
             notifications = notifications.Skip(parameter.StartIndex).Take(parameter.Count);
-            result.Content = await notifications.Skip(parameter.StartIndex).Take(parameter.Count).Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            result.Content = await notifications.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
         }
 

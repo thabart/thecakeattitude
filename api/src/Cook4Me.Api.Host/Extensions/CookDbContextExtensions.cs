@@ -883,6 +883,60 @@ namespace Cook4Me.Api.Host.Extensions
                     IsRead = false,
                     From = "administrator",
                     To = "administrator"
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "add_comment",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "add_comment",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "add_comment",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "add_comment",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "add_comment",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
+                },
+                new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "add_comment",
+                    CreatedDateTime = DateTime.UtcNow,
+                    IsRead = false,
+                    From = "administrator",
+                    To = "administrator"
                 }
             });
         }

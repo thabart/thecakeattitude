@@ -250,3 +250,8 @@ ul.list-group-default li:first-child {
 .badge {
   color: inherit !important;
 }
+
+/* Pagination */
+.pagination .page-link{
+  color: black;
+}

@@ -143,7 +143,7 @@ class App extends Component {
         });
         proxy.on('notificationAdded', function(message) {
             AppDispatcher.dispatch({
-                actionName: 'add-notification',
+                actionName: 'update-notification',
                 data: message
             });
         });
@@ -212,7 +212,7 @@ class App extends Component {
                 <Route path="/products/:id/:action?" component={Products}/>
                 <Route path="/services/:id/:action?" component={Services}/>
                 <Route path="/announces/:id" component={Announces} />
-                <Route path="/notifications" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
+                <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                 <Route path="/addservice/:id"

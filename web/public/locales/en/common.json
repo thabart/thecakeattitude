@@ -133,5 +133,6 @@
   "pendingNotifications": "{0} pending notifications",
   "viewAll": "View all",
   "yourNotifications": "Your notifications",
-  "unknown": "Unknown"
+  "unknown": "Unknown",
+  "noNotifications": "No notifications"
 }

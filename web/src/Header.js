@@ -224,7 +224,10 @@ class Header extends Component {
       })]).then(function(r) {
         var status = r[0]['_embedded'];
         var notifications = r[1]['_embedded'];
-        if (!(notifications instanceof Array)) {
+        if (!notifications) {
+          notifications = [];
+        }
+        else if (!(notifications instanceof Array)) {
           notifications = [notifications];
         }
 
@@ -252,7 +255,8 @@ class Header extends Component {
       }).catch(function() {
         self.setState({
           isNotificationLoading: false,
-          notifications: []
+          notifications: [],
+          nbUnread: 0
         });
       });
     }
@@ -446,12 +450,6 @@ class Header extends Component {
       self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
               case 'update-notification':
-                  if (payload.data.common_id === self._commonId) {
-                    self.refreshNotifications();
-                  }
-
-                  break;
-              case 'add-notification':
                   var sub = ApplicationStore.getUser().sub;
                   if (payload.data.to === sub) {
                     self.refreshNotifications();

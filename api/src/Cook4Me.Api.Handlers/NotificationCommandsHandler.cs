@@ -42,6 +42,7 @@ namespace Cook4Me.Api.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
 
+            var notification = await _notificationRepository.Get(message.Id);
             await _notificationRepository.Update(new NotificationAggregate
             {
                 Id = message.Id,
@@ -51,7 +52,9 @@ namespace Cook4Me.Api.Handlers
             {
                 Id = message.Id,
                 IsRead = message.IsRead,
-                CommonId = message.CommonId
+                CommonId = message.CommonId,
+                From = notification.From,
+                To = notification.To
             });
         }
     }
