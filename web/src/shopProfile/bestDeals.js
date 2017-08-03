@@ -1,15 +1,18 @@
 import React, {Component} from "react";
-import {Alert} from "reactstrap";
-import {ProductsService} from "../services/index";
+import { Alert } from "reactstrap";
+import { ProductsService } from "../services/index";
+import { translate } from 'react-i18next';
 import ProductElt from "./productElt";
-import $ from "jquery";
 import AppDispatcher from "../appDispatcher";
+import Constants from '../../Constants';
+import $ from "jquery";
 
 var json = {start_index: 0, count: 5, contains_valid_promotions: true};
 
 class BestDeals extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.displayBestDeals = this.displayBestDeals.bind(this);
         this.toggleError = this.toggleError.bind(this);
         this.navigateDeals = this.navigateDeals.bind(this);
@@ -21,8 +24,7 @@ class BestDeals extends Component {
         };
     }
 
-    // Navigate through the pages
-    navigateDeals(e, name) {
+    navigateDeals(e, name) {   // Navigate through the pages.
         e.preventDefault();
         var startIndex = name - 1;
         json = $.extend({}, json, {
@@ -31,15 +33,13 @@ class BestDeals extends Component {
         this.displayBestDeals();
     }
 
-    // Toggle the error
-    toggleError() {
+    toggleError() { // Toggle the error.
         this.setState({
             errorMessage: null
         });
     }
 
-    // Display the best deals
-    displayBestDeals() {
+    displayBestDeals() { // Display the best deals.
         var self = this;
         self.setState({
             isBestDealsLoading: true
@@ -66,15 +66,15 @@ class BestDeals extends Component {
         });
     }
 
-    // Returns the view
-    render() {
+    render() { // Returns the view.
         var products = [],
             navigations = [],
             self = this;
 
+        const {t} = this.props;
         if (this.state.products && this.state.products.length > 0) {
             this.state.products.forEach(function (product) {
-                products.push((<ProductElt className="col-md-6 row" product={product}/>));
+                products.push((<ProductElt className="col-md-6" product={product}/>));
             });
         }
 
@@ -88,7 +88,7 @@ class BestDeals extends Component {
 
         return (
             <section>
-                <h5 className="col-md-12">Best deals</h5>
+                <h5 className="col-md-12">{t('bestDeals')}</h5>
                 <div className="col-md-12">
                     <Alert color="danger"
                            isOpen={this.state.errorMessage !== null}
@@ -102,7 +102,7 @@ class BestDeals extends Component {
                             <i className='fa fa-spinner fa-spin'/>
                         </div>
                     ) :
-                    products.length == 0 ? (<span>No deals</span>) :
+                    products.length == 0 ? (<span>{t('noDeals')}</span>) :
                         (<div className="col-md-12">
                             <div className="col-md-12">
                                 <ul className="pagination">
@@ -120,11 +120,10 @@ class BestDeals extends Component {
         );
     }
 
-    // Execute after the render
-    componentWillMount() {
+    componentWillMount() { // Execute after the render.
         var shopId = this.props.shop.id,
             self = this;
-        AppDispatcher.register(function (payload) {
+        self._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'new-product-comment':
                 case 'remove-product-comment':
@@ -136,8 +135,12 @@ class BestDeals extends Component {
             }
         });
         json['shop_id'] = shopId;
-        this.displayBestDeals();
+        self.displayBestDeals();
+    }
+
+    componentWillUnmount() { // Unregister.
+      AppDispatcher.unregister(this._waitForToken);
     }
 }
 
-export default BestDeals;
+export default translate('common', { wait: process && !process.release })(BestDeals);

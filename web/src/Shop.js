@@ -212,12 +212,12 @@ class Shop extends Component {
     render() { // Render the component
         const {t} = this.props;
         if (this.state.isLoading) {
-            return (<div className="container">Loading ...</div>);
+            return (<div className="container"><i className='fa fa-spinner fa-spin'></i></div>);
         }
 
         if (this.state.errorMessage !== null) {
-            return (<div className="container"><Alert color="danger" isOpen={this.state.errorMessage !== null}
-                                                      toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+            return (<div className="container">
+              <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
             </div>);
         }
 
@@ -233,14 +233,11 @@ class Shop extends Component {
         var editUrl = null;
         var self = this;
         var tags = [];
-        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}
-                                    history={this.props.history}/>);
+        var content = (<ShopProfile user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable} history={this.props.history}/>);
         if (action === "products") {
-            content = (
-                <ShopProducts user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}/>);
+            content = (<ShopProducts user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}/>);
         } else if (action === "services") {
-            content = (
-                <ShopServices user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}/> );
+            content = (<ShopServices user={this.state.user} shop={this.state.shop} isEditable={this.state.isEditable}/> );
         } else if (action === 'settings' && this.state.isEditable) {
             content = (<ShopSettings shop={this.state.shop}/>);
         }

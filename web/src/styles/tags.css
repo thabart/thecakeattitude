@@ -22,3 +22,32 @@
 .react-tagsinput-popup ul {
   list-style-type: none;
 }
+
+/* List of tags */
+ul.tags {
+    list-style-type: none;
+    margin: 0;
+}
+
+ul.tags li {
+    display: inline-block;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 5px;
+    font-style: italic;
+    font-size: 10pt;
+    margin-right: 5px;
+}
+
+ul.gray li {
+    border: 1px solid #f1f0f0;
+    color: gray;
+}
+
+ul.no-style {
+    list-style-type: none;
+}
+
+ul.no-margin {
+    margin: 0;
+}

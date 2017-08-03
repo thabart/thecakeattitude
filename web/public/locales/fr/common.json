@@ -146,5 +146,15 @@
   "errorAddingComment": "Impossible d'ajouter le commentaire, veuillez prendre contact avec l'administrateur",
   "errorRemovingComment": "Impossible de supprimer le commtaire, veuillez prendre contact avec l'administrateur",
   "commentAdded": "Un commentaire a été ajouté",
-  "commentRemoved": "Un commentaire a été supprimé"
+  "commentRemoved": "Un commentaire a été supprimé",
+  "noPaymentMethod": "Aucun moyen de paiement",
+  "category": "Catégorie",
+  "paymentMethods": "Moyens de paiement",
+  "contactInformation": "Informations de contact",
+  "updateShopAddressModalTitle": "Mettre à jour l'adresse du magasin",
+  "cancel": "Annuler",
+  "updatePaymentMethodsModalTitle": "Mettre à jour les moyens de paiement",
+  "bestDeals": "Meilleurs offres",
+  "noDeals": "Aucune offre",
+  "addToCart": "Ajouter au panier"
 }

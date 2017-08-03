@@ -127,12 +127,13 @@ class ShopProfile extends Component {
         });
     }
 
-    render() {
+    render() { // Display the view.
         var self = this,
             payments = self.state.shop.payments,
             paymentsInner = [];
+        const {t} = this.props;
         if (!payments || payments.length === 0) {
-            paymentsInner.push((<span className="col-md-12">No payment</span>));
+            paymentsInner.push((<span className="col-md-12">{t('noPaymentMethod')}</span>));
         } else {
             payments.forEach(function (payment) {
                 switch (payment.method) {
@@ -141,7 +142,7 @@ class ShopProfile extends Component {
                         paymentsInner.push((
                             <div className="col-md-3 contact">
                                 <i className="fa fa-money fa-3"></i><br/>
-                                <label>Cash</label>
+                                <label>{t('cash')}</label>
                             </div>
                         ));
                         break;
@@ -150,7 +151,7 @@ class ShopProfile extends Component {
                         paymentsInner.push((
                             <div className="col-md-3 contact">
                                 <i className="fa fa-credit-card fa-3"></i><br/>
-                                <label>Bank transfer</label><br />
+                                <label>{t('bankTransfer')}</label><br />
                                 <label>IBAN : <i>{payment.iban}</i></label>
                             </div>
                         ));
@@ -160,7 +161,7 @@ class ShopProfile extends Component {
                         paymentsInner.push((
                             <div className="col-md-3 contact">
                                 <i className="fa fa-paypal fa-3"></i><br/>
-                                <label>Paypal</label>
+                                <label>{t('paypal')}</label>
                             </div>
                         ));
                         break;
@@ -178,7 +179,7 @@ class ShopProfile extends Component {
             <section className="section row" style={{marginTop: "20px"}}>
               { /* Description */ }
               <div className="col-md-12">
-                <h5>Description</h5>
+                <h5>{t('description')}</h5>
                 {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description}
                                                             validate={(i) => {
                                                                 AppDispatcher.dispatch({
@@ -192,13 +193,13 @@ class ShopProfile extends Component {
               <div className="section-separation"></div>
               { /* Category */ }
               <div className="col-md-12">
-                <h5>Category</h5>
+                <h5>{t('category')}</h5>
                 <p>{categoryName}</p>
               </div>
               <div className="section-separation"></div>
               { /* Payment methods */ }
               <div className="col-md-12">
-                  <h5>Payment methods</h5>
+                  <h5>{t('paymentMethods')}</h5>
                   { this.state.isEditable && (
                       <Button outline color="secondary" size="sm" onClick={this.openModalPayments}>
                         <i className="fa fa-pencil"></i>
@@ -211,7 +212,7 @@ class ShopProfile extends Component {
             { /* Contact information & Address */ }
             <section className="section row" style={{marginTop: "20px"}}>
               <div className="col-md-12">
-                <h5>Contact information</h5>
+                <h5>{t('contactInformation')}</h5>
                 { this.state.isEditable && (
                   <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm">
                     <i className="fa fa-pencil"></i>
@@ -275,7 +276,7 @@ class ShopProfile extends Component {
             <Modal size="lg" isOpen={this.state.isModalAddressOpened}>
                 <ModalHeader toggle={() => {
                     self.closeModalAddress();
-                }}>Update address</ModalHeader>
+                }}>{t('updateShopAddress')}</ModalHeader>
                 <ModalBody>
                     <Alert color="danger" isOpen={this.state.errorMessageAddress !== null}
                            toggle={this.closeAddressError}>{this.state.errorMessageAddress}</Alert>
@@ -292,16 +293,16 @@ class ShopProfile extends Component {
                 <ModalFooter>
                     <button className="btn btn-success" onClick={() => {
                         self.updateAddress();
-                    }} disabled={!this.state.isAdrValidateEnabled}>Validate
+                    }} disabled={!this.state.isAdrValidateEnabled}>{t('update')}
                     </button>
-                    <button className="btn btn-default" onClick={self.closeModalAddress}>Cancel</button>
+                    <button className="btn btn-default" onClick={self.closeModalAddress}>{t('cancel')}</button>
                 </ModalFooter>
             </Modal>
             {/* Modal window for the payment methods */}
             <Modal size="lg" isOpen={this.state.isModalPaymentsOpened}>
                 <ModalHeader toggle={() => {
                     self.closeModalPayments();
-                }}>Update payment methods</ModalHeader>
+                }}>{t('updatePaymentMethodsModalTitle')}</ModalHeader>
                 <ModalBody>
                     <Alert color="danger" isOpen={this.state.errorMessagePaymentMethods !== null}
                            toggle={this.closePaymentMethodsError}>{this.state.errorMessagePaymentMethods}</Alert>
@@ -314,9 +315,9 @@ class ShopProfile extends Component {
                 <ModalFooter>
                     <button className="btn btn-success" onClick={(r) => {
                         self.updatePaymentMethods(r);
-                    }}>Validate
+                    }}>{t('update')}
                     </button>
-                    <button className="btn btn-default" onClick={self.closeModalPayments}>Cancel</button>
+                    <button className="btn btn-default" onClick={self.closeModalPayments}>{t('cancel')}</button>
                 </ModalFooter>
             </Modal>
         </div>);

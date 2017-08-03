@@ -1,18 +1,19 @@
 import React, {Component} from "react";
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
+import { translate } from 'react-i18next';
 import Rater from "react-rater";
-import "./productElt.css";
+import "../styles/productElt.css";
 
 class ProductElt extends Component {
     constructor(props) {
         super(props);
     }
 
-    render() {
+    render() { // Returns the view.
         var imageUrl = "#",
             product = this.props.product,
             self = this;
-        // Set default url
+        const {t} = this.props;
         if (product.images && product.images.length > 0) {
             imageUrl = product.images[0];
         }
@@ -43,40 +44,40 @@ class ProductElt extends Component {
         }
 
         return (
-            <NavLink
-                className={newPrice == null ? this.props.className + " product-item no-decoration" : this.props.className + " product-item is-best-deals no-decoration"}
-                to={'/products/' + product.id}>
-                <div className="col-md-3">
-                    <img src={imageUrl} className="rounded" width="140" height="140"/>
-                    <div className="best-deals">
-                        <img src="/images/hot_deals.png" width="60"/>
+            <div className={this.props.className + " product-item"}>
+              <div className="content">
+                {newPrice !== null ? (<div className="best-deals"><img src="/images/hot_deals.png" width="60"/></div>) : ''}
+                <NavLink className="no-decoration row" to={'/products/' + product.id}>
+                    <div className="col-md-3">
+                        <img src={imageUrl} className="rounded" width="140" height="140"/>
                     </div>
-                </div>
-                <div className="col-md-5">
-                    <h3>{product.name}</h3>
-                    <Rater total={5} rating={product.average_score}
-                           interactive={false}/>{product.comments && product.comments.length > 0 && (
-                    <label>Comments : {product.nb_comments}</label>)}
-                    <p>
-                        {product.description}
-                    </p>
-                </div>
-                <div className="col-md-4">
-                    {newPrice == null ? (<h4 className="price">€ {product.price}</h4>) : (
-                        <div>
-                            <h4 className="price inline"><strike>€ {product.price}</strike></h4>
-                            (<i>-{promotion.discount}%</i>)
-                            <h4 className="price"> € {newPrice}</h4>
-                        </div>
-                    )}
-                    <ul>
-                        {filters}
-                    </ul>
-                    <button className="btn btn-success">BUY</button>
-                </div>
-            </NavLink>
+                    <div className="col-md-5">
+                        <h3>{product.name}</h3>
+                        <Rater total={5} rating={product.average_score}
+                               interactive={false}/>{product.comments && product.comments.length > 0 && (
+                        <label>{t('comments')} : {product.nb_comments}</label>)}
+                        <p>
+                            {product.description}
+                        </p>
+                    </div>
+                    <div className="col-md-4">
+                        {newPrice == null ? (<h4 className="price">€ {product.price}</h4>) : (
+                            <div>
+                                <h4 className="price inline"><strike>€ {product.price}</strike></h4>
+                                (<i>-{promotion.discount}%</i>)
+                                <h4 className="price"> € {newPrice}</h4>
+                            </div>
+                        )}
+                        <ul>
+                            {filters}
+                        </ul>
+                        <button className="btn btn-default">{t('addToCart')}</button>
+                    </div>
+                </NavLink>
+              </div>
+            </div>
         )
     }
 }
 
-export default ProductElt;
+export default translate('common', { wait: process && !process.release })(ProductElt);

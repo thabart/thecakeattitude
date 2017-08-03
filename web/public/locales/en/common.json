@@ -149,5 +149,15 @@
   "errorAddingComment": "An error occured while trying to add the comment, please contact the administrator",
   "errorRemovingComment": "Add error occured while trying to remove the comment, please contact the administrator",
   "commentAdded": "A comment has been added",
-  "commentRemoved": "A comment has been removed"
+  "commentRemoved": "A comment has been removed",
+  "noPaymentMethod": "No payment method",
+  "category": "Category",
+  "paymentMethods": "Payment methods",
+  "contactInformation": "Contact information",
+  "updateShopAddressModalTitle": "Update the shop address",
+  "cancel": "Cancel",
+  "updatePaymentMethodsModalTitle": "Update the payment methods",
+  "bestDeals": "Best deals",
+  "noDeals": "No deal",
+  "addToCart": "Add to cart"
 }
