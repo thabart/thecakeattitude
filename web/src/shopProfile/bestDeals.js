@@ -87,7 +87,7 @@ class BestDeals extends Component {
         }
 
         return (
-            <section className="row section white-section shop-section shop-section-padding">
+            <section>
                 <h5 className="col-md-12">Best deals</h5>
                 <div className="col-md-12">
                     <Alert color="danger"

@@ -30,6 +30,7 @@ import "./styles/palette.css";
 import "./styles/verticalMenu.css";
 import "./styles/formTab.css";
 import './styles/tags.css';
+import './styles/section.css';
 import "bootstrap/dist/css/bootstrap.css";
 import { translate } from 'react-i18next';
 

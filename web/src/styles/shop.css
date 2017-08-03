@@ -76,10 +76,6 @@
     margin: 0;
 }
 
-.shop-section {
-    margin-top: 20px;
-}
-
 .shop-tags {
     padding: 0;
 }
@@ -119,11 +115,6 @@
 
 .contact .fa {
     font-size: 40pt;
-}
-
-.map {
-    height: 300px !important;
-    width: 300px !important;
 }
 
 .product {

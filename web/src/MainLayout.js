@@ -17,7 +17,7 @@ class MainLayout extends Component {
         <div id="app-body">
           {this.props.children}
         </div>
-        {this.props.isFooterDisplayed ? (<div className="footerBg"></div>) : (<span></span>)}
+        {this.props.isFooterDisplayed ? (<div className="footer-bg"></div>) : (<span></span>)}
         <NotificationSystem ref="notificationSystem" />
       </div>
       {this.props.isFooterDisplayed ? (<Footer />) : (<span></span>)}

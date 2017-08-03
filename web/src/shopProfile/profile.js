@@ -1,14 +1,13 @@
 import React, {Component} from "react";
-import {Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert} from "reactstrap";
-import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
-import {Address, EditableTextArea, EditableCategory, PaymentMethodsSelector} from '../components';
-import {NavLink} from "react-router-dom";
-import Comment from "./comment";
-import BestDeals from "./bestDeals";
-import "./profile.css";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from "reactstrap";
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+import { Address, EditableTextArea, EditableCategory, PaymentMethodsSelector } from '../components';
+import { NavLink} from "react-router-dom";
+import { translate } from 'react-i18next';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
-
+import Comment from "./comment";
+import BestDeals from "./bestDeals";
 const shopOpts = {
     url: '/images/shop-pin.png',
     scaledSize: new window.google.maps.Size(34, 38)
@@ -52,47 +51,47 @@ class ShopProfile extends Component {
         };
     }
 
-    onMapLoad(map) {
+    onMapLoad(map) { // Store google map reference.
         this._googleMap = map;
     }
 
-    closeModalAddress() {
+    closeModalAddress() { // Close modal address.
         this.setState({
             isModalAddressOpened: false
         });
     }
 
-    closeModalPayments() {
+    closeModalPayments() { // Close modal payment.
         this.setState({
             isModalPaymentsOpened: false
         });
     }
 
-    closePaymentMethodsError() {
+    closePaymentMethodsError() { // Close error in modal payment.
         this.setState({
             errorMessagePaymentMethods: null
         });
     }
 
-    closeAddressError() {
+    closeAddressError() { // Close error in modal address.
         this.setState({
             errorMessageAddress: null
         });
     }
 
-    openModalAddress() {
+    openModalAddress() { // Open modal address.
         this.setState({
             isModalAddressOpened: true
         });
     }
 
-    openModalPayments() {
+    openModalPayments() { // Open modal payment.
         this.setState({
             isModalPaymentsOpened: true
         });
     }
 
-    updateAddress() {
+    updateAddress() { // Update the address.
         var address = this.refs.address.getAddress();
         var shop = this.state.shop;
         shop.street_address = address.street_address;
@@ -110,7 +109,7 @@ class ShopProfile extends Component {
         });
     }
 
-    updatePaymentMethods() {
+    updatePaymentMethods() { // Update payment methods.
         var arr = this.refs.paymentMethods.validate();
         if (!arr || arr === null) {
             return;
@@ -175,8 +174,11 @@ class ShopProfile extends Component {
         }
 
         return ( <div>
-            <section className="row white-section shop-section shop-section-padding">
-                <h5 className="col-md-12">Description</h5>
+            { /*General information */ }
+            <section className="section row" style={{marginTop: "20px"}}>
+              { /* Description */ }
+              <div className="col-md-12">
+                <h5>Description</h5>
                 {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description}
                                                             validate={(i) => {
                                                                 AppDispatcher.dispatch({
@@ -184,64 +186,91 @@ class ShopProfile extends Component {
                                                                     data: {description: i}
                                                                 });
                                                             }}/>) : (
-                    <p className="col-md-12">{this.state.shop.description}</p>
+                    <p>{this.state.shop.description}</p>
                 )}
+              </div>
+              <div className="section-separation"></div>
+              { /* Category */ }
+              <div className="col-md-12">
+                <h5>Category</h5>
+                <p>{categoryName}</p>
+              </div>
+              <div className="section-separation"></div>
+              { /* Payment methods */ }
+              <div className="col-md-12">
+                  <h5>Payment methods</h5>
+                  { this.state.isEditable && (
+                      <Button outline color="secondary" size="sm" onClick={this.openModalPayments}>
+                        <i className="fa fa-pencil"></i>
+                      </Button>) }
+                  <div className="row col-md-12">
+                      {paymentsInner}
+                  </div>
+              </div>
             </section>
-            <section className="row white-section sub-section shop-section-padding">
-                <h5 className="col-md-12">Category</h5>
-                <p className="col-md-12">{categoryName}</p>
-            </section>
-            <section className="row white-section sub-section shop-section-padding">
-                <h5>Payment methods</h5>
-                { this.state.isEditable && (
-                    <Button outline color="secondary" size="sm" onClick={this.openModalPayments}><i
-                        className="fa fa-pencil"></i></Button>) }
-                <div className="row col-md-12">
-                    {paymentsInner}
-                </div>
-            </section>
-            <section className="row white-section sub-section shop-section-padding">
+            { /* Contact information & Address */ }
+            <section className="section row" style={{marginTop: "20px"}}>
+              <div className="col-md-12">
                 <h5>Contact information</h5>
                 { this.state.isEditable && (
-                    <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm"><i
-                        className="fa fa-pencil"></i></NavLink>) }
-                <div className="row col-md-12">
-                    <div className="col-md-3 contact">
-                        <i className="fa fa-envelope fa-3"></i><br />
-                        <span>{this.state.user.email}</span>
-                    </div>
-                    <div className="col-md-3 contact">
-                        <i className="fa fa-phone fa-3"></i><br />
-                        <span>{this.state.user.home_phone_number}</span>
-                    </div>
-                    <div className="col-md-3 contact">
-                        <i className="fa fa-mobile fa-3"></i><br />
-                        <span>{this.state.user.mobile_phone_number}</span>
-                    </div>
-                    <div className="col-md-3 contact">
-                        {this.state.isEditable ? (<button className="btn btn-default" onClick={() => {
-                            this.openModalAddress();
-                        }}><i className="fa fa-map-marker fa-3"></i></button>) :
-                            (<i className="fa fa-map-marker fa-3"></i>
-                            )}<br />
-                        <span>{this.state.shop.street_address}</span>
-                    </div>
+                  <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm">
+                    <i className="fa fa-pencil"></i>
+                  </NavLink>)
+                }
+                <div className="row">
+                  { /* Email */ }
+                  <div className="col-md-3 contact">
+                    <i className="fa fa-envelope fa-3"></i><br />
+                    <span>{this.state.user.email}</span>
+                  </div>
+                  { /* Home phone */ }
+                  <div className="col-md-3 contact">
+                    <i className="fa fa-phone fa-3"></i><br />
+                    <span>{this.state.user.home_phone_number}</span>
+                  </div>
+                  { /* Mobile phone */ }
+                  <div className="col-md-3 contact">
+                    <i className="fa fa-mobile fa-3"></i><br />
+                    <span>{this.state.user.mobile_phone_number}</span>
+                  </div>
+                  { /* Address */ }
+                  <div className="col-md-3 contact">
+                    {this.state.isEditable ? (
+                      <button className="btn btn-default" onClick={() => { this.openModalAddress();}}>
+                        <i className="fa fa-map-marker fa-3"></i>
+                      </button>
+                    ) : (<i className="fa fa-map-marker fa-3"></i>)
+                    }
+                    <br />
+                    <span>{this.state.shop.street_address}</span>
+                  </div>
                 </div>
-                <div className="col-md-12 map">
-                    <GettingStartedGoogleMap
-                        center={this.state.shop.location}
-                        onMapLoad={this.onMapLoad}
-                        containerElement={
-                            <div style={{height: `100%`}}/>
-                        }
-                        mapElement={
-                            <div style={{height: `100%`}}/>
-                        }>
-                    </GettingStartedGoogleMap>
-                </div>
+              </div>
+              <div className="col-md-12" style={{marginBottom : "20px", width: "300px", height: "300px"}}>
+                <GettingStartedGoogleMap
+                  center={this.state.shop.location}
+                  onMapLoad={this.onMapLoad}
+                  containerElement={
+                    <div style={{height: `100%`}}/>
+                  }
+                  mapElement={
+                    <div style={{height: `100%`}}/>
+                  }>
+                </GettingStartedGoogleMap>
+              </div>
             </section>
-            <Comment shop={self.state.shop}/>
-            <BestDeals shop={self.state.shop}/>
+            { /* Comments */ }
+            <section className="section row" style={{marginTop: "20px"}}>
+              <div className="col-md-12">
+                <Comment shop={self.state.shop}/>
+              </div>
+            </section>
+            { /* Best deals */ }
+            <section className="section row" style={{marginTop: "20px"}}>
+              <div className="col-md-12">
+                <BestDeals shop={self.state.shop}/>
+              </div>
+            </section>
             {/* Modal window for the address */}
             <Modal size="lg" isOpen={this.state.isModalAddressOpened}>
                 <ModalHeader toggle={() => {
@@ -294,4 +323,4 @@ class ShopProfile extends Component {
     }
 }
 
-export default ShopProfile;
+export default translate('common', { wait: process && !process.release })(ShopProfile);

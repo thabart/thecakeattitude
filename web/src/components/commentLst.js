@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { Tooltip, Alert, Modal, ModalHeader, ModalFooter, Button } from 'reactstrap';
 import { UserService, SessionService, OpenIdService } from '../services/index';
 import { withRouter } from 'react-router';
-import {ApplicationStore} from '../stores';
+import { ApplicationStore } from '../stores';
 import Promise from 'bluebird';
 import moment from 'moment';
 import Rater from 'react-rater';
 import Constants from '../../Constants';
 import $ from 'jquery';
-import './commentLst.css';
+import '../styles/comment.css';
 
 class CommentLst extends Component {
   constructor(props) {
@@ -43,24 +43,28 @@ class CommentLst extends Component {
       }
     };
   }
-  toggleRemoveComment() {
+
+  toggleRemoveComment() { // Toggle remove comment.
     var self = this;
     this.setState({
       isRemoveCommentOpened: !self.state.isRemoveCommentOpened
     });
   }
-  toggleError() {
+
+  toggleError() { // Toggle error message.
     this.setState({
       errorMessage: null
     });
   }
-  displayRemoveComment(id) {
+
+  displayRemoveComment(id) { // Display remove icon.
     this.setState({
       isRemoveCommentOpened: true,
       currentComment: id
     })
   }
-  removeComment() {
+
+  removeComment() { // Remove the comment.
     var self = this;
     self.setState({
       isRemoveCommentOpened: false
@@ -71,7 +75,8 @@ class CommentLst extends Component {
       });
     });
   }
-  handleInputChange(e) {
+
+  handleInputChange(e) { // Handle input change & set states.
     const target = e.target;
     var value = null,
       name = null;
@@ -89,19 +94,22 @@ class CommentLst extends Component {
       [name]: value
     });
   }
-  toggleTooltip(name) {
+
+  toggleTooltip(name) { // Toggle tooltip.
     var tooltip = this.state.tooltip;
     tooltip[name] = !tooltip[name];
     this.setState({
       tooltip: tooltip
     });
   }
-  navigateComment(e, name) {
+
+  navigateComment(e, name) { // Navigate.
     e.preventDefault();
     this.request['start_index'] = (name - 1) * this.request.count;
     this.refreshComments();
   }
-  refreshComments() {
+
+  refreshComments() { // Refresh the comments.
     var self = this;
     self.setState({
       isCommentsLoading: true
@@ -114,7 +122,8 @@ class CommentLst extends Component {
       });
     });
   }
-  addComment() {
+
+  addComment() { // Add a comment.
     var self = this,
       isContentInvalid  = false,
       isScoreInvalid = false,
@@ -170,18 +179,20 @@ class CommentLst extends Component {
       });
     });
   }
-  buildErrorTooltip(validName, description) {
+
+  buildErrorTooltip(validName, description) { // Build the error tooltip.
     var result;
     if (this.state.valid[validName]) {
-      result = (<span><i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
-      <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => { this.toggleTooltip(validName); }}>
+      result = (<span><i className="fa fa-exclamation-triangle txt-info" id={validName}></i>
+      <Tooltip className="red-tooltip-inner" placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => { this.toggleTooltip(validName); }}>
         {description}
       </Tooltip></span>);
     }
 
     return result;
   }
-  displayComments(obj) {
+
+  displayComments(obj) { // Display comments.
     var comments = obj['_embedded'],
       navigations = obj['_links']['navigation'],
       self = this;
@@ -225,7 +236,8 @@ class CommentLst extends Component {
       });
     });
   }
-  render() {
+
+  render() { // Render the view.
     var comments = [],
       navigations = [],
       self = this;
@@ -240,9 +252,9 @@ class CommentLst extends Component {
           picture = "/images/profile-picture.png";
         }
 
-        comments.push((<div className={self.props.className}>
+        comments.push((<div className={self.props.className + " comment"}>
           {comment.subject === self.state.subject && <div className="close-comment"><i className="fa fa-times" onClick={() => { self.displayRemoveComment(comment.id); }}></i></div> }
-          <div className="element">
+          <div className="content">
             <div className="row header">
               <div className="col-md-3">
                 <img src={picture} className="rounded-circle" width="60" height="60" />
@@ -253,7 +265,7 @@ class CommentLst extends Component {
                 <Rater total={5} rating={comment.score} interactive={false} /> Score : {comment.score}
               </div>
             </div>
-            <div className="content">
+            <div className="message">
               <p>{comment.content}</p>
             </div>
           </div>
@@ -314,7 +326,8 @@ class CommentLst extends Component {
         </Modal>
       </section>);
   }
-  componentWillMount() {
+
+  componentWillMount() { // Unregister events.
     var self = this;
     var user = ApplicationStore.getUser();
     if (user && user !== null) {
@@ -323,7 +336,7 @@ class CommentLst extends Component {
         subject: user.sub
       });
     }
-    
+
     self.refreshComments();
   }
 }
