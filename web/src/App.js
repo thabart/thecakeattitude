@@ -78,13 +78,13 @@ class App extends Component {
         });
         proxy.on('shopCommentAdded', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'new-shop-comment',
+                actionName: Constants.events.NEW_COMMENT,
                 data: message
             });
         });
         proxy.on('shopCommentRemoved', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'remove-shop-comment',
+                actionName: Constants.events.REMOVE_COMMENT,
                 data: message
             });
         });

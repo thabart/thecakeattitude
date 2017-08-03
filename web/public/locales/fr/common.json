@@ -134,5 +134,17 @@
   "noNotifications": "Aucune notification",
   "shopProfile": "Profil",
   "services": "Services",
-  "settings": "Paramètres"
+  "settings": "Paramètres",
+  "wantToRemoveComment": "Souhaitez-vous supprimer le commentaire ?",
+  "comment": "Commentaire",
+  "addComment": "Ajouter le commentaire",
+  "enterCommentPlaceholder": "Rentrez votre commentaire",
+  "score": "Score",
+  "noComment": "Aucun commentaire",
+  "scoreMandatoryError": "Le score est obligatoire",
+  "commentContentError": "Le contenu du commentaire est invalid et doit contenir entre 0 et 255 caractères",
+  "errorAddingComment": "Impossible d'ajouter le commentaire, veuillez prendre contact avec l'administrateur",
+  "errorRemovingComment": "Impossible de supprimer le commtaire, veuillez prendre contact avec l'administrateur",
+  "commentAdded": "Un commentaire a été ajouté",
+  "commentRemoved": "Un commentaire a été supprimé"
 }

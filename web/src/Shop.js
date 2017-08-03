@@ -386,7 +386,8 @@ class Shop extends Component {
 
     componentDidMount() { // Execute before the render.
         var self = this,
-            shopId = self.props.match.params.id;
+            shopId = self.props.match.params.id,
+            {t} = this.props;
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'update-shop':
@@ -417,20 +418,20 @@ class Shop extends Component {
                         });
                     }
                     break;
-                case 'new-shop-comment': // Display popup when a comment has been added to the shop.
+                case Constants.events.NEW_COMMENT: // Display popup when a comment has been added to the shop.
                     if (payload.data && payload.data.shop_id === shopId) {
                         ApplicationStore.sendMessage({
-                            message: 'A comment has been added',
+                            message: t('commentAdded'),
                             level: 'info',
                             position: 'tr'
                         });
                         self.refreshScore();
                     }
                     break;
-                case 'remove-shop-comment': // Display popup when a comment has been removed
+                case Constants.events.REMOVE_COMMENT: // Display popup when a comment has been removed
                     if (payload.data && payload.data.shop_id === shopId) {
                         ApplicationStore.sendMessage({
-                            message: 'A comment has been removed',
+                            message: t('commentRemoved'),
                             level: 'info',
                             position: 'tr'
                         });

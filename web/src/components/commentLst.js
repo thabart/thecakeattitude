@@ -3,6 +3,8 @@ import { Tooltip, Alert, Modal, ModalHeader, ModalFooter, Button } from 'reactst
 import { UserService, SessionService, OpenIdService } from '../services/index';
 import { withRouter } from 'react-router';
 import { ApplicationStore } from '../stores';
+import { translate } from 'react-i18next';
+import AppDispatcher from '../appDispatcher';
 import Promise from 'bluebird';
 import moment from 'moment';
 import Rater from 'react-rater';
@@ -13,6 +15,7 @@ import '../styles/comment.css';
 class CommentLst extends Component {
   constructor(props) {
     super(props);
+    this._waitForToken = null;
     this.request = { count: 4, start_index: 0 };
     this.navigateComment = this.navigateComment.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -66,12 +69,13 @@ class CommentLst extends Component {
 
   removeComment() { // Remove the comment.
     var self = this;
+    const {t} = this.props;
     self.setState({
       isRemoveCommentOpened: false
     });
     self.props.removeCommentCallback(this.state.currentComment).catch(function(e) {
       self.setState({
-        errorMessage: "an error occured while trying to remove the comment"
+        errorMessage: t('errorRemovingComment')
       });
     });
   }
@@ -128,6 +132,7 @@ class CommentLst extends Component {
       isContentInvalid  = false,
       isScoreInvalid = false,
       isValid = true;
+    const {t} = this.props;
     // 1. Check rating exists
     if (self.state.score === 0) {
       isScoreInvalid = true;
@@ -162,13 +167,14 @@ class CommentLst extends Component {
       content: self.state.comment,
       score: self.state.score
     };
+
     self.props.addCommentCallback(json).then(function(e) {
       self.setState({
         isAddingComment: false
       });
     }).catch(function(error) {
       var json = error.responseJSON;
-      var errorMessage = "an error occured while trying to add the comment";
+      var errorMessage = t('errorAddingComment');
       if (json) {
         errorMessage = json.error_description;
       }
@@ -241,8 +247,9 @@ class CommentLst extends Component {
     var comments = [],
       navigations = [],
       self = this;
-    var scoreError = self.buildErrorTooltip('isScoreInvalid', 'Score is mandatory');
-    var commentError = self.buildErrorTooltip('isContentInvalid', 'Should contains 0 to 255 characters');
+    const {t} = this.props;
+    var scoreError = self.buildErrorTooltip('isScoreInvalid', t('scoreMandatoryError'));
+    var commentError = self.buildErrorTooltip('isContentInvalid', t('commentContentError'));
     if (this.state.comments) {
       this.state.comments.forEach(function(comment) {
         var date = moment(comment.update_datetime).format('LLL');
@@ -262,7 +269,7 @@ class CommentLst extends Component {
               <div className="col-md-9">
                 <b>{comment.user.name}</b><br />
                 {date} <br />
-                <Rater total={5} rating={comment.score} interactive={false} /> Score : {comment.score}
+                <Rater total={5} rating={comment.score} interactive={false} /> {t('score')} : {comment.score}
               </div>
             </div>
             <div className="message">
@@ -281,11 +288,11 @@ class CommentLst extends Component {
 
     return (
       <section className="row white-section shop-section shop-section-padding">
-        <h5 className="col-md-12">Comments</h5>
+        <h5 className="col-md-12">{t('comments')}</h5>
         <div className="col-md-12"><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>
         {this.state.isCommentsLoading ?
           (<div className="col-md-12"><i className='fa fa-spinner fa-spin'></i></div>) :
-          comments.length == 0 ? (<span>No comment</span>) :
+          comments.length == 0 ? (<span>{t('noComment')}</span>) :
           (<div className="col-md-12">
             <div className="col-md-12">
               <ul className="pagination">
@@ -302,26 +309,27 @@ class CommentLst extends Component {
         {this.state.isAuthenticated &&
           (<div className="col-md-12">
             <div className="form-group">
-              <label>Score</label> {scoreError}
+              <label>{t('score')}</label> {scoreError}
               <Rater total={5} name="score" onClick={this.handleInputChange} />
             </div>
             <div className="form-group">
-              <label>Comment</label> {commentError}
-              <textarea className="form-control" placeholder="Your comment ..." name="comment" onChange={this.handleInputChange}/>
+              <label>{t('comment')}</label> {commentError}
+              <textarea className="form-control" placeholder={t('enterCommentPlaceholder')} name="comment" onChange={this.handleInputChange}/>
             </div>
             <div className="form-group">
               {!this.state.isAddingComment ?
-                (<button className="btn btn-primary" onClick={this.addComment}>Add</button>) :
-                (<button className="btn btn-primary previous" disabled><i className='fa fa-spinner fa-spin'></i> Processing update ...</button>)
+                (<button className="btn btn-default" onClick={this.addComment}>{t('addComment')}</button>) :
+                (<button className="btn btn-default previous" disabled><i className='fa fa-spinner fa-spin'></i> {t('processingUpdate')}</button>)
               }
             </div>
           </div>)
         }
-        <Modal isOpen={this.state.isRemoveCommentOpened}>
-          <ModalHeader toggle={this.toggleRemoveComment}>Do-you want to remove the comment ?</ModalHeader>
+        { /* Remove modal window */ }
+        <Modal isOpen={this.state.isRemoveCommentOpened} size="lg">
+          <ModalHeader toggle={this.toggleRemoveComment} className="redColor"><h2>{t('wantToRemoveComment')}</h2></ModalHeader>
           <ModalFooter>
-            <Button color='success' onClick={this.removeComment}>Yes</Button>
-            <Button color='danger' onClick={this.toggleRemoveComment}>No</Button>
+            <Button color='default' onClick={this.removeComment}>{t('yes')}</Button>
+            <Button color='default' onClick={this.toggleRemoveComment}>{t('no')}</Button>
           </ModalFooter>
         </Modal>
       </section>);
@@ -330,15 +338,31 @@ class CommentLst extends Component {
   componentWillMount() { // Unregister events.
     var self = this;
     var user = ApplicationStore.getUser();
-    if (user && user !== null) {
+
+    if (user && user !== null && user.sub && user.sub !== null) {
       self.setState({
         isAuthenticated: true,
         subject: user.sub
       });
     }
 
+    self._waitForToken = AppDispatcher.register(function (payload) {
+      switch(payload.actionName) {
+          case Constants.events.USER_LOGGED_IN:
+            self.setState({
+              isAuthenticated: true,
+              subject: payload.data.sub
+            });
+          break;
+      }
+    });
+
     self.refreshComments();
+  }
+
+  componentWillUnmount() { // Remove the registration.
+      AppDispatcher.unregister(this._waitForToken);
   }
 }
 
-export default CommentLst;
+export default translate('common', { wait: process && !process.release, withRef: true })(CommentLst);

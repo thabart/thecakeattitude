@@ -3,11 +3,12 @@ import $ from "jquery";
 import Header from "./Header";
 import Footer from './Footer';
 import NotificationSystem from 'react-notification-system';
-import {ApplicationStore} from './stores';
+import { ApplicationStore } from './stores';
 
 class MainLayout extends Component {
   constructor(props) {
     super(props);
+    this.displayNotification = this.displayNotification.bind(this);
   }
 
   render() {
@@ -24,12 +25,18 @@ class MainLayout extends Component {
     </div>);
   }
 
+  displayNotification() {
+    var message = ApplicationStore.getMessage();
+    this.refs.notificationSystem.addNotification(message);
+  }
+
   componentDidMount() {
-    var self = this;
-    ApplicationStore.addMessageListener(function() {
-      var message = ApplicationStore.getMessage();
-      self.refs.notificationSystem.addNotification(message);
-    });
+    ApplicationStore.addMessageListener(this.displayNotification);
+  }
+
+  componentWillUnmount() {
+    ApplicationStore.removeMessageListener(this.displayNotification);
+
   }
 }
 
