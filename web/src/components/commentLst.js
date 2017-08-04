@@ -16,6 +16,7 @@ class CommentLst extends Component {
   constructor(props) {
     super(props);
     this._waitForToken = null;
+    this._page = '1';
     this.request = { count: 4, start_index: 0 };
     this.navigateComment = this.navigateComment.bind(this);
     this.addComment = this.addComment.bind(this);
@@ -109,6 +110,7 @@ class CommentLst extends Component {
 
   navigateComment(e, name) { // Navigate.
     e.preventDefault();
+    this._page = name;
     this.request['start_index'] = (name - 1) * this.request.count;
     this.refreshComments();
   }
@@ -282,7 +284,7 @@ class CommentLst extends Component {
 
     if (this.state.navigations && this.state.navigations.length > 1) {
       this.state.navigations.forEach(function(nav) {
-        navigations.push((<li className="page-item"><a href="#" className="page-link" onClick={(e) => { self.navigateComment(e, nav.name); }}>{nav.name}</a></li>));
+        navigations.push((<li className="page-item"><a href="#" className={self._page === nav.name ? "page-link active" : "page-link"} onClick={(e) => { self.navigateComment(e, nav.name); }}>{nav.name}</a></li>));
       });
     }
 

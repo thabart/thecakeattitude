@@ -43,6 +43,7 @@ class ProductElt extends Component {
             newPrice = product.new_price;
         }
 
+        var description = product.description.length > 70 ? product.description.substring(0, 67) + "..." : product.description;
         return (
             <div className={this.props.className + " product-item"}>
               <div className="content">
@@ -51,21 +52,27 @@ class ProductElt extends Component {
                     <div className="col-md-3">
                         <img src={imageUrl} className="rounded" width="140" height="140"/>
                     </div>
-                    <div className="col-md-5">
+                    <div className="col-md-4">
                         <h3>{product.name}</h3>
                         <Rater total={5} rating={product.average_score}
                                interactive={false}/>{product.comments && product.comments.length > 0 && (
                         <label>{t('comments')} : {product.nb_comments}</label>)}
-                        <p>
-                            {product.description}
+                        <p style={{wordBreak: "break-all"}}>
+                            {description}
                         </p>
                     </div>
-                    <div className="col-md-4">
+                    <div className="col-md-5">
                         {newPrice == null ? (<h4 className="price">€ {product.price}</h4>) : (
                             <div>
-                                <h4 className="price inline"><strike>€ {product.price}</strike></h4>
-                                (<i>-{promotion.discount}%</i>)
-                                <h4 className="price"> € {newPrice}</h4>
+                                <h4 className="price inline">
+                                  <span className="badge badge-success">
+                                    <strike style={{color: "white"}}>€ {product.price}</strike>
+                                    <i className="ml-1" style={{color: "white"}}>
+                                      -{promotion.discount}%
+                                    </i>
+                                  </span>
+                                </h4>
+                                <h4 className="inline ml-1">€ {newPrice}</h4>
                             </div>
                         )}
                         <ul>
