@@ -252,6 +252,7 @@ namespace Cook4Me.Api.EF.Repositories
                         var payment = paymentMethods.First(c => c.Id == paymentToUpdate.Id);
                         paymentToUpdate.Method = (int)payment.Method;
                         paymentToUpdate.Iban = payment.Iban;
+                        paymentToUpdate.PaypalAccount = payment.PaypalAccount;
                     }
 
                     foreach (var paymentToRemove in paymentsToRemove)
@@ -266,7 +267,8 @@ namespace Cook4Me.Api.EF.Repositories
                             Id = paymentToAdd.Id,
                             Iban = paymentToAdd.Iban,
                             Method = (int)paymentToAdd.Method,
-                            ShopId = shop.Id
+                            ShopId = shop.Id,
+                            PaypalAccount = paymentToAdd.PaypalAccount
                         };
                         _context.PaymentMethods.Add(rec);
                     }

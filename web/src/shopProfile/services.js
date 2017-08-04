@@ -34,10 +34,10 @@ class ShopServices extends Component {
       listUrl = '/shops/' + this.props.shop.id + '/view/services';
     }
 
-    return (<section className="section row" style={{marginTop: "20px"}}>
+    return (<section className="section row" style={{marginTop: "20px", paddingBottom: "20px", paddingTop: "20px"}}>
       { this.state.isEditable && (
         <div className="col-md-12">
-          <NavLink className="btn btn-success" to={'/addservice/' + this.props.shop.id}>
+          <NavLink className="btn btn-default" to={'/addservice/' + this.props.shop.id}>
             <i className="fa fa-plus"></i> {t('addService')}
           </NavLink>
         </div>)

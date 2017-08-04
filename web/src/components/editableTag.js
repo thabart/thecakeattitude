@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import TagsInput from "react-tagsinput";
+import { translate } from 'react-i18next';
 import TagsSelector from './tagsSelector';
-import './editable.css';
+import '../styles/editable.css';
 
 class EditableTag extends Component {
   constructor(props) {
@@ -15,24 +15,29 @@ class EditableTag extends Component {
       isEditMode: false
     };
   }
-  onClickField() {
+
+  onClickField() { // Enable the edit mode.
     this.setState({
       isEditMode: true
     });
   }
-  validate() {
+
+  validate() { // Validate tags.
     this.setState({
       tags: this._tagsSelector.getTags(),
       isEditMode: false
     });
     if (this.props.validate) this.props.validate(this._tagsSelector.getTags());
   }
-  closeEditMode() {
+
+  closeEditMode() { // Close the edit mode.
     this.setState({
       isEditMode: false
     });
   }
-  render() {
+
+  render() { // Display the view.
+    const {t} = this.props;
     if (!this.state.isEditMode) {
       var tags = [],
         self = this;
@@ -42,24 +47,28 @@ class EditableTag extends Component {
         });
       }
       return (<div className="editable-input" onClick={(e) => { this.onClickField(); }}>
-        <ul className="tags no-padding">
-          {tags}
-        </ul>
+        {tags.length > 0 ? (
+          <ul className="tags no-padding">
+            {tags}
+          </ul>
+        ) : (
+          <div><i>{t('noTags')}</i></div>
+        )}
       </div>);
     }
 
     return (<div className="row">
-      <div className="editable-input-container col-md-8">
-        <TagsSelector ref={(elt) => {
-          this._tagsSelector = elt;
-        }} tags={this.state.tags} />
-      </div>
-      <div className="editable-buttons-container col-md-4">
-        <button className="btn btn-primary btn-sm" onClick={(e) => {this.validate(); }}><i className="fa fa-check"></i></button>
-        <button className="btn btn-default btn-sm" onClick={(e) => {this.closeEditMode(); }}><i className="fa fa-times"></i></button>
-      </div>
-  </div>);
+        <div className="editable-input-container col-md-8">
+          <TagsSelector ref={(elt) => {
+            this._tagsSelector = elt;
+          }} tags={this.state.tags} />
+        </div>
+        <div className="editable-buttons-container col-md-4">
+          <button className="btn btn-default" onClick={(e) => {this.validate(); }}>{t('ok')}</button>
+          <button className="btn btn-default" onClick={(e) => {this.closeEditMode(); }} style={{marginLeft: "5px"}}>{t('cancel')}</button>
+        </div>
+      </div>);
   }
 }
 
-export default EditableTag;
+export default translate('common', { wait: process && !process.release })(EditableTag);

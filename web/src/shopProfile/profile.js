@@ -104,7 +104,7 @@ class ShopProfile extends Component {
             isModalAddressOpened: false
         });
         AppDispatcher.dispatch({
-            actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+            actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
             data: address
         });
     }
@@ -122,7 +122,7 @@ class ShopProfile extends Component {
             shop: shop
         });
         AppDispatcher.dispatch({
-            actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+            actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
             data: {payments: arr}
         });
     }
@@ -161,7 +161,8 @@ class ShopProfile extends Component {
                         paymentsInner.push((
                             <div className="col-md-3 contact">
                                 <i className="fa fa-paypal fa-3"></i><br/>
-                                <label>{t('paypal')}</label>
+                                <label>{t('paypal')}</label><br />
+                                <label>{payment.paypal_account}</label>
                             </div>
                         ));
                         break;
@@ -181,9 +182,11 @@ class ShopProfile extends Component {
               <div className="col-md-12" style={{paddingTop: "20px"}}>
                 <h5>{t('description')}</h5>
                 {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description}
+                                                            minLength={1}
+                                                            maxLength={255}
                                                             validate={(i) => {
                                                                 AppDispatcher.dispatch({
-                                                                    actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+                                                                    actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
                                                                     data: {description: i}
                                                                 });
                                                             }}/>) : (
@@ -201,7 +204,7 @@ class ShopProfile extends Component {
               <div className="col-md-12" style={{paddingTop: "20px"}}>
                   <h5>{t('paymentMethods')}</h5>
                   { this.state.isEditable && (
-                      <Button outline color="secondary" size="sm" onClick={this.openModalPayments}>
+                      <Button outline color="secondary" size="sm" className="btn-icon with-border" onClick={this.openModalPayments}>
                         <i className="fa fa-pencil"></i>
                       </Button>) }
                   <div className="row col-md-12">
@@ -214,7 +217,7 @@ class ShopProfile extends Component {
               <div className="col-md-12">
                 <h5>{t('contactInformation')}</h5>
                 { this.state.isEditable && (
-                  <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm">
+                  <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm btn-icon with-border">
                     <i className="fa fa-pencil"></i>
                   </NavLink>)
                 }
@@ -276,7 +279,7 @@ class ShopProfile extends Component {
             <Modal size="lg" isOpen={this.state.isModalAddressOpened}>
                 <ModalHeader toggle={() => {
                     self.closeModalAddress();
-                }}>{t('updateShopAddress')}</ModalHeader>
+                }}>{t('updateShopAddressModalTitle')}</ModalHeader>
                 <ModalBody>
                     <Alert color="danger" isOpen={this.state.errorMessageAddress !== null}
                            toggle={this.closeAddressError}>{this.state.errorMessageAddress}</Alert>
@@ -291,7 +294,7 @@ class ShopProfile extends Component {
                     }}/>
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btn btn-success" onClick={() => {
+                    <button className="btn btn-default" onClick={() => {
                         self.updateAddress();
                     }} disabled={!this.state.isAdrValidateEnabled}>{t('update')}
                     </button>

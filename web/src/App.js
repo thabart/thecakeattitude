@@ -13,6 +13,7 @@ import AddAnnouncement from "./AddAnnouncement";
 import AddService from './AddService';
 import Notifications from './Notifications';
 import Home from './Home';
+import Tags from './Tags';
 import {OpenIdService, SessionService} from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
@@ -81,13 +82,13 @@ class App extends Component {
         });
         proxy.on('shopCommentAdded', function (message) {
             AppDispatcher.dispatch({
-                actionName: Constants.events.NEW_COMMENT,
+                actionName: Constants.events.NEW_SHOP_COMMENT_ARRIVED,
                 data: message
             });
         });
         proxy.on('shopCommentRemoved', function (message) {
             AppDispatcher.dispatch({
-                actionName: Constants.events.REMOVE_COMMENT,
+                actionName: Constants.events.REMOVE_SHOP_COMMENT_ARRIVED,
                 data: message
             });
         });
@@ -135,7 +136,7 @@ class App extends Component {
         });
         proxy.on('shopUpdated', function(message) {
             AppDispatcher.dispatch({
-                actionName: 'update-shop',
+                actionName: Constants.events.SHOP_UPDATE_ARRIVED,
                 data: message
             });
         });
@@ -216,6 +217,7 @@ class App extends Component {
                 <Route path="/products/:id/:action?" component={Products}/>
                 <Route path="/services/:id/:action?" component={Services}/>
                 <Route path="/announces/:id" component={Announces} />
+                <Route path="/tags/:tag" component={Tags} />
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>

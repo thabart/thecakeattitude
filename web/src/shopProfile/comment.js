@@ -37,8 +37,8 @@ class Comment extends Component {
         var self = this;
         this._waitForToken = AppDispatcher.register(function(payload) {
             switch (payload.actionName) {
-                case Constants.events.NEW_COMMENT:
-                case Constants.events.REMOVE_COMMENT:
+                case Constants.events.NEW_SHOP_COMMENT_ARRIVED:
+                case Constants.events.REMOVE_SHOP_COMMENT_ARRIVED:
                     if (payload && payload.data && payload.data.shop_id === self.props.shop.id) {
                         self.refs.comments.getWrappedInstance().refreshComments();
                     }

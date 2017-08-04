@@ -33,7 +33,7 @@ AppDispatcher.register(function(payload) {
     case Constants.events.EDIT_SHOP_LOADED:
       loadShop(payload.data);
       break;
-    case Constants.events.UPDATE_SHOP_INFORMATION:
+    case Constants.events.UPDATE_SHOP_INFORMATION_ACT:
       updateShop(payload.data);
       EditShopStore.emitChange();
     break;

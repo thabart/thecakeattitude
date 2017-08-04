@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import CategorySelector from './categorySelector';
-import './editable.css';
+import '../styles/editable.css';
 
 class EditableCategory extends Component {
   constructor(props) {

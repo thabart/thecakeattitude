@@ -31,6 +31,7 @@ class Shop extends Component {
         this.updateTitle = this.updateTitle.bind(this);
         this.updateTags = this.updateTags.bind(this);
         this.refresh = this.refresh.bind(this);
+        this.saveShop = this.saveShop.bind(this);
         this.state = {
             isLoading: true,
             location: {},
@@ -38,11 +39,16 @@ class Shop extends Component {
             shop: null,
             scores: null,
             nbComments: 0,
-            isRatingOpened: false,
             errorMessage: null,
             updatingErrorMessage: null,
             isEditable: false,
-            canBeEdited: false
+            canBeEdited: false,
+            isRatingOpened: false, // Tooltip visibility
+            isBannerImageTooltipOpened: false,
+            isViewShopTooltipOpened: false,
+            isEditShopTooltipOpened: false,
+            isEditProfileTooltipOpened: false,
+            isUpdateShopTooltipOpened: false
         };
     }
 
@@ -77,7 +83,7 @@ class Shop extends Component {
                 shop: shop
             });
             AppDispatcher.dispatch({
-                actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+                actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
                 data: {banner_image: result}
             });
         });
@@ -92,7 +98,7 @@ class Shop extends Component {
                 shop: shop
             });
             AppDispatcher.dispatch({
-                actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+                actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
                 data: {profile_image: result}
             });
         });
@@ -101,6 +107,10 @@ class Shop extends Component {
     uploadImage(e, callback) {
         e.preventDefault();
         var file = e.target.files[0];
+        if (file.type !== 'image/png' && file.type !== 'image/jpg' && file.type !== 'image/jpeg') {
+          return;
+        }
+
         var reader = new FileReader();
         reader.onloadend = () => {
             callback(reader.result);
@@ -108,9 +118,10 @@ class Shop extends Component {
         reader.readAsDataURL(file);
     }
 
-    toggle() {   // Toggle score window
+    toggle(name) {   // Toggle the tooltip.
+        var value = !this.state[name];
         this.setState({
-            isRatingOpened: !this.state.isRatingOpened
+            [name]: value
         });
     }
 
@@ -154,23 +165,48 @@ class Shop extends Component {
 
     updateTitle(title) {  // Udpate the title
         AppDispatcher.dispatch({
-            actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+            actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
             data: {name: title}
         });
     }
 
     updateTags(tags) { // Update the tags
         AppDispatcher.dispatch({
-            actionName: Constants.events.UPDATE_SHOP_INFORMATION,
+            actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
             data: {tags: tags}
         });
     }
 
-    refresh() {
+    saveShop() { // Save the shop.
+      var self = this;
+      var shop = EditShopStore.getShop();
+      const {t} = this.props;
+      self.setState({
+        isLoading: true
+      });
+      self._commonId = Guid.generate();
+      ShopsService.update(shop.id, shop, self._commonId).catch(function (e) {
+          var json = e.responseJSON;
+          if (json && json.error_description) {
+              self.setState({
+                  updatingErrorMessage: json.error_description,
+                  isLoading: false
+              });
+          } else {
+            self.setState({
+                updatingErrorMessage: t('errorUpdateShop'),
+                isLoading: false
+            });
+          }
+      });
+    }
+
+    refresh() { // Refresh the shop's information.
         var self = this,
             shopId = self.props.match.params.id,
             paction = self.props.match.params.paction,
             isEditable = paction && paction === 'edit';
+        const {t} = this.props;
         self.setState({
             isLoading: true
         });
@@ -196,7 +232,7 @@ class Shop extends Component {
             });
         }).catch(function (e) {
             var json = e.responseJSON;
-            var error = "an error occured while trying to retrieve the shop";
+            var error = t('errorRetrieveShop');
             if (json && json.error_description) {
                 error = json.error_description;
             }
@@ -209,16 +245,22 @@ class Shop extends Component {
 
     }
 
-    render() { // Render the component
+    render() { // Render the component.
         const {t} = this.props;
         if (this.state.isLoading) {
-            return (<div className="container"><i className='fa fa-spinner fa-spin'></i></div>);
+            return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+                <div className="container">
+                  <i className='fa fa-spinner fa-spin'></i>
+                </div>
+            </MainLayout>);
         }
 
         if (this.state.errorMessage !== null) {
-            return (<div className="container">
-              <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
-            </div>);
+            return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+              <div className="container">
+                <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+              </div>
+          </MainLayout>);
         }
 
         var bannerImage = this.state.shop.banner_image;
@@ -301,18 +343,22 @@ class Shop extends Component {
                   { /* Profile picture */ }
                   <div className="profile-img">
                       <img src={profileImage} className="img-thumbnail" />
-                      {self.state.isEditable && (<Button outline color="secondary" size="sm" className="edit-icon"
-                                                         onClick={this.clickPictureImage}><i className="fa fa-pencil"></i></Button>)}
+                      {self.state.isEditable && (<Button outline color="secondary" id="edit-profile" size="sm" className="edit-profile-icon btn-icon with-border" onClick={this.clickPictureImage}>
+                        <i className="fa fa-pencil"></i>
+                      </Button>)}
                       {self.state.isEditable && (
-                          <input type="file" accept='image/*' ref="uploadProfileBtn" className="upload-image"
-                                 onChange={(e) => {
-                                     this.uploadPictureImage(e);
-                                 }}/>)}
+                          <input type="file" accept=".png, .jpg, .jpeg" ref="uploadProfileBtn" className="upload-image" onChange={(e) => { this.uploadPictureImage(e); }}/>
+                      )}
+                      {self.state.isEditable && (
+                        <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isEditProfileTooltipOpened} target="edit-profile" toggle={() => this.toggle('isEditProfileTooltipOpened')}>
+                            {t('editShopProfilePictureTooltip')}
+                        </Tooltip>
+                      )}
                   </div>
                   { /* Shop information */ }
                   <div className="profile-information">
                       { this.state.isEditable ? (
-                          <EditableText className="header1" value={this.state.shop.name} validate={this.updateTitle}/>)
+                          <EditableText className="header1" value={this.state.shop.name} validate={this.updateTitle} maxLength={15} minLength={1}/>)
                           : ( <h1>{this.state.shop.name}</h1> )
                       }
                       { this.state.nbComments > 0 ? (
@@ -321,18 +367,21 @@ class Shop extends Component {
                                 <Rater total={5} ref="rater" interactive={false}/>
                                 {this.state.nbComments} {t('comments')}
                               </span>
-                              <Tooltip placement='bottom' className="rating-popup white-tooltip-inner" isOpen={this.state.isRatingOpened} target="rating" toggle={this.toggle}>
+                              <Tooltip placement='bottom' className="rating-popup white-tooltip-inner" isOpen={this.state.isRatingOpened} target="rating" toggle={() => this.toggle('isRatingOpened')}>
                                   <ul>
                                       {ratingSummary}
                                   </ul>
                               </Tooltip>
-                              {tags.length > 0 && this.state.isEditable && (
+                              {this.state.isEditable && (
                                   <EditableTag tags={self.state.shop.tags} validate={this.updateTags}/>
                               )}
                               {tags.length > 0 && !this.state.isEditable && (
                                   <ul className="tags no-padding">
                                       {tags}
                                   </ul>
+                              )}
+                              {tags.length === 0 && !this.state.isEditable && (
+                                  <div><i>{t('noTags')}</i></div>
                               )}
                           </div>) : '' }
                   </div>
@@ -355,22 +404,35 @@ class Shop extends Component {
                   <ul className="nav nav-pills menu-shop-options">
                       { this.state.canBeEdited && (
                           <li className="nav-item">
-                              <a href={editUrl} className="btn btn-outline-secondary btn-sm btn-icon"><i className="fa fa-pencil"></i></a>
+                              <a href={editUrl} className="btn btn-outline-secondary btn-sm btn-icon with-border" id="edit-shop"><i className="fa fa-pencil"></i></a>
+                              <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isEditShopTooltipOpened} target="edit-shop" toggle={() => this.toggle('isEditShopTooltipOpened')}>
+                                  {t('editShopTooltip')}
+                              </Tooltip>
                           </li>
                       ) }
                       { this.state.isEditable && (
                           <li className="nav-item">
-                              <Button outline color="secondary" size="sm"><i className="fa fa-pencil"
-                                                                             onClick={this.clickBannerImage}></i></Button>
-                              <input type="file" accept='image/*' ref="uploadBannerBtn" className="upload-image"
-                                     onChange={(e) => {
-                                         this.uploadBannerImage(e);
-                                     }}/>
+                              <Button id="saveShop" className="btn btn-outline-secondary btn-sm btn-icon with-border" onClick={this.saveShop}><i className="fa fa-floppy-o"></i></Button>
+                              <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isUpdateShopTooltipOpened} target="saveShop" toggle={() => this.toggle('isUpdateShopTooltipOpened')}>
+                                  {t('updateShopTooltip')}
+                              </Tooltip>
+                          </li>
+                      )}
+                      { this.state.isEditable && (
+                          <li className="nav-item">
+                              <Button id="editBanner" className="btn btn-outline-secondary btn-sm btn-icon with-border" onClick={this.clickBannerImage}><i className="fa fa-pencil"></i></Button>
+                              <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isBannerImageTooltipOpened} target="editBanner" toggle={() => this.toggle('isBannerImageTooltipOpened')}>
+                                  {t('editShopBannerImageTooltip')}
+                              </Tooltip>
+                              <input type="file" accept=".png, .jpg, .jpeg" ref="uploadBannerBtn" className="upload-image" onChange={(e) => { this.uploadBannerImage(e); }}/>
                           </li>
                       )}
                       {this.state.isEditable && (
                           <li className="nav-item">
-                              <a href={viewUrl} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></a>
+                              <a href={viewUrl} className="btn btn-outline-secondary btn-sm btn-icon with-border" id="view-shop"><i className="fa fa-eye"></i></a>
+                              <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isViewShopTooltipOpened} target="view-shop" toggle={() => this.toggle('isViewShopTooltipOpened')}>
+                                  {t('viewShopTooltip')}
+                              </Tooltip>
                           </li>
                       )}
                   </ul>
@@ -387,10 +449,10 @@ class Shop extends Component {
             {t} = this.props;
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'update-shop':
+                case Constants.events.SHOP_UPDATE_ARRIVED:
                     if (payload.data && payload.data.id === shopId) {
                         ApplicationStore.sendMessage({
-                            message: 'The shop has been updated',
+                            message: t('shopUpdated'),
                             level: 'success',
                             position: 'bl'
                         });
@@ -415,7 +477,7 @@ class Shop extends Component {
                         });
                     }
                     break;
-                case Constants.events.NEW_COMMENT: // Display popup when a comment has been added to the shop.
+                case Constants.events.NEW_SHOP_COMMENT_ARRIVED: // Display popup when a comment has been added to the shop.
                     if (payload.data && payload.data.shop_id === shopId) {
                         ApplicationStore.sendMessage({
                             message: t('commentAdded'),
@@ -425,7 +487,7 @@ class Shop extends Component {
                         self.refreshScore();
                     }
                     break;
-                case Constants.events.REMOVE_COMMENT: // Display popup when a comment has been removed
+                case Constants.events.REMOVE_SHOP_COMMENT_ARRIVED: // Display popup when a comment has been removed
                     if (payload.data && payload.data.shop_id === shopId) {
                         ApplicationStore.sendMessage({
                             message: t('commentRemoved'),
@@ -438,17 +500,17 @@ class Shop extends Component {
             }
         });
 
+        /*
         EditShopStore.addChangeListener(function () {
             var shop = EditShopStore.getShop();
             self._commonId = Guid.generate();
-            ShopsService.update(shop.id, shop, self._commonId).then(function () {
-
-            }).catch(function () {
+            ShopsService.update(shop.id, shop, self._commonId).catch(function () {
                 self.setState({
-                    updatingErrorMessage: 'An error occured while trying to update the shop'
+                    updatingErrorMessage: t('errorUpdateShop')
                 });
             });
         });
+        */
 
         this.refresh();
     }

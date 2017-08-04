@@ -50,6 +50,12 @@ h2 {
 .red-theme .btn-icon:active {
   color: white;
   border: none !important;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.red-theme .btn-icon.with-border {
+  background-color: #f7b2b5 !important;
 }
 
 .red-theme .btn-icon:hover {

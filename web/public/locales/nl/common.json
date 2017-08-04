@@ -186,5 +186,16 @@
   "thursday": "Thursday",
   "friday": "Friday",
   "saturday": "Saturday",
-  "sunday": "Sunday"
+  "sunday": "Sunday",
+  "errorRetrieveShop": "An error occured while trying to retrieve the shop, please contact the administrator",
+  "errorUpdateShop": "An error occured while trying to update the shop, please contact the administrator",
+  "ok": "Ok",
+  "viewShopTooltip": "View the shop",
+  "editShopBannerImageTooltip": "Edit the banner image",
+  "editShopTooltip": "Edit the shop's information",
+  "editShopProfilePictureTooltip": "Edit the profile image",
+  "updateShopTooltip": "Update the shop",
+  "shopUpdated": "Shop has been updated",
+  "shouldContainsCharacters": "Should contains between {0} and {1} characters",
+  "noTags": "No tags"
 }

@@ -179,7 +179,8 @@ namespace Cook4Me.Api.Host.Extensions
                             new PaymentMethod
                             {
                                 Id = Guid.NewGuid().ToString(),
-                                Method = 2
+                                Method = 2,
+                                PaypalAccount = "habarthierry@hotmail.fr"
                             }
                         },
                         ShopMap = new Map

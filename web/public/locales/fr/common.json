@@ -185,5 +185,16 @@
   "thursday": "Jeudi",
   "friday": "Vendredi",
   "saturday": "Samedi",
-  "sunday": "Dimanche"
+  "sunday": "Dimanche",
+  "errorRetrieveShop": "Une erreur est survenue lors de la récupération du magasin, veuillez prendre contact avec l'administrateur",
+  "errorUpdateShop": "Une erreur est survenue durant la mise à jour du magasin, veuillez prendre contact avec l'administrateur",
+  "ok": "Ok",
+  "viewShopTooltip": "Visualiser les informations du magasin",
+  "editShopBannerImageTooltip": "Modifier la bannière",
+  "editShopTooltip": "Modifier les informations du magasin",
+  "editShopProfilePictureTooltip": "Modifier l'image du profil",
+  "updateShopTooltip": "Mettre à jour le magasin",
+  "shopUpdated": "Le magasin a été mis à jour",
+  "shouldContainsCharacters": "Doit contenir entre {0} et {1} caractères",
+  "noTags": "Aucun tag"
 }

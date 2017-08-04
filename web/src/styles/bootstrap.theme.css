@@ -197,6 +197,14 @@ a.no-style:link {
   border-left-color: #ea4248 !important;
 }
 
+.bs-tether-target-attached-bottom .red-tooltip-inner:before {
+  border-bottom-color: #ea4248 !important;
+}
+
+.bs-tether-target-attached-top .red-tooltip-inner:before {
+  border-top-color: #ea4248 !important;
+}
+
 .white-tooltip-inner {
   background-color: white !important;
   color: inherit !important;
