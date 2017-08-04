@@ -178,7 +178,7 @@ class ShopProfile extends Component {
             { /*General information */ }
             <section className="section row" style={{marginTop: "20px"}}>
               { /* Description */ }
-              <div className="col-md-12">
+              <div className="col-md-12" style={{paddingTop: "20px"}}>
                 <h5>{t('description')}</h5>
                 {this.state.isEditable ? (<EditableTextArea value={this.state.shop.description}
                                                             validate={(i) => {
@@ -192,13 +192,13 @@ class ShopProfile extends Component {
               </div>
               <div className="section-separation"></div>
               { /* Category */ }
-              <div className="col-md-12">
+              <div className="col-md-12" style={{paddingTop: "20px"}}>
                 <h5>{t('category')}</h5>
                 <p>{categoryName}</p>
               </div>
               <div className="section-separation"></div>
               { /* Payment methods */ }
-              <div className="col-md-12">
+              <div className="col-md-12" style={{paddingTop: "20px"}}>
                   <h5>{t('paymentMethods')}</h5>
                   { this.state.isEditable && (
                       <Button outline color="secondary" size="sm" onClick={this.openModalPayments}>
@@ -210,7 +210,7 @@ class ShopProfile extends Component {
               </div>
             </section>
             { /* Contact information & Address */ }
-            <section className="section row" style={{marginTop: "20px"}}>
+            <section className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
               <div className="col-md-12">
                 <h5>{t('contactInformation')}</h5>
                 { this.state.isEditable && (
@@ -261,13 +261,13 @@ class ShopProfile extends Component {
               </div>
             </section>
             { /* Comments */ }
-            <section className="section row" style={{marginTop: "20px"}}>
+            <section className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
               <div className="col-md-12">
                 <Comment shop={self.state.shop}/>
               </div>
             </section>
             { /* Best deals */ }
-            <section className="section row" style={{marginTop: "20px"}}>
+            <section className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
               <div className="col-md-12">
                 <BestDeals shop={self.state.shop}/>
               </div>

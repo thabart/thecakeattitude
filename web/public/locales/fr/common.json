@@ -168,5 +168,22 @@
   "noProducts": "Pas de produit",
   "latest": "Les derniers",
   "priceAsc": "Prix (asc)",
-  "priceDesc": "Prix (desc)"
+  "priceDesc": "Prix (desc)",
+  "addService": "Ajouter un service",
+  "serviceName": "Nom du service",
+  "list": "Liste",
+  "calendar": "Calendrier",
+  "errorRetrieveServices": "Une erreur est survenue lors de la récupération des services, veuillez prendre contact avec l'administrateur",
+  "noOccurrence": "Aucune occurrence",
+  "period": "Période",
+  "scoreAsc": "Score (asc)",
+  "scoreDesc": "Score (desc)",
+  "noServices": "Aucun service",
+  "monday": "Lundi",
+  "tuesday": "Mardi",
+  "wednesday": "Mercredi",
+  "thursday": "Jeudi",
+  "friday": "Vendredi",
+  "saturday": "Samedi",
+  "sunday": "Dimanche"
 }

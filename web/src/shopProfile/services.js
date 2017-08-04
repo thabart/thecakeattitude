@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import {NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Calendar, List } from './shopService';
-import {withRouter} from "react-router";
-import './services.css';
+import { withRouter } from "react-router";
+import { translate } from 'react-i18next';
 
 class ShopServices extends Component {
   constructor(props) {
@@ -11,10 +11,12 @@ class ShopServices extends Component {
       isEditable: this.props.isEditable
     };
   }
-  render() {
+
+  render() { // Display the view.
     var action = this.props.match.params.subaction,
       content = null,
       self = this;
+    const {t} = this.props;
     if (action === "calendar") {
       content = (<Calendar shop={this.props.shop} history={this.props.history} />);
     } else {
@@ -32,17 +34,23 @@ class ShopServices extends Component {
       listUrl = '/shops/' + this.props.shop.id + '/view/services';
     }
 
-    return (<section className="row white-section shop-section shop-section-padding">
-      { this.state.isEditable && (<NavLink className="btn btn-success" to={'/addservice/' + this.props.shop.id}><i className="fa fa-plus"></i> Add service</NavLink>) }
-      <div className="row col-md-12 menu-service">
-        <div className="shop-options">
-          <NavLink to={listUrl} className="no-decoration"><i className={action === 'list' ? "fa fa-list active" : "fa fa-list"}></i></NavLink>
-          <NavLink to={calendarUrl} className="no-decoration"><i className={action === 'calendar' ? "fa fa-calendar active" : "fa fa-calendar"}></i></NavLink>
-        </div>
+    return (<section className="section row" style={{marginTop: "20px"}}>
+      { this.state.isEditable && (
+        <div className="col-md-12">
+          <NavLink className="btn btn-success" to={'/addservice/' + this.props.shop.id}>
+            <i className="fa fa-plus"></i> {t('addService')}
+          </NavLink>
+        </div>)
+      }
+      <div className="col-md-12" style={{paddingTop: "20px"}}>
+        <ul className="nav nav-pills shop-products-menu">
+          <li className="nav-item"><a href="#" onClick={(e) => { e.preventDefault(); self.props.history.push(listUrl); }} className={action === "list" ? "nav-link active" : "nav-link"}>{t('list')}</a></li>
+          <li className="nav-item"><NavLink to={calendarUrl} className="nav-link">{t('calendar')}</NavLink></li>
+        </ul>
       </div>
       {content}
     </section>);
   }
 }
 
-export default withRouter(ShopServices);
+export default translate('common', { wait: process && !process.release })(withRouter(ShopServices));

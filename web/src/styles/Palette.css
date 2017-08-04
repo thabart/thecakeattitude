@@ -141,7 +141,7 @@ h2 {
   background-color: transparent !important;
 }
 
-.red-theme .progress-bar {
+.progress-bar {
   background-color: #e7272d !important;
 }
 
@@ -149,8 +149,13 @@ h2 {
   border: 2px solid rgb(231, 39, 45) !important;
 }
 
-.red-theme .rc-slider-track {
+.red-theme .rc-slider-track,
+.red-theme .rbc-event {
   background-color: #ee676b  !important;
+}
+
+.red-theme .rbc-today {
+  background-color: rgba(247, 178, 181, 0.53) !important;
 }
 
 .red-theme .shop-products-menu .nav-link.active {

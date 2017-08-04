@@ -1,30 +1,23 @@
 import React, {Component} from "react";
-import {Range} from "rc-slider";
-import {NavLink} from "react-router-dom";
-import "react-datepicker/dist/react-datepicker.css";
-import {Alert} from "reactstrap";
+import { Range } from "rc-slider";
+import { NavLink } from "react-router-dom";
+import { Alert } from "reactstrap";
+import { ShopServices } from "../../services/index";
+import { translate } from 'react-i18next';
+import ServiceElt from '../serviceElt';
 import DatePicker from "react-datepicker";
 import Rater from "react-rater";
 import moment from "moment";
-import {ShopServices} from "../../services/index";
 import Constants from "../../../Constants";
-import $ from "jquery";
 import AppDispatcher from "../../appDispatcher";
+import $ from "jquery";
 
 let countServices = 5;
-var daysMapping = {
-    "0": "Monday",
-    "1": "Tuesday",
-    "2": "Wednesday",
-    "3": "Thursday",
-    "4": "Friday",
-    "5": "Saturday",
-    "6": "Sunday"
-}
 
 class List extends Component {
     constructor(props) {
         super(props);
+        this._page = '1';
         this._waitForToken = null;
         this.handleChangeStart = this.handleChangeStart.bind(this);
         this.handleChangeEnd = this.handleChangeEnd.bind(this);
@@ -49,7 +42,7 @@ class List extends Component {
         };
     }
 
-    handleInputChange(e) {
+    handleInputChange(e) { // Handle input change.
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -58,29 +51,30 @@ class List extends Component {
         });
     }
 
-    toggleError() {
+    toggleError() { // Toggle error message.
         this.setState({
             errorMessage: null
         });
     }
 
-    handleChangeStart(date) {
+    handleChangeStart(date) { // Execute when the start datetime is changed.
         this.setState({
             startDate: date
         });
     }
 
-    handleChangeEnd(date) {
+    handleChangeEnd(date) { // Execute when the end datetime is changed.
         this.setState({
             endDate: date
         });
     }
 
-    refresh() {
+    refresh() { // Refresh the list of services.
         var self = this;
         self.setState({
             isLoading: true
         });
+        const {t} = this.props;
         ShopServices.search(self.request).then(function (r) {
             var embedded = r['_embedded'];
             var pagination = r['_links'].navigation;
@@ -96,20 +90,21 @@ class List extends Component {
         }).catch(function () {
             self.setState({
                 isLoading: false,
-                errorMessage: 'An error occured while trying to retrieve the services'
+                errorMessage: t('errorRetrieveServices')
             });
         });
     }
 
-    changePage(e, name) {
+    changePage(e, name) { // Execute when the page change.
         e.preventDefault();
+        this._page = name;
         this.request = $.extend({}, this.request, {
             start_index: countServices * (name - 1)
         });
         this.refresh();
     }
 
-    search() {
+    search() { // Execute when the user clicks on search.
         this.request = $.extend({}, this.request, {
             name: this.state.serviceName,
             from_datetime: this.state.startDate.format(),
@@ -118,7 +113,7 @@ class List extends Component {
         this.refresh();
     }
 
-    changeOrder(e) {
+    changeOrder(e) { // Execute when the order has changed.
         var selected = $(e.target).find(':selected');
         var obj = {
             target: $(selected).data('target'),
@@ -128,68 +123,30 @@ class List extends Component {
         this.search();
     }
 
-    render() {
+    render() { // Display the view.
         var services = [],
             pagination = [],
             self = this;
-
+        const {t} = this.props;
         if (self.state.services && self.state.services.length > 0) {
             self.state.services.forEach(function (service) {
-                var image = "/images/default-service.jpg";
-                if (service.images && service.images.length > 0) {
-                    image = service.images[0];
-                }
-
-                var occurrence = (<p></p>);
-                if (service.occurrence && service.occurrence !== null) {
-                    var days = (<span>No occurrence</span>);
-                    if (service.occurrence.days && service.occurrence.days.length > 0) {
-                        var list = $.map(service.occurrence.days, function (val) {
-                            return (<li>{daysMapping[val]}</li>);
-                        });
-                        days = (<ul className="no-padding tags gray">{list}</ul>);
-                    }
-
-                    occurrence = (<table>
-                        <tr>
-                            <td colSpan="2">{days}</td>
-                        </tr>
-                    </table>);
-                }
-
-                services.push((<NavLink to={'/services/' + service.id} className="row product-item no-decoration" key={service.id}>
-                    <div className="col-md-3">
-                        <img src={image} className="rounded" width="140" height="140"/>
-                    </div>
-                    <div className="col-md-5">
-                        <h3>{service.name}</h3>
-                        <Rater total={5} rating={service.average_score} interactive={false}/>
-                        <p>
-                            {service.description}
-                        </p>
-                    </div>
-                    <div className="col-md-4">
-                        <h4 className="price">€ {service.price}</h4>
-                        {occurrence}
-                    </div>
-                </NavLink>));
+              services.push((<ServiceElt service={service} className="col-md-12"/>));
             });
         }
 
         if (this.state.pagination && this.state.pagination.length > 1) {
             this.state.pagination.forEach(function (page) {
-                pagination.push((<li className="page-item"><a className="page-link" href="#" onClick={(e) => {
-                    self.changePage(e, page.name);
-                }}>{page.name}</a></li>))
+                pagination.push((<li className="page-item">
+                  <a className={self._page === page.name ? "page-link active" : "page-link"} href="#" onClick={(e) => { self.changePage(e, page.name);}}>{page.name}</a>
+                </li>))
             });
         }
 
         return (
-            <div className="col-md-12">
-                { this.state.errorMessage !== null && (<div className="row col-md-12"><Alert color="danger col-md-12"
-                                                                                             isOpen={this.state.errorMessage !== null}
-                                                                                             toggle={this.toggleError}>{this.state.errorMessage}</Alert>
-                </div>) }
+            <div>
+                { this.state.errorMessage !== null && (
+                  <Alert color="danger col-md-12" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>)
+                }
                 <div className="row col-md-12">
                     <div className="col-md-3">
                         <form onSubmit={(e) => {
@@ -197,12 +154,11 @@ class List extends Component {
                             this.search();
                         }}>
                             <div className="form-group">
-                                <label>Service s name</label>
-                                <input type="text" className="form-control" name='serviceName'
-                                       onChange={this.handleInputChange}/>
+                                <label>{t('serviceName')}</label>
+                                <input type="text" className="form-control" name='serviceName' onChange={this.handleInputChange}/>
                             </div>
                             <div className="form-group">
-                                <label>Period</label>
+                                <label>{t('period')}</label>
                                 <DatePicker
                                     selected={this.state.startDate}
                                     selectsStart
@@ -222,7 +178,7 @@ class List extends Component {
                                 />
                             </div>
                             <div className="form-group">
-                                <button className="btn btn-default" onClick={this.search}>Search</button>
+                                <button className="btn btn-default" onClick={this.search}>{t('search')}</button>
                             </div>
                         </form>
                     </div>
@@ -233,17 +189,17 @@ class List extends Component {
                                 <select className="form-control" onChange={(e) => {
                                     this.changeOrder(e);
                                 }}>
-                                    <option data-target="update_datetime" data-method="desc">Latest</option>
-                                    <option data-target="price" data-method="asc">Price (asc)</option>
-                                    <option data-target="price" data-method="desc">Price (desc)</option>
-                                    <option data-target="average_score" data-method="asc">Score (asc)</option>
-                                    <option data-target="average_score" data-method="desc">Score (desc)</option>
+                                    <option data-target="update_datetime" data-method="desc">{t('latest')}</option>
+                                    <option data-target="price" data-method="asc">{t('priceAsc')}</option>
+                                    <option data-target="price" data-method="desc">{t('priceDesc')}</option>
+                                    <option data-target="average_score" data-method="asc">{t('scoreAsc')}</option>
+                                    <option data-target="average_score" data-method="desc">{t('scoreDesc')}</option>
                                 </select>
                             </div>
                         </div>
                         { this.state.isLoading ? (<i className='fa fa-spinner fa-spin'></i>) : (
                             <div>
-                                { services.length === 0 ? (<span>No services</span>) : services }
+                                { services.length === 0 ? (<span>{t('noServices')}</span>) : services }
                             </div>
                         )}
                         { pagination.length > 0 && (<ul className="pagination">
@@ -255,7 +211,7 @@ class List extends Component {
         );
     }
 
-    componentDidMount() {
+    componentDidMount() { // Execute before render view.
         var self = this,
           shopId = self.props.shop.id;
         this.request = $.extend({}, this.request, {
@@ -283,4 +239,4 @@ class List extends Component {
     }
 }
 
-export default List;
+export default translate('common', { wait: process && !process.release })(List);

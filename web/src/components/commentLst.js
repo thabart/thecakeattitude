@@ -289,7 +289,7 @@ class CommentLst extends Component {
     }
 
     return (
-      <section className="row white-section shop-section shop-section-padding">
+      <section className="row">
         <h5 className="col-md-12">{t('comments')}</h5>
         <div className="col-md-12"><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>
         {this.state.isCommentsLoading ?

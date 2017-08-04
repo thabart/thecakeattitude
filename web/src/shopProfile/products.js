@@ -7,7 +7,6 @@ import { translate } from 'react-i18next';
 import ProductElt from "./productElt";
 import AppDispatcher from "../appDispatcher";
 import $ from "jquery";
-import "./products.css";
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -281,14 +280,20 @@ class ShopProducts extends Component {
         }
 
         return (
-            <div>
-                <section className="row white-section shop-section shop-section-padding">
-                    { this.state.isEditable && (
-                        <NavLink className="btn btn-default" to={'/addproduct/' + this.props.shop.id}>
-                          <i className="fa fa-plus"></i> {t('addProduct')}
-                        </NavLink>) }
-                    <div className="row col-md-12">
-                        <div className="col-md-3">
+                <section className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
+                  { /*  Add product btn */ }
+                  { this.state.isEditable && (
+                    <div className="col-md-12">
+                      <NavLink className="btn btn-default" to={'/addproduct/' + this.props.shop.id}>
+                        <i className="fa fa-plus"></i> {t('addProduct')}
+                      </NavLink>
+                    </div>
+                    )
+                  }
+                  { /* Content */ }
+                  <div className="col-md-12 row">
+                    { /* Filters */ }
+                    <div className="col-md-3">
                             <form onSubmit={(e) => {
                                 e.preventDefault();
                                 this.search();
@@ -323,8 +328,9 @@ class ShopProducts extends Component {
                                 </div>
                             </div>
                             {filters}
-                        </div>
-                        <div className="col-md-9">
+                    </div>
+                    { /* List of products */ }
+                    <div className="col-md-9">
                             <Alert color="danger" isOpen={this.state.productErrorMessage !== null}
                                    toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
                             <div className="col-md-12">
@@ -351,10 +357,10 @@ class ShopProducts extends Component {
                                     {pagination}
                                 </ul>)}
                             </div>
-                        </div>
                     </div>
+                  </div>
                 </section>
-            </div>);
+        );
     }
 
     // Execute after the render
