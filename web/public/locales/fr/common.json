@@ -156,5 +156,17 @@
   "updatePaymentMethodsModalTitle": "Mettre à jour les moyens de paiement",
   "bestDeals": "Meilleurs offres",
   "noDeals": "Aucune offre",
-  "addToCart": "Ajouter au panier"
+  "addToCart": "Ajouter au panier",
+  "errorFilterProducts": "Une erreur est survenue lors du filtrage des produits, veuillez prendre contact avec l'administrateur",
+  "all": "Tout",
+  "addProduct": "Ajouter un produit",
+  "productName": "Nom du produit",
+  "price": "Prix",
+  "minEuro": "Min €",
+  "maxEuro": "Max €",
+  "filterBy": "Filtrer par",
+  "noProducts": "Pas de produit",
+  "latest": "Les derniers",
+  "priceAsc": "Prix (asc)",
+  "priceDesc": "Prix (desc)"
 }

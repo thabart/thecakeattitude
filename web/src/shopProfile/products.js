@@ -1,13 +1,13 @@
 import React, {Component} from "react";
-import {Range} from "rc-slider";
-import {Alert} from "reactstrap";
-import {ProductsService} from "../services/index";
-import "rc-slider/assets/index.css";
-import {NavLink} from "react-router-dom";
-import "./products.css";
+import { Range } from "rc-slider";
+import { Alert } from "reactstrap";
+import { ProductsService } from "../services/index";
+import { NavLink } from "react-router-dom";
+import { translate } from 'react-i18next';
 import ProductElt from "./productElt";
-import $ from "jquery";
 import AppDispatcher from "../appDispatcher";
+import $ from "jquery";
+import "./products.css";
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -25,6 +25,7 @@ class ShopProducts extends Component {
     constructor(props) {
         super(props);
         this._waitForToken = null;
+        this._page = '1';
         this.changePrice = this.changePrice.bind(this);
         this.toggleError = this.toggleError.bind(this);
         this.filter = this.filter.bind(this);
@@ -55,12 +56,12 @@ class ShopProducts extends Component {
         };
     }
 
-    search() {
+    search() { // Search products by name.
         filterJson['name'] = this.state.productName;
         this.updateProducts();
     }
 
-    filter(e, filterId, filterValue) {
+    filter(e, filterId, filterValue) { // Filter products.
         var filter = null,
             indice = -1,
             self = this;
@@ -87,8 +88,9 @@ class ShopProducts extends Component {
         this.updateProducts();
     }
 
-    updateProducts() {
+    updateProducts() { // Update list of products.
         var self = this;
+        const {t} = this.props;
         self.setState({
             isProductsLoading: true
         });
@@ -107,32 +109,32 @@ class ShopProducts extends Component {
         }).catch(function () {
             self.setState({
                 isProductsLoading: false,
-                productErrorMessage: 'an error occured while trying to filter the products'
+                productErrorMessage: t('errorFilterProducts')
             });
         });
 
     }
 
-    toggleProductError() {
+    toggleProductError() { // Toggle product error message.
         this.setState({
             productErrorMessage: null
         });
     }
 
-    toggleError() {
+    toggleError() { // Toggle error message.
         this.setState({
             errorMessage: null
         });
     }
 
-    changePrice(p) {
+    changePrice(p) { // Change price range.
         this.setState({
             minPrice: p[0],
             maxPrice: p[1]
         });
     }
 
-    handleInputChange(e) {
+    handleInputChange(e) { // Handle input change.
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -141,7 +143,7 @@ class ShopProducts extends Component {
         });
     }
 
-    handlePriceChange(e) {
+    handlePriceChange(e) { // Handle price change.
         const target = e.target;
         const name = target.name;
         if (!target.value || target.value === "") {
@@ -160,7 +162,7 @@ class ShopProducts extends Component {
         this.priceChange();
     }
 
-    handleBestDeals(e) {
+    handleBestDeals(e) { // Handle best price.
         var isChecked = $(e.target).is(':checked');
         if (isChecked) {
             filterJson['contains_valid_promotions'] = true;
@@ -171,7 +173,7 @@ class ShopProducts extends Component {
         this.updateProducts();
     }
 
-    selectCategory(e, id) {
+    selectCategory(e, id) { // Display the products in the specified category.
         e.preventDefault();
         if (id === null) {
             delete filterJson['category_id'];
@@ -185,20 +187,21 @@ class ShopProducts extends Component {
         this.updateProducts();
     }
 
-    priceChange() {
+    priceChange() { // Display the products with a price comprised in a range.
         filterJson['min_price'] = this.state.minPrice;
         filterJson['max_price'] = this.state.maxPrice;
         filterJson['start_index'] = 0;
         this.updateProducts();
     }
 
-    changePage(e, page) {
+    changePage(e, page) { // Change the page.
         e.preventDefault();
+        this._page = page;
         filterJson['start_index'] = (page - 1) * defaultCount;
         this.updateProducts();
     }
 
-    changeOrder(e) {
+    changeOrder(e) { // Change the order.
         var selected = $(e.target).find(':selected');
         var obj = {
             target: $(selected).data('target'),
@@ -208,29 +211,30 @@ class ShopProducts extends Component {
         this.updateProducts();
     }
 
-    // Render the component
-    render() {
+    render() { // Display the view.
+        const {t} = this.props;
         if (this.state.isLoading) {
-            return (<div>Loading ...</div>);
+            return (<div><i className='fa fa-spinner fa-spin'></i></div>);
         }
 
         if (this.state.errorMessage && this.state.errorMessage !== null) {
-            return (<div><Alert color="danger" isOpen={this.state.errorMessage !== null}
-                                toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>);
+            return (<div>
+              <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+            </div>);
         }
 
         var products = [],
             filters = [],
-            productCategories = [(<li className="nav-item"><a
-                className={this.state.activeCategory == null ? "nav-link active" : "nav-link"} href="#"
-                onClick={(e) => {
-                    this.selectCategory(e, null);
-                }}>All</a></li>)],
+            productCategories = [(<li className="nav-item">
+              <a className={this.state.activeCategory == null ? "nav-link active" : "nav-link"} href="#" onClick={(e) => { this.selectCategory(e, null);}}>
+                {t('all')}
+              </a>
+            </li>)],
             pagination = [],
             self = this;
         if (this.state.products) {
             this.state.products.forEach(function (product) {
-                products.push((<ProductElt product={product} className="row product-item"/>));
+                products.push((<ProductElt product={product} className="col-md-12"/>));
             });
         }
 
@@ -253,9 +257,11 @@ class ShopProducts extends Component {
 
         if (this.state.pagination && this.state.pagination.length > 1) {
             this.state.pagination.forEach(function (page) {
-                pagination.push((<li className="page-item"><a className="page-link" href="#" onClick={(e) => {
-                    self.changePage(e, page.name);
-                }}>{page.name}</a></li>))
+                pagination.push((<li className="page-item">
+                  <a className={self._page === page.name ? "page-link active" : "page-link"} href="#" onClick={(e) => { self.changePage(e, page.name);}}>
+                    {page.name}
+                  </a>
+                </li>))
             });
         }
 
@@ -266,11 +272,11 @@ class ShopProducts extends Component {
             }
 
             arr.forEach(function (cat) {
-                productCategories.push((<li className="nav-item"><a
-                    className={self.state.activeCategory == cat.id ? "nav-link active" : "nav-link"} href="#"
-                    onClick={(e) => {
-                        self.selectCategory(e, cat.id);
-                    }}>{cat.name}</a></li>))
+                productCategories.push((<li className="nav-item">
+                  <a className={self.state.activeCategory == cat.id ? "nav-link active" : "nav-link"} href="#" onClick={(e) => { self.selectCategory(e, cat.id);}}>
+                    {cat.name}
+                  </a>
+                </li>))
             });
         }
 
@@ -278,8 +284,9 @@ class ShopProducts extends Component {
             <div>
                 <section className="row white-section shop-section shop-section-padding">
                     { this.state.isEditable && (
-                        <NavLink className="btn btn-success" to={'/addproduct/' + this.props.shop.id}><i
-                            className="fa fa-plus"></i> Add product</NavLink>) }
+                        <NavLink className="btn btn-default" to={'/addproduct/' + this.props.shop.id}>
+                          <i className="fa fa-plus"></i> {t('addProduct')}
+                        </NavLink>) }
                     <div className="row col-md-12">
                         <div className="col-md-3">
                             <form onSubmit={(e) => {
@@ -287,30 +294,29 @@ class ShopProducts extends Component {
                                 this.search();
                             }}>
                                 <div className="form-group">
-                                    <label>Product name</label>
-                                    <input type="text" className="form-control" name="productName"
-                                           onChange={this.handleInputChange}/>
+                                    <label>{t('productName')}</label>
+                                    <input type="text" className="form-control" name="productName" onChange={this.handleInputChange}/>
                                 </div>
                                 <div className="form-group">
-                                    <button className="btn btn-default" onClick={this.search}>Search</button>
+                                    <button className="btn btn-default" onClick={this.search}>{t('search')}</button>
                                 </div>
                             </form>
                             <div className="form-group filter">
-                                <input type="checkbox" onClick={this.handleBestDeals}/> Best deals
+                                <input type="checkbox" onClick={this.handleBestDeals}/> {t('bestDeals')}
                             </div>
                             <div className="form-group filter">
-                                <label>Price</label>
+                                <label>{t('price')}</label>
                                 <Range min={minPrice} ref="priceRange" max={maxPrice}
                                        defaultValue={[minPrice, maxPrice]}
                                        onChange={this.changePrice} onAfterChange={this.priceChange}/>
                                 <div className="row">
-                                    <span className="col-md-4">Min €</span><input type="text" name="minPrice"
+                                    <span className="col-md-4">{t('minEuro')}</span><input type="text" name="minPrice"
                                                                                   className="form-control col-md-6"
                                                                                   onChange={this.handlePriceChange}
                                                                                   value={this.state.minPrice}/>
                                 </div>
                                 <div className="row">
-                                    <span className="col-md-4">Max €</span><input type="text" name="maxPrice"
+                                    <span className="col-md-4">{t('maxEuro')}</span><input type="text" name="maxPrice"
                                                                                   className="form-control col-md-6"
                                                                                   onChange={this.handlePriceChange}
                                                                                   value={this.state.maxPrice}/>
@@ -322,23 +328,23 @@ class ShopProducts extends Component {
                             <Alert color="danger" isOpen={this.state.productErrorMessage !== null}
                                    toggle={this.toggleProductError}>{this.state.productErrorMessage}</Alert>
                             <div className="col-md-12">
-                                <ul className="nav nav-pills">
+                                <ul className="nav nav-pills shop-products-menu">
                                     {productCategories}
                                 </ul>
                                 <div className="col-md-4 offset-md-8">
-                                    <label>Filter by</label>
+                                    <label>{t('filterBy')}</label>
                                     <select className="form-control" onChange={(e) => {
                                         this.changeOrder(e);
                                     }}>
-                                        <option data-target="update_datetime" data-method="desc">Latest</option>
-                                        <option data-target="price" data-method="asc">Price (asc)</option>
-                                        <option data-target="price" data-method="desc">Price (desc)</option>
+                                        <option data-target="update_datetime" data-method="desc">{t('latest')}</option>
+                                        <option data-target="price" data-method="asc">{t('priceAsc')}</option>
+                                        <option data-target="price" data-method="desc">{t('priceDesc')}</option>
                                     </select>
                                 </div>
                                 { this.state.isProductsLoading ? (
                                     <div className="col-md-8"><i className='fa fa-spinner fa-spin'></i></div>) : (
                                     <div>
-                                        {products.length === 0 ? (<span>No products</span>) : products}
+                                        {products.length === 0 ? (<span>{t('noProducts')}</span>) : products}
                                     </div>
                                 )}
                                 {pagination.length > 0 && (<ul className="pagination">
@@ -393,4 +399,4 @@ class ShopProducts extends Component {
     }
 }
 
-export default ShopProducts;
+export default translate('common', { wait: process && !process.release })(ShopProducts);

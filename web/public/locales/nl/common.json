@@ -157,5 +157,17 @@
   "updatePaymentMethodsModalTitle": "Update the payment methods",
   "bestDeals": "Best deals",
   "noDeals": "No deal",
-  "addToCart": "Add to cart"
+  "addToCart": "Add to cart",
+  "errorFilterProducts": "An error occured while trying to filter the products, please contact the administrator",
+  "all": "All",
+  "addProduct": "Add product",
+  "productName": "Product's name",
+  "price": "Price",
+  "minEuro": "Min €",
+  "maxEuro": "Max €",
+  "filterBy": "Filter by",
+  "noProducts": "No products",
+  "latest": "Latest",
+  "priceAsc": "Price (asc)",
+  "priceDesc": "Price (desc)"
 }

@@ -141,8 +141,20 @@ h2 {
   background-color: transparent !important;
 }
 
-.progress-bar {
+.red-theme .progress-bar {
   background-color: #e7272d !important;
+}
+
+.red-theme .rc-slider-handle {
+  border: 2px solid rgb(231, 39, 45) !important;
+}
+
+.red-theme .rc-slider-track {
+  background-color: #ee676b  !important;
+}
+
+.red-theme .shop-products-menu .nav-link.active {
+  background-color: rgba(231, 39, 45, 0.7) !important;
 }
 
 /* Global theme */

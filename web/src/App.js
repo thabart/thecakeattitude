@@ -32,6 +32,7 @@ import "./styles/formTab.css";
 import './styles/tags.css';
 import './styles/section.css';
 import "bootstrap/dist/css/bootstrap.css";
+import "rc-slider/assets/index.css";
 import { translate } from 'react-i18next';
 
 var history = createBrowserHistory();
