@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert } from "reactstrap";
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert,Tooltip } from "reactstrap";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
-import { Address, EditableTextArea, EditableCategory, PaymentMethodsSelector } from '../components';
+import { Address, EditableTextArea, PaymentMethodsSelector } from '../components';
 import { NavLink} from "react-router-dom";
 import { translate } from 'react-i18next';
 import AppDispatcher from '../appDispatcher';
@@ -30,6 +30,7 @@ const GettingStartedGoogleMap = withGoogleMap(props => {
 class ShopProfile extends Component {
     constructor(props) {
         super(props);
+        this.toggle = this.toggle.bind(this);
         this.onMapLoad = this.onMapLoad.bind(this);
         this.closeModalAddress = this.closeModalAddress.bind(this);
         this.closeModalPayments = this.closeModalPayments.bind(this);
@@ -47,8 +48,18 @@ class ShopProfile extends Component {
             isEditable: props.isEditable,
             errorMessagePaymentMethods: null,
             errorMessageAddress: null,
-            isAdrValidateEnabled: true
+            isAdrValidateEnabled: true,
+            isEditShopAddressTooltipOpened: false, // Tooltip visibility.
+            isEditContactInformationTooltipOpened: false,
+            isEditPaymentMethodsTooltipOpened: false
         };
+    }
+
+    toggle(name) { // Toggle the tooltip.
+        var value = !this.state[name];
+        this.setState({
+            [name]: value
+        });
     }
 
     onMapLoad(map) { // Store google map reference.
@@ -92,7 +103,7 @@ class ShopProfile extends Component {
     }
 
     updateAddress() { // Update the address.
-        var address = this.refs.address.getAddress();
+        var address = this.refs.address.getWrappedInstance().getAddress();
         var shop = this.state.shop;
         shop.street_address = address.street_address;
         shop.location = {
@@ -110,7 +121,7 @@ class ShopProfile extends Component {
     }
 
     updatePaymentMethods() { // Update payment methods.
-        var arr = this.refs.paymentMethods.validate();
+        var arr = this.refs.paymentMethods.getWrappedInstance().validate();
         if (!arr || arr === null) {
             return;
         }
@@ -123,7 +134,7 @@ class ShopProfile extends Component {
         });
         AppDispatcher.dispatch({
             actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
-            data: {payments: arr}
+            data: { payments: arr }
         });
     }
 
@@ -140,8 +151,8 @@ class ShopProfile extends Component {
                     case "Cash":
                     case "cash":
                         paymentsInner.push((
-                            <div className="col-md-3 contact">
-                                <i className="fa fa-money fa-3"></i><br/>
+                            <div className="col-md-3 shop-badge">
+                                <i className="fa fa-money fa-3 icon"></i><br/>
                                 <label>{t('cash')}</label>
                             </div>
                         ));
@@ -149,8 +160,8 @@ class ShopProfile extends Component {
                     case "BankTransfer":
                     case "bank_transfer":
                         paymentsInner.push((
-                            <div className="col-md-3 contact">
-                                <i className="fa fa-credit-card fa-3"></i><br/>
+                            <div className="col-md-3 shop-badge">
+                                <i className="fa fa-credit-card fa-3 icon"></i><br/>
                                 <label>{t('bankTransfer')}</label><br />
                                 <label>IBAN : <i>{payment.iban}</i></label>
                             </div>
@@ -159,8 +170,8 @@ class ShopProfile extends Component {
                     case "PayPal":
                     case "paypal":
                         paymentsInner.push((
-                            <div className="col-md-3 contact">
-                                <i className="fa fa-paypal fa-3"></i><br/>
+                            <div className="col-md-3 shop-badge">
+                                <i className="fa fa-paypal fa-3 icon"></i><br/>
                                 <label>{t('paypal')}</label><br />
                                 <label>{payment.paypal_account}</label>
                             </div>
@@ -204,9 +215,14 @@ class ShopProfile extends Component {
               <div className="col-md-12" style={{paddingTop: "20px"}}>
                   <h5>{t('paymentMethods')}</h5>
                   { this.state.isEditable && (
-                      <Button outline color="secondary" size="sm" className="btn-icon with-border" onClick={this.openModalPayments}>
-                        <i className="fa fa-pencil"></i>
-                      </Button>) }
+                      <div>
+                        <Button id="edit-payment-methods" outline color="secondary" size="sm" className="btn-icon with-border" onClick={this.openModalPayments}>
+                          <i className="fa fa-pencil"></i>
+                        </Button>
+                        <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isEditPaymentMethodsTooltipOpened} target="edit-payment-methods" toggle={() => this.toggle('isEditPaymentMethodsTooltipOpened')}>
+                            {t('editPaymentMethodsTooltip')}
+                        </Tooltip>
+                      </div>) }
                   <div className="row col-md-12">
                       {paymentsInner}
                   </div>
@@ -217,33 +233,42 @@ class ShopProfile extends Component {
               <div className="col-md-12">
                 <h5>{t('contactInformation')}</h5>
                 { this.state.isEditable && (
-                  <NavLink to="/manage/profile" className="btn btn-outline-secondary btn-sm btn-icon with-border">
-                    <i className="fa fa-pencil"></i>
-                  </NavLink>)
+                  <div>
+                    <NavLink id="edit-profile-information" to="/manage/profile" className="btn btn-outline-secondary btn-sm btn-icon with-border">
+                      <i className="fa fa-pencil"></i>
+                    </NavLink>
+                    <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isEditContactInformationTooltipOpened} target="edit-profile-information" toggle={() => this.toggle('isEditContactInformationTooltipOpened')}>
+                        {t('editShopContactInformationTooltip')}
+                    </Tooltip>
+                  </div>)
                 }
                 <div className="row">
                   { /* Email */ }
-                  <div className="col-md-3 contact">
-                    <i className="fa fa-envelope fa-3"></i><br />
+                  <div className="col-md-3 shop-badge">
+                    <i className="fa fa-envelope fa-3 icon"></i><br />
                     <span>{this.state.user.email}</span>
                   </div>
                   { /* Home phone */ }
-                  <div className="col-md-3 contact">
-                    <i className="fa fa-phone fa-3"></i><br />
+                  <div className="col-md-3 shop-badge">
+                    <i className="fa fa-phone fa-3 icon"></i><br />
                     <span>{this.state.user.home_phone_number}</span>
                   </div>
                   { /* Mobile phone */ }
-                  <div className="col-md-3 contact">
-                    <i className="fa fa-mobile fa-3"></i><br />
+                  <div className="col-md-3 shop-badge">
+                    <i className="fa fa-mobile fa-3 icon"></i><br />
                     <span>{this.state.user.mobile_phone_number}</span>
                   </div>
                   { /* Address */ }
-                  <div className="col-md-3 contact">
+                  <div className="col-md-3 shop-badge">
                     {this.state.isEditable ? (
-                      <button className="btn btn-default" onClick={() => { this.openModalAddress();}}>
-                        <i className="fa fa-map-marker fa-3"></i>
-                      </button>
-                    ) : (<i className="fa fa-map-marker fa-3"></i>)
+                      <div className="editable">
+                        <Button id="edit-shop-address" className="btn btn-outline-secondary btn-sm btn-icon with-border edit-icon" onClick={this.openModalAddress}><i className="fa fa-pencil"></i></Button>
+                        <Tooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isEditShopAddressTooltipOpened} target="edit-shop-address" toggle={() => this.toggle('isEditShopAddressTooltipOpened')}>
+                            {t('editShopAddressTooltip')}
+                        </Tooltip>
+                        <i className="fa fa-map-marker fa-3 icon"></i>
+                      </div>
+                    ) : (<i className="fa fa-map-marker fa-3 icon"></i>)
                     }
                     <br />
                     <span>{this.state.shop.street_address}</span>
@@ -316,7 +341,7 @@ class ShopProfile extends Component {
                     }} payments={self.state.shop.payments}/>
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btn btn-success" onClick={(r) => {
+                    <button className="btn btn-default" onClick={(r) => {
                         self.updatePaymentMethods(r);
                     }}>{t('update')}
                     </button>

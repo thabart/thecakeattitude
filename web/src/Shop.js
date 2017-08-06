@@ -13,7 +13,7 @@ import Rater from "react-rater";
 import AppDispatcher from './appDispatcher';
 import Constants from '../Constants';
 import $ from 'jquery';
-import "react-rater/lib/react-rater.css";
+import Mousetrap from 'mousetrap';
 import "./styles/shop.css";
 
 class Shop extends Component {
@@ -499,20 +499,13 @@ class Shop extends Component {
                     break;
             }
         });
-
-        /*
-        EditShopStore.addChangeListener(function () {
-            var shop = EditShopStore.getShop();
-            self._commonId = Guid.generate();
-            ShopsService.update(shop.id, shop, self._commonId).catch(function () {
-                self.setState({
-                    updatingErrorMessage: t('errorUpdateShop')
-                });
-            });
-        });
-        */
-
         this.refresh();
+        Mousetrap.bind('ctrl+s', function(e) { // Save the shop (ctrl+s)
+          if (self.state.isEditable) {
+            e.preventDefault();
+            self.saveShop();
+          }
+        });
     }
 
     componentWillUnmount() { // Remove listener.

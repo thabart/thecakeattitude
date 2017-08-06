@@ -135,8 +135,6 @@
   "yourNotifications": "Your notifications",
   "unknown": "Unknown",
   "noNotifications": "No notifications",
-  "shopProfile": "Profile",
-  "services": "Services",
   "settings": "Settings",
   "wantToRemoveComment": "Do-you want to remove the comment ?",
   "comment": "Comment",
@@ -196,8 +194,12 @@
   "editShopBannerImageTooltip": "Edit the banner image",
   "editShopTooltip": "Edit the shop's information",
   "editShopProfilePictureTooltip": "Edit the profile image",
-  "updateShopTooltip": "Update the shop",
+  "updateShopTooltip": "Update the shop (CTRL + S)",
   "shopUpdated": "Shop has been updated",
   "shouldContainsCharacters": "Should contains between {0} and {1} characters",
-  "noTags": "No tags"
+  "noTags": "No tags",
+  "editShopAddressTooltip": "Edit the shop address",
+  "editShopContactInformationTooltip": "Edit the contact information",
+  "editPaymentMethodsTooltip": "Edit the payment methods",
+  "shopProfile": "Profile"
 }

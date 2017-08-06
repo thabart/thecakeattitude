@@ -35,6 +35,7 @@ import './styles/section.css';
 import "bootstrap/dist/css/bootstrap.css";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
+import "react-rater/lib/react-rater.css";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { translate } from 'react-i18next';
 

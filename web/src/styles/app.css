@@ -38,6 +38,11 @@ p {
   margin-bottom: -40px;
 }
 
+/* Google map search box div */
+.pac-container {
+  z-index: 3000 !important;
+}
+
 /* Display loading spinner */
 .loader-container {
   height: 100%;

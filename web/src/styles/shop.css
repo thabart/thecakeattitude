@@ -76,6 +76,26 @@
     margin: 0;
 }
 
+/* Shop badge (used for contact information & payment methods) */
+
+.shop-badge {
+  text-align: center;
+}
+
+.shop-badge .editable {
+  position: relative;
+}
+
+.shop-badge .editable .edit-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.shop-badge .icon {
+  font-size: 40pt;
+}
+
 .shop-section-padding {
     padding: 20px;
 }
@@ -98,14 +118,6 @@
 
 .react-rater a.is-active-half:before {
     color: #fc6 !important;
-}
-
-.contact {
-    text-align: center;
-}
-
-.contact .fa {
-    font-size: 40pt;
 }
 
 .product {

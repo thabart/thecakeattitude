@@ -193,8 +193,11 @@
   "editShopBannerImageTooltip": "Modifier la bannière",
   "editShopTooltip": "Modifier les informations du magasin",
   "editShopProfilePictureTooltip": "Modifier l'image du profil",
-  "updateShopTooltip": "Mettre à jour le magasin",
+  "updateShopTooltip": "Mettre à jour le magasin (CTRL + S)",
   "shopUpdated": "Le magasin a été mis à jour",
   "shouldContainsCharacters": "Doit contenir entre {0} et {1} caractères",
-  "noTags": "Aucun tag"
+  "noTags": "Aucun tag",
+  "editShopAddressTooltip": "Editer l'adresse du magasin",
+  "editShopContactInformationTooltip": "Editer les informations de contact",
+  "editPaymentMethodsTooltip": "Editer les moyens de paiement"
 }
