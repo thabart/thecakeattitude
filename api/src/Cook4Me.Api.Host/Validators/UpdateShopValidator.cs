@@ -150,7 +150,7 @@ namespace Cook4Me.Api.Host.Validators
                     return new UpdateShopValidationResult(string.Format(ErrorDescriptions.DuplicateValues, Constants.DtoNames.Shop.ProductCategories));
                 }
 
-                if (shop.ProductCategories.Count() > 5)
+                if (shop.ProductCategories.Count() > 6)
                 {
                     return new UpdateShopValidationResult(ErrorDescriptions.OnlyEightCategoriesCanBeAdded);
                 }

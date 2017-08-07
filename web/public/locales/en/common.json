@@ -109,7 +109,7 @@
   "addFilter": "Add characteristic",
   "filterName": "Characteristic name",
   "filterValues": "Characteristic values",
-  "maxEightProductCategories": "8 product categories can be specified",
+  "maxEightProductCategories": "6 product categories can be specified",
   "filterRowInfoTooltip": "At least one tag must be specified and the name must be filled-in",
   "enterProductCategoryNamePlaceHolder": "Enter the product category name ...",
   "characteristicsTooltip": "Assign characteristics to the products and define some values",

@@ -106,7 +106,7 @@
   "addFilter": "Ajouter une caractéristique",
   "filterName": "Nom de la caractéristique",
   "filterValues": "Les valeurs de la caractéristique",
-  "maxEightProductCategories": "Au maximum 8 catégories peuvent être spécifiées",
+  "maxEightProductCategories": "Au maximum 6 catégories peuvent être spécifiées",
   "filterRowInfoTooltip": "Au moins un tag doit être spécifié et le nom doit être rempli",
   "enterProductCategoryNamePlaceHolder": "Rentrez le nom de la catégorie de produit ...",
   "characteristicsTooltip": "Ajouter des caractéristiques aux produits",

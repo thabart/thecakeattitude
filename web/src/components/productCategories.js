@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import {Tooltip} from "reactstrap";
+import { Tooltip } from "reactstrap";
+import { Guid } from '../utils';
+import { translate } from 'react-i18next';
+import ShelfChooser from '../game/shelfChooser';
 import TagsInput from "react-tagsinput";
 import $ from 'jquery';
-import ShelfChooser from '../game/shelfChooser';
-import {Guid} from '../utils';
-import { translate } from 'react-i18next';
 
 class ProductCategories extends Component {
   constructor(props) {
@@ -42,7 +42,8 @@ class ProductCategories extends Component {
       return {
         shop_section_name: shelf.name,
         name: shelf.category_name,
-        description: shelf.category_name
+        description: shelf.category_name,
+        id: shelf.id
       };
     });
   }
@@ -106,13 +107,16 @@ class ProductCategories extends Component {
         loadedCallback: function(shelves) {
           shelves.forEach(function(shelf) {
             var value = '';
+            var id = Guid.generate();
             var filteredProductCategories = self.props.productCategories.filter(function(cat) { return cat.shop_section_name === shelf.name; });
             if (filteredProductCategories.length === 1) {
               value = filteredProductCategories[0].name;
+              id = filteredProductCategories[0].id;
             }
 
             shelf.isSelected = false;
             shelf.category_name = value;
+            shelf.id = id;
           });
           self.setState({
             shelves: shelves,

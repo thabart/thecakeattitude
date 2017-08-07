@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {Tooltip} from "reactstrap";
+import { Tooltip } from "reactstrap";
+import { Guid } from '../utils';
+import { translate } from 'react-i18next';
 import TagsInput from "react-tagsinput";
 import $ from 'jquery';
-import {Guid} from '../utils';
-import { translate } from 'react-i18next';
 
 class ShopProductFilter extends Component {
   constructor(props) {
