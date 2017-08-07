@@ -498,6 +498,9 @@ class Shop extends Component {
                         self.refreshScore();
                     }
                     break;
+                case Constants.events.USER_LOGGED_IN: // When the user is logged in then refresh the shop.
+                    self.refresh();
+                    break;
             }
         });
         this.refresh();

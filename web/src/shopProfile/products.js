@@ -11,20 +11,20 @@ import $ from "jquery";
 const minPrice = 1;
 const maxPrice = 30000;
 const defaultCount = 3;
-var filterJson = {
-    orders: [{target: 'update_datetime', method: 'desc'}],
-    start_index: 0,
-    count: defaultCount,
-    min_price: minPrice,
-    max_price: maxPrice,
-    filters: []
-};
 
 class ShopProducts extends Component {
     constructor(props) {
         super(props);
         this._waitForToken = null;
         this._page = '1';
+        this._filterJson = {
+            orders: [{target: 'update_datetime', method: 'desc'}],
+            start_index: 0,
+            count: defaultCount,
+            min_price: minPrice,
+            max_price: maxPrice,
+            filters: []
+        };
         this.changePrice = this.changePrice.bind(this);
         this.toggleError = this.toggleError.bind(this);
         this.filter = this.filter.bind(this);
@@ -56,7 +56,7 @@ class ShopProducts extends Component {
     }
 
     search() { // Search products by name.
-        filterJson['name'] = this.state.productName;
+        this._filterJson['name'] = this.state.productName;
         this.updateProducts();
     }
 
@@ -65,7 +65,7 @@ class ShopProducts extends Component {
             indice = -1,
             self = this;
         if (!$(e.target).is(':checked')) {
-            filterJson.filters.forEach(function (f, e) {
+            self._filterJson.filters.forEach(function (f, e) {
                 if (f.id === filterId) {
                     filter = f;
                     indice = e;
@@ -73,17 +73,17 @@ class ShopProducts extends Component {
             });
 
             if (indice > -1) {
-                filterJson.filters.splice(indice, 1);
+                self._filterJson.filters.splice(indice, 1);
             }
         }
         else {
-            filterJson.filters.push({
+            self._filterJson.filters.push({
                 id: filterId,
                 value: filterValue
             });
         }
 
-        filterJson['start_index'] = 0;
+        self._filterJson['start_index'] = 0;
         this.updateProducts();
     }
 
@@ -93,7 +93,7 @@ class ShopProducts extends Component {
         self.setState({
             isProductsLoading: true
         });
-        ProductsService.search(filterJson).then(function (record) {
+        ProductsService.search(self._filterJson).then(function (record) {
             var products = record['_embedded'];
             var pagination = record['_links'].navigation;
             if (!(products instanceof Array)) {
@@ -164,9 +164,9 @@ class ShopProducts extends Component {
     handleBestDeals(e) { // Handle best price.
         var isChecked = $(e.target).is(':checked');
         if (isChecked) {
-            filterJson['contains_valid_promotions'] = true;
+            this._filterJson['contains_valid_promotions'] = true;
         } else {
-            filterJson['contains_valid_promotions'] = '';
+            this._filterJson['contains_valid_promotions'] = '';
         }
 
         this.updateProducts();
@@ -175,9 +175,9 @@ class ShopProducts extends Component {
     selectCategory(e, id) { // Display the products in the specified category.
         e.preventDefault();
         if (id === null) {
-            delete filterJson['category_id'];
+            delete this._filterJson['category_id'];
         } else {
-            filterJson['category_id'] = id;
+            this._filterJson['category_id'] = id;
         }
 
         this.setState({
@@ -187,16 +187,16 @@ class ShopProducts extends Component {
     }
 
     priceChange() { // Display the products with a price comprised in a range.
-        filterJson['min_price'] = this.state.minPrice;
-        filterJson['max_price'] = this.state.maxPrice;
-        filterJson['start_index'] = 0;
+        this._filterJson['min_price'] = this.state.minPrice;
+        this._filterJson['max_price'] = this.state.maxPrice;
+        this._filterJson['start_index'] = 0;
         this.updateProducts();
     }
 
     changePage(e, page) { // Change the page.
         e.preventDefault();
         this._page = page;
-        filterJson['start_index'] = (page - 1) * defaultCount;
+        this._filterJson['start_index'] = (page - 1) * defaultCount;
         this.updateProducts();
     }
 
@@ -206,7 +206,7 @@ class ShopProducts extends Component {
             target: $(selected).data('target'),
             method: $(selected).data('method')
         };
-        filterJson.orders = [obj];
+        this._filterJson.orders = [obj];
         this.updateProducts();
     }
 
@@ -373,7 +373,7 @@ class ShopProducts extends Component {
                 case 'new-product-comment': // When a comment is removed or added => refresh the list.
                 case 'remove-product-comment':
                     if (payload.data.shop_id === shopId) {
-                      filterJson = $.extend({}, filterJson, {
+                      self._filterJson = $.extend({}, self._filterJson, {
                         start_index: 0
                       });
                       self.updateProducts();
@@ -381,7 +381,7 @@ class ShopProducts extends Component {
                     break;
                 case 'new-product': // When a product is added to the shop => refresh the list.
                   if (payload.data.shop_id === shopId) {
-                    filterJson = $.extend({}, filterJson, {
+                    self._filterJson = $.extend({}, self._filterJson, {
                       start_index: 0
                     });
                     self.updateProducts();
@@ -392,7 +392,7 @@ class ShopProducts extends Component {
         self.setState({
             isLoading: true
         });
-        filterJson['shop_id'] = shopId;
+        self._filterJson['shop_id'] = shopId;
         self.setState({
             isLoading: false,
             filters: filters

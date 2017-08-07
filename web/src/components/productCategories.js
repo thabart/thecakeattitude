@@ -43,7 +43,7 @@ class ProductCategories extends Component {
         shop_section_name: shelf.name,
         name: shelf.category_name,
         description: shelf.category_name,
-        id: shelf.id
+        id: shelf.category_id
       };
     });
   }
@@ -116,7 +116,7 @@ class ProductCategories extends Component {
 
             shelf.isSelected = false;
             shelf.category_name = value;
-            shelf.id = id;
+            shelf.category_id = id;
           });
           self.setState({
             shelves: shelves,

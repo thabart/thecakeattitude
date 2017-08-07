@@ -60,6 +60,7 @@ class Chooser extends window.Phaser.State {
 
     setCurrentShelf(shelfId) { // Select the shelf.
       var self = this;
+      console.log(shelfId);
       self.shelfSprites.map(function(shelf) { return shelf.sprite; }).forEach(function(s) { s.rect.alpha = 0.2 });
       var filtered = self.shelfSprites.filter(function(shelf) { return shelf.id === shelfId; }).map(function(shelf) { return shelf.sprite; });
       if (filtered && filtered.length > 0) {

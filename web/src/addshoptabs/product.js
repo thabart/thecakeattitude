@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Tooltip} from "reactstrap";
 import TagsInput from "react-tagsinput";
 import { translate } from 'react-i18next';
-import {ShopProductFilter, ProductCategories} from '../components';
+import { ShopProductFilter, ProductCategories } from '../components';
 
 class ProductForm extends Component {
   constructor(props) {
