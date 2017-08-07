@@ -397,8 +397,9 @@ class Shop extends Component {
                           <NavLink to={servicesUrl} className={action === 'services' ? 'nav-link active-nav-link' : 'nav-link'}>{t('services')}</NavLink>
                       </li>
                       <li className="nav-item">
-                          { this.state.isEditable && (<NavLink to={settingsUrl}
-                                                               className={action === 'settings' ? 'nav-link active' : 'nav-link'}>{t('settings')}</NavLink>) }
+                          { this.state.isEditable && (
+                            <NavLink to={settingsUrl} className={action === 'settings' ? 'nav-link active-nav-link' : 'nav-link'}>{t('settings')}</NavLink>)
+                          }
                       </li>
                   </ul>
                   <ul className="nav nav-pills menu-shop-options">

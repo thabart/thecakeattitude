@@ -201,5 +201,6 @@
   "editShopAddressTooltip": "Edit the shop address",
   "editShopContactInformationTooltip": "Edit the contact information",
   "editPaymentMethodsTooltip": "Edit the payment methods",
-  "shopProfile": "Profile"
+  "shopProfile": "Profile",
+  "filterSameNameError": "A characteristic with the same name has already been specified"
 }

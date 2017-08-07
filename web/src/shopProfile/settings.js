@@ -1,7 +1,8 @@
 import React, {Component} from "react";
-import {ShopProductFilter, ProductCategories} from "../components";
-import {ShopsService} from "../services/index";
-import {Tooltip} from "reactstrap";
+import { ShopProductFilter, ProductCategories } from "../components";
+import { ShopsService } from "../services/index";
+import { Tooltip } from "reactstrap";
+import { translate } from 'react-i18next';
 import AppDispatcher from "../appDispatcher";
 import NotificationSystem from 'react-notification-system';
 import Constants from '../../Constants';
@@ -24,76 +25,63 @@ class ShopSettings extends Component {
           });
         }
 
-        this.save = this.save.bind(this);
+        this.toggle = this.toggle.bind(this);
+        this.setProductCategories = this.setProductCategories.bind(this);
+        this.setProductFilters = this.setProductFilters.bind(this);
         this.state = {
-          tooltip:  {
-            toggleProductFilters: false
-          },
-          filters: filters,
+          toggleProductCategories: false, // Display tooltip
+          toggleProductFilters: false,
+          filters: filters, // Used in the view.
           productCategories: props.shop.product_categories
         };
     }
 
-    toggleTooltip(name) {
-        var tooltip = this.state.tooltip;
-        tooltip[name] = !tooltip[name];
+    toggle(name) { // Toggle the tooltip.
         this.setState({
-            tooltip: tooltip
+            [name]: !this.state[name]
         });
     }
 
-    save() {
-      var productCategories = this.refs.productCategories,
-        shopProductFilter = this.refs.shopProductFilter;
-      var categories = productCategories.getCategories(),
-        filters = shopProductFilter.getFilters().map(function(filter) {
-          return {
-            id: filter.externalId,
-            name: filter.name,
-            values: filter.tags
-          }
-        });
+    setProductCategories(value) { // Set product categories.
       AppDispatcher.dispatch({
-        actionName: Constants.events.UPDATE_SHOP_INFORMATION,
-        data: { product_categories: categories, filters: filters }
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
+        data: { product_categories: value }
       });
     }
 
-    render() {
+    setProductFilters(value) { // Set product filters.
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_SHOP_INFORMATION_ACT,
+        data: { filters: value }
+      });
+    }
+
+    render() { // Display the view.
         var self = this;
-        return (<div>
-          <section className="col-md-12 white-section shop-section shop-section-padding">
-            <p>
-              <b>Edit the filter and the categories of all your products.</b> <br/>
-              <i>Category</i> : <i>Women</i> or <i>Men</i><br/>
-              A <i>filter</i> is a common characteristic which can be assigned to your products for example : <i>Colors</i> or <i>Size</i>.
-            </p>
+        const {t} = this.props;
+        return (<div className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
+          <div className="col-md-12">
+            <p><i className="fa fa-exclamation-triangle txt-info"></i> {t('productAddShopDescription')}</p>
+            <p>{t('productAddShopReminder')}</p>
+            {/* Product categories */}
             <div className="form-group">
-              <label className="form-label">Product categories</label> <i className="fa fa-exclamation-circle" id="productCategories"></i>
-              <Tooltip placement="right" target="productCategories" isOpen={self.state.tooltip["toggleProductCategories"]} toggle={() => {
-                self.toggleTooltip("toggleProductCategories");
-              }}>
-                You can add 5 product categories (max)
+              <label className="form-label">{t('productCategories')}</label> <i className="fa fa-info-circle txt-info" id="productCategories"></i>
+              <Tooltip placement="right" className="red-tooltip-inner" target="productCategories" isOpen={this.state.toggleProductCategories} toggle={() => { this.toggle('toggleProductCategories'); }}>
+                  {t('maxEightProductCategories')}
               </Tooltip>
-              <ProductCategories ref="productCategories" categories={this.state.productCategories} />
+              <ProductCategories ref="productCategories" productCategories={self.state.productCategories} onChange={(cats) => this.setProductCategories(cats)} />
             </div>
+            {/* Product filters */}
             <div className="form-group">
-              <label className="form-label">Product filters</label> <i className="fa fa-exclamation-circle" id="productFilters"></i>
-              <Tooltip placement="right" target="productFilters" isOpen={self.state.tooltip["toggleProductFilters"]} toggle={() => {
-                self.toggleTooltip("toggleProductFilters");
-              }}>
-                Add product filters and their values
+              <label className="form-label">{t('productFilters')}</label> <i className="fa fa-info-circle txt-info" id="productFilters"></i>
+              <Tooltip placement="right" className="red-tooltip-inner" target="productFilters" isOpen={this.state.toggleProductFilters} toggle={() => { this.toggle('toggleProductFilters');}}>
+                  {t('characteristicsTooltip')}
               </Tooltip>
+              <ShopProductFilter ref="shopProductFilter" filters={this.state.filters} onChange={ (filters) => this.setProductFilters(filters) }/>
             </div>
-            <div className="form-group">
-              <ShopProductFilter ref="shopProductFilter" filters={this.state.filters} />
-            </div>
-            <div className="form-group">
-              <button className="btn btn-success" onClick={this.save}>Save</button>
-            </div>
-          </section>
+          </div>
         </div>);
     }
 }
 
-export default ShopSettings;
+export default translate('common', { wait: process && !process.release })(ShopSettings);

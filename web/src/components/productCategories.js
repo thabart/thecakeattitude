@@ -31,6 +31,10 @@ class ProductCategories extends Component {
     this.setState({
       shelves: self.state.shelves
     });
+
+    if (self.props.onChange) {
+      self.props.onChange(self.getCategories());
+    }
   }
 
   getCategories() { // Returns the categories.
@@ -74,7 +78,7 @@ class ProductCategories extends Component {
       self.state.shelves.forEach(function(shelf) {
         shelves.push((<li className={shelf.isSelected ? "list-group-item active" : "list-group-item"} data-id={shelf.id} onClick={() => { self.selectPlace(shelf.id); }}>
           <div className="col-md-4">{shelf.name}</div>
-          <div className="col-md-8"><input type="text" className="form-control" placeholder={t('enterProductCategoryNamePlaceHolder')} onChange={(e) => { self.handleInputChange(e, shelf.id); }} /></div>
+          <div className="col-md-8"><input type="text" className="form-control" placeholder={t('enterProductCategoryNamePlaceHolder')} value={shelf.category_name} onChange={(e) => { self.handleInputChange(e, shelf.id); }} /></div>
         </li>));
       });
     }
@@ -86,7 +90,6 @@ class ProductCategories extends Component {
           </ul>
         )}
       </div>
-      {/* <TagsInput value={this.state.tags} onChange={this.handleTags}  inputProps={{placeholder: "Category"}} renderTag={this.renderTag} maxTags={5} /> */}
       <div className="col-md-6">
         <ShelfChooser ref="shelfChooser" />
       </div>
@@ -101,7 +104,16 @@ class ProductCategories extends Component {
     self.refs.shelfChooser.display(
       {
         loadedCallback: function(shelves) {
-          shelves.forEach(function(shelf) { shelf.isSelected = false; });
+          shelves.forEach(function(shelf) {
+            var value = '';
+            var filteredProductCategories = self.props.productCategories.filter(function(cat) { return cat.shop_section_name === shelf.name; });
+            if (filteredProductCategories.length === 1) {
+              value = filteredProductCategories[0].name;
+            }
+
+            shelf.isSelected = false;
+            shelf.category_name = value;
+          });
           self.setState({
             shelves: shelves,
             isLoading: false

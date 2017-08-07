@@ -109,7 +109,7 @@
   "maxEightProductCategories": "Au maximum 8 catégories peuvent être spécifiées",
   "filterRowInfoTooltip": "Au moins un tag doit être spécifié et le nom doit être rempli",
   "enterProductCategoryNamePlaceHolder": "Rentrez le nom de la catégorie de produit ...",
-  "characteristicsTooltip": "Ajouter des caractéristiques de produit ainsi  produits ainsi que leurs valeurs",
+  "characteristicsTooltip": "Ajouter des caractéristiques aux produits",
   "shelf": "Rayon",
   "productCategoryName": "Nom de la catégorie de produit",
   "choosePaymentMethodDescription": "Choisir un ou plusieurs moyen(s) de paiement",
@@ -199,5 +199,6 @@
   "noTags": "Aucun tag",
   "editShopAddressTooltip": "Editer l'adresse du magasin",
   "editShopContactInformationTooltip": "Editer les informations de contact",
-  "editPaymentMethodsTooltip": "Editer les moyens de paiement"
+  "editPaymentMethodsTooltip": "Editer les moyens de paiement",
+  "filterSameNameError": "Une caractéristique du même nom a déjà été ajoutée"
 }

@@ -14,7 +14,7 @@ class ShopProductFilter extends Component {
     this.renderTag = this.renderTag.bind(this);
     this.state = {
       tooltip:  {},
-      filters: props.filters || []
+      filters: []
     };
   }
 
@@ -33,7 +33,8 @@ class ShopProductFilter extends Component {
       externalId: Guid.generate(),
       tags: [],
       name: '',
-      isNotComplete: true
+      isNotComplete: true,
+      isCorrect: false
     });
     this.setState({
       filters: filters
@@ -69,7 +70,9 @@ class ShopProductFilter extends Component {
   }
 
   getFilters() {
-    return this.state.filters;
+    return this.state.filters
+      .filter(function(f) { return !f.isNotComplete && f.isCorrect; })
+      .map(function(f) { return { id: f.externalId, name: f.name, values: f.tags }; });
   }
 
   renderTag(props) {
@@ -103,6 +106,10 @@ class ShopProductFilter extends Component {
             self.setState({
               filters: fs
             });
+
+            if (self.props.onChange) {
+              self.props.onChange(self.getFilters());
+            }
           }} /></div>
           <div className="col-md-6"><TagsInput value={filter.tags} onChange={(tags, changed, changedIndexes) => {
             var fs = self.state.filters.slice(0);
@@ -132,6 +139,10 @@ class ShopProductFilter extends Component {
             self.setState({
               filters: fs
             });
+
+            if (self.props.onChange) {
+              self.props.onChange(self.getFilters());
+            }
           }}   inputProps={{placeholder: t('filterValues')}} renderTag={self.renderTag} /></div>
           <div className="col-md-2"><button className="btn btn-outline-secondary btn-sm" data-target={filter.id} onClick={(e) => {
             var id = parseInt($(e.target).attr('data-target'));
@@ -154,16 +165,21 @@ class ShopProductFilter extends Component {
             }
 
             fs.splice(index, 1);
+            self.state.filters = fs;
             self.setState({
               filters: fs
             });
+
+            if (self.props.onChange) {
+              self.props.onChange(self.getFilters());
+            }
           }}><i className="fa fa-close" data-target={filter.id}></i></button>
            { filter.isCorrect === false && (<span>
-             <i className="fa fa-exclamation-triangle validation-error" id={"validationError_"+filter.id}></i>
+             <i className="fa fa-exclamation-triangle txt-info" id={"validationError_"+filter.id}></i>
              <Tooltip className="red-tooltip-inner" placement="right" target={"validationError_"+filter.id} isOpen={self.state.tooltip["validationError_"+filter.id]} toggle={() => {
                  self.toggleTooltip("validationError_"+filter.id);
              }}>
-              A filter with the same name has already been specified
+              {t('filterSameNameError')}
              </Tooltip>
            </span>) }
            { filter.isNotComplete && (<span>
@@ -183,6 +199,16 @@ class ShopProductFilter extends Component {
       <div className="col-md-12"><button className="btn btn-default" onClick={this.addFilterLine}><i className="fa fa-plus"></i> {t('addFilter')}</button></div>
       {filters}
     </div>);
+  }
+
+  componentWillMount() {
+    if (this.props.filters) {
+      var filters = this.props.filters;
+      filters.forEach(function(filter) { filter.isCorrect = true; filter.isNotComplete = false; });
+      this.setState({
+        filters: filters
+      });
+    }
   }
 }
 

@@ -37,14 +37,14 @@ class Chooser extends window.Phaser.State {
           spr.height = newHeight;
           var rect = self.game.add.graphics(newX, newY);
           rect.beginFill(0xe7272d);
-          rect.alpha = 0.5;
+          rect.alpha = 0.2;
           rect.drawRect(0, 0, newWidth, newHeight);
           rect.endFill();
           spr.rect = rect;
           // spr.rect.visible = false;
           spr.events.onInputDown.add(function () {
-            self.shelfSprites.map(function(shelf) { return shelf.sprite; }).forEach(function(s) { s.rect.alpha = 0.5 });
-            rect.alpha = 1;
+            self.shelfSprites.map(function(shelf) { return shelf.sprite; }).forEach(function(s) { s.rect.alpha = 0.2 });
+            rect.alpha = 0.5;
             if (self.opts.onShelfClick) {
               self.opts.onShelfClick(obj.id);
             }
@@ -60,10 +60,10 @@ class Chooser extends window.Phaser.State {
 
     setCurrentShelf(shelfId) { // Select the shelf.
       var self = this;
-      self.shelfSprites.map(function(shelf) { return shelf.sprite; }).forEach(function(s) { s.rect.alpha = 0.5 });
+      self.shelfSprites.map(function(shelf) { return shelf.sprite; }).forEach(function(s) { s.rect.alpha = 0.2 });
       var filtered = self.shelfSprites.filter(function(shelf) { return shelf.id === shelfId; }).map(function(shelf) { return shelf.sprite; });
       if (filtered && filtered.length > 0) {
-        filtered[0].rect.alpha = 1;
+        filtered[0].rect.alpha = 0.5;
       }
     }
 }

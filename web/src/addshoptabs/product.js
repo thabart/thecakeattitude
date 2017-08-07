@@ -101,7 +101,7 @@ class ProductForm extends Component {
             {/* Product categories */}
             <div className="form-group">
               <label className="form-label">{t('productCategories')}</label> <i className="fa fa-info-circle txt-info" id="productCategories"></i>
-              <Tooltip placement="right" target="productCategories" isOpen={this.state.tooltip.toggleProductCategories} toggle={() => { this.toggleTooltip('toggleProductCategories'); }}>
+              <Tooltip placement="right" className="red-tooltip-inner" target="productCategories" isOpen={this.state.tooltip.toggleProductCategories} toggle={() => { this.toggleTooltip('toggleProductCategories'); }}>
                   {t('maxEightProductCategories')}
               </Tooltip>
               <ProductCategories ref="productCategories" />
