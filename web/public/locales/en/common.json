@@ -129,7 +129,7 @@
   "incompleteAddShopRequestError": "The information are not complete",
   "addShopError": "An error occurred while trying to add the shop. Please contact the administrator",
   "add_comment": "A new comment has been added to one of your shop",
-  "create_shop_by_you": "A new shop has been added by you",
+  "create_shop": "A new shop has been added",
   "pendingNotifications": "{0} pending notifications",
   "viewAll": "View all",
   "yourNotifications": "Your notifications",
@@ -206,5 +206,6 @@
   "retrieveProductError": "An error occured while trying to retrieve the product, please contact the administrator",
   "general": "General",
   "noCharacteristic": "No characteristic",
-  "characteritics": "Characteritics"
+  "characteritics": "Characteritics",
+  "add_product_comment": "A comment has been added to one of your product"
 }

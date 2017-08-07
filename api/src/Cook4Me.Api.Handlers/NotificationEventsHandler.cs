@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.Notification;
+using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.Core.Repositories;
 using System;
@@ -24,23 +25,25 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class NotificationEventsHandler : Handles<ShopAddedEvent>
+    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>
     {
         private readonly INotificationRepository _notificationRepository;
+        private readonly IShopRepository _shopRepository;
         private readonly IEventPublisher _eventPublisher;
 
-        public NotificationEventsHandler(INotificationRepository notificationRepository, IEventPublisher eventPublisher)
+        public NotificationEventsHandler(INotificationRepository notificationRepository, IShopRepository shopRepository, IEventPublisher eventPublisher)
         {
             _notificationRepository = notificationRepository;
+            _shopRepository = shopRepository;
             _eventPublisher = eventPublisher;
         }
 
-        public async Task Handle(ShopAddedEvent message)
+        public async Task Handle(ShopAddedEvent message) // Notify the owner of the shop.
         {
             var notification = new NotificationAggregate
             {
                 Id = Guid.NewGuid().ToString(),
-                Content = "create_shop_by_you",
+                Content = "create_shop",
                 CreatedDateTime = DateTime.UtcNow,
                 IsRead = false,
                 From = message.Subject,
@@ -55,6 +58,39 @@ namespace Cook4Me.Api.Handlers
                     }
                 }
             };
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(ProductCommentAddedEvent message) // Notify the owner of the shop.
+        {
+            var shop = await _shopRepository.Get(message.ShopId);
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "add_product_comment",
+                IsRead = false,
+                From = message.Subject,
+                To = shop.Subject,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new []
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.ProductId,
+                        Value = message.ProductId
+                    }
+                }
+            };
+            
             await _notificationRepository.Add(notification);
             _eventPublisher.Publish(new NotificationAddedEvent
             {

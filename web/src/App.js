@@ -79,7 +79,7 @@ class App extends Component {
         });
         proxy.on('shopAdded', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'new-shop',
+                actionName: Constants.events.NEW_SHOP_ARRIVED,
                 data: message
             });
         });
@@ -97,13 +97,13 @@ class App extends Component {
         });
         proxy.on('productCommentAdded', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'new-product-comment',
+                actionName: Constants.events.NEW_PRODUCT_COMMENT_ARRIVED,
                 data: message
             });
         });
         proxy.on('productCommentRemoved', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'remove-product-comment',
+                actionName: Constants.events.REMOVE_PRODUCT_COMMENT_ARRIVED,
                 data: message
             });
         });

@@ -20,7 +20,8 @@ namespace Cook4Me.Api.Core.Aggregates
 {
     public enum NotificationParameterTypes
     {
-        ShopId
+        ShopId,
+        ProductId
     }
 
     public class NotificationParameter

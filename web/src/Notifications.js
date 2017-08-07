@@ -102,8 +102,11 @@ class Notifications extends Component {
           var link = '';
           if (notification.parameters) { // construct the link.
             var shopId = notification.parameters.filter(function(param) { return param.type === "shop_id"; }).map(function(param) { return param.value; });
+            var productId = notification.parameters.filter(function(param) { return param.type === "product_id"; }).map(function(param) { return param.value; });
             if (shopId && shopId.length === 1) {
               link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/shops/'+shopId[0]+'/view/profile')}></i>);
+            } else if (productId && productId.length === 1) {
+              link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/products/'+productId[0]+'/comments')}></i>);
             }
           }
 

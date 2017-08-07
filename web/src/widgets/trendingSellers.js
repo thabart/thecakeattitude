@@ -1,12 +1,13 @@
 import React, {Component} from "react";
-import {ShopsService} from "../services/index";
-import {NavLink} from "react-router-dom";
+import { ShopsService } from "../services/index";
+import { NavLink } from "react-router-dom";
+import { translate } from 'react-i18next';
+import { Button } from 'reactstrap';
+import Constants from '../../Constants';
 import Widget from "../components/widget";
 import Rater from "react-rater";
-import {Button} from 'reactstrap';
-import { translate } from 'react-i18next';
-import $ from "jquery";
 import AppDispatcher from "../appDispatcher";
+import $ from "jquery";
 
 class TrendingSellers extends Component {
     constructor(props) {
@@ -179,9 +180,9 @@ class TrendingSellers extends Component {
         var self = this;
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'new-shop':
-                case 'new-shop-comment':
-                case 'remove-shop-comment':
+                case Constants.events.NEW_SHOP_ARRIVED:
+                case Constants.events.NEW_SHOP_COMMENT_ARRIVED:
+                case Constants.events.REMOVE_SHOP_COMMENT_ARRIVED:
                     var request = $.extend({}, self.request, {
                         start_index: 0
                     });

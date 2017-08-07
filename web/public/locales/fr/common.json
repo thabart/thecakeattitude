@@ -126,7 +126,7 @@
   "incompleteAddShopRequestError": "Les informations ne sont pas complètes",
   "addShopError": "Le magasin n'a pas pu être ajouté. Veuillez prendre contact avec l'adminisrateur",
   "add_comment": "Un nouveau commentaire a été ajouté sur un magasin",
-  "create_shop_by_you": "Un nouveau magasin a été ouvert par vous",
+  "create_shop": "Un nouveau magasin a été ouvert",
   "pendingNotifications": "{0} notifications en attente",
   "viewAll": "Tout voir",
   "yourNotifications": "Vos notifications",
@@ -204,5 +204,6 @@
   "retrieveProductError": "Une erreur est survenue lors de la récupération du produit, veuillez prendre contact avec l'administrateur",
   "general": "Générale",
   "noCharacteristic": "Aucun caractéristique",
-  "characteritics": "Caractéristiques"
+  "characteritics": "Caractéristiques",
+  "add_product_comment": "Un commentaire a été ajouté à l'un de vos produits"
 }

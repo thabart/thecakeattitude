@@ -4,6 +4,7 @@ import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ProductsService, ShopsService } from "./services/index";
 import { DescriptionTab, ProductComment } from "./productabs";
+import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
 import Constants from "../Constants";
 import Rater from "react-rater";
@@ -14,6 +15,7 @@ import classnames from "classnames";
 class Products extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.toggleError = this.toggleError.bind(this);
         this.changeImage = this.changeImage.bind(this);
         this.refresh = this.refresh.bind(this);
@@ -128,7 +130,7 @@ class Products extends Component {
         }
 
         if (action === "comments") {
-            content = (<ProductComment product={self.state.product} onRefreshScore={self.refreshScore}/>);
+            content = (<ProductComment product={self.state.product} />);
         } else {
             content = (<DescriptionTab product={self.state.product} shop={self.state.shop}/>);
             action = "general";
@@ -256,6 +258,21 @@ class Products extends Component {
 
     componentWillMount() { // Execute after the render.
         this.refresh();
+        var self = this;
+        self._waitForToken = AppDispatcher.register(function (payload) {
+          switch (payload.actionName) {
+            case Constants.events.NEW_PRODUCT_COMMENT_ARRIVED:
+            case Constants.events.REMOVE_PRODUCT_COMMENT_ARRIVED:
+              if (payload && payload.data && payload.data.product_id == self.state.product.id) {
+                  self.refreshScore(payload.data);
+                }
+                break;
+            }
+        });
+    }
+
+    componentWillUnmount() { // Remove listener.
+        AppDispatcher.unregister(this._waitForToken);
     }
 }
 

@@ -294,7 +294,7 @@ class CommentLst extends Component {
         <div className="col-md-12"><Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert></div>
         {this.state.isCommentsLoading ?
           (<div className="col-md-12"><i className='fa fa-spinner fa-spin'></i></div>) :
-          comments.length == 0 ? (<span>{t('noComment')}</span>) :
+          comments.length == 0 ? (<div className="col-md-12"><i><span>{t('noComment')}</span></i></div>) :
           (<div className="col-md-12">
             <div className="col-md-12">
               <ul className="pagination">

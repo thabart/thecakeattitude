@@ -182,8 +182,8 @@ class BestDeals extends Component {
         var self = this;
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'new-product-comment':
-                case 'remove-product-comment':
+                case Constants.events.NEW_PRODUCT_COMMENT_ARRIVED:
+                case Constants.events.REMOVE_PRODUCT_COMMENT_ARRIVED:
                     var request = $.extend({}, self.request, {
                         start_index: 0
                     });

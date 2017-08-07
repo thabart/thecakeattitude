@@ -14,17 +14,17 @@ import {
     ModalHeader,
     ModalBody
 } from "reactstrap";
-import {NavLink} from "react-router-dom";
-import {withRouter} from "react-router";
 import Promise from "bluebird";
-import {OpenIdService, AuthenticateService, SessionService, NotificationService, UserService} from "./services/index";
+import { NavLink } from "react-router-dom";
+import { withRouter } from "react-router";
+import { OpenIdService, AuthenticateService, SessionService, NotificationService, UserService } from "./services/index";
+import { translate } from 'react-i18next';
+import { Guid } from './utils/index';
+import { ApplicationStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import moment from 'moment';
 import Constants from '../Constants';
-import { translate } from 'react-i18next';
 import i18n from './i18n';
-import {Guid} from './utils/index';
-import {ApplicationStore} from './stores/index';
 import "./styles/header.css";
 
 class Header extends Component {
@@ -288,8 +288,11 @@ class Header extends Component {
               var link = '';
               if (notification.parameters) { // construct the link.
                 var shopId = notification.parameters.filter(function(param) { return param.type === "shop_id"; }).map(function(param) { return param.value; });
+                var productId = notification.parameters.filter(function(param) { return param.type === "product_id"; }).map(function(param) { return param.value; });
                 if (shopId && shopId.length === 1) {
                   link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/shops/'+shopId[0]+'/view/profile')}></i>);
+                } else if (productId && productId.length === 1) {
+                  link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/products/'+productId[0]+'/comments')}></i>);
                 }
               }
 
