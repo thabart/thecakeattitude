@@ -202,5 +202,9 @@
   "editShopContactInformationTooltip": "Edit the contact information",
   "editPaymentMethodsTooltip": "Edit the payment methods",
   "shopProfile": "Profile",
-  "filterSameNameError": "A characteristic with the same name has already been specified"
+  "filterSameNameError": "A characteristic with the same name has already been specified",
+  "retrieveProductError": "An error occured while trying to retrieve the product, please contact the administrator",
+  "general": "General",
+  "noCharacteristic": "No characteristic",
+  "characteritics": "Characteritics"
 }

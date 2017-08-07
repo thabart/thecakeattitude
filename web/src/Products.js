@@ -1,12 +1,13 @@
 import React, {Component} from "react";
-import {Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem} from "reactstrap";
-import Rater from "react-rater";
-import {withRouter} from "react-router";
+import { Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { withRouter } from "react-router";
+import { translate } from 'react-i18next';
+import { ProductsService, ShopsService } from "./services/index";
+import { DescriptionTab, ProductComment } from "./productabs";
+import MainLayout from './MainLayout';
 import Constants from "../Constants";
+import Rater from "react-rater";
 import Magnify from "react-magnify";
-import "react-magnify/lib/react-magnify.css";
-import {ProductsService, ShopsService} from "./services/index";
-import {DescriptionTab, ProductComment} from "./productabs";
 import $ from "jquery";
 import classnames from "classnames";
 
@@ -28,7 +29,7 @@ class Products extends Component {
         };
     }
 
-    refreshScore(data) {
+    refreshScore(data) { // Refresht the score.
         var product = this.state.product;
         product['average_score'] = data['average_score'];
         product['nb_comments'] = data['nb_comments'];
@@ -40,11 +41,12 @@ class Products extends Component {
         });
     }
 
-    refresh() {
+    refresh() { // Refresh the product.
         var self = this;
         self.setState({
             isLoading: true
         });
+        const {t} = this.props;
         ProductsService.get(this.props.match.params.id).then(function (r) {
             var product = r['_embedded'];
             ShopsService.get(product.shop_id).then(function(sr) {
@@ -55,25 +57,25 @@ class Products extends Component {
               });
             }).catch(function() {
                 self.setState({
-                    errorMessage: "An error occured while trying to retrieve the product",
+                    errorMessage: t('retrieveProductError'),
                     isLoading: false
                 });
             });
         }).catch(function () {
             self.setState({
-                errorMessage: "An error occured while trying to retrieve the product",
+                errorMessage: t('retrieveProductError'),
                 isLoading: false
             });
         });
     }
 
-    toggleError() {
+    toggleError() { // Toggle the error message.
         this.setState({
             errorMessage: null
         });
     }
 
-    changeImage(e) {
+    changeImage(e) { // Change the current image.
         e.preventDefault();
         var indice = $(e.target).data('id');
         this.setState({
@@ -81,29 +83,35 @@ class Products extends Component {
         });
     }
 
-    // Navigate to the shop
-    navigateShop(e, shopId) {
+    navigateShop(e, shopId) { // Navigate to the shop.
         e.preventDefault();
         this.props.history.push('/shops/' + shopId + '/view/profile');
     }
 
-    navigateGeneral(e) {
+    navigateGeneral(e) { // Navigate to the general tab.
         this.props.history.push('/products/' + this.state.product.id);
     }
 
-    navigateComments(e) {
+    navigateComments(e) { // Navigate to the comments tab.
         this.props.history.push('/products/' + this.state.product.id + '/comments');
     }
 
-    render() {
+    render() { // Display the view.
+        const {t} = this.props;
         if (this.state.isLoading) {
-            return (<div className="container">Loading ...</div>);
+            return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+                <div className="container">
+                  <i className='fa fa-spinner fa-spin'></i>
+                </div>
+            </MainLayout>);
         }
 
         if (this.state.errorMessage !== null) {
-            return (<div className="container"><Alert color="danger" isOpen={this.state.errorMessage !== null}
-                                                      toggle={this.toggleError}>{this.state.errorMessage}</Alert>
-            </div>);
+            return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+              <div className="container">
+                <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+              </div>
+          </MainLayout>);
         }
 
         var newPrice = null,
@@ -122,7 +130,7 @@ class Products extends Component {
         if (action === "comments") {
             content = (<ProductComment product={self.state.product} onRefreshScore={self.refreshScore}/>);
         } else {
-            content = (<DescriptionTab product={self.state.product}/>);
+            content = (<DescriptionTab product={self.state.product} shop={self.state.shop}/>);
             action = "general";
         }
 
@@ -150,106 +158,105 @@ class Products extends Component {
         }
 
         return (
-
+          <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
-                <Breadcrumb>
-                    <BreadcrumbItem>
-                        <a href="#"
-                           onClick={(e) => {
-                               self.navigateShop(e, this.state.shop.id);
-                           }}>
-                            {this.state.shop.name}
-                        </a>
-                    </BreadcrumbItem>
-                    <BreadcrumbItem active>{this.state.product.name}</BreadcrumbItem>
-                </Breadcrumb>
-                <section className="white-section">
-                    <div className="row col-md-12 m-2">
-                        <div className="col-md-8 p-1">
-                            <div className="row p-1">
-                                <div className="col-md-12">
-                                    <h3>{this.state.product.name}</h3>
-                                    <div>
-                                        <div>
-                                            <Rater total={5} ref="score" rating={this.state.product.average_score}
-                                                   interactive={false}/>
-                                            <b> {this.state.product.average_score} </b>
-                                        </div>
-                                        <span>Comments ({this.state.product.nb_comments})</span>
-                                    </div>
-                                </div>
+                <section className="section" style={{paddingBottom: "20px"}}>
+                    <Breadcrumb>
+                        <BreadcrumbItem>
+                            <a href="#" className="no-decoration red" onClick={(e) => { self.navigateShop(e, this.state.shop.id);}}>
+                                {this.state.shop.name}
+                            </a>
+                        </BreadcrumbItem>
+                        <BreadcrumbItem active>{this.state.product.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="row">
+                        { /* Left side */ }
+                        <div className="col-md-8">
+                          <div style={{paddingLeft: "10px"}}>
+                            { /* Header */ }
+                            <div>
+                              <h3>{this.state.product.name}</h3>
+                              <div>
+                                <Rater total={5} ref="score" rating={this.state.product.average_score} interactive={false}/>
+                                <b> {this.state.product.average_score} </b>
+                              </div>
+                              <span>{t('comments')} ({this.state.product.nb_comments})</span>
                             </div>
-                            <div className="row p-1">
-                                {tags.length > 0 && (
-                                    <ul className="col-md-12 tags gray">
+                            { /* Tags */ }
+                            <div>
+                                {tags.length > 0 ? (
+                                    <ul className="col-md-12 tags gray" style={{padding: "0"}}>
                                         {tags}
                                     </ul>)
-                                }
+                                 : (<span><i>{t('noTags')}</i></span>)}
                             </div>
+                            { /* Images */ }
                             {images.length > 0 && (
-                                <div className="row p-1">
+                                <div className="row" style={{paddingTop: "10px"}}>
                                     <ul className="col-md-3 no-style no-margin image-selector">
                                         {images}
                                     </ul>
-                                    <div className={newPrice == null ? "col-md-9" : "col-md-9"}>
-                                        <Magnify style={{
-                                            width: '433px',
-                                            height: '433px'
-                                        }} src={currentImageSrc}></Magnify>
+                                    <div className="col-md-9">
+                                        <Magnify style={{ width: '433px', height: '433px'}} src={currentImageSrc}></Magnify>
                                     </div>
                                 </div>)
                             }
-                            <div className="row p-1">
-                                <Nav tabs className="col-md-12">
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({active: action === 'general'})}
-                                            onClick={() => {
-                                                this.navigateGeneral();
-                                            }}
-                                        >
-                                            General
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({active: action === 'comments'})}
-                                            onClick={() => {
-                                                this.navigateComments();
-                                            }}
-                                        >
-                                            Comments
-                                        </NavLink>
-                                    </NavItem>
-                                </Nav>
-                                <div className="col-md-12">
-                                    {content}
-                                </div>
-                            </div>
+                          </div>
                         </div>
-                        <div className="col-md-4 p-1">
+                        { /* Right side */ }
+                        <div className="col-md-4">
                             {newPrice == null ? (
                                 <h4 className="price">€ {this.state.product.price}</h4>) : (
                                 <div>
                                     <h4 className="inline">
-                                        <Badge
-                                            color="success"><strike>€ {this.state.product.price}</strike><i
-                                            className="ml-1">-{promotion.discount}%</i></Badge>
+                                        <Badge color="success">
+                                          <strike style={{color: "white"}}>€ {this.state.product.price}</strike>
+                                          <i style={{color: "white"}} className="ml-1">-{promotion.discount}%</i>
+                                        </Badge>
                                     </h4>
                                     <h4 className="inline ml-1">€ {newPrice}</h4>
                                 </div>
                             )}
-                            <button className="btn btn-info">BUY</button>
+                            <button className="btn btn-default">{t('addToCart')}</button>
                         </div>
+                    </div>
+                    { /* Tab content */ }
+                    <div>
+                      <Nav tabs style={{paddingLeft: "10px"}}>
+                              <NavItem>
+                                  <NavLink
+                                      className={classnames({active: action === 'general'})}
+                                      onClick={() => {
+                                          this.navigateGeneral();
+                                      }}
+                                  >
+                                      {t('general')}
+                                  </NavLink>
+                              </NavItem>
+                              <NavItem>
+                                  <NavLink
+                                      className={classnames({active: action === 'comments'})}
+                                      onClick={() => {
+                                          this.navigateComments();
+                                      }}
+                                  >
+                                      {t('comments')}
+                                  </NavLink>
+                              </NavItem>
+                      </Nav>
+                      <div style={{paddingLeft: "10px", paddingTop: "10px"}}>
+                        {content}
+                      </div>
                     </div>
                 </section>
             </div>
+          </MainLayout>
         );
     }
 
-    componentWillMount() {
+    componentWillMount() { // Execute after the render.
         this.refresh();
     }
 }
 
-export default withRouter(Products);
+export default translate('common', { wait: process && !process.release })(withRouter(Products));

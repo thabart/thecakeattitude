@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import { translate } from 'react-i18next';
 
 class DescriptionTab extends Component {
     constructor(props) {
@@ -6,6 +7,8 @@ class DescriptionTab extends Component {
     }
 
     render() {
+        const {t} = this.props;
+        var self = this;
         var characteristics = [];
         if (this.props.product.filters) {
             var groupedFilters = {};
@@ -27,17 +30,27 @@ class DescriptionTab extends Component {
             }
         }
 
+        var productCategory = t('unknown')
+        var filteredProductCategories = this.props.shop.product_categories.filter(function(c) { return c.id === self.props.product.category_id });
+        if (filteredProductCategories && filteredProductCategories.length === 1) {
+          productCategory = filteredProductCategories[0].name;
+        }
+
         return (
             <div className="row">
-                <h5 className="col-md-12 title">Description</h5>
+                <h5 className="col-md-12">{t('description')}</h5>
                 <p className="col-md-12">
                     {this.props.product.description}
                 </p>
-                <h5 className="col-md-12 title">Characteristics</h5>
-                {characteristics.length === 0 ? (<span>No characteristics</span>) : (
+                <h5 className="col-md-12">{t('category')}</h5>
+                <p className="col-md-12">
+                  {productCategory}
+                </p>
+                <h5 className="col-md-12">{t('characteritics')}</h5>
+                {characteristics.length === 0 ? (<span><i>{t('noCharacteristic')}</i></span>) : (
                     <table className="table table-striped">
                         <tbody>
-                        {characteristics}
+                          {characteristics}
                         </tbody>
                     </table>
                 )}
@@ -46,4 +59,4 @@ class DescriptionTab extends Component {
     }
 }
 
-export default DescriptionTab;
+export default translate('common', { wait: process && !process.release })(DescriptionTab);

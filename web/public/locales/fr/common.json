@@ -200,5 +200,9 @@
   "editShopAddressTooltip": "Editer l'adresse du magasin",
   "editShopContactInformationTooltip": "Editer les informations de contact",
   "editPaymentMethodsTooltip": "Editer les moyens de paiement",
-  "filterSameNameError": "Une caractéristique du même nom a déjà été ajoutée"
+  "filterSameNameError": "Une caractéristique du même nom a déjà été ajoutée",
+  "retrieveProductError": "Une erreur est survenue lors de la récupération du produit, veuillez prendre contact avec l'administrateur",
+  "general": "Générale",
+  "noCharacteristic": "Aucun caractéristique",
+  "characteritics": "Caractéristiques"
 }

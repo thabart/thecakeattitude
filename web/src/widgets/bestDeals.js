@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import {ProductsService} from "../services/index";
-import Rater from "react-rater";
+import React, { Component } from "react";
+import { ProductsService } from "../services/index";
+import { Button, Badge } from 'reactstrap';
+import { translate } from 'react-i18next';
 import Widget from "../components/widget";
 import Constants from "../../Constants";
-import {Button} from 'reactstrap';
-import $ from "jquery";
-import { translate } from 'react-i18next';
 import AppDispatcher from "../appDispatcher";
+import Rater from "react-rater";
+import $ from "jquery";
 
 class BestDeals extends Component {
     constructor(props) {
@@ -23,20 +23,18 @@ class BestDeals extends Component {
         };
     }
 
-    localize(e, product) {
+    localize(e, product) { // Set the current marker.
       e.preventDefault();
       e.stopPropagation();
       this.props.setCurrentMarker(product.shop_id);
     }
 
-    // Navigate to the product page
-    navigateProduct(e, id) {
+    navigateProduct(e, id) { // Navigate to the product page
         e.preventDefault();
         this.props.history.push('/products/' + id);
     }
 
-    // Navigate through the pages
-    navigate(e, name) {
+    navigate(e, name) {   // Navigate through the pages
         e.preventDefault();
         var startIndex = name - 1;
         var request = $.extend({}, this.request, {
@@ -45,8 +43,7 @@ class BestDeals extends Component {
         this.display(request);
     }
 
-    // Refresh
-    refresh(json) {
+    refresh(json) { // Refresh
         var request = $.extend({}, json, {
             orders: [
                 {target: "update_datetime", method: "desc"}
@@ -58,15 +55,14 @@ class BestDeals extends Component {
         this.display(request);
     }
 
-    reset() {
+    reset() { // Reset the products.
       this.setState({
         products: [],
         navigation: []
       });
     }
 
-    // Display the list
-    display(request) {
+    display(request) {   // Display the list
         var self = this;
         self.setState({
             isLoading: true
@@ -95,12 +91,11 @@ class BestDeals extends Component {
         });
     }
 
-    enableMove(b) {
+    enableMove(b) { // Enable widget movement.
       this.refs.widget.enableMove(b);
     }
 
-    // Render the view
-    render() {
+    render() {   // Render the view
       const {t} = this.props;
         var title = t('bestDealsWidgetTitle'),
             content = [],
@@ -134,11 +129,15 @@ class BestDeals extends Component {
                        <div className="second-column">
                            <div>{product.name}</div>
                            <Rater total={5} rating={product.average_score} interactive={false}/>
-                           <p>
-                               <h5 className="price inline"><strike>€ {product.price}</strike></h5>
-                               (<i>-{firstPromotion.discount}%</i>)
-                               <h5 className="price inline">€ {product.new_price}</h5>
-                           </p>
+                           <div>
+                               <h5 className="inline">
+                                   <Badge color="success">
+                                     <strike style={{color: "white"}}>€ {product.price}</strike>
+                                     <i style={{color: "white"}} className="ml-1">-{firstPromotion.discount}%</i>
+                                   </Badge>
+                               </h5>
+                               <h5 className="inline ml-1">€ {product.new_price}</h5>
+                           </div>
                        </div>
                        <div className="last-column">
                         <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, product); }}>
@@ -179,7 +178,7 @@ class BestDeals extends Component {
         );
     }
 
-    componentDidMount() {
+    componentDidMount() { // Execute before the render.
         var self = this;
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
@@ -194,7 +193,7 @@ class BestDeals extends Component {
         });
     }
 
-    componentWillUnmount() {
+    componentWillUnmount() { // Unregister the events.
       AppDispatcher.unregister(this._waitForToken);
     }
 }

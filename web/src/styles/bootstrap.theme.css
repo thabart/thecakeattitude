@@ -280,3 +280,9 @@ ul.list-group-default li:first-child {
 .pagination .page-link{
   color: black;
 }
+
+/* Breadcrumb */
+.breadcrumb {
+  border-radius: 0 !important;
+  border: none !important;
+}
