@@ -64,6 +64,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<UpdateNotificationCommand>(notificationCommandHandler.Handle);
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);
+            bus.RegisterHandler<ShopCommentAddedEvent>(notificationEventsHandler.Handle);
             return serviceCollection;
         }
     }

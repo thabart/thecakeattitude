@@ -125,7 +125,7 @@
   "notValidPaypalAccountError": "L'adresse du compte paypal n'est pas une adresse email valide",
   "incompleteAddShopRequestError": "Les informations ne sont pas complètes",
   "addShopError": "Le magasin n'a pas pu être ajouté. Veuillez prendre contact avec l'adminisrateur",
-  "add_comment": "Un nouveau commentaire a été ajouté sur un magasin",
+  "add_shop_comment": "Un nouveau commentaire a été ajouté sur un magasin",
   "create_shop": "Un nouveau magasin a été ouvert",
   "pendingNotifications": "{0} notifications en attente",
   "viewAll": "Tout voir",

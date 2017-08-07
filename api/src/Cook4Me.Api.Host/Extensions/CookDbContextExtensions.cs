@@ -879,7 +879,7 @@ namespace Cook4Me.Api.Host.Extensions
                 new Notification
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "add_comment",
+                    Content = "add_shop_comment",
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
                     From = "administrator",
@@ -888,7 +888,7 @@ namespace Cook4Me.Api.Host.Extensions
                 new Notification
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "add_comment",
+                    Content = "add_shop_comment",
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
                     From = "administrator",
@@ -897,7 +897,7 @@ namespace Cook4Me.Api.Host.Extensions
                 new Notification
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "add_comment",
+                    Content = "add_shop_comment",
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
                     From = "administrator",
@@ -906,7 +906,7 @@ namespace Cook4Me.Api.Host.Extensions
                 new Notification
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "add_comment",
+                    Content = "add_shop_comment",
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
                     From = "administrator",
@@ -915,7 +915,7 @@ namespace Cook4Me.Api.Host.Extensions
                 new Notification
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "add_comment",
+                    Content = "add_shop_comment",
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
                     From = "administrator",
@@ -924,19 +924,19 @@ namespace Cook4Me.Api.Host.Extensions
                 new Notification
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "add_comment",
+                    Content = "add_shop_comment",
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
-                    From = "administrator",
+                    From = "laetitia",
                     To = "administrator"
                 },
                 new Notification
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "add_comment",
+                    Content = "add_shop_comment",
                     CreatedDateTime = DateTime.UtcNow,
                     IsRead = false,
-                    From = "administrator",
+                    From = "laetitia",
                     To = "administrator"
                 }
             });

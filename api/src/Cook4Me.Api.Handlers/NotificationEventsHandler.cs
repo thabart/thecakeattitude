@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>
+    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IShopRepository _shopRepository;
@@ -91,6 +91,39 @@ namespace Cook4Me.Api.Handlers
                 }
             };
             
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(ShopCommentAddedEvent message) // Notify the owner of the shop.
+        {
+            var shop = await _shopRepository.Get(message.ShopId);
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "add_shop_comment",
+                IsRead = false,
+                From = message.Subject,
+                To = shop.Subject,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.ShopId,
+                        Value = message.ShopId
+                    }
+                }
+            };
+
             await _notificationRepository.Add(notification);
             _eventPublisher.Publish(new NotificationAddedEvent
             {
