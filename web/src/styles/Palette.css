@@ -76,7 +76,8 @@ h2 {
 .red-theme .pagination .page-link:hover,
 .red-theme .react-tagsinput-tag,
 .red-theme .breadcrumb,
-.red-theme .table-striped tbody tr:nth-of-type(odd) {
+.red-theme .table-striped tbody tr:nth-of-type(odd),
+.red-theme .react-datepicker__header {
   background-color: rgba(231, 39, 45, 0.22) !important;
 }
 
@@ -150,7 +151,8 @@ h2 {
   background-color: transparent !important;
 }
 
-.progress-bar {
+.progress-bar,
+.red-theme .react-datepicker__day--selected {
   background-color: #e7272d !important;
 }
 

@@ -1,0 +1,8 @@
+.react-datepicker__header {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.react-datepicker {
+  border-radius: 0 !important;
+}

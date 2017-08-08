@@ -33,6 +33,7 @@ import "./styles/formTab.css";
 import './styles/tags.css';
 import './styles/section.css';
 import './styles/image-selector.css';
+import './styles/datePicker.css';
 import "bootstrap/dist/css/bootstrap.css";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";

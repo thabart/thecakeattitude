@@ -1,11 +1,11 @@
 import React, {Component} from "react";
 import { Range } from "rc-slider";
 import { NavLink } from "react-router-dom";
-import { Alert } from "reactstrap";
+import { Alert, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import { ShopServices } from "../../services/index";
+import { SelectDate } from '../../components/index';
 import { translate } from 'react-i18next';
 import ServiceElt from '../serviceElt';
-import DatePicker from "react-datepicker";
 import Rater from "react-rater";
 import moment from "moment";
 import Constants from "../../../Constants";
@@ -27,7 +27,7 @@ class List extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.changeOrder = this.changeOrder.bind(this);
         this.state = {
-            startDate: moment().subtract(10, 'days'),
+            startDate: moment(),
             endDate: moment(),
             errorMessage: null,
             services: [],
@@ -143,7 +143,7 @@ class List extends Component {
         }
 
         return (
-            <div>
+            <div className="col-md-12">
                 { this.state.errorMessage !== null && (
                   <Alert color="danger col-md-12" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>)
                 }
@@ -153,29 +153,15 @@ class List extends Component {
                             e.preventDefault();
                             this.search();
                         }}>
+                            { /* Service name */ }
                             <div className="form-group">
                                 <label>{t('serviceName')}</label>
                                 <input type="text" className="form-control" name='serviceName' onChange={this.handleInputChange}/>
                             </div>
+                            { /* Select date */ }
                             <div className="form-group">
-                                <label>{t('period')}</label>
-                                <DatePicker
-                                    selected={this.state.startDate}
-                                    selectsStart
-                                    startDate={this.state.startDate}
-                                    endDate={this.state.endDate}
-                                    onChange={this.handleChangeStart}
-                                    className="form-control"
-                                    placeholderText="Start date"
-                                />
-                                <DatePicker selected={this.state.endDate}
-                                            selectsEnd
-                                            startDate={this.state.startDate}
-                                            endDate={this.state.endDate}
-                                            onChange={this.handleChangeEnd}
-                                            className="form-control"
-                                            placeholderText="End date"
-                                />
+                              <label>Date</label>
+                              <SelectDate />
                             </div>
                             <div className="form-group">
                                 <button className="btn btn-default" onClick={this.search}>{t('search')}</button>

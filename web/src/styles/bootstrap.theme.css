@@ -262,6 +262,10 @@ ul.list-group-default li:first-child {
   content: '';
 }
 
+.dropdown-menu.no-arrow:before {
+  border: none !important;
+}
+
 .dropdown-menu {
   border-radius: 0 !important;
   padding: 0 !important;

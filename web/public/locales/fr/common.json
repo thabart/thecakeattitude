@@ -212,5 +212,8 @@
   "occurrence": "Occurrence",
   "days": "Jours",
   "fromToHours": "De {0} à {1}",
-  "add_service_comment": "Un commentaire a été ajouté sur l'un de vos services"
+  "add_service_comment": "Un commentaire a été ajouté sur l'un de vos services",
+  "today": "Aujourd'hui",
+  "tomorrow": "Demain",
+  "chooseDate": "Choisissez une date ..."
 }

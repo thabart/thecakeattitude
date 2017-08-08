@@ -11,6 +11,7 @@ import TagsSelector from './tagsSelector';
 import ShopProductFilter from './shopProductFilter';
 import ProductCategories from './productCategories';
 import ImagesUploader from './imagesUploader';
+import SelectDate from './selectDate';
 
 exports.CommentLst = CommentLst;
 exports.EditableText = EditableText;
@@ -25,3 +26,4 @@ exports.TagsSelector = TagsSelector;
 exports.ShopProductFilter = ShopProductFilter;
 exports.ProductCategories = ProductCategories;
 exports.ImagesUploader = ImagesUploader;
+exports.SelectDate = SelectDate;
