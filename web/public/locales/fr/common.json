@@ -205,5 +205,11 @@
   "general": "Générale",
   "noCharacteristic": "Aucun caractéristique",
   "characteritics": "Caractéristiques",
-  "add_product_comment": "Un commentaire a été ajouté à l'un de vos produits"
+  "add_product_comment": "Un commentaire a été ajouté à l'un de vos produits",
+  "errorRetrieveService": "Une erreur est survenue lors de la récupération du service, veuillez prendre contact avec l'administrateur",
+  "contactTheShop": "Contacter le magasin",
+  "viewCalendar": "Voir le calendrier",
+  "occurrence": "Occurrence",
+  "days": "Jours",
+  "fromToHours": "De {0} à {1}"
 }

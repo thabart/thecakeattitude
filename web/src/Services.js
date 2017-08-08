@@ -1,10 +1,13 @@
 import React, {Component} from "react";
+import { CommentTab, DescriptionTab } from "./servicetabs";
+import { ShopServices, ShopsService } from "./services/index";
+import { TabContent, TabPane, Nav, NavItem, NavLink, Alert, Badge, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { withRouter } from "react-router";
+import { translate } from 'react-i18next';
+import AppDispatcher from "./appDispatcher";
 import Rater from "react-rater";
+import MainLayout from './MainLayout';
 import Magnify from "react-magnify";
-import {CommentTab, DescriptionTab} from "./servicetabs";
-import {ShopServices, ShopsService} from "./services/index";
-import {TabContent, TabPane, Nav, NavItem, NavLink, Alert, Badge, Breadcrumb, BreadcrumbItem} from "reactstrap";
-import {withRouter} from "react-router";
 import Constants from "../Constants";
 import $ from "jquery";
 import classnames from "classnames";
@@ -12,6 +15,7 @@ import classnames from "classnames";
 class Services extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.toggleError = this.toggleError.bind(this);
         this.changeImage = this.changeImage.bind(this);
         this.navigateGeneral = this.navigateGeneral.bind(this);
@@ -26,7 +30,7 @@ class Services extends Component {
         };
     }
 
-    refreshScore(data) {
+    refreshScore(data) { // Refresh the score.
         var service = this.state.service;
         service['average_score'] = data['average_score'];
         service['nb_comments'] = data['nb_comments'];
@@ -38,7 +42,7 @@ class Services extends Component {
         });
     }
 
-    changeImage(e) {
+    changeImage(e) { // Change the image.
         e.preventDefault();
         var indice = $(e.target).data('id');
         this.setState({
@@ -46,17 +50,18 @@ class Services extends Component {
         });
     }
 
-    toggleError() {
+    toggleError() { // Toggle error message.
         this.setState({
             errorMessage: null
         });
     }
 
-    refresh() {
+    refresh() { // Refresh the service.
         var self = this;
         self.setState({
             isLoading: true
         });
+        const {t} = this.props;
         ShopServices.get(this.props.match.params.id).then(function (r) {
             var service = r['_embedded'];
             ShopsService.get(service.shop_id).then(function(sr) {
@@ -68,43 +73,49 @@ class Services extends Component {
             })
             .catch(function() {
               self.setState({
-                errorMessage: 'An error occured while trying to retrieve the service',
+                errorMessage: t('errorRetrieveService'),
                 isLoading: false
               });
             });
         }).catch(function () {
             self.setState({
-                errorMessage: 'An error occured while trying to retrieve the service',
+                errorMessage: t('errorRetrieveService'),
                 isLoading: false
             });
         });
     }
 
-    // Navigate to the shop
-    navigateShop(e, shopId) {
+    navigateShop(e, shopId) { // Navigate to the shop.
         e.preventDefault();
         this.props.history.push('/shops/' + shopId + '/view/profile');
     }
 
-    navigateGeneral(e) {
+    navigateGeneral(e) { // Display general tab.
         this.props.history.push('/services/' + this.state.service.id);
     }
 
-    navigateComments(e) {
+    navigateComments(e) { // Display comments tab.
         this.props.history.push('/services/' + this.state.service.id + '/comments');
     }
 
     render() {
         if (this.state.isLoading) {
-            return (<div className="container">Loading ...</div>);
+            return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+                <div className="container">
+                  <i className='fa fa-spinner fa-spin'></i>
+                </div>
+            </MainLayout>);
         }
 
         if (this.state.errorMessage !== null) {
-            return (<div className="container"><Alert color="danger" isOpen={this.state.errorMessage !== null}
-                                                      toggle={this.toggleError}>{this.state.errorMessage}</Alert>
-            </div>);
+            return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+              <div className="container">
+                <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+              </div>
+          </MainLayout>);
         }
 
+        const {t} = this.props;
         var action = this.props.match.params.action,
             self = this,
             tags = [],
@@ -112,7 +123,7 @@ class Services extends Component {
             content = null,
             currentImageSrc = "/images/default-service.jpg";
         if (action === 'comments') {
-            content = (<CommentTab service={self.state.service} onRefreshScore={self.refreshScore}/>);
+            content = (<CommentTab service={self.state.service} />);
         } else {
             content = (<DescriptionTab service={self.state.service}/>);
             action = 'general';
@@ -142,8 +153,9 @@ class Services extends Component {
         }
 
         return (
+          <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
-                <section className="white-section product-section">
+                <section className="section" style={{paddingBottom: "20px"}}>
                     <Breadcrumb>
                         <BreadcrumbItem>
                             <a href="#"
@@ -155,82 +167,98 @@ class Services extends Component {
                         </BreadcrumbItem>
                         <BreadcrumbItem active>{this.state.service.name}</BreadcrumbItem>
                     </Breadcrumb>
-                    <div className="row col-md-12 m-2">
-                        <div className="col-md-8 p-1">
-                            <div className="row p-1">
-                                <div className="col-md-12">
-                                    <h3 className="title">{self.state.service.name}</h3>
-                                    <div>
-                                        <div>
-                                            <Rater total={5} ref="score" rating={self.state.service.average_score}
-                                                   interactive={false}/>
-                                            <b> {self.state.service.average_score} </b>
-                                        </div>
-                                        <span>Comments({self.state.service.nb_comments})</span>
+                    <div className="row">
+                        { /* Left side */ }
+                        <div className="col-md-8">
+                          <div style={{paddingLeft: "10px"}}>
+                            { /* Header */ }
+                            <div>
+                                <h3 className="title">{self.state.service.name}</h3>
+                                <div>
+                                  <Rater total={5} ref="score" rating={self.state.service.average_score} interactive={false}/>
+                                  <b> {self.state.service.average_score} </b>
+                                </div>
+                                <span>{t('comments')} ({self.state.service.nb_comments})</span>
+                            </div>
+                            { /* Tags */ }
+                            <div>
+                                {tags.length > 0 ? (
+                                    <ul className="col-md-12 tags gray" style={{padding: "0"}}>
+                                        {tags}
+                                    </ul>)
+                                 : (<span><i>{t('noTags')}</i></span>)}
+                            </div>
+                            { /* Images */ }
+                            {images.length > 0 && (
+                                <div className="row" style={{paddingTop: "10px"}}>
+                                    <ul className="col-md-3 no-style no-margin image-selector">
+                                        {images}
+                                    </ul>
+                                    <div className="col-md-9">
+                                        <Magnify style={{ width: '433px', height: '433px'}} src={currentImageSrc}></Magnify>
                                     </div>
-                                </div>
-                            </div>
-                            <div className="row p-1">
-                                <div className="col-md-12">
-                                    {tags.length > 0 && (
-                                        <ul className="col-md-12 tags gray no-margin no-padding">
-                                            {tags}
-                                        </ul>)
-                                    }
-                                </div>
-                            </div>
-                            <div className="row medium-padding-top">
-                                <ul className="col-md-3 no-style no-margin image-selector">
-                                    {images}
-                                </ul>
-                                <div className="col-md-9">
-                                    <Magnify style={{
-                                        width: '433px',
-                                        height: '433px'
-                                    }} src={currentImageSrc}></Magnify>
-                                </div>
-                            </div>
-                            <div className="row p-1">
-                                <Nav tabs className="col-md-12">
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({active: action === 'general'})}
-                                            onClick={() => {
-                                                this.navigateGeneral();
-                                            }}
-                                        >
-                                            General
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem>
-                                        <NavLink
-                                            className={classnames({active: action === 'comments'})}
-                                            onClick={() => {
-                                                this.navigateComments();
-                                            }}
-                                        >
-                                            Comments
-                                        </NavLink>
-                                    </NavItem>
-                                </Nav>
-                                <div className="col-md-12">
-                                    {content}
-                                </div>
-                            </div>
+                                </div>)
+                            }
+                          </div>
                         </div>
-                        <div className="col-md-4 p1">
+                        { /* Right side */ }
+                        <div className="col-md-4">
                             <h4>€ {self.state.service.new_price}</h4>
-                            <button className="btn btn-info">CONTACT THE SHOP</button>
+                            <button className="btn btn-default">{t('contactTheShop')}</button>
+                        </div>
+                    </div>
+                    { /* Tab content */ }
+                    <div>
+                        <Nav tabs style={{paddingLeft: "10px"}}>
+                            <NavItem>
+                                <NavLink
+                                    className={classnames({active: action === 'general'})}
+                                    onClick={() => {
+                                        this.navigateGeneral();
+                                    }}
+                                >
+                                    {t('general')}
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink
+                                    className={classnames({active: action === 'comments'})}
+                                    onClick={() => {
+                                        this.navigateComments();
+                                    }}
+                                >
+                                    {t('comments')}
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <div style={{paddingLeft: "10px", paddingTop: "10px"}}>
+                            {content}
                         </div>
                     </div>
                 </section>
             </div>
+          </MainLayout>
         );
     }
 
-    componentWillMount() {
+    componentWillMount() { // Execute after the render.
         this.refresh();
+        var self = this;
+        self._waitForToken = AppDispatcher.register(function (payload) {
+          switch (payload.actionName) {
+            case Constants.events.NEW_SERVICE_COMMENT_ARRIVED:
+            case Constants.events.REMOVE_SERVICE_COMMENT_ARRIVED:
+              if (payload && payload.data && payload.data.service_id == self.state.service.id) {
+                  self.refreshScore(payload.data);
+                }
+                break;
+            }
+        });
+    }
+
+    componentWillUnmount() { // Remove listener.
+        AppDispatcher.unregister(this._waitForToken);
     }
 }
 
-export default withRouter(Services);
+export default translate('common', { wait: process && !process.release })(withRouter(Services));

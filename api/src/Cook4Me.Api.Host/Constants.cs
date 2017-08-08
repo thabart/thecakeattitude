@@ -212,6 +212,8 @@ namespace Cook4Me.Api.Host
             {
                 public const string StartDateTime = "start_datetime";
                 public const string EndDateTime = "end_datetime";
+                public const string StartTime = "start_time";
+                public const string EndTime = "end_time";
                 public const string Days = "days";
             }
 

@@ -109,13 +109,13 @@ class App extends Component {
         });
         proxy.on('serviceCommentAdded', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'new-service-comment',
+                actionName: Constants.events.NEW_SERVICE_COMMENT_ARRIVED,
                 data: message
             });
         });
         proxy.on('serviceCommentRemoved', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'remove-service-comment',
+                actionName: Constants.events.REMOVE_SERVICE_COMMENT_ARRIVED,
                 data: message
             });
         });

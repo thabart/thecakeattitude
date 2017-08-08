@@ -1,7 +1,10 @@
 import React, {Component} from "react";
-import {CommentLst} from "../components";
+import { CommentLst } from "../components";
+import { ApplicationStore } from '../stores';
+import { translate } from 'react-i18next';
 import ShopServices from "../services/ShopServices";
 import AppDispatcher from "../appDispatcher";
+import Constants from '../../Constants';
 
 class Comments extends Component {
     constructor(props) {
@@ -33,16 +36,29 @@ class Comments extends Component {
 
     componentDidMount() {
         var self = this;
-        // Refresh the comments.
+        const {t} = this.props;
         self._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'new-service-comment':
-                case 'remove-service-comment':
+                  case Constants.events.NEW_SERVICE_COMMENT_ARRIVED:
                     if (payload && payload.data && payload.data.service_id === self.props.service.id) {
-                        self.refs.comments.refreshComments();
-                        self.props.onRefreshScore(payload.data);
+                        ApplicationStore.sendMessage({
+                            message: t('commentAdded'),
+                            level: 'info',
+                            position: 'tr'
+                        });
+                        self.refs.comments.getWrappedInstance().refreshComments();
                     }
                     break;
+                  case Constants.events.REMOVE_SERVICE_COMMENT_ARRIVED:
+                    if (payload && payload.data && payload.data.service_id === self.props.service.id) {
+                        ApplicationStore.sendMessage({
+                            message: t('commentRemoved'),
+                            level: 'info',
+                            position: 'tr'
+                        });
+                        self.refs.comments.getWrappedInstance().refreshComments();
+                    }
+                  break;
             }
         });
     }
@@ -52,4 +68,4 @@ class Comments extends Component {
     }
 }
 
-export default Comments;
+export default translate('common', { wait: process && !process.release })(Comments);

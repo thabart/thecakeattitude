@@ -950,6 +950,8 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.ServiceOccurrence.StartDateTime, aggregate.StartDate);
             jObj.Add(Constants.DtoNames.ServiceOccurrence.EndDateTime, aggregate.EndDate);
+            jObj.Add(Constants.DtoNames.ServiceOccurrence.StartTime, aggregate.StartTime);
+            jObj.Add(Constants.DtoNames.ServiceOccurrence.EndTime, aggregate.EndTime);
             if (aggregate.Days != null)
             {
                 var arr = new JArray();
