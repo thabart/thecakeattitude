@@ -215,5 +215,6 @@
   "add_service_comment": "Un commentaire a été ajouté sur l'un de vos services",
   "today": "Aujourd'hui",
   "tomorrow": "Demain",
-  "chooseDate": "Choisissez une date ..."
+  "chooseDate": "Choisissez une date ...",
+  "date": "Date"
 }

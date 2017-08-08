@@ -55,8 +55,13 @@ h2 {
   padding: 5px;
 }
 
-.red-theme .btn-icon.with-border {
+.red-theme .btn-icon.with-border,
+.red-theme .badge-default {
   background-color: #f7b2b5 !important;
+}
+
+.red-theme .badge-default {
+  color: #55555c !important;
 }
 
 .red-theme .btn-icon:hover {

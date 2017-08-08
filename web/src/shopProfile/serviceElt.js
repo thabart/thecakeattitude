@@ -62,7 +62,7 @@ class ServiceElt extends Component {
                       {days === null ? (<div><i>{t('noOccurrence')}</i></div>) : (
                         <div>
                           <div><span>{t('days')} </span>{days}</div>
-                          <span>{t('fromToHours').replace('{0}', moment(service.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(service.occurrence.end_time, 'HH:mm:ss').format('LT'))}</span>
+                          <span className="badge badge-default">{t('fromToHours').replace('{0}', moment(service.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(service.occurrence.end_time, 'HH:mm:ss').format('LT'))}</span>
                         </div>
                       )}
                     </div>

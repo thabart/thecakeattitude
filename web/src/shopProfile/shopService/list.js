@@ -19,24 +19,22 @@ class List extends Component {
         super(props);
         this._page = '1';
         this._waitForToken = null;
-        this.handleChangeStart = this.handleChangeStart.bind(this);
-        this.handleChangeEnd = this.handleChangeEnd.bind(this);
+        this._currentDate = moment();
         this.toggleError = this.toggleError.bind(this);
         this.changePage = this.changePage.bind(this);
         this.search = this.search.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.changeOrder = this.changeOrder.bind(this);
+        this.handleChangeDate = this.handleChangeDate.bind(this);
         this.state = {
-            startDate: moment(),
-            endDate: moment(),
             errorMessage: null,
             services: [],
             pagination: [],
             serviceName: null
         };
         this.request = {
-            from_datetime: this.state.startDate.format(),
-            to_datetime: this.state.endDate.format(),
+            from_datetime: this._currentDate.format(),
+            to_datetime: this._currentDate.format(),
             count: countServices,
             orders: [{target: 'update_datetime', method: 'desc'}]
         };
@@ -54,18 +52,6 @@ class List extends Component {
     toggleError() { // Toggle error message.
         this.setState({
             errorMessage: null
-        });
-    }
-
-    handleChangeStart(date) { // Execute when the start datetime is changed.
-        this.setState({
-            startDate: date
-        });
-    }
-
-    handleChangeEnd(date) { // Execute when the end datetime is changed.
-        this.setState({
-            endDate: date
         });
     }
 
@@ -107,8 +93,8 @@ class List extends Component {
     search() { // Execute when the user clicks on search.
         this.request = $.extend({}, this.request, {
             name: this.state.serviceName,
-            from_datetime: this.state.startDate.format(),
-            to_datetime: this.state.endDate.format()
+            from_datetime: this._currentDate.format(),
+            to_datetime: this._currentDate.format()
         });
         this.refresh();
     }
@@ -121,6 +107,11 @@ class List extends Component {
         };
         this.request.orders = [obj];
         this.search();
+    }
+
+    handleChangeDate(date) { // Handle change date.
+      this._currentDate = date;
+      this.search();
     }
 
     render() { // Display the view.
@@ -160,8 +151,8 @@ class List extends Component {
                             </div>
                             { /* Select date */ }
                             <div className="form-group">
-                              <label>Date</label>
-                              <SelectDate />
+                              <label>{t('date')}</label>
+                              <SelectDate onChange={this.handleChangeDate}/>
                             </div>
                             <div className="form-group">
                                 <button className="btn btn-default" onClick={this.search}>{t('search')}</button>

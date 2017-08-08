@@ -149,7 +149,7 @@ class ShopServices extends Component {
                             <div>
                               <p>
                                 {t('days')} {days}<br />
-                                {t('fromToHours').replace('{0}', moment(service.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(service.occurrence.end_time, 'HH:mm:ss').format('LT'))}
+                                <span className="badge badge-default">{t('fromToHours').replace('{0}', moment(service.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(service.occurrence.end_time, 'HH:mm:ss').format('LT'))}</span>
                               </p>
                             </div>
                         )}
