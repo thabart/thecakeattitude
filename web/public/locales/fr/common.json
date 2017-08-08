@@ -211,5 +211,6 @@
   "viewCalendar": "Voir le calendrier",
   "occurrence": "Occurrence",
   "days": "Jours",
-  "fromToHours": "De {0} à {1}"
+  "fromToHours": "De {0} à {1}",
+  "add_service_comment": "Un commentaire a été ajouté sur l'un de vos services"
 }

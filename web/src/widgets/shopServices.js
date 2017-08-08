@@ -1,21 +1,22 @@
 import React, {Component} from "react";
+import { Button } from 'reactstrap';
+import { translate } from 'react-i18next';
 import Widget from "../components/widget";
 import Service from "../services/ShopServices";
 import moment from "moment";
-import {Button} from 'reactstrap';
 import Rater from "react-rater";
-import $ from "jquery";
-import { translate } from 'react-i18next';
 import AppDispatcher from "../appDispatcher";
+import $ from "jquery";
+import Constants from '../../Constants';
 
 var daysMapping = {
-    "0": "Monday",
-    "1": "Tuesday",
-    "2": "Wednesday",
-    "3": "Thursday",
-    "4": "Friday",
-    "5": "Saturday",
-    "6": "Sunday"
+    "0": "monday",
+    "1": "tuesday",
+    "2": "wednesday",
+    "3": "thursday",
+    "4": "friday",
+    "5": "saturday",
+    "6": "sunday"
 };
 
 class ShopServices extends Component {
@@ -29,13 +30,13 @@ class ShopServices extends Component {
         };
     }
 
-    localize(e, service) {
+    localize(e, service) { // Set current marker.
       e.preventDefault();
       e.stopPropagation();
       this.props.setCurrentMarker(service.shop_id);
     }
 
-    navigate(e, name) {
+    navigate(e, name) { // Navigate through the pages.
         e.preventDefault();
         var startIndex = (name - 1) * 5;
         var request = $.extend({}, this.request, {
@@ -44,19 +45,19 @@ class ShopServices extends Component {
         this.display(request);
     }
 
-    navigateService(e, serviceId) {
+    navigateService(e, serviceId) { // Navigate to the service.
         e.preventDefault();
         this.props.history.push('/services/' + serviceId);
     }
 
-    reset() {
+    reset() { // Reset the widget.
       this.setState({
           services: [],
           navigation: []
       });
     }
 
-    refresh(json) {
+    refresh(json) { // Refresh the widget.
         var request = $.extend({}, json, {
             orders: [
                 {target: "total_score", method: 'desc'}
@@ -69,7 +70,7 @@ class ShopServices extends Component {
         this.display(request);
     }
 
-    display(request) {
+    display(request) { // Display the services.
         var self = this;
         self.setState({
             isLoading: true
@@ -99,11 +100,11 @@ class ShopServices extends Component {
         });
     }
 
-    enableMove(b) {
+    enableMove(b) { // Enable move.
       this.refs.widget.enableMove(b);
     }
 
-    render() {
+    render() { // Display the widget.
         const {t} = this.props;
         var title = t('bestServicesWidgetTitle'),
             content = [],
@@ -126,7 +127,7 @@ class ShopServices extends Component {
                 var days = (<span>No occurrence</span>);
                 if (service.occurrence.days && service.occurrence.days.length > 0) {
                     var list = $.map(service.occurrence.days, function (val) {
-                        return (<li>{daysMapping[val]}</li>);
+                        return (<li>{t(daysMapping[val])}</li>);
                     });
                     days = (<ul className="no-padding tags gray">{list}</ul>);
                 }
@@ -192,8 +193,8 @@ class ShopServices extends Component {
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'new-service':
-                case 'new-service-comment':
-                case 'remove-service-comment':
+                case Constants.events.NEW_SERVICE_COMMENT_ARRIVED:
+                case Constants.events.REMOVE_SERVICE_COMMENT_ARRIVED:
                     var request = $.extend({}, self.request, {
                         start_index: 0
                     });

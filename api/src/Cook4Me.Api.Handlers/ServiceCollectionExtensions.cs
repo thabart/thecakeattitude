@@ -21,6 +21,7 @@ using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Events.Product;
+using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -65,6 +66,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ShopCommentAddedEvent>(notificationEventsHandler.Handle);
+            bus.RegisterHandler<ServiceCommentAddedEvent>(notificationEventsHandler.Handle);
             return serviceCollection;
         }
     }

@@ -154,6 +154,9 @@ namespace Cook4Me.Api.Host.Builders
                 case NotificationParameterTypes.ProductId:
                     type = "product_id";
                     break;
+                case NotificationParameterTypes.ServiceId:
+                    type = "service_id";
+                    break;
             }
 
             var result = new JObject();

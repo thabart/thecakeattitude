@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
+using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.Core.Repositories;
 using System;
@@ -120,6 +121,39 @@ namespace Cook4Me.Api.Handlers
                         Id = Guid.NewGuid().ToString(),
                         Type = NotificationParameterTypes.ShopId,
                         Value = message.ShopId
+                    }
+                }
+            };
+
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(ServiceCommentAddedEvent message) // Notify the owner of the shop.
+        {
+            var shop = await _shopRepository.Get(message.ShopId);
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "add_service_comment",
+                IsRead = false,
+                From = message.Subject,
+                To = shop.Subject,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.ServiceId,
+                        Value = message.ServiceId
                     }
                 }
             };
