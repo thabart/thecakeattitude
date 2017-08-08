@@ -1,32 +1,72 @@
 import React, {Component} from "react";
-import {ManageAnnounces, ManageProfile, ManageShops} from './manageTabs/index';
-import {NavLink} from "react-router-dom";
-import {withRouter} from "react-router";
-import './Manage.css';
+import { ManageAnnounces, ManageShops } from './manageTabs/index';
+import { UserProfile } from './users/index';
+import { NavLink } from "react-router-dom";
+import { withRouter } from "react-router";
+import { translate } from 'react-i18next';
+import { ApplicationStore } from './stores/index';
+import MainLayout from './MainLayout';
 
 class Manage extends Component {
-  render() {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+    this.state = {
+      isVerticalMenuDisplayed: true
+    };
+  }
+
+  toggle(name) { // Toggle property.
+    this.setState({
+      [name] : !this.state[name]
+    })
+  }
+
+  render() { // Render the view.
+    const {t} = this.props;
+    var self = this;
     var action = this.props.match.params.action;
-    var content = (<ManageProfile />);
+    var sub = ApplicationStore.getUser().sub;
+    console.log(ApplicationStore.getUser());
+    var content = (<UserProfile sub={sub} />);
     if (action === "announces") {
       content = (<ManageAnnounces />);
     } else if (action === "shops") {
       content = (<ManageShops />);
     }
 
-    return (<div className="row" id="manage-profile">
-      <nav className="col-sm-3 col-md-2 navbar-light hidden-xs-down main-sidebar">
-        <ul className="nav nav-pills navbar-nav flex-column">
-          <li className="nav-item"><NavLink to="/manage/profile" className="nav-link" activeClassName="text-white rounded bg-info">PROFILE</NavLink></li>
-          <li className="nav-item"><NavLink to="/manage/announces" className="nav-link" activeClassName="text-white rounded bg-info">ANNOUNCES</NavLink></li>
-          <li className="nav-item"><NavLink to="/manage/shops" className="nav-link" activeClassName="text-white rounded bg-info">SHOPS</NavLink></li>
-        </ul>
-      </nav>
-      <section className="col-sm-9 col-md-10 offset-sm-3 offset-md-2">
-        {content}
-      </section>
-    </div>);
+    return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
+        <div className="row" id="manage-profile">
+            <nav className={self.state.isVerticalMenuDisplayed ? "col-md-2 hidden-sm-down vertical-menu fixed" : "vertical-menu hidden-sm-down min fixed"} style={{zIndex : "1029"}}>
+              <div className="header">
+                <i className="fa fa-bars" onClick={() => self.toggle('isVerticalMenuDisplayed')}></i>
+              </div>
+              {this.state.isVerticalMenuDisplayed ? (
+                <ul>
+                  <li className="menu-item hoverable">
+                    <NavLink to="/manage/profile" className="nav-link"><h3 className="uppercase"><img src="/images/user.png" width="30" /> {t('profile')}</h3></NavLink>
+                  </li>
+                  <li className="menu-item hoverable">
+                    <NavLink to="/manage/shops" className="nav-link"><h3 className="uppercase"><img src="/images/shop.png" width="30" /> {t('shops')}</h3></NavLink>
+                  </li>
+                </ul>
+              ) : (
+                <ul>
+                  <li className="menu-item hoverable">
+                    <NavLink to="/manage/profile" className="nav-link"><img src="/images/user.png" width="30" /></NavLink>
+                  </li>
+                  <li className="menu-item hoverable">
+                    <NavLink to="/manage/shops" className="nav-link"><img src="/images/shop.png" width="30" /></NavLink>
+                  </li>
+                </ul>
+              )}
+            </nav>
+            <section className={self.state.isVerticalMenuDisplayed ? "col-md-10 offset-md-2" : "col-md-12"}>
+              {content}
+            </section>
+    </div>
+    </MainLayout>);
   }
 }
 
-export default withRouter(Manage);
+export default translate('common', { wait: process && !process.release })(withRouter(Manage));

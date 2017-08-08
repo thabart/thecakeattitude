@@ -1,0 +1,63 @@
+/* Profile cover (shop or user) */
+.cover {
+    position: relative;
+    height: 220px;
+}
+
+.cover .cover-banner {
+    overflow: hidden;
+}
+
+.cover .cover-banner img {
+  width: 1140px;
+  height: 220px;
+}
+
+.cover .profile-img {
+    position: absolute;
+    bottom: -10px;
+    left: 10px;
+}
+
+.cover .profile-img img {
+  width: 150px;
+  height: 150px;
+}
+
+.cover .profile-img .edit-profile-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.cover .profile-information {
+    position: absolute;
+    left: 170px;
+    top: 75px;
+    right: 10px;
+    color: white;
+    height: 145px;
+    overflow: hidden;
+}
+
+.cover .upload-image {
+    display: none;
+}
+
+.cover .menu,
+.cover .menu-shop-options {
+    position: absolute;
+    top: 10px;
+}
+
+.cover .menu li a {
+  color: white;
+}
+
+.cover .menu {
+    left: 10px;
+}
+
+.cover .menu-shop-options {
+    right: 10px;
+}

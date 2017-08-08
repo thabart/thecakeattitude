@@ -1,11 +1,11 @@
 import React, {Component} from "react";
+import { UserService, GoogleMapService } from '../services/index';
+import { Alert } from 'reactstrap';
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+import { translate } from 'react-i18next';
 import Promise from "bluebird";
-import {UserService, GoogleMapService} from '../services/index';
-import {Alert} from 'reactstrap';
-import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import Constants from '../../Constants';
-import './profile.css';
 import $ from 'jquery';
 
 const currentLocationOpts = {
@@ -76,7 +76,8 @@ class ManageProfile extends Component {
       isHomePhoneInvalid: false
     };
   }
-  save() {
+
+  save() { // Save the profile.
     var self = this,
       user = this.state.user,
       address = this.state.address;
@@ -107,7 +108,8 @@ class ManageProfile extends Component {
       });
     });
   }
-  handleInputChange(e) {
+
+  handleInputChange(e) { // Handle the input change.
     var self = this;
     const target = e.target;
     const name = target.name;
@@ -143,7 +145,8 @@ class ManageProfile extends Component {
         user: user
       });
   }
-  uploadPicture(e) {
+
+  uploadPicture(e) { // Upload the picture.
     e.preventDefault();
     var self = this;
     var file = e.target.files[0];
@@ -156,20 +159,24 @@ class ManageProfile extends Component {
     };
     reader.readAsDataURL(file);
   }
-  onMapLoad(map) {
+
+  onMapLoad(map) { // Store google map reference.
     this._googleMap = map;
   }
-  closeError() {
+
+  closeError() { // Close error message.
     this.setState({
       errorMessage: null
     });
   }
-  closeSuccess() {
+
+  closeSuccess() { // Close success message.
     this.setState({
       successMessage: null
     });
   }
-  refresh() {
+
+  refresh() { // Refresh the profile informatin.
     var self = this;
     self.setState({
       isLoading: true
@@ -204,10 +211,12 @@ class ManageProfile extends Component {
       });
     });
   }
-  onSearchBoxCreated(searchBox) {
+
+  onSearchBoxCreated(searchBox) { // Store search box reference.
     this._searchBox = searchBox;
   }
-  onPlacesChanged() {
+
+  onPlacesChanged() { // Execute when the place has changed.
     var self = this;
     const places = self._searchBox.getPlaces();
     var firstPlace = places[0];
@@ -222,96 +231,72 @@ class ManageProfile extends Component {
       console.log(e);
     });
   }
-  render() {
+
+  render() { // Display profile.
     if (this.state.isLoading) {
       return (<div><i className="fa fa-spinner fa-spin"></i></div>);
     }
 
+    const {t} = this.props;
+    var bannerImage = "/images/default-shop-banner.jpg";
     var isInvalid = this.state.isEmailInvalid || this.state.isMobilePhoneInvalid || this.state.isHomePhoneInvalid;
     var optsActions = {};
     if (isInvalid) {
         optsActions['disabled'] = 'disabled';
     }
 
-    return (<div className="container manage-container">
-      <h1>Manage profile</h1>
+    return (<div className="container">
       <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.closeSuccess}>{this.state.successMessage}</Alert>
       <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
-      <div className="form-group">
-        <label>Displayed name</label>
-        <input type="text" value={this.state.user.name} name="name" onChange={this.handleInputChange} className="form-control" />
-      </div>
-      <div className="form-group">
-        <label>Picture</label><br />
-        <input type='file' accept='image/*' onChange={(e) => this.uploadPicture(e)}/><br />
-        <img src={this.state.picture}  width='50' height='50' />
-      </div>
-      <div className="form-group">
-        <label>Email</label>
-        <input type="text" value={this.state.user.email} name="email" onChange={this.handleInputChange} className="form-control" />
-        { this.state.isEmailInvalid && (<span className="invalid-description">The email is invalid</span>) }
-      </div>
-      <div className="form-group">
-        <label>Home phone number</label>
-        <input type="text" value={this.state.user.home_phone_number} name="home_phone_number" onChange={this.handleInputChange} className="form-control" />
-        { this.state.isHomePhoneInvalid && (<span className="invalid-description">The home phone is invalid</span>) }
-      </div>
-      <div className="form-group">
-        <label>Mobile phone number</label>
-        <input type="text" value={this.state.user.mobile_phone_number} name="mobile_phone_number" onChange={this.handleInputChange} className="form-control" />
-        { this.state.isMobilePhoneInvalid && (<span className="invalid-description">The mobile phone is invalid</span>) }
-      </div>
-      <div className="form-group">
-        <label>Address</label>
-        <div className="row">
-          <div className="col-md-6">
-            <div className="form-group">
-                <div className='form-group col-md-12'>
-                  <label className='control-label'>Street address</label>
-                  <input type='text' className='form-control' name='street_address' value={this.state.address.street_address} readOnly/>
-                </div>
-                <div className='form-group col-md-12'>
-                  <label className='control-label'>Postal code</label>
-                  <input type='text' className='form-control' name='street_address' value={this.state.address.postal_code} readOnly/>
-                </div>
-                <div className='form-group col-md-12'>
-                  <label className='control-label'>Locality</label>
-                  <input type='text' className='form-control' name='street_address' value={this.state.address.locality} readOnly/>
-                </div>
-                <div className='form-group col-md-12'>
-                  <label className='control-label'>Country</label>
-                  <input type='text' className='form-control' name='country' value={this.state.address.country} readOnly/>
-                </div>
+      { /* Header */ }
+      <section className="row cover">
+          { /* Cover banner */ }
+          <div className="cover-banner">
+              <img src={bannerImage}/>
+          </div>
+          { /* Profile picture */ }
+          <div className="profile-img">
+              <img src={this.state.picture} className="img-thumbnail" />
+          </div>
+          { /* Profile information */ }
+          <div className="profile-information">
+              <h1>{this.state.user.name}</h1>
+          </div>
+      </section>
+      { /* Contact information */ }
+      <section className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
+        <div className="col-md-12">
+          <h5>{t('contactInformation')}</h5>
+          <div className="row">
+            { /* Email */ }
+            <div className="col-md-3 shop-badge">
+              <i className="fa fa-envelope fa-3 icon"></i><br />
+              <span>{this.state.user.email}</span>
+            </div>
+            { /* Home phone */ }
+            <div className="col-md-3 shop-badge">
+              <i className="fa fa-phone fa-3 icon"></i><br />
+              <span>{this.state.user.home_phone_number}</span>
+            </div>
+            { /* Mobile phone */ }
+            <div className="col-md-3 shop-badge">
+              <i className="fa fa-mobile fa-3 icon"></i><br />
+              <span>{this.state.user.mobile_phone_number}</span>
+            </div>
+            { /* Address */ }
+            <div className="col-md-3 shop-badge">
+              <i className="fa fa-map-marker fa-3 icon"></i><br />
+              <span>TO COMPLETE</span>
             </div>
           </div>
-          <div className="col-md-6">
-            <GettingStartedGoogleMap
-              onMapLoad={this.onMapLoad}
-              center={this.state.location}
-              onPlacesChanged={this.onPlacesChanged}
-              onSearchBoxCreated={this.onSearchBoxCreated}
-              containerElement={
-                <div style={{height: `100%`}}/>
-              }
-              mapElement={
-                <div style={{height: `100%`}}/>
-              }>
-            </GettingStartedGoogleMap>
-          </div>
         </div>
-      </div>
-      <div className="form-group">
-        {this.state.isUpdating ? (
-          <button className="btn btn-success" disabled><i className='fa fa-spinner fa-spin'></i>Processing update ...</button>
-        ) : (
-          <button className="btn btn-success" onClick={this.save} {...optsActions}>Update</button>
-        )}
-      </div>
+      </section>
     </div>);
   }
-  componentDidMount() {
+
+  componentDidMount() { // Execute before the render.
     this.refresh();
   }
 }
 
-export default ManageProfile;
+export default translate('common', { wait: process && !process.release })(ManageProfile);

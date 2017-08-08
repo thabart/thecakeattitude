@@ -14,6 +14,7 @@ import AddService from './AddService';
 import Notifications from './Notifications';
 import Home from './Home';
 import Tags from './Tags';
+import Users from './Users';
 import {OpenIdService, SessionService} from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
@@ -34,12 +35,14 @@ import './styles/tags.css';
 import './styles/section.css';
 import './styles/image-selector.css';
 import './styles/datePicker.css';
+import './styles/profile.css';
 import "bootstrap/dist/css/bootstrap.css";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-rater/lib/react-rater.css";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import "react-magnify/lib/react-magnify.css";
+import "react-grid-layout/css/styles.css";
 import { translate } from 'react-i18next';
 
 var history = createBrowserHistory();
@@ -222,6 +225,8 @@ class App extends Component {
                 <Route path="/services/:id/:action?" component={Services}/>
                 <Route path="/announces/:id" component={Announces} />
                 <Route path="/tags/:tag" component={Tags} />
+                <Route path="/users/:id" component={Users} />
+                <Route path="/users/:id/edit" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Users />))}/>
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>

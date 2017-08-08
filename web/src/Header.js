@@ -333,7 +333,10 @@ class Header extends Component {
                         }
                       </ul>
                       <ul>
+                        { /* Help button */ }
                         <li><NavLink to="/help" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-question-circle"></i></NavLink></li>
+                        { /* Messages */ }
+                        <li><NavLink to="/messages" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-envelope"></i></NavLink></li>
                         {/* Notifications */}
                         {
                           (self.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">

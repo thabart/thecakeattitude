@@ -335,7 +335,7 @@ class Shop extends Component {
               { /* Error message */ }
               <Alert color="danger" isOpen={this.state.updatingErrorMessage !== null} toggle={this.toggleUpdatingError}>{this.state.updatingErrorMessage}</Alert>
               { /* Header */ }
-              <section className="row white-section shop-section cover">
+              <section className="row cover">
                   { /* Cover banner */ }
                   <div className="cover-banner">
                       <img src={bannerImage}/>
