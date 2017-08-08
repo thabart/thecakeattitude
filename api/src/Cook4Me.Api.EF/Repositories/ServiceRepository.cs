@@ -100,7 +100,8 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (parameter.FromDateTime != null && parameter.ToDateTime != null)
             {
-                services = services.Where(p => p.Occurrence != null && p.Occurrence.StartDate < parameter.ToDateTime);
+                var days = GetDays(parameter.FromDateTime.Value, parameter.ToDateTime.Value);
+                services = services.Where(p => p.Occurrence != null && p.Occurrence.StartDate <= parameter.FromDateTime && p.Occurrence.EndDate >= parameter.ToDateTime && p.Occurrence.Days.Any(d => days.Contains(d.DayId)));
             }
 
             if (parameter.Orders != null)
@@ -456,6 +457,44 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             return products;
+        }
+
+        private IEnumerable<string> GetDays(DateTime fromDateTime, DateTime toDateTime)
+        {
+            var fromDay = (int)fromDateTime.DayOfWeek;
+            var fromDate = fromDateTime.Date;
+            var toDate = toDateTime.Date;
+            var tmp = toDate - fromDate;
+            var nbDays = tmp.Days;
+            var days = new List<string>();
+            if (fromDay + nbDays <= 6)
+            {
+                for (var i = fromDay; i <= fromDay + nbDays; i++)
+                {
+                    days.Add(i.ToString());
+                }
+            }
+            else
+            {
+                for (var i = fromDay; i <= 6; i++)
+                {
+                    nbDays--;
+                    days.Add(i.ToString());
+                }
+
+                var diff = fromDay - nbDays;
+                if (diff < 0)
+                {
+                    diff = fromDay;
+                }
+
+                for (var i = 0; i < fromDay; i++)
+                {
+                    days.Add(i.ToString());
+                }
+            }
+
+            return days;
         }
     }
 }

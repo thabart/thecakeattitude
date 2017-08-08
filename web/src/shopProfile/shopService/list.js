@@ -143,7 +143,7 @@ class List extends Component {
         }
 
         return (
-            <div className="col-md-12">
+            <div className="col-md-12" style={{minHeight: "400px"}}>
                 { this.state.errorMessage !== null && (
                   <Alert color="danger col-md-12" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>)
                 }
