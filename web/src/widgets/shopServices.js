@@ -120,16 +120,16 @@ class ShopServices extends Component {
         if (self.state.services && self.state.services.length > 0) {
             self.state.services.forEach(function (service) {
                 var image = "/images/default-shop-service.png";
-                if (!service.images && service.images.length > 0) {
+                if (service.images && service.images.length > 0) {
                     image = service.images[0];
                 }
 
-                var days = (<span>No occurrence</span>);
+                var days = null;
                 if (service.occurrence.days && service.occurrence.days.length > 0) {
                     var list = $.map(service.occurrence.days, function (val) {
                         return (<li>{t(daysMapping[val])}</li>);
                     });
-                    days = (<ul className="no-padding tags gray">{list}</ul>);
+                    days = (<ul className="no-padding tags gray inline">{list}</ul>);
                 }
 
                 content.push((
@@ -145,9 +145,14 @@ class ShopServices extends Component {
                         <div>
                             <Rater total={5} rating={service.average_score} interactive={false}/><i>{t('comments')}: {service.nb_comments}</i>
                         </div>
-                        <div>
-                          {days}
-                        </div>
+                        {days === null ? (<div><i>{t('noOccurrence')}</i></div>) : (
+                            <div>
+                              <p>
+                                {t('days')} {days}<br />
+                                {t('fromToHours').replace('{0}', moment(service.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(service.occurrence.end_time, 'HH:mm:ss').format('LT'))}
+                              </p>
+                            </div>
+                        )}
                        </div>
                        <div className="last-column">
                         <Button outline color="secondary" size="sm"  onClick={(e) => { self.localize(e, service); }}>

@@ -185,7 +185,7 @@ class List extends Component {
                     <div className="col-md-9">
                         <div className="col-md-12">
                             <div className="col-md-4 offset-md-8">
-                                <label>Filter by</label>
+                                <label>{t('filterBy')}</label>
                                 <select className="form-control" onChange={(e) => {
                                     this.changeOrder(e);
                                 }}>

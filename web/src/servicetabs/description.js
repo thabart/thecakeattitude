@@ -29,7 +29,7 @@ class Description extends Component {
                 var list = $.map(self.props.service.occurrence.days, function (val) {
                     return (<li>{t(daysMapping[val])}</li>);
                 });
-                days = (<ul className="no-padding tags gray">{list}</ul>);
+                days = (<ul className="no-padding tags gray inline">{list}</ul>);
             }
         }
 
@@ -42,8 +42,7 @@ class Description extends Component {
                     <p className="col-md-12">
                         {days === null ? (<div><i>{t('noOccurrence')}</i></div>) : (
                           <div>
-                            <span>{t('days')}</span>
-                            {days}
+                            <div><span>{t('days')} </span>{days}</div>
                             <span>{t('fromToHours').replace('{0}', moment(self.props.service.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(self.props.service.occurrence.end_time, 'HH:mm:ss').format('LT'))}</span>
                           </div>
                         )}

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { NavLink } from "react-router-dom";
 import { translate } from 'react-i18next';
+import moment from 'moment';
 import Rater from "react-rater";
 import $ from "jquery";
 import "../styles/serviceElt.css";
@@ -23,28 +24,20 @@ class ServiceElt extends Component {
     render() { // Returns the view.
         var imageUrl = "/images/default-shop-service.png",
             service = this.props.service,
-            occurrence = null,
             self = this;
         const {t} = this.props;
         if (service.images && service.images.length > 0) {
             imageUrl = service.images[0];
         }
 
+        var days = null;
         if (service.occurrence && service.occurrence !== null) {
-            var days = (<span>{t('noOccurrence')}</span>);
             if (service.occurrence.days && service.occurrence.days.length > 0) {
                 var list = $.map(service.occurrence.days, function (val) {
                     return (<li>{t(daysMapping[val])}</li>);
                 });
-                days = (<ul className="tags gray">{list}</ul>);
+                days = (<ul className="tags gray inline">{list}</ul>);
             }
-
-            // TODO :  TRANSLATE THE DAYS
-            occurrence = (<table>
-                <tr>
-                    <td colSpan="2">{days}</td>
-                </tr>
-            </table>);
         }
 
         var description = service.description.length > 70 ? service.description.substring(0, 67) + "..." : service.description;
@@ -65,8 +58,13 @@ class ServiceElt extends Component {
                         </p>
                     </div>
                     <div className="col-md-5">
-                      <h4 className="price">€ {service.price}</h4>
-                      {occurrence}
+                      <h4>€ {service.price}</h4>
+                      {days === null ? (<div><i>{t('noOccurrence')}</i></div>) : (
+                        <div>
+                          <div><span>{t('days')} </span>{days}</div>
+                          <span>{t('fromToHours').replace('{0}', moment(service.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(service.occurrence.end_time, 'HH:mm:ss').format('LT'))}</span>
+                        </div>
+                      )}
                     </div>
                 </NavLink>
               </div>
