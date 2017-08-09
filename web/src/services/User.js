@@ -25,6 +25,27 @@ module.exports = {
             });
         });
     },
+
+    confirm: function() { // Confirm the account.
+      return new Promise(function (resolve, reject) {
+          var session = SessionService.getSession();
+          if (!session || !session.access_token) {
+              reject();
+          }
+
+          $.ajax(Constants.openIdUrl + '/users/confirm', {
+              method: 'GET',
+              headers: {
+                  'Authorization': 'Bearer ' + session.access_token
+              }
+          }).then(function (r) {
+              resolve(r);
+          }).fail(function (e) {
+              reject(e);
+          });
+      });
+    },
+
     getClaims: function () { // Get claims
         return new Promise(function (resolve, reject) {
             var session = SessionService.getSession();

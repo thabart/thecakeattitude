@@ -25,6 +25,7 @@ class Profile extends Component {
     this.updateEmail = this.updateEmail.bind(this);
     this.updateHomePhone = this.updateHomePhone.bind(this);
     this.updateMobilePhone = this.updateMobilePhone.bind(this);
+    this.confirm = this.confirm.bind(this);
     this.state = {
       password: null,
       isLoading: false,
@@ -59,6 +60,36 @@ class Profile extends Component {
   toggle(name) { // Toggle a state.
     this.setState({
       [name]: !this.state[name]
+    });
+  }
+
+  confirm() { // Confirm the user account.
+    var self = this;
+    const {t} = self.props;
+    self.setState({
+      isLoading: true
+    });
+    UserService.confirm().then(function() {
+      var user = self.state.user;
+      user.is_local_account = true;
+      ApplicationStore.sendMessage({
+        message: t('successConfirmUser'),
+        level: 'success',
+        position: 'bl'
+      });
+      self.setState({
+        isLoading: false,
+        user: user
+      });
+    }).catch(function() {
+      ApplicationStore.sendMessage({
+        message: t('errorConfirmUser'),
+        level: 'error',
+        position: 'tr'
+      });
+      self.setState({
+        isLoading: false
+      });
     });
   }
 
@@ -348,7 +379,7 @@ class Profile extends Component {
                 </div>
               </form>
             ) : (
-                <button className="btn btn-default">{t('confirmYourAccount')}</button>
+                <button className="btn btn-default" onClick={self.confirm}>{t('confirmYourAccount')}</button>
             )}
           </div>
         </section>

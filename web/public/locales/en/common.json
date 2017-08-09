@@ -234,5 +234,9 @@
   "login": "Login",
   "newPassword": "New password",
   "confirmYourAccount": "Confirm your account",
-  "passwordInvalid": "Minimum eight characters, at least one letter and one number"
+  "passwordInvalid": "Minimum eight characters, at least one letter and one number",
+  "successConfirmUser": "The user's account has been confirmed",
+  "errorConfirmUser": "An error occured while trying to confirm the user's account, please contact the administrator",
+  "owner": "Owner",
+  "visitTheProfile": "Visit the profile"
 }

@@ -232,5 +232,9 @@
   "login": "Login",
   "newPassword": "Nouveau mot de passe",
   "confirmYourAccount": "Confirmer votre compte",
-  "passwordInvalid": "Minimum 8 caractères, et au moins une lettre et un nombre"
+  "passwordInvalid": "Minimum 8 caractères, et au moins une lettre et un nombre",
+  "successConfirmUser": "Le compte utilisé a été confirmé",
+  "errorConfirmUser": "Une erreur est survenue durant la confirmation du compte, veuillez prendre contact avec l'administrateur",
+  "owner": "Propriétaire",
+  "visitTheProfile": "Visiter le profil"
 }

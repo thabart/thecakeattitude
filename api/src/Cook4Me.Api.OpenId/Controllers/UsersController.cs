@@ -198,7 +198,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             return new OkResult();
         }
 
-        [HttpGet] // User Authentication enabled.
+        [HttpGet(Constants.RouteNames.Confirm)] // User Authentication enabled.
         public async Task<IActionResult> Confirm()
         {
             // 1. Get the subject.
