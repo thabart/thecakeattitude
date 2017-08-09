@@ -103,6 +103,80 @@ namespace Cook4Me.Api.OpenId.Controllers
             return new OkObjectResult(jObj);
         }
 
+        [HttpPut(Constants.RouteNames.UserClaims)] // User Authentication enabled.
+        public async Task<IActionResult> UpdateClaims([FromBody] JObject json)
+        {
+            if (json == null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+
+            // 1. Get the subject.
+            var subjectResult = await GetSubject();
+            if (!subjectResult.IsValid)
+            {
+                return subjectResult.Error;
+            }
+
+            // 2. Get the user.
+            var user = await _resourceOwnerRepository.GetAsync(subjectResult.Subject);
+            if (user == null)
+            {
+                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
+            }
+
+            // 2. Construct the request and update user information.
+            var newClaims = _requestBuilder.GetUpdateUserParameter(json);
+            var assignedClaims = new List<Claim>();
+            foreach (var claim in user.Claims.Where(c => c.Type != SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture && c.Type != Constants.Claims.BannerImage))
+            {
+                var record = newClaims.FirstOrDefault(c => c.Type == claim.Type);
+                if (record == null || record.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject)
+                {
+                    assignedClaims.Add(claim);
+                    continue;
+                }
+
+                assignedClaims.Add(record);
+            }
+
+            var pictureClaim = newClaims.FirstOrDefault(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture);
+            var bannerClaim = newClaims.FirstOrDefault(c => c.Type == Constants.Claims.BannerImage);
+            if (pictureClaim != null)
+            {
+                string path;
+                if (AddImage(pictureClaim.Value, user.Id, true, out path))
+                {
+                    assignedClaims.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, path));
+                }
+                else
+                {
+                    assignedClaims.Add(pictureClaim);
+                }
+            }
+
+            if (bannerClaim != null)
+            {
+                string path;
+                if (AddImage(bannerClaim.Value, user.Id, false, out path))
+                {
+                    assignedClaims.Add(new Claim(Constants.Claims.BannerImage, path));
+                }
+                else
+                {
+                    assignedClaims.Add(bannerClaim);
+                }
+            }
+
+            user.Claims = assignedClaims;
+            if (!await _resourceOwnerRepository.UpdateAsync(user))
+            {
+                return this.BuildError(ErrorCodes.UnhandledExceptionCode, Constants.ErrorMessages.ErrorOccuredWhileTryingToUpdateTheUser);
+            }
+
+            return new OkResult();
+        }
+
         [HttpGet(Constants.RouteNames.PublicClaims)]
         public async Task<IActionResult> GetPublicClaims(string id)
         {
@@ -143,112 +217,6 @@ namespace Cook4Me.Api.OpenId.Controllers
             }
 
             return new OkObjectResult(arr);
-        }
-
-        [HttpPut(Constants.RouteNames.UserClaims)] // User Authentication enabled.
-        public async Task<IActionResult> UpdateClaims([FromBody] JObject json)
-        {
-            if (json == null)
-            {
-                throw new ArgumentNullException(nameof(json));
-            }
-
-            // 1. Get the subject.
-            var subjectResult = await GetSubject();
-            if (!subjectResult.IsValid)
-            {
-                return subjectResult.Error;
-            }
-
-            // 2. Get the user.
-            var user = await _resourceOwnerRepository.GetAsync(subjectResult.Subject);
-            if (user == null)
-            {
-                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
-            }
-
-            // 2. Construct the request and update user information.
-            var newClaims = _requestBuilder.GetUpdateUserParameter(json);
-            var assignedClaims = new List<Claim>();
-            foreach (var claim in user.Claims.Where(c => c.Type != SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture))
-            {
-                var record = newClaims.FirstOrDefault(c => c.Type == claim.Type);
-                if (record == null || record.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Subject)
-                {
-                    assignedClaims.Add(claim);
-                    continue;
-                }
-
-                assignedClaims.Add(record);
-            }
-
-            var pictureClaim = newClaims.FirstOrDefault(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture);
-            if (pictureClaim != null)
-            {
-                string path;
-                if (AddImage(pictureClaim.Value, user.Id, out path))
-                {
-                    assignedClaims.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, path));
-                }
-                else
-                {
-                    assignedClaims.Add(pictureClaim);
-                }
-            }
-
-            user.Claims = assignedClaims;
-            if (!await _resourceOwnerRepository.UpdateAsync(user))
-            {
-                return this.BuildError(ErrorCodes.UnhandledExceptionCode, Constants.ErrorMessages.ErrorOccuredWhileTryingToUpdateTheUser);
-            }
-
-            return new OkResult();
-        }
-
-        [HttpPut(Constants.RouteNames.Image)] // User Authentication enabled.
-        public async Task<IActionResult> UpdateImage([FromBody] JObject json)
-        {
-            if (json == null)
-            {
-                throw new ArgumentNullException(nameof(json));
-            }
-
-
-            // 1. Get the subject.
-            var subjectResult = await GetSubject();
-            if (!subjectResult.IsValid)
-            {
-                return subjectResult.Error;
-            }           
-            
-            // 2. Get the user.
-            var user = await _resourceOwnerRepository.GetAsync(subjectResult.Subject);
-            if (user == null)
-            {
-                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
-            }
-
-            // 3. Get Base64 image and save it.
-            var result = _requestBuilder.GetUploadImage(json);
-            string path;
-            if (!AddImage(result, subjectResult.Subject, out path))
-            {
-                return this.BuildError(ErrorCodes.InvalidRequestCode, Constants.ErrorMessages.ErrorOccuredWhileTryingToUpdatePicture);
-            }
-
-            var claim = user.Claims.FirstOrDefault(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture);
-            if (claim != null)
-            {
-                user.Claims.Remove(claim);
-            }
-
-            user.Claims.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, path));
-            if (!await _resourceOwnerRepository.UpdateAsync(user))
-            {
-                return this.BuildError(ErrorCodes.UnhandledExceptionCode, Constants.ErrorMessages.ErrorOccuredWhileTryingToUpdateTheUser);
-            }
-
-            return new OkResult();
         }
 
         private async Task<GetSubjectResult> GetSubject()
@@ -294,27 +262,27 @@ namespace Cook4Me.Api.OpenId.Controllers
             return authorization.Parameter;
         }
 
-        private bool AddImage(string base64Encoded, string subject, out string path)
+        private bool AddImage(string base64Encoded, string subject, bool isProfile, out string path)
         {
             path = null;
             if (string.IsNullOrWhiteSpace(base64Encoded))
             {
                 return false;
             }
-
-            var picturePath = Path.Combine(_hostingEnvironment.WebRootPath, "img/users/" + subject + ".jpg");
-            if (System.IO.File.Exists(picturePath))
-            {
-                System.IO.File.Delete(picturePath);
-            }
-
+            
+            var picturePath = Path.Combine(_hostingEnvironment.WebRootPath, "img/users/" + subject + (isProfile ? "_profile" : "_banner") +  ".jpg");
             try
             {
                 base64Encoded = base64Encoded.Substring(base64Encoded.IndexOf(',') + 1);
                 base64Encoded = base64Encoded.Trim('\0');
                 var imageBytes = Convert.FromBase64String(base64Encoded);
+                if (System.IO.File.Exists(picturePath))
+                {
+                    System.IO.File.Delete(picturePath);
+                }
+
                 System.IO.File.WriteAllBytes(picturePath, imageBytes);
-                path = Request.GetAbsoluteUriWithVirtualPath()+ "/img/users/" + subject + ".jpg";
+                path = Request.GetAbsoluteUriWithVirtualPath()+ "/img/users/" + subject + (isProfile ? "_profile" : "_banner") + ".jpg";
                 return true;
             }
             catch(Exception ex)
@@ -344,6 +312,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             jObj.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, TryGetValue(resourceOwner.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name));
             jObj.Add(Constants.Claims.HomePhoneNumber, TryGetValue(resourceOwner.Claims, Constants.Claims.HomePhoneNumber));
             jObj.Add(Constants.Claims.MobilePhoneNumber, TryGetValue(resourceOwner.Claims, Constants.Claims.MobilePhoneNumber));
+            jObj.Add(Constants.Claims.BannerImage, TryGetValue(resourceOwner.Claims, Constants.Claims.BannerImage));
             return jObj;
         }
     }

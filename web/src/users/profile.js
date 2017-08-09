@@ -21,6 +21,9 @@ class Profile extends Component {
     this.uploadPictureImage = this.uploadPictureImage.bind(this);
     this.clickPictureImage = this.clickPictureImage.bind(this);
     this.updateDisplayname = this.updateDisplayname.bind(this);
+    this.updateEmail = this.updateEmail.bind(this);
+    this.updateHomePhone = this.updateHomePhone.bind(this);
+    this.updateMobilePhone = this.updateMobilePhone.bind(this);
     this.state = {
       isLoading: false,
       canBeEdited: false,
@@ -49,6 +52,30 @@ class Profile extends Component {
 
   save() { // Save the user.
     var user = EditUserStore.getUser();
+    var self = this;
+    const {t} = this.props;
+    self.setState({
+      isLoading: true
+    });
+    UserService.updateClaims(user).then(function() {
+      ApplicationStore.sendMessage({
+        message: t('successUpdateUser'),
+        level: 'success',
+        position: 'bl'
+      });
+      self.setState({
+        isLoading: false
+      });
+    }).catch(function() {
+      ApplicationStore.sendMessage({
+        message: t('errorUpdateUser'),
+        level: 'error',
+        position: 'tr'
+      });
+      self.setState({
+        isLoading: false
+      });
+    });
   }
 
   uploadImage(e, callback) { // Common function used to upload the image.
@@ -106,9 +133,50 @@ class Profile extends Component {
   }
 
   updateDisplayname(title) { // Update the display name.
+      var user = this.state.user;
+      user.name = title;
+      this.setState({
+        user: user
+      });
       AppDispatcher.dispatch({
           actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
           data: {name: title}
+      });
+  }
+
+  updateEmail(email) { // Update the email
+      var user = this.state.user;
+      user.email = email;
+      this.setState({
+        user: user
+      });
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
+          data: {email: email}
+      });
+  }
+
+  updateHomePhone(phone) { // Update the home phone number.
+      var user = this.state.user;
+      user.home_phone_number = phone;
+      this.setState({
+        user: user
+      });
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
+          data: {home_phone_number: phone}
+      });
+  }
+
+  updateMobilePhone(phone) { // Update the mobile phone number.
+      var user = this.state.user;
+      user.mobile_phone_number = phone;
+      this.setState({
+        user: user
+      });
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
+          data: {mobile_phone_number: phone}
       });
   }
 
@@ -201,7 +269,7 @@ class Profile extends Component {
             <div className="col-md-4 shop-badge">
               <i className="fa fa-envelope fa-3 icon"></i><br />
               { self.state.isEditable ? (
-                  <EditableText value={this.state.user.email} type='email'/>)
+                  <EditableText value={this.state.user.email} type='email' validate={this.updateEmail}/>)
                   : ( <span>{this.state.user.email}</span> )
               }
             </div>
@@ -209,7 +277,7 @@ class Profile extends Component {
             <div className="col-md-4 shop-badge">
               <i className="fa fa-phone fa-3 icon"></i><br />
               { self.state.isEditable ? (
-                  <EditableText value={this.state.user.home_phone_number} type='phone' />)
+                  <EditableText value={this.state.user.home_phone_number} type='phone' validate={this.updateHomePhone} />)
                   : ( <span>{this.state.user.home_phone_number}</span> )
               }
             </div>
@@ -217,7 +285,7 @@ class Profile extends Component {
             <div className="col-md-4 shop-badge">
               <i className="fa fa-mobile fa-3 icon"></i><br />
               { self.state.isEditable ? (
-                  <EditableText value={this.state.user.mobile_phone_number} type='phone' />)
+                  <EditableText value={this.state.user.mobile_phone_number} type='phone' validate={this.updateMobilePhone} />)
                   : ( <span>{this.state.user.mobile_phone_number}</span> )
               }
             </div>

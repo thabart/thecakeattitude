@@ -67,10 +67,6 @@ class Manage extends Component {
         </div>
     </MainLayout>);
   }
-
-  componentDidMount() {
-    console.log('coucou3');
-  }
 }
 
 export default translate('common', { wait: process && !process.release })(withRouter(Manage));

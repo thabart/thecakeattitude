@@ -42,6 +42,7 @@ namespace Cook4Me.Api.OpenId
             public const string MobilePhoneNumber = "mobile_phone_number";
             public const string HomePhoneNumber = "home_phone_number";
             public const string GooglePlaceId = "google_place_id";
+            public const string BannerImage = "banner_image";
         }
 
         public static class Dtos

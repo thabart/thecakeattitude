@@ -64,7 +64,8 @@ namespace Cook4Me.Api.OpenId.Extensions
                     new Claim { Code = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Role },
                     new Claim { Code = Constants.Claims.MobilePhoneNumber },
                     new Claim { Code = Constants.Claims.HomePhoneNumber },
-                    new Claim { Code = Constants.Claims.GooglePlaceId }
+                    new Claim { Code = Constants.Claims.GooglePlaceId },
+                    new Claim { Code = Constants.Claims.BannerImage }
                 });
             }
         }
@@ -104,7 +105,8 @@ namespace Cook4Me.Api.OpenId.Extensions
                             new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.BirthDate },
                             new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.ZoneInfo },
                             new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Locale },
-                            new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.UpdatedAt }
+                            new ScopeClaim { ClaimCode = SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.UpdatedAt },
+                            new ScopeClaim { ClaimCode = Constants.Claims.BannerImage }
                         },
                         Type = ScopeType.ResourceOwner,
                         IsDisplayedInConsent = true

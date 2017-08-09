@@ -227,5 +227,7 @@
   "editUserBannerImageTooltip": "Edit the banner image",
   "editUserProfilePictureTooltip": "Edit the profile image",
   "notValidPhone": "Not a valid phone number",
-  "notValidEmail": "Not a valid email"
+  "notValidEmail": "Not a valid email",
+  "errorUpdateUser": "An error occured while tryng to update the user information, please contact the administrator",
+  "successUpdateUser": "The user profile has been updated"
 }
