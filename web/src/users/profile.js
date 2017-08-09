@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
-import { Alert, Tooltip, Button } from "reactstrap";
+import { Alert, Tooltip, Button, Input, FormFeedback } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { UserService } from '../services/index';
 import { ApplicationStore, EditUserStore } from '../stores/index';
@@ -32,6 +32,7 @@ class Profile extends Component {
       isEditable: false,
       errorMessage: null,
       user : props.user || { claims : {} },
+      isPasswordInvalid: false,
       isEditUserTooltipOpened: false, // Tooltip
       isViewUserTooltipOpened: false,
       isUpdateUserTooltipOpened: false,
@@ -40,7 +41,7 @@ class Profile extends Component {
     };
   }
 
-  handleInputChange(e) {
+  handleInputChange(e) { // Handle input change.
     const target = e.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -64,12 +65,23 @@ class Profile extends Component {
   save() { // Save the user.
     var user = EditUserStore.getUser();
     var self = this;
-    user['password'] = self.state.password;
+    if (user.is_local_account) {
+      user['password'] = self.state.password;
+      if(user['password'] && user['password'] !== '') {
+        var regex = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);
+        if (!regex.test(user['password'])) {
+          self.setState({
+            isPasswordInvalid: true
+          });
+          return;
+        }
+      }
+    }
+
     const {t} = this.props;
     self.setState({
       isLoading: true
     });
-    console.log(user);
     UserService.update(user).then(function() {
       ApplicationStore.sendMessage({
         message: t('successUpdateUser'),
@@ -206,6 +218,13 @@ class Profile extends Component {
         </div>);
     }
 
+    var feedbackName = null;
+    var errorMessage = null;
+    if (this.state.isPasswordInvalid) {
+      errorMessage = t('passwordInvalid');
+      feedbackName = 'danger';
+    }
+
     var bannerImage = this.state.user.claims.banner_image || "/images/default-profile-banner.jpg";
     return (<div className="container">
       { /* Header */ }
@@ -320,7 +339,8 @@ class Profile extends Component {
                 { /* Password */ }
                 <div className="form-group">
                   <label>{t('newPassword')}</label>
-                  <input type="password" className="form-control" value={self.state.password} name="password" onChange={self.handleInputChange} />
+                  <Input type="password" className="form-control" state={feedbackName} value={self.state.password} name="password" onChange={self.handleInputChange} />
+                  <FormFeedback>{errorMessage}</FormFeedback>
                 </div>
                 { /* Save button */ }
                 <div className="form-group">

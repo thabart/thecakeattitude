@@ -233,5 +233,6 @@
   "credentials": "Credentials",
   "login": "Login",
   "newPassword": "New password",
-  "confirmYourAccount": "Confirm your account"
+  "confirmYourAccount": "Confirm your account",
+  "passwordInvalid": "Minimum eight characters, at least one letter and one number"
 }

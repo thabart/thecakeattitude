@@ -34,6 +34,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.OpenId.Controllers
@@ -168,6 +169,11 @@ namespace Cook4Me.Api.OpenId.Controllers
             user.TwoFactorAuthentication = updateParameter.TwoFactorAuthentication;
             if (!string.IsNullOrWhiteSpace(updateParameter.Password) && user.IsLocalAccount)
             {
+                if (!Regex.IsMatch(updateParameter.Password, @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"))
+                {
+                    return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.ThePasswordIsNotCorrect, HttpStatusCode.InternalServerError);
+                }
+
                 user.Password = _authenticateResourceOwnerService.GetHashedPassword(updateParameter.Password);
             }
 
