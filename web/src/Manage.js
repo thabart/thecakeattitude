@@ -25,10 +25,10 @@ class Manage extends Component {
   render() { // Render the view.
     const {t} = this.props;
     var self = this;
-    var action = this.props.match.params.action;
+    var action = self.props.match.params.action;
+    var subaction = self.props.match.params.subaction || 'view';
     var sub = ApplicationStore.getUser().sub;
-    console.log(ApplicationStore.getUser());
-    var content = (<UserProfile sub={sub} />);
+    var content = (<UserProfile sub={sub} isEditable={subaction === 'edit'} />);
     if (action === "announces") {
       content = (<ManageAnnounces />);
     } else if (action === "shops") {
@@ -64,8 +64,12 @@ class Manage extends Component {
             <section className={self.state.isVerticalMenuDisplayed ? "col-md-10 offset-md-2" : "col-md-12"}>
               {content}
             </section>
-    </div>
+        </div>
     </MainLayout>);
+  }
+
+  componentDidMount() {
+    console.log('coucou3');
   }
 }
 

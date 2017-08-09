@@ -219,5 +219,11 @@
   "tomorrow": "Tomorrow",
   "chooseDate": "Choose a date ...",
   "date": "Date",
-  "profile": "Profile"
+  "profile": "Profile",
+  "errorRetrieveUser": "An error occured while trying to retrieve the user information, please contact the administrator",
+  "editUserTooltip": "Edit the user's information",
+  "viewUserTooltip": "View the profile",
+  "updateUserTooltip": "Update the profile information",
+  "editUserBannerImageTooltip": "Edit the banner image",
+  "editUserProfilePictureTooltip": "Edit the profile image"
 }

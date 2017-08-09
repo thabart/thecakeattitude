@@ -45,7 +45,7 @@
 }
 
 .cover .menu,
-.cover .menu-shop-options {
+.cover .menu-profile-options {
     position: absolute;
     top: 10px;
 }
@@ -58,6 +58,6 @@
     left: 10px;
 }
 
-.cover .menu-shop-options {
+.cover .menu-profile-options {
     right: 10px;
 }

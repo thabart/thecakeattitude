@@ -217,5 +217,11 @@
   "tomorrow": "Demain",
   "chooseDate": "Choisissez une date ...",
   "date": "Date",
-  "profile": "Profil"
+  "profile": "Profil",
+  "errorRetrieveUser": "Une erreur est survenue lors de la récupération des informations de l'utilisateur, veuillez prendre contact avec l'administrateur",
+  "editUserTooltip": "Modifier les informations de votre profil",
+  "viewUserTooltip": "Voir le profil",
+  "updateUserTooltip": "Mettre à jour les informations de profil",
+  "editUserBannerImageTooltip": "Modifier la bannière",
+  "editUserProfilePictureTooltip": "Modifier l'image du profil"
 }

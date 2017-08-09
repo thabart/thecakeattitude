@@ -189,6 +189,10 @@ class ShopProfile extends Component {
         return ( <div>
             { /*General information */ }
             <section className="section row" style={{marginTop: "20px"}}>
+              { /* Owner */ }
+              <div className="col-md-12" style={{paddingTop: "20px"}}>
+                <h5>Owner</h5>
+              </div>
               { /* Description */ }
               <div className="col-md-12" style={{paddingTop: "20px"}}>
                 <h5>{t('description')}</h5>

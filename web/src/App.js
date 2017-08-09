@@ -226,7 +226,6 @@ class App extends Component {
                 <Route path="/announces/:id" component={Announces} />
                 <Route path="/tags/:tag" component={Tags} />
                 <Route path="/users/:id" component={Users} />
-                <Route path="/users/:id/edit" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Users />))}/>
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
@@ -234,7 +233,7 @@ class App extends Component {
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
                 <Route path="/addAnnounce"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
-                <Route path="/manage/:action"
+                <Route path="/manage/:action/:subaction?"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
                 <Route path="/error/:type" component={Error}/>
               </div>

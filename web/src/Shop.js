@@ -402,7 +402,7 @@ class Shop extends Component {
                           }
                       </li>
                   </ul>
-                  <ul className="nav nav-pills menu-shop-options">
+                  <ul className="nav nav-pills menu-profile-options">
                       { this.state.canBeEdited && (
                           <li className="nav-item">
                               <a href={editUrl} className="btn btn-outline-secondary btn-sm btn-icon with-border" id="edit-shop"><i className="fa fa-pencil"></i></a>
