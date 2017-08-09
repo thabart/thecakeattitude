@@ -15,6 +15,7 @@
 #endregion
 
 using Newtonsoft.Json.Linq;
+using SimpleIdentityServer.Core.Models;
 using SimpleIdentityServer.Core.Parameters;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace Cook4Me.Api.OpenId.Builders
 {
     public interface IRequestBuilder
     {
-        IList<Claim> GetUpdateUserParameter(JObject json);
+        UpdateUserParameter GetUpdateUserParameter(JObject json);
         SearchResourceOwnerParameter GetSearchResourceOwner(JObject json);
         string GetUploadImage(JObject json);
     }
@@ -34,22 +35,22 @@ namespace Cook4Me.Api.OpenId.Builders
     {
         private Dictionary<string, Action<ICollection<Claim>, string>> _mappingKeyToUpdateUserParameter = new Dictionary<string, Action<ICollection<Claim>, string>>
         {
-            { Constants.Dtos.UpdateUser.Name, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, v)) },
-            { Constants.Dtos.UpdateUser.Email, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, v)) },
-            { Constants.Dtos.UpdateUser.PhoneNumber, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber, v)) },
+            { Constants.Dtos.UpdateClaim.Name, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name, v)) },
+            { Constants.Dtos.UpdateClaim.Email, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Email, v)) },
+            { Constants.Dtos.UpdateClaim.PhoneNumber, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber, v)) },
             { Constants.Claims.HomePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.HomePhoneNumber, v)) },
             { Constants.Claims.MobilePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.MobilePhoneNumber, v)) },
             { Constants.Claims.GooglePlaceId, (u, v) => u.Add(new Claim(Constants.Claims.GooglePlaceId, v)) },
             { Constants.Claims.BannerImage, (u, v) => u.Add(new Claim(Constants.Claims.BannerImage, v)) },
-            { Constants.Dtos.UpdateUser.Picture, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, v)) }
+            { Constants.Dtos.UpdateClaim.Picture, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, v)) }
         };
 
         private Dictionary<string, Action<JObject, string>> _mappingKeyToAddress = new Dictionary<string, Action<JObject, string>>
         {
-            { Constants.Dtos.UpdateUser.StreetAddress, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.StreetAddress, v) },
-            { Constants.Dtos.UpdateUser.PostalCode, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.PostalCode, v) },
-            { Constants.Dtos.UpdateUser.Locality, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Locality, v) },
-            { Constants.Dtos.UpdateUser.Country, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Country, v) }
+            { Constants.Dtos.UpdateClaim.StreetAddress, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.StreetAddress, v) },
+            { Constants.Dtos.UpdateClaim.PostalCode, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.PostalCode, v) },
+            { Constants.Dtos.UpdateClaim.Locality, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Locality, v) },
+            { Constants.Dtos.UpdateClaim.Country, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Country, v) }
         };
 
         public SearchResourceOwnerParameter GetSearchResourceOwner(JObject json)
@@ -65,7 +66,7 @@ namespace Cook4Me.Api.OpenId.Builders
             };
         }
 
-        public IList<Claim> GetUpdateUserParameter(JObject json)
+        public UpdateUserParameter GetUpdateUserParameter(JObject json)
         {
             if (json == null)
             {
@@ -73,19 +74,27 @@ namespace Cook4Me.Api.OpenId.Builders
             }
 
             var claims = new List<Claim>();
+            JToken token = null;
             var address = new JObject();
-            foreach (var kvp in json)
+            if (json.TryGetValue(Constants.Dtos.ResourceOwner.Claims, StringComparison.CurrentCultureIgnoreCase, out token)) // Fetch claims.
             {
-                if (_mappingKeyToUpdateUserParameter.ContainsKey(kvp.Key))
+                var claimsJson = token as JObject;
+                if (claimsJson != null)
                 {
-                    _mappingKeyToUpdateUserParameter[kvp.Key](claims, kvp.Value.Value<string>());
-                    continue;
-                }
+                    foreach (var kvp in claimsJson)
+                    {
+                        if (_mappingKeyToUpdateUserParameter.ContainsKey(kvp.Key))
+                        {
+                            _mappingKeyToUpdateUserParameter[kvp.Key](claims, kvp.Value.Value<string>());
+                            continue;
+                        }
 
-                if (_mappingKeyToAddress.ContainsKey(kvp.Key))
-                {
-                    _mappingKeyToAddress[kvp.Key](address, kvp.Value.Value<string>());
-                    continue;
+                        if (_mappingKeyToAddress.ContainsKey(kvp.Key))
+                        {
+                            _mappingKeyToAddress[kvp.Key](address, kvp.Value.Value<string>());
+                            continue;
+                        }
+                    }
                 }
             }
 
@@ -94,7 +103,18 @@ namespace Cook4Me.Api.OpenId.Builders
                 claims.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Address, address.ToString()));
             }
 
-            return claims;
+            string password = null;
+            if (json.TryGetValue(Constants.Dtos.ResourceOwner.Password, StringComparison.CurrentCultureIgnoreCase, out token))
+            {
+                password = token.ToString();
+            }
+
+            return new UpdateUserParameter
+            {
+                Claims = claims,
+                TwoFactorAuthentication = TwoFactorAuthentications.NONE,
+                Password = password
+            };
         }
 
         public string GetUploadImage(JObject json)

@@ -81,13 +81,18 @@ class EditableText extends Component {
   }
 
   render() { // Render the view.
+    const {t} = this.props;
     if (!this.state.isEditMode) {
+      var val = this.state.value;
+      if (val === null || val === '') {
+        val = t('unknown');
+      }
+
       return (<div onClick={(e) => { this.onClickField(); }} className="editable-input">
-        <span className={this.props.className}>{this.state.value}</span>
+        <span className={this.props.className}>{val}</span>
       </div>);
     }
 
-    const {t} = this.props;
     var feedbackName = null;
     var errorMessage = null;
     if (this.state.isLengthInvalid) {

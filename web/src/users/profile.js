@@ -16,6 +16,7 @@ class Profile extends Component {
     this.setValue = this.setValue.bind(this);
     this.toggle = this.toggle.bind(this);
     this.save = this.save.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
     this.clickBannerImage = this.clickBannerImage.bind(this);
     this.uploadBannerImage = this.uploadBannerImage.bind(this);
     this.uploadPictureImage = this.uploadPictureImage.bind(this);
@@ -25,17 +26,27 @@ class Profile extends Component {
     this.updateHomePhone = this.updateHomePhone.bind(this);
     this.updateMobilePhone = this.updateMobilePhone.bind(this);
     this.state = {
+      password: null,
       isLoading: false,
       canBeEdited: false,
       isEditable: false,
       errorMessage: null,
-      user : props.user || {},
+      user : props.user || { claims : {} },
       isEditUserTooltipOpened: false, // Tooltip
       isViewUserTooltipOpened: false,
       isUpdateUserTooltipOpened: false,
       isBannerImageTooltipOpened: false,
       isEditProfileTooltipOpened: false
     };
+  }
+
+  handleInputChange(e) {
+    const target = e.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
   }
 
   setValue(name, value) { // Set value.
@@ -53,11 +64,13 @@ class Profile extends Component {
   save() { // Save the user.
     var user = EditUserStore.getUser();
     var self = this;
+    user['password'] = self.state.password;
     const {t} = this.props;
     self.setState({
       isLoading: true
     });
-    UserService.updateClaims(user).then(function() {
+    console.log(user);
+    UserService.update(user).then(function() {
       ApplicationStore.sendMessage({
         message: t('successUpdateUser'),
         level: 'success',
@@ -101,13 +114,13 @@ class Profile extends Component {
       var self = this;
       self.uploadImage(e, function (result) {
           var user = self.state.user;
-          user.picture = result;
+          user.claims.picture = result;
           self.setState({
               user: user
           });
           AppDispatcher.dispatch({
               actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
-              data: {picture: result}
+              data: { claims: user.claims }
           });
       });
   }
@@ -121,7 +134,7 @@ class Profile extends Component {
       var self = this;
       self.uploadImage(e, function (result) {
           var user = self.state.user;
-          user.banner_image = result;
+          user.claims.banner_image = result;
           self.setState({
               user: user
           });
@@ -134,49 +147,49 @@ class Profile extends Component {
 
   updateDisplayname(title) { // Update the display name.
       var user = this.state.user;
-      user.name = title;
+      user.claims.name = title;
       this.setState({
         user: user
       });
       AppDispatcher.dispatch({
           actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
-          data: {name: title}
+          data: { claims: user.claims }
       });
   }
 
   updateEmail(email) { // Update the email
       var user = this.state.user;
-      user.email = email;
+      user.claims.email = email;
       this.setState({
         user: user
       });
       AppDispatcher.dispatch({
           actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
-          data: {email: email}
+          data: { claims: user.claims }
       });
   }
 
   updateHomePhone(phone) { // Update the home phone number.
       var user = this.state.user;
-      user.home_phone_number = phone;
+      user.claims.home_phone_number = phone;
       this.setState({
         user: user
       });
       AppDispatcher.dispatch({
           actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
-          data: {home_phone_number: phone}
+          data: { claims: user.claims }
       });
   }
 
   updateMobilePhone(phone) { // Update the mobile phone number.
       var user = this.state.user;
-      user.mobile_phone_number = phone;
+      user.claims.mobile_phone_number = phone;
       this.setState({
         user: user
       });
       AppDispatcher.dispatch({
           actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
-          data: {mobile_phone_number: phone}
+          data: { claims: user.claims }
       });
   }
 
@@ -189,11 +202,11 @@ class Profile extends Component {
 
     if (this.state.errorMessage !== null) {
         return (<div className="container">
-          <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={() => this.setValue('errorMessage', null)}>{this.state.errorMessage}</Alert>
+          <Alert color="danger" isOpen={this.state.errorMessage !== null}>{this.state.errorMessage}</Alert>
         </div>);
     }
 
-    var bannerImage = this.state.user.banner_image || "/images/default-profile-banner.jpg";
+    var bannerImage = this.state.user.claims.banner_image || "/images/default-profile-banner.jpg";
     return (<div className="container">
       { /* Header */ }
       <section className="row cover">
@@ -203,7 +216,7 @@ class Profile extends Component {
         </div>
         { /* Profile picture */ }
         <div className="profile-img">
-          <img src={this.state.user.picture} className="img-thumbnail" />
+          <img src={this.state.user.claims.picture} className="img-thumbnail" />
           {self.state.isEditable && (<Button outline color="secondary" id="edit-profile" size="sm" className="edit-profile-icon btn-icon with-border" onClick={this.clickPictureImage}>
             <i className="fa fa-pencil"></i>
           </Button>)}
@@ -219,8 +232,8 @@ class Profile extends Component {
         { /* Profile information */ }
         <div className="profile-information">
           { self.state.isEditable ? (
-              <EditableText className="header1" value={this.state.user.name} validate={this.updateDisplayname} type='txt' maxLength={15} minLength={1}/>)
-              : ( <h1>{this.state.user.name}</h1> )
+              <EditableText className="header1" value={this.state.user.claims.name} validate={this.updateDisplayname} type='txt' maxLength={15} minLength={1}/>)
+              : ( <h1>{this.state.user.claims.name}</h1> )
           }
         </div>
         { /* List of options */ }
@@ -269,29 +282,57 @@ class Profile extends Component {
             <div className="col-md-4 shop-badge">
               <i className="fa fa-envelope fa-3 icon"></i><br />
               { self.state.isEditable ? (
-                  <EditableText value={this.state.user.email} type='email' validate={this.updateEmail}/>)
-                  : ( <span>{this.state.user.email}</span> )
+                  <EditableText value={this.state.user.claims.email} type='email' validate={this.updateEmail}/>)
+                  : ( <span>{this.state.user.claims.email}</span> )
               }
             </div>
             { /* Home phone */ }
             <div className="col-md-4 shop-badge">
               <i className="fa fa-phone fa-3 icon"></i><br />
               { self.state.isEditable ? (
-                  <EditableText value={this.state.user.home_phone_number} type='phone' validate={this.updateHomePhone} />)
-                  : ( <span>{this.state.user.home_phone_number}</span> )
+                  <EditableText value={this.state.user.claims.home_phone_number} type='phone' validate={this.updateHomePhone} />)
+                  : ( <span>{this.state.user.claims.home_phone_number}</span> )
               }
             </div>
             { /* Mobile phone */ }
             <div className="col-md-4 shop-badge">
               <i className="fa fa-mobile fa-3 icon"></i><br />
               { self.state.isEditable ? (
-                  <EditableText value={this.state.user.mobile_phone_number} type='phone' validate={this.updateMobilePhone} />)
-                  : ( <span>{this.state.user.mobile_phone_number}</span> )
+                  <EditableText value={this.state.user.claims.mobile_phone_number} type='phone' validate={this.updateMobilePhone} />)
+                  : ( <span>{this.state.user.claims.mobile_phone_number}</span> )
               }
             </div>
           </div>
         </div>
       </section>
+      { /* Credentials */ }
+      { self.state.isEditable && (
+        <section className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
+          <div className="col-md-12">
+            <h5>{t('credentials')}</h5>
+            { self.state.user.is_local_account ? (
+              <form onSubmit={(e) => { e.preventDefault(); self.save(); }}>
+                { /* Login */ }
+                <div className="form-group">
+                  <label>{t('login')}</label>
+                  <input type="text" className="form-control" value={self.state.user.claims.sub} disabled />
+                </div>
+                { /* Password */ }
+                <div className="form-group">
+                  <label>{t('newPassword')}</label>
+                  <input type="password" className="form-control" value={self.state.password} name="password" onChange={self.handleInputChange} />
+                </div>
+                { /* Save button */ }
+                <div className="form-group">
+                  <input type="submit" className="btn btn-default" value={t('update')} />
+                </div>
+              </form>
+            ) : (
+                <button className="btn btn-default">{t('confirmYourAccount')}</button>
+            )}
+          </div>
+        </section>
+      )}
      </div>);
   }
 
@@ -305,7 +346,7 @@ class Profile extends Component {
     var canBeEdited = this.props.canBeEdited;
     UserService.getPublicClaims(sub).then(function(user) {
       var localUser = ApplicationStore.getUser();
-      canBeEdited = canBeEdited && localUser && localUser !== null && localUser.sub === user.sub;
+      canBeEdited = canBeEdited && localUser && localUser !== null && localUser.sub === user.claims.sub;
       var isEditable = self.props.isEditable || false;
       isEditable = canBeEdited && isEditable;
       self.setState({
@@ -314,7 +355,6 @@ class Profile extends Component {
         canBeEdited: canBeEdited,
         isEditable: isEditable,
       });
-
       if (canBeEdited) {
         AppDispatcher.dispatch({
           actionName: Constants.events.EDIT_USER_LOADED,

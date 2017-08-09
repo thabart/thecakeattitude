@@ -47,9 +47,9 @@ class Notifications extends Component {
         var subs = notifications.map(function(notification) { return notification.from; });
         UserService.searchPublicClaims({subs: subs}).then(function(users) {
           notifications.forEach(function(notification) {
-            var user = users.filter(function(user) { return user.sub === notification.from; });
+            var user = users.filter(function(user) { return user.claims.sub === notification.from; });
             if (user && user.length === 1) {
-              notification.name = user[0].name;
+              notification.name = user[0].claims.name;
             }
           });
 

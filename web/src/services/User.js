@@ -4,14 +4,14 @@ import Promise from "bluebird";
 import $ from "jquery";
 
 module.exports = {
-    updateClaims: function (json) {  // Update claims.
+    update: function (json) {  // Update claims.
         return new Promise(function (resolve, reject) {
             var session = SessionService.getSession();
             if (!session || !session.access_token) {
                 reject();
             }
 
-            $.ajax(Constants.openIdUrl + '/users/claims', {
+            $.ajax(Constants.openIdUrl + '/users', {
                 method: 'PUT',
                 contentType: 'application/json',
                 headers: {

@@ -224,8 +224,8 @@ class CommentLst extends Component {
       comments.forEach(function(comment) {
         var user = null;
         users.forEach(function(u) {
-          if (u.sub == comment.subject) {
-            user = u;
+          if (u.claims.sub == comment.subject) {
+            user = u.claims;
             return;
           }
         });

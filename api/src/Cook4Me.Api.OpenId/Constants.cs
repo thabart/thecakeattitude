@@ -25,6 +25,7 @@ namespace Cook4Me.Api.OpenId
         {
             public const string Users = "users";
             public const string UserClaims = "claims";
+            public const string Confirm = "confirm";
             public const string Image = "image";
             public const string PublicClaims = "{id}/public";
             public const string BulkPublicClaims = "bulk/public";
@@ -47,7 +48,14 @@ namespace Cook4Me.Api.OpenId
 
         public static class Dtos
         {
-            public static class UpdateUser
+            public static class ResourceOwner
+            {
+                public const string Claims = "claims";
+                public const string Password = "password";
+                public const string IsLocalAccount = "is_local_account";
+            }
+
+            public static class UpdateClaim
             {
                 public const string Name = "name";
                 public const string Picture = "picture";
