@@ -28,7 +28,7 @@ class Manage extends Component {
     var action = self.props.match.params.action;
     var subaction = self.props.match.params.subaction || 'view';
     var sub = ApplicationStore.getUser().sub;
-    var content = (<UserProfile sub={sub} isEditable={subaction === 'edit'} />);
+    var content = (<UserProfile sub={sub} isEditable={subaction === 'edit'} canBeEdited={true} />);
     if (action === "announces") {
       content = (<ManageAnnounces />);
     } else if (action === "shops") {

@@ -10,7 +10,7 @@ class Users extends Component {
 
   render() { // Display the view.
     return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
-      <UserProfile sub={this.props.match.params.id} />
+      <UserProfile sub={this.props.match.params.id} canBeEdited={false} />
     </MainLayout>);
   }
 }

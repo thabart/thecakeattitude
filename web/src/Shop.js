@@ -299,7 +299,7 @@ class Shop extends Component {
         }
 
         if (!bannerImage) {
-            bannerImage = "/images/default-shop-banner.jpg";
+            bannerImage = "/images/default-profile-banner.jpg";
         }
 
         if (!profileImage) {

@@ -11,7 +11,9 @@ class EditableText extends Component {
     this.closeEditMode = this.closeEditMode.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
-      isInvalid: false,
+      isLengthInvalid: false,
+      isEmailInvalid: false,
+      isPhoneInvalid: false,
       isEditMode: false,
       value: props.value,
       oldValue: props.value
@@ -38,20 +40,44 @@ class EditableText extends Component {
   }
 
   validate() { // Validate the text.
-    var oldValue = this.state.oldValue;
-    if (oldValue.length < this.props.minLength || oldValue.length > this.props.maxLength) {
-      this.setState({
-        isInvalid: true
-      });
-      return;
+    var self = this;
+    var oldValue = self.state.oldValue;
+    var type = self.props.type || 'txt';
+    switch(type) {
+      case 'txt': // Validate length.
+        if (oldValue.length < this.props.minLength || oldValue.length > this.props.maxLength) {
+          self.setState({
+            isLengthInvalid: true
+          });
+          return;
+        }
+      break;
+      case 'email': // Validate email.
+        var regex = new RegExp("^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$");
+        if (!regex.test(oldValue)) {
+          self.setState({
+            isEmailInvalid: true
+          });
+          return;
+        }
+      break;
+      case 'phone': // Validate phone.
+        var regex = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im);
+        if (!regex.test(oldValue)) {
+          self.setState({
+            isPhoneInvalid: true
+          });
+          return;
+        }
+      break;
     }
 
-    this.setState({
+    self.setState({
       value: oldValue,
       isEditMode: false,
       isInvalid: false
     });
-    if (this.props.validate) this.props.validate(oldValue);
+    if (self.props.validate) self.props.validate(oldValue);
   }
 
   render() { // Render the view.
@@ -64,9 +90,15 @@ class EditableText extends Component {
     const {t} = this.props;
     var feedbackName = null;
     var errorMessage = null;
-    if (this.state.isInvalid) {
+    if (this.state.isLengthInvalid) {
       errorMessage = t('shouldContainsCharacters').replace('{0}', this.props.minLength).replace('{1}', this.props.maxLength);
       feedbackName = "danger";
+    } else if (this.state.isEmailInvalid) {
+      errorMessage = t('notValidEmail');
+      feedbackName = 'danger';
+    } else if (this.state.isPhoneInvalid) {
+      errorMessage = t('notValidPhone');
+      feedbackName = 'danger';
     }
 
     return <form onSubmit={(e) => { e.preventDefault(); this.validate(); }} className="row">

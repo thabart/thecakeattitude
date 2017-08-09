@@ -223,7 +223,9 @@
   "errorRetrieveUser": "An error occured while trying to retrieve the user information, please contact the administrator",
   "editUserTooltip": "Edit the user's information",
   "viewUserTooltip": "View the profile",
-  "updateUserTooltip": "Update the profile information",
+  "updateUserTooltip": "Update the profile information (CTRL + S)",
   "editUserBannerImageTooltip": "Edit the banner image",
-  "editUserProfilePictureTooltip": "Edit the profile image"
+  "editUserProfilePictureTooltip": "Edit the profile image",
+  "notValidPhone": "Not a valid phone number",
+  "notValidEmail": "Not a valid email"
 }

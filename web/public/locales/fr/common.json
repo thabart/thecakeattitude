@@ -221,7 +221,9 @@
   "errorRetrieveUser": "Une erreur est survenue lors de la récupération des informations de l'utilisateur, veuillez prendre contact avec l'administrateur",
   "editUserTooltip": "Modifier les informations de votre profil",
   "viewUserTooltip": "Voir le profil",
-  "updateUserTooltip": "Mettre à jour les informations de profil",
+  "updateUserTooltip": "Mettre à jour les informations de profil (CTRL + S)",
   "editUserBannerImageTooltip": "Modifier la bannière",
-  "editUserProfilePictureTooltip": "Modifier l'image du profil"
+  "editUserProfilePictureTooltip": "Modifier l'image du profil",
+  "notValidPhone": "Pas un numéro de téléphone valide",
+  "notValidEmail": "Pas une adresse email valide"
 }

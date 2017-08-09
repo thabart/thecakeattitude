@@ -3,7 +3,12 @@ import { translate } from 'react-i18next';
 import { Alert, Tooltip, Button } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { UserService } from '../services/index';
-import { ApplicationStore } from '../stores/index';
+import { ApplicationStore, EditUserStore } from '../stores/index';
+import { EditableText } from '../components/index';
+import AppDispatcher from '../appDispatcher';
+import Constants from '../../Constants';
+import Mousetrap from 'mousetrap';
+import $ from 'jquery';
 
 class Profile extends Component {
   constructor(props) {
@@ -15,6 +20,7 @@ class Profile extends Component {
     this.uploadBannerImage = this.uploadBannerImage.bind(this);
     this.uploadPictureImage = this.uploadPictureImage.bind(this);
     this.clickPictureImage = this.clickPictureImage.bind(this);
+    this.updateDisplayname = this.updateDisplayname.bind(this);
     this.state = {
       isLoading: false,
       canBeEdited: false,
@@ -42,23 +48,68 @@ class Profile extends Component {
   }
 
   save() { // Save the user.
-
+    var user = EditUserStore.getUser();
   }
 
-  clickBannerImage() { // Execute when the user clicks on the banner image.
+  uploadImage(e, callback) { // Common function used to upload the image.
+      e.preventDefault();
+      var file = e.target.files[0];
+      if (file.type !== 'image/png' && file.type !== 'image/jpg' && file.type !== 'image/jpeg') {
+        return;
+      }
 
-  }
-
-  uploadPictureImage() { // Upload the picture image.
-
-  }
-
-  uploadBannerImage() { // Update the banner image.
-
+      var reader = new FileReader();
+      reader.onloadend = () => {
+          callback(reader.result);
+      };
+      reader.readAsDataURL(file);
   }
 
   clickPictureImage() { // When clicks on the btn then open the window explorer.
+      var btn = this.refs.uploadProfileBtn;
+      $(btn).click();
+  }
 
+  uploadPictureImage(e) { // Upload the picture image.
+      var self = this;
+      self.uploadImage(e, function (result) {
+          var user = self.state.user;
+          user.picture = result;
+          self.setState({
+              user: user
+          });
+          AppDispatcher.dispatch({
+              actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
+              data: {picture: result}
+          });
+      });
+  }
+
+  clickBannerImage() { // Execute when the user clicks on the banner image.
+      var btn = this.refs.uploadBannerBtn;
+      $(btn).click();
+  }
+
+  uploadBannerImage(e) { // Update the banner image.
+      var self = this;
+      self.uploadImage(e, function (result) {
+          var user = self.state.user;
+          user.banner_image = result;
+          self.setState({
+              user: user
+          });
+          AppDispatcher.dispatch({
+              actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
+              data: {banner_image: result}
+          });
+      });
+  }
+
+  updateDisplayname(title) { // Update the display name.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
+          data: {name: title}
+      });
   }
 
   render() { // Render the view.
@@ -74,7 +125,7 @@ class Profile extends Component {
         </div>);
     }
 
-    var bannerImage = "/images/default-shop-banner.jpg";
+    var bannerImage = this.state.user.banner_image || "/images/default-profile-banner.jpg";
     return (<div className="container">
       { /* Header */ }
       <section className="row cover">
@@ -99,7 +150,10 @@ class Profile extends Component {
         </div>
         { /* Profile information */ }
         <div className="profile-information">
-          <h1>{this.state.user.name}</h1>
+          { self.state.isEditable ? (
+              <EditableText className="header1" value={this.state.user.name} validate={this.updateDisplayname} type='txt' maxLength={15} minLength={1}/>)
+              : ( <h1>{this.state.user.name}</h1> )
+          }
         </div>
         { /* List of options */ }
         <ul className="nav nav-pills menu-profile-options">
@@ -146,17 +200,26 @@ class Profile extends Component {
             { /* Email */ }
             <div className="col-md-4 shop-badge">
               <i className="fa fa-envelope fa-3 icon"></i><br />
-              <span>{this.state.user.email}</span>
+              { self.state.isEditable ? (
+                  <EditableText value={this.state.user.email} type='email'/>)
+                  : ( <span>{this.state.user.email}</span> )
+              }
             </div>
             { /* Home phone */ }
             <div className="col-md-4 shop-badge">
               <i className="fa fa-phone fa-3 icon"></i><br />
-              <span>{this.state.user.home_phone_number}</span>
+              { self.state.isEditable ? (
+                  <EditableText value={this.state.user.home_phone_number} type='phone' />)
+                  : ( <span>{this.state.user.home_phone_number}</span> )
+              }
             </div>
             { /* Mobile phone */ }
             <div className="col-md-4 shop-badge">
               <i className="fa fa-mobile fa-3 icon"></i><br />
-              <span>{this.state.user.mobile_phone_number}</span>
+              { self.state.isEditable ? (
+                  <EditableText value={this.state.user.mobile_phone_number} type='phone' />)
+                  : ( <span>{this.state.user.mobile_phone_number}</span> )
+              }
             </div>
           </div>
         </div>
@@ -171,9 +234,10 @@ class Profile extends Component {
     });
     const {t} = this.props;
     var sub = this.props.sub;
+    var canBeEdited = this.props.canBeEdited;
     UserService.getPublicClaims(sub).then(function(user) {
       var localUser = ApplicationStore.getUser();
-      var canBeEdited = localUser && localUser !== null && localUser.sub === user.sub;
+      canBeEdited = canBeEdited && localUser && localUser !== null && localUser.sub === user.sub;
       var isEditable = self.props.isEditable || false;
       isEditable = canBeEdited && isEditable;
       self.setState({
@@ -182,6 +246,19 @@ class Profile extends Component {
         canBeEdited: canBeEdited,
         isEditable: isEditable,
       });
+
+      if (canBeEdited) {
+        AppDispatcher.dispatch({
+          actionName: Constants.events.EDIT_USER_LOADED,
+          data: user
+        });
+        Mousetrap.bind('ctrl+s', function(e) { // Save the user (ctrl+s)
+          if (self.state.isEditable) {
+            e.preventDefault();
+            self.save();
+          }
+        });
+      }
     }).catch(function() {
       self.setState({
         isLoading: false,
