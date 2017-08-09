@@ -1,11 +1,12 @@
-import React, {Component} from "react";
-import {ShopsService} from '../services/index';
-import {Alert} from 'reactstrap';
-import {NavLink} from "react-router-dom";
+import React, { Component } from "react";
+import { ShopsService } from '../services/index';
+import { Alert } from 'reactstrap';
+import { NavLink } from "react-router-dom";
+import { Guid } from '../utils';
+import { translate } from 'react-i18next';
 import moment from 'moment';
 import $ from 'jquery';
 import AppDispatcher from "../appDispatcher";
-import {Guid} from '../utils';
 
 class ManageShops extends Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class ManageShops extends Component {
       successMessage: null
     };
   }
-  navigate(e, name) {
+
+  navigate(e, name) { // Navigate through the table
     e.preventDefault();
     var startIndex = name - 1;
     this._request = $.extend({}, this._request, {
@@ -33,7 +35,8 @@ class ManageShops extends Component {
     });
     this.refresh();
   }
-  removeShop(id) {
+
+  removeShop(id) { // Remove the shop.
     var self = this;
     self.setState({
       isLoading: true
@@ -51,17 +54,20 @@ class ManageShops extends Component {
       });
     });
   }
+
   closeError() {
     this.setState({
       errorMessage: null
     });
   }
+
   closeSuccess() {
     this.setState({
       successMessage: null
     });
   }
-  refresh() {
+
+  refresh() { // Refresh table.
     var self = this;
     self.setState({
       isLoading: true
@@ -90,27 +96,39 @@ class ManageShops extends Component {
       });
     });
   }
+
   render() {
     if (this.state.isLoading) {
       return (<div><i className="fa fa-spinner fa-spin"></i></div>);
     }
 
+    const {t} = this.props;
     var rows = [],
       navigations = [],
       self = this;
     if (this.state.shops && this.state.shops.length > 0) {
       this.state.shops.forEach(function(shop) {
         rows.push((<tr>
-          <td>{shop.id}</td>
           <td>{shop.name}</td>
           <td>{shop.category.name}</td>
           <td>{moment(shop.create_datetime).format('LLL')}</td>
           <td>
+            <a href="#" style={{padding: "5px", border: "1px solid #ee676b", borderRadius: "5px", color: "#ee676b"}}>
+              <i className="fa fa-trash"></i> Delete
+            </a>
+            <a href="#" style={{padding: "5px", border: "1px solid green", borderRadius: "5px", marginLeft: "5px", color: "green"}}>
+              <i className="fa fa-external-link"></i> View
+            </a>
+            <a href="#" style={{padding: "5px", border: "1px solid #6c6c44", borderRadius: "5px", marginLeft: "5px", color: "#6c6c44"}}>
+              <i className="fa fa-pencil"></i> Edit
+            </a>
+            {/*
             <button className="btn btn-outline-secondary btn-sm" onClick={(e) => { self.removeShop(shop.id); }}><i className="fa fa-trash"></i></button>
             <NavLink to={'/shops/' + shop.id + '/view/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></NavLink>
             <NavLink to={'/shops/' + shop.id + '/edit/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>
             <NavLink to={'/addproduct/' + shop.id} className="btn btn-success"><i className="fa fa-plus"></i> ADD PRODUCT</NavLink>
             <NavLink to={'/addservice/' + shop.id} className="btn btn-success"><i className="fa fa-plus"></i> ADD SERVICE</NavLink>
+            */}
           </td>
         </tr>));
       });
@@ -126,32 +144,31 @@ class ManageShops extends Component {
       });
     }
 
-    return (<div className="container manage-container">
-      <h1>Manage shops</h1>
-      <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
-      <Alert color="success" isOpen={this.state.successMessage !== null} toggle={this.closeSuccess}>{this.state.successMessage}</Alert>
-      {rows.length === 0 && (<Alert color="warning">No shops</Alert>) || (
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Category</th>
-              <th>Creation datetime</th>
-              <th>Manage</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows}
-          </tbody>
-        </table> )}
-      {navigations.length > 0 && (
-        <ul className="pagination">
-          {navigations}
-        </ul>
-      )}
+    return (<div className="container">
+      <div className="section">
+        {rows.length === 0 && (<Alert color="warning">No shops</Alert>) || (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Creation datetime</th>
+                <th>Manage</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows}
+            </tbody>
+          </table> )}
+        {navigations.length > 0 && (
+          <ul className="pagination">
+            {navigations}
+          </ul>
+        )}
+      </div>
     </div>);
   }
+
   componentDidMount() {
     var self = this;
     AppDispatcher.register(function (payload) {
@@ -169,4 +186,4 @@ class ManageShops extends Component {
   }
 }
 
-export default ManageShops;
+export default translate('common', { wait: process && !process.release })(ManageShops);
