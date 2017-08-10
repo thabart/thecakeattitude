@@ -23,20 +23,21 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Announcement
 {
-    public interface IGetAnnouncementOperation
+    public interface IGetClientServiceOperation
     {
         Task<IActionResult> Execute(string id);
     }
 
-    internal class GetAnnouncementOperation : IGetAnnouncementOperation
+    internal class GetClientServiceOperation : IGetClientServiceOperation
     {
-        private readonly IAnnouncementRepository _repository;
+        private readonly IClientServiceRepository _repository;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
-        private readonly IAnnouncementEnricher _enricher;
+        private readonly IClientServiceEnricher _enricher;
 
-        public GetAnnouncementOperation(
-            IAnnouncementRepository repository, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder, IAnnouncementEnricher enricher)
+        public GetClientServiceOperation(
+            IClientServiceRepository repository, IHalResponseBuilder halResponseBuilder, 
+            IRequestBuilder requestBuilder, IClientServiceEnricher enricher)
         {
             _repository = repository;
             _halResponseBuilder = halResponseBuilder;
@@ -64,7 +65,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
 
         private static string GetAnnouncementLink(string id)
         {
-            return "/" + Constants.RouteNames.Announcements + "/" + id;
+            return "/" + Constants.RouteNames.ClientServices + "/" + id;
         }
     }
 }

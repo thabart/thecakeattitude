@@ -6,8 +6,8 @@ import Service from "../services/ShopServices";
 import moment from "moment";
 import Rater from "react-rater";
 import AppDispatcher from "../appDispatcher";
-import $ from "jquery";
 import Constants from '../../Constants';
+import $ from "jquery";
 
 var daysMapping = {
     "0": "monday",
@@ -184,7 +184,7 @@ class ShopServices extends Component {
                     </ul>
                 )}
                 {content.length == 0
-                    ? (<span>No services</span>) :
+                    ? (<span>{t('noServices')}</span>) :
                     (<ul className="list-group list-group-flush">
                         {content}
                     </ul>)

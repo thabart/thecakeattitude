@@ -14,26 +14,26 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Core.Repositories;
 using System;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Validators
 {
-    public interface IRemoveAnnouncementValidator
+    public interface IRemoveClientServiceValidator
     {
-        Task<RemoveAnnouncementValidationResult> Validate(RemoveAnnouncementCommand command);
+        Task<RemoveClientServiceValidationResult> Validate(RemoveClientServiceCommand command);
     }
 
-    public class RemoveAnnouncementValidationResult
+    public class RemoveClientServiceValidationResult
     {
-        public RemoveAnnouncementValidationResult()
+        public RemoveClientServiceValidationResult()
         {
             IsValid = true;
         }
 
-        public RemoveAnnouncementValidationResult(string message)
+        public RemoveClientServiceValidationResult(string message)
         {
             IsValid = false;
             Message = message;
@@ -43,16 +43,16 @@ namespace Cook4Me.Api.Host.Validators
         public string Message { get; private set; }
     }
 
-    internal class RemoveAnnouncementValidator : IRemoveAnnouncementValidator
+    internal class RemoveClientServiceValidator : IRemoveClientServiceValidator
     {
-        private readonly IAnnouncementRepository _repository;
+        private readonly IClientServiceRepository _repository;
 
-        public RemoveAnnouncementValidator(IAnnouncementRepository repository)
+        public RemoveClientServiceValidator(IClientServiceRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<RemoveAnnouncementValidationResult> Validate(RemoveAnnouncementCommand command)
+        public async Task<RemoveClientServiceValidationResult> Validate(RemoveClientServiceCommand command)
         {
             if (command == null)
             {
@@ -62,15 +62,15 @@ namespace Cook4Me.Api.Host.Validators
             var announcement = await _repository.Get(command.AnnouncementId);
             if (announcement == null)
             {
-                return new RemoveAnnouncementValidationResult(ErrorDescriptions.TheAnnouncementDoesntExist);
+                return new RemoveClientServiceValidationResult(ErrorDescriptions.TheAnnouncementDoesntExist);
             }
 
             if (announcement.Subject != command.Subject)
             {
-                return new RemoveAnnouncementValidationResult(ErrorDescriptions.TheAnnouncementCannotBeRemovedByYou);
+                return new RemoveClientServiceValidationResult(ErrorDescriptions.TheAnnouncementCannotBeRemovedByYou);
             }
 
-            return new RemoveAnnouncementValidationResult();
+            return new RemoveClientServiceValidationResult();
         }
     }
 }

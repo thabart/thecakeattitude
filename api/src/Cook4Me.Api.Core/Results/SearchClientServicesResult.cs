@@ -14,23 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
-using System;
+using Cook4Me.Api.Core.Aggregates;
+using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Events.Announcement
+namespace Cook4Me.Api.Core.Results
 {
-    public class AnnouncementAddedEvent : Event
+    public class SearchClientServicesResult
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Subject { get; set; }
-        public string CategoryId { get; set; }
-        public string GooglePlaceId { get; set; }
-        public float Longitude { get; set; }
-        public float Latitude { get; set; }
-        public double Price { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
+        public IEnumerable<ClientServiceAggregate> Content { get; set; }
+        public int TotalResults { get; set; }
+        public int StartIndex { get; set; }
     }
 }

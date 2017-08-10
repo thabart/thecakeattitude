@@ -1,5 +1,5 @@
-import ManageAnnounces from './announces';
+import ManageServices from './services';
 import ManageShops from './shops';
 
-exports.ManageAnnounces = ManageAnnounces;
+exports.ManageServices = ManageServices;
 exports.ManageShops = ManageShops;

@@ -1,14 +1,14 @@
 import React, {Component} from "react";
 import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router";
-import { ShopsService, SessionService, AnnouncementsService, CategoryService } from "./services/index";
+import { ShopsService, SessionService, ClientService, CategoryService } from "./services/index";
 import { withGoogleMap, GoogleMap, InfoWindow, Marker } from "react-google-maps";
 import { MAP } from "react-google-maps/lib/constants";
 import { Responsive, WidthProvider } from "react-grid-layout";
 import { translate } from 'react-i18next';
 import TrendingSellers from "./widgets/trendingSellers";
 import ShopServices from "./widgets/shopServices";
-import PublicAnnouncements from "./widgets/publicAnnouncements";
+import ClientServices from "./widgets/clientServices";
 import BestDeals from "./widgets/bestDeals";
 import SearchBox from "react-google-maps/lib/places/SearchBox";
 import Constants from '../Constants';
@@ -26,20 +26,20 @@ const widgetKeys = {
   trendingSellers: 'a',
   shopServices: 'b',
   bestDeals: 'c',
-  announces: 'd'
+  clientServices: 'd'
 };
 
 function getFilter() { // Get the filter from the local storage.
   let ls = {
     include_shops : true,
-    include_announces : true,
+    include_clientservices : true,
     excludedCategories : []
   };
   if (global.localStorage) {
     try {
       ls = JSON.parse(global.localStorage.getItem(filterStorageKey)) || {
         include_shops : true,
-        include_announces : true,
+        include_clientservices : true,
         excludedCategories : []
       };
     } catch (e) { }
@@ -99,7 +99,7 @@ const shopOpts = {
     scaledSize: new window.google.maps.Size(34, 38)
 };
 
-const announceOpts = {
+const clientServiceOpts = {
     url: '/images/service-pin.png',
     scaledSize: new window.google.maps.Size(34, 38)
 };
@@ -197,7 +197,7 @@ class Map extends Component {
             activeWidgets: activeWidgets,
             isVerticalMenuDisplayed: true,
             isShopsLayerDisplayed : filter.include_shops,
-            isServicesLayerDisplayed: filter.include_announces,
+            isServicesLayerDisplayed: filter.include_clientservices,
             shopCategories: []
         };
     }
@@ -302,7 +302,7 @@ class Map extends Component {
         });
     }
 
-    refreshMap() { // Refresh the map : Display shops and announces.
+    refreshMap() { // Refresh the map : Display shops and client services.
         const {t} = this.props;
         var self = this;
         var categoryIds = [];
@@ -357,7 +357,7 @@ class Map extends Component {
         var searchServicesRequest = $.extend({}, json, {
           shop_category_ids: categoryIds
         });
-        var searchAnnounces = $.extend({}, json, {
+        var searchClientServices = $.extend({}, json, {
           category_id: categoryIds
         });
 
@@ -419,26 +419,26 @@ class Map extends Component {
         }
 
         if (self.state.isServicesLayerDisplayed) { // Client services LAYER.
-          if (self.state.activeWidgets.includes(widgetKeys.announces)) {
-            self.refs.publicAnnouncements.getWrappedInstance().refresh(searchAnnounces);
+          if (self.state.activeWidgets.includes(widgetKeys.clientServices)) {
+            self.refs.clientServices.getWrappedInstance().refresh(searchClientServices);
           }
-          AnnouncementsService.search(searchAnnounces).then(function (announcesResult) {
-              var announcesEmbedded = announcesResult['_embedded'];
-              if (!(announcesEmbedded instanceof Array)) {
-                  announcesEmbedded = [announcesEmbedded];
+          ClientService.search(searchClientServices).then(function (clientServicesResult) {
+              var clientServicesEmbedded = clientServicesResult['_embedded'];
+              if (!(clientServicesEmbedded instanceof Array)) {
+                  clientServicesEmbedded = [clientServicesEmbedded];
               }
 
               var markers = self.state.markers;
-              announcesEmbedded.forEach(function (announce) {
+              clientServicesEmbedded.forEach(function (clientService) {
                   markers.push({
-                      location: announce.location,
-                      name: announce.name,
+                      location: clientService.location,
+                      name: clientService.name,
                       showInfo: false,
-                      id: announce.id,
-                      opts: announceOpts,
+                      id: clientService.id,
+                      opts: clientServiceOpts,
                       info: (<div>
-                        <strong>{announce.name}</strong><br />
-                        <NavLink to={"/announces/" + announce.id }>{t('viewClientService')}</NavLink>
+                        <strong>{clientService.name}</strong><br />
+                        <NavLink to={"/clientservices/" + clientService.id }>{t('viewClientService')}</NavLink>
                       </div>)
                   });
               });
@@ -454,8 +454,8 @@ class Map extends Component {
         }
         else
         {
-          if (self.state.activeWidgets.includes(widgetKeys.announces)) {
-            self.refs.publicAnnouncements.getWrappedInstance().reset();
+          if (self.state.activeWidgets.includes(widgetKeys.clientServices)) {
+            self.refs.clientServices.getWrappedInstance().reset();
           }
         }
 
@@ -607,14 +607,14 @@ class Map extends Component {
                       {i: widgetKeys.trendingSellers, x: 0, y: 0, w: 1, h: 1, isResizable: true},
                       {i: widgetKeys.bestDeals, x: 1, y: 0, w: 1, h: 1, isResizable: true},
                       {i: widgetKeys.shopServices, x: 2, y: 0, w: 1, h: 1, isResizable: true},
-                      {i: widgetKeys.announces, x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
+                      {i: widgetKeys.clientServices, x: 0, y: 1, w: 3, h: 2, minW: 2, isResizable: true}
                   ]
               },
           shopCategories = self.state.shopCategories;
         internalItems[widgetKeys.trendingSellers] = (<div key={widgetKeys.trendingSellers}><TrendingSellers ref="trendingSellers" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.trendingSellers); }}/></div>);
         internalItems[widgetKeys.bestDeals] = (<div key={widgetKeys.bestDeals}><BestDeals ref="bestDeals" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.bestDeals); }} /></div>);
         internalItems[widgetKeys.shopServices] = (<div key={widgetKeys.shopServices}><ShopServices ref="shopServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.shopServices); }}/></div>);
-        internalItems[widgetKeys.announces] = (<div key={widgetKeys.announces}><PublicAnnouncements ref="publicAnnouncements" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.announces); }}/></div>);
+        internalItems[widgetKeys.clientServices] = (<div key={widgetKeys.clientServices}><ClientServices ref="clientServices" history={self.props.history} setCurrentMarker={self.setCurrentMarker} onClose={() => { self.toggleWidget(widgetKeys.clientServices); }}/></div>);
         if (this.state.isSearching) {
             cl = "row searching";
         } else if (this.state.isDragging) {
@@ -687,7 +687,7 @@ class Map extends Component {
                             <li className="menu-item">
                               <h6 className="title">{t('clients')}</h6>
                               <div className="actions">
-                                <i className={self.state.isServicesLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => { self.toggle('isServicesLayerDisplayed'); var filter = getFilter(); filter.include_announces = self.state.isServicesLayerDisplayed; saveFilter(filter); self.refreshMap(); }}></i>
+                                <i className={self.state.isServicesLayerDisplayed ? "fa fa-eye action" : "fa fa-eye-slash action"} onClick={() => { self.toggle('isServicesLayerDisplayed'); var filter = getFilter(); filter.include_clientservices = self.state.isServicesLayerDisplayed; saveFilter(filter); self.refreshMap(); }}></i>
                               </div>
                             </li>
                           </ul>
@@ -715,7 +715,7 @@ class Map extends Component {
                             <li className="menu-item">
                               <h6 className="title">{t('lastClientServicesWidgetTitle')}</h6>
                               <div className="actions">
-                                <i className={self.state.activeWidgets.includes(widgetKeys.announces) ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => { self.toggleWidget(widgetKeys.announces); }}></i>
+                                <i className={self.state.activeWidgets.includes(widgetKeys.clientServices) ? 'fa fa-eye action' : 'fa fa-eye-slash action'} onClick={() => { self.toggleWidget(widgetKeys.clientServices); }}></i>
                               </div>
                             </li>
                           </ul>

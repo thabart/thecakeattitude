@@ -24,19 +24,21 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Announcement
 {
-    public interface IGetMineAnnouncementsOperation
+    public interface IGetMineClientServicesOperation
     {
         Task<IActionResult> Execute(string subject);
     }
 
-    internal class GetMineAnnouncementsOperation : IGetMineAnnouncementsOperation
+    internal class GetMineClientServicesOperation : IGetMineClientServicesOperation
     {
-        private readonly IAnnouncementRepository _repository;
+        private readonly IClientServiceRepository _repository;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
-        private readonly IAnnouncementEnricher _enricher;
+        private readonly IClientServiceEnricher _enricher;
 
-        public GetMineAnnouncementsOperation(IAnnouncementRepository repository, IHalResponseBuilder halResponseBuilder, IRequestBuilder requestBuilder, IAnnouncementEnricher enricher)
+        public GetMineClientServicesOperation(
+            IClientServiceRepository repository, IHalResponseBuilder halResponseBuilder, 
+            IRequestBuilder requestBuilder, IClientServiceEnricher enricher)
         {
             _repository = repository;
             _halResponseBuilder = halResponseBuilder;
@@ -51,7 +53,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            var announces = await _repository.Search(new SearchAnnouncementsParameter
+            var announces = await _repository.Search(new SearchClientServicesParameter
             {
                 Subjects = new [] { subject }
             });
@@ -69,7 +71,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
 
         private static string GetAnnouncementLink()
         {
-            return "/" + Constants.RouteNames.Announcements + "/" + Constants.RouteNames.Me;
+            return "/" + Constants.RouteNames.ClientServices + "/" + Constants.RouteNames.Me;
         }
     }
 }

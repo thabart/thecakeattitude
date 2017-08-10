@@ -14,15 +14,13 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Bus;
 
-namespace Cook4Me.Api.Core.Results
+namespace Cook4Me.Api.Core.Events.ClientService
 {
-    public class SearchAnnouncementsResult
+    public class ClientServiceRemovedEvent : Event
     {
-        public IEnumerable<AnnouncementAggregate> Content { get; set; }
-        public int TotalResults { get; set; }
-        public int StartIndex { get; set; }
+        public string AnnouncementId { get; set; }
+        public string Subject { get; set; }
     }
 }

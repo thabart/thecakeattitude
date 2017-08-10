@@ -26,20 +26,20 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Announcement
 {
-    public interface IAddAnnouncementOperation
+    public interface IAddClientServiceOperation
     {
         Task<IActionResult> Execute(JObject jObj, string subject, string commonId);
     }
 
-    public class AddAnnouncementOperation : IAddAnnouncementOperation
+    public class AddClientServiceOperation : IAddClientServiceOperation
     {
         private readonly IRequestBuilder _requestBuilder;
-        private readonly IAddAnnouncementValidator _validator;
+        private readonly IAddClientServiceValidator _validator;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
         private readonly ICommandSender _commandSender;
 
-        public AddAnnouncementOperation(IRequestBuilder requestBuilder, IAddAnnouncementValidator validator,
+        public AddClientServiceOperation(IRequestBuilder requestBuilder, IAddClientServiceValidator validator,
             IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
         {
             _requestBuilder = requestBuilder;
@@ -61,7 +61,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            var command = _requestBuilder.GetAnnouncement(jObj);
+            var command = _requestBuilder.GetClientService(jObj);
             command.CreateDateTime = DateTime.UtcNow;
             command.UpdateDateTime = DateTime.UtcNow;
             command.Id = Guid.NewGuid().ToString();

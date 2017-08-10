@@ -1,9 +1,8 @@
 import React, {Component} from "react";
-import {Alert, Breadcrumb, BreadcrumbItem} from 'reactstrap';
-import {withGoogleMap, GoogleMap, Marker} from "react-google-maps";
-import {AnnouncementsService, UserService} from './services/index';
+import { Alert, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
+import { ClientService, UserService } from './services/index';
 import Constants from '../Constants';
-import './announces.css';
 
 const announceOpts = {
     url: '/images/service-pin.png',
@@ -24,7 +23,7 @@ const GettingStartedGoogleMap = withGoogleMap(props => {
     );
 });
 
-class Announces extends Component {
+class ClientServices extends Component {
   constructor(props) {
     super(props);
     this._googleMap = null;
@@ -37,21 +36,24 @@ class Announces extends Component {
       announce: null
     };
   }
+
   onMapLoad(map) {
       this._googleMap = map;
   }
+
   closeError() {
     this.setState({
       errorMessage: null
     });
   }
+
   refresh() {
     var self = this,
       id = self.props.match.params.id;
     self.setState({
       isLoading: true
     });
-    AnnouncementsService.get(id).then(function(announceResult) {
+    ClientService.get(id).then(function(announceResult) {
       var announceEmbedded = announceResult['_embedded'];
       UserService.getPublicClaims(announceEmbedded.subject).then(function(userResult) {
         self.setState({
@@ -72,6 +74,7 @@ class Announces extends Component {
       });
     });
   }
+
   render() {
     if (this.state.isLoading) {
       return (<div className="container">Loading ...</div>);
@@ -162,9 +165,10 @@ class Announces extends Component {
       </section>
     </div>);
   }
+
   componentWillMount() {
     this.refresh();
   }
 }
 
-export default Announces;
+export default ClientServices;

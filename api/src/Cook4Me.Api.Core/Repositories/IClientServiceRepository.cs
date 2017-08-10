@@ -14,13 +14,19 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Results;
+using System.Threading.Tasks;
 
-namespace Cook4Me.Api.Core.Events.Announcement
+namespace Cook4Me.Api.Core.Repositories
 {
-    public class AnnouncementRemovedEvent : Event
+    public interface IClientServiceRepository
     {
-        public string AnnouncementId { get; set; }
-        public string Subject { get; set; }
+        Task<bool> Delete(string id);
+        Task<SearchClientServicesResult> Search(SearchClientServicesParameter parameter);
+        Task<ClientServiceAggregate> Get(string id);
+        Task<bool> Add(ClientServiceAggregate record);
+        Task<bool> Update(ClientServiceAggregate record);
     }
 }

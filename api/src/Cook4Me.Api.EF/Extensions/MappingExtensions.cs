@@ -124,20 +124,20 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static AnnouncementAggregate ToAggregate(this Announcement announcement)
+        public static ClientServiceAggregate ToAggregate(this ClientService announcement)
         {
             if (announcement == null)
             {
                 throw new ArgumentNullException(nameof(announcement));
             }
 
-            AnnouncementCategory category = null;
+            ClientServiceCategory category = null;
             if (announcement.Category != null)
             {
                 category = announcement.Category.ToCategoryAggregate();
             }
 
-            return new AnnouncementAggregate
+            return new ClientServiceAggregate
             {
                 Id = announcement.Id,
                 CategoryId = announcement.CategoryId,
@@ -155,14 +155,14 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Announcement ToModel(this AnnouncementAggregate announcement)
+        public static ClientService ToModel(this ClientServiceAggregate announcement)
         {
             if (announcement == null)
             {
                 throw new ArgumentNullException(nameof(announcement));
             }
 
-            return new Announcement
+            return new ClientService
             {
                 Id = announcement.Id,
                 CategoryId = announcement.CategoryId,
@@ -201,14 +201,14 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static AnnouncementCategory ToCategoryAggregate(this Category category)
+        public static ClientServiceCategory ToCategoryAggregate(this Category category)
         {
             if (category == null)
             {
                 throw new ArgumentNullException(nameof(category));
             }
 
-            return new AnnouncementCategory
+            return new ClientServiceCategory
             {
                 Id = category.Id,
                 Description = category.Description,
@@ -216,7 +216,7 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static Category ToModel(this AnnouncementCategory category)
+        public static Category ToModel(this ClientServiceCategory category)
         {
             if (category == null)
             {

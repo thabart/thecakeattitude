@@ -15,7 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Validators;
@@ -25,20 +25,21 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Announcement
 {
-    public interface IDeleteAnnouncementOperation
+    public interface IDeleteClientServiceOperation
     {
-        Task<IActionResult> Execute(RemoveAnnouncementCommand command);
+        Task<IActionResult> Execute(RemoveClientServiceCommand command);
     }
 
-    internal class DeleteAnnouncementOperation : IDeleteAnnouncementOperation
+    internal class DeleteClientServiceOperation : IDeleteClientServiceOperation
     {
-        private readonly IRemoveAnnouncementValidator _validator;
+        private readonly IRemoveClientServiceValidator _validator;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
         private readonly ICommandSender _commandSender;
 
-        public DeleteAnnouncementOperation(
-            IRemoveAnnouncementValidator validator, IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
+        public DeleteClientServiceOperation(
+            IRemoveClientServiceValidator validator, IResponseBuilder responseBuilder, 
+            IControllerHelper controllerHelper, ICommandSender commandSender)
         {
             _validator = validator;
             _responseBuilder = responseBuilder;
@@ -46,7 +47,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
             _commandSender = commandSender;
         }
 
-        public async Task<IActionResult> Execute(RemoveAnnouncementCommand command)
+        public async Task<IActionResult> Execute(RemoveClientServiceCommand command)
         {
             if (command == null)
             {

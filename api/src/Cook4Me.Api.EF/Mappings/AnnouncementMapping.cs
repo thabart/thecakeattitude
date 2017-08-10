@@ -30,7 +30,7 @@ namespace Cook4Me.Api.EF.Mappings
             }
 
 
-            modelBuilder.Entity<Announcement>()
+            modelBuilder.Entity<ClientService>()
                 .HasKey(a => a.Id);
             return modelBuilder;
         }

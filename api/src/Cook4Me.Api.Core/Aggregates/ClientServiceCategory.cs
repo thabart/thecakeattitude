@@ -16,7 +16,7 @@
 
 namespace Cook4Me.Api.Core.Aggregates
 {
-    public class AnnouncementCategory
+    public class ClientServiceCategory
     {
         public string Id { get; set; }
         public string Name { get; set; }

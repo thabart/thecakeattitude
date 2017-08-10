@@ -19,9 +19,9 @@ using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Parameters
 {
-    public class SearchAnnouncementsParameter
+    public class SearchClientServicesParameter
     {
-        public SearchAnnouncementsParameter()
+        public SearchClientServicesParameter()
         {
             StartIndex = 0;
             Count = 100;

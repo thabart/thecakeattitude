@@ -18,7 +18,7 @@ using System;
 
 namespace Cook4Me.Api.EF.Models
 {
-    public class Announcement
+    public class ClientService
     {
         public string Id { get; set; }
         public string Name { get; set; }

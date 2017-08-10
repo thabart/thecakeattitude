@@ -29,6 +29,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual Category Parent { get; set; }
         public virtual ICollection<Shop> Shops { get; set; }
         public virtual ICollection<Map> Maps { get; set; }
-        public virtual ICollection<Announcement> Announcements { get; set; }
+        public virtual ICollection<ClientService> Announcements { get; set; }
     }
 }

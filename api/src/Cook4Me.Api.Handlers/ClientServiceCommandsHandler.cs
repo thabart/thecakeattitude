@@ -16,33 +16,33 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Commands.Announcement;
-using Cook4Me.Api.Core.Events.Announcement;
+using Cook4Me.Api.Core.Commands.ClientService;
+using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Repositories;
 using System;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class AnnouncementCommandsHandler : Handles<AddAnnouncementCommand>, Handles<RemoveAnnouncementCommand>
+    public class ClientServiceCommandsHandler : Handles<AddClientServiceCommand>, Handles<RemoveClientServiceCommand>
     {
-        private readonly IAnnouncementRepository _repository;
+        private readonly IClientServiceRepository _repository;
         private readonly IEventPublisher _eventPublisher;
 
-        public AnnouncementCommandsHandler(IAnnouncementRepository repository, IEventPublisher eventPublisher)
+        public ClientServiceCommandsHandler(IClientServiceRepository repository, IEventPublisher eventPublisher)
         {
             _repository = repository;
             _eventPublisher = eventPublisher;
         }
 
-        public async Task Handle(AddAnnouncementCommand message)
+        public async Task Handle(AddClientServiceCommand message)
         {
             if (message == null)
             {
                 throw new ArgumentNullException(nameof(message));
             }
 
-            var record = new AnnouncementAggregate
+            var record = new ClientServiceAggregate
             {
                 CategoryId = message.CategoryId,
                 CreateDateTime = message.CreateDateTime,
@@ -62,7 +62,7 @@ namespace Cook4Me.Api.Handlers
                 return;
             }
 
-            _eventPublisher.Publish(new AnnouncementAddedEvent
+            _eventPublisher.Publish(new ClientServiceAddedEvent
             {
                 CategoryId = message.CategoryId,
                 CreateDateTime = message.CreateDateTime,
@@ -79,7 +79,7 @@ namespace Cook4Me.Api.Handlers
             });
         }
 
-        public async Task Handle(RemoveAnnouncementCommand message)
+        public async Task Handle(RemoveClientServiceCommand message)
         {
             if (message == null)
             {
@@ -97,7 +97,7 @@ namespace Cook4Me.Api.Handlers
                 return;
             }
 
-            _eventPublisher.Publish(new AnnouncementRemovedEvent
+            _eventPublisher.Publish(new ClientServiceRemovedEvent
             {
                 AnnouncementId = message.AnnouncementId,
                 Subject = message.Subject,

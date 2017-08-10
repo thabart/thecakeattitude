@@ -14,7 +14,7 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Operations.Announcement;
@@ -25,28 +25,28 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
 {
-    [Route(Constants.RouteNames.Announcements)]
-    public class AnnouncementsController : BaseController
+    [Route(Constants.RouteNames.ClientServices)]
+    public class ClientServicesController : BaseController
     {
-        private readonly ISearchAnnouncementsOperation _searchOperation;
-        private readonly IGetAnnouncementOperation _getOperation;
-        private readonly IAddAnnouncementOperation _addOperation;
-        private readonly IDeleteAnnouncementOperation _deleteOperation;
-        private readonly IGetMineAnnouncementsOperation _getMineAnnouncementsOperation;
-        private readonly ISearchMineAnnouncements _searchMineAnnouncements;
+        private readonly ISearchClientServicesOperation _searchOperation;
+        private readonly IGetClientServiceOperation _getOperation;
+        private readonly IAddClientServiceOperation _addOperation;
+        private readonly IDeleteClientServiceOperation _deleteOperation;
+        private readonly IGetMineClientServicesOperation _getMineClientServicesOperation;
+        private readonly ISearchMineClientServices _searchMineClientServices;
 
-        public AnnouncementsController(
-            ISearchAnnouncementsOperation searchOperation, IGetAnnouncementOperation getOperation,
-            IAddAnnouncementOperation addOperation, IDeleteAnnouncementOperation deleteOperation,
-            IGetMineAnnouncementsOperation getMineAnnouncementsOperation, ISearchMineAnnouncements searchMineAnnouncements,
+        public ClientServicesController(
+            ISearchClientServicesOperation searchOperation, IGetClientServiceOperation getOperation,
+            IAddClientServiceOperation addOperation, IDeleteClientServiceOperation deleteOperation,
+            IGetMineClientServicesOperation getMineAnnouncementsOperation, ISearchMineClientServices searchMineAnnouncements,
             IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchOperation = searchOperation;
             _getOperation = getOperation;
             _addOperation = addOperation;
             _deleteOperation = deleteOperation;
-            _getMineAnnouncementsOperation = getMineAnnouncementsOperation;
-            _searchMineAnnouncements = searchMineAnnouncements;
+            _getMineClientServicesOperation = getMineAnnouncementsOperation;
+            _searchMineClientServices = searchMineAnnouncements;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -63,16 +63,16 @@ namespace Cook4Me.Api.Host.Controllers
 
         [HttpGet(Constants.RouteNames.Me)]
         [Authorize("Connected")]
-        public async Task<IActionResult> GetMineAnnouncements()
+        public async Task<IActionResult> GetMineClientServices()
         {
-            return await _getMineAnnouncementsOperation.Execute(User.GetSubject());
+            return await _getMineClientServicesOperation.Execute(User.GetSubject());
         }
 
         [HttpPost(Constants.RouteNames.SearchMine)]
         [Authorize("Connected")]
-        public async Task<IActionResult> SearchMineAnnouncements([FromBody] JObject jObj)
+        public async Task<IActionResult> SearchMineClientServices([FromBody] JObject jObj)
         {
-            return await _searchMineAnnouncements.Execute(User.GetSubject(), jObj);
+            return await _searchMineClientServices.Execute(User.GetSubject(), jObj);
         }
 
         [HttpPost]
@@ -86,7 +86,7 @@ namespace Cook4Me.Api.Host.Controllers
         [Authorize("Connected")]
         public async Task<IActionResult> Remove(string id)
         {
-            return await _deleteOperation.Execute(new RemoveAnnouncementCommand
+            return await _deleteOperation.Execute(new RemoveClientServiceCommand
             {
                 Subject = User.GetSubject(),
                 AnnouncementId = id,

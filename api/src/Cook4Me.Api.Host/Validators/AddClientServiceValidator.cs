@@ -14,26 +14,26 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Core.Repositories;
 using System;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Validators
 {
-    public interface IAddAnnouncementValidator
+    public interface IAddClientServiceValidator
     {
-        Task<AddAnnouncementValidationResult> Validate(AddAnnouncementCommand command);
+        Task<AddClientServiceValidationResult> Validate(AddClientServiceCommand command);
     }
 
-    public class AddAnnouncementValidationResult
+    public class AddClientServiceValidationResult
     {
-        public AddAnnouncementValidationResult()
+        public AddClientServiceValidationResult()
         {
             IsValid = true;
         }
 
-        public AddAnnouncementValidationResult(string message)
+        public AddClientServiceValidationResult(string message)
         {
             IsValid = false;
             Message = message;
@@ -43,19 +43,19 @@ namespace Cook4Me.Api.Host.Validators
         public string Message { get; private set; }
     }
 
-    internal class AddAnnouncementValidator : IAddAnnouncementValidator
+    internal class AddClientServiceValidator : IAddClientServiceValidator
     {
         private readonly IShopCategoryRepository _categoryRepository;
-        private readonly IAnnouncementRepository _announcementRepository;
+        private readonly IClientServiceRepository _announcementRepository;
         private readonly IServiceRepository _serviceRepository;
 
-        public AddAnnouncementValidator(IShopCategoryRepository categoryRepository, IAnnouncementRepository announcementRepository)
+        public AddClientServiceValidator(IShopCategoryRepository categoryRepository, IClientServiceRepository announcementRepository)
         {
             _categoryRepository = categoryRepository;
             _announcementRepository = announcementRepository;
         }
 
-        public async Task<AddAnnouncementValidationResult> Validate(AddAnnouncementCommand command)
+        public async Task<AddClientServiceValidationResult> Validate(AddClientServiceCommand command)
         {
             if (command == null)
             {
@@ -64,22 +64,22 @@ namespace Cook4Me.Api.Host.Validators
 
             if (!IsValid(command.Name, 1, 15))
             {
-                return new AddAnnouncementValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Announcement.Name, 1, 15));
+                return new AddClientServiceValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.ClientService.Name, 1, 15));
             }
 
             if (!IsValid(command.Description, 1, 255))
             {
-                return new AddAnnouncementValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Announcement.Description, 1, 255));
+                return new AddClientServiceValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.ClientService.Description, 1, 255));
             }
 
             if (command.Price < 0)
             {
-                return new AddAnnouncementValidationResult(ErrorDescriptions.ThePriceCannotBeLessThanZero);
+                return new AddClientServiceValidationResult(ErrorDescriptions.ThePriceCannotBeLessThanZero);
             }
 
             if (!IsValid(command.GooglePlaceId))
             {
-                return new AddAnnouncementValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Announcement.GooglePlaceId));
+                return new AddClientServiceValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.ClientService.GooglePlaceId));
             }
 
             if (!string.IsNullOrWhiteSpace(command.CategoryId))
@@ -87,11 +87,11 @@ namespace Cook4Me.Api.Host.Validators
                 var category = await _categoryRepository.Get(command.CategoryId);
                 if (category == null)
                 {
-                    return new AddAnnouncementValidationResult(ErrorDescriptions.TheCategoryDoesntExist);
+                    return new AddClientServiceValidationResult(ErrorDescriptions.TheCategoryDoesntExist);
                 }
             }
 
-            return new AddAnnouncementValidationResult();
+            return new AddClientServiceValidationResult();
         }
 
         private static bool IsValid(string value, int min, int max)

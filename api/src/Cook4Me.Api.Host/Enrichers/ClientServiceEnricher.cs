@@ -20,21 +20,21 @@ using System;
 
 namespace Cook4Me.Api.Host.Enrichers
 {
-    public interface IAnnouncementEnricher
+    public interface IClientServiceEnricher
     {
-        void Enrich(IHalResponseBuilder halResponseBuilder, AnnouncementAggregate announcement);
+        void Enrich(IHalResponseBuilder halResponseBuilder, ClientServiceAggregate announcement);
     }
 
-    internal class AnnouncementEnricher : IAnnouncementEnricher
+    internal class ClientServiceEnricher : IClientServiceEnricher
     {
         private readonly IResponseBuilder _responseBuilder;
 
-        public AnnouncementEnricher(IResponseBuilder responseBuilder)
+        public ClientServiceEnricher(IResponseBuilder responseBuilder)
         {
             _responseBuilder = responseBuilder;
         }
 
-        public void Enrich(IHalResponseBuilder halResponseBuilder, AnnouncementAggregate announcement)
+        public void Enrich(IHalResponseBuilder halResponseBuilder, ClientServiceAggregate announcement)
         {
             if (halResponseBuilder == null)
             {
@@ -46,7 +46,7 @@ namespace Cook4Me.Api.Host.Enrichers
                 throw new ArgumentNullException(nameof(announcement));
             }
 
-            halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetAnnouncement(announcement),
+            halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetClientService(announcement),
                 (l) =>
                 {
                     if (announcement.Category == null)
@@ -54,7 +54,7 @@ namespace Cook4Me.Api.Host.Enrichers
                         return;
                     }
 
-                    l.AddOtherItem("category", new Dtos.Link("/" + Constants.RouteNames.ShopCategories + "/" + announcement.CategoryId)).AddSelf(Constants.RouteNames.Announcements + "/" + announcement.Id);
+                    l.AddOtherItem("category", new Dtos.Link("/" + Constants.RouteNames.ShopCategories + "/" + announcement.CategoryId)).AddSelf(Constants.RouteNames.ClientServices + "/" + announcement.Id);
                 }));
         }
     }

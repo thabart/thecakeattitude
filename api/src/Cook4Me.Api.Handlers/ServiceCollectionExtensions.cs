@@ -15,7 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Core.Commands.Notifications;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
@@ -46,7 +46,7 @@ namespace Cook4Me.Api.Handlers
             var shopCommandHandler = new ShopCommandsHandler(provider.GetService<IShopRepository>(), bus);
             var productCommandHandler = new ProductCommandsHandler(provider.GetService<IProductRepository>(), bus);
             var serviceCommandHandler = new ServiceCommandsHandler(provider.GetService<IServiceRepository>(), bus);
-            var announcementCommandHandler = new AnnouncementCommandsHandler(provider.GetService<IAnnouncementRepository>(), bus);
+            var clientServiceCommandHandler = new ClientServiceCommandsHandler(provider.GetService<IClientServiceRepository>(), bus);
             var notificationCommandHandler = new NotificationCommandsHandler(provider.GetService<INotificationRepository>(), bus);
             var notificationEventsHandler = new NotificationEventsHandler(provider.GetService<INotificationRepository>(), provider.GetService<IShopRepository>(), bus);
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
@@ -60,8 +60,8 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<AddServiceCommentCommand>(serviceCommandHandler.Handle);
             bus.RegisterHandler<AddServiceCommand>(serviceCommandHandler.Handle);
             bus.RegisterHandler<RemoveServiceCommentCommand>(serviceCommandHandler.Handle);
-            bus.RegisterHandler<AddAnnouncementCommand>(announcementCommandHandler.Handle);
-            bus.RegisterHandler<RemoveAnnouncementCommand>(announcementCommandHandler.Handle);
+            bus.RegisterHandler<AddClientServiceCommand>(clientServiceCommandHandler.Handle);
+            bus.RegisterHandler<RemoveClientServiceCommand>(clientServiceCommandHandler.Handle);
             bus.RegisterHandler<UpdateNotificationCommand>(notificationCommandHandler.Handle);
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);

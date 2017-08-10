@@ -27,7 +27,7 @@ namespace Cook4Me.Api.Host
         public static class RouteNames
         {
             public const string Notifications = "notifications";
-            public const string Announcements = "announcements";
+            public const string ClientServices = "clientservices";
             public const string Services = "services";
             public const string Products = "products";
             public const string Shops = "shops";
@@ -183,7 +183,7 @@ namespace Cook4Me.Api.Host
                 public const string Parameters = "parameters";
             }
 
-            public static class Announcement
+            public static class ClientService
             {
                 public const string Id = "id";
                 public const string Name = "name";

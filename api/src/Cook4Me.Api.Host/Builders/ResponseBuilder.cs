@@ -15,7 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Events.Announcement;
+using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
@@ -53,14 +53,14 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment);
         JObject GetServiceCommentAddedEvent(ServiceCommentAddedEvent comment);
         JObject GetServiceAddedEvent(ServiceAddedEvent evt);
-        JObject GetAnnouncementAddedEvent(AnnouncementAddedEvent evt);
-        JObject GetAnnouncementRemovedEvent(AnnouncementRemovedEvent evt);
+        JObject GetClientServiceAddedEvent(ClientServiceAddedEvent evt);
+        JObject GetClientServiceRemovedEvent(ClientServiceRemovedEvent evt);
         JObject GetProductAddedEvent(ProductAddedEvent evt);
         JObject GetProduct(ProductAggregate product);
         JObject GetPromotion(ProductAggregatePromotion promotion);
         JObject GetService(ServiceAggregate service);
         JObject GetServiceOccurrence(ServiceResultLine service);
-        JObject GetAnnouncement(AnnouncementAggregate announcement);
+        JObject GetClientService(ClientServiceAggregate announcement);
     }
 
     internal class ResponseBuilder : IResponseBuilder
@@ -653,7 +653,7 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetAnnouncementAddedEvent(AnnouncementAddedEvent evt)
+        public JObject GetClientServiceAddedEvent(ClientServiceAddedEvent evt)
         {
             if (evt == null)
             {
@@ -662,22 +662,22 @@ namespace Cook4Me.Api.Host.Builders
 
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
-            jObj.Add(Constants.DtoNames.Announcement.Description, evt.Description);
-            jObj.Add(Constants.DtoNames.Announcement.Id, evt.Id);
-            jObj.Add(Constants.DtoNames.Announcement.CategoryId, evt.CategoryId);
-            jObj.Add(Constants.DtoNames.Announcement.CreateDateTime, evt.CreateDateTime);
-            jObj.Add(Constants.DtoNames.Announcement.GooglePlaceId, evt.GooglePlaceId);
+            jObj.Add(Constants.DtoNames.ClientService.Description, evt.Description);
+            jObj.Add(Constants.DtoNames.ClientService.Id, evt.Id);
+            jObj.Add(Constants.DtoNames.ClientService.CategoryId, evt.CategoryId);
+            jObj.Add(Constants.DtoNames.ClientService.CreateDateTime, evt.CreateDateTime);
+            jObj.Add(Constants.DtoNames.ClientService.GooglePlaceId, evt.GooglePlaceId);
             var location = new JObject();
             location.Add(Constants.DtoNames.Location.Latitude, evt.Latitude);
             location.Add(Constants.DtoNames.Location.Longitude, evt.Longitude);
-            jObj.Add(Constants.DtoNames.Announcement.Location, location);
-            jObj.Add(Constants.DtoNames.Announcement.Name, evt.Name);
-            jObj.Add(Constants.DtoNames.Announcement.Price, evt.Price);
-            jObj.Add(Constants.DtoNames.Announcement.UpdateDateTime, evt.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.ClientService.Location, location);
+            jObj.Add(Constants.DtoNames.ClientService.Name, evt.Name);
+            jObj.Add(Constants.DtoNames.ClientService.Price, evt.Price);
+            jObj.Add(Constants.DtoNames.ClientService.UpdateDateTime, evt.UpdateDateTime);
             return jObj;
         }
 
-        public JObject GetAnnouncementRemovedEvent(AnnouncementRemovedEvent evt)
+        public JObject GetClientServiceRemovedEvent(ClientServiceRemovedEvent evt)
         {
             if (evt == null)
             {
@@ -685,7 +685,7 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.Announcement.Id, evt.AnnouncementId);
+            jObj.Add(Constants.DtoNames.ClientService.Id, evt.AnnouncementId);
             jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return jObj;
         }
@@ -969,7 +969,7 @@ namespace Cook4Me.Api.Host.Builders
             return jObj;
         }
 
-        public JObject GetAnnouncement(AnnouncementAggregate announcement)
+        public JObject GetClientService(ClientServiceAggregate announcement)
         {
             if (announcement == null)
             {
@@ -977,29 +977,29 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.Announcement.Id, announcement.Id);
-            jObj.Add(Constants.DtoNames.Announcement.Name, announcement.Name);
-            jObj.Add(Constants.DtoNames.Announcement.Description, announcement.Description);
-            jObj.Add(Constants.DtoNames.Announcement.CategoryId, announcement.CategoryId);
-            jObj.Add(Constants.DtoNames.Announcement.GooglePlaceId, announcement.GooglePlaceId);
-            jObj.Add(Constants.DtoNames.Announcement.Price, announcement.Price);
-            jObj.Add(Constants.DtoNames.Announcement.Subject, announcement.Subject);
-            jObj.Add(Constants.DtoNames.Announcement.StreetAddress, announcement.StreetAddress);
-            jObj.Add(Constants.DtoNames.Announcement.CreateDateTime, announcement.CreateDateTime);
-            jObj.Add(Constants.DtoNames.Announcement.UpdateDateTime, announcement.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.ClientService.Id, announcement.Id);
+            jObj.Add(Constants.DtoNames.ClientService.Name, announcement.Name);
+            jObj.Add(Constants.DtoNames.ClientService.Description, announcement.Description);
+            jObj.Add(Constants.DtoNames.ClientService.CategoryId, announcement.CategoryId);
+            jObj.Add(Constants.DtoNames.ClientService.GooglePlaceId, announcement.GooglePlaceId);
+            jObj.Add(Constants.DtoNames.ClientService.Price, announcement.Price);
+            jObj.Add(Constants.DtoNames.ClientService.Subject, announcement.Subject);
+            jObj.Add(Constants.DtoNames.ClientService.StreetAddress, announcement.StreetAddress);
+            jObj.Add(Constants.DtoNames.ClientService.CreateDateTime, announcement.CreateDateTime);
+            jObj.Add(Constants.DtoNames.ClientService.UpdateDateTime, announcement.UpdateDateTime);
             var location = new JObject();
             location.Add(Constants.DtoNames.Location.Latitude, announcement.Latitude);
             location.Add(Constants.DtoNames.Location.Longitude, announcement.Longitude);
-            jObj.Add(Constants.DtoNames.Announcement.Location, location);
+            jObj.Add(Constants.DtoNames.ClientService.Location, location);
             if (announcement.Category != null)
             {
-                jObj.Add(Constants.DtoNames.Announcement.Category, GetCategory(announcement.Category));
+                jObj.Add(Constants.DtoNames.ClientService.Category, GetCategory(announcement.Category));
             }
 
             return jObj;
         }
 
-        public JObject GetCategory(AnnouncementCategory category)
+        public JObject GetCategory(ClientServiceCategory category)
         {
             if (category == null)
             {

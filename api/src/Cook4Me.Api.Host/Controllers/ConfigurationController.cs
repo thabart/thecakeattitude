@@ -28,7 +28,7 @@ namespace Cook4Me.Api.Host.Controllers
         {
             var issuer = Request.GetAbsoluteUriWithVirtualPath();
             var jObj = new JObject();
-            jObj.Add("announcements_endpoint", issuer + "/" + Constants.RouteNames.Announcements);
+            jObj.Add("clientservices_endpoint", issuer + "/" + Constants.RouteNames.ClientServices);
             jObj.Add("products_endpoint", issuer + "/" + Constants.RouteNames.Products);
             jObj.Add("shops_endpoint", issuer + "/" + Constants.RouteNames.Shops);
             jObj.Add("services_endpoint", issuer + "/" + Constants.RouteNames.Services);

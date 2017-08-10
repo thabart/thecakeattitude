@@ -14,28 +14,28 @@
 // limitations under the License.
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Events.Announcement;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
+using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Hubs;
+using Microsoft.AspNetCore.SignalR.Infrastructure;
+using System;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Handlers
 {
-    public class AnnouncementEventsHandler : Handles<AnnouncementAddedEvent>, Handles<AnnouncementRemovedEvent>
+    public class ClientServiceEventsHandler : Handles<ClientServiceAddedEvent>, Handles<ClientServiceRemovedEvent>
     {
         private readonly IConnectionManager _connectionManager;
         private readonly IResponseBuilder _responseBuilder;
 
-        public AnnouncementEventsHandler(IConnectionManager connectionManager, IResponseBuilder responseBuilder)
+        public ClientServiceEventsHandler(IConnectionManager connectionManager, IResponseBuilder responseBuilder)
         {
             _connectionManager = connectionManager;
             _responseBuilder = responseBuilder;
         }
 
-        public Task Handle(AnnouncementRemovedEvent message)
+        public Task Handle(ClientServiceRemovedEvent message)
         {
             if (message == null)
             {
@@ -43,11 +43,11 @@ namespace Cook4Me.Api.Host.Handlers
             }
 
             var notifier = _connectionManager.GetHubContext<Notifier>();
-            notifier.Clients.All.announcementRemoved(_responseBuilder.GetAnnouncementRemovedEvent(message));
+            notifier.Clients.All.clientServiceRemoved(_responseBuilder.GetClientServiceRemovedEvent(message));
             return Task.FromResult(0);
         }
 
-        public Task Handle(AnnouncementAddedEvent message)
+        public Task Handle(ClientServiceAddedEvent message)
         {
             if (message == null)
             {
@@ -55,7 +55,7 @@ namespace Cook4Me.Api.Host.Handlers
             }
 
             var notifier = _connectionManager.GetHubContext<Notifier>();
-            notifier.Clients.All.announcementAdded(_responseBuilder.GetAnnouncementAddedEvent(message));
+            notifier.Clients.All.clientServiceAdded(_responseBuilder.GetClientServiceAddedEvent(message));
             return Task.FromResult(0);
         }
     }

@@ -15,7 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Bus;
-using Cook4Me.Api.Core.Events.Announcement;
+using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
@@ -36,18 +36,18 @@ namespace Cook4Me.Api.Host.Handlers
         private readonly ShopEventsHandler _shopEventsHandler;
         private readonly ProductEventsHandler _productEventsHandler;
         private readonly ServiceEventsHandler _serviceEventsHandler;
-        private readonly AnnouncementEventsHandler _announcementEventsHandler;
+        private readonly ClientServiceEventsHandler _clientServiceEventsHandler;
         private readonly NotificationEventsHandler _notificationEventsHandler;
         private readonly IBus _bus;
 
         public HandlersInitiator(ShopEventsHandler shopEventsHandler, ProductEventsHandler productEventsHandler, 
-            ServiceEventsHandler serviceEventsHandler, AnnouncementEventsHandler announcementEventsHandler,
+            ServiceEventsHandler serviceEventsHandler, ClientServiceEventsHandler clientServiceEventsHandlers,
             NotificationEventsHandler notificationEventsHandler, IBus bus)
         {
             _shopEventsHandler = shopEventsHandler;
             _productEventsHandler = productEventsHandler;
             _serviceEventsHandler = serviceEventsHandler;
-            _announcementEventsHandler = announcementEventsHandler;
+            _clientServiceEventsHandler = clientServiceEventsHandlers;
             _notificationEventsHandler = notificationEventsHandler;
             _bus = bus;
         }
@@ -72,8 +72,8 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<ServiceCommentAddedEvent>(_serviceEventsHandler.Handle);
                 _bus.RegisterHandler<ServiceCommentRemovedEvent>(_serviceEventsHandler.Handle);
                 _bus.RegisterHandler<ServiceAddedEvent>(_serviceEventsHandler.Handle);
-                _bus.RegisterHandler<AnnouncementAddedEvent>(_announcementEventsHandler.Handle);
-                _bus.RegisterHandler<AnnouncementRemovedEvent>(_announcementEventsHandler.Handle);
+                _bus.RegisterHandler<ClientServiceAddedEvent>(_clientServiceEventsHandler.Handle);
+                _bus.RegisterHandler<ClientServiceRemovedEvent>(_clientServiceEventsHandler.Handle);
                 _bus.RegisterHandler<NotificationUpdatedEvent>(_notificationEventsHandler.Handle);
                 _bus.RegisterHandler<NotificationAddedEvent>(_notificationEventsHandler.Handle);
                 _isInitiated = true;

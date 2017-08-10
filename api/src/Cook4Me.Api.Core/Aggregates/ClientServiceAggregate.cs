@@ -14,13 +14,24 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
+using System;
 
-namespace Cook4Me.Api.Core.Commands.Announcement
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public class RemoveAnnouncementCommand : Command
+    public class ClientServiceAggregate
     {
-        public string AnnouncementId { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string Subject { get; set; }
+        public string CategoryId { get; set; }
+        public string GooglePlaceId { get; set; }
+        public float Longitude { get; set; }
+        public float Latitude { get; set; }
+        public double Price { get; set; }
+        public string StreetAddress { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
+        public ClientServiceCategory Category { get; set; }
     }
 }

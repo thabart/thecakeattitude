@@ -4,11 +4,10 @@ import Session from "./Session";
 import $ from "jquery";
 
 module.exports = {
-    // Search announcements
-    search: function (content) {
+    search: function (content) { // Search client services.
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
-                $.ajax(configuration.announcements_endpoint + '/.search', {
+                $.ajax(configuration.clientservices_endpoint + '/.search', {
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(content)
@@ -20,12 +19,11 @@ module.exports = {
             });
         });
     },
-    // Search mine announcements
-    searchMineAnnouncements: function (content) {
+    searchMineAnnouncements: function (content) { // Search mine client services.
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
-                $.ajax(configuration.announcements_endpoint + '/me/.search', {
+                $.ajax(configuration.clientservices_endpoint + '/me/.search', {
                     method: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(content),
@@ -40,11 +38,10 @@ module.exports = {
             });
         });
     },
-    // Get announcement
-    get: function (id) {
+    get: function (id) { // Get client service.
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
-                $.get(configuration.announcements_endpoint + '/' + id).then(function (r) {
+                $.get(configuration.clientservices_endpoint + '/' + id).then(function (r) {
                     resolve(r);
                 }).fail(function (e) {
                     reject(e);
@@ -52,12 +49,11 @@ module.exports = {
             });
         });
     },
-    // Remove announcement
-    remove: function (id, commonId) {
+    remove: function (id, commonId) {   // Remove client service.
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
-                $.ajax(configuration.announcements_endpoint + '/' + id, {
+                $.ajax(configuration.clientservices_endpoint + '/' + id, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': 'Bearer ' + accessToken,
@@ -71,12 +67,11 @@ module.exports = {
             });
         });
     },
-    // Add announcement
-    add: function (content) {
+    add: function (content) { // Add client service.
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
-                $.ajax(configuration.announcements_endpoint, {
+                $.ajax(configuration.clientservices_endpoint, {
                     method: 'POST',
                     contentType: 'application/json',
                     headers: {

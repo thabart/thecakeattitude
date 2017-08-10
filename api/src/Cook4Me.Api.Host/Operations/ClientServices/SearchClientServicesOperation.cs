@@ -24,21 +24,21 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Announcement
 {
-    public interface ISearchAnnouncementsOperation
+    public interface ISearchClientServicesOperation
     {
         Task<IActionResult> Execute(JObject jObj);
     }
 
-    internal class SearchAnnouncementsOperation : ISearchAnnouncementsOperation
+    internal class SearchClientServicesOperation : ISearchClientServicesOperation
     {
-        private readonly IAnnouncementRepository _repository;
+        private readonly IClientServiceRepository _repository;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IRequestBuilder _requestBuilder;
-        private readonly IAnnouncementEnricher _enricher;
+        private readonly IClientServiceEnricher _enricher;
 
-        public SearchAnnouncementsOperation(
-            IAnnouncementRepository repository, IHalResponseBuilder halResponseBuilder,
-            IRequestBuilder requestBuilder, IAnnouncementEnricher enricher)
+        public SearchClientServicesOperation(
+            IClientServiceRepository repository, IHalResponseBuilder halResponseBuilder,
+            IRequestBuilder requestBuilder, IClientServiceEnricher enricher)
         {
             _repository = repository;
             _halResponseBuilder = halResponseBuilder;
@@ -78,7 +78,7 @@ namespace Cook4Me.Api.Host.Operations.Announcement
 
         private static string GetProductLink()
         {
-            return "/" + Constants.RouteNames.Announcements + "/" + Constants.RouteNames.Search;
+            return "/" + Constants.RouteNames.ClientServices + "/" + Constants.RouteNames.Search;
         }
     }
 }

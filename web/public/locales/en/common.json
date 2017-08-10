@@ -245,5 +245,9 @@
   "view": "View",
   "edit": "Edit",
   "noShops": "No shop",
-  "creationDate": "Creation date"
+  "creationDate": "Creation date",
+  "services": "Services",
+  "errorRemoveClientService": "An error occured while trying to remove the client service, please contact the administrator",
+  "noClientService": "No service has been asked",
+  "successRemoveClientService": "The service has been removed"
 }

@@ -17,9 +17,9 @@
 using Cook4Me.Api.Core.Bus;
 using System;
 
-namespace Cook4Me.Api.Core.Commands.Announcement
+namespace Cook4Me.Api.Core.Events.ClientService
 {
-    public class AddAnnouncementCommand : Command
+    public class ClientServiceAddedEvent : Event
     {
         public string Id { get; set; }
         public string Name { get; set; }
@@ -27,7 +27,6 @@ namespace Cook4Me.Api.Core.Commands.Announcement
         public string Subject { get; set; }
         public string CategoryId { get; set; }
         public string GooglePlaceId { get; set; }
-        public string StreetAddress { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public double Price { get; set; }

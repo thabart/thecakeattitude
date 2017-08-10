@@ -27,11 +27,11 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
 {
-    internal class AnnouncementRepository : IAnnouncementRepository
+    internal class ClientServiceRepository : IClientServiceRepository
     {
         private readonly CookDbContext _context;
 
-        public AnnouncementRepository(CookDbContext context)
+        public ClientServiceRepository(CookDbContext context)
         {
             _context = context;
         }
@@ -43,7 +43,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(id));
             }
 
-            var record = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+            var record = await _context.ClientServices.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
             if (record == null)
             {
                 return false;
@@ -51,7 +51,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             try
             {
-                _context.Announcements.Remove(record);
+                _context.ClientServices.Remove(record);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
                 return true;
             }
@@ -61,7 +61,7 @@ namespace Cook4Me.Api.EF.Repositories
             }
         }
 
-        public async Task<bool> Add(AnnouncementAggregate aggregate)
+        public async Task<bool> Add(ClientServiceAggregate aggregate)
         {
             if (aggregate == null)
             {
@@ -71,7 +71,7 @@ namespace Cook4Me.Api.EF.Repositories
             var record = aggregate.ToModel();
             try
             {
-                _context.Add(record);
+                _context.ClientServices.Add(record);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
                 return true;
             }
@@ -81,14 +81,14 @@ namespace Cook4Me.Api.EF.Repositories
             }
         }
 
-        public async Task<AnnouncementAggregate> Get(string id)
+        public async Task<ClientServiceAggregate> Get(string id)
         {
             if (string.IsNullOrWhiteSpace(id))
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            var record = await _context.Announcements.Include(a => a.Category).FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+            var record = await _context.ClientServices.Include(a => a.Category).FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
             if (record == null)
             {
                 return null;
@@ -97,14 +97,14 @@ namespace Cook4Me.Api.EF.Repositories
             return record.ToAggregate();
         }
 
-        public async Task<SearchAnnouncementsResult> Search(SearchAnnouncementsParameter parameter)
+        public async Task<SearchClientServicesResult> Search(SearchClientServicesParameter parameter)
         {
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Announcement> announcements = _context.Announcements.Include(c => c.Category);
+            IQueryable<Models.ClientService> announcements = _context.ClientServices.Include(c => c.Category);
             if (parameter.CategoryIds != null && parameter.CategoryIds.Any())
             {
                 announcements = announcements.Where(s => parameter.CategoryIds.Contains(s.CategoryId));
@@ -137,7 +137,7 @@ namespace Cook4Me.Api.EF.Repositories
                 }
             }
 
-            var result = new SearchAnnouncementsResult
+            var result = new SearchClientServicesResult
             {
                 TotalResults = await announcements.CountAsync().ConfigureAwait(false),
                 StartIndex = parameter.StartIndex
@@ -152,7 +152,7 @@ namespace Cook4Me.Api.EF.Repositories
             return result;
         }
 
-        public async Task<bool> Update(AnnouncementAggregate aggregate)
+        public async Task<bool> Update(ClientServiceAggregate aggregate)
         {
             if (aggregate == null)
             {
@@ -160,7 +160,7 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
 
-            var record = await _context.Announcements.FirstOrDefaultAsync(a => a.Id == aggregate.Id);
+            var record = await _context.ClientServices.FirstOrDefaultAsync(a => a.Id == aggregate.Id);
             if (record == null)
             {
                 return false;
@@ -178,7 +178,7 @@ namespace Cook4Me.Api.EF.Repositories
             return false;
         }
 
-        private static IQueryable<Models.Announcement> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Announcement, TKey>> keySelector, IQueryable<Models.Announcement> shops)
+        private static IQueryable<Models.ClientService> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.ClientService, TKey>> keySelector, IQueryable<Models.ClientService> shops)
         {
             if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
             {

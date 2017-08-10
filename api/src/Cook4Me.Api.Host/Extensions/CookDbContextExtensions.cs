@@ -61,7 +61,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertPromotions(context);
             InsertDays(context);
             InsertServices(context);
-            InsertAnnouncements(context);
+            InsertClientServices(context);
             InsertNotifications(context);
             context.SaveChanges();
         }
@@ -942,11 +942,11 @@ namespace Cook4Me.Api.Host.Extensions
             });
         }
 
-        private static void InsertAnnouncements(CookDbContext context)
+        private static void InsertClientServices(CookDbContext context)
         {
-            context.Announcements.AddRange(new[]
+            context.ClientServices.AddRange(new[]
             {
-                new Announcement
+                new ClientService
                 {
                     Id = Guid.NewGuid().ToString(),
                     CategoryId = _bakeryCategoryId,
@@ -961,7 +961,7 @@ namespace Cook4Me.Api.Host.Extensions
                     Subject = "administrator",
                     StreetAddress = "223 avenue des croix du feu"
                 },
-                new Announcement
+                new ClientService
                 {
                     Id = Guid.NewGuid().ToString(),
                     CategoryId = _bakeryCategoryId,

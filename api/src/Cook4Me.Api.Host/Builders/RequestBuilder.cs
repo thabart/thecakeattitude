@@ -14,7 +14,7 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Commands.Announcement;
+using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Core.Commands.Notifications;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
@@ -34,7 +34,7 @@ namespace Cook4Me.Api.Host.Builders
         GetNotificationStatusParameter GetNotificationStatus(JObject jObj);
         UpdateNotificationCommand GetUpdateNotification(JObject jObj);
         SearchNotificationsParameter GetSearchNotifications(JObject jObj);
-        AddAnnouncementCommand GetAnnouncement(JObject jObj);
+        AddClientServiceCommand GetClientService(JObject jObj);
         AddShopCommand GetAddShop(JObject jObj);
         AddServiceCommand GetAddService(JObject jObj);
         AddServiceOccurrence GetAddServiceOccurrence(JObject jObj);
@@ -53,7 +53,7 @@ namespace Cook4Me.Api.Host.Builders
         SearchServiceCommentParameter GetSearchServiceComments(JObject jObj);
         SearchProductsParameter GetSearchProducts(JObject jObj);
         SearchServiceParameter GetSearchServices(JObject jObj);
-        SearchAnnouncementsParameter GetSearchAnnouncements(JObject jObj);
+        SearchClientServicesParameter GetSearchAnnouncements(JObject jObj);
         SearchServiceOccurrenceParameter GetSearchServiceOccurrences(JObject jObj);
         OrderBy GetOrderBy(JObject jObj);
     }
@@ -111,24 +111,24 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
-        public AddAnnouncementCommand GetAnnouncement(JObject jObj)
+        public AddClientServiceCommand GetClientService(JObject jObj)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            var result = new AddAnnouncementCommand
+            var result = new AddClientServiceCommand
             {
-                Name = jObj.TryGetString(Constants.DtoNames.Announcement.Name),
-                Description = jObj.TryGetString(Constants.DtoNames.Announcement.Description),
-                CategoryId = jObj.TryGetString(Constants.DtoNames.Announcement.CategoryId),
-                GooglePlaceId = jObj.TryGetString(Constants.DtoNames.Announcement.GooglePlaceId),
-                StreetAddress = jObj.TryGetString(Constants.DtoNames.Announcement.StreetAddress),
-                Price = jObj.TryGetDouble(Constants.DtoNames.Announcement.Price)
+                Name = jObj.TryGetString(Constants.DtoNames.ClientService.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.ClientService.Description),
+                CategoryId = jObj.TryGetString(Constants.DtoNames.ClientService.CategoryId),
+                GooglePlaceId = jObj.TryGetString(Constants.DtoNames.ClientService.GooglePlaceId),
+                StreetAddress = jObj.TryGetString(Constants.DtoNames.ClientService.StreetAddress),
+                Price = jObj.TryGetDouble(Constants.DtoNames.ClientService.Price)
             };
 
-            var location = jObj[Constants.DtoNames.Announcement.Location];
+            var location = jObj[Constants.DtoNames.ClientService.Location];
             if (location != null)
             {
                 result.Latitude = location.Value<float>(Constants.DtoNames.Location.Latitude);
@@ -932,7 +932,7 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
-        public SearchAnnouncementsParameter GetSearchAnnouncements(JObject jObj)
+        public SearchClientServicesParameter GetSearchAnnouncements(JObject jObj)
         {
             if (jObj == null)
             {
@@ -963,11 +963,11 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
-            var result = new SearchAnnouncementsParameter
+            var result = new SearchClientServicesParameter
             {
-                CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Announcement.CategoryId),
+                CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.ClientService.CategoryId),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
-                Name = jObj.Value<string>(Constants.DtoNames.Announcement.Name),
+                Name = jObj.Value<string>(Constants.DtoNames.ClientService.Name),
                 Orders = orders,
                 NorthEast = northEastLocation,
                 SouthWest = southWestLocation

@@ -6,7 +6,7 @@ import AddShop from "./AddShop";
 import Shop from "./Shop";
 import Products from "./Products";
 import Services from "./Services";
-import Announces from './Announces';
+import ClientServices from './ClientServices';
 import Manage from './Manage';
 import AddProduct from './AddProduct';
 import AddAnnouncement from "./AddAnnouncement";
@@ -123,15 +123,15 @@ class App extends Component {
                 data: message
             });
         });
-        proxy.on('announcementAdded', function (message) {
+        proxy.on('clientServiceAdded', function (message) {
             AppDispatcher.dispatch({
                 actionName: 'add-announce',
                 data: message
             });
         });
-        proxy.on('announcementRemoved', function (message) {
+        proxy.on('clientServiceRemoved', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'remove-announce',
+                actionName: Constants.events.REMOVE_CLIENT_SERVICE_ARRIVED,
                 data: message
             });
         });
@@ -223,7 +223,7 @@ class App extends Component {
                 <Route path="/shops/:id/:paction/:action/:subaction?" component={Shop}/>
                 <Route path="/products/:id/:action?" component={Products}/>
                 <Route path="/services/:id/:action?" component={Services}/>
-                <Route path="/announces/:id" component={Announces} />
+                <Route path="/clientservices/:id" component={ClientServices} />
                 <Route path="/tags/:tag" component={Tags} />
                 <Route path="/users/:id" component={Users} />
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>

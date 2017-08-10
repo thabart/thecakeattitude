@@ -1,32 +1,35 @@
 import React, {Component} from "react";
-import Widget from "../components/widget";
-import { AnnouncementsService } from '../services/index';
-import {Button} from 'reactstrap';
-import $ from 'jquery';
+import { ClientService } from '../services/index';
+import { Button } from 'reactstrap';
 import { translate } from 'react-i18next';
+import Widget from "../components/widget";
 import AppDispatcher from "../appDispatcher";
+import Constants from '../../Constants';
+import $ from 'jquery';
 
-class PublicAnnouncements extends Component {
+class ClientServices extends Component {
     constructor(props) {
         super(props);
         this._waitForToken = null;
         this.navigate = this.navigate.bind(this);
         this.showDetails = this.showDetails.bind(this);
         this.localize = this.localize.bind(this);
-        this.navigateToAnnounce = this.navigateToAnnounce.bind(this);
+        this.navigateToClientService = this.navigateToClientService.bind(this);
         this.state = {
             errorMessage: null,
             isLoading: false,
-            announcements: [],
+            clientServices: [],
             navigation: [],
             details: {}
         };
     }
-    localize(e, announcement) {
+
+    localize(e, clientService) {
       e.preventDefault();
       e.stopPropagation();
-      this.props.setCurrentMarker(announcement.id);
+      this.props.setCurrentMarker(clientService.id);
     }
+
     showDetails(id, isDetailDisplayed) {
       var details = this.state.details;
       details[id] = !isDetailDisplayed;
@@ -34,12 +37,14 @@ class PublicAnnouncements extends Component {
         details : details
       });
     }
+
     reset() {
       this.setState({
-          announcements: [],
+          clientServices: [],
           navigation: []
       });
     }
+
     refresh(json) {
         var request = $.extend({}, json, {
             orders: [
@@ -50,6 +55,7 @@ class PublicAnnouncements extends Component {
         this.request = request;
         this.display(request);
     }
+
     navigate(e, name) {
         e.preventDefault();
         var startIndex = name - 1;
@@ -58,40 +64,44 @@ class PublicAnnouncements extends Component {
         });
         this.display(request);
     }
+
     display(request) {
         var self = this;
         self.setState({
             isLoading: true
         });
-        AnnouncementsService.search(request).then(function (r) {
-            var announcements = r['_embedded'],
+        ClientService.search(request).then(function (r) {
+            var clientServices = r['_embedded'],
                 navigation = r['_links']['navigation'];
-            if (!(announcements instanceof Array)) {
-                announcements = [announcements];
+            if (!(clientServices instanceof Array)) {
+                clientServices = [clientServices];
             }
             if (!(navigation instanceof Array)) {
                 navigation = [navigation];
             }
 
             self.setState({
-                announcements: announcements,
+                clientServices: clientServices,
                 navigation: navigation,
                 isLoading: false
             });
         }).catch(function () {
             self.setState({
-                announcements: [],
+                clientServices: [],
                 navigation: [],
                 isLoading: false
             });
         });
     }
+
     enableMove(b) {
       this.refs.widget.enableMove(b);
     }
-    navigateToAnnounce(id) {
-      this.props.history.push('/announces/' + id);
+
+    navigateToClientService(id) {
+      this.props.history.push('/clientservices/' + id);
     }
+
     render() {
         const {t} = this.props;
         var title = t('lastClientServicesWidgetTitle'),
@@ -105,31 +115,31 @@ class PublicAnnouncements extends Component {
                 </Widget>);
         }
 
-        if (self.state.announcements && self.state.announcements.length > 0) {
-          self.state.announcements.forEach(function (announcement) {
+        if (self.state.clientServices && self.state.clientServices.length > 0) {
+          self.state.clientServices.forEach(function (clientService) {
             var image = "/images/default-client-service.png";
             var days = (<p>{t('noClientServicesMsg')}</p>);
-            var isDetailsDisplayed = self.state.details[announcement.id] && self.state.details[announcement.id] !== null;
+            var isDetailsDisplayed = self.state.details[clientService.id] && self.state.details[clientService.id] !== null;
             content.push((
-              <li key={announcement.id} className="list-group-item list-group-item-action no-padding row">
+              <li key={clientService.id} className="list-group-item list-group-item-action no-padding row">
                 <div className="summary">
                   <div className="first-column"><img src={image} className="img-thumbnail rounded picture image-small"/></div>
                   <div className="second-column">
-                    <div>{announcement.name}</div>
-                    {announcement.category && announcement.category !== null && <p>{t('belongsToTheCategoryTxt')} <b>{announcement.category.name}</b></p>}
+                    <div>{clientService.name}</div>
+                    {clientService.category && clientService.category !== null && <p>{t('belongsToTheCategoryTxt')} <b>{clientService.category.name}</b></p>}
                   </div>
                     <div className="last-column">
-                      <Button outline color="secondary" size="sm"  onClick={(e) => { self.navigateToAnnounce(announcement.id);}}>
+                      <Button outline color="secondary" size="sm"  onClick={(e) => { self.navigateToClientService(clientService.id);}}>
                         <i className="fa fa-sign-in localize"></i>
                       </Button>
-                      <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, announcement); }}>
+                      <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, clientService); }}>
                         <i className="fa fa-map-marker localize"></i>
                       </Button>
-                      {announcement.price > 0 && (
-                        <h5 className="price">{t('proposedPriceLabel')} {announcement.price}</h5>
+                      {clientService.price > 0 && (
+                        <h5 className="price">{t('proposedPriceLabel')} {clientService.price}</h5>
                       )}
                     </div>
-                  <div className="expander" onClick={(e) => { e.preventDefault(); self.showDetails(announcement.id, isDetailsDisplayed); }}>
+                  <div className="expander" onClick={(e) => { e.preventDefault(); self.showDetails(clientService.id, isDetailsDisplayed); }}>
                     {isDetailsDisplayed ? (<span>{t('closeDetailsTxt')}</span>) : (<span>{t('moreDetailsTxt')}</span>)}
                   </div>
                 </div>
@@ -139,7 +149,7 @@ class PublicAnnouncements extends Component {
                       <tbody>
                         <tr>
                           <td>{t('description')}</td>
-                          <td>{announcement.description}</td>
+                          <td>{clientService.description}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -167,7 +177,7 @@ class PublicAnnouncements extends Component {
                     </ul>
                 )}
                 {content.length == 0
-                    ? (<span>No announces</span>) :
+                    ? (<span>{t('noClientService')}</span>) :
                     (<ul className="list-group list-group-flush">
                         {content}
                     </ul>)
@@ -175,12 +185,13 @@ class PublicAnnouncements extends Component {
             </Widget>
         );
     }
+
     componentDidMount() {
         var self = this;
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
                 case 'add-announce':
-                case 'remove-announce':
+                case Constants.events.REMOVE_CLIENT_SERVICE_ARRIVED:
                     var request = $.extend({}, self.request, {
                         start_index: 0
                     });
@@ -195,4 +206,4 @@ class PublicAnnouncements extends Component {
     }
 }
 
-export default translate('common', { wait: process && !process.release, withRef: true })(PublicAnnouncements);
+export default translate('common', { wait: process && !process.release, withRef: true })(ClientServices);

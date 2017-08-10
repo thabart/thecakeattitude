@@ -39,7 +39,7 @@ class Header extends Component {
         this.disconnect = this.disconnect.bind(this);
         this.manageProfile = this.manageProfile.bind(this);
         this.manageShops = this.manageShops.bind(this);
-        this.manageAnnounces = this.manageAnnounces.bind(this);
+        this.manageServices = this.manageServices.bind(this);
         this.switchLanguage = this.switchLanguage.bind(this);
         this.refreshNotifications = this.refreshNotifications.bind(this);
         this.readNotification = this.readNotification.bind(this);
@@ -174,8 +174,8 @@ class Header extends Component {
       this.props.history.push('/manage/shops');
     }
 
-    manageAnnounces() { // Manage announces.
-      this.props.history.push('/manage/announces');
+    manageServices() { // Manage client services.
+      this.props.history.push('/manage/services');
     }
 
     displayUser(isLoggedIn, user) { // Display the user information.
@@ -364,7 +364,7 @@ class Header extends Component {
                               <DropdownItem onClick={self.disconnect}>{t('disconnectMenuItem')}</DropdownItem>
                               <DropdownItem header>{t('manageMenuItem')}</DropdownItem>
                               <DropdownItem onClick={self.manageProfile}>{t('manageYourProfileMenuItem')}</DropdownItem>
-                              <DropdownItem onClick={self.manageAnnounces}>{t('manageYourOffersMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={self.manageServices}>{t('manageYourOffersMenuItem')}</DropdownItem>
                               <DropdownItem onClick={self.manageShops}>{t('manageYourShopsMenuItem')}</DropdownItem>
                             </DropdownMenu>
                           </NavDropdown></li> : ''
@@ -444,7 +444,7 @@ class Header extends Component {
                     (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.manageProfile}>{t('manageYourProfileMenuItem')}</a></li> : ''
                   }
                   {
-                    (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.manageAnnounces}>{t('manageYourOffersMenuItem')}</a></li> : ''
+                    (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.manageServices}>{t('manageYourOffersMenuItem')}</a></li> : ''
                   }
                   {
                     (self.state.isLoggedIn) ? <li><a href="#" className="nav-link no-style" onClick={self.manageShops}>{t('manageYourShopsMenuItem')}</a></li> : ''

@@ -6,7 +6,7 @@
   "connectMenuItem": "Se connecter",
   "manageMenuItem": "Gérer",
   "manageYourProfileMenuItem": "Gérer votre profil",
-  "manageYourOffersMenuItem": "Gérer vos offres",
+  "manageYourOffersMenuItem": "Gérer vos services",
   "manageYourShopsMenuItem": "Gérer vos magasins",
   "chooseLanguage": "Choisir la langue",
   "chooseFr": "Français",
@@ -243,5 +243,9 @@
   "view": "Voir",
   "edit": "Editer",
   "noShops": "Aucun magasin",
-  "creationDate": "Date de création"
+  "creationDate": "Date de création",
+  "services": "Services",
+  "errorRemoveClientService": "Une erreur est survenue durant la suppression du service, veuillez prendre contact avec l'administrateur",
+  "noClientService": "Auncun service n'a été demandé",
+  "successRemoveClientService": "Le service a été supprimé"
 }
