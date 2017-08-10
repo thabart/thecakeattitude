@@ -249,5 +249,12 @@
   "services": "Services",
   "errorRemoveClientService": "An error occured while trying to remove the client service, please contact the administrator",
   "noClientService": "No service has been asked",
-  "successRemoveClientService": "The service has been removed"
+  "successRemoveClientService": "The service has been removed",
+  "errorGetClientService": "An error occured while trying to retrieve the client service, please contact the administrator",
+  "notMentioned": "Not mentioned",
+  "clientAskedServiceToTheCommunity": "A client asked for a service to the shops that belong to the category <ul class='tags gray'><li>{0}</li></ul>",
+  "clientAskedServiceToEveryone": "A client asked a service to all the shops",
+  "proposedPrice": "Proposed price",
+  "contactClient": "Contact the client",
+  "sendMessage": "Send message"
 }

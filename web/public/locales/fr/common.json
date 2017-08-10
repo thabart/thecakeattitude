@@ -247,5 +247,12 @@
   "services": "Services",
   "errorRemoveClientService": "Une erreur est survenue durant la suppression du service, veuillez prendre contact avec l'administrateur",
   "noClientService": "Auncun service n'a été demandé",
-  "successRemoveClientService": "Le service a été supprimé"
+  "successRemoveClientService": "Le service a été supprimé",
+  "errorGetClientService": "Une erreur est survenue durant la récupération du service du client, veuillez prendre contact avec l'administrateur",
+  "notMentioned": "Pas mentionné",
+  "clientAskedServiceToTheCommunity": "Un client a demandé un service aux magasins faisant partie de la catégorie <ul class='tags gray'><li>{0}</li></ul>",
+  "clientAskedServiceToEveryone": "Un client a demandé un service à tous les magasins",
+  "proposedPrice": "Prix proposé",
+  "contactClient": "Contacter le client",
+  "sendMessage": "Envoyer un message"
 }

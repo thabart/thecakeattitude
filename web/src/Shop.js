@@ -26,7 +26,6 @@ class Shop extends Component {
         this.uploadPictureImage = this.uploadPictureImage.bind(this);
         this.toggle = this.toggle.bind(this);
         this.refreshScore = this.refreshScore.bind(this);
-        this.toggleError = this.toggleError.bind(this);
         this.toggleUpdatingError = this.toggleUpdatingError.bind(this);
         this.updateTitle = this.updateTitle.bind(this);
         this.updateTags = this.updateTags.bind(this);
@@ -50,12 +49,6 @@ class Shop extends Component {
             isEditProfileTooltipOpened: false,
             isUpdateShopTooltipOpened: false
         };
-    }
-
-    toggleError() { // Toggle the error message
-        this.setState({
-            errorMessage: null
-        });
     }
 
     toggleUpdatingError() { // Toggle updating error message
@@ -258,7 +251,7 @@ class Shop extends Component {
         if (this.state.errorMessage !== null) {
             return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
               <div className="container">
-                <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.toggleError}>{this.state.errorMessage}</Alert>
+                <Alert color="danger" isOpen={this.state.errorMessage !== null}>{this.state.errorMessage}</Alert>
               </div>
           </MainLayout>);
         }

@@ -177,7 +177,7 @@ class Products extends Component {
                           <div style={{paddingLeft: "10px"}}>
                             { /* Header */ }
                             <div>
-                              <h3>{this.state.product.name}</h3>
+                              <h2>{this.state.product.name}</h2>
                               <div>
                                 <Rater total={5} ref="score" rating={this.state.product.average_score} interactive={false}/>
                                 <b> {this.state.product.average_score} </b>
