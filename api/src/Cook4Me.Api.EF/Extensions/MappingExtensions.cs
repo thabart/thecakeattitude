@@ -25,6 +25,56 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static Message ToModel(this MessageAggregate message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var files = message.MessageAttachments == null ? new List<MessageJoinedFile>() : message.MessageAttachments.Select(a => a.ToModel()).ToList();
+            var receivers = message.MessageReceivers == null ? new List<MessageDestination>() : message.MessageReceivers.Select(a => a.ToModel()).ToList();
+            return new Message
+            {
+                Id = message.Id,
+                Content = message.Content,
+                From = message.From,
+                CreationDateTime = message.CreationDateTime,
+                IsRead = message.IsRead,
+                ParentId = message.ParentId,
+                DestinationLst = receivers,
+                JoinedFiles = files
+            };
+        }
+
+        public static MessageDestination ToModel(this MessageReceiver receiver)
+        {
+            if (receiver == null)
+            {
+                throw new ArgumentNullException(nameof(receiver));
+            }
+
+            return new MessageDestination
+            {
+                Id = receiver.Id,
+                To = receiver.To
+            };
+        }
+
+        public static MessageJoinedFile ToModel(this MessageAttachment attachment)
+        {
+            if (attachment == null)
+            {
+                throw new ArgumentNullException(nameof(attachment));
+            }
+
+            return new MessageJoinedFile
+            {
+                Id = attachment.Id,
+                Link = attachment.Link
+            };
+        }
+
         public static Notification ToModel(this NotificationAggregate notification)
         {
             if (notification == null)

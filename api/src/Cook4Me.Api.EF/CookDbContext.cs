@@ -45,6 +45,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<ClientService> ClientServices { get; set; }
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,7 +73,10 @@ namespace Cook4Me.Api.EF
                 .AddServiceAddDayMapping()
                 .AddAnnouncement()
                 .AddNotification()
-                .AddNotificationParameter();
+                .AddNotificationParameter()
+                .AddMessageDestinationMapping()
+                .AddMessageJoinedFileMappingMapping()
+                .AddMessageMapping();
         }
     }
 }
