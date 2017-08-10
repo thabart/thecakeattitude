@@ -137,7 +137,7 @@ class App extends Component {
         });
         proxy.on('shopRemoved', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'remove-shop',
+                actionName: Constants.events.REMOVE_SHOP_ARRIVED,
                 data: message
             });
         });

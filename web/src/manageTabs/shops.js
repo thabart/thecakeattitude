@@ -4,26 +4,26 @@ import { Alert } from 'reactstrap';
 import { NavLink } from "react-router-dom";
 import { Guid } from '../utils';
 import { translate } from 'react-i18next';
+import { ApplicationStore } from '../stores/index';
 import moment from 'moment';
-import $ from 'jquery';
 import AppDispatcher from "../appDispatcher";
+import Constants from '../../Constants';
+import $ from 'jquery';
 
 class ManageShops extends Component {
   constructor(props) {
     super(props);
     this._request = {count: 10, start_index: 0};
     this._common_id = null;
+    this._waitForToken = null;
     this.refresh = this.refresh.bind(this);
     this.removeShop = this.removeShop.bind(this);
-    this.closeError = this.closeError.bind(this);
-    this.closeSuccess = this.closeSuccess.bind(this);
     this.navigate = this.navigate.bind(this);
     this.state = {
       isLoading: false,
       shops: [],
       navigation: [],
-      errorMessage: null,
-      successMessage: null
+      errorMessage: null
     };
   }
 
@@ -41,33 +41,21 @@ class ManageShops extends Component {
     self.setState({
       isLoading: true
     });
+    const {t} = this.props;
     this._common_id = Guid.generate();
-    ShopsService.remove(id, this._common_id).then(function(r) {
-      self.setState({
-        isLoading: false,
-        successMessage: 'The shop has been removed'
+    ShopsService.remove(id, this._common_id).catch(function() {
+      ApplicationStore.sendMessage({
+        message: t('errorRemoveShop'),
+        level: 'error',
+        position: 'tr'
       });
-    }).catch(function() {
       self.setState({
-        errorMessage: 'An error occured while trying to remove the shop',
         isLoading: false
       });
     });
   }
 
-  closeError() {
-    this.setState({
-      errorMessage: null
-    });
-  }
-
-  closeSuccess() {
-    this.setState({
-      successMessage: null
-    });
-  }
-
-  refresh() { // Refresh table.
+  refresh() { // Refresh the table.
     var self = this;
     self.setState({
       isLoading: true
@@ -97,7 +85,7 @@ class ManageShops extends Component {
     });
   }
 
-  render() {
+  render() { // Render the view.
     if (this.state.isLoading) {
       return (<div><i className="fa fa-spinner fa-spin"></i></div>);
     }
@@ -113,22 +101,15 @@ class ManageShops extends Component {
           <td>{shop.category.name}</td>
           <td>{moment(shop.create_datetime).format('LLL')}</td>
           <td>
-            <a href="#" style={{padding: "5px", border: "1px solid #ee676b", borderRadius: "5px", color: "#ee676b"}}>
-              <i className="fa fa-trash"></i> Delete
+            <a href="#" className="btn-light red" style={{textDecoration: 'none !important'}} onClick={(e) => { self.removeShop(shop.id); }}>
+              <i className="fa fa-trash"></i> {t('delete')}
             </a>
-            <a href="#" style={{padding: "5px", border: "1px solid green", borderRadius: "5px", marginLeft: "5px", color: "green"}}>
-              <i className="fa fa-external-link"></i> View
-            </a>
-            <a href="#" style={{padding: "5px", border: "1px solid #6c6c44", borderRadius: "5px", marginLeft: "5px", color: "#6c6c44"}}>
-              <i className="fa fa-pencil"></i> Edit
-            </a>
-            {/*
-            <button className="btn btn-outline-secondary btn-sm" onClick={(e) => { self.removeShop(shop.id); }}><i className="fa fa-trash"></i></button>
-            <NavLink to={'/shops/' + shop.id + '/view/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-eye"></i></NavLink>
-            <NavLink to={'/shops/' + shop.id + '/edit/profile'} className="btn btn-outline-secondary btn-sm"><i className="fa fa-pencil"></i></NavLink>
-            <NavLink to={'/addproduct/' + shop.id} className="btn btn-success"><i className="fa fa-plus"></i> ADD PRODUCT</NavLink>
-            <NavLink to={'/addservice/' + shop.id} className="btn btn-success"><i className="fa fa-plus"></i> ADD SERVICE</NavLink>
-            */}
+            <NavLink to={'/shops/' + shop.id + '/view/profile'} className="btn-light green" style={{textDecoration: 'none !important', marginLeft: "5px"}}>
+              <i className="fa fa-external-link"></i> {t('view')}
+            </NavLink>
+            <NavLink to={'/shops/' + shop.id + '/edit/profile'} className="btn-light gray" style={{textDecoration: 'none !important', marginLeft: "5px"}}>
+              <i className="fa fa-pencil"></i> {t('edit')}
+            </NavLink>
           </td>
         </tr>));
       });
@@ -146,14 +127,14 @@ class ManageShops extends Component {
 
     return (<div className="container">
       <div className="section">
-        {rows.length === 0 && (<Alert color="warning">No shops</Alert>) || (
+        {rows.length === 0 && (<span><i>{t('noShops')}</i></span>) || (
           <table className="table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Creation datetime</th>
-                <th>Manage</th>
+                <th>{t('name')}</th>
+                <th>{t('category')}</th>
+                <th>{t('creationDate')}</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -169,12 +150,18 @@ class ManageShops extends Component {
     </div>);
   }
 
-  componentDidMount() {
+  componentDidMount() { // Execute before the render method.
     var self = this;
-    AppDispatcher.register(function (payload) {
+    const {t} = this.props;
+    self._waitForToken = AppDispatcher.register(function (payload) {
         switch (payload.actionName) {
-            case 'remove-shop':
+            case Constants.events.REMOVE_SHOP_ARRIVED:
               if (payload.data && payload.data.common_id === self._common_id) {
+                ApplicationStore.sendMessage({
+                  message: t('successRemoveShop'),
+                  level: 'success',
+                  position: 'bl'
+                });
                 self.refresh();
               }
 
@@ -183,6 +170,10 @@ class ManageShops extends Component {
     });
 
     self.refresh();
+  }
+
+  componentWillUnmount() { // Remove listener.
+      AppDispatcher.unregister(this._waitForToken);
   }
 }
 

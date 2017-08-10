@@ -238,5 +238,12 @@
   "successConfirmUser": "The user's account has been confirmed",
   "errorConfirmUser": "An error occured while trying to confirm the user's account, please contact the administrator",
   "owner": "Owner",
-  "visitTheProfile": "Visit the profile"
+  "visitTheProfile": "Visit the profile",
+  "errorRemoveShop": "An error occured while trying to remove the shop, please contact the administrator",
+  "successRemoveShop": "The shop has been removed",
+  "delete": "Delete",
+  "view": "View",
+  "edit": "Edit",
+  "noShops": "No shop",
+  "creationDate": "Creation date"
 }

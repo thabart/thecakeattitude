@@ -171,7 +171,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             {
                 if (!Regex.IsMatch(updateParameter.Password, @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"))
                 {
-                    return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.ThePasswordIsNotCorrect, HttpStatusCode.InternalServerError);
+                    return this.BuildError(ErrorCodes.InvalidRequestCode, "the password is not correct", HttpStatusCode.InternalServerError);
                 }
 
                 user.Password = _authenticateResourceOwnerService.GetHashedPassword(updateParameter.Password);
@@ -217,7 +217,7 @@ namespace Cook4Me.Api.OpenId.Controllers
 
             if (user.IsLocalAccount)
             {
-                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoIsAlreadyConfirmed, HttpStatusCode.InternalServerError);
+                return this.BuildError(ErrorCodes.InvalidRequestCode, "the resource owner is already confirmed", HttpStatusCode.InternalServerError);
             }
 
             // 3. Update the information.

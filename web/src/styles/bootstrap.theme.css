@@ -180,6 +180,36 @@ a.no-style:link {
   border-bottom: 3px solid rgb(231, 39, 45) !important;
 }
 
+.btn-light {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.btn-light.red {
+  border: 1px solid #ee676b;
+  color: #ee676b;
+}
+
+.btn-light.green {
+  border: 1px solid rgba(0, 128, 0, 0.53);
+  color: rgba(0, 128, 0, 0.53);
+}
+
+.btn-light.green:hover {
+  border: 1px solid green;
+  color: green;
+}
+
+.btn-light.gray {
+  border: 1px solid rgba(108, 108, 68, 0.62);
+  color: rgba(108, 108, 68, 0.62);
+}
+
+.btn-light.gray:hover {
+  border: 1px solid #6c6c44;
+  color: #6c6c44;
+}
+
 /* Tooltip */
 .txt-info {
   color: #ea4248 !important;

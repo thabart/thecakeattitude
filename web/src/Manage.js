@@ -33,6 +33,8 @@ class Manage extends Component {
       content = (<ManageAnnounces />);
     } else if (action === "shops") {
       content = (<ManageShops />);
+    } else {
+      action = "profile";
     }
 
     return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
@@ -43,19 +45,19 @@ class Manage extends Component {
               </div>
               {this.state.isVerticalMenuDisplayed ? (
                 <ul>
-                  <li className="menu-item hoverable">
+                  <li className={action === "profile" ? "menu-item hoverable active": "menu-item hoverable"}>
                     <NavLink to="/manage/profile" className="nav-link"><h3 className="uppercase"><img src="/images/user.png" width="30" /> {t('profile')}</h3></NavLink>
                   </li>
-                  <li className="menu-item hoverable">
+                  <li className={action === "shops" ? "menu-item hoverable active": "menu-item hoverable"}>
                     <NavLink to="/manage/shops" className="nav-link"><h3 className="uppercase"><img src="/images/shop.png" width="30" /> {t('shops')}</h3></NavLink>
                   </li>
                 </ul>
               ) : (
                 <ul>
-                  <li className="menu-item hoverable">
+                  <li className={action === "profile" ? "menu-item hoverable active": "menu-item hoverable"}>
                     <NavLink to="/manage/profile" className="nav-link"><img src="/images/user.png" width="30" /></NavLink>
                   </li>
-                  <li className="menu-item hoverable">
+                  <li className={action === "shops" ? "menu-item hoverable active": "menu-item hoverable"}>
                     <NavLink to="/manage/shops" className="nav-link"><img src="/images/shop.png" width="30" /></NavLink>
                   </li>
                 </ul>

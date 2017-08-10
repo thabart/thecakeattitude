@@ -236,5 +236,12 @@
   "successConfirmUser": "Le compte utilisé a été confirmé",
   "errorConfirmUser": "Une erreur est survenue durant la confirmation du compte, veuillez prendre contact avec l'administrateur",
   "owner": "Propriétaire",
-  "visitTheProfile": "Visiter le profil"
+  "visitTheProfile": "Visiter le profil",
+  "errorRemoveShop": "Une erreur est survenue durant la suppression du magasin, veuillez prendre contact avec l'administrateur",
+  "successRemoveShop": "Le magasin a été supprimé",
+  "delete": "Supprimer",
+  "view": "Voir",
+  "edit": "Editer",
+  "noShops": "Aucun magasin",
+  "creationDate": "Date de création"
 }

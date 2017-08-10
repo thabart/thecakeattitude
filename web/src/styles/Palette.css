@@ -27,7 +27,8 @@ h2 {
 
 .red-theme .progressbar .counter-rounded,
 .red-theme .card-header,
-.red-theme .vertical-menu .menu-item.hoverable a:hover {
+.red-theme .vertical-menu .menu-item.hoverable a:hover,
+.red-theme .vertical-menu .menu-item.active {
   background-color: rgba(231, 39, 45, 0.22);
 }
 
