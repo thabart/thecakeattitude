@@ -14,8 +14,6 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
 namespace Cook4Me.Api.Core.Parameters
 {
     public class SearchMessagesParameter
@@ -26,10 +24,15 @@ namespace Cook4Me.Api.Core.Parameters
             Count = 100;
         }
 
-        public IEnumerable<string> From { get; set; }
-        public IEnumerable<string> To { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public string ProductId { get; set; }
+        public string ServiceId { get; set; }
+        public bool? IsRead { get; set; }
+        public bool? IsParent { get; set; }
+        public string ParentId { get; set; }
         public int StartIndex { get; set; }
         public int Count { get; set; }
-        public bool? IsRead { get; set; }
+        public bool IsPagingEnabled { get; set; }
     }
 }

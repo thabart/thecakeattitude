@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.ClientService;
+using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
@@ -38,17 +39,19 @@ namespace Cook4Me.Api.Host.Handlers
         private readonly ServiceEventsHandler _serviceEventsHandler;
         private readonly ClientServiceEventsHandler _clientServiceEventsHandler;
         private readonly NotificationEventsHandler _notificationEventsHandler;
+        private readonly MessageEventsHandler _messageEventsHandler;
         private readonly IBus _bus;
 
         public HandlersInitiator(ShopEventsHandler shopEventsHandler, ProductEventsHandler productEventsHandler, 
             ServiceEventsHandler serviceEventsHandler, ClientServiceEventsHandler clientServiceEventsHandlers,
-            NotificationEventsHandler notificationEventsHandler, IBus bus)
+            NotificationEventsHandler notificationEventsHandler, MessageEventsHandler messageEventsHandler, IBus bus)
         {
             _shopEventsHandler = shopEventsHandler;
             _productEventsHandler = productEventsHandler;
             _serviceEventsHandler = serviceEventsHandler;
             _clientServiceEventsHandler = clientServiceEventsHandlers;
             _notificationEventsHandler = notificationEventsHandler;
+            _messageEventsHandler = messageEventsHandler;
             _bus = bus;
         }
 
@@ -76,6 +79,7 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<ClientServiceRemovedEvent>(_clientServiceEventsHandler.Handle);
                 _bus.RegisterHandler<NotificationUpdatedEvent>(_notificationEventsHandler.Handle);
                 _bus.RegisterHandler<NotificationAddedEvent>(_notificationEventsHandler.Handle);
+                _bus.RegisterHandler<MessageAddedEvent>(_messageEventsHandler.Handle);
                 _isInitiated = true;
             }
         }

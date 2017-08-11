@@ -176,7 +176,8 @@ h2 {
   background-color: rgba(247, 178, 181, 0.53) !important;
 }
 
-.red-theme .shop-products-menu .nav-link.active {
+.red-theme .shop-products-menu .nav-link.active,
+.red-theme .red .nav-link.active {
   background-color: rgba(231, 39, 45, 0.7) !important;
 }
 

@@ -25,6 +25,46 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static MessageAggregate ToAggregate(this Message message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var files = message.JoinedFiles == null ? new List<MessageAttachment>() : message.JoinedFiles.Select(a => a.ToAggregate()).ToList();
+            var children = message.Children == null ? new List<string>() : message.Children.Select(m => m.Id);
+            return new MessageAggregate
+            {
+                Id = message.Id,
+                Content = message.Content,
+                From = message.From,
+                To = message.To,
+                CreateDateTime = message.CreateDateTime,
+                IsRead = message.IsRead,
+                ParentId = message.ParentId,
+                Subject = message.Subject,
+                ProductId = message.ProductId,
+                ServiceId = message.ServiceId,
+                Children = children,
+                MessageAttachments = files,
+            };
+        }
+
+        public static MessageAttachment ToAggregate(this MessageJoinedFile message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(MessageAttachment));
+            }
+
+            return new MessageAttachment
+            {
+                Id = message.Id,
+                Link = message.Link
+            };
+        }
+
         public static Message ToModel(this MessageAggregate message)
         {
             if (message == null)
@@ -33,31 +73,19 @@ namespace Cook4Me.Api.EF.Extensions
             }
 
             var files = message.MessageAttachments == null ? new List<MessageJoinedFile>() : message.MessageAttachments.Select(a => a.ToModel()).ToList();
-            var receivers = message.MessageReceivers == null ? new List<MessageDestination>() : message.MessageReceivers.Select(a => a.ToModel()).ToList();
             return new Message
             {
                 Id = message.Id,
                 Content = message.Content,
                 From = message.From,
-                CreationDateTime = message.CreationDateTime,
+                To = message.To,
+                CreateDateTime = message.CreateDateTime,
                 IsRead = message.IsRead,
+                JoinedFiles = files,
                 ParentId = message.ParentId,
-                DestinationLst = receivers,
-                JoinedFiles = files
-            };
-        }
-
-        public static MessageDestination ToModel(this MessageReceiver receiver)
-        {
-            if (receiver == null)
-            {
-                throw new ArgumentNullException(nameof(receiver));
-            }
-
-            return new MessageDestination
-            {
-                Id = receiver.Id,
-                To = receiver.To
+                ProductId = message.ProductId,
+                ServiceId = message.ServiceId,
+                Subject = message.Subject
             };
         }
 

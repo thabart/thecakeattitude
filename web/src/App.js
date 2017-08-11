@@ -15,6 +15,7 @@ import Notifications from './Notifications';
 import Home from './Home';
 import Tags from './Tags';
 import Users from './Users';
+import Messages from './Messages';
 import {OpenIdService, SessionService} from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
@@ -226,6 +227,7 @@ class App extends Component {
                 <Route path="/clientservices/:id" component={ClientServices} />
                 <Route path="/tags/:tag" component={Tags} />
                 <Route path="/users/:id" component={Users} />
+                <Route path="/messages" component={Messages} />
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>

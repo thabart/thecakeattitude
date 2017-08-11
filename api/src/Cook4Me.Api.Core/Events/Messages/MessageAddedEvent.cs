@@ -14,25 +14,22 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.EF.Models;
-using Microsoft.EntityFrameworkCore;
+using Cook4Me.Api.Core.Bus;
 using System;
 
-namespace Cook4Me.Api.EF.Mappings
+namespace Cook4Me.Api.Core.Events.Messages
 {
-    internal static class MessageDestinationMapping
+    public class MessageAddedEvent : Event
     {
-        public static ModelBuilder AddMessageDestinationMapping(this ModelBuilder modelBuilder)
-        {
-            if (modelBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(modelBuilder));
-            }
-
-            modelBuilder.Entity<MessageDestination>()
-                .ToTable("messageDestinations")
-                .HasKey(s => s.Id);
-            return modelBuilder;
-        }
+        public string Id { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public string Content { get; set; }
+        public string ServiceId { get; set; }
+        public string ProductId { get; set; }
+        public string ParentId { get; set; }
+        public string Subject { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public bool IsRead { get; set; }
     }
 }

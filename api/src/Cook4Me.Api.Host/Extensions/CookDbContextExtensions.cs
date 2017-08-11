@@ -63,6 +63,7 @@ namespace Cook4Me.Api.Host.Extensions
             InsertServices(context);
             InsertClientServices(context);
             InsertNotifications(context);
+            InsertMessages(context);
             context.SaveChanges();
         }
 
@@ -938,6 +939,23 @@ namespace Cook4Me.Api.Host.Extensions
                     IsRead = false,
                     From = "laetitia",
                     To = "administrator"
+                }
+            });
+        }
+
+        private static void InsertMessages(CookDbContext context)
+        {
+            context.Messages.AddRange(new[]
+            {
+                new Message
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "je suis intéressé par la voiture",
+                    CreateDateTime = DateTime.UtcNow,
+                    From = "laetitia",
+                    To = "administrator",
+                    IsRead = false,
+                    Subject = "votre voiture"
                 }
             });
         }

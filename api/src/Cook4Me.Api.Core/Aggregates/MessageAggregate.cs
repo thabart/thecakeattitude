@@ -22,13 +22,16 @@ namespace Cook4Me.Api.Core.Aggregates
     public class MessageAggregate
     {
         public string Id { get; set; }
+        public string Subject { get; set; }
         public string From { get; set; }
+        public string To { get; set; }
         public string Content { get; set; }
-        public DateTime CreationDateTime { get; set; }
-        public string ParentId { get; set; }
+        public string ProductId { get; set; }
+        public string ServiceId { get; set; }
+        public DateTime CreateDateTime { get; set; }
         public bool IsRead { get; set; }
+        public string ParentId { get; set; }
         public IEnumerable<string> Children { get; set; }
-        public IEnumerable<MessageReceiver> MessageReceivers { get; set; }
         public IEnumerable<MessageAttachment> MessageAttachments { get; set; }
     }
 }

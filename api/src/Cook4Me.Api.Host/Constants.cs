@@ -48,10 +48,33 @@ namespace Cook4Me.Api.Host
             public const string Me = "me";
             public const string SearchMine = "me/.search";
             public const string Status = "status";
+            public const string Messages = "messages";
         }
 
         public static class DtoNames
         {
+            public static class UserMessage
+            {
+                public const string Id = "id";
+                public const string From = "from";
+                public const string To = "to";
+                public const string Content = "content";
+                public const string ServiceId = "service_id";
+                public const string ProductId = "product_id";
+                public const string CreateDateTime = "create_datetime";
+                public const string Attachments = "attachments";
+                public const string IsRead = "is_read";
+                public const string Subject = "subject";
+                public const string ParentId = "parent_id";
+            }
+
+            public static class UserMessageAttachment
+            {
+                public const string Id = "id";
+                public const string Link = "link";
+                public const string Name = "name";
+            }
+
             public static class Message
             {
                 public const string CommonId = "common_id";

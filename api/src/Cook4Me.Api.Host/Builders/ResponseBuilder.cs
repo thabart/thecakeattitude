@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Events.ClientService;
+using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
@@ -29,6 +30,9 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetMessageAddedEvent(MessageAddedEvent evt);
+        JObject GetMessage(MessageAggregate message);
+        JObject GetMessageAttachment(MessageAttachment attachment);
         JObject GetNotificationAddedEvent(NotificationAddedEvent evt);
         JObject GetNotificationStatus(GetNotificationStatusResult result);
         JObject GetNotificationUpdatedEvent(NotificationUpdatedEvent evt);
@@ -65,6 +69,71 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetMessageAddedEvent(MessageAddedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+            
+            var result = new JObject();
+            result.Add(Constants.DtoNames.UserMessage.Id, evt.Id);
+            result.Add(Constants.DtoNames.UserMessage.Content, evt.Content);
+            result.Add(Constants.DtoNames.UserMessage.CreateDateTime, evt.CreateDateTime);
+            result.Add(Constants.DtoNames.UserMessage.From, evt.From);
+            result.Add(Constants.DtoNames.UserMessage.IsRead, evt.IsRead);
+            result.Add(Constants.DtoNames.UserMessage.ProductId, evt.ProductId);
+            result.Add(Constants.DtoNames.UserMessage.ServiceId, evt.ServiceId);
+            result.Add(Constants.DtoNames.UserMessage.To, evt.To);
+            result.Add(Constants.DtoNames.UserMessage.ParentId, evt.ParentId);
+            result.Add(Constants.DtoNames.UserMessage.Subject, evt.Subject);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return result;
+        }
+
+        public JObject GetMessage(MessageAggregate message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var attachments = new JArray();
+            if (message.MessageAttachments != null)
+            {
+                foreach(var attachment in message.MessageAttachments)
+                {
+                    attachments.Add(GetMessageAttachment(attachment));
+                }
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.UserMessage.Id, message.Id);
+            result.Add(Constants.DtoNames.UserMessage.Content, message.Content);
+            result.Add(Constants.DtoNames.UserMessage.CreateDateTime, message.CreateDateTime);
+            result.Add(Constants.DtoNames.UserMessage.From, message.From);
+            result.Add(Constants.DtoNames.UserMessage.IsRead, message.IsRead);
+            result.Add(Constants.DtoNames.UserMessage.ProductId, message.ProductId);
+            result.Add(Constants.DtoNames.UserMessage.ServiceId, message.ServiceId);
+            result.Add(Constants.DtoNames.UserMessage.To, message.To);
+            result.Add(Constants.DtoNames.UserMessage.Attachments, attachments);
+            return result;
+        }
+
+        public JObject GetMessageAttachment(MessageAttachment attachment)
+        {
+            if (attachment == null)
+            {
+                throw new ArgumentNullException(nameof(attachment));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.UserMessageAttachment.Id, attachment.Id);
+            result.Add(Constants.DtoNames.UserMessageAttachment.Link, attachment.Link);
+            result.Add(Constants.DtoNames.UserMessageAttachment.Name, attachment.Name);
+            return result;
+        }
+
         public JObject GetNotificationStatus(GetNotificationStatusResult param)
         {
             if (param == null)

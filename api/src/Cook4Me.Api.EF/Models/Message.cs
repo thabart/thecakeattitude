@@ -22,14 +22,20 @@ namespace Cook4Me.Api.EF.Models
     public class Message
     {
         public string Id { get; set; }
-        public string From { get; set; }
+        public string Subject { get; set; }
         public string Content { get; set; }
-        public DateTime CreationDateTime { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
         public string ParentId { get; set; }
         public bool IsRead { get; set; }
-        public virtual ICollection<MessageDestination> DestinationLst { get; set; }
-        public virtual ICollection<Message> Children { get; set; }
+        public string MessageId { get; set; }
+        public string ProductId { get; set; }
+        public string ServiceId { get; set; }
         public virtual ICollection<MessageJoinedFile> JoinedFiles { get; set; }
+        public virtual ICollection<Message> Children { get; set; }
         public virtual Message Parent { get; set; }
+        public virtual Product Product { get; set; }
+        public virtual Service Service { get; set; }
     }
 }

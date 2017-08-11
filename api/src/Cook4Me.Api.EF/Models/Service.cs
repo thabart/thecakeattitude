@@ -36,5 +36,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<ServiceImage> Images { get; set; }
         public virtual ICollection<ServiceTag> Tags { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
     }
 }

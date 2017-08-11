@@ -15,11 +15,14 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Repositories;
-using System.Threading.Tasks;
 using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
+using Cook4Me.Api.EF.Extensions;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -32,19 +35,111 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
-        public Task<bool> Add(MessageAggregate message)
+        public async Task<bool> Add(MessageAggregate message)
         {
-            return null;
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = message.ToModel();
+                    _context.Messages.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
-        public Task<MessageAggregate> Get(string id)
+        public async Task<MessageAggregate> Get(string id)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var result = await _context.Messages.Include(n => n.JoinedFiles).Include(n => n.JoinedFiles).FirstOrDefaultAsync(n => n.Id == id).ConfigureAwait(false);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToAggregate();
         }
 
-        public Task<SearchMessagesResult> Search(SearchMessagesParameter parameter)
+        public async Task<SearchMessagesResult> Search(SearchMessagesParameter parameter)
         {
-            throw new NotImplementedException();
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.Message> messages = _context.Messages.Include(n => n.JoinedFiles);
+            if (!string.IsNullOrWhiteSpace(parameter.ProductId))
+            {
+                messages = messages.Where(m => m.ProductId == parameter.ProductId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.ServiceId))
+            {
+                messages = messages.Where(m => m.ServiceId == parameter.ServiceId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.ParentId))
+            {
+                messages = messages.Where(m => m.ParentId == parameter.ParentId);
+            }
+
+            if (parameter.IsParent != null)
+            {
+                if (parameter.IsParent.Value)
+                {
+                    messages = messages.Where(m => m.ParentId == null);
+                }
+                else
+                {
+                    messages = messages.Where(m => m.ParentId != null);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.From))
+            {
+                messages = messages.Where(m => m.From == parameter.From);
+            }
+
+            if (!string.IsNullOrWhiteSpace(parameter.To))
+            {
+                messages = messages.Where(m => m.To == parameter.To);
+            }
+
+            if (parameter.IsRead != null)
+            {
+                messages = messages.Where(m => m.IsRead == parameter.IsRead.Value);
+            }
+            
+            var result = new SearchMessagesResult
+            {
+                TotalResults = await messages.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            messages = messages.OrderByDescending(c => c.CreateDateTime);
+            if (parameter.IsPagingEnabled)
+            {
+                messages = messages.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await messages.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
         }
     }
 }

@@ -14,13 +14,22 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.EF.Models
+using Cook4Me.Api.Core.Bus;
+using System;
+
+namespace Cook4Me.Api.Core.Commands.Messages
 {
-    public class MessageDestination
+    public class AddMessageCommand : Command
     {
         public string Id { get; set; }
+        public string From { get; set; }
+        public string Content { get; set; }
+        public string ServiceId { get; set; }
+        public string ProductId { get; set; }
         public string To { get; set; }
-        public string MessageId { get; set; }
-        public virtual Message Message { get; set; }
+        public string ParentId { get; set; }
+        public string Subject { get; set; }
+        public bool IsRead { get; set; }
+        public DateTime CreateDateTime { get; set; }
     }
 }

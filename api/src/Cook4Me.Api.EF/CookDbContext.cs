@@ -74,7 +74,6 @@ namespace Cook4Me.Api.EF
                 .AddAnnouncement()
                 .AddNotification()
                 .AddNotificationParameter()
-                .AddMessageDestinationMapping()
                 .AddMessageJoinedFileMappingMapping()
                 .AddMessageMapping();
         }

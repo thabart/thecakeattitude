@@ -23,6 +23,7 @@ using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Hubs;
 using Cook4Me.Api.Host.Operations.Announcement;
+using Cook4Me.Api.Host.Operations.Messages;
 using Cook4Me.Api.Host.Operations.Notifications;
 using Cook4Me.Api.Host.Operations.Product;
 using Cook4Me.Api.Host.Operations.Services;
@@ -147,6 +148,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IRemoveShopValidator, RemoveShopValidator>();
             services.AddTransient<IAddProductValidator, AddProductValidator>();
             services.AddTransient<IAddServiceValidator, AddServiceValidator>();
+            services.AddTransient<IAddMessageValidator, AddMessageValidator>();
             services.AddTransient<IControllerHelper, ControllerHelper>();
             services.AddTransient<IAddShopOperation, AddShopOperation>();
             services.AddTransient<IAddShopCommentOperation, AddShopCommentOperation>();
@@ -180,6 +182,9 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetMineClientServicesOperation, GetMineClientServicesOperation>();
             services.AddTransient<ISearchMineShopsOperation, SearchMineShopsOperation>();
             services.AddTransient<IGetNotificationStatusOperation, GetNotificationStatusOperation>();
+            services.AddTransient<ISearchMessagesOperation, SearchMessagesOperation>();
+            services.AddTransient<IAddMessageOperation, AddMessageOperation>();
+            services.AddTransient<IGetMessageOperation, GetMessageOperation>();
             services.AddTransient<IUpdateShopOperation, UpdateShopOperation>();
             services.AddTransient<IAddProductOperation, AddProductOperation>();
             services.AddTransient<IDeleteShopOperation, DeleteShopOperation>();
@@ -199,11 +204,13 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IServiceEnricher, ServiceEnricher>();
             services.AddTransient<IClientServiceEnricher, ClientServiceEnricher>();
             services.AddTransient<INotificationEnricher, NotificationEnricher>();
+            services.AddTransient<IMessageEnricher, MessageEnricher>();
             services.AddSingleton<IHandlersInitiator, HandlersInitiator>();
             services.AddSingleton<ShopEventsHandler>();
             services.AddSingleton<ProductEventsHandler>();
             services.AddSingleton<ServiceEventsHandler>();
             services.AddSingleton<ClientServiceEventsHandler>();
+            services.AddSingleton<MessageEventsHandler>();
             services.AddSingleton<Handlers.NotificationEventsHandler>();
         }
     }

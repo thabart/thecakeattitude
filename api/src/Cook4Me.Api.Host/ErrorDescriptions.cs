@@ -38,6 +38,7 @@ namespace Cook4Me.Api.Host
         public const string TheCommentCannotBeRemoved = "an error occured while trying to remove the comment";
         public const string TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory = "you already have a shop on this category";
         public const string TheParameterIsMandatory = "the parameter {0} is mandatory";
+        public const string TheParametersAreMandatories = "the parameters {0} are mandatories";
         public const string TheParameterIsMandatoryAndShouldContainsBetween = "the parameter {0} is mandatory and should contains between {1} characters and {2}";
         public const string TheParameterLengthCannotExceedNbCharacters = "the parameter {0} length cannot exceed {1} characters";
         public const string TheScoreMustBeBetween = "the score must be between 1 and 5";
@@ -60,5 +61,7 @@ namespace Cook4Me.Api.Host
         public const string ThePaypalAccountIsNotValid = "the paypal account is not a valid email";
         public const string TheNotificationDoesntExist = "the notification doesn't exist";
         public const string TheNotificationCannotBeUpdated = "you don't have the correct right to update the notification";
+        public const string TheProductAndServiceAndToCannotBeSpecifiedAtSameTime = "the product, service and to parameters cannot be specified at same time";
+        public const string TheParentMessageDoesntExist = "the parent message doesn't exist";
     }
 }

@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Commands.ClientService;
+using Cook4Me.Api.Core.Commands.Messages;
 using Cook4Me.Api.Core.Commands.Notifications;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
@@ -31,6 +32,8 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        AddMessageCommand GetAddMessage(JObject jObj);
+        SearchMessagesParameter GetSearchMessages(JObject jObj);
         GetNotificationStatusParameter GetNotificationStatus(JObject jObj);
         UpdateNotificationCommand GetUpdateNotification(JObject jObj);
         SearchNotificationsParameter GetSearchNotifications(JObject jObj);
@@ -60,6 +63,54 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public AddMessageCommand GetAddMessage(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var addMessageCommand = new AddMessageCommand
+            {
+                From = jObj.TryGetString(Constants.DtoNames.UserMessage.From),
+                To = jObj.TryGetString(Constants.DtoNames.UserMessage.To),
+                ProductId = jObj.TryGetString(Constants.DtoNames.UserMessage.ProductId),
+                ServiceId = jObj.TryGetString(Constants.DtoNames.UserMessage.ServiceId),
+                Content = jObj.TryGetString(Constants.DtoNames.UserMessage.Content),
+                ParentId = jObj.TryGetString(Constants.DtoNames.UserMessage.ParentId),
+                Subject = jObj.TryGetString(Constants.DtoNames.UserMessage.Subject)
+            };
+
+            return addMessageCommand;
+        }
+
+        public SearchMessagesParameter GetSearchMessages(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+            
+            var result = new SearchMessagesParameter
+            {
+                From = jObj.TryGetString(Constants.DtoNames.UserMessage.From),
+                To = jObj.TryGetString(Constants.DtoNames.UserMessage.To),
+                IsRead = jObj.TryGetNullableBoolean(Constants.DtoNames.UserMessage.IsRead),
+                ProductId = jObj.TryGetString(Constants.DtoNames.UserMessage.ProductId),
+                ServiceId = jObj.TryGetString(Constants.DtoNames.UserMessage.ServiceId),
+                
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+            };
+
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
         public GetNotificationStatusParameter GetNotificationStatus(JObject jObj)
         {
             if (jObj == null)
