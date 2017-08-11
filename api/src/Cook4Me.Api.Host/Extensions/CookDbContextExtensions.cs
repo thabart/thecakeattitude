@@ -950,12 +950,52 @@ namespace Cook4Me.Api.Host.Extensions
                 new Message
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Content = "je suis intéressé par la voiture",
+                    Content = "Intéressé par votre voiture",
                     CreateDateTime = DateTime.UtcNow,
                     From = "laetitia",
                     To = "administrator",
                     IsRead = false,
-                    Subject = "votre voiture"
+                    Subject = "[ACHAT] VOITURE"
+                },
+                new Message
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "Intéressé par un gâteau d'anniversaire",
+                    CreateDateTime = DateTime.UtcNow,
+                    From = "administrator",
+                    To = "laetitia",
+                    IsRead = false,
+                    Subject = "[ACHAT] GATEAU ANNIVERSAIRE"
+                },
+                new Message
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "Intéressé par un gâteau d'anniversaire",
+                    CreateDateTime = DateTime.UtcNow,
+                    From = "administrator",
+                    To = "laetitia",
+                    IsRead = false,
+                    Subject = "[ACHAT] GATEAU ANNIVERSAIRE"
+                },
+                new Message
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "Intéressé par un gâteau d'anniversaire",
+                    CreateDateTime = DateTime.UtcNow,
+                    From = "administrator",
+                    To = "laetitia",
+                    IsRead = false,
+                    Subject = "[ACHAT] GATEAU ANNIVERSAIRE"
+                },
+                new Message
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Content = "Intéressé par un gâteau d'anniversaire",
+                    CreateDateTime = DateTime.UtcNow,
+                    From = "administrator",
+                    To = "laetitia",
+                    IsRead = false,
+                    Subject = "[ACHAT] GATEAU ANNIVERSAIRE"
                 }
             });
         }

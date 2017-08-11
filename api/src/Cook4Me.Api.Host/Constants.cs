@@ -53,6 +53,11 @@ namespace Cook4Me.Api.Host
 
         public static class DtoNames
         {
+            public static class SearchUserMessage
+            {
+                public const string IsParent = "is_parent";
+            }
+
             public static class UserMessage
             {
                 public const string Id = "id";

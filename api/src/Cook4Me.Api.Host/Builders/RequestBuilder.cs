@@ -98,8 +98,10 @@ namespace Cook4Me.Api.Host.Builders
                 IsRead = jObj.TryGetNullableBoolean(Constants.DtoNames.UserMessage.IsRead),
                 ProductId = jObj.TryGetString(Constants.DtoNames.UserMessage.ProductId),
                 ServiceId = jObj.TryGetString(Constants.DtoNames.UserMessage.ServiceId),
-                
-                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+                ParentId = jObj.TryGetString(Constants.DtoNames.UserMessage.ParentId),
+                IsParent = jObj.TryGetNullableBoolean(Constants.DtoNames.SearchUserMessage.IsParent),
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                IsPagingEnabled = true,
             };
 
             var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);

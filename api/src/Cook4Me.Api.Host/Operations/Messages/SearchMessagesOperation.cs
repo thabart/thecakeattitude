@@ -54,6 +54,12 @@ namespace Cook4Me.Api.Host.Operations.Messages
             
             var href = "/" + Constants.RouteNames.Messages + "/" + Constants.RouteNames.Search;
             var request = _requestBuilder.GetSearchMessages(jObj);
+            if (request.From != subject && request.To != subject)
+            {
+
+                return null;
+            }
+
             var searchResult = await _repository.Search(request);
             if (searchResult.Content == null || !searchResult.Content.Any())
             {
