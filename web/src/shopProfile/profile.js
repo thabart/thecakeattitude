@@ -192,7 +192,7 @@ class ShopProfile extends Component {
               { /* Owner */ }
               <div className="col-md-12" style={{paddingTop: "20px"}}>
                 <h5>{t('owner')}</h5>
-                <NavLink to={"/users/" + this.state.shop.subject}>{t('visitTheProfile')}</NavLink>
+                <NavLink to={"/users/" + this.state.shop.subject} className="no-decoration red">{t('visitTheProfile')}</NavLink>
               </div>
               { /* Description */ }
               <div className="col-md-12" style={{paddingTop: "20px"}}>

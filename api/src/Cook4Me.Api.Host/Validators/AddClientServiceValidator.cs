@@ -62,7 +62,7 @@ namespace Cook4Me.Api.Host.Validators
                 throw new ArgumentNullException(nameof(command));
             }
 
-            if (!IsValid(command.Name, 1, 15))
+            if (!IsValid(command.Name, 1, 50))
             {
                 return new AddClientServiceValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.ClientService.Name, 1, 15));
             }

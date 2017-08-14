@@ -87,7 +87,7 @@
   "uniqueAddressError": "The address must be unique",
   "completeAddressError": "The address must be complete",
   "addressDetailsError": "The address details cannot be fetched",
-  "shopAddressDescription": "Specify the address where your shop is located. By default the address is the same than the one specified in your profile.",
+  "shopAddressDescription": "Specify the address where your shop is located.",
   "uploadProfileError": "The profile cannot be update. Please contact the administrator",
   "retrieveProfileInfoError": "The profile information cannot be fecthed. Please contact the administrator",
   "invalidEmailError": "The email is not valid",
@@ -264,5 +264,14 @@
   "yourMessages": "Your messages",
   "received": "Received",
   "sent": "Sent",
-  "add_message": "A message has been received"
+  "add_message": "A message has been received",
+  "errorSaveClientService": "An error occured while trying to add the client service, please contact the administrator",
+  "priceInvalid": "The price should be > 0",
+  "clientServiceDescription": "As a client, you can ask for a service to ALL the shops or the shops that belong to the specified category. <br /> For example : I want to change the sole of my shoes (Price : 50 euros)",
+  "nameClientServiceTooltip": "Displayed name",
+  "descriptionClientServiceTooltip": "Description of your service",
+  "priceClientServiceTooltip": "Give an estimation",
+  "clientServiceAddressDescription": "Specify the address where your service is located.",
+  "contains1To50CharsError": "Should contains 1 to 50 characters",
+  "create_client_service": "A client service has been added"
 }

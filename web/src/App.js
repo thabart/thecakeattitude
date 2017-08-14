@@ -9,7 +9,7 @@ import Services from "./Services";
 import ClientServices from './ClientServices';
 import Manage from './Manage';
 import AddProduct from './AddProduct';
-import AddAnnouncement from "./AddAnnouncement";
+import AddClientService from "./AddClientService";
 import AddService from './AddService';
 import Notifications from './Notifications';
 import Home from './Home';
@@ -132,7 +132,7 @@ class App extends Component {
         });
         proxy.on('clientServiceAdded', function (message) {
             AppDispatcher.dispatch({
-                actionName: 'add-announce',
+                actionName: Constants.events.ADD_CLIENT_SERVICE_ARRIVED,
                 data: message
             });
         });
@@ -266,7 +266,7 @@ class App extends Component {
                 <Route path="/addservice/:id"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
                 <Route path="/addAnnounce"
-                       render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddAnnouncement />))}/>
+                       render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddClientService />))}/>
                 <Route path="/manage/:action/:subaction?"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>
                 <Route path="/error/:type" component={Error}/>

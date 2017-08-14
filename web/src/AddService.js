@@ -20,6 +20,7 @@ class AddService extends Component {
       shop: {}
     };
   }
+
   toggle(tab, json) {
     var self = this;
     if (json) {
@@ -32,16 +33,19 @@ class AddService extends Component {
       });
     }
   }
+
   closeWarning() {
     this.setState({
       warningMessage: null
     });
   }
+
   closeError() {
     this.setState({
       errorMessage: null
     });
   }
+
   save(occurrence) {
     var json = this._data['1'],
       self = this;
@@ -50,7 +54,7 @@ class AddService extends Component {
       isLoading: true
     });
     json['shop_id'] = this.props.match.params.id;
-    ShopServices.add(json).then(function() {      
+    ShopServices.add(json).then(function() {
         self.setState({
           isLoading: false
         });
@@ -62,6 +66,7 @@ class AddService extends Component {
       });
     });
   }
+
   render() {
     return (<div className="container">
             {this.state.shop.name && this.state.shop.name !== null && (
@@ -91,6 +96,7 @@ class AddService extends Component {
             </TabContent>
     </div>);
   }
+  
   componentDidMount() {
     var self = this;
     self.setState({

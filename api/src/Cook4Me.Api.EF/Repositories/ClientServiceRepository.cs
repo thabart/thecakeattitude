@@ -107,7 +107,7 @@ namespace Cook4Me.Api.EF.Repositories
             IQueryable<Models.ClientService> announcements = _context.ClientServices.Include(c => c.Category);
             if (parameter.CategoryIds != null && parameter.CategoryIds.Any())
             {
-                announcements = announcements.Where(s => parameter.CategoryIds.Contains(s.CategoryId));
+                announcements = announcements.Where(s => s.CategoryId == null || parameter.CategoryIds.Contains(s.CategoryId));
             }
             
 

@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
@@ -57,6 +58,37 @@ namespace Cook4Me.Api.Handlers
                         Id = Guid.NewGuid().ToString(),
                         Type = NotificationParameterTypes.ShopId,
                         Value = message.ShopId
+                    }
+                }
+            };
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(ClientServiceAddedEvent message) // Notify the owner of the shop.
+        {
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "create_client_service",
+                CreatedDateTime = DateTime.UtcNow,
+                IsRead = false,
+                From = message.Subject,
+                To = message.Subject,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.ClientServiceId,
+                        Value = message.Id
                     }
                 }
             };

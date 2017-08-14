@@ -12,9 +12,10 @@ import {
     FormFeedback,
     Button
 } from "reactstrap";
-import {CategorySelector} from "../components";
+import { translate } from 'react-i18next';
+import { CategorySelector } from "../components";
 
-class DescriptionAnnouncement extends Component {
+class DescriptionClientService extends Component {
     constructor(props) {
         super(props);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -37,7 +38,7 @@ class DescriptionAnnouncement extends Component {
         };
     }
 
-    handleInputChange(e) {
+    handleInputChange(e) { // Handle the input change.
         const target = e.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
@@ -46,7 +47,7 @@ class DescriptionAnnouncement extends Component {
         });
     }
 
-    toggleTooltip(name) {
+    toggleTooltip(name) { // Toggle tooltip.
         var tooltip = this.state.tooltip;
         tooltip[name] = !tooltip[name];
         this.setState({
@@ -54,29 +55,24 @@ class DescriptionAnnouncement extends Component {
         });
     }
 
-    buildErrorTooltip(validName, description) {
+    buildErrorTooltip(validName, description) { // Build error tooltip.
         var result;
         if (this.state.valid[validName]) {
             result = (
                 <span>
-              <i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
-              <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => {
-                  this.toggleTooltip(validName);
-              }}>
                 {description}
-              </Tooltip>
-            </span> );
+              </span> );
         }
 
         return result;
     }
 
-    validate() {
+    validate() { // Validate the form.
         var self = this,
             valid = self.state.valid,
             isValid = true;
         // Check name
-        if (!self.state.name || self.state.name.length < 1 || self.state.name.length > 15) {
+        if (!self.state.name || self.state.name.length < 1 || self.state.name.length > 50) {
             valid.isNameInvalid = true;
             isValid = false;
         } else {
@@ -107,7 +103,7 @@ class DescriptionAnnouncement extends Component {
             return;
         }
 
-        var category = this.refs.categorySelector.getCategory();
+        var category = this.refs.categorySelector.getWrappedInstance().getCategory();
         var json = {
             name: this.state.name,
             description: this.state.description,
@@ -120,67 +116,56 @@ class DescriptionAnnouncement extends Component {
         this.props.onNext(json);
     }
 
-    render() {
-        var nameError = this.buildErrorTooltip('isNameInvalid', 'Should contains 1 to 15 characters'),
-            descriptionError = this.buildErrorTooltip('isDescriptionInvalid', 'Should contains 1 to 255 characters'),
-            priceError = this.buildErrorTooltip('isPriceInvalid', 'the price should be a number > 0');
+    render() { // Display the component.
+        const {t} = this.props;
+        var nameError = this.buildErrorTooltip('isNameInvalid', t('contains1To15CharsError')),
+            descriptionError = this.buildErrorTooltip('isDescriptionInvalid', t('contains1To255CharsError')),
+            priceError = this.buildErrorTooltip('isPriceInvalid', t('priceInvalid'));
 
-        const txtToolTipName = 'Displayed name';
-        const txtToolTipDescription = 'Description of your announce';
-        const txtToolTipPrice = 'Your price estimation';
+        const txtToolTipName = t('nameClientServiceTooltip');
+        const txtToolTipDescription = t('descriptionClientServiceTooltip');
+        const txtToolTipPrice = t('priceClientServiceTooltip');
 
-        const feedbackName = nameError ? 'warning' : undefined;
-        const feedbackDescription = descriptionError ? 'warning' : undefined;
-        const feedbackPrice = priceError ? 'warning' : undefined;
+        const feedbackName = nameError ? 'danger' : undefined;
+        const feedbackDescription = descriptionError ? 'danger' : undefined;
+        const feedbackPrice = priceError ? 'danger' : undefined;
 
         return (
             <div className="container bg-white rounded">
                 <section className="row p-1">
                     <div className="col-md-12">
+                        <p dangerouslySetInnerHTML={{__html: t('clientServiceDescription')}}></p>
                         <Form>
                             <FormGroup color={feedbackName}>
-                                <Label sm={12}>Name <i className="fa fa-info-circle text-info"
-                                                       id="toolTipName"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipName">
+                                <Label sm={12}>{t('name')} <i className="fa fa-info-circle txt-info" id="toolTipName"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipName" className="red-tooltip-inner">
                                     {txtToolTipName}
                                 </UncontrolledTooltip>
                                 <Col sm={12}>
-                                    <Input state={feedbackName}
-                                           type="text"
-                                           name="name"
-                                           onChange={this.handleInputChange}/>
+                                    <Input state={feedbackName} type="text" name="name" onChange={this.handleInputChange}/>
                                     <FormFeedback>{nameError}</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <FormGroup color={feedbackDescription}>
-                                <Label sm={12}>Description <i
-                                    className="fa fa-info-circle text-info"
-                                    id="toolTipDescription"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipDescription">
+                                <Label sm={12}>{t('description')} <i className="fa fa-info-circle txt-info" id="toolTipDescription"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipDescription" className="red-tooltip-inner">
                                     {txtToolTipDescription}
                                 </UncontrolledTooltip>
                                 <Col sm={12}>
-                                    <Input state={feedbackDescription}
-                                           type="textarea"
-                                           name="description"
-                                           onChange={this.handleInputChange}/>
+                                    <Input state={feedbackDescription} type="textarea" name="description" onChange={this.handleInputChange}/>
                                     <FormFeedback>{descriptionError}</FormFeedback>
                                 </Col>
                             </FormGroup>
                             <CategorySelector ref="categorySelector"/>
                             <FormGroup color={feedbackPrice}>
-                                <Label sm={12}>Price <i className="fa fa-info-circle text-info"
-                                                        id="toolTipPrice"/></Label>
-                                <UncontrolledTooltip placement="right" target="toolTipPrice">
+                                <Label sm={12}>{t('price')} <i className="fa fa-info-circle txt-info" id="toolTipPrice"/></Label>
+                                <UncontrolledTooltip placement="right" target="toolTipPrice" className="red-tooltip-inner">
                                     {txtToolTipPrice}
                                 </UncontrolledTooltip>
                                 <Col sm={12}>
                                     <InputGroup>
                                         <InputGroupAddon>€</InputGroupAddon>
-                                        <Input state={feedbackPrice}
-                                               type="number"
-                                               name="price"
-                                               onChange={this.handleInputChange}/>
+                                        <Input state={feedbackPrice} type="number" name="price" onChange={this.handleInputChange}/>
                                         <FormFeedback>{priceError}</FormFeedback>
                                     </InputGroup>
                                 </Col>
@@ -189,12 +174,10 @@ class DescriptionAnnouncement extends Component {
                     </div>
                 </section>
                 <section className="row p-1">
-                    <Button outline
-                            color="info"
-                            onClick={this.validate}>Next</Button>
+                    <Button color="default" onClick={this.validate}>{t('next')}</Button>
                 </section>
             </div>);
     }
 }
 
-export default DescriptionAnnouncement;
+export default translate('common', { wait: process && !process.release })(DescriptionClientService);

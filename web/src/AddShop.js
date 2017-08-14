@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import {TabContent, TabPane, Alert} from "reactstrap";
-import {withRouter} from "react-router";
-import {DescriptionForm, ContactInfoForm, PaymentForm, AddressForm, ProductForm} from "./addshoptabs";
-import {ShopsService} from "./services/index";
+import React, { Component } from "react";
+import {TabContent, TabPane, Alert } from "reactstrap";
+import { withRouter } from "react-router";
+import { DescriptionForm, ContactInfoForm, PaymentForm, AddressForm, ProductForm } from "./addshoptabs";
+import { ShopsService} from "./services/index";
 import { translate } from 'react-i18next';
 import $ from "jquery";
 import MainLayout from './MainLayout';

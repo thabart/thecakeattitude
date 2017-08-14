@@ -84,7 +84,7 @@
   "uniqueAddressError": "L'adresse doit être unique",
   "completeAddressError": "L'adresse doit être complète",
   "addressDetailsError": "Les details de l'adresse n'ont pas pu être récupérés",
-  "shopAddressDescription": "Spécifiez l'adresse de votre magasin. Par défault l'adresse est la même que celle spécifiée dans votre profil.",
+  "shopAddressDescription": "Spécifiez l'adresse de votre magasin.",
   "uploadProfileError": "Le profil n'a pas pu être mis à jour. Veuillez prendre contact avec l'administrateur.",
   "retrieveProfileInfoError": "Les informations de votre profil n'ont pas pu être récupérées. Veuillez prendre contact avec l'administrateur.",
   "invalidEmailError": "L'email n'est pas valide",
@@ -262,5 +262,14 @@
   "yourMessages": "Vos messages",
   "received": "Reçus",
   "sent": "Envoyés",
-  "add_message": "Un message a été reçu"
+  "add_message": "Un message a été reçu",
+  "errorSaveClientService": "Une erreur est survenue lors de l'insertion du service, veuillez prendre contact avec l'administrateur",
+  "priceInvalid": "Le prix doit être > 0",
+  "clientServiceDescription": "Comme client, vous pouvez soumettre une demande à TOUS les magasins ou les magasins qui appartiennent à la catégorie que vous avez spécifié. <br /> Par exemple : Je souhaite changer la semelle de mes chaussures (Prix désiré : 50 euros).",
+  "nameClientServiceTooltip": "Nom affiché",
+  "descriptionClientServiceTooltip": "Description de votre demande",
+  "priceClientServiceTooltip": "Donner une estimation",
+  "clientServiceAddressDescription": "Spécifiez l'adresse de votre service.",
+  "contains1To50CharsError": "Doit contenir entre 1 et 50 caractères",
+  "create_client_service": "Une demande a été formulée"
 }

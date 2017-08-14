@@ -162,4 +162,4 @@ class CategorySelector extends Component {
     }
 }
 
-export default translate('common', { wait: process && !process.release })(CategorySelector);
+export default translate('common', { wait: process && !process.release, withRef: true })(CategorySelector);
