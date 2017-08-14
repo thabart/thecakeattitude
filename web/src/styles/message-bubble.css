@@ -1,0 +1,16 @@
+/* Message tchat bubbles */
+
+.message {
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.message.received {
+  float: left;
+  background-color: #ddd;
+}
+
+.message.sent {
+  float:right;
+}

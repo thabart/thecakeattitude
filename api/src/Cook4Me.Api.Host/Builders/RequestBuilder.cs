@@ -90,7 +90,21 @@ namespace Cook4Me.Api.Host.Builders
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
-            
+
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchUserMessage.Orders);
+            var orderBy = new List<OrderBy>();
+            if (ordersObj != null)
+            {
+                var orders = ordersObj as JArray;
+                if (orders != null)
+                {
+                    foreach (var order in orders)
+                    {
+                        orderBy.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
+
             var result = new SearchMessagesParameter
             {
                 From = jObj.TryGetString(Constants.DtoNames.UserMessage.From),
@@ -102,6 +116,7 @@ namespace Cook4Me.Api.Host.Builders
                 IsParent = jObj.TryGetNullableBoolean(Constants.DtoNames.SearchUserMessage.IsParent),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 IsPagingEnabled = true,
+                OrderBy = orderBy
             };
 
             var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);

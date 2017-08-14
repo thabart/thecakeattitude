@@ -254,5 +254,7 @@
   "clientAskedServiceToEveryone": "Un client a demandé un service à tous les magasins",
   "proposedPrice": "Prix proposé",
   "contactClient": "Contacter le client",
-  "sendMessage": "Envoyer un message"
+  "sendMessage": "Envoyer un message",
+  "noMessage": "Aucun message",
+  "messagesTitle": "Messages"
 }

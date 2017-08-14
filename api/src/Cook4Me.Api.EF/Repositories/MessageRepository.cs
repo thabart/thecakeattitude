@@ -22,6 +22,7 @@ using Cook4Me.Api.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -125,7 +126,15 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 messages = messages.Where(m => m.IsRead == parameter.IsRead.Value);
             }
-            
+
+            if (parameter.OrderBy != null)
+            {
+                foreach (var orderBy in parameter.OrderBy)
+                {
+                    messages = Order(orderBy, "create_datetime", s => s.CreateDateTime, messages);
+                }
+            }
+
             var result = new SearchMessagesResult
             {
                 TotalResults = await messages.CountAsync().ConfigureAwait(false),
@@ -140,6 +149,21 @@ namespace Cook4Me.Api.EF.Repositories
 
             result.Content = await messages.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
+        }
+
+        private static IQueryable<Models.Message> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Message, TKey>> keySelector, IQueryable<Models.Message> messages)
+        {
+            if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (orderBy.Method == OrderByMethods.Ascending)
+                {
+                    return messages.OrderBy(keySelector);
+                }
+
+                return messages.OrderByDescending(keySelector);
+            }
+
+            return messages;
         }
     }
 }

@@ -56,6 +56,7 @@ namespace Cook4Me.Api.Host
             public static class SearchUserMessage
             {
                 public const string IsParent = "is_parent";
+                public const string Orders = "orders";
             }
 
             public static class UserMessage

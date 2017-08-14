@@ -955,7 +955,42 @@ namespace Cook4Me.Api.Host.Extensions
                     From = "laetitia",
                     To = "administrator",
                     IsRead = false,
-                    Subject = "[ACHAT] VOITURE"
+                    Subject = "[ACHAT] VOITURE",
+                    Children = new []
+                    {
+                        new Message
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "Resp",
+                            From = "laetitia",
+                            To = "administrator",
+                            IsRead = false
+                        },
+                        new Message
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "Resp",
+                            From = "laetitia",
+                            To = "administrator",
+                            IsRead = false
+                        },
+                        new Message
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "Resp 2",
+                            From = "administrator",
+                            To = "laetitia",
+                            IsRead = false
+                        },
+                        new Message
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "Resp 2",
+                            From = "administrator",
+                            To = "laetitia",
+                            IsRead = false
+                        }
+                    }
                 },
                 new Message
                 {

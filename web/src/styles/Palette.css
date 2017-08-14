@@ -177,8 +177,13 @@ h2 {
 }
 
 .red-theme .shop-products-menu .nav-link.active,
-.red-theme .red .nav-link.active {
+.red-theme .red .nav-link.active,
+.red-theme .message.sent {
   background-color: rgba(231, 39, 45, 0.7) !important;
+}
+
+.red-theme .message.sent {
+  color: white;
 }
 
 .red-theme .image-selector .active {
