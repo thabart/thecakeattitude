@@ -290,12 +290,15 @@ class Header extends Component {
                 var shopId = notification.parameters.filter(function(param) { return param.type === "shop_id"; }).map(function(param) { return param.value; });
                 var productId = notification.parameters.filter(function(param) { return param.type === "product_id"; }).map(function(param) { return param.value; });
                 var serviceId = notification.parameters.filter(function(param) { return param.type === "service_id"; }).map(function(param) { return param.value; });
+                var messageId = notification.parameters.filter(function(param) { return param.type === "message_id"; }).map(function(param) { return param.value; });
                 if (shopId && shopId.length === 1) {
                   link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/shops/'+shopId[0]+'/view/profile')}></i>);
                 } else if (productId && productId.length === 1) {
                   link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/products/'+productId[0]+'/comments')}></i>);
                 } else if (serviceId && serviceId.length === 1) {
                   link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/services/'+serviceId[0]+'/comments')}></i>);
+                } else if (messageId && messageId.length === 1) {
+                  link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/message/'+messageId[0])}></i>);
                 }
               }
 
@@ -334,9 +337,13 @@ class Header extends Component {
                       </ul>
                       <ul>
                         { /* Help button */ }
-                        <li><NavLink to="/help" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-question-circle"></i></NavLink></li>
+                        <li><NavLink to="/help" className="nav-link no-style"><i className="fa fa-question-circle"></i></NavLink></li>
                         { /* Messages */ }
-                        <li><NavLink to="/messages" className="nav-link no-style" activeClassName="active-nav-link"><i className="fa fa-envelope"></i></NavLink></li>
+                        {
+                          (self.state.isLoggedIn ? (
+                            <li><NavLink to="/messages" className="nav-link no-style"><i className="fa fa-envelope"></i></NavLink></li>
+                          ) : '')
+                        }
                         {/* Notifications */}
                         {
                           (self.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">
@@ -459,6 +466,7 @@ class Header extends Component {
       var self = this;
       self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
+              case Constants.events.ADD_NOTIFICATION_ARRIVED:
               case 'update-notification':
                   var sub = ApplicationStore.getUser().sub;
                   if (payload.data.to === sub) {

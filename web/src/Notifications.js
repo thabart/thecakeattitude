@@ -6,6 +6,7 @@ import { SessionService, NotificationService, UserService } from "./services/ind
 import { Guid } from './utils/index';
 import { ApplicationStore } from './stores/index';
 import moment from 'moment';
+import Constants from '../Constants';
 import AppDispatcher from "./appDispatcher";
 
 class Notifications extends Component {
@@ -104,12 +105,15 @@ class Notifications extends Component {
             var shopId = notification.parameters.filter(function(param) { return param.type === "shop_id"; }).map(function(param) { return param.value; });
             var productId = notification.parameters.filter(function(param) { return param.type === "product_id"; }).map(function(param) { return param.value; });
             var serviceId = notification.parameters.filter(function(param) { return param.type === "service_id"; }).map(function(param) { return param.value; });
+            var messageId = notification.parameters.filter(function(param) { return param.type === "message_id"; }).map(function(param) { return param.value; });
             if (shopId && shopId.length === 1) {
               link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/shops/'+shopId[0]+'/view/profile')}></i>);
             } else if (productId && productId.length === 1) {
               link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/products/'+productId[0]+'/comments')}></i>);
             } else if (serviceId && serviceId.length === 1) {
               link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/services/'+serviceId[0]+'/comments')}></i>);
+            } else if (messageId && messageId.length === 1) {
+              link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/message/'+messageId[0])}></i>);
             }
           }
 
@@ -166,6 +170,7 @@ class Notifications extends Component {
       var self = this;
       self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
+            case Constants.events.ADD_NOTIFICATION_ARRIVED:
             case 'update-notification':
               var sub = ApplicationStore.getUser().sub;
               if (payload.data.to === sub) {

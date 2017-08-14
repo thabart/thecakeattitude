@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.SignalR.Infrastructure;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Hubs;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Host.Handlers
 {
@@ -44,10 +45,15 @@ namespace Cook4Me.Api.Host.Handlers
             }
 
             var notifier = _connectionManager.GetHubContext<SecuredHub>();
-            var fromLst = SecuredHub.Connections.GetConnections(message.From).ToList();
-            var toLst = SecuredHub.Connections.GetConnections(message.To).ToList();
-            notifier.Clients.Clients(fromLst).messageAdded(_responseBuilder.GetMessageAddedEvent(message));
-            notifier.Clients.Clients(toLst).messageAdded(_responseBuilder.GetMessageAddedEvent(message));
+            var lst = new[] { message.To, message.From };
+            lst.Distinct();
+            var connectionIds = new List<string>();
+            foreach (var r in lst)
+            {
+                connectionIds.AddRange(SecuredHub.Connections.GetConnections(r).ToList());
+            }
+
+            notifier.Clients.Clients(connectionIds).messageAdded(_responseBuilder.GetMessageAddedEvent(message));
             return Task.FromResult(0);
         }
     }

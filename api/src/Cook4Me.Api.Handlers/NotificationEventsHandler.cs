@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Notification;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
@@ -154,6 +155,38 @@ namespace Cook4Me.Api.Handlers
                         Id = Guid.NewGuid().ToString(),
                         Type = NotificationParameterTypes.ServiceId,
                         Value = message.ServiceId
+                    }
+                }
+            };
+
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(MessageAddedEvent message) // Notify the "to" that a message has been sent.
+        {
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "add_message",
+                IsRead = false,
+                From = message.From,
+                To = message.To,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.MessageId,
+                        Value = string.IsNullOrWhiteSpace(message.ParentId) ? message.Id : message.ParentId
                     }
                 }
             };

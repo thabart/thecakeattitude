@@ -166,7 +166,7 @@ class App extends Component {
                 data: message
             });
         });
-        proxy.on('notificationAdded', function(message) {
+        securedProxy.on('notificationAdded', function(message) {
             AppDispatcher.dispatch({
                 actionName: 'update-notification',
                 data: message

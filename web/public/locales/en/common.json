@@ -263,5 +263,6 @@
   "errorAddMessage": "An error occured while trying to send the message, please contact the administrator",
   "yourMessages": "Your messages",
   "received": "Received",
-  "sent": "Sent"
+  "sent": "Sent",
+  "add_message": "A message has been received"
 }

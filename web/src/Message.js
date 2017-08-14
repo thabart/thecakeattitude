@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { translate } from 'react-i18next';
 import { MessageService, UserService } from './services/index';
-import { Alert, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { Alert, Breadcrumb, BreadcrumbItem, Input, FormFeedback } from "reactstrap";
 import { NavLink} from "react-router-dom";
 import { ApplicationStore } from './stores/index';
 import { withRouter } from "react-router";
@@ -37,7 +37,8 @@ class Message extends Component {
       pagination: [],
       parentMessage: {},
       errorMessage: null,
-      messageContent: null
+      messageContent: null,
+      contentIsInvalid: false
     };
   }
 
@@ -106,8 +107,18 @@ class Message extends Component {
   add(e) { // Send a message.
     e.preventDefault();
     var self = this;
+    var msgContent = self.state.messageContent;
+    if (!msgContent || msgContent.length < 0 || msgContent.length > 255) {
+      self.setState({
+        contentIsInvalid: true
+      });
+      return;
+    }
+
     self.setState({
-      isLoading: true
+      isLoading: true,
+      contentIsInvalid: false,
+      messageContent: null
     });
     const {t} = this.props;
     var parentMessage = self.state.parentMessage;
@@ -115,7 +126,7 @@ class Message extends Component {
     var json = {
       to: to,
       parent_id: parentMessage.id,
-      content: self.state.messageContent
+      content: msgContent
     };
     MessageService.add(json).catch(function() {
       ApplicationStore.sendMessage({
@@ -159,6 +170,8 @@ class Message extends Component {
     var messageLst = [];
     var paginationLst = [];
     var self = this;
+    var feedbackName = null;
+    var errorMessage = null;
     const {t} = this.props;
     if (this.state.messages) {
       var currentUserSub = ApplicationStore.getUser().sub;
@@ -185,6 +198,11 @@ class Message extends Component {
         });
     }
 
+    if (this.state.contentIsInvalid) {
+      errorMessage = t('shouldContainsCharacters').replace('{0}', '0').replace('{1}', '255');
+      feedbackName = "danger";
+    }
+
     return (
       <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         <div className="container">
@@ -208,7 +226,8 @@ class Message extends Component {
                   {paginationLst}
               </ul>)}
               <form onSubmit={this.add}>
-                <textarea className="form-control" name='messageContent' onChange={this.handleInputChange} />
+                <Input type="textarea" state={feedbackName} className="form-control" name='messageContent' onChange={this.handleInputChange} minLength='1' maxLength='255' />
+                <FormFeedback>{errorMessage}</FormFeedback>
                 <button className="btn btn-default">{t('sendMessage')}</button>
               </form>
             </div>

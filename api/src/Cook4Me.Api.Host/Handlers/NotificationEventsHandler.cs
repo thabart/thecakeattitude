@@ -20,6 +20,8 @@ using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Hubs;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Handlers
@@ -54,8 +56,16 @@ namespace Cook4Me.Api.Host.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
             
-            var notifier = _connectionManager.GetHubContext<Notifier>();
-            notifier.Clients.All.notificationAdded(_responseBuilder.GetNotificationAddedEvent(message));
+            var notifier = _connectionManager.GetHubContext<SecuredHub>();
+            var lst = new[] { message.To };
+            lst.Distinct();
+            var connectionIds = new List<string>();
+            foreach(var r in lst)
+            {
+                connectionIds.AddRange(SecuredHub.Connections.GetConnections(r).ToList());
+            }
+
+            notifier.Clients.Clients(connectionIds).notificationAdded(_responseBuilder.GetNotificationAddedEvent(message));
             return Task.FromResult(0);
         }
     }

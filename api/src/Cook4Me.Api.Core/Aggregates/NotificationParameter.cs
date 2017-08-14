@@ -22,7 +22,8 @@ namespace Cook4Me.Api.Core.Aggregates
     {
         ShopId,
         ProductId,
-        ServiceId
+        ServiceId,
+        MessageId
     }
 
     public class NotificationParameter
