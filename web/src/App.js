@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {BrowserRouter as Router, Route, Redirect} from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import Map from "./Map";
 import Sellers from "./Sellers";
 import AddShop from "./AddShop";
@@ -52,6 +52,9 @@ var history = createBrowserHistory();
 class App extends Component {
     constructor(props) {
         super(props);
+        this._connection = null;
+        this._securedConnection = null;
+        this._waitForToken = null;
         this.state = {
           isAccessTokenChecked: false,
           isLoggedIn: false,
@@ -69,8 +72,10 @@ class App extends Component {
           }, 1000);
         });
 
-        var connection = $.hubConnection(Constants.apiUrl);
-        var proxy = connection.createHubProxy("notifier");
+        this._connection = $.hubConnection(Constants.apiUrl);
+        this._securedConnection = $.hubConnection(Constants.apiUrl);
+        var proxy = this._connection.createHubProxy("notifier");
+        var securedProxy = this._securedConnection.createHubProxy("secured");
         proxy.on('serviceAdded', function(message) {
           AppDispatcher.dispatch({
             actionName: 'new-service',
@@ -149,6 +154,12 @@ class App extends Component {
                 data: message
             });
         });
+        securedProxy.on('messageAdded', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.MESSAGE_ADDED,
+                data: message
+            });
+        });
         proxy.on('notificationUpdated', function(message) {
             AppDispatcher.dispatch({
                 actionName: 'update-notification',
@@ -161,14 +172,13 @@ class App extends Component {
                 data: message
             });
         });
-        connection.start({jsonp: false})
+        this._connection.start({jsonp: false})
             .done(function () {
-                console.log('Now connected, connection ID=' + connection.id);
+                console.log('Now connected, connection ID=' + self._connection.id);
             })
             .fail(function () {
                 console.log('Could not connect');
             });
-        var self = this;
         var session = SessionService.getSession();
         if (!session || session == null) {
             self.setState({
@@ -195,6 +205,26 @@ class App extends Component {
               actionName: Constants.events.USER_LOGGED_OUT
             });
             SessionService.remove();
+        });
+
+        self._waitForToken = AppDispatcher.register(function(payload) {
+          switch(payload.actionName) {
+            case Constants.events.USER_LOGGED_IN:
+              var accessToken = SessionService.getSession().access_token;
+              self._securedConnection.qs = 'authtoken=' + accessToken;
+              self._securedConnection.start({jsonp: false})
+                  .done(function () {
+                      console.log('Now connected, connection ID=' + self._connection.id);
+                  })
+                  .fail(function () {
+                      console.log('Could not connect');
+                  });
+            break;
+            case Constants.events.USER_LOGGED_OUT:
+              self._connection.qs = '';
+              self._securedConnection.stop();
+            break;
+          }
         });
     }
 
@@ -228,8 +258,8 @@ class App extends Component {
                 <Route path="/clientservices/:id" component={ClientServices} />
                 <Route path="/tags/:tag" component={Tags} />
                 <Route path="/users/:id" component={Users} />
-                <Route path="/messages/:action?" component={Messages} />
-                <Route path="/message/:id" component={Message} />
+                <Route path="/messages/:action?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Messages />))}/>
+                <Route path="/message/:id" render={(p) => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Message id={p.match.params.id} />))}/>
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
@@ -243,6 +273,10 @@ class App extends Component {
               </div>
             </Router>
         );
+    }
+
+    componentWillUnmount() { // Remove listener.
+        AppDispatcher.unregister(this._waitForToken);
     }
 }
 

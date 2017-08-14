@@ -72,7 +72,6 @@ namespace Cook4Me.Api.Host.Builders
 
             var addMessageCommand = new AddMessageCommand
             {
-                From = jObj.TryGetString(Constants.DtoNames.UserMessage.From),
                 To = jObj.TryGetString(Constants.DtoNames.UserMessage.To),
                 ProductId = jObj.TryGetString(Constants.DtoNames.UserMessage.ProductId),
                 ServiceId = jObj.TryGetString(Constants.DtoNames.UserMessage.ServiceId),

@@ -258,5 +258,10 @@
   "contactClient": "Contact the client",
   "sendMessage": "Send message",
   "noMessage": "No message",
-  "messagesTitle": "Messages"
+  "messagesTitle": "Messages",
+  "messageAdded": "A message has been sent",
+  "errorAddMessage": "An error occured while trying to send the message, please contact the administrator",
+  "yourMessages": "Your messages",
+  "received": "Received",
+  "sent": "Sent"
 }

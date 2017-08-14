@@ -28,8 +28,8 @@ namespace Cook4Me.Api.Core.Commands.Messages
         public string ProductId { get; set; }
         public string To { get; set; }
         public string ParentId { get; set; }
-        public string Subject { get; set; }
         public bool IsRead { get; set; }
+        public string Subject { get; set; }
         public DateTime CreateDateTime { get; set; }
     }
 }

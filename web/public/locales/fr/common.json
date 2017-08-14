@@ -256,5 +256,10 @@
   "contactClient": "Contacter le client",
   "sendMessage": "Envoyer un message",
   "noMessage": "Aucun message",
-  "messagesTitle": "Messages"
+  "messagesTitle": "Messages",
+  "messageAdded": "Un message a été envoyé",
+  "errorAddMessage": "Une erreur est survenue durant l'envoie du message, veuillez prendre contact avec l'administrateur",
+  "yourMessages": "Vos messages",
+  "received": "Reçus",
+  "sent": "Envoyés"
 }

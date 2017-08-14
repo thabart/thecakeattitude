@@ -103,7 +103,7 @@ class Messages extends Component {
                 <p>{message.content}</p>
               </div>
               <div className="col-md-2">
-                <NavLink to={"/message/" + message.id} className="btn-light green"><i className="fa fa-external-link"></i> View</NavLink>
+                <NavLink to={"/message/" + message.id} className="btn-light green"><i className="fa fa-external-link"></i> {t('view')}</NavLink>
               </div>
             </div>
           </li>
@@ -114,14 +114,14 @@ class Messages extends Component {
     return (
       <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         <div className="container">
-          <h2>Your messages</h2>
+          <h2>{t('yourMessages')}</h2>
           <div className="section" style={{padding: "20px"}}>
             <ul className="nav nav-pills red">
-              <li className="nav-item"><a href="#" className={action === "received" ? "nav-link active" : "nav-link"} onClick={self.displayReceived}>Reçus</a></li>
-              <li className="nav-item"><a href="#" className={action === "sent" ? "nav-link active" : "nav-link"} onClick={self.displaySent}>Envoyés</a></li>
+              <li className="nav-item"><a href="#" className={action === "received" ? "nav-link active" : "nav-link"} onClick={self.displayReceived}>{t('received')}</a></li>
+              <li className="nav-item"><a href="#" className={action === "sent" ? "nav-link active" : "nav-link"} onClick={self.displaySent}>{t('sent')}</a></li>
             </ul>
             <ul className="list-group-default list-group-default-border" style={{marginTop: "5px"}}>
-              { messageLst.length > 0 ? (messageLst) : (<span><i>No messages</i></span>) }
+              { messageLst.length > 0 ? (messageLst) : (<span><i>{t('noMessage')}</i></span>) }
             </ul>
           </div>
         </div>

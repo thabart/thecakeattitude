@@ -141,7 +141,6 @@ namespace Cook4Me.Api.EF.Repositories
                 StartIndex = parameter.StartIndex
             };
 
-            messages = messages.OrderByDescending(c => c.CreateDateTime);
             if (parameter.IsPagingEnabled)
             {
                 messages = messages.Skip(parameter.StartIndex).Take(parameter.Count);

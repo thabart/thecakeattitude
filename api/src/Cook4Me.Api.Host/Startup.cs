@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.EF;
 using Cook4Me.Api.Handlers;
+using Cook4Me.Api.Host.Authentications;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
 using Cook4Me.Api.Host.Extensions;
@@ -91,16 +92,18 @@ namespace Cook4Me.Api.Host
             app.UseCors("AllowAll");
             // 3. Use static files
             app.UseStaticFiles();
-            // 4. Authenticate the request with OAUTH2.0 introspection endpoint.
+            // 4. Authenticate SignalR request
+            app.UseJwtSignalRAuthentication();
+            // 5. Authenticate the request with OAUTH2.0 introspection endpoint.
             app.UseAuthenticationWithIntrospection(new Oauth2IntrospectionOptions
             {
                 InstrospectionEndPoint = introspectUrl,
                 ClientId = clientId,
                 ClientSecret = clientSecret
             });
-            // 5. Use static files
+            // 6. Use static files
             app.UseStaticFiles();
-            // 6. Migrate the data.
+            // 7. Migrate the data.
             if (!_isInitialized)
             {
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
@@ -112,10 +115,10 @@ namespace Cook4Me.Api.Host
                 }
             }
 
-            // 7. Launch Signal-R
+            // 8. Launch Signal-R
             app.UseSignalR<RawConnection>("/raw-connection");
             app.UseSignalR();
-            // 8. Launch ASP.NET MVC
+            // 9. Launch ASP.NET MVC
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

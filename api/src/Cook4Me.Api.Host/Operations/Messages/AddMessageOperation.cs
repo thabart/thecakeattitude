@@ -62,11 +62,6 @@ namespace Cook4Me.Api.Host.Operations.Messages
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            if (string.IsNullOrEmpty(commonId))
-            {
-                throw new ArgumentNullException(nameof(commonId));
-            }
-
             // 1. Check the request
             AddMessageCommand command = null;
             try
@@ -79,6 +74,7 @@ namespace Cook4Me.Api.Host.Operations.Messages
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
+            command.From = subject;
             var validationResult = await _addMessageValidator.Validate(command);
             if (!validationResult.IsValid)
             {
