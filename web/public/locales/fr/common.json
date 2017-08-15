@@ -271,5 +271,12 @@
   "priceClientServiceTooltip": "Donner une estimation",
   "clientServiceAddressDescription": "Spécifiez l'adresse de votre service.",
   "contains1To50CharsError": "Doit contenir entre 1 et 50 caractères",
-  "create_client_service": "Une demande a été formulée"
+  "create_client_service": "Une demande a été formulée",
+  "newMessageTitle": "Nouveau message",
+  "userMessage": "Utilisateur",
+  "subjectMessage": "Sujet",
+  "contentMessage": "Contenu",
+  "userMessageTooltip": "Destinataire du message",
+  "subjectMessageTooltip": "Sujet du message (entre 1 et 50 caractères)",
+  "contentMessageTooltip": "Contenu du message (entre 1 et 255 caractères)"
 }

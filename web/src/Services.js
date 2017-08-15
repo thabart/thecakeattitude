@@ -204,7 +204,7 @@ class Services extends Component {
                         { /* Right side */ }
                         <div className="col-md-4">
                             <h4>€ {self.state.service.new_price}</h4>
-                            <button className="btn btn-default">{t('contactTheShop')}</button>
+                            <button className="btn btn-default" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage'); }}>{t('contactTheShop')}</button>
                         </div>
                     </div>
                     { /* Tab content */ }

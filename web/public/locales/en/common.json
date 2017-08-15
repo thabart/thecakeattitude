@@ -273,5 +273,12 @@
   "priceClientServiceTooltip": "Give an estimation",
   "clientServiceAddressDescription": "Specify the address where your service is located.",
   "contains1To50CharsError": "Should contains 1 to 50 characters",
-  "create_client_service": "A client service has been added"
+  "create_client_service": "A client service has been added",
+  "newMessageTitle": "New message",
+  "userMessage": "User",
+  "subjectMessage": "Subject",
+  "contentMessage": "Content",
+  "userMessageTooltip": "Message destination",
+  "subjectMessageTooltip": "Subject of your message (between 1 and 50 characters)",
+  "contentMessageTooltip": "Content of your message (between 1 and 255 characters)"
 }

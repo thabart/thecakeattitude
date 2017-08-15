@@ -17,6 +17,7 @@ import Tags from './Tags';
 import Users from './Users';
 import Messages from './Messages';
 import Message from './Message';
+import NewMessage from './NewMessage';
 import {OpenIdService, SessionService} from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
@@ -260,6 +261,7 @@ class App extends Component {
                 <Route path="/users/:id" component={Users} />
                 <Route path="/messages/:action?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Messages />))}/>
                 <Route path="/message/:id" render={(p) => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Message id={p.match.params.id} />))}/>
+                <Route path="/newmessage/:action?/:id?" render={(p) => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<NewMessage />))}/>
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>

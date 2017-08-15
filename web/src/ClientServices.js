@@ -4,6 +4,7 @@ import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { ClientService, UserService } from './services/index';
 import { translate } from 'react-i18next';
 import { NavLink } from "react-router-dom";
+import { withRouter } from "react-router";
 import MainLayout from './MainLayout';
 import Constants from '../Constants';
 
@@ -74,6 +75,7 @@ class ClientServices extends Component {
 
   render() { // Display the view.
     const {t} = this.props;
+    var self = this;
     if (this.state.isLoading) {
         return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
@@ -154,7 +156,7 @@ class ClientServices extends Component {
                     </li>
                   )}
                 </ul>
-                <button className="btn btn-default">{t('sendMessage')}</button>
+                <button className="btn btn-default" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage'); }}>{t('sendMessage')}</button>
                 <h5>{t('address')}</h5>
                 <i>{this.state.clientService.street_address}</i>
                 <div style={{width: "100%", height: "200px"}}>
@@ -181,4 +183,4 @@ class ClientServices extends Component {
   }
 }
 
-export default translate('common', { wait: process && !process.release })(ClientServices);
+export default translate('common', { wait: process && !process.release })(withRouter(ClientServices));
