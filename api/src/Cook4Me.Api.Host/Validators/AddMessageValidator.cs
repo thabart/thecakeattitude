@@ -78,11 +78,9 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddMessageValidationResult(string.Format(ErrorDescriptions.TheParameterLengthCannotExceedNbCharacters, Constants.DtoNames.UserMessage.Content, "255"));
             }
 
-            if ((!string.IsNullOrWhiteSpace(command.ServiceId) && !string.IsNullOrWhiteSpace(command.ProductId)) 
-                || (!string.IsNullOrWhiteSpace(command.ServiceId) && !string.IsNullOrWhiteSpace(command.To)) 
-                || (!string.IsNullOrWhiteSpace(command.ProductId) && !string.IsNullOrWhiteSpace(command.To))) // Check parameters are not specified at same time.
+            if (!string.IsNullOrWhiteSpace(command.ProductId) && !string.IsNullOrWhiteSpace(command.ServiceId)) // Check parameters are not specified at same time.
             {
-                return new AddMessageValidationResult(ErrorDescriptions.TheProductAndServiceAndToCannotBeSpecifiedAtSameTime);
+                return new AddMessageValidationResult(ErrorDescriptions.TheProductAndServiceCannotBeSpecifiedAtSameTime);
             }
 
             if (!string.IsNullOrWhiteSpace(command.ServiceId))
@@ -114,7 +112,9 @@ namespace Cook4Me.Api.Host.Validators
                 {
                     return new AddMessageValidationResult(string.Format(ErrorDescriptions.TheParameterLengthCannotExceedNbCharacters, Constants.DtoNames.UserMessage.Subject, "100"));
                 }
-
+            }
+            else
+            {
                 var parent = await _messageRepository.Get(command.ParentId);
                 if (parent == null)
                 {

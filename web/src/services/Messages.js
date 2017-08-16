@@ -44,13 +44,14 @@ module.exports = {
           });
       });
   },
-  add: function(content) { // Add a message.
+  add: function(content, commonId) { // Add a message.
       var accessToken = Session.getSession().access_token;
       return new Promise(function (resolve, reject) {
           ConfigurationService.get().then(function (configuration) {
               $.ajax(configuration.messages_endpoint, {
                   headers: {
-                      'Authorization': 'Bearer ' + accessToken
+                      'Authorization': 'Bearer ' + accessToken,
+                      'CommonId': commonId
                   },
                   method: 'POST',
                   contentType: 'application/json',

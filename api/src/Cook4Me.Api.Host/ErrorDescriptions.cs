@@ -61,7 +61,7 @@ namespace Cook4Me.Api.Host
         public const string ThePaypalAccountIsNotValid = "the paypal account is not a valid email";
         public const string TheNotificationDoesntExist = "the notification doesn't exist";
         public const string TheNotificationCannotBeUpdated = "you don't have the correct right to update the notification";
-        public const string TheProductAndServiceAndToCannotBeSpecifiedAtSameTime = "the product, service and to parameters cannot be specified at same time";
+        public const string TheProductAndServiceCannotBeSpecifiedAtSameTime = "the product and service parameters cannot be specified at same time";
         public const string TheParentMessageDoesntExist = "the parent message doesn't exist";
     }
 }

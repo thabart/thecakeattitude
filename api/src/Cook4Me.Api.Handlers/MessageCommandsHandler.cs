@@ -67,7 +67,8 @@ namespace Cook4Me.Api.Handlers
                 ServiceId = messageAggregate.ServiceId,
                 ParentId = messageAggregate.ParentId,
                 Subject = messageAggregate.Subject,
-                CreateDateTime = messageAggregate.CreateDateTime
+                CreateDateTime = messageAggregate.CreateDateTime,
+                CommonId = message.CommonId
             });
         }
     }

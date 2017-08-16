@@ -7,7 +7,7 @@ import { withRouter } from "react-router";
 import MainLayout from './MainLayout';
 import moment from 'moment';
 
-const defaultCount = 3;
+const defaultCount = 10;
 
 class Messages extends Component {
   constructor(props) {
