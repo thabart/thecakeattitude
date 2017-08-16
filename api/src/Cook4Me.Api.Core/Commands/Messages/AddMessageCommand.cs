@@ -26,6 +26,7 @@ namespace Cook4Me.Api.Core.Commands.Messages
         public string Content { get; set; }
         public string ServiceId { get; set; }
         public string ProductId { get; set; }
+        public string ClientServiceId { get; set; }
         public string To { get; set; }
         public string ParentId { get; set; }
         public bool IsRead { get; set; }

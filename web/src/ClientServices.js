@@ -5,6 +5,7 @@ import { ClientService, UserService } from './services/index';
 import { translate } from 'react-i18next';
 import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router";
+import { ApplicationStore } from './stores/index';
 import MainLayout from './MainLayout';
 import Constants from '../Constants';
 
@@ -97,6 +98,7 @@ class ClientServices extends Component {
       img = this.state.user.claims.picture;
     }
 
+    var user = ApplicationStore.getUser();
     return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
       <div className="container">
         <section className="section" style={{paddingBottom: "20px"}}>
@@ -156,7 +158,7 @@ class ClientServices extends Component {
                     </li>
                   )}
                 </ul>
-                <button className="btn btn-default" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage'); }}>{t('sendMessage')}</button>
+                { user && user.sub !== this.state.user.claims.sub && (<a href="#" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/clientservices/' + self.state.clientService.id); }} className="btn btn-default">{t('sendMessage')}</a>) }
                 <h5>{t('address')}</h5>
                 <i>{this.state.clientService.street_address}</i>
                 <div style={{width: "100%", height: "200px"}}>

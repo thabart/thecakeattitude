@@ -67,6 +67,7 @@ namespace Cook4Me.Api.Host
                 public const string Content = "content";
                 public const string ServiceId = "service_id";
                 public const string ProductId = "product_id";
+                public const string ClientServiceId = "clientservice_id";
                 public const string CreateDateTime = "create_datetime";
                 public const string Attachments = "attachments";
                 public const string IsRead = "is_read";

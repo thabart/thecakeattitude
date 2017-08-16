@@ -20,9 +20,9 @@ using System;
 
 namespace Cook4Me.Api.EF.Mappings
 {
-    internal static class AnnouncementMapping
+    internal static class ClientServiceMapping
     {
-        public static ModelBuilder AddAnnouncement(this ModelBuilder modelBuilder)
+        public static ModelBuilder AddClientService(this ModelBuilder modelBuilder)
         {
             if (modelBuilder == null)
             {
@@ -32,6 +32,10 @@ namespace Cook4Me.Api.EF.Mappings
 
             modelBuilder.Entity<ClientService>()
                 .HasKey(a => a.Id);
+            modelBuilder.Entity<ClientService>()
+                .HasMany(a => a.Messages)
+                .WithOne(a => a.ClientService)
+                .HasForeignKey(a => a.ClientServiceId);
             return modelBuilder;
         }
     }

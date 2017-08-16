@@ -273,13 +273,14 @@
   "contains1To50CharsError": "Doit contenir entre 1 et 50 caractères",
   "create_client_service": "Une demande a été formulée",
   "newMessageTitle": "Nouveau message",
-  "shopMessage": "Magasin",
+  "destinationMessage": "Destinataire",
   "subjectMessage": "Sujet",
   "contentMessage": "Contenu",
-  "shopMessageTooltip": "Destinataire du message",
+  "destinationMessageTooltip": "Destinataire du message",
   "subjectMessageTooltip": "Sujet du message (entre 1 et 50 caractères)",
   "contentMessageTooltip": "Contenu du message (entre 1 et 255 caractères)",
   "productMessageSubject": "[{0}] Acheter le produit",
   "shopServiceMessageSubject": "[{0}] Demander des informations sur le service",
-  "destinationMustBeSpecified": "Le destinataire doit être spécifié"
+  "destinationMustBeSpecified": "Le destinataire doit être spécifié",
+  "clientServiceMessageSubject": "[{0}] Demander des informations à propos du service"
 }

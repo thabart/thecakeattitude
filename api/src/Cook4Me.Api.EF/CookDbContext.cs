@@ -71,7 +71,7 @@ namespace Cook4Me.Api.EF
                 .AddServiceOccurrence()
                 .AddServiceOccurrenceDay()
                 .AddServiceAddDayMapping()
-                .AddAnnouncement()
+                .AddClientService()
                 .AddNotification()
                 .AddNotificationParameter()
                 .AddMessageJoinedFileMappingMapping()

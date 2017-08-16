@@ -28,6 +28,7 @@ namespace Cook4Me.Api.Core.Events.Messages
         public string ServiceId { get; set; }
         public string ProductId { get; set; }
         public string ParentId { get; set; }
+        public string ClientServiceId { get; set; }
         public string Subject { get; set; }
         public DateTime CreateDateTime { get; set; }
         public bool IsRead { get; set; }

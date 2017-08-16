@@ -53,6 +53,7 @@ namespace Cook4Me.Api.Handlers
                 ServiceId = message.ServiceId,
                 ParentId = message.ParentId,
                 Subject = message.Subject,
+                ClientServiceId = message.ClientServiceId,
                 CreateDateTime = DateTime.UtcNow
             };
             await _messageRepository.Add(messageAggregate);
@@ -65,6 +66,7 @@ namespace Cook4Me.Api.Handlers
                 IsRead = messageAggregate.IsRead,
                 ProductId = messageAggregate.ProductId,
                 ServiceId = messageAggregate.ServiceId,
+                ClientServiceId = messageAggregate.ClientServiceId,
                 ParentId = messageAggregate.ParentId,
                 Subject = messageAggregate.Subject,
                 CreateDateTime = messageAggregate.CreateDateTime,

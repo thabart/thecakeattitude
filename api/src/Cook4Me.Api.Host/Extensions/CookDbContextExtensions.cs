@@ -149,7 +149,7 @@ namespace Cook4Me.Api.Host.Extensions
                     new Shop
                     {
                         Id = _firstShopId,
-                        Subject = "administrator",
+                        Subject = "laetitia",
                         Name = "shop 1",
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
@@ -1051,7 +1051,7 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "first announcement",
                     Name = "FA",
                     Price = 200,
-                    Subject = "administrator",
+                    Subject = "laetitia",
                     StreetAddress = "223 avenue des croix du feu"
                 },
                 new ClientService

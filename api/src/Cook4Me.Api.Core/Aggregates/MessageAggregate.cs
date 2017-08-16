@@ -28,6 +28,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public string Content { get; set; }
         public string ProductId { get; set; }
         public string ServiceId { get; set; }
+        public string ClientServiceId { get; set; }
         public DateTime CreateDateTime { get; set; }
         public bool IsRead { get; set; }
         public string ParentId { get; set; }

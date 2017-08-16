@@ -4,6 +4,7 @@ import { ShopServices, ShopsService } from "./services/index";
 import { TabContent, TabPane, Nav, NavItem, NavLink, Alert, Badge, Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
+import { ApplicationStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import Rater from "react-rater";
 import MainLayout from './MainLayout';
@@ -152,6 +153,7 @@ class Services extends Component {
             });
         }
 
+        var user = ApplicationStore.getUser();
         return (
           <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
@@ -204,7 +206,7 @@ class Services extends Component {
                         { /* Right side */ }
                         <div className="col-md-4">
                             <h4>€ {self.state.service.new_price}</h4>
-                            <button className="btn btn-default" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage'); }}>{t('contactTheShop')}</button>
+                            { user && user.sub !== this.state.shop.subject && (<a href="#" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/services/' + self.state.service.id); }} className="btn btn-default">{t('contactTheShop')}</a>) }
                         </div>
                     </div>
                     { /* Tab content */ }

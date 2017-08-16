@@ -47,6 +47,7 @@ namespace Cook4Me.Api.EF.Extensions
                 ProductId = message.ProductId,
                 ServiceId = message.ServiceId,
                 Children = children,
+                ClientServiceId = message.ClientServiceId,
                 MessageAttachments = files,
             };
         }
@@ -84,6 +85,7 @@ namespace Cook4Me.Api.EF.Extensions
                 JoinedFiles = files,
                 ParentId = message.ParentId,
                 ProductId = message.ProductId,
+                ClientServiceId = message.ClientServiceId,
                 ServiceId = message.ServiceId,
                 Subject = message.Subject
             };

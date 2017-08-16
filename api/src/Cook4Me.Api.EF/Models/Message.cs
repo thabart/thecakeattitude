@@ -32,10 +32,12 @@ namespace Cook4Me.Api.EF.Models
         public string MessageId { get; set; }
         public string ProductId { get; set; }
         public string ServiceId { get; set; }
+        public string ClientServiceId { get; set; }
         public virtual ICollection<MessageJoinedFile> JoinedFiles { get; set; }
         public virtual ICollection<Message> Children { get; set; }
         public virtual Message Parent { get; set; }
         public virtual Product Product { get; set; }
         public virtual Service Service { get; set; }
+        public virtual ClientService ClientService { get; set; }
     }
 }

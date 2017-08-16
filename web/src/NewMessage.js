@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { translate } from 'react-i18next';
-import { MessageService, UserService, ProductsService, ShopServices, ShopsService } from './services/index';
+import { MessageService, UserService, ProductsService, ShopServices, ShopsService, ClientService } from './services/index';
 import { Breadcrumb, BreadcrumbItem, Input, FormFeedback, UncontrolledTooltip, FormGroup, Label, Form } from 'reactstrap';
 import { withRouter } from "react-router";
 import { ApplicationStore } from './stores/index';
@@ -22,11 +22,12 @@ class NewMessage extends Component {
     this.refresh = this.refresh.bind(this);
     this.state = {
       isLoading: false,
-      shopName: null,
+      destination: null,
       subject: null,
       content: null,
       productId: null,
       serviceId: null,
+      clientServiceId: null,
       valid: {
         isShopInvalid: false,
         isSubjectInvalid: false,
@@ -85,7 +86,8 @@ class NewMessage extends Component {
       subject: self.state.subject,
       content: self.state.content,
       product_id: self.state.productId,
-      service_id: self.state.serviceId
+      service_id: self.state.serviceId,
+      clientservice_id: self.state.clientServiceId
     };
     self.setState({
       isLoading: true
@@ -128,26 +130,54 @@ class NewMessage extends Component {
       callback = ShopServices.get(this.state.serviceId);
     } else if (this.state.productId && this.state.productId !== null) {
       callback = ProductsService.get(this.state.productId);
+    } else if (this.state.clientServiceId && this.state.clientServiceId !== null) {
+      callback = ClientService.get(this.state.clientServiceId);
     }
 
     if (callback !== null) {
       callback.then(function(objElt) {
         var embedded = objElt['_embedded'];
-        var subject = self.state.serviceId && self.state.serviceId !== null ? t('shopServiceMessageSubject') : t('productMessageSubject');
+        var subject;
+        var useShopInfo = false;
+        if (self.state.serviceId && self.state.serviceId !== null) {
+          subject = t('shopServiceMessageSubject');
+          useShopInfo = true;
+        } else if (self.state.productId && self.state.productId !== null) {
+          subject = t('productMessageSubject');
+          useShopInfo = true;
+        } else {
+          subject = t('clientServiceMessageSubject');
+        }
+
         subject = subject.replace('{0}', embedded.name);
-        ShopsService.get(embedded.shop_id).then(function(objShop) {
-          var shop = objShop['_embedded'];
-          self._userSubject = shop.subject;
-          self.setState({
-            isLoading: false,
-            subject: subject,
-            shopName: shop.name
+        if (useShopInfo) { // Shop information.
+          ShopsService.get(embedded.shop_id).then(function(objShop) {
+            var shop = objShop['_embedded'];
+            self._userSubject = shop.subject;
+            self.setState({
+              isLoading: false,
+              subject: subject,
+              destination: shop.name
+            });
+          }).catch(function() {
+            self.setState({
+              isLoading: false
+            });
           });
-        }).catch(function() {
-          self.setState({
-            isLoading: false
+        } else { // User information.
+          UserService.getPublicClaims(embedded.subject).then(function(userObj) {
+            self._userSubject = embedded.subject;
+            self.setState({
+              isLoading: false,
+              destination: userObj.claims.name,
+              subject: subject
+            });
+          }).catch(function() {
+            self.setState({
+              isLoading: false
+            });
           });
-        });
+        }
       }).catch(function() {
         self.setState({
           isLoading: false
@@ -197,12 +227,12 @@ class NewMessage extends Component {
               { /* User */ }
               <FormGroup color={feedbackShop}>
                 <Label className="col-form-label">
-                  {t('shopMessage')} <i className="fa fa-info-circle txt-info" id="tooltipShopMessage"/>
+                  {t('destinationMessage')} <i className="fa fa-info-circle txt-info" id="tooltipDestinationMessage"/>
                 </Label>
-                <UncontrolledTooltip placement="right" target="tooltipShopMessage" className="red-tooltip-inner">
-                    {t('shopMessageTooltip')}
+                <UncontrolledTooltip placement="right" target="tooltipDestinationMessage" className="red-tooltip-inner">
+                    {t('destinationMessageTooltip')}
                 </UncontrolledTooltip>
-                <Input type="text" state={feedbackShop} value={this.state.shopName} disabled />
+                <Input type="text" state={feedbackShop} value={this.state.destination} disabled />
                 <FormFeedback>{shopError}</FormFeedback>
               </FormGroup>
               { /* Subject of the message  */ }
@@ -211,6 +241,7 @@ class NewMessage extends Component {
                   {t('subjectMessage')} <i className="fa fa-info-circle txt-info" id="tooltipSubjectMessage"/>
                   {self.state.productId && self.state.productId !== null && ( <i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/products/'+self.state.productId)} /> ) }
                   {self.state.serviceId && self.state.serviceId !== null && ( <i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/services/'+self.state.serviceId)} /> ) }
+                  {self.state.clientServiceId && self.state.clientServiceId !== null && ( <i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/clientservices/'+self.state.clientServiceId)} /> ) }
                 </Label>
                 <UncontrolledTooltip placement="right" target="tooltipSubjectMessage" className="red-tooltip-inner">
                     {t('subjectMessageTooltip')}
@@ -253,6 +284,12 @@ class NewMessage extends Component {
         this.state.productId = id;
         self.setState({
           productId: id
+        });
+      break;
+      case 'clientservices':
+        this.state.clientServiceId = id;
+        self.setState({
+          clientServiceId: id
         });
       break;
     }

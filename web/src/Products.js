@@ -4,6 +4,7 @@ import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ProductsService, ShopsService } from "./services/index";
 import { DescriptionTab, ProductComment } from "./productabs";
+import { ApplicationStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
 import Constants from "../Constants";
@@ -159,6 +160,7 @@ class Products extends Component {
             });
         }
 
+        var user = ApplicationStore.getUser();
         return (
           <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
@@ -220,6 +222,7 @@ class Products extends Component {
                                 </div>
                             )}
                             <button className="btn btn-default">{t('addToCart')}</button>
+                            { user && user.sub !== this.state.shop.subject && (<a href="#" style={{marginLeft: "5px"}} onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/products/' + self.state.product.id); }} className="btn btn-default">{t('contactTheShop')}</a>) }
                         </div>
                     </div>
                     { /* Tab content */ }

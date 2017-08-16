@@ -75,6 +75,7 @@ namespace Cook4Me.Api.Host.Builders
                 To = jObj.TryGetString(Constants.DtoNames.UserMessage.To),
                 ProductId = jObj.TryGetString(Constants.DtoNames.UserMessage.ProductId),
                 ServiceId = jObj.TryGetString(Constants.DtoNames.UserMessage.ServiceId),
+                ClientServiceId = jObj.TryGetString(Constants.DtoNames.UserMessage.ClientServiceId),
                 Content = jObj.TryGetString(Constants.DtoNames.UserMessage.Content),
                 ParentId = jObj.TryGetString(Constants.DtoNames.UserMessage.ParentId),
                 Subject = jObj.TryGetString(Constants.DtoNames.UserMessage.Subject)

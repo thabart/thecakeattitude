@@ -84,7 +84,6 @@ namespace Cook4Me.Api.Host.Operations.Messages
 
             command.Id = Guid.NewGuid().ToString();
             command.CreateDateTime = DateTime.UtcNow;
-            command.From = subject;
             command.CommonId = commonId;
 
             // 2. Send the command.

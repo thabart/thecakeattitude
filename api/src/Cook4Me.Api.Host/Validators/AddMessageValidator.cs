@@ -48,12 +48,14 @@ namespace Cook4Me.Api.Host.Validators
         private readonly IMessageRepository _messageRepository;
         private readonly IProductRepository _productRepository;
         private readonly IServiceRepository _serviceRepository;
+        private readonly IClientServiceRepository _clientServiceRepository;
 
-        public AddMessageValidator(IMessageRepository messageRepository, IProductRepository productRepository, IServiceRepository serviceRepository)
+        public AddMessageValidator(IMessageRepository messageRepository, IProductRepository productRepository, IServiceRepository serviceRepository, IClientServiceRepository clientServiceRepository)
         {
             _messageRepository = messageRepository;
             _productRepository = productRepository;
             _serviceRepository = serviceRepository;
+            _clientServiceRepository = clientServiceRepository;
         }
 
         public async Task<AddMessageValidationResult> Validate(AddMessageCommand command)
@@ -63,9 +65,16 @@ namespace Cook4Me.Api.Host.Validators
                 throw new ArgumentNullException(nameof(command));
             }
 
-            if (string.IsNullOrWhiteSpace(command.ServiceId) && string.IsNullOrWhiteSpace(command.ProductId) && string.IsNullOrWhiteSpace(command.To)) // Check mandatories parameters.
+            if (command.From == command.To)
             {
-                return new AddMessageValidationResult(string.Format(ErrorDescriptions.TheParametersAreMandatories, Constants.DtoNames.UserMessage.ServiceId + "," + Constants.DtoNames.UserMessage.ProductId + "," + Constants.DtoNames.UserMessage.To));
+                return new AddMessageValidationResult(ErrorDescriptions.TheMessageCannotBeSentToYourself);
+            }
+
+            if (string.IsNullOrWhiteSpace(command.ServiceId) && string.IsNullOrWhiteSpace(command.ProductId) 
+                && string.IsNullOrWhiteSpace(command.To) && string.IsNullOrWhiteSpace(command.ClientServiceId)) // Check mandatories parameters.
+            {
+                return new AddMessageValidationResult(string.Format(ErrorDescriptions.TheParametersAreMandatories,
+                    Constants.DtoNames.UserMessage.ServiceId + "," + Constants.DtoNames.UserMessage.ProductId + "," + Constants.DtoNames.UserMessage.To + "," + Constants.DtoNames.UserMessage.ClientServiceId));
             }
 
             if (string.IsNullOrWhiteSpace(command.Content))
@@ -78,7 +87,9 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddMessageValidationResult(string.Format(ErrorDescriptions.TheParameterLengthCannotExceedNbCharacters, Constants.DtoNames.UserMessage.Content, "255"));
             }
 
-            if (!string.IsNullOrWhiteSpace(command.ProductId) && !string.IsNullOrWhiteSpace(command.ServiceId)) // Check parameters are not specified at same time.
+            if ((!string.IsNullOrWhiteSpace(command.ProductId) && !string.IsNullOrWhiteSpace(command.ServiceId)) ||
+                (!string.IsNullOrWhiteSpace(command.ProductId) && !string.IsNullOrWhiteSpace(command.ClientServiceId)) ||
+                (!string.IsNullOrWhiteSpace(command.ServiceId) && !string.IsNullOrWhiteSpace(command.ClientServiceId))) // Check parameters are not specified at same time.
             {
                 return new AddMessageValidationResult(ErrorDescriptions.TheProductAndServiceCannotBeSpecifiedAtSameTime);
             }
@@ -98,6 +109,15 @@ namespace Cook4Me.Api.Host.Validators
                 if (product == null)
                 {
                     return new AddMessageValidationResult(ErrorDescriptions.TheProductDoesntExist);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(command.ClientServiceId))
+            {
+                var clientService = await _clientServiceRepository.Get(command.ClientServiceId);
+                if (clientService == null)
+                {
+                    return new AddMessageValidationResult(ErrorDescriptions.TheClientServiceDoesntExist);
                 }
             }
 

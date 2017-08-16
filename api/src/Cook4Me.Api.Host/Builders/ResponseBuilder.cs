@@ -84,6 +84,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.UserMessage.IsRead, evt.IsRead);
             result.Add(Constants.DtoNames.UserMessage.ProductId, evt.ProductId);
             result.Add(Constants.DtoNames.UserMessage.ServiceId, evt.ServiceId);
+            result.Add(Constants.DtoNames.UserMessage.ClientServiceId, evt.ClientServiceId);
             result.Add(Constants.DtoNames.UserMessage.To, evt.To);
             result.Add(Constants.DtoNames.UserMessage.ParentId, evt.ParentId);
             result.Add(Constants.DtoNames.UserMessage.Subject, evt.Subject);
@@ -117,6 +118,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.UserMessage.ServiceId, message.ServiceId);
             result.Add(Constants.DtoNames.UserMessage.ParentId, message.ParentId);
             result.Add(Constants.DtoNames.UserMessage.Subject, message.Subject);
+            result.Add(Constants.DtoNames.UserMessage.ClientServiceId, message.ClientServiceId);
             result.Add(Constants.DtoNames.UserMessage.To, message.To);
             result.Add(Constants.DtoNames.UserMessage.Attachments, attachments);
             return result;
