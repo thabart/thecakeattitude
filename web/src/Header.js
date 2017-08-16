@@ -335,7 +335,7 @@ class Header extends Component {
                           (self.state.isLoggedIn) ? <li><NavLink to="/addshop" className="nav-link"  activeClassName="active-nav-link">{t('addShopMenuItem')}</NavLink></li> : ''
                         }
                         {
-                          (self.state.isLoggedIn) ? <li><NavLink to="/addAnnounce" className="nav-link no-style"  activeClassName="active-nav-link">{t('addOfferMenuItem')}</NavLink></li> : ''
+                          (self.state.isLoggedIn) ? <li><NavLink to="/addclientservice" className="nav-link no-style"  activeClassName="active-nav-link">{t('addOfferMenuItem')}</NavLink></li> : ''
                         }
                       </ul>
                       <ul>

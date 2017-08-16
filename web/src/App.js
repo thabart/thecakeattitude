@@ -39,6 +39,7 @@ import './styles/section.css';
 import './styles/image-selector.css';
 import './styles/datePicker.css';
 import './styles/profile.css';
+import "./styles/rc-time-picker.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -267,7 +268,7 @@ class App extends Component {
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                 <Route path="/addservice/:id"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
-                <Route path="/addAnnounce"
+                <Route path="/addclientservice"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddClientService />))}/>
                 <Route path="/manage/:action/:subaction?"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Manage />))}/>

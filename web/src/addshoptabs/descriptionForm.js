@@ -1,11 +1,11 @@
 import React, {Component} from "react";
-import {Form, FormGroup, Label, Col, Row, Input, Button, FormFeedback, UncontrolledTooltip, Modal, ModalHeader, ModalBody} from "reactstrap";
-import {CategoryService, ShopsService, OpenIdService, SessionService} from "../services/index";
-import {CategorySelector, TagsSelector} from "../components";
+import { Form, FormGroup, Label, Col, Row, Input, Button, FormFeedback, UncontrolledTooltip, Modal, ModalHeader, ModalBody } from "reactstrap";
+import { CategoryService, ShopsService, OpenIdService, SessionService } from "../services/index";
+import { CategorySelector, TagsSelector } from "../components";
+import { translate } from 'react-i18next';
 import ShopChooser from "../game/shopChooser";
 import "react-tagsinput/react-tagsinput.css";
 import $ from "jquery";
-import { translate } from 'react-i18next';
 
 class DescriptionForm extends Component {
     constructor(props) {

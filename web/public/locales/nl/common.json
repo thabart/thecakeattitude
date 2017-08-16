@@ -284,5 +284,15 @@
   "productMessageSubject": "[{0}] Buy a product",
   "shopServiceMessageSubject": "[{0}] Ask information about the service",
   "destinationMustBeSpecified": "The destination must be specified",
-  "clientServiceMessageSubject": "[{0}] Ask information about the client service"
+  "clientServiceMessageSubject": "[{0}] Ask information about the client service",
+  "errorAddShopService": "An error occured while trying to add the service, please contact the administrator",
+  "addShopService": "Add service",
+  "planning": "Planning",
+  "shopDoesntExistError": "The shop doesn't exist",
+  "addShopServiceNameTooltip": "Displayed name (1 to 50 characters)",
+  "addShopServiceDescriptionTooltip": "Description of your service",
+  "addShopServiceTagsTooltip": "Add some tags",
+  "addShopServicePriceTooltip": "Give a price to your service",
+  "addShopServiceImagesTooltip": "Add some images",
+  "images": "Images"
 }

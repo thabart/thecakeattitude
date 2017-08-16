@@ -1,6 +1,7 @@
 import React, {Component} from "react";
-import {Tooltip} from 'reactstrap';
-import {TagsSelector, ImagesUploader} from '../components';
+import { UncontrolledTooltip, FormFeedback, FormGroup, Label } from 'reactstrap';
+import { TagsSelector, ImagesUploader } from '../components';
+import { translate } from 'react-i18next';
 
 class DescriptionTab extends Component {
   constructor(props) {
@@ -26,14 +27,16 @@ class DescriptionTab extends Component {
       }
     };
   }
-  toggleTooltip(name) {
+
+  toggleTooltip(name) { // Toggle tooltip.
       var tooltip = this.state.tooltip;
       tooltip[name] = !tooltip[name];
       this.setState({
           tooltip: tooltip
       });
   }
-  handleInputChange(e) {
+
+  handleInputChange(e) { // Handle input change.
       const target = e.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
@@ -41,23 +44,20 @@ class DescriptionTab extends Component {
           [name]: value
       });
   }
-  buildErrorTooltip(validName, description) {
+
+  buildErrorTooltip(validName, description) { // Build error tooltip.
       var result;
       if (this.state.valid[validName]) {
           result = (
             <span>
-              <i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
-              <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => {
-                  this.toggleTooltip(validName);
-              }}>
-                {description}
-              </Tooltip>
+              {description}
             </span> );
       }
 
       return result;
   }
-  validate() {
+
+  validate() { // Validate the form.
     var self = this,
       valid = self.state.valid,
       isValid = true;
@@ -102,56 +102,71 @@ class DescriptionTab extends Component {
     };
     if (this.props.onNext) this.props.onNext(json);
   }
-  render() {
-    var nameError = this.buildErrorTooltip('isNameInvalid', 'Should contains 1 to 15 characters'),
-      descriptionError = this.buildErrorTooltip('isDescriptionInvalid', 'Should contains 1 to 255 characters'),
-      priceError = this.buildErrorTooltip('isPriceInvalid', 'the price should be a number > 0');
-    return (<div>
-      <section className="row">
-        <div className="form-group col-md-12">
-          <label className="form-label">Name</label> <i className="fa fa-exclamation-circle" id="nameTooltip"></i>
-          <Tooltip placement="right" target="nameTooltip" isOpen={this.state.tooltip.toggleName} toggle={() => { this.toggleTooltip('toggleName'); }}>
-            Displayed name
-          </Tooltip> {nameError}
-         <input type='text' className='form-control' name='name' onChange={this.handleInputChange}/>
-        </div>
-        <div className="form-group col-md-12">
-          <label className="form-label">Description</label> <i className="fa fa-exclamation-circle" id="descriptionTooltip"></i>
-          <Tooltip placement="right" target="descriptionTooltip" isOpen={this.state.tooltip.toggleDescription} toggle={() => { this.toggleTooltip('toggleDescription'); }}>
-            Description of your service
-          </Tooltip> {descriptionError}
-          <textarea type='text' className='form-control' name='description' onChange={this.handleInputChange}></textarea>
-        </div>
-        <div className="form-group col-md-12">
-          <label className="form-label">Tags</label> <i className="fa fa-exclamation-circle" id="tagsTooltip"></i>
-          <Tooltip placement="right" target="tagsTooltip" isOpen={this.state.tooltip.toggleTags} toggle={() => { this.toggleTooltip('toggleTags'); }}>
-            Add some tags
-          </Tooltip>
-          <TagsSelector ref="tagsSelector" />
-        </div>
-        <div className="form-group col-md-12">
-          <label className="form-label">Price</label> <i className="fa fa-exclamation-circle" id="priceTooltip"></i>
-          <Tooltip placement="right" target="priceTooltip" isOpen={this.state.tooltip.togglePrice} toggle={() => { this.toggleTooltip('togglePrice'); }}>
-            Give a price to your service
-          </Tooltip> {priceError}
-         <div className="input-group">
-           <span className="input-group-addon">€</span>
-           <input type="number" className="form-control" name="price" onChange={this.handleInputChange} />
-          </div>
-        </div>
-        <div className="form-group col-md-12">
-          <label className="control-label">Images</label> <i className="fa fa-exclamation-circle" id="imagesTooltip"></i>
-          <Tooltip placement="right" target="imagesTooltip" isOpen={this.state.tooltip.toggleImages} toggle={() => { this.toggleTooltip('toggleImages'); }}>
-            Add one or more images
-          </Tooltip>
-          <ImagesUploader ref="imagesUploader" />
+
+  render() { // Display the component.
+    const {t} = this.props;
+    var nameError = this.buildErrorTooltip('isNameInvalid', t('contains1To50CharsError')),
+      descriptionError = this.buildErrorTooltip('isDescriptionInvalid', t('contains1To255CharsError')),
+      priceError = this.buildErrorTooltip('isPriceInvalid', t('priceInvalid'));
+    const feedbackName = nameError ? "danger" : undefined;
+    const feedbackDescription = descriptionError ? "danger": undefined;
+    const feedbackPrice = priceError ? "danger": undefined;
+    return (<div className="container bg-white rounded">
+      <section className="row p-1">
+        <div className="col-md-12">
+          { /* Name */ }
+          <FormGroup color={feedbackName}>
+            <Label className="col-form-label">{t('name')}</Label> <i className="fa fa-info-circle txt-info" id="nameTooltip"></i>
+            <UncontrolledTooltip placement="right" target="nameTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleName} toggle={() => { this.toggleTooltip('toggleName'); }}>
+              {t('addShopServiceNameTooltip')}
+            </UncontrolledTooltip>
+            <input type='text' className='form-control' name='name' onChange={this.handleInputChange}/>
+            <FormFeedback>{nameError}</FormFeedback>
+          </FormGroup>
+          { /* Description */ }
+          <FormGroup color={feedbackDescription}>
+            <Label className="col-form-label">{t('description')}</Label> <i className="fa fa-info-circle txt-info" id="descriptionTooltip"></i>
+            <UncontrolledTooltip placement="right" target="descriptionTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleDescription} toggle={() => { this.toggleTooltip('toggleDescription'); }}>
+              {t('addShopServiceDescriptionTooltip')}
+            </UncontrolledTooltip>
+            <textarea type='text' className='form-control' name='description' onChange={this.handleInputChange}></textarea>
+            <FormFeedback>{descriptionError}</FormFeedback>
+          </FormGroup>
+          { /* Tags */ }
+          <FormGroup>
+            <Label className="col-form-label">{t('tags')}</Label> <i className="fa fa-info-circle txt-info" id="tagsTooltip"></i>
+            <UncontrolledTooltip placement="right" target="tagsTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleTags} toggle={() => { this.toggleTooltip('toggleTags'); }}>
+              {t('addShopServiceTagsTooltip')}
+            </UncontrolledTooltip>
+            <TagsSelector ref="tagsSelector" />
+          </FormGroup>
+          { /* Price */}
+          <FormGroup color={feedbackPrice}>
+            <Label className="col-form-label">{t('price')}</Label> <i className="fa fa-info-circle txt-info" id="priceTooltip"></i>
+            <UncontrolledTooltip placement="right" target="priceTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.togglePrice} toggle={() => { this.toggleTooltip('togglePrice'); }}>
+              {t('addShopServicePriceTooltip')}
+            </UncontrolledTooltip>
+            <div className="input-group">
+              <span className="input-group-addon">€</span>
+              <input type="number" className="form-control" name="price" onChange={this.handleInputChange} />
+            </div>
+            <FormFeedback>{priceError}</FormFeedback>
+          </FormGroup>
+          { /* Images */ }
+          <FormGroup>
+            <Label className="col-form-label">{t('images')}</Label> <i className="fa fa-info-circle txt-info" id="imagesTooltip"></i>
+            <UncontrolledTooltip placement="right" target="imagesTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleImages} toggle={() => { this.toggleTooltip('toggleImages'); }}>
+              {t('addShopServiceImagesTooltip')}
+            </UncontrolledTooltip>
+            <ImagesUploader ref="imagesUploader" />
+          </FormGroup>
         </div>
       </section>
-      <section className="col-md-12 sub-section">
-          <button className="btn btn-primary next" onClick={this.validate}>Next</button>
+      <section className="row p-1">
+          <button className="btn btn-default" onClick={this.validate}>{t('next')}</button>
       </section>
   </div>);
   }
 }
 
-export default DescriptionTab;
+export default translate('common', { wait: process && !process.release })(DescriptionTab);

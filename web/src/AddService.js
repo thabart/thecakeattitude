@@ -1,19 +1,20 @@
 import React, {Component} from "react";
-import {Alert, TabContent, TabPane, Breadcrumb, BreadcrumbItem} from 'reactstrap';
-import {NavLink} from "react-router-dom";
-import {DescriptionTab, PlanningTab} from './addservicetabs';
-import {ShopsService,ShopServices} from './services/index';
-import {withRouter} from "react-router";
+import { Alert, TabContent, TabPane, Breadcrumb, BreadcrumbItem } from 'reactstrap';
+import { NavLink } from "react-router-dom";
+import { DescriptionTab, PlanningTab } from './addservicetabs';
+import { ShopsService, ShopServices } from './services/index';
+import { translate } from 'react-i18next';
+import { withRouter } from "react-router";
+import { ApplicationStore } from './stores/index';
+import MainLayout from './MainLayout';
 
 class AddService extends Component {
   constructor(props) {
     super(props);
     this._data = {};
-    this.closeWarning = this.closeWarning.bind(this);
-    this.closeError = this.closeError.bind(this);
     this.save = this.save.bind(this);
     this.state = {
-      activeTab: '1',
+      activeTab: '2',
       isLoading: false,
       errorMessage: null,
       warningMessage: null,
@@ -21,7 +22,7 @@ class AddService extends Component {
     };
   }
 
-  toggle(tab, json) {
+  toggle(tab, json) { // Toggle tab.
     var self = this;
     if (json) {
       self._data[self.state.activeTab] = json;
@@ -34,21 +35,10 @@ class AddService extends Component {
     }
   }
 
-  closeWarning() {
-    this.setState({
-      warningMessage: null
-    });
-  }
-
-  closeError() {
-    this.setState({
-      errorMessage: null
-    });
-  }
-
-  save(occurrence) {
+  save(occurrence) { // Save shop service.
     var json = this._data['1'],
       self = this;
+    const {t} = this.props;
     json['occurrence'] = occurrence;
     self.setState({
       isLoading: true
@@ -62,46 +52,60 @@ class AddService extends Component {
     }).catch(function() {
       self.setState({
         isLoading: false,
-        errorMessage: 'An error occured while trying to add the service'
+        errorMessage: t('errorAddShopService')
       });
     });
   }
 
-  render() {
-    return (<div className="container">
+  render() { // Display view.
+    if (this.state.errorMessage !== null) {
+        return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+          <div className="container">
+            <Alert color="danger" isOpen={this.state.errorMessage !== null}>{this.state.errorMessage}</Alert>
+          </div>
+      </MainLayout>);
+    }
+
+    const {t} = this.props;
+    return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+        <div className="container">
+          <div className="mt-1 mb-1 p-1 bg-white rounded">
+            <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
+              <li className={(parseInt(this.state.activeTab) >= 1) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">1</div>{t('description')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 2) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">2</div>{t('planning')}</li>
+            </ul>
+          </div>
+          <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
             {this.state.shop.name && this.state.shop.name !== null && (
               <Breadcrumb>
-                  <BreadcrumbItem>
-                      <NavLink to={'/shops/' + this.state.shop.id + '/view/profile'}>
-                        {this.state.shop.name}
-                      </NavLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbItem active>Add product</BreadcrumbItem>
+                <BreadcrumbItem>
+                  <NavLink to={'/shops/' + this.state.shop.id + '/view/profile'}>
+                    {this.state.shop.name}
+                  </NavLink>
+                </BreadcrumbItem>
+                <BreadcrumbItem active>{t('addShopService')}</BreadcrumbItem>
               </Breadcrumb>
             )}
-            <ul className="progressbar">
-                <li className={(parseInt(this.state.activeTab) >= 1) ? 'active' : ''}>Description</li>
-                <li className={(parseInt(this.state.activeTab) >= 2) ? 'active' : ''}>Planning</li>
-            </ul>
-            <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
-            <Alert color="warning" isOpen={this.state.warningMessage !== null} toggle={this.closeWarning}>{this.state.warningMessage}</Alert>
-            <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
-                <div className={this.state.isLoading ? 'loading' : 'loading hidden'}><i className='fa fa-spinner fa-spin'></i></div>
-                <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
-                  <DescriptionTab onNext={(json) => {this.toggle('2', json); }} />
-                </TabPane>
-                <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-                  <PlanningTab onPrevious={() => { this.toggle('1'); } } onNext={(json) => { this.save(json); }} />
-                </TabPane>
-            </TabContent>
-    </div>);
+            <div className={this.state.isLoading ? 'loading' : 'loading hidden'}>
+              <i className='fa fa-spinner fa-spin'></i>
+            </div>
+            <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
+              <DescriptionTab onNext={(json) => {this.toggle('2', json); }} />
+            </TabPane>
+            <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
+              <PlanningTab onPrevious={() => { this.toggle('1'); } } onNext={(json) => { this.save(json); }} />
+            </TabPane>
+          </TabContent>
+      </div>
+    </MainLayout>);
   }
-  
-  componentDidMount() {
+
+  componentDidMount() { // Execute before the render.
     var self = this;
     self.setState({
       isLoading: true
     });
+    const {t} = this.props;
     ShopsService.get(this.props.match.params.id).then(function(s) {
       self.setState({
         isLoading: false,
@@ -110,10 +114,10 @@ class AddService extends Component {
     }).catch(function(e) {
       self.setState({
         isLoading: false,
-        errorMessage: 'The shop doesn\'t exist'
+        errorMessage: t('shopDoesntExistError')
       });
     });
   }
 }
 
-export default withRouter(AddService);
+export default translate('common', { wait: process && !process.release })(withRouter(AddService));

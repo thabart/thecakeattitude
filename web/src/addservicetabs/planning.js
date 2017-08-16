@@ -1,10 +1,9 @@
 import React, {Component} from "react";
-import {Tooltip} from 'reactstrap';
-import "react-datepicker/dist/react-datepicker.css";
+import { UncontrolledTooltip, FormGroup, FormFeedback, Label } from 'reactstrap';
+import { translate } from 'react-i18next';
 import DatePicker from "react-datepicker";
-import moment from "moment";
-import '../styles/rc-time-picker.css';
 import TimePicker from 'rc-time-picker';
+import moment from "moment";
 
 class PlanningTab extends Component {
   constructor(props) {
@@ -36,6 +35,7 @@ class PlanningTab extends Component {
       }
     };
   }
+
   toggleTooltip(name) {
       var tooltip = this.state.tooltip;
       tooltip[name] = !tooltip[name];
@@ -43,6 +43,7 @@ class PlanningTab extends Component {
           tooltip: tooltip
       });
   }
+
   toggleDays(e, day) {
     e.preventDefault();
     var days = this.state.days.slice(0);
@@ -58,42 +59,43 @@ class PlanningTab extends Component {
       days: days
     });
   }
+
   handleChangeStartDate(date) {
       this.setState({
           startDate: date
       });
   }
+
   handleChangeEndDate(date) {
       this.setState({
           endDate: date
       });
   }
+
   handleChangeStartTime(time) {
       this.setState({
         startTime: time
       });
   }
+
   handleChangeEndTime(time) {
       this.setState({
         endTime: time
       });
   }
+
   buildErrorTooltip(validName, description) {
       var result;
       if (this.state.valid[validName]) {
           result = (
             <span>
-              <i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
-              <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => {
-                  this.toggleTooltip(validName);
-              }}>
                 {description}
-              </Tooltip>
             </span> );
       }
 
       return result;
   }
+
   validate() {
     var self = this,
       valid = self.state.valid,
@@ -143,113 +145,126 @@ class PlanningTab extends Component {
     };
     if (this.props.onNext) this.props.onNext(json);
   }
+
   previous() {
     if (this.props.onPrevious) this.props.onPrevious();
   }
-  render() {
-    var daysError = this.buildErrorTooltip('isDaysInvalid', 'At least one day should be selected'),
-      datePeriodError = this.buildErrorTooltip('isDatePeriodInvalid', 'Period is invalid : start < end AND end > now'),
-      timePeriodError = this.buildErrorTooltip('isTimePeriodInvalid', 'Time period is invalid : start < end');
-    return (<div>
-      <section className="row">
+
+  render() { // Render the component.
+    const {t} = this.props;
+    var daysError = this.buildErrorTooltip('isDaysInvalid', t('oneSelectedDayError')),
+      datePeriodError = this.buildErrorTooltip('isDatePeriodInvalid', t('periodInvalidError')),
+      timePeriodError = this.buildErrorTooltip('isTimePeriodInvalid', t('timePeriodInvalidError'));
+    return (<div className="container bg-white rounded">
+      <section className="row p-1">
+        <div className="col-md-12">
           {/* Information */ }
-          <div className='form-group col-md-12'>
-            <p><i className="fa fa-exclamation-triangle"></i> Specify the occurence of your service. For example : <i>Repare your shoes</i>
+          <FormGroup>
+            <p dangerouslySetInnerHTML={{__html: t('addShopServiceOccurrenceDescription')}}></p>
             <ul className="no-padding tags gray">
-              <li>Monday</li>
-              <li>Wednesday</li>
-            </ul></p>
-          </div>
+              <li>{t('monday')}</li>
+              <li>{t('wednesday')}</li>
+            </ul>
+          </FormGroup>
           {/* Time period */}
-          <div className="form-group col-md-12">
-            <label className="form-label">Time period</label> <i className="fa fa-exclamation-circle" id="timePeriodTooltip"></i>
-            <Tooltip placement="right" target="timePeriodTooltip" isOpen={this.state.tooltip.toggleTimePeriodTooltip} toggle={() => { this.toggleTooltip('toggleTimePeriodTooltip'); }}>
-              Time period
-            </Tooltip> {timePeriodError}
+          <FormGroup>
+            <Label className="col-form-label">{t('timePeriod')} <i className="fa fa-info-circle txt-info" id="timePeriodTooltip"></i></Label>
+            <UncontrolledTooltip className="red-tooltip-inner" placement="right" target="timePeriodTooltip" isOpen={this.state.tooltip.toggleTimePeriodTooltip} toggle={() => { this.toggleTooltip('toggleTimePeriodTooltip'); }}>
+              {t('addShopServiceOccurrenceTimePeriodTooltip')}
+            </UncontrolledTooltip>
+            <FormFeedback>{timePeriodError}</FormFeedback>
             <div className="row">
               <div className="col-md-6">
-                <label className="form-label">From time</label>
+                <label className="form-label">{t('fromTime')}</label>
                 <TimePicker value={this.state.startTime} onChange={this.handleChangeStartTime} />
               </div>
               <div className="col-md-6">
-                <label className="form-label">To time</label>
+                <label className="form-label">{t('toTime')}</label>
                 <TimePicker value={this.state.endTime} onChange={this.handleChangeEndTime} />
               </div>
             </div>
-          </div>
+          </FormGroup>
           {/* Date period */}
-          <div className="form-group col-md-12">
-            <label className="form-label">Date period</label> <i className="fa fa-exclamation-circle" id="datePeriodTooltip"></i>
-            <Tooltip placement="right" target="datePeriodTooltip" isOpen={this.state.tooltip.toggleDatePeriodTooltip} toggle={() => { this.toggleTooltip('toggleDatePeriodTooltip'); }}>
-              Date period
-            </Tooltip> {datePeriodError}
+          <FormGroup>
+            <Label className="col-form-label">
+              {t('datePeriod')} <i className="fa fa-info-circle txt-info" id="datePeriodTooltip"></i>
+            </Label>
+            <UncontrolledTooltip className="red-tooltip-inner" placement="right" target="datePeriodTooltip" isOpen={this.state.tooltip.toggleDatePeriodTooltip} toggle={() => { this.toggleTooltip('toggleDatePeriodTooltip'); }}>
+              {t('addShopServiceOccurrenceDatePeriodTooltip')}
+            </UncontrolledTooltip>
+            <FormFeedback>{datePeriodError}</FormFeedback>
             <div className="row">
               <div className="col-md-6">
-                <label className="form-label">From date</label>
+                <label className="form-label">{t('fromDate')}</label>
                 <DatePicker selected={this.state.startDate}
                             selectsStart
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
                             onChange={this.handleChangeStartDate}
                             className="form-control"
-                            placeholderText="Start date" />
+                            placeholderText={t('fromDate')} />
               </div>
               <div className="col-md-6">
-                <label className="form-label">To date</label>
+                <label className="form-label">{t('toDate')}</label>
                 <DatePicker selected={this.state.endDate}
                             selectsEnd
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
                             onChange={this.handleChangeEndDate}
                             className="form-control"
-                            placeholderText="End date" />
+                            placeholderText={t('toDate')} />
               </div>
             </div>
-          </div>
+          </FormGroup>
           {/* Days */}
-          <div className="form-group col-md-12">
-            <label className="form-label">Days</label> <i className="fa fa-exclamation-circle" id="daysTooltip"></i>
-            <Tooltip placement="right" target="daysTooltip" isOpen={this.state.tooltip.toggleDaysTooltip} toggle={() => { this.toggleTooltip('toggleDaysTooltip'); }}>
-              Days
-            </Tooltip>  {daysError}
+          <FormGroup>
+            <Label className="col-form-label">
+              {t('days')} <i className="fa fa-info-circle txt-info" id="daysTooltip"></i>
+            </Label>
+            <UncontrolledTooltip className="red-tooltip-inner" placement="right" target="daysTooltip" isOpen={this.state.tooltip.toggleDaysTooltip} toggle={() => { this.toggleTooltip('toggleDaysTooltip'); }}>
+              {t('addShopServiceOccurrenceDaysTooltip')}
+            </UncontrolledTooltip>
+            {daysError}
+            { /* Days */ }
             <div className="list-group">
-            <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 0); }}>
+              <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 0); }}>
                 {this.state.days.includes(0) ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
-                Monday
+                {t('sunday')}
               </a>
               <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 1); }}>
                 {this.state.days.includes(1) ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
-                Tuesday
+                {t('monday')}
               </a>
               <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 2); }}>
                 {this.state.days.includes(2) ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
-                Wednesday
+                {t('tuesday')}
               </a>
               <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 3); }}>
                 {this.state.days.includes(3) ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
-                Thursday
+                {t('wednesday')}
               </a>
               <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 4); }}>
                 {this.state.days.includes(4) ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
-                Friday
+                {t('thursday')}
               </a>
               <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 5); }}>
                 {this.state.days.includes(5) ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
-                Saturday
+                {t('friday')}
               </a>
               <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 6); }}>
                 {this.state.days.includes(6) ? (<div className="checkbox-container"><i className="fa fa-check checkbox"></i></div>) : ''}
-                Sunday
+                {t('saturday')}
               </a>
             </div>
-          </div>
+          </FormGroup>
+        </div>
       </section>
-      <section className="col-md-12 sub-section">
-          <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
-          <button className="btn btn-success next" onClick={this.validate}>Confirm</button>
+      <section className="row p-1">
+          <button className="btn btn-default" onClick={this.previous}>{t('previous')}</button>
+          <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={this.validate}>{t('confirm')}</button>
       </section>
   </div>);
   }
 }
 
-export default PlanningTab;
+export default translate('common', { wait: process && !process.release })(PlanningTab);

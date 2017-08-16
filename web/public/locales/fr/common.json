@@ -282,5 +282,15 @@
   "productMessageSubject": "[{0}] Acheter le produit",
   "shopServiceMessageSubject": "[{0}] Demander des informations sur le service",
   "destinationMustBeSpecified": "Le destinataire doit être spécifié",
-  "clientServiceMessageSubject": "[{0}] Demander des informations à propos du service"
+  "clientServiceMessageSubject": "[{0}] Demander des informations à propos du service",
+  "errorAddShopService": "Une erreur est survenue durant l'insertion du service, veuillez prendre contact avec l'administrateur",
+  "addShopService": "Ajouter un service",
+  "planning": "Planning",
+  "shopDoesntExistError": "Le magasin n'existe pas",
+  "addShopServiceNameTooltip": "Nom affiché (entre 1 et 50 caractères)",
+  "addShopServiceDescriptionTooltip": "Description de votre service",
+  "addShopServiceTagsTooltip": "Ajouter quelques tags",
+  "addShopServicePriceTooltip": "Donner une estimation de prix à votre service",
+  "addShopServiceImagesTooltip": "Ajouter quelques images",
+  "images": "Images"
 }
