@@ -153,8 +153,7 @@
 }
 
 li.rc-time-picker-panel-select-option-selected {
-  background: #edfaff;
-  color: #2db7f5;
+  background: rgba(231, 39, 45, 0.22);
 }
 
 li.rc-time-picker-panel-select-option-disabled {
@@ -164,4 +163,13 @@ li.rc-time-picker-panel-select-option-disabled {
 li.rc-time-picker-panel-select-option-disabled:hover {
   background: transparent;
   cursor: not-allowed;
+}
+
+.has-danger .rc-time-picker-input {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23d9534f' viewBox='-2 -2 7 7'%3E%3Cpath stroke='%23d9534f' d='M0 0l3 3m0-3L0 3'/%3E%3Ccircle r='.5'/%3E%3Ccircle cx='3' r='.5'/%3E%3Ccircle cy='3' r='.5'/%3E%3Ccircle cx='3' cy='3' r='.5'/%3E%3C/svg%3E") !important;
+  background-size: 1.125rem 1.125rem;
+  background-position: center right 0.5625rem;
+  background-repeat: no-repeat;
+  padding-right: 2.25rem;
+  border-color: #d9534f !important;
 }

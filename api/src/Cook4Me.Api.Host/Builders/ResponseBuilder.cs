@@ -236,6 +236,9 @@ namespace Cook4Me.Api.Host.Builders
                 case NotificationParameterTypes.ClientServiceId:
                     type = "client_service_id";
                     break;
+                case NotificationParameterTypes.ShopServiceId:
+                    type = "shop_service_id";
+                    break;
             }
 
             var result = new JObject();
@@ -729,6 +732,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Service.NewPrice, evt.NewPrice);
             jObj.Add(Constants.DtoNames.Service.CreateDatetime, evt.CreateDateTime);
             jObj.Add(Constants.DtoNames.Service.UpdateDatetime, evt.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return jObj;
         }
 

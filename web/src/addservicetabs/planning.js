@@ -36,7 +36,7 @@ class PlanningTab extends Component {
     };
   }
 
-  toggleTooltip(name) {
+  toggleTooltip(name) { // Toggle the tooltip.
       var tooltip = this.state.tooltip;
       tooltip[name] = !tooltip[name];
       this.setState({
@@ -44,7 +44,7 @@ class PlanningTab extends Component {
       });
   }
 
-  toggleDays(e, day) {
+  toggleDays(e, day) { // Toggle the days.
     e.preventDefault();
     var days = this.state.days.slice(0);
     if (days.includes(day)) {
@@ -60,31 +60,31 @@ class PlanningTab extends Component {
     });
   }
 
-  handleChangeStartDate(date) {
+  handleChangeStartDate(date) { // Handle change start date.
       this.setState({
           startDate: date
       });
   }
 
-  handleChangeEndDate(date) {
+  handleChangeEndDate(date) { // Handle change end date.
       this.setState({
           endDate: date
       });
   }
 
-  handleChangeStartTime(time) {
+  handleChangeStartTime(time) { // Handle change start time.
       this.setState({
         startTime: time
       });
   }
 
-  handleChangeEndTime(time) {
+  handleChangeEndTime(time) { // Handle change end time.
       this.setState({
         endTime: time
       });
   }
 
-  buildErrorTooltip(validName, description) {
+  buildErrorTooltip(validName, description) { // Build error tooltip.
       var result;
       if (this.state.valid[validName]) {
           result = (
@@ -96,7 +96,7 @@ class PlanningTab extends Component {
       return result;
   }
 
-  validate() {
+  validate() { // Validate the form.
     var self = this,
       valid = self.state.valid,
       isValid = true;
@@ -109,19 +109,24 @@ class PlanningTab extends Component {
     }
 
     // Check date.
-    var startDate = self.state.startDate.toDate(),
-      endDate = self.state.endDate.toDate(),
-      now = moment().toDate();
-    if (now > endDate || startDate > endDate) {
+    if (!self.state.startDate || !self.state.endDate || self.state.endDate === null || self.state.startDate === null) {
       isValid = false;
       valid.isDatePeriodInvalid = true;
     } else {
-      valid.isDatePeriodInvalid = false;
+      var startDate = self.state.startDate.toDate(),
+        endDate = self.state.endDate.toDate(),
+        now = moment().toDate();
+        if (now > endDate || startDate > endDate) {
+          isValid = false;
+          valid.isDatePeriodInvalid = true;
+        } else {
+          valid.isDatePeriodInvalid = false;
+        }
     }
 
     var startTime = self.state.startTime,
       endTime = self.state.endTime;
-    if (startTime > endTime) {
+    if (!startTime || !endTime || startTime === null || endTime === null || startTime > endTime) {
       isValid = false;
       valid.isTimePeriodInvalid = true;
     } else {
@@ -146,7 +151,7 @@ class PlanningTab extends Component {
     if (this.props.onNext) this.props.onNext(json);
   }
 
-  previous() {
+  previous() { // Précdent.
     if (this.props.onPrevious) this.props.onPrevious();
   }
 
@@ -155,6 +160,9 @@ class PlanningTab extends Component {
     var daysError = this.buildErrorTooltip('isDaysInvalid', t('oneSelectedDayError')),
       datePeriodError = this.buildErrorTooltip('isDatePeriodInvalid', t('periodInvalidError')),
       timePeriodError = this.buildErrorTooltip('isTimePeriodInvalid', t('timePeriodInvalidError'));
+    const feedbackTimePeriod = timePeriodError ? "danger" : undefined;
+    const feedbackDatePeriod = datePeriodError ? "danger" : undefined;
+    const feedbackDays = daysError ? "danger" : undefined;
     return (<div className="container bg-white rounded">
       <section className="row p-1">
         <div className="col-md-12">
@@ -167,64 +175,61 @@ class PlanningTab extends Component {
             </ul>
           </FormGroup>
           {/* Time period */}
-          <FormGroup>
+          <FormGroup color={feedbackTimePeriod}>
             <Label className="col-form-label">{t('timePeriod')} <i className="fa fa-info-circle txt-info" id="timePeriodTooltip"></i></Label>
             <UncontrolledTooltip className="red-tooltip-inner" placement="right" target="timePeriodTooltip" isOpen={this.state.tooltip.toggleTimePeriodTooltip} toggle={() => { this.toggleTooltip('toggleTimePeriodTooltip'); }}>
               {t('addShopServiceOccurrenceTimePeriodTooltip')}
             </UncontrolledTooltip>
-            <FormFeedback>{timePeriodError}</FormFeedback>
             <div className="row">
               <div className="col-md-6">
-                <label className="form-label">{t('fromTime')}</label>
+                <Label className="col-form-label">{t('fromTime')}</Label>
                 <TimePicker value={this.state.startTime} onChange={this.handleChangeStartTime} />
               </div>
               <div className="col-md-6">
-                <label className="form-label">{t('toTime')}</label>
+                <Label className="col-form-label">{t('toTime')}</Label>
                 <TimePicker value={this.state.endTime} onChange={this.handleChangeEndTime} />
               </div>
             </div>
+            <FormFeedback>{timePeriodError}</FormFeedback>
           </FormGroup>
           {/* Date period */}
-          <FormGroup>
+          <FormGroup color={feedbackDatePeriod}>
             <Label className="col-form-label">
               {t('datePeriod')} <i className="fa fa-info-circle txt-info" id="datePeriodTooltip"></i>
             </Label>
             <UncontrolledTooltip className="red-tooltip-inner" placement="right" target="datePeriodTooltip" isOpen={this.state.tooltip.toggleDatePeriodTooltip} toggle={() => { this.toggleTooltip('toggleDatePeriodTooltip'); }}>
               {t('addShopServiceOccurrenceDatePeriodTooltip')}
             </UncontrolledTooltip>
-            <FormFeedback>{datePeriodError}</FormFeedback>
             <div className="row">
               <div className="col-md-6">
-                <label className="form-label">{t('fromDate')}</label>
+                <Label className="col-form-label">{t('fromDate')}</Label>
                 <DatePicker selected={this.state.startDate}
                             selectsStart
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
                             onChange={this.handleChangeStartDate}
-                            className="form-control"
-                            placeholderText={t('fromDate')} />
+                            className="form-control" />
               </div>
               <div className="col-md-6">
-                <label className="form-label">{t('toDate')}</label>
+                <Label className="col-form-label">{t('toDate')}</Label>
                 <DatePicker selected={this.state.endDate}
                             selectsEnd
                             startDate={this.state.startDate}
                             endDate={this.state.endDate}
                             onChange={this.handleChangeEndDate}
-                            className="form-control"
-                            placeholderText={t('toDate')} />
+                            className="form-control" />
               </div>
             </div>
+            <FormFeedback>{datePeriodError}</FormFeedback>
           </FormGroup>
           {/* Days */}
-          <FormGroup>
+          <FormGroup color={feedbackDays}>
             <Label className="col-form-label">
               {t('days')} <i className="fa fa-info-circle txt-info" id="daysTooltip"></i>
             </Label>
             <UncontrolledTooltip className="red-tooltip-inner" placement="right" target="daysTooltip" isOpen={this.state.tooltip.toggleDaysTooltip} toggle={() => { this.toggleTooltip('toggleDaysTooltip'); }}>
               {t('addShopServiceOccurrenceDaysTooltip')}
             </UncontrolledTooltip>
-            {daysError}
             { /* Days */ }
             <div className="list-group">
               <a href="#" className='list-group-item list-group-item-action active-payment' onClick={(e) => { this.toggleDays(e, 0); }}>
@@ -256,6 +261,7 @@ class PlanningTab extends Component {
                 {t('saturday')}
               </a>
             </div>
+            <FormFeedback>{daysError}</FormFeedback>
           </FormGroup>
         </div>
       </section>

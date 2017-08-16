@@ -76,9 +76,9 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddServiceValidationResult(ErrorDescriptions.TheServiceCannotBeAddedByYou);
             }
 
-            if (!IsValid(command.Name, 1, 15))
+            if (!IsValid(command.Name, 1, 50))
             {
-                return new AddServiceValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Service.Name, 1, 15));
+                return new AddServiceValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Service.Name, 1, 50));
             }
 
             if (!IsValid(command.Description, 1, 255))

@@ -292,5 +292,20 @@
   "addShopServiceTagsTooltip": "Ajouter quelques tags",
   "addShopServicePriceTooltip": "Donner une estimation de prix à votre service",
   "addShopServiceImagesTooltip": "Ajouter quelques images",
-  "images": "Images"
+  "images": "Images",
+  "oneSelectedDayError": "Au moins un jour doit être sélectionné",
+  "periodInvalidError": "La période est invalide : début < fin et fin > maintenant",
+  "timePeriodInvalidError": "La période est invalide : début < find",
+  "addShopServiceOccurrenceDescription": "<i className='fa fa-exclamation-triangle'></i> Indiquer l'occurrence de votre service. Par exemple : <i>Réparer les chaussures</i>",
+  "addShopServiceOccurrenceTimePeriodTooltip": "Choisir la période (heures)",
+  "addShopServiceOccurrenceDatePeriodTooltip": "Choisir la période (jours)",
+  "addShopServiceOccurrenceDaysTooltip": "Sélectionner au moins une date",
+  "fromTime": "Heure de début",
+  "toTime": "Heure de fin",
+  "fromDate": "Date de début",
+  "toDate": "Date de fin",
+  "datePeriod": "Période (date)",
+  "timePeriod": "Période (heures)",
+  "days": "Jours",
+  "add_shop_service": "Un nouveau service a été ajouté sur l'un de vos magasins"
 }

@@ -157,7 +157,8 @@ namespace Cook4Me.Api.Handlers
                 NewPrice = message.NewPrice,
                 ShopId = message.ShopId,
                 CreateDateTime = message.CreateDateTime,
-                UpdateDateTime = message.UpdateDateTime
+                UpdateDateTime = message.UpdateDateTime,
+                CommonId = message.CommonId
             });
         }
     }

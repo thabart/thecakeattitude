@@ -6,15 +6,20 @@ import { ShopsService, ShopServices } from './services/index';
 import { translate } from 'react-i18next';
 import { withRouter } from "react-router";
 import { ApplicationStore } from './stores/index';
+import { Guid } from './utils/index';
+import AppDispatcher from './appDispatcher';
 import MainLayout from './MainLayout';
+import Constants from '../Constants';
 
 class AddService extends Component {
   constructor(props) {
     super(props);
     this._data = {};
+    this._commonId = null;
+    this._waitForToken = null;
     this.save = this.save.bind(this);
     this.state = {
-      activeTab: '2',
+      activeTab: '1',
       isLoading: false,
       errorMessage: null,
       warningMessage: null,
@@ -44,15 +49,15 @@ class AddService extends Component {
       isLoading: true
     });
     json['shop_id'] = this.props.match.params.id;
-    ShopServices.add(json).then(function() {
-        self.setState({
-          isLoading: false
-        });
-        self.props.history.push('/');
-    }).catch(function() {
+    self._commonId = Guid.generate();
+    ShopServices.add(json, self._commonId).catch(function() {
+      ApplicationStore.sendMessage({
+        message: t('errorAddShopService'),
+        level: 'success',
+        position: 'tr'
+      });
       self.setState({
-        isLoading: false,
-        errorMessage: t('errorAddShopService')
+        isLoading: false
       });
     });
   }
@@ -117,6 +122,19 @@ class AddService extends Component {
         errorMessage: t('shopDoesntExistError')
       });
     });
+    self._waitForToken = AppDispatcher.register(function (payload) {
+      switch (payload.actionName) {
+          case Constants.events.NEW_SHOP_SERVICE_ARRIVED:
+              if (payload.data && payload.data.common_id === self._commonId) {
+                self.props.history.push('/services/' + payload.data.id);
+              }
+              break;
+      }
+    });
+  }
+
+  componentWillUnmount() { // Remove listener.
+      AppDispatcher.unregister(this._waitForToken);
   }
 }
 

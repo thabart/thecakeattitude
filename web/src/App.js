@@ -80,7 +80,7 @@ class App extends Component {
         var securedProxy = this._securedConnection.createHubProxy("secured");
         proxy.on('serviceAdded', function(message) {
           AppDispatcher.dispatch({
-            actionName: 'new-service',
+            actionName: Constants.events.NEW_SHOP_SERVICE_ARRIVED,
             data: message
           });
         });
