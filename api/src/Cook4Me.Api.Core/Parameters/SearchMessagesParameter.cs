@@ -24,6 +24,7 @@ namespace Cook4Me.Api.Core.Parameters
         {
             StartIndex = 0;
             Count = 100;
+            IncludeParent = false;
         }
 
         public string From { get; set; }
@@ -36,6 +37,7 @@ namespace Cook4Me.Api.Core.Parameters
         public int StartIndex { get; set; }
         public int Count { get; set; }
         public bool IsPagingEnabled { get; set; }
+        public bool IncludeParent { get; set; }
         public IEnumerable<OrderBy> OrderBy { get; set; }
     }
 }

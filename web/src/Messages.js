@@ -14,7 +14,15 @@ class Messages extends Component {
     super(props);
     var sub = ApplicationStore.getUser().sub;
     this._page = '1';
-    this._request = { count: defaultCount, start_index: 0, is_parent: true, to: sub };
+    this._request = {
+      count: defaultCount,
+      start_index: 0,
+      is_parent: true,
+      to: sub,
+      orders: [
+        { target: 'create_datetime', method: 'desc' }
+      ]
+    };
     this.refresh = this.refresh.bind(this);
     this.displayReceived = this.displayReceived.bind(this);
     this.displaySent = this.displaySent.bind(this);
@@ -137,7 +145,7 @@ class Messages extends Component {
                 <span>{moment(message.create_datetime).format('lll')}</span>
               </div>
               <div className="col-md-8">
-                <p>{message.content}</p>
+                <p>{message.subject}</p>
               </div>
               <div className="col-md-2">
                 <NavLink to={"/message/" + message.id} className="btn-light green"><i className="fa fa-external-link"></i> {t('view')}</NavLink>

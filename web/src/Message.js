@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { translate } from 'react-i18next';
 import { MessageService, UserService } from './services/index';
-import { Alert, Breadcrumb, BreadcrumbItem, Input, FormFeedback } from "reactstrap";
+import { Alert, Breadcrumb, BreadcrumbItem, Input, FormFeedback, Form, FormGroup } from "reactstrap";
 import { NavLink} from "react-router-dom";
 import { ApplicationStore } from './stores/index';
 import { withRouter } from "react-router";
@@ -21,10 +21,11 @@ class Message extends Component {
     this._page = '1';
     this._request = {
       orders: [
-        { target: 'create_datetime', method: 'asc' }
+        { target: 'create_datetime', method: 'desc' }
       ],
       count: defaultCount,
-      start_index: 0
+      start_index: 0,
+      include_parent: true
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -56,16 +57,22 @@ class Message extends Component {
     self.setState({
       isLoading: true
     });
+    MessageService.search(self._request).then(function(result) {
+
+    }).catch(function() {
+      self.setState({
+        isLoading: false,
+        messages: [],
+        subject: null,
+        pagination: []
+      });
+    });
     Promise.all([ MessageService.search(self._request), MessageService.get(self._request.parent_id) ]).then(function(result) {
       var messages = result[0]['_embedded'];
       var pagination = result[0]['_links'].navigation;
       var parentMessage = result[1]['_embedded'];
       if (!(messages instanceof Array)) {
         messages = [messages];
-      }
-
-      if (self._page === '1') {
-        messages.unshift(parentMessage);
       }
 
       var subjects = messages.map(function(m) { return m.from; });
@@ -220,16 +227,23 @@ class Message extends Component {
               <BreadcrumbItem active>{this.state.parentMessage.subject}</BreadcrumbItem>
             </Breadcrumb>
             <div style={{padding: "20px"}}>
-              <h4>{this.state.parentMessage.subject}</h4>
+              <h4>
+                {this.state.parentMessage.subject}
+                {this.state.parentMessage.product_id && this.state.parentMessage.product_id !== null && ( <i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/products/'+self.state.parentMessage.product_id)} /> ) }
+                {this.state.parentMessage.service_id && this.state.parentMessage.service_id !== null && ( <i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/services/'+self.state.parentMessage.service_id)} /> ) }
+                {this.state.parentMessage.clientservice_id && this.state.parentMessage.clientservice_id !== null && ( <i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/clientservices/'+self.state.parentMessage.clientservice_id)} /> ) }
+              </h4>
               { messageLst.length === 0 ? (<i>{t('noMessage')}</i>) : messageLst }
               {paginationLst.length > 0 && (<ul className="pagination">
                   {paginationLst}
               </ul>)}
-              <form onSubmit={this.add}>
-                <Input type="textarea" state={feedbackName} className="form-control" name='messageContent' onChange={this.handleInputChange} minLength='1' maxLength='255' />
-                <FormFeedback>{errorMessage}</FormFeedback>
-                <button className="btn btn-default">{t('sendMessage')}</button>
-              </form>
+              <Form onSubmit={this.add}>
+                <FormGroup color={feedbackName}>
+                  <Input type="textarea" state={feedbackName} className="form-control" name='messageContent' onChange={this.handleInputChange} minLength='1' maxLength='255' />
+                  <FormFeedback>{errorMessage}</FormFeedback>
+                  <button className="btn btn-default">{t('sendMessage')}</button>
+                </FormGroup>
+              </Form>
             </div>
           </div>
         </div>

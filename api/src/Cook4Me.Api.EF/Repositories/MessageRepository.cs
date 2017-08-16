@@ -97,7 +97,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (!string.IsNullOrWhiteSpace(parameter.ParentId))
             {
-                messages = messages.Where(m => m.ParentId == parameter.ParentId);
+                messages = messages.Where(m => m.ParentId == parameter.ParentId || parameter.IncludeParent && parameter.ParentId == m.Id);
             }
 
             if (parameter.IsParent != null)

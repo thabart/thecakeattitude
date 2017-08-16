@@ -113,6 +113,7 @@ namespace Cook4Me.Api.Host.Builders
                 ProductId = jObj.TryGetString(Constants.DtoNames.UserMessage.ProductId),
                 ServiceId = jObj.TryGetString(Constants.DtoNames.UserMessage.ServiceId),
                 ParentId = jObj.TryGetString(Constants.DtoNames.UserMessage.ParentId),
+                IncludeParent = jObj.TryGetBoolean(Constants.DtoNames.SearchUserMessage.IncludeParent),
                 IsParent = jObj.TryGetNullableBoolean(Constants.DtoNames.SearchUserMessage.IsParent),
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 IsPagingEnabled = true,
