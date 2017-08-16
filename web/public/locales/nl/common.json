@@ -309,5 +309,7 @@
   "datePeriod": "Date period",
   "timePeriod": "Time period",
   "days": "Days",
-  "add_shop_service": "A new shop'service has been added"
+  "add_shop_service": "A new shop'service has been added",
+  "confirmNewPassword": "Confirm the new password",
+  "notSamePassword": "The password is not the same"
 }

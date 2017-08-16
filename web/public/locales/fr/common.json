@@ -307,5 +307,7 @@
   "datePeriod": "Période (date)",
   "timePeriod": "Période (heures)",
   "days": "Jours",
-  "add_shop_service": "Un nouveau service a été ajouté sur l'un de vos magasins"
+  "add_shop_service": "Un nouveau service a été ajouté sur l'un de vos magasins",
+  "confirmNewPassword": "Confirmer le nouveau mot de passe",
+  "notSamePassword": "Le mot de passe n'est pas le même"
 }

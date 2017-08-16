@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
-import { Alert, Tooltip, Button, Input, FormFeedback } from "reactstrap";
+import { Alert, Tooltip, Button, Input, FormFeedback, FormGroup, Label } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import { UserService } from '../services/index';
 import { ApplicationStore, EditUserStore } from '../stores/index';
@@ -28,17 +28,21 @@ class Profile extends Component {
     this.confirm = this.confirm.bind(this);
     this.state = {
       password: null,
+      copiedPassword: null,
       isLoading: false,
       canBeEdited: false,
       isEditable: false,
       errorMessage: null,
       user : props.user || { claims : {} },
-      isPasswordInvalid: false,
       isEditUserTooltipOpened: false, // Tooltip
       isViewUserTooltipOpened: false,
       isUpdateUserTooltipOpened: false,
       isBannerImageTooltipOpened: false,
-      isEditProfileTooltipOpened: false
+      isEditProfileTooltipOpened: false,
+      valid: {
+        isPasswordInvalid: false,
+        isPasswordConfirmationInvalid: false
+      }
     };
   }
 
@@ -96,16 +100,32 @@ class Profile extends Component {
   save() { // Save the user.
     var user = EditUserStore.getUser();
     var self = this;
+    var valid = this.state.valid;
+    var isValid = true;
     if (user.is_local_account) {
       user['password'] = self.state.password;
       if(user['password'] && user['password'] !== '') {
         var regex = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);
         if (!regex.test(user['password'])) {
-          self.setState({
-            isPasswordInvalid: true
-          });
-          return;
+          valid.isPasswordInvalid = true;
+          isValid = false;
+        } else {
+          valid.isPasswordInvalid = false;
         }
+      }
+
+      if (self.state.copiedPassword != self.state.password) {
+        isValid = false;
+        valid.isPasswordConfirmationInvalid = true;
+      } else {
+        valid.isPasswordConfirmationInvalid = false;
+      }
+
+      if (!isValid) {
+        self.setState({
+          valid: valid
+        });
+        return;
       }
     }
 
@@ -249,11 +269,18 @@ class Profile extends Component {
         </div>);
     }
 
-    var feedbackName = null;
-    var errorMessage = null;
-    if (this.state.isPasswordInvalid) {
-      errorMessage = t('passwordInvalid');
-      feedbackName = 'danger';
+    var feedbackPassword = null;
+    var errorPasswordMessage = null;
+    var feedbackCopiedPassword = null;
+    var errorCopiedPasswordMessage = null;
+    if (this.state.valid.isPasswordInvalid) {
+      errorPasswordMessage = t('passwordInvalid');
+      feedbackPassword = 'danger';
+    }
+
+    if (this.state.valid.isPasswordConfirmationInvalid) {
+      errorCopiedPasswordMessage= t('notSamePassword');
+      feedbackCopiedPassword = 'danger';
     }
 
     var bannerImage = this.state.user.claims.banner_image || "/images/default-profile-banner.jpg";
@@ -368,11 +395,17 @@ class Profile extends Component {
                   <input type="text" className="form-control" value={self.state.user.claims.sub} disabled />
                 </div>
                 { /* Password */ }
-                <div className="form-group">
-                  <label>{t('newPassword')}</label>
-                  <Input type="password" className="form-control" state={feedbackName} value={self.state.password} name="password" onChange={self.handleInputChange} />
-                  <FormFeedback>{errorMessage}</FormFeedback>
-                </div>
+                <FormGroup color={feedbackPassword}>
+                  <Label className="col-form-label">{t('newPassword')}</Label>
+                  <Input type="password" className="form-control" state={feedbackPassword} value={self.state.password} name="password" onChange={self.handleInputChange} />
+                  <FormFeedback>{errorPasswordMessage}</FormFeedback>
+                </FormGroup>
+                { /* Confirm password */ }
+                <FormGroup color={feedbackCopiedPassword}>
+                  <Label className="col-form-label">{t('confirmNewPassword')}</Label>
+                  <Input type="password" className="form-control" state={feedbackCopiedPassword} value={self.state.copiedPassword} name="copiedPassword" onChange={self.handleInputChange} />
+                  <FormFeedback>{errorCopiedPasswordMessage}</FormFeedback>
+                </FormGroup>
                 { /* Save button */ }
                 <div className="form-group">
                   <input type="submit" className="btn btn-default" value={t('update')} />
