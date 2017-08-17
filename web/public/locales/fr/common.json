@@ -334,6 +334,7 @@
   "oneCharacteristicValueInsertedError": "Au moins une valeur doit être spécifiée",
   "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Ajouter quelques caractéristiques à votre produit par exemple : <i>Couleur = Bleu, Taille = Moyenne</i>",
   "add": "Ajouter",
-  "characteriticValuePlaceHolder": "Valeurs"
+  "characteriticValuePlaceHolder": "Valeurs",
+  "add_product": "Un nouveau produit a été ajouté"
 
 }

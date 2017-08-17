@@ -265,5 +265,37 @@ namespace Cook4Me.Api.Handlers
                 To = notification.To
             });
         }
+
+        public async Task Handle(ProductAddedEvent message)
+        {
+            var shop = await _shopRepository.Get(message.ShopId);
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "add_product",
+                CreatedDateTime = DateTime.UtcNow,
+                IsRead = false,
+                From = shop.Subject,
+                To = shop.Subject,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.ProductId,
+                        Value = message.Id
+                    }
+                }
+            };
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
     }
 }

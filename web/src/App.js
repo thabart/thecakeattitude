@@ -86,7 +86,7 @@ class App extends Component {
         });
         proxy.on('productAdded', function(message) {
             AppDispatcher.dispatch({
-                actionName: 'new-product',
+                actionName: Constants.events.ADD_PRODUCT_ARRIVED,
                 data: message
             });
         });

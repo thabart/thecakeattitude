@@ -336,5 +336,6 @@
   "oneCharacteristicValueInsertedError": "At least one characteristic value should be inserted",
   "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Add some characteristics to your product for example : <i>Color = Blue, Size = Medium</i>",
   "add": "Add",
-  "characteriticValuePlaceHolder": "Values"
+  "characteriticValuePlaceHolder": "Values",
+  "add_product": "A new product has been added"
 }

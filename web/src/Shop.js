@@ -453,19 +453,19 @@ class Shop extends Component {
                         self.refresh();
                     }
                     break;
-                case 'new-product': // Display popup when a product has been added to the shop.
+                case Constants.events.ADD_PRODUCT_ARRIVED: // Display popup when a product has been added to the shop.
                     if (payload.data && payload.data.shop_id === shopId) {
                         ApplicationStore.sendMessage({
-                            message: 'A new product has been added',
+                            message: t('add_product'),
                             level: 'info',
                             position: 'tr'
                         });
                     }
                     break;
-                case 'new-service': // Display popup when a service has been added to the shop.
+                case Constants.events.NEW_SHOP_SERVICE_ARRIVED: // Display popup when a service has been added to the shop.
                     if (payload.data && payload.data.shop_id === shopId) {
                         ApplicationStore.sendMessage({
-                            message: 'A new service has been added',
+                            message: t('add_shop_service'),
                             level: 'info',
                             position: 'tr'
                         });

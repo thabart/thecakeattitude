@@ -15,12 +15,13 @@ class AddProduct extends Component {
   constructor(props) {
     super(props);
     this._data = {};
+    this._waitForToken = null;
     this._commonId = null;
     this.confirm = this.confirm.bind(this);
     this.toggle = this.toggle.bind(this);
     this.refresh = this.refresh.bind(this);
     this.state = {
-      activeTab : '2',
+      activeTab : '1',
       errorMessage: null,
       isLoading: false,
       shop: {}
@@ -136,7 +137,21 @@ class AddProduct extends Component {
   }
 
   componentDidMount() { // Execute before the render view.
-    this.refresh();
+    var self = this;
+    self.refresh();
+    self._waitForToken = AppDispatcher.register(function (payload) {
+      switch (payload.actionName) {
+          case Constants.events.ADD_PRODUCT_ARRIVED:
+              if (payload.data && payload.data.common_id === self._commonId) {
+                self.props.history.push('/products/' + payload.data.id);
+              }
+              break;
+      }
+    });
+  }
+
+  componentWillUnmount() { // Remove listener.
+      AppDispatcher.unregister(this._waitForToken);
   }
 }
 

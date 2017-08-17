@@ -190,7 +190,7 @@ class ClientServices extends Component {
         var self = this;
         this._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'add-announce':
+                case Constants.events.ADD_CLIENT_SERVICE_ARRIVED:
                 case Constants.events.REMOVE_CLIENT_SERVICE_ARRIVED:
                     var request = $.extend({}, self.request, {
                         start_index: 0
