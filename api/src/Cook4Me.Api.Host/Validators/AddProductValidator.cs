@@ -91,7 +91,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddProductValidationResult(ErrorDescriptions.TheProductCannotBeAddedByYou);
             }
 
-            if (!IsValid(command.Name, 1, 15))
+            if (!IsValid(command.Name, 1, 50))
             {
                 return new AddProductValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Product.Name, 1, 15));
             }

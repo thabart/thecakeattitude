@@ -1,12 +1,14 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
+import { Alert } from 'reactstrap';
+import { ShopsService } from '../services/index';
+import { translate } from 'react-i18next';
 import TagsInput from "react-tagsinput";
-import {Alert} from 'reactstrap';
-import {ShopsService} from '../services/index';
 import $ from 'jquery';
 
 class FilterSelector extends Component {
   constructor(props) {
     super(props);
+    this.elt = null;
     this._selectedFilter = null;
     this._isInitialized = false;
     this.handleTags = this.handleTags.bind(this);
@@ -23,33 +25,40 @@ class FilterSelector extends Component {
       errorMessage: null
     };
   }
-  handleTags(tags, changed, changedIndexes) {
-    var changedValue = changed[0].toLowerCase();
-    var selectedValue = this._selectedFilter.values.filter(function(value) {
-      return value.content.toLowerCase().indexOf(changedValue) !== -1;
-    });
-    if (selectedValue.length === 0) {
-      return;
+
+  handleTags(tags, changed, changedIndexes) { // Handle tags modification.
+    if (changedIndexes[0] === this.state.tags.length) {
+      var changedValue = changed[0].toLowerCase();
+      var selectedValue = this._selectedFilter.values.filter(function(value) {
+        return value.content.toLowerCase().indexOf(changedValue) !== -1;
+      });
+      if (selectedValue.length !== 1) {
+        return;
+      }
+
+      tags.pop();
+      tags.push(selectedValue[0].content);
     }
 
-    var newTags = this.state.tags;
-    newTags.push(selectedValue[0].content);
     this.setState({
-      tags: newTags
+      tags: tags
     });
     this.hidePopup();
   }
-  closeError() {
+
+  closeError() { // Close error message.
     this.setState({
       errorMessage: null
     });
   }
-  hidePopup() {
+
+  hidePopup() { // Hide popup.
       var ul = $(this.popup).find('ul');
       $(ul).empty();
       $(this.popup).hide();
   }
-  displayFilters(filters) {
+
+  displayFilters(filters) { // Display filters.
     $(this.popup).show();
     var ul = $(this.popup).find('ul');
     var self = this;
@@ -58,7 +67,8 @@ class FilterSelector extends Component {
       $(self.popup).find('ul').append('<li>' + filter.content + '</li>');
     });
   }
-  changeFilter(e) {
+
+  changeFilter(e) { // Execute when the user changes the filter.
     var value = e.target.value;
     var filter = this.state.filters.find(function(elt) {
       return elt.id === value;
@@ -68,63 +78,72 @@ class FilterSelector extends Component {
       tags: []
     });
   }
-  initialize(elt) {
+
+  updatePopupContent(value) { // Update popup content.
+    var self = this;
+    if (self._selectedFilter === null) {
+      self.hidePopup();
+      return;
+    }
+
+    var arr = [],
+      tags = self.state.tags;
+    if (value && value !== '') {
+      self._selectedFilter.values.forEach(function(f) {
+        if (f.content.toLowerCase().indexOf(value.toLowerCase()) !== -1 && $.inArray(f.content, tags) === -1) {
+          arr.push(f);
+        }
+      });
+    } else {
+      self._selectedFilter.values.forEach(function(f) {
+        if ($.inArray(f.content, tags) === -1) {
+          arr.push(f);
+        }
+      });
+    }
+
+    self.displayFilters(arr);
+    self.popup.find('li').click(function() {
+      var tags = self.state.tags;
+      tags.push($(this).html());
+      self.setState({
+        tags: tags
+      });
+      self.hidePopup();
+    });
+  }
+
+  updatePopupPosition() { // Update popup position.
+    var self = this,
+      container = self.elt.refs.div,
+      parent = $(container).parent();
+    $(self.popup).width($(container).width() + 5);
+    $(self.popup).css('left', $(container).offset().left);
+    $(self.popup).css('top', $(parent).offset().top + $(parent).height());
+  }
+
+  initialize(elt) { // Called only one time to initialize the popup.
     if (this._isInitialized) return;
     var self = this,
       input = elt.refs.input,
-      container = elt.refs.div,
       paddingLeft = 5,
       paddingTop = 5;
-    self.popup = $("<div class='popup' style='position: absolute;display: none;'><ul></ul></div>");
-    var updatePopup = function(value) {
-      if (self._selectedFilter === null) {
-        self.hidePopup();
-        return;
-      }
-
-      $(self.popup).width($(container).width() + 5);
-      $(self.popup).css('left', $(container).offset().left);
-      $(self.popup).css('top', $(container).offset().top + $(container).height());
-      var arr = [],
-        tags = self.state.tags;
-      if (value && value !== '') {
-        self._selectedFilter.values.forEach(function(f) {
-          if (f.content.toLowerCase().indexOf(value.toLowerCase()) !== -1 && $.inArray(f.content, tags) === -1) {
-            arr.push(f);
-          }
-        });
-      } else {
-        self._selectedFilter.values.forEach(function(f) {
-          if ($.inArray(f.content, tags) === -1) {
-            arr.push(f);
-          }
-        });
-      }
-
-      self.displayFilters(arr);
-      self.popup.find('li').click(function() {
-        var tags = self.state.tags;
-        tags.push($(this).html());
-        self.setState({
-          tags: tags
-        });
-        self.hidePopup();
-      });
-    };
-
+    self.elt = elt;
+    self.popup = $("<div class='react-tagsinput-popup' style='position: absolute;display: none;'><ul></ul></div>");
     $(document.body).append(self.popup);
-    $(input).on('focus', function() {
-      updatePopup();
-    });
+    $(window).resize(self.updatePopupPosition);
     $(input).on('input', function () {
-      updatePopup(this.value);
+      self.updatePopupPosition();
+      self.updatePopupContent(this.value);
     });
     self._isInitialized = true;
   }
-  addFilter() {
+
+  addFilter() { // Add a filter.
+    const {t} = this.props;
     if (!this.state.tags || this.state.tags.length === 0) {
       this.setState({
-        errorMessage: 'At least one filter value should be specified'
+        errorMessage: t('oneCharacteristicValueInsertedError')
       });
       return;
     }
@@ -144,7 +163,8 @@ class FilterSelector extends Component {
       tags: []
     });
   }
-  removeFilter(r) {
+
+  removeFilter(r) { // Remove filter.
     var productFilters = this.state.productFilters;
     var filters = this.state.filters;
     var index = productFilters.indexOf(r);
@@ -161,6 +181,7 @@ class FilterSelector extends Component {
       tags: []
     });
   }
+
   initSelectedFilter() {
     if (this.state.filters.length === 0) {
       this._selectedFilter = null;
@@ -168,7 +189,8 @@ class FilterSelector extends Component {
       this._selectedFilter = this.state.filters[0];
     }
   }
-  getFilters() {
+
+  getFilters() { // Get the filters.
     var productFilters = this.state.productFilters,
       arr = [];
     productFilters.forEach(function(productFilter) {
@@ -187,7 +209,8 @@ class FilterSelector extends Component {
     });
     return arr;
   }
-  render() {
+
+  render() { // Display the view.
     var filters = [],
       productFilters = [],
       self = this;
@@ -206,6 +229,7 @@ class FilterSelector extends Component {
       });
     }
 
+    const {t} = self.props;
     return (<div>
       <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
       <div className={this.state.filters.length === 0 ? "row col-md-12 hidden" : "row col-md-12"}>
@@ -217,10 +241,10 @@ class FilterSelector extends Component {
         <div className="col-md-4">
           <TagsInput ref={(elt) => {
             this.initialize(elt);
-          }} value={this.state.tags} onChange={this.handleTags} inputProps={{placeholder: "Filter values"}}/>
+          }} value={this.state.tags} onChange={this.handleTags} inputProps={{placeholder: t('characteriticValuePlaceHolder')}}/>
         </div>
         <div className="col-md-4">
-          <input type="submit" className="btn btn-success" value="Add" onClick={this.addFilter} />
+          <input type="submit" className="btn btn-default" value={t('add')} onClick={this.addFilter} />
         </div>
       </div>
       <ul className="list-group">
@@ -228,7 +252,8 @@ class FilterSelector extends Component {
       </ul>
     </div>);
   }
-  componentWillMount() {
+
+  componentWillMount() { // Execute before after the render.
     var shopId = this.props.shopId,
       self = this;
     self.setState({
@@ -249,4 +274,4 @@ class FilterSelector extends Component {
   }
 }
 
-export default FilterSelector;
+export default translate('common', { wait: process && !process.release, withRef: true })(FilterSelector);

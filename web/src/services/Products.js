@@ -102,7 +102,7 @@ module.exports = {
         });
     },
     // Add a product
-    add: function(content) {
+    add: function(content, commonId) {
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
@@ -110,7 +110,8 @@ module.exports = {
                     method: 'POST',
                     contentType: 'application/json',
                     headers: {
-                        'Authorization': 'Bearer ' + accessToken
+                        'Authorization': 'Bearer ' + accessToken,
+                        'CommonId': commonId
                     },
                     data: JSON.stringify(content)
                 }).then(function (r) {

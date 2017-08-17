@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import {Tooltip} from 'reactstrap';
-import {withRouter} from "react-router";
-import {ShopsService} from '../services/index';
-import {TagsSelector, ImagesUploader} from '../components';
-import {AddProductStore} from '../stores';
-import './description.css';
+import { Tooltip, FormGroup, UncontrolledTooltip, Input, Label, FormFeedback } from 'reactstrap';
+import { withRouter } from "react-router";
+import { ShopsService } from '../services/index';
+import { TagsSelector, ImagesUploader } from '../components';
+import { AddProductStore } from '../stores';
+import { translate } from 'react-i18next';
 
 class DescriptionTab extends Component {
   constructor(props) {
@@ -42,23 +42,20 @@ class DescriptionTab extends Component {
       }
     };
   }
-  buildErrorTooltip(validName, description) {
+
+  buildErrorTooltip(validName, description) { // Build the error tooltip.
       var result;
       if (this.state.valid[validName]) {
           result = (
             <span>
-              <i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
-              <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => {
-                  this.toggleTooltip(validName);
-              }}>
-                {description}
-              </Tooltip>
+              {description}
             </span> );
       }
 
       return result;
   }
-  handleInputChange(e) {
+
+  handleInputChange(e) { // Handle input change.
       const target = e.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
@@ -66,19 +63,21 @@ class DescriptionTab extends Component {
           [name]: value
       });
   }
-  toggleTooltip(name) {
+
+  toggleTooltip(name) { // Toggle the tooltip.
       var tooltip = this.state.tooltip;
       tooltip[name] = !tooltip[name];
       this.setState({
           tooltip: tooltip
       });
   }
-  next() {
+
+  next() { // Execute when the user clicks on next.
     var self = this,
       valid = self.state.valid,
       isValid = true;
     // Check name
-    if (!self.state.name || self.state.name.length < 1 || self.state.name.length > 15) {
+    if (!self.state.name || self.state.name.length < 1 || self.state.name.length > 50) {
       valid.isNameInvalid = true;
       isValid = false;
     } else {
@@ -147,132 +146,141 @@ class DescriptionTab extends Component {
 
     this.props.next(json);
   }
-  buildErrorTooltip(validName, description) {
-      var result;
-      if (this.state.valid[validName]) {
-          result = (<span><i className="fa fa-exclamation-triangle validation-error" id={validName}></i>
-    <Tooltip placement="right" target={validName} isOpen={this.state.tooltip[validName]} toggle={() => {
-        this.toggleTooltip(validName);
-    }}>
-      {description}
-    </Tooltip></span>);
-      }
 
-      return result;
-  }
-  toggleUnlimited() {
+  toggleUnlimited() { // Toggle unlimited checkbox.
     var unlimited = this.state.unlimited;
     this.setState({
       unlimited: !unlimited
     });
   }
-  render() {
-    var nameError = this.buildErrorTooltip('isNameInvalid', 'Should contains 1 to 15 characters'),
-      descriptionError = this.buildErrorTooltip('isDescriptionInvalid', 'Should contains 1 to 255 characters'),
-      priceError = this.buildErrorTooltip('isPriceInvalid', 'the price must be more than 0'),
-      quantityError = this.buildErrorTooltip('isQuantityInvalid', 'the quantity must be more than 0'),
-      inStockError = this.buildErrorTooltip('isInStockInvalid', 'the stock must be more or equal to 0'),
+
+  render() { // Display the tab.
+    const {t} = this.props;
+    var nameError = this.buildErrorTooltip('isNameInvalid', t('contains1To50CharsError')),
+      descriptionError = this.buildErrorTooltip('isDescriptionInvalid', t('contains1To255CharsError')),
+      priceError = this.buildErrorTooltip('isPriceInvalid', t('priceInvalid')),
+      quantityError = this.buildErrorTooltip('isQuantityInvalid', t('quantityError')),
+      inStockError = this.buildErrorTooltip('isInStockInvalid', t('stockError')),
       productCategories = [(<option></option>)],
       self = this;
-
+    const feedbackName = nameError ? "danger" : undefined;
+    const feedbackDescription = descriptionError ? "danger": undefined;
+    const feedbackPrice = priceError ? "danger": undefined;
+    const feedbackQuantity = quantityError ? "danger" : undefined;
+    const feedbackStock = inStockError ? "danger": undefined;
     if (this.state.productCategories && this.state.productCategories.length > 0) {
       this.state.productCategories.forEach(function(productCategory) {
         productCategories.push((<option value={productCategory.id}>{productCategory.name}</option>));
       });
     }
 
-    return (<div>
-        <section className="row section">
-          <div className="col-md-6 row">
-            <div className="form-group col-md-12">
-              <label className='control-label'>Name</label> <i className="fa fa-exclamation-circle" id="nameTooltip"></i>
-              <Tooltip placement="right" target="nameTooltip" isOpen={this.state.tooltip.toggleName} toggle={() => { this.toggleTooltip('toggleName'); }}>
-                Product name
-              </Tooltip>
-               {nameError}
-              <input type='text' className='form-control' name='name' onChange={this.handleInputChange}/>
-            </div>
-            <div className="form-group col-md-12">
-              <label className="control-label">Description</label> <i className="fa fa-exclamation-circle" id="descriptionToolTip"></i>
-              <Tooltip placement="right" target="descriptionToolTip" isOpen={this.state.tooltip.toggleDescription} toggle={() => { this.toggleTooltip('toggleDescription'); }}>
-                Describe the product in some words
-              </Tooltip>
-               {descriptionError}
-              <textarea className='form-control' name='description' onChange={this.handleInputChange}></textarea>
-            </div>
-            <div className="form-group col-md-12">
-              <label className="control-label">Product category</label> <i className="fa fa-exclamation-circle" id="productCategory"></i>
-              <Tooltip placement="right" target="productCategory" isOpen={this.state.tooltip.toggleProductCategory} toggle={() => { this.toggleTooltip('toggleProductCategory'); }}>
-                Choose a category
-              </Tooltip>
+    return (
+      <div className="container rounded">
+        <section className="row p-1">
+         {/* Left side */ }
+          <div className="col-md-6">
+            { /* Name */ }
+            <FormGroup color={feedbackName}>
+              <Label className='col-form-label'>{t('name')}  <i className="fa fa-info-circle txt-info" id="nameTooltip"></i></Label>
+              <UncontrolledTooltip placement="right" target="nameTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleName} toggle={() => { this.toggleTooltip('toggleName'); }}>
+                {t('productNameTooltip')}
+              </UncontrolledTooltip>
+              <Input type='text' state={feedbackName} className='form-control' name='name' onChange={this.handleInputChange}/>
+              <FormFeedback>{nameError}</FormFeedback>
+            </FormGroup>
+            { /* Description */ }
+            <FormGroup color={feedbackDescription}>
+              <Label className="col-form-label">{t('description')} <i className="fa fa-info-circle txt-info" id="descriptionToolTip"></i></Label>
+              <UncontrolledTooltip placement="right" target="descriptionToolTip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleDescription} toggle={() => { this.toggleTooltip('toggleDescription'); }}>
+                {t('productDescriptionTooltip')}
+              </UncontrolledTooltip>
+              <Input type="textarea" state={feedbackDescription} className='form-control' name='description' onChange={this.handleInputChange} />
+              <FormFeedback>{descriptionError}</FormFeedback>
+            </FormGroup>
+            { /* Product category */ }
+            <FormGroup>
+              <Label className="col-form-label">{t('chooseProductCategory')}  <i className="fa fa-info-circle txt-info" id="productCategory"></i></Label>
+              <UncontrolledTooltip placement="right" target="productCategory" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleProductCategory} toggle={() => { this.toggleTooltip('toggleProductCategory'); }}>
+                {t('chooseProductCategoryTooltip')}
+              </UncontrolledTooltip>
               <select name="productCategory" onChange={this.handleInputChange} className="form-control">{productCategories}</select>
-            </div>
-            <div className="form-group col-md-12">
-              <label className="control-label">Tags</label> <i className="fa fa-exclamation-circle" id="productTags"></i>
-              <Tooltip placement="right" target="productTags" isOpen={this.state.tooltip.toggleProductTags} toggle={() => { this.toggleTooltip('toggleProductTags'); }}>
-                Assign one or more tags
-              </Tooltip>
+            </FormGroup>
+            { /* Tags */ }
+            <FormGroup>
+              <Label className="col-form-label">{t('tags')} <i className="fa fa-info-circle txt-info" id="productTags"></i></Label>
+              <UncontrolledTooltip placement="right" target="productTags" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleProductTags} toggle={() => { this.toggleTooltip('toggleProductTags'); }}>
+                {t('productTagsTooltip')}
+              </UncontrolledTooltip>
               <TagsSelector ref="productTags"/>
-            </div>
-            <div className="form-group col-md-12">
-              <label className="control-label">Images</label> <i className="fa fa-exclamation-circle" id="imagesTooltip"></i>
-              <Tooltip placement="right" target="imagesTooltip" isOpen={this.state.tooltip.toggleImages} toggle={() => { this.toggleTooltip('toggleImages'); }}>
-                Images
+            </FormGroup>
+            { /* Images */ }
+            <FormGroup>
+              <Label className="col-form-label">{t('images')} <i className="fa fa-info-circle txt-info" id="imagesTooltip"></i></Label>
+              <Tooltip placement="right" target="imagesTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleImages} toggle={() => { this.toggleTooltip('toggleImages'); }}>
+                {t('productImagesTooltip')}
               </Tooltip>
               <ImagesUploader ref="imagesUploader" />
-            </div>
+            </FormGroup>
           </div>
-          <div className="col-md-6 row">
-            <div className="form-group col-md-12">
-              <label className="control-label">Price</label> <i className="fa fa-exclamation-circle" id="priceTooltip"></i>
-              <Tooltip placement="right" target="priceTooltip" isOpen={this.state.tooltip.togglePrice} toggle={() => { this.toggleTooltip('togglePrice'); }}>
-                Price per portion
-              </Tooltip>
-               {priceError}
+          { /* Right side */ }
+          <div className="col-md-6">
+            { /* Price */ }
+            <FormGroup color={feedbackPrice}>
+              <Label className="col-form-label">{t('price')} <i className="fa fa-info-circle txt-info" id="priceTooltip"></i></Label>
+              <UncontrolledTooltip placement="right" target="priceTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.togglePrice} toggle={() => { this.toggleTooltip('togglePrice'); }}>
+                {t('productPriceTooltip')}
+              </UncontrolledTooltip>
               <div className="input-group">
                 <span className="input-group-addon">€</span>
-                <input className="form-control" type="number" name="price" onChange={this.handleInputChange} />
+                <Input state={feedbackPrice} className="form-control" type="number" name="price" onChange={this.handleInputChange} />
               </div>
-            </div>
-            <div className="form-group col-md-12">
-              <label className="control-label">Unit of measure</label> <i className="fa fa-exclamation-circle" id="unitOfMeasureTooltip"></i>
-              <Tooltip placement="right" target="unitOfMeasureTooltip" isOpen={this.state.tooltip.toggleUnitOfMeasure} toggle={() => { this.toggleTooltip('toggleUnitOfMeasure'); }}>
-                Unit of measure
-              </Tooltip>
+              <FormFeedback>{priceError}</FormFeedback>
+            </FormGroup>
+            { /* Unit of measure */ }
+            <FormGroup>
+              <Label className="col-form-label">{t('productUnitOfMeasure')} <i className="fa fa-info-circle txt-info" id="unitOfMeasureTooltip"></i></Label>
+              <UncontrolledTooltip placement="right" target="unitOfMeasureTooltip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleUnitOfMeasure} toggle={() => { this.toggleTooltip('toggleUnitOfMeasure'); }}>
+                {t('productUnitOfMeasureTooltip')}
+              </UncontrolledTooltip>
               <select className="form-control" name="unitOfMeasure" onChange={(e) => { this.handleInputChange(e); }}>
-                <option value="piece">Piece</option>
-                <option value="kg">KG</option>
-                <option value="l">L</option>
+                <option value="piece">{t('piece')}</option>
+                <option value="kg">{t('kg')}</option>
+                <option value="l">{t('l')}</option>
               </select>
-            </div>
-            <div className="form-group col-md-12">
-              <label className="control-label">Quantity</label> <i className="fa fa-exclamation-circle" id="quantity"></i>
-              <Tooltip placement="right" target="quantity" isOpen={this.state.tooltip.toggleQuantity} toggle={() => { this.toggleTooltip('toggleQuantity'); }}>
-                Quantity in the portion
-              </Tooltip>
-               {quantityError}
-              <input className="form-control" type="number" name="quantity" onChange={this.handleInputChange} />
-            </div>
-            <div className="form-roup col-md-12">
-              <input type="checkbox" onChange={this.toggleUnlimited} checked={this.state.unlimited} /><label className="control-label">Unlimited stock</label>
-            </div>
+            </FormGroup>
+            { /* Quantity */ }
+            <FormGroup color={feedbackQuantity}>
+              <Label className="col-form-label">{t('productQuantity')} <i className="fa fa-info-circle txt-info" id="quantity"></i></Label>
+              <UncontrolledTooltip placement="right" target="quantity" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleQuantity} toggle={() => { this.toggleTooltip('toggleQuantity'); }}>
+                {t('productQuantityTooltip')}
+              </UncontrolledTooltip>
+              <Input state={feedbackQuantity} className="form-control" type="number" name="quantity" onChange={this.handleInputChange} />
+              <FormFeedback>{quantityError}</FormFeedback>
+            </FormGroup>
+            { /* Unlimited stock */ }
+            <FormGroup>
+              <input type="checkbox" onChange={this.toggleUnlimited} checked={this.state.unlimited} /><label className="control-label">{t('unlimitedStock')}</label>
+            </FormGroup>
+            { /* In stock */ }
             { this.state.unlimited === false && (
-            <div className="form-group col-md-12">
-              <label className="control-label">Available in your stocks</label> <i className="fa fa-exclamation-circle" id="inStock"></i>
-              <Tooltip placement="right" target="inStock" isOpen={this.state.tooltip.toggleInStock} toggle={() => { this.toggleTooltip('toggleInStock'); }}>
-                Number of portions available in your stocks
-              </Tooltip>
-               {inStockError}
-              <input className="form-control" type="number" name="availableInStock" onChange={this.handleInputChange} />
-            </div> )}
+              <FormGroup color={feedbackStock}>
+                <Label className="col-form-label">{t('productStock')} <i className="fa fa-info-circle txt-info" id="inStock"></i></Label>
+                <UncontrolledTooltip placement="right" target="inStock" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleInStock} toggle={() => { this.toggleTooltip('toggleInStock'); }}>
+                  {t('productStockTooltip')}
+                </UncontrolledTooltip>
+                <Input state={feedbackStock} className="form-control" type="number" name="availableInStock" onChange={this.handleInputChange} />
+                <FormFeedback>{inStockError}</FormFeedback>
+              </FormGroup>
+            ) }
           </div>
       </section>
-      <section className="col-md-12 sub-section">
-          <button className="btn btn-primary next" onClick={this.next}>Next</button>
+      <section className="row p-1">
+          <button className="btn btn-default" onClick={this.next}>Next</button>
       </section>
     </div>);
   }
-  componentWillMount() {
+
+  componentWillMount() { // Execute before the render.
     var self = this;
     AddProductStore.addChangeListener(function() {
       var shop = AddProductStore.getShop();
@@ -283,4 +291,4 @@ class DescriptionTab extends Component {
   }
 }
 
-export default withRouter(DescriptionTab);
+export default translate('common', { wait: process && !process.release })(withRouter(DescriptionTab));

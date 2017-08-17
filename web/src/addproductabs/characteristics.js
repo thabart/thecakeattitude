@@ -1,9 +1,10 @@
-import React, {Component} from "react";
-import $ from 'jquery';
+import React, { Component } from "react";
+import { Alert } from 'reactstrap';
+import { withRouter } from "react-router";
+import { FilterSelector } from '../components';
+import { translate } from 'react-i18next';
 import TagsInput from "react-tagsinput";
-import {Alert} from 'reactstrap';
-import {withRouter} from "react-router";
-import {FilterSelector} from '../components';
+import $ from 'jquery';
 
 class CharacteristicsTab extends Component {
   constructor(props) {
@@ -23,7 +24,8 @@ class CharacteristicsTab extends Component {
       errorMessage: null
     };
   }
-  handleInputChange(e) {
+
+  handleInputChange(e) { // Handle input change.
       const target = e.target;
       const value = target.type === 'checkbox' ? target.checked : target.value;
       const name = target.name;
@@ -31,21 +33,25 @@ class CharacteristicsTab extends Component {
           [name]: value
       });
   }
-  previous() {
+
+  previous() { // Execute when the user clicks on previous.
     this.props.previous();
   }
-  confirm() {
-    var filters = this.refs.filterSelector.getFilters();
+
+  confirm() { // Confirm the creation.
+    var filters = this.refs.filterSelector.getWrappedInstance().getFilters();
     this.props.confirm(filters);
   }
-  addCharacteristic() {
+
+  addCharacteristic() { // Add a characteristic.
     if (this._selectedCharacteristic === null) {
       return;
     }
 
+    const {t} = this.props;
     if (this.state.tags.length === 0) {
       this.setState({
-        errorMessage: 'At least one tag should be inserted'
+        errorMessage: t('oneCharacteristicValueInsertedError')
       });
       return;
     }
@@ -75,13 +81,15 @@ class CharacteristicsTab extends Component {
     });
     self._selectedCharacteristic = characteristics[0];
   }
-  selectCharacteristic(e) {
+
+  selectCharacteristic(e) { // Select a characteristic.
     this._selectedCharacteristic = {
       name: $(e.target).find(':selected').text(),
       id : e.target.value
     };
   }
-  removeFilter(filter) {
+
+  removeFilter(filter) { // Remove filter.
     var productFilters = this.state.productFilters,
       characteristics = this.state.characteristics;
     var index = productFilters.indexOf(filter);
@@ -99,29 +107,29 @@ class CharacteristicsTab extends Component {
       characteristics: characteristics
     });
   }
-  closeError() {
+
+  closeError() { // Close error message.
     this.setState({
       errorMessage: null
     });
   }
-  render() {
+
+  render() { // Display view.
     var self = this;
     var shopId = this.props.match.params.id;
-    return (<div>
-        <section className="section">
+    const {t} = this.props;
+    return (<div className="container rounded">
+        <section>
           <Alert color="danger" isOpen={this.state.errorMessage !== null} toggle={this.closeError}>{this.state.errorMessage}</Alert>
-          <div className='form-group col-md-12'><p><i className="fa fa-exclamation-triangle"></i> Add some filters to your product for example : <i>Color = Blue, Size = Medium</i></p></div>
+          <div className='form-group'><p dangerouslySetInnerHTML ={{__html: t('productCharacteristicDescription')}}></p></div>
           <FilterSelector ref="filterSelector" shopId={shopId} />
         </section>
-        <section className="col-md-12 sub-section">
-            <button className="btn btn-primary previous" onClick={this.previous}>Previous</button>
-            <button className="btn btn-success next" onClick={this.confirm}>Confirm</button>
+        <section className="row p-1">
+            <button className="btn btn-default" onClick={this.previous}>{t('previous')}</button>
+            <button className="btn btn-default" onClick={this.confirm} style={{marginLeft: "5px"}}>{t('confirm')}</button>
         </section>
       </div>);
   }
-  componentWillMount() {
-
-  }
 }
 
-export default withRouter(CharacteristicsTab);
+export default translate('common', { wait: process && !process.release })(withRouter(CharacteristicsTab));
