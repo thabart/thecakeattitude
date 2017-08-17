@@ -352,6 +352,12 @@ class Header extends Component {
                             <li><NavLink to="/messages" className="nav-link no-style"><i className="fa fa-envelope"></i></NavLink></li>
                           ) : '')
                         }
+                        { /* Basket */ }
+                        {
+                          (self.state.isLoggedIn && (
+                            <li><NavLink to="/basket" className="nav-link no-style"><i className="fa fa-shopping-cart"></i></NavLink></li>
+                          ))
+                        }
                         {/* Notifications */}
                         {
                           (self.state.isLoggedIn ? (<li className="dropdown dropdown-extended dropdown-notification open">

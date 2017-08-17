@@ -18,6 +18,7 @@ import Users from './Users';
 import Messages from './Messages';
 import Message from './Message';
 import NewMessage from './NewMessage';
+import Basket from './Basket';
 import {OpenIdService, SessionService} from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
@@ -266,6 +267,7 @@ class App extends Component {
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                <Route path="/basket" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Basket />))}/>
                 <Route path="/addservice/:id"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
                 <Route path="/addclientservice"

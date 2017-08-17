@@ -1,0 +1,60 @@
+{	
+	"UPSSecurity": {
+		"UsernameToken": { 
+			"Username": "thabart1",
+			"Password": "SORbonne1989" 
+		},
+		"ServiceAccessToken": { 
+			"AccessLicenseNumber": "FD300339C9051F5C"
+		} 
+	}, 
+	"ShipmentRequest": { 
+		"Request": { 
+			"RequestOption": "validate", 
+			"TransactionReference": { 
+				"CustomerContext": "Your Customer Context" 
+			} 
+		}, 
+		"Shipment": { 
+			"Description": "Description",
+			"Shipper": { 
+				"Name": "Shipper Name", 
+				"AttentionName": "Shipper Attn Name", 
+				"TaxIdentificationNumber": "123456",
+				"Phone": { "Number": "1234567890", "Extension": "1" }, 
+				"ShipperNumber": "98FF76", 
+				"FaxNumber": "1234567890", 
+				"Address": { "AddressLine": "223 avenue des croix du feu", "City": "Bruxelles", "PostalCode": "1020", "CountryCode": "BE" } 
+			}, 
+			"ShipTo": { 
+				"Name": "Ship To Name", 
+				"AttentionName": "Ship To Attn Name",
+				"Phone": { "Number": "1234567890" },
+				"Address": { "AddressLine": "Avenue J. Brel 30", "City": "Bruxelles", "PostalCode": "1200", "CountryCode": "BE" }
+			}, 
+			"ShipFrom": { 
+				"Name": "Ship From Name", 
+				"AttentionName": "Ship From Attn Name", 
+				"Phone": { "Number": "1234567890" }, 
+				"FaxNumber": "1234567890", 
+				"Address": { "AddressLine": "223 avenue des croix du feu", "City": "Bruxelles", "PostalCode": "1020", "CountryCode": "BE" } 
+			}, 
+			"PaymentInformation": { 
+				"ShipmentCharge": { "Type": "01", "BillShipper": { "AccountNumber": "98FF76" }	} 
+			}, 
+			"Service": { 
+				"Code": "14"
+			}, 
+			"Package": {
+				"Description": "Description", 
+				"Packaging": { "Code": "02", "Description": "Description" }, 
+				"Dimensions": { "UnitOfMeasurement": { "Code": "IN", "Description": "Inches" }, "Length": "7", "Width": "5", "Height": "2" },
+				"PackageWeight": { "UnitOfMeasurement": { "Code": "LBS", "Description": "Pounds" }, "Weight": "10" }
+			} 
+		}, 
+		"LabelSpecification": { 
+			"LabelImageFormat": { "Code": "GIF","Description": "GIF" }, 
+			"HTTPUserAgent": "Mozilla/4.5" 
+		} 
+	} 
+}
