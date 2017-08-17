@@ -334,6 +334,8 @@
   "productStock": "Available in your stock",
   "productStockTooltip": "Choose a number of portions available in your stocks",
   "oneCharacteristicValueInsertedError": "At least one characteristic value should be inserted",
-  "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Add some characteristics to your product for example : <i>Color = Blue, Size = Medium</i>"
+  "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Add some characteristics to your product for example : <i>Color = Blue, Size = Medium</i>",
+  "add": "Add",
+  "characteriticValuePlaceHolder": "Values"
 
 }

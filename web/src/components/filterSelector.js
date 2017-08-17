@@ -224,7 +224,7 @@ class FilterSelector extends Component {
       this.state.productFilters.forEach(function(productFilter) {
         productFilters.push((<li className="list-group-item justify-content-between">
           {productFilter.filter.name} : {productFilter.tags.join(',')}
-          <i className="fa fa-times" onClick={(e) => { self.removeFilter(productFilter); }}></i>
+          <i className="fa fa-times" onClick={(e) => { self.removeFilter(productFilter); }} style={{ cursor: "pointer" }}></i>
         </li>))
       });
     }

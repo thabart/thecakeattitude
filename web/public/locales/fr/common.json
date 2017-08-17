@@ -331,7 +331,9 @@
   "unlimitedStock": "Stock illimité",
   "productStock": "Disponible dans votre stock",
   "productStockTooltip": "Choisir un nombre de portion disponible dans votre stock",
-  "oneCharacteristicValueInsertedError": "Au moins une value doit être spécifiée",
-  "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Ajouter quelques caractéristiques à votre produit par exemple : <i>Couleur = Bleu, Taille = Moyenne</i>"
+  "oneCharacteristicValueInsertedError": "Au moins une valeur doit être spécifiée",
+  "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Ajouter quelques caractéristiques à votre produit par exemple : <i>Couleur = Bleu, Taille = Moyenne</i>",
+  "add": "Ajouter",
+  "characteriticValuePlaceHolder": "Valeurs"
 
 }
