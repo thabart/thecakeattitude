@@ -1,0 +1,33 @@
+Les types de service : 
+
+Union européenne
+Description		   																		Shipping	Rating 	Inclure			
+UPS Access Point Economy 	Shipments within the European Union 						70 			70 		OUI (sélectionner un point de vente)
+UPS Worldwide Expedited	 	Destinations étrangères						 				08 			08 		
+UPS Express 				Partout dans le monde						 				07 			07 		OUI (comparer prix avec RATING)
+UPS Standard 				Envois moins urgents						 				11 			11 		OUI (comparer prix avec RATING)
+UPS Express Plus			Express Plus Shipments originating in the European Union 	54 			54 		OUI (comparer prix avec RATING)
+UPS Express Saver			Saver Shipments originating in the European Union 			65 			65 		OUI (comparer prix avec RATING)
+
+Les services importants :
+
+========== GetAvailableShipmentOptions ==========
+
+URL : https://www.ups.com/ship/Lookup/GetAvailableShipmentOptions
+BODY : {"shipFromAddress":{"country":{"code":"BE","isFromCountry":null,"allowGuestShipping":null},"postal":"1020","state":{"code":null},"city":"Bruxelles","address1":"223 avenue des croix du feu","address2":null,"address3":null,"classification":{"key":"0","value":"Unknown"},"validationResult":0},"shipToAddress":{"country":{"code":"BE","isFromCountry":null,"allowGuestShipping":null},"postal":"1200","state":{"code":null},"city":"Bruxelles","address1":"rue solleveld 20","address2":null,"address3":null,"classification":{"key":"0","value":"Unknown"},"validationResult":0},"serviceTypeCode":"065","packageTypeCode":"02","shipToAccessPoint":true,"isDTR":false}
+RESPONSE : {"availableShipmentOptions":{"carbonNeutral":false,"deliveryConfirmation":true,"returnOfDocument":false,"saturdayDelivery":false,"saturdayPickup":false,"quantumViewNotify":false,"qvnShipNotification":true,"qvnExceptionNotification":false,"qvnDeliveryNotification":false,"directDeliveryOnly":false,"collectOnDelivery":false,"r2rOption":true,"d2rOption":false,"d2rCod":false,"epraReleaseCode":false,"deliverToAddresseeOnly":false}}
+
+========== GetPickupCharges ==========
+
+URL : https://www.ups.com/ship/Pickup/GetPickupCharges
+BODY : {"pickupSelection":{"serviceDate":"2017-08-18T07:30:00.000Z","today":true,"readyTime":"2017-08-18T07:30:00.000Z","closeTime":"2017-08-18T12:00:00.000Z","gmtOffsetInMinutes":-120,"pickupPoint":"Front Door","pickupReference":null},"shipFromAddress":{"country":{"code":"BE","isFromCountry":null,"allowGuestShipping":null},"postal":"1020","state":{"code":null},"city":"Bruxelles","address1":"223 avenue des croix du feu","address2":null,"address3":null,"classification":{"key":"0","value":"Unknown"},"validationResult":0},"paymentAccount":{"number":null,"name":null,"postal":null,"country":null}}
+RESPONSE : {"pickupCharges":{"currencyCode":"EUR","chargeDetail":[{"description":"BASE CHARGE","chargeAmount":"4.96","incentedAmount":null,"taxAmount":"0.00"}],"totalChargeAmount":"6.00","totalIncentedAmount":null,"taxCharges":[{"type":"TVA","monetaryValue":"1.04"}]}}
+
+========== GetAvailablePackagingTypes ==========
+
+URL : https://www.ups.com/ship/Lookup/GetAvailablePackagingTypes
+BODY : {"ShipFrom":{"country":{"code":"BE","isFromCountry":null,"allowGuestShipping":null},"postal":"1020","state":{"code":null},"city":"Bruxelles","address1":"223 avenue des croix du feu","address2":null,"address3":null,"classification":{"key":"0","value":"Unknown"},"validationResult":0},"ShipTo":{"country":{"code":"BE","isFromCountry":null,"allowGuestShipping":null},"postal":"1200","state":{"code":null},"city":"Bruxelles","address1":"rue solleveld 20","address2":null,"address3":null,"classification":{"key":"0","value":"Unknown"},"validationResult":0}}
+RESPONSE : [{"PackageTypeId":"04","PackageTypeName":"UPS Pak","PackageTypeSize":null,"MaxWeight":"99999","MaxWeightMetric":"99999","Length":"17","Width":"13","Height":"1","LengthMetric":"41","WidthMetric":"33","HeightMetric":"3"},{"PackageTypeId":"01","PackageTypeName":"UPS Letter","PackageTypeSize":null,"MaxWeight":"99999","MaxWeightMetric":"99999","Length":"00","Width":"00","Height":"00","LengthMetric":"00","WidthMetric":"00","HeightMetric":"00"},{"PackageTypeId":"02","PackageTypeName":"Customer Packaging","PackageTypeSize":null,"MaxWeight":"99999","MaxWeightMetric":"99999","Length":"00","Width":"00","Height":"00","LengthMetric":"00","WidthMetric":"00","HeightMetric":"00"},{"PackageTypeId":"03","PackageTypeName":"UPS Tube","PackageTypeSize":null,"MaxWeight":"99999","MaxWeightMetric":"99999","Length":"38","Width":"6","Height":"6","LengthMetric":"97","WidthMetric":"19","HeightMetric":"17"},{"PackageTypeId":"21","PackageTypeName":"UPS Express Box","PackageTypeSize":null,"MaxWeight":"99999","MaxWeightMetric":"99999","Length":"19","Width":"13","Height":"4","LengthMetric":"46","WidthMetric":"32","HeightMetric":"10"}]
+
+Tâches :
+==> 1. Client doit indiquer le point où il va récupérer le colis.

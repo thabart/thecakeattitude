@@ -1,0 +1,42 @@
+https://wwwcie.ups.com/ups.app/xml/Locator
+
+<?xml version="1.0"?>
+<AccessRequest xml:lang="en-US">
+  <AccessLicenseNumber>FD300339C9051F5C</AccessLicenseNumber>
+  <UserId>thabart1</UserId>
+  <Password>SORbonne1989</Password>
+</AccessRequest>
+<?xml version="1.0"?>
+<LocatorRequest>
+  <Request>
+    <RequestAction>Locator</RequestAction>
+    <RequestOption>1</RequestOption>
+    <TransactionReference>
+      <CustomerContext>Your Test Case Summary Description</CustomerContext>
+      <XpciVersion>1.0014</XpciVersion>
+    </TransactionReference>
+      </Request>
+      <OriginAddress>
+        <PhoneNumber>
+    		<StructuredPhoneNumber>
+    			<PhoneDialPlanNumber/>
+    			<PhoneLineNumber/>
+    		</StructuredPhoneNumber>
+    	</PhoneNumber>
+        <AddressKeyFormat>
+          	<AddressLine>223 avenue des croix du feu</AddressLine>
+          	<PoliticalDivision2>Bruxelles</PoliticalDivision2>
+          	<CountryCode>BE</CountryCode>
+        </AddressKeyFormat>
+      
+    <MaximumListSize/>
+    
+    </OriginAddress>
+      <Translate>
+        <LanguageCode>ENG</LanguageCode>
+      </Translate>
+      <UnitOfMeasurement>
+        <Code>KM</Code>
+      </UnitOfMeasurement>
+      <LocationID/>
+ </LocatorRequest>

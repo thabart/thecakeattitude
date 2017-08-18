@@ -1,0 +1,80 @@
+URL : https://wwwcie.ups.com/rest/Rate
+
+{     
+	"UPSSecurity": {
+		"UsernameToken": { 
+			"Username": "thabart1",
+			"Password": "SORbonne1989" 
+		},
+		"ServiceAccessToken": { 
+			"AccessLicenseNumber": "FD300339C9051F5C"
+		} 
+	},
+	"RateRequest": {
+		"Request": {
+			"RequestOption": "Rate",
+			"TransactionReference": {     
+				"CustomerContext": "Your Customer Context"             
+			}
+		},
+		"Shipment": {
+			"Shipper": {
+				"Name": "Shipper Name",
+				"ShipperNumber": "Shipper Number",   
+				"Address": {  
+					"AddressLine": [ "223 avenue des croix du feu" ],
+					"City": "Bruxelles",
+					"PostalCode": "1020",
+					"CountryCode": "BE"
+				}
+			},
+			"ShipTo": {
+				"Name": "Ship To Name",  
+				"Address": {
+					"AddressLine": [ "rue solleveld 20" ],   
+					"City": "Bruxelles",
+					"PostalCode": "1200",
+					"CountryCode": "BE"
+				}
+			},
+			"ShipFrom": {
+				"Name": "Ship From Name",
+				"Address": {   
+					"AddressLine": [ "223 avenue des croix du feu" ],
+					"City": "Bruxelles",
+					"PostalCode": "1020",
+					"CountryCode": "BE"
+				}
+			},
+			"Service": {
+				"Code": "03",  
+				"Description": "Service Code Description"   
+			},
+			"Package": {   
+				"PackagingType": {  
+					"Code": "02",  
+					"Description": "Rate"  
+				},        
+				"Dimensions": {  
+					"UnitOfMeasurement": {  
+						"Code": "CM",  
+						"Description": "inches"  
+					},  
+					"Length": "5",   
+					"Width": "4",
+					"Height": "3" 
+				},    
+				"PackageWeight": { 
+					"UnitOfMeasurement": {   
+						"Code": "Lbs",  
+						"Description": "pounds"       
+					},  
+					"Weight": "1"    
+				}     
+			},  
+			"ShipmentRatingOptions": {    
+				"NegotiatedRatesIndicator": ""
+			} 
+		}  
+	}
+} 
