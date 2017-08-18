@@ -2,7 +2,7 @@
 	"UPSSecurity": {
 		"UsernameToken": { 
 			"Username": "thabart1",
-			"Password": "SORbonne1989" 
+			"Password": "CakeAttitude1989" 
 		},
 		"ServiceAccessToken": { 
 			"AccessLicenseNumber": "FD300339C9051F5C"

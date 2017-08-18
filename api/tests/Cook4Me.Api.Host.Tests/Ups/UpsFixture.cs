@@ -14,12 +14,17 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Serialization;
+using Ups.Client;
 using Ups.Client.Params;
+using Ups.Client.Params.Locator;
 using Xunit;
 
 namespace Cook4Me.Api.Host.Tests.MondeRelay
@@ -27,38 +32,86 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
     public class UpsFixture
     {
         private const string _userName = "thabart1";
-        private const string _password = "SORbonne1989";
+        private const string _password = "CakeAttitude1989";
         private const string _accessLicenseNumber = "FD300339C9051F5C";
-        private const string _testUrl = "https://wwwcie.ups.com/rest/Ship";
+        private const string _locationUrl = "https://onlinetools.ups.com/ups.app/xml/Locator";
 
         [Fact]
-        public async Task Ship()
+        public async Task GetLocations()
         {
             var httpHandler = new HttpClientHandler();
             ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
             var client = new HttpClient(httpHandler);
-            var parameter = new ShipmentRequest
+            var parameter = new LocatorRequest
             {
-                Security = new UpsSecurity
+                Security = new AccessRequestType
                 {
-                    ServiceAccessToken = new ServiceAccessToken
+                    AccessLicenseNumber = _accessLicenseNumber,
+                    Password = _password,
+                    UserId = _userName
+                },
+                Body = new LocatorRequestBody
+                {
+                    Request = new RequestType
                     {
-                        AccessLicenseNumber = _accessLicenseNumber
+                        RequestAction = "Locator",
+                        RequestOption = "1",
+                        TransactionReferenceType = new TransactionReferenceType
+                        {
+                            CustomerContext = "Your Test Case Summary Description",
+                            XpciVersion = "1.0014"
+                        }
                     },
-                    UsernameToken = new UsernameToken
+                    Address = new LocatorOriginAddress
                     {
-                        Password = _password,
-                        Username = _userName
+                        PhoneNumber = new StructuredPhoneNumberType(),
+                        Address = new AddressKeyFormatType
+                        {
+                            AddressLine = "223 avenue des croix du feu",
+                            PoliticalDivision2 = "Bruxelles",
+                            CountryCode = "BE"
+                        }
+                    },
+                    Translate = new TranslateType
+                    {
+                        LanguageCode = "ENG"
+                    },
+                    UnitOfMeasurement = new UnitOfMeasurementType
+                    {
+                        Code = "KM"
                     }
                 }
             };
-            var json = JsonConvert.SerializeObject(parameter);
-            var body = new StringContent(json);
+
+            var serializerSecurity = new XmlSerializer(typeof(AccessRequestType));
+            var serializerBody = new XmlSerializer(typeof(LocatorRequestBody));
+            var xmlSecurity = "";
+            var xmlBody = "";
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerSecurity.Serialize(writer, parameter.Security);
+                    xmlSecurity = sww.ToString();
+                }
+            }
+
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerBody.Serialize(writer, parameter.Body);
+                    xmlBody = sww.ToString();
+                }
+            }
+
+            var xml = xmlSecurity + "" + xmlBody;
+            var body = new StringContent(xml);
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 Content = body,
-                RequestUri = new Uri(_testUrl)
+                RequestUri = new Uri(_locationUrl)
             };
             var serializedContent = await client.SendAsync(request).ConfigureAwait(false);
             var res = await serializedContent.Content.ReadAsStringAsync();

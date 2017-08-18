@@ -4,7 +4,7 @@ https://wwwcie.ups.com/ups.app/xml/Locator
 <AccessRequest xml:lang="en-US">
   <AccessLicenseNumber>FD300339C9051F5C</AccessLicenseNumber>
   <UserId>thabart1</UserId>
-  <Password>SORbonne1989</Password>
+  <Password>CakeAttitude1989</Password>
 </AccessRequest>
 <?xml version="1.0"?>
 <LocatorRequest>
@@ -27,10 +27,8 @@ https://wwwcie.ups.com/ups.app/xml/Locator
           	<AddressLine>223 avenue des croix du feu</AddressLine>
           	<PoliticalDivision2>Bruxelles</PoliticalDivision2>
           	<CountryCode>BE</CountryCode>
-        </AddressKeyFormat>
-      
-    <MaximumListSize/>
-    
+        </AddressKeyFormat>      
+    <MaximumListSize/>    
     </OriginAddress>
       <Translate>
         <LanguageCode>ENG</LanguageCode>

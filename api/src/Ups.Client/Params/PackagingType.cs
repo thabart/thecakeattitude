@@ -14,16 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace Ups.Client.Params
 {
-    [JsonObject]
     public class PackagingType
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.PackagingType.Code)]
+        [XmlElement(ElementName = Constants.DtoNames.PackagingTypeNames.Code)]
         public string Code { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.PackagingType.Description)]
+        [XmlElement(ElementName = Constants.DtoNames.PackagingTypeNames.Description)]
         public string Description { get; set; }
     }
 }

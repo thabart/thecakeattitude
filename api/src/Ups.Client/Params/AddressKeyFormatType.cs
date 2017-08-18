@@ -14,16 +14,19 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace Ups.Client.Params
 {
-    [JsonObject]
-    public class Phone
+    public class AddressKeyFormatType
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.Phone.Number)]
-        public string Number { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.Phone.Extension)]
-        public string Extension { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.AddressLine)]
+        public string AddressLine { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.CountryCode)]
+        public string CountryCode { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.PoliticalDivision1)]
+        public string PoliticalDivision1 { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.PoliticalDivision2)]
+        public string PoliticalDivision2 { get; set; }
     }
 }

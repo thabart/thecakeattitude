@@ -20,23 +20,6 @@ namespace Ups.Client
     {
         public static class DtoNames
         {
-            public static class UpsSecurity
-            {
-                public const string UserNameToken = "UsernameToken";
-                public const string ServiceAccessToken = "ServiceAccessToken";
-            }
-
-            public static class UsernameToken
-            {
-                public const string Username = "Username";
-                public const string Password = "Password";
-            }
-
-            public static class ServiceAccessToken
-            {
-                public const string AccessLicenseNumber = "AccessLicenseNumber";
-            }
-
             public static class ShipperType
             {
                 public const string Name = "Name";
@@ -46,15 +29,6 @@ namespace Ups.Client
                 public const string ShipperNumber = "ShipperNumber";
                 public const string FaxNumber = "FaxNumber";
                 public const string Address = "Address";
-            }
-
-            public static class Address
-            {
-                public const string AddressLine = "AddressLine";
-                public const string City = "City";
-                public const string StateProvinceCode = "StateProvinceCode";
-                public const string PostalCode = "PostalCode";
-                public const string CountryCode = "CountryCode";
             }
 
             public static class Phone
@@ -90,28 +64,10 @@ namespace Ups.Client
                 public const string ShipmentCharge = "ShipmentCharge";
             }
 
-            public static class ServiceType
+            public static class ServiceTypeNames
             {
                 public const string Code = "Code";
                 public const string Description = "Description";
-            }
-
-            public static class PackagingType
-            {
-                public const string Code = "Code";
-                public const string Description = "Description";
-            }
-
-            public static class ShipUnitOfMeasurementType
-            {
-                public const string Code = "Code";
-                public const string Description = "Description";
-            }
-
-            public static class PackageWeightType
-            {
-                public const string UnitOfMeasurement = "UnitOfMeasurement";
-                public const string Weight = "Weight";
             }
 
             public static class PackageType
@@ -136,17 +92,119 @@ namespace Ups.Client
                 public const string HttpUserAgent = "HTTPUserAgent";
             }
 
-            public static class ShipmentRequestBody
+            // Common.
+            public static class UpsSecurityNames
+            {
+                public const string UserNameToken = "UsernameToken";
+                public const string ServiceAccessToken = "ServiceAccessToken";
+            }
+
+            public static class UsernameTokenTypeNames
+            {
+                public const string Username = "Username";
+                public const string Password = "Password";
+            }
+
+            public static class AccessRequestTypeNames
+            {
+                public const string AccessLicenseNumber = "AccessLicenseNumber";
+                public const string UserId = "UserId";
+                public const string Password = "Password";
+            }
+
+            public static class ServiceAccessTokenNames
+            {
+                public const string AccessLicenseNumber = "AccessLicenseNumber";
+            }
+
+            public static class RequestTypeNames
+            {
+                public const string RequestAction = "RequestAction";
+                public const string RequestOption = "RequestOption";
+                public const string TransactionReferenceType = "TransactionReferenceType";
+            }
+
+            public static class TransactionReferenceTypeNames
+            {
+                public const string CustomerContext = "CustomerContext";
+                public const string XpciVersion = "XpciVersion";
+            }
+
+            public static class AddressTypeNames
+            {
+                public const string AddressLine = "AddressLine";
+                public const string City = "City";
+                public const string StateProvinceCode = "StateProvinceCode";
+                public const string PostalCode = "PostalCode";
+                public const string CountryCode = "CountryCode";
+            }
+
+            public static class AddressKeyFormatTypeNames
+            {
+                public const string AddressLine = "AddressLine";
+                public const string PoliticalDivision1 = "PoliticalDivision1";
+                public const string PoliticalDivision2 = "PoliticalDivision2";
+                public const string CountryCode = "CountryCode";
+            }
+
+            public static class UnitOfMeasurementTypeNames
+            {
+                public const string Code = "Code";
+                public const string Description = "Description";
+            }
+
+            public static class PackagingTypeNames
+            {
+                public const string Code = "Code";
+                public const string Description = "Description";
+            }
+
+            public static class PackageWeightTypeNames
+            {
+                public const string UnitOfMeasurement = "UnitOfMeasurement";
+                public const string Weight = "Weight";
+            }
+
+            public static class StructuredPhoneNumberTypeNames
+            {
+                public const string StructuredPhoneNumberType = "StructuredPhoneNumberType";
+                public const string PhoneLineNumber = "PhoneLineNumber";
+            }
+
+            // Locator.
+            public static class LocatorRequestNames
+            {
+                public const string Security = "AccessRequest";
+                public const string Body = "LocatorRequest";
+            }
+
+            public static class LocatorRequestBodyNames
+            {
+                public const string Request = "Request";
+                public const string Address = "OriginAddress";
+                public const string Translate = "Translate";
+                public const string UnitOfMeasurement = "UnitOfMeasurement";
+                public const string LocationID = "LocationID";
+            }
+
+            public static class LocatorOriginAddressNames
+            {
+                public const string PhoneNumber = "PhoneNumber";
+                public const string Address = "AddressKeyFormat";
+            }
+
+            // Shipment.
+            public static class ShipmentRequestNames
+            {
+                public const string Security = "UPSSecurity";
+                public const string Body = "ShipmentRequest";
+            }
+
+            public static class ShipmentRequestBodyNames
             {
                 public const string Request = "Request";
                 public const string Shipment = "Shipment";
                 public const string LabelSpecification = "LabelSpecification";
-            }
-
-            public static class ShipmentRequest
-            {
-                public const string Security = "UPSSecurity";
-                public const string Body = "ShipmentRequest";
             }
         }
     }

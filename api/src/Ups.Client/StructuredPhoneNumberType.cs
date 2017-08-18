@@ -14,14 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
-namespace Ups.Client.Params
+namespace Ups.Client
 {
-    [JsonObject]
-    public class BillShipperType
+    public class StructuredPhoneNumberType
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.BillShipperType.AccountNumber)]
-        public string AccountNumber { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.StructuredPhoneNumberTypeNames.StructuredPhoneNumberType)]
+        public string PhoneDialPlanNumber { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.StructuredPhoneNumberTypeNames.PhoneLineNumber)]
+        public string PhoneLineNumber { get; set; }
     }
 }

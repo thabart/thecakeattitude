@@ -14,14 +14,13 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace Ups.Client.Params
 {
-    [JsonObject]
     public class ServiceAccessToken
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.ServiceAccessToken.AccessLicenseNumber)]
+        [XmlElement(ElementName = Constants.DtoNames.ServiceAccessTokenNames.AccessLicenseNumber)]
         public string AccessLicenseNumber { get; set; }
     }
 }

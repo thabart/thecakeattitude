@@ -16,13 +16,18 @@
 
 using System.Xml.Serialization;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Params.Locator
 {
-    public class PackageWeightType
+    [XmlRoot(Constants.DtoNames.LocatorRequestNames.Body)]
+    public class LocatorRequestBody
     {
-        [XmlElement(ElementName = Constants.DtoNames.PackageWeightTypeNames.UnitOfMeasurement)]
+        [XmlElement(ElementName = Constants.DtoNames.LocatorRequestBodyNames.Request)]
+        public RequestType Request { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorRequestBodyNames.Address)]
+        public LocatorOriginAddress Address { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorRequestBodyNames.Translate)]
+        public TranslateType Translate { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorRequestBodyNames.UnitOfMeasurement)]
         public UnitOfMeasurementType UnitOfMeasurement { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.PackageWeightTypeNames.Weight)]
-        public string Weight { get; set; }
     }
 }

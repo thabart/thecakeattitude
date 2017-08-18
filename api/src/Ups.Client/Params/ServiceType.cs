@@ -15,15 +15,15 @@
 #endregion
 
 using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace Ups.Client.Params
 {
-    [JsonObject]
     public class ServiceType
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.ServiceType.Code)]
+        [XmlElement(ElementName = Constants.DtoNames.ServiceTypeNames.Code)]
         public string Code { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.ServiceType.Description)]
+        [XmlElement(ElementName = Constants.DtoNames.ServiceTypeNames.Description)]
         public string Description { get; set; }
     }
 }

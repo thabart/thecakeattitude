@@ -14,18 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Params.Locator
 {
-    [JsonObject]
-    public class ShipmentRequestBody
+    public class LocatorRequest
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.ShipmentRequestBody.Request)]
-        public Request Request { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.ShipmentRequestBody.Shipment)]
-        public Shipment Shipment { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.ShipmentRequestBody.LabelSpecification)]
-        public LabelSpecificationType LabelSpecification { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorRequestNames.Security)]
+        public AccessRequestType Security { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorRequestNames.Body)]
+        public LocatorRequestBody Body { get; set; }
     }
 }

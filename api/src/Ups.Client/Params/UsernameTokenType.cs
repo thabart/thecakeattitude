@@ -14,20 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace Ups.Client.Params
 {
-    [JsonObject]
-    public class PackageDimensionType
+    public class UsernameTokenType
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.PackageDimensionType.UnitOfMeasurement)]
-        public ShipUnitOfMeasurementType UnitOfMeasurement { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.PackageDimensionType.Length)]
-        public string Length { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.PackageDimensionType.Width)]
-        public string Width { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.PackageDimensionType.Height)]
-        public string Height { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.UsernameTokenTypeNames.Username)]
+        public string Username { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.UsernameTokenTypeNames.Password)]
+        public string Password { get; set; }
     }
 }

@@ -14,16 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Params.Shipment
 {
-    [JsonObject]
-    public class UsernameToken
+    public class ShipmentRequest
     {
-        [JsonProperty(PropertyName = Constants.DtoNames.UsernameToken.Username)]
-        public string Username { get; set; }
-        [JsonProperty(PropertyName = Constants.DtoNames.UsernameToken.Password)]
-        public string Password { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentRequestNames.Security)]
+        public UpsSecurity Security { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentRequestNames.Body)]
+        public ShipmentRequestBody Body { get; set; }
     }
 }

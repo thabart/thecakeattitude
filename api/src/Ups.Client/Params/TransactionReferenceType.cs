@@ -14,12 +14,15 @@
 // limitations under the License.
 #endregion
 
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace Ups.Client.Params
 {
-    [JsonObject]
-    public class LabelImageFormatType
+    public class TransactionReferenceType
     {
+        [XmlElement(ElementName = Constants.DtoNames.TransactionReferenceTypeNames.CustomerContext)]
+        public string CustomerContext { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.TransactionReferenceTypeNames.XpciVersion)]
+        public string XpciVersion { get; set; }
     }
 }
