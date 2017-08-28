@@ -144,16 +144,14 @@ namespace Ups.Client
                 public const string AddressLine = "AddressLine";
                 public const string PoliticalDivision1 = "PoliticalDivision1";
                 public const string PoliticalDivision2 = "PoliticalDivision2";
+                public const string PoliticalDivision3 = "PoliticalDivision3";
                 public const string CountryCode = "CountryCode";
+                public const string ConsigneeName = "ConsigneeName";
+                public const string PostcodePrimaryLow = "PostcodePrimaryLow";
+                public const string PostcodeExtendedLow = "PostcodeExtendedLow";
             }
 
             public static class UnitOfMeasurementTypeNames
-            {
-                public const string Code = "Code";
-                public const string Description = "Description";
-            }
-
-            public static class PackagingTypeNames
             {
                 public const string Code = "Code";
                 public const string Description = "Description";
@@ -169,6 +167,18 @@ namespace Ups.Client
             {
                 public const string StructuredPhoneNumberType = "StructuredPhoneNumberType";
                 public const string PhoneLineNumber = "PhoneLineNumber";
+            }
+
+            public static class GeocodeNames
+            {
+                public const string Latitude = "Latitude";
+                public const string Longitude = "Longitude";
+            }
+
+            public static class TypeParameterNames
+            {
+                public const string Code = "Code";
+                public const string Description = "Description";
             }
 
             // Locator.
@@ -191,6 +201,114 @@ namespace Ups.Client
             {
                 public const string PhoneNumber = "PhoneNumber";
                 public const string Address = "AddressKeyFormat";
+            }
+
+            // Locator response
+            public static class LocatorResponseBodyNames
+            {
+                public const string TransactionReference = "TransactionReference";
+                public const string ResponseStatusCode = "ResponseStatusCode";
+                public const string ResponseStatusDescription = "ResponseStatusDescription";
+                public const string Error = "Error";
+            }
+
+            public static class LocatorResponseNames
+            {
+                public const string LocatorResponse = "LocatorResponse";
+                public const string Response = "Response";
+                public const string AllowAllConfidenceLevels = "AllowAllConfidenceLevels";
+                public const string Geocode = "Geocode";
+                public const string SearchResults = "SearchResults";
+            }
+
+            public static class LocatorSearchResultsNames
+            {
+                public const string GeocodeCandidate = "GeocodeCandidate";
+                public const string Disclaimer = "Disclaimer";
+                public const string DropLocation = "DropLocation";
+                public const string AvailableLocationAttributes = "AvailableLocationAttributes";
+                public const string ActiveAvailableAccessPointIndicator = "ActiveAvailableAccessPointIndicator";
+            }
+
+            public static class IntegratedVoiceResponseInformationNames
+            {
+                public const string PhraseId = "PhraseID";
+                public const string TextToSpeechIndicator = "TextToSpeechIndicator";
+            }
+
+            public static class LocationAttributeNames
+            {
+                public const string OptionType = "OptionType";
+                public const string OptionCode = "OptionCode";
+            }
+
+            public static class LocatorDropLocationNames
+            {
+                public const string LocationId = "LocationID";
+                public const string OriginOrDestination = "OriginOrDestination";
+                public const string Ivr = "IVR";
+                public const string Geocode = "Geocode";
+                public const string AddressKeyFormat = "AddressKeyFormat";
+                public const string PhoneNumber = "PhoneNumber";
+                public const string FaxNumber = "FaxNumber";
+                public const string EmailAddress = "EMailAddress";
+                public const string LocationAttribute = "LocationAttribute";
+                public const string Distance = "Distance";
+                public const string SpecialInstructions = "SpecialInstructions";
+                public const string LatestGroundDropOffTime = "LatestGroundDropOffTime";
+                public const string LatestAirDropOffTime = "LatestAirDropOffTime";
+                public const string AdditionalChargeIndicator = "AdditionalChargeIndicator";
+                public const string StandardHoursOfOperation = "StandardHoursOfOperation";
+                public const string NonStandardHoursOfOperation = "NonStandardHoursOfOperation";
+                public const string WillCallHoursOfOperation = "WillCallHoursOfOperation";
+                public const string Number = "Number";
+                public const string HomePageURL = "HomePageURL";
+                public const string Comments = "Comments";
+                public const string AdditionalComments = "AdditionalComments";
+                public const string Disclaimer = "Disclaimer";
+                public const string Slic = "SLIC";
+                public const string Timezone = "Timezone";
+                public const string FacilityType = "FacilityType";
+                public const string OperatingHours = "OperatingHours";
+                public const string LocalizedInstruction = "LocalizedInstruction";
+                public const string PromotionInformation = "PromotionInformation";
+                public const string SortCode = "SortCode";
+                public const string ServiceOfferingList = "ServiceOfferingList";
+                public const string DisplayPhoneNumberIndicator = "DisplayPhoneNumberIndicator";
+                public const string AccessPointInformation = "AccessPointInformation";
+                public const string LocationImage = "LocationImage";
+                public const string PromotionalLinkURL = "PromotionalLinkURL";
+                public const string LocationNewIndicator = "LocationNewIndicator";
+                public const string FeaturedRank = "FeaturedRank";
+                public const string WillCallLocationIndicator = "WillCallLocationIndicator";
+            }
+
+            public static class TransportationPickUpScheduleNames
+            {
+
+            }
+
+            public static class LocatorGeocodeCandidateNames
+            {
+                public const string AddressKeyFormat = "AddressKeyFormat";
+                public const string Geocode = "Geocode";
+                public const string LandmarkName = "LandmarkName";
+            }
+
+            public static class LocatorErrorResponseNames
+            {
+                public const string ErrorSeverity = "ErrorSeverity";
+                public const string ErrorCode = "ErrorCode";
+                public const string ErrorDescription = "ErrorDescription";
+                public const string MinimumRetrySeconds = "MinimumRetrySeconds";
+                public const string ErrorLocation = "ErrorLocation";
+                public const string ErrorDigest = "ErrorDigest";
+            }
+
+            public static class ErrorLocationNames
+            {
+                public const string ErrorLocationElementName = "ErrorLocationElementName";
+                public const string ErrorLocationAttributeName = "ErrorLocationAttributeName";
             }
 
             // Shipment.

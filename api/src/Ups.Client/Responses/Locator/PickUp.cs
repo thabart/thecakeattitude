@@ -14,15 +14,9 @@
 // limitations under the License.
 #endregion
 
-using System.Xml.Serialization;
-
-namespace Ups.Client.Params
+namespace Ups.Client.Responses.Locator
 {
-    public class PackagingType
+    public class PickUp
     {
-        [XmlElement(ElementName = Constants.DtoNames.PackagingTypeNames.Code)]
-        public string Code { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.PackagingTypeNames.Description)]
-        public string Description { get; set; }
     }
 }

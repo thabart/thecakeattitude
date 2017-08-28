@@ -17,13 +17,13 @@
 using System.Xml.Serialization;
 using Ups.Client.Common;
 
-namespace Ups.Client.Params.Locator
+namespace Ups.Client.Responses.Locator
 {
-    public class LocatorOriginAddress
+    public class LocationAttribute
     {
-        [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.PhoneNumber)]
-        public StructuredPhoneNumberType PhoneNumber { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.Address)]
-        public AddressKeyFormatType Address { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocationAttributeNames.OptionType)]
+        public TypeParameter OptionType { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocationAttributeNames.OptionCode)]
+        public OptionCode OptionCode { get; set; }
     }
 }

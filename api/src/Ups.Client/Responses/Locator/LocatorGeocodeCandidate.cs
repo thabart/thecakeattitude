@@ -15,18 +15,17 @@
 #endregion
 
 using System.Xml.Serialization;
+using Ups.Client.Common;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Responses.Locator
 {
-    public class AddressKeyFormatType
+    public class LocatorGeocodeCandidate
     {
-        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.AddressLine)]
-        public string AddressLine { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.CountryCode)]
-        public string CountryCode { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.PoliticalDivision1)]
-        public string PoliticalDivision1 { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.PoliticalDivision2)]
-        public string PoliticalDivision2 { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorGeocodeCandidateNames.AddressKeyFormat)]
+        public AddressKeyFormatType AddressKeyFormat { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorGeocodeCandidateNames.Geocode)]
+        public Geocode Geocode { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorGeocodeCandidateNames.LandmarkName)]
+        public string LandmarkName { get; set; }
     }
 }

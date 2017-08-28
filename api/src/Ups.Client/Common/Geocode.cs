@@ -15,15 +15,14 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
 
-namespace Ups.Client.Params.Locator
+namespace Ups.Client.Common
 {
-    public class LocatorOriginAddress
+    public class Geocode
     {
-        [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.PhoneNumber)]
-        public StructuredPhoneNumberType PhoneNumber { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.Address)]
-        public AddressKeyFormatType Address { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.GeocodeNames.Latitude)]
+        public string Latitude { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.GeocodeNames.Longitude)]
+        public string Longitude { get; set; }
     }
 }

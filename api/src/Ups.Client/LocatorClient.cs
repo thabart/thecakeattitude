@@ -20,9 +20,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using Ups.Client.Common;
 using Ups.Client.Factories;
 using Ups.Client.Params;
 using Ups.Client.Params.Locator;
+using Ups.Client.Responses.Locator;
 
 namespace Ups.Client
 {
@@ -132,8 +134,12 @@ namespace Ups.Client
             };
             var serializedContent = await client.SendAsync(req).ConfigureAwait(false);
             var res = await serializedContent.Content.ReadAsStringAsync();
-
-            string s = "";
+            var deserializer = new XmlSerializer(typeof(LocatorResponse));
+            using (TextReader reader = new StringReader(res))
+            {
+                var r = (LocatorResponse)deserializer.Deserialize(reader);
+                string s = "";
+            }
         }
     }
 }

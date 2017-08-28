@@ -14,16 +14,13 @@
 // limitations under the License.
 #endregion
 
-using System.Xml.Serialization;
-using Ups.Client.Common;
-
-namespace Ups.Client.Params.Locator
+namespace Ups.Client.Responses.Locator
 {
-    public class LocatorOriginAddress
+    public class OptionCode
     {
-        [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.PhoneNumber)]
-        public StructuredPhoneNumberType PhoneNumber { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.Address)]
-        public AddressKeyFormatType Address { get; set; }
+        public string Category { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public string Name { get; set; }
     }
 }
