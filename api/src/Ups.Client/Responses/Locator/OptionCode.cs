@@ -14,13 +14,21 @@
 // limitations under the License.
 #endregion
 
+using System.Xml.Serialization;
+
 namespace Ups.Client.Responses.Locator
 {
     public class OptionCode
     {
+        [XmlElement(ElementName = Constants.DtoNames.OptionCodeNames.Category)]
         public string Category { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.OptionCodeNames.Code)]
         public string Code { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.OptionCodeNames.Description)]
         public string Description { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.OptionCodeNames.Name)]
         public string Name { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.OptionCodeNames.TransportationPickUpSchedule)]
+        public TransportationPickUpSchedule TransportationPickUpSchedule { get; set; }
     }
 }

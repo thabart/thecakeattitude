@@ -19,9 +19,9 @@ using System.Xml.Serialization;
 
 namespace Ups.Client.Responses.Locator
 {
-    public class TransportationPickUpSchedule
+    public class PrivateNetworkList
     {
-        [XmlElement(ElementName = Constants.DtoNames.TransportationPickUpScheduleNames.PickUp)]
-        public List<PickUp> PickUp { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PrivateNetworkListNames.PrivateNetwork)]
+        public List<PrivateNetwork> PrivateNetwork { get; set; }
     }
 }

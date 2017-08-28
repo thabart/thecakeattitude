@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Ups.Client.Common;
 
@@ -39,10 +40,10 @@ namespace Ups.Client.Responses.Locator
         public string EmailAddress { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LocationAttribute)]
         public LocationAttribute LocationAttribute { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.Distance)]
-        // public string Distance { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.SpecialInstructions)]
-        // public string Distance { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.Distance)]
+        public Distance Distance { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.SpecialInstructions)]
+        public SpecialInstructions SpecialInstructions { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LatestGroundDropOffTime)]
         public string LatestGroundDropOffTime { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LatestAirDropOffTime)]
@@ -61,8 +62,8 @@ namespace Ups.Client.Responses.Locator
         public string HomePageURL { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.Comments)]
         public string Comments { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.AdditionalComments)]
-        // public string AdditionalComments { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.AdditionalComments)]
+        public AdditionalComments AdditionalComments { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.Disclaimer)]
         public string Disclaimer { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.Slic)]
@@ -71,22 +72,22 @@ namespace Ups.Client.Responses.Locator
         public string Timezone { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.FacilityType)]
         public string FacilityType { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.OperatingHours)]
-        // public string OperatingHours { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LocalizedInstruction)]
-        // public string LocalizedInstruction { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.PromotionInformation)]
-        // public string PromotionInformation { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.SortCode)]
-        // public string SortCode { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.ServiceOfferingList)]
-        // public string ServiceOfferingList { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.OperatingHours)]
+        public OperatingHours OperatingHours { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LocalizedInstruction)]
+        public LocalizedInstruction LocalizedInstruction { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.PromotionInformation)]
+        public List<PromotionInformation> PromotionInformation { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.SortCode)]
+        public SortCode SortCode { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.ServiceOfferingList)]
+        public ServiceOfferingList ServiceOfferingList { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.DisplayPhoneNumberIndicator)]
         public string DisplayPhoneNumberIndicator { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.AccessPointInformation)]
-        // public string AccessPointInformation { get; set; }
-        // [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LocationImage)]
-        // public string LocationImage { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.AccessPointInformation)]
+        public AccessPointInformation AccessPointInformation { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LocationImage)]
+        public LocationImage LocationImage { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.LocationNewIndicator)]
         public string LocationNewIndicator { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.PromotionalLinkURL)]

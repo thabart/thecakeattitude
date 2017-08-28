@@ -15,6 +15,7 @@
 #endregion
 
 using System.Xml.Serialization;
+using Ups.Client.Common;
 
 namespace Ups.Client.Params
 {

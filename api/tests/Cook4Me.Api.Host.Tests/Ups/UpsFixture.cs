@@ -44,7 +44,7 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 },
                 Address = new UpsAddressParameter
                 {
-                    AddressLine = "223 avenue des croix du feu",
+                    AddressLine = "05555 avenue des croix du feu",
                     City = "Bruxelles",
                     Country = "BE"
                 }

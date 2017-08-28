@@ -27,11 +27,9 @@ namespace Ups.Client.Responses.Locator
         public string Disclaimer { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorSearchResultsNames.DropLocation)]
         public List<LocatorDropLocation> DropLocation { get; set; }
-        /*
         [XmlElement(ElementName = Constants.DtoNames.LocatorSearchResultsNames.AvailableLocationAttributes)]
         public AvailableLocationAttribute AvailableLocationAttributes { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorSearchResultsNames.ActiveAvailableAccessPointIndicator)]
         public string ActiveAvailableAccessPointIndicator { get; set; }
-        */
     }
 }

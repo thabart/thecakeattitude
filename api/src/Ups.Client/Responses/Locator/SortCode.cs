@@ -14,14 +14,15 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
 using System.Xml.Serialization;
 
 namespace Ups.Client.Responses.Locator
 {
-    public class TransportationPickUpSchedule
+    public class SortCode
     {
-        [XmlElement(ElementName = Constants.DtoNames.TransportationPickUpScheduleNames.PickUp)]
-        public List<PickUp> PickUp { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.SortCodeNames.HubSortCode)]
+        public string HubSortCode { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.SortCodeNames.FreightSortFacilityCode)]
+        public string FreightSortFacilityCode { get; set; }
     }
 }

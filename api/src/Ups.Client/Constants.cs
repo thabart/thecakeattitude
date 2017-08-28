@@ -20,6 +20,100 @@ namespace Ups.Client
     {
         public static class DtoNames
         {
+            public static class AvailableLocationAttributeNames
+            {
+                public const string OptionType = "OptionType";
+                public const string OptionCode = "OptionCode";
+            }
+
+            public static class LocationImageNames
+            {
+                public const string SecureURL = "SecureURL";
+                public const string NonSecureURL = "NonSecureURL";
+            }
+
+            public static class AccessPointInformationNames
+            {
+                public const string PublicAccessPointId = "PublicAccessPointID";
+                public const string ImageUrl = "ImageURL";
+                public const string BusinessClassificationList = "BusinessClassificationList";
+                public const string AccessPointStatus = "AccessPointStatus";
+                public const string FacilitySlic = "FacilitySLIC";
+                public const string Availability = "Availability";
+                public const string PrivateNetworkList = "PrivateNetworkList";
+            }
+
+            public static class BusinessClassificationListNames
+            {
+                public const string BusinessClassification = "BusinessClassification";
+            }
+
+            public static class BusinessClassificationNames
+            {
+                public const string Code = "Code";
+                public const string Description = "Description";
+            }
+
+            public static class AccessPointStatusNames
+            {
+                public const string Code = "Code";
+                public const string Description = "Description";
+            }
+
+            public static class AvailabilityNames
+            {
+                public const string ShippingAvailability = "ShippingAvailability";
+                public const string DcrAvailability = "DCRAvailability";
+            }
+
+            public static class ShippingAvailabilityNames
+            {
+                public const string AvailableIndicator = "AvailableIndicator";
+                public const string UnavailableReason = "UnavailableReason";
+                public const string Code = "Code";
+                public const string Description = "Description";
+            }
+
+            public static class DcrAvailabilityNames
+            {
+                public const string AvailableIndicator = "AvailableIndicator";
+                public const string UnavailableReason = "UnavailableReason";
+            }
+
+            public static class UnavailableReasonNames
+            {
+                public const string Code = "Code";
+                public const string Description = "Description";
+            }
+
+            public static class PrivateNetworkListNames
+            {
+                public const string PrivateNetwork = "PrivateNetwork";
+            }
+
+            public static class PrivateNetworkNames
+            {
+                public const string NetworkId = "NetworkID";
+                public const string NetworkDescription = "NetworkDescription";
+            }
+
+            public static class ServiceOfferingListNames
+            {
+                public const string ServiceOffering = "ServiceOffering";
+            }
+
+            public static class ServiceOfferingNames
+            {
+                public const string Code = "Code";
+                public const string Description = "Description";
+            }
+
+            public static class SortCodeNames
+            {
+                public const string HubSortCode = "HubSortCode";
+                public const string FreightSortFacilityCode = "FreightSortFacilityCode";
+            }
+
             public static class ShipperType
             {
                 public const string Name = "Name";
@@ -29,6 +123,18 @@ namespace Ups.Client
                 public const string ShipperNumber = "ShipperNumber";
                 public const string FaxNumber = "FaxNumber";
                 public const string Address = "Address";
+            }
+
+            public static class PromotionInformationNames
+            {
+                public const string Locale = "Locale";
+                public const string Promotion = "Promotion";
+            }
+
+            public static class LocalizedInstructionNames
+            {
+                public const string Locale = "Locale";
+                public const string Last50ftInstruction = "Last50ftInstruction";
             }
 
             public static class Phone
@@ -181,6 +287,16 @@ namespace Ups.Client
                 public const string Description = "Description";
             }
 
+            public static class OptionCodeNames
+            {
+                public const string Category = "Category";
+                public const string Code = "Code";
+                public const string Description = "Description";
+                public const string Name = "Name";
+                public const string TransportationPickUpSchedule = "TransportationPickUpSchedule";
+
+            }
+
             // Locator.
             public static class LocatorRequestNames
             {
@@ -283,9 +399,50 @@ namespace Ups.Client
                 public const string WillCallLocationIndicator = "WillCallLocationIndicator";
             }
 
+            public static class OperatingHoursNames
+            {
+                public const string StandardHours = "StandardHours";
+            }
+
+            public static class StandardHoursNames
+            {
+                public const string HoursType = "HoursType";
+                public const string DayOfWeek = "DayOfWeek";
+            }
+
+            public static class DayOfWeekNames
+            {
+                public const string Day = "Day";
+                public const string OpenHours = "OpenHours";
+                public const string CloseHours = "CloseHours";
+                public const string LatestDropOffHours = "LatestDropOffHours";
+                public const string PrepHours = "PrepHours";
+                public const string ClosedIndicator = "ClosedIndicator";
+                public const string Open24HoursIndicator = "Open24HoursIndicator";
+            }
+
             public static class TransportationPickUpScheduleNames
             {
+                public const string PickUp = "PickUp";
+            }
 
+            public static class PickUpNames
+            {
+                public const string DayOfWeek = "DayOfWeek";
+                public const string PickUpDetails = "PickUpDetails";
+                public const string PickUpTime = "PickUpTime";
+                public const string NoPickUpIndicator = "NoPickUpIndicator";
+            }
+
+            public static class DistanceNames
+            {
+                public const string Value = "Value";
+                public const string UnitOfMeasurement = "UnitOfMeasurement";
+            }
+
+            public static class SpecialInstructionsNames
+            {
+                public const string Segment = "Segment";
             }
 
             public static class LocatorGeocodeCandidateNames
@@ -311,8 +468,19 @@ namespace Ups.Client
                 public const string ErrorLocationAttributeName = "ErrorLocationAttributeName";
             }
 
+            public static class AdditionalCommentsNames
+            {
+                public const string CommentType = "CommentType";
+            }
+
+            public static class CommentTypeNames
+            {
+                public const string Code = "Code";
+                public const string Text = "Text";
+            }
+
             // Shipment.
-            public static class ShipmentRequestNames
+                public static class ShipmentRequestNames
             {
                 public const string Security = "UPSSecurity";
                 public const string Body = "ShipmentRequest";

@@ -14,9 +14,16 @@
 // limitations under the License.
 #endregion
 
+using System.Xml.Serialization;
+using Ups.Client.Common;
+
 namespace Ups.Client.Responses.Locator
 {
     public class AvailableLocationAttribute
     {
+        [XmlElement(ElementName = Constants.DtoNames.AvailableLocationAttributeNames.OptionCode)]
+        public OptionCode OptionCode { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AvailableLocationAttributeNames.OptionType)]
+        public TypeParameter OptionType { get; set; }
     }
 }

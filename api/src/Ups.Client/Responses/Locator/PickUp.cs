@@ -14,9 +14,19 @@
 // limitations under the License.
 #endregion
 
+using System.Xml.Serialization;
+
 namespace Ups.Client.Responses.Locator
 {
     public class PickUp
     {
+        [XmlElement(ElementName = Constants.DtoNames.PickUpNames.DayOfWeek)]
+        public string DayOfWeek { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PickUpNames.PickUpDetails)]
+        public string PickUpDetails { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PickUpNames.PickUpTime)]
+        public string PickUpTime { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PickUpNames.NoPickUpIndicator)]
+        public string NoPickUpIndicator { get; set; }
     }
 }

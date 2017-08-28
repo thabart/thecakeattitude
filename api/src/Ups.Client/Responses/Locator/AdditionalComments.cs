@@ -16,13 +16,11 @@
 
 using System.Xml.Serialization;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Responses.Locator
 {
-    public class UnitOfMeasurementType
+    public class AdditionalComments
     {
-        [XmlElement(ElementName = Constants.DtoNames.UnitOfMeasurementTypeNames.Code)]
-        public string Code { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.UnitOfMeasurementTypeNames.Description)]
-        public string Description { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AdditionalCommentsNames.CommentType)]
+        public CommentType CommentType { get; set; }
     }
 }
