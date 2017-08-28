@@ -27,14 +27,13 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
         private const string _userName = "thabart1";
         private const string _password = "CakeAttitude1989";
         private const string _accessLicenseNumber = "FD300339C9051F5C";
-        private const string _locationUrl = "https://onlinetools.ups.com/ups.app/xml/Locator";
 
         [Fact]
         public async Task GetLocations()
         {
             var httpClientFactory = new HttpClientFactory();
             var locatorClient = new LocatorClient(httpClientFactory);
-            await locatorClient.GetLocations(new GetLocationsParameter
+            var result = await locatorClient.GetLocations(new GetLocationsParameter
             {
                 Credentials = new UpsCredentials
                 {
@@ -49,6 +48,7 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Country = "BE"
                 }
             });
+            string s = "";
         }
     }
 }

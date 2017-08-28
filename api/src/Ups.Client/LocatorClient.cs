@@ -30,7 +30,7 @@ namespace Ups.Client
 {
     public interface ILocatorClient
     {
-        Task GetLocations(GetLocationsParameter parameter);
+        Task<LocatorResponse> GetLocations(GetLocationsParameter parameter);
     }
 
     internal class LocatorClient : ILocatorClient
@@ -43,7 +43,7 @@ namespace Ups.Client
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task GetLocations(GetLocationsParameter parameter)
+        public async Task<LocatorResponse> GetLocations(GetLocationsParameter parameter)
         {
             if (parameter == null)
             {
@@ -137,8 +137,7 @@ namespace Ups.Client
             var deserializer = new XmlSerializer(typeof(LocatorResponse));
             using (TextReader reader = new StringReader(res))
             {
-                var r = (LocatorResponse)deserializer.Deserialize(reader);
-                string s = "";
+                return (LocatorResponse)deserializer.Deserialize(reader);
             }
         }
     }

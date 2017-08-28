@@ -18,6 +18,13 @@ namespace Cook4Me.Api.Host
 {
     internal static class Constants
     {
+        public static class UpsCredentials
+        {
+            public const string _userName = "thabart1";
+            public const string _password = "CakeAttitude1989";
+            public const string _accessLicenseNumber = "FD300339C9051F5C";
+        }
+
         public static class Assets
         {
             public const string PartialShop = "./wwwroot/shops/shop_template.json";

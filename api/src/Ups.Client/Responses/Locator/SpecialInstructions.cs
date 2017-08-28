@@ -16,7 +16,7 @@
 
 using System.Xml.Serialization;
 
-namespace Ups.Client.Responses
+namespace Ups.Client.Responses.Locator
 {
     public class SpecialInstructions
     {

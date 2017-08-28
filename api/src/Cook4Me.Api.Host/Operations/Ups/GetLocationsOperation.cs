@@ -17,19 +17,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Ups.Client;
 using Ups.Client.Params;
 
 namespace Cook4Me.Api.Host.Operations.Ups
 {
     public interface IGetLocationsOperation
     {
-
+        Task<IActionResult> Execute(GetLocationsParameter parameter);   
     }
 
     internal class GetLocationsOperation : IGetLocationsOperation
     {
-        public GetLocationsOperation()
+        private readonly ILocatorClient _locatorClient;
+
+        public GetLocationsOperation(ILocatorClient locatorClient)
         {
+            _locatorClient = locatorClient;
         }
 
         public async Task<IActionResult> Execute(GetLocationsParameter parameter)
@@ -37,8 +41,8 @@ namespace Cook4Me.Api.Host.Operations.Ups
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
-            }            
-
+            }
+            
             return null;
         }
     }
