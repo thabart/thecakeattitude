@@ -38,6 +38,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SimpleIdentityServer.Oauth2Instrospection.Authentication;
+using Ups.Client;
 
 namespace Cook4Me.Api.Host
 {
@@ -135,7 +136,8 @@ namespace Cook4Me.Api.Host
         private static void RegisterDependencies(IServiceCollection services)
         {
             services.AddCookForMeStoreInMemory()
-                .AddHandlers();
+                .AddHandlers()
+                .AddUpsClient();
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();

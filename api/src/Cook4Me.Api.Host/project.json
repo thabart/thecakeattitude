@@ -35,7 +35,8 @@
     "Cook4Me.Api.EF": { "target": "project" },
     "SimpleIdentityServer.Oauth2Instrospection.Authentication": { "target": "project" },
     "SimpleIdentityServer.Core.Jwt": { "target": "project" },
-    "Cook4Me.Api.Handlers": { "target": "project" }
+    "Cook4Me.Api.Handlers": { "target": "project" },
+    "Ups.Client": { "target": "project" }
   },
   "frameworks": {
     "net46": {

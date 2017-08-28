@@ -49,6 +49,7 @@ namespace Cook4Me.Api.Host
             public const string SearchMine = "me/.search";
             public const string Status = "status";
             public const string Messages = "messages";
+            public const string Ups = "ups";
         }
 
         public static class DtoNames

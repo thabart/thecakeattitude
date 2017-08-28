@@ -14,17 +14,10 @@
 // limitations under the License.
 #endregion
 
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
 using Ups.Client;
+using Ups.Client.Factories;
 using Ups.Client.Params;
-using Ups.Client.Params.Locator;
 using Xunit;
 
 namespace Cook4Me.Api.Host.Tests.MondeRelay
@@ -39,83 +32,23 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
         [Fact]
         public async Task GetLocations()
         {
-            var httpHandler = new HttpClientHandler();
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            var client = new HttpClient(httpHandler);
-            var parameter = new LocatorRequest
+            var httpClientFactory = new HttpClientFactory();
+            var locatorClient = new LocatorClient(httpClientFactory);
+            await locatorClient.GetLocations(new GetLocationsParameter
             {
-                Security = new AccessRequestType
+                Credentials = new UpsCredentials
                 {
-                    AccessLicenseNumber = _accessLicenseNumber,
+                    LicenseNumber = _accessLicenseNumber,
                     Password = _password,
-                    UserId = _userName
+                    UserName = _userName
                 },
-                Body = new LocatorRequestBody
+                Address = new UpsAddressParameter
                 {
-                    Request = new RequestType
-                    {
-                        RequestAction = "Locator",
-                        RequestOption = "1",
-                        TransactionReferenceType = new TransactionReferenceType
-                        {
-                            CustomerContext = "Your Test Case Summary Description",
-                            XpciVersion = "1.0014"
-                        }
-                    },
-                    Address = new LocatorOriginAddress
-                    {
-                        PhoneNumber = new StructuredPhoneNumberType(),
-                        Address = new AddressKeyFormatType
-                        {
-                            AddressLine = "223 avenue des croix du feu",
-                            PoliticalDivision2 = "Bruxelles",
-                            CountryCode = "BE"
-                        }
-                    },
-                    Translate = new TranslateType
-                    {
-                        LanguageCode = "ENG"
-                    },
-                    UnitOfMeasurement = new UnitOfMeasurementType
-                    {
-                        Code = "KM"
-                    }
+                    AddressLine = "223 avenue des croix du feu",
+                    City = "Bruxelles",
+                    Country = "BE"
                 }
-            };
-
-            var serializerSecurity = new XmlSerializer(typeof(AccessRequestType));
-            var serializerBody = new XmlSerializer(typeof(LocatorRequestBody));
-            var xmlSecurity = "";
-            var xmlBody = "";
-            using (var sww = new StringWriter())
-            {
-                using (var writer = XmlWriter.Create(sww))
-                {
-                    serializerSecurity.Serialize(writer, parameter.Security);
-                    xmlSecurity = sww.ToString();
-                }
-            }
-
-            using (var sww = new StringWriter())
-            {
-                using (var writer = XmlWriter.Create(sww))
-                {
-                    serializerBody.Serialize(writer, parameter.Body);
-                    xmlBody = sww.ToString();
-                }
-            }
-
-            var xml = xmlSecurity + "" + xmlBody;
-            var body = new StringContent(xml);
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                Content = body,
-                RequestUri = new Uri(_locationUrl)
-            };
-            var serializedContent = await client.SendAsync(request).ConfigureAwait(false);
-            var res = await serializedContent.Content.ReadAsStringAsync();
-            string s = "";
+            });
         }
     }
 }
