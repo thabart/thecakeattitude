@@ -38,6 +38,24 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
+        public async Task<OrderAggregate> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            IQueryable<Order> orders = _context.Orders
+                .Include(p => p.OrderLines);
+            var result = await orders.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return result.ToAggregate();
+        }
+
         public async Task<bool> Remove(OrderAggregate orderAggregate)
         {
             if (orderAggregate == null)

@@ -32,6 +32,8 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrder(OrderAggregate order);
+        JObject GetOrderLine(OrderAggregateLine orderLine);
         JObject GetDistance(Distance distance);
         JObject GetStandardHours(StandardHours standardHours);
         JObject GetAddressKeyFormat(AddressKeyFormatType addressKeyFormat);
@@ -77,6 +79,55 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrder(OrderAggregate order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
+            var result = new JObject();
+            var arr = new JArray();
+            if (order.OrderLines != null)
+            {
+                foreach(var orderLine in order.OrderLines)
+                {
+                    arr.Add(GetOrderLine(orderLine));
+                }
+            }
+
+            result.Add(Constants.DtoNames.OrderNames.Id, order.Id);
+            result.Add(Constants.DtoNames.OrderNames.CreateDateTime, order.CreateDateTime);
+            result.Add(Constants.DtoNames.OrderNames.UpdateDateTime, order.UpdateDateTime);
+            result.Add(Constants.DtoNames.OrderNames.TotalPrice, order.TotalPrice);
+            result.Add(Constants.DtoNames.OrderNames.Subject, order.Subject);
+            string status = null;
+            switch(order.Status)
+            {
+                case OrderAggregateStatus.Created:
+                    status = "created";
+                    break;
+            }
+            result.Add(Constants.DtoNames.OrderNames.Status, status);
+            result.Add(Constants.DtoNames.OrderNames.Lines, arr);
+            return result;
+        }
+
+        public JObject GetOrderLine(OrderAggregateLine orderLine)
+        {
+            if (orderLine == null)
+            {
+                throw new ArgumentNullException(nameof(orderLine));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderLineNames.Id, orderLine.Id);
+            result.Add(Constants.DtoNames.OrderLineNames.Price, orderLine.Price);
+            result.Add(Constants.DtoNames.OrderLineNames.ProductId, orderLine.ProductId);
+            result.Add(Constants.DtoNames.OrderLineNames.Quantity, orderLine.Quantity);
+            return result;
+        }
+
         public JObject GetUpsLocations(LocatorResponse locatorResponse)
         {
             if (locatorResponse == null)

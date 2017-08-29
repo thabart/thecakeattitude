@@ -64,7 +64,37 @@ namespace Cook4Me.Api.Host.Extensions
             InsertClientServices(context);
             InsertNotifications(context);
             InsertMessages(context);
+            InsertOrders(context);
             context.SaveChanges();
+        }
+
+        private static void InsertOrders(CookDbContext context)
+        {
+            if (!context.Orders.Any())
+            {
+                context.Orders.AddRange(new[]
+                {
+                    new Order
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Status = 0,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        TotalPrice = 1000,
+                        Subject = "administrator",
+                        OrderLines = new []
+                        {
+                            new OrderLine
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Price = 1000,
+                                ProductId = _jeanProductId,
+                                Quantity = 2
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         private static void InsertCategories(CookDbContext context)

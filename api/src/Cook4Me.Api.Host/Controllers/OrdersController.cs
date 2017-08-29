@@ -14,9 +14,32 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Handlers;
+using Cook4Me.Api.Host.Operations.Orders;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
+
 namespace Cook4Me.Api.Host.Controllers
 {
-    public class OrdersController
+    [Route(Constants.RouteNames.Orders)]
+    public class OrdersController : BaseController
     {
+        public ISearchOrdersOperation _searchOrdersOperation;
+
+        public OrdersController(ISearchOrdersOperation searchOrdersOperation,
+            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+        {
+            _searchOrdersOperation = searchOrdersOperation;
+        }
+
+        [Authorize("Connected")]
+        [HttpPost(Constants.RouteNames.Search)]
+        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        {
+            return await _searchOrdersOperation.Execute(jObj, User.GetSubject());
+        }
     }
 }

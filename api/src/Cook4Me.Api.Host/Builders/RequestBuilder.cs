@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        SearchOrdersParameter GetSearchOrdersParameter(JObject jObj);
         AddMessageCommand GetAddMessage(JObject jObj);
         SearchMessagesParameter GetSearchMessages(JObject jObj);
         GetNotificationStatusParameter GetNotificationStatus(JObject jObj);
@@ -65,6 +66,44 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public SearchOrdersParameter GetSearchOrdersParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchUserMessage.Orders);
+            var orderBy = new List<OrderBy>();
+            if (ordersObj != null)
+            {
+                var orders = ordersObj as JArray;
+                if (orders != null)
+                {
+                    foreach (var order in orders)
+                    {
+                        orderBy.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
+
+            var result = new SearchOrdersParameter
+            {
+                IsPagingEnabled = true,
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                OrderBy = orderBy,
+                Subjects = jObj.TryGetStringArray(Constants.DtoNames.SearchOrdersParameterNames.Subjects)
+            };
+
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
         public GetLocationsParameter GetLocationsParameter(JObject jObj)
         {
             if (jObj == null)

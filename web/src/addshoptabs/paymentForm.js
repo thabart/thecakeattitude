@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-import {Button} from "reactstrap";
-import {PaymentMethodsSelector} from "../components";
+import { Button } from "reactstrap";
+import { PaymentMethodsSelector } from "../components";
 import { translate } from 'react-i18next';
 
 class PaymentForm extends Component {
@@ -34,8 +34,8 @@ class PaymentForm extends Component {
                         <PaymentMethodsSelector ref="selector" onError={this.props.onError}/>
                     </section>
                     <section className="row p-1">
-                        <Button color="default" onClick={this.previous}>Previous</Button>
-                        <Button color="default" style={{marginLeft: "5px"}} onClick={this.confirm}>Confirm</Button>
+                        <Button color="default" onClick={this.previous}>{t('previous')}</Button>
+                        <Button color="default" style={{marginLeft: "5px"}} onClick={this.confirm}>{t('confirm')}</Button>
                     </section>
                 </div>
             </div>

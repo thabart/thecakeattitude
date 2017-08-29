@@ -58,10 +58,16 @@ namespace Cook4Me.Api.Host
             public const string Messages = "messages";
             public const string Ups = "ups";
             public const string SearchLocations = "locations/.search";
+            public const string Orders = "orders";
         }
 
         public static class DtoNames
         {
+            public static class SearchOrdersParameterNames
+            {
+                public const string Subjects = "subjects";
+            }
+
             public static class DropLocationResponse
             {
                 public const string Id = "id";
@@ -74,6 +80,25 @@ namespace Cook4Me.Api.Host
                 public const string OperatingHours = "operating_hours";
                 public const string Distance = "distance";
                 public const string Geocode = "geocode";
+            }
+
+            public static class OrderNames
+            {
+                public const string Id = "id";
+                public const string TotalPrice = "total_price";
+                public const string CreateDateTime = "create_datetime";
+                public const string UpdateDateTime = "update_datetime";
+                public const string Status = "status";
+                public const string Subject = "subject";
+                public const string Lines = "lines";
+            }
+
+            public static class OrderLineNames
+            {
+                public const string Id = "id";
+                public const string Price = "price";
+                public const string Quantity = "quantity";
+                public const string ProductId = "product_id";
             }
 
             public static class LocationDistanceResponse

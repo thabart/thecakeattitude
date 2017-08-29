@@ -13,6 +13,7 @@ import GoogleMapService from './GoogleMap';
 import NotificationService from './Notification';
 import AuthenticateService from './Authenticate';
 import MessageService from './Messages';
+import OrdersService from './Orders';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -29,3 +30,4 @@ exports.GoogleMapService = GoogleMapService;
 exports.NotificationService = NotificationService;
 exports.AuthenticateService = AuthenticateService;
 exports.MessageService = MessageService;
+exports.OrdersService = OrdersService;
