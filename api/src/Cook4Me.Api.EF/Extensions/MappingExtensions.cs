@@ -25,6 +25,76 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static Order ToModel(this OrderAggregate order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
+            return new Order
+            {
+                Id = order.Id,
+                CreateDateTime = order.CreateDateTime,
+                Status = (int)order.Status,
+                Subject = order.Subject,
+                TotalPrice = order.TotalPrice,
+                UpdateDateTime = order.UpdateDateTime,
+                OrderLines = order.OrderLines == null ? new List<OrderLine>() : order.OrderLines.Select(o => o.ToModel()).ToList()
+            };
+        }
+
+        public static OrderLine ToModel(this OrderAggregateLine orderLine)
+        {
+            if (orderLine == null)
+            {
+                throw new ArgumentNullException(nameof(orderLine));
+            }
+
+            return new OrderLine
+            {
+                Id = orderLine.Id,
+                Price = orderLine.Price,
+                ProductId = orderLine.ProductId,
+                Quantity = orderLine.Quantity
+            };
+        }
+
+        public static OrderAggregate ToAggregate(this Order order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
+            return new OrderAggregate
+            {
+                Id = order.Id,
+                CreateDateTime = order.CreateDateTime,
+                Status = (OrderAggregateStatus)order.Status,
+                Subject = order.Subject,
+                TotalPrice = order.TotalPrice,
+                UpdateDateTime = order.UpdateDateTime,
+                OrderLines = order.OrderLines == null ? null : order.OrderLines.Select(o => o.ToAggregate())
+            };
+        }
+
+        public static OrderAggregateLine ToAggregate(this OrderLine orderLine)
+        {
+            if (orderLine == null)
+            {
+                throw new ArgumentNullException(nameof(orderLine));
+            }
+
+            return new OrderAggregateLine
+            {
+                Id = orderLine.Id,
+                Price = orderLine.Price,
+                ProductId = orderLine.ProductId,
+                Quantity = orderLine.Quantity
+            };
+        }
+
         public static MessageAggregate ToAggregate(this Message message)
         {
             if (message == null)

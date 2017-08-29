@@ -27,7 +27,6 @@ namespace Cook4Me.Api.EF
         }
 
         public virtual DbSet<Shop> Shops { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Map> Maps { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
@@ -46,6 +45,8 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderLine> OrderLines { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

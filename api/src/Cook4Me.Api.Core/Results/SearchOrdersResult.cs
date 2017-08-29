@@ -15,17 +15,14 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Results
 {
-    public interface IOrderRepository
+    public class SearchOrdersResult
     {
-        Task<bool> Remove(OrderAggregate orderAggregate);
-        Task<bool> Insert(OrderAggregate orderAggregate);
-        Task<bool> Update(OrderAggregate orderAggregate);
-        Task<SearchOrdersResult> Search(SearchOrdersParameter parameter);
+        public IEnumerable<OrderAggregate> Content { get; set; }
+        public int TotalResults { get; set; }
+        public int StartIndex { get; set; }
     }
 }
