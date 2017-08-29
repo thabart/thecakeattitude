@@ -480,7 +480,7 @@ namespace Ups.Client
             }
 
             // Shipment.
-                public static class ShipmentRequestNames
+            public static class ShipmentRequestNames
             {
                 public const string Security = "UPSSecurity";
                 public const string Body = "ShipmentRequest";
@@ -491,6 +491,32 @@ namespace Ups.Client
                 public const string Request = "Request";
                 public const string Shipment = "Shipment";
                 public const string LabelSpecification = "LabelSpecification";
+            }
+
+            public static class RatingServiceSelectionRequestNames
+            {
+                public const string Request = "Request";
+                public const string PickupType = "PickupType";
+                public const string CustomerClassification = "CustomerClassification";
+                public const string Shipment = "Shipment";
+            }
+
+            public static class RatingServiceSelectionRequestBodyNames
+            {
+                public const string RequestAction = "RequestAction";
+                public const string RequestOption = "RequestOption";
+                public const string SubVersion = "SubVersion";
+                public const string TransactionReference = "TransactionReference";
+            }
+
+            public static class PickupTypeNames
+            {
+                public const string Code = "Code";
+            }
+
+            public static class CustomerClassificationNames
+            {
+                public const string Code = "Code";
             }
         }
     }

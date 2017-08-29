@@ -43,5 +43,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual ICollection<ProductPromotion> Promotions { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
         public virtual Shop Shop { get; set; }
+        public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
 }

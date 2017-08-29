@@ -14,21 +14,13 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public class User
+    public class OrderAggregateLine
     {
         public string Id { get; set; }
-        public string Pseudo { get; set; }
-        public bool IsSeller { get; set; }
-        public string StreetAddress { get; set; }
-        public string StreetNumber { get; set; }
-        public string PostalCode { get; set; }
-        public string City { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public virtual ICollection<Shop> Shops { get; set; }
+        public string ProductId { get; set; }
+        public int Quantity { get; set; }
+        public double Price { get; set; }
     }
 }

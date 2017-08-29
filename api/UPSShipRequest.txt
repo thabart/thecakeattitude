@@ -22,7 +22,7 @@
 				"AttentionName": "Shipper Attn Name", 
 				"TaxIdentificationNumber": "123456",
 				"Phone": { "Number": "1234567890", "Extension": "1" }, 
-				"ShipperNumber": "98FF76", 
+				"ShipperNumber": "123456", 
 				"FaxNumber": "1234567890", 
 				"Address": { "AddressLine": "223 avenue des croix du feu", "City": "Bruxelles", "PostalCode": "1020", "CountryCode": "BE" } 
 			}, 
@@ -43,13 +43,12 @@
 				"ShipmentCharge": { "Type": "01", "BillShipper": { "AccountNumber": "98FF76" }	} 
 			}, 
 			"Service": { 
-				"Code": "14"
+				"Code": "11"
 			}, 
 			"Package": {
 				"Description": "Description", 
 				"Packaging": { "Code": "02", "Description": "Description" }, 
-				"Dimensions": { "UnitOfMeasurement": { "Code": "IN", "Description": "Inches" }, "Length": "7", "Width": "5", "Height": "2" },
-				"PackageWeight": { "UnitOfMeasurement": { "Code": "LBS", "Description": "Pounds" }, "Weight": "10" }
+				"Dimensions": { "UnitOfMeasurement": { "Code": "IN", "Description": "Inches" }, "Length": "7", "Width": "5", "Height": "2" }
 			} 
 		}, 
 		"LabelSpecification": { 
