@@ -1,20 +1,17 @@
 import React, { Component } from "react";
-import { OrdersService } from '../services/index';
 import { Button } from "reactstrap";
 import { translate } from 'react-i18next';
 
 class Products extends Component {
   constructor(props) {
     super(props);
-    this.refresh = this.refresh.bind(this);
+    this.next = this.next.bind(this);
   }
 
-  refresh() { // Refresh the products.
-    OrdersService.search({ }).then(function(res) {
-      console.log(res);
-    }).catch(function() {
-
-    });
+  next() { // Execute when the user click on next.
+    if (this.props.onNext) {
+      this.props.onNext();
+    }
   }
 
   render() { // Display the component.
@@ -53,15 +50,11 @@ class Products extends Component {
             </div>
           </section>
           <section className="row p-1">
-              <Button color="default">{t('next')}</Button>
+              <Button color="default" onClick={this.next}>{t('next')}</Button>
           </section>
         </div>
       </div>
     );
-  }
-
-  componentDidMount() { // Execute before the render.
-    this.refresh();
   }
 }
 
