@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { TabContent, TabPane, Alert } from "reactstrap";
 import { translate } from 'react-i18next';
-import { ProductsTab, TransportMethodsTab } from './basketabs/index';
+import { ProductsTab, TransportMethodsTab, ShopsTab } from './basketabs/index';
 import { OrdersService } from './services/index';
 import $ from "jquery";
 import MainLayout from './MainLayout';
@@ -49,8 +49,9 @@ class Basket extends Component {
                 <h2>Your Shopping Cart</h2>
                 <div className="mt-1 mb-1 p-1 bg-white rounded">
                     <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
-                      <li className="col-2 active"><div className="counter-rounded">1</div>Products</li>
-                      <li className={this.state.activeTab >= '2' ? "col-2 active" : "col-2"}><div className="counter-rounded">2</div>Transports</li>
+                      <li className="col-2 active"><div className="counter-rounded">1</div>Shops</li>
+                      <li className={this.state.activeTab >= '2' ? "col-2 active" : "col-2"}><div className="counter-rounded">2</div>Products</li>
+                      <li className={this.state.activeTab >= '3' ? "col-2 active" : "col-2"}><div className="counter-rounded">3</div>Transports</li>
                     </ul>
                 </div>
                 <TabContent activeTab={this.state.activeTab}>
@@ -58,15 +59,22 @@ class Basket extends Component {
                       <i className='fa fa-spinner fa-spin'/>
                   </div>
                   <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
-                      <ProductsTab onNext={(json) => {
-                          this.toggle('2', json);
+                    <ShopsTab onNext={(json) => {
+                        this.toggle('2', json);
+                    }} />
+                  </TabPane>
+                  <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
+                      <ProductsTab onPrevious={() => {
+                          this.toggle('1');
+                      }} onNext={(json) => {
+                          this.toggle('3', json);
                       }} />
                   </TabPane>
-                  <TabPane tabId='2' className={this.state.isLoading ? 'hidden': ''}>
+                  <TabPane tabId='3' className={this.state.isLoading ? 'hidden': ''}>
                     <TransportMethodsTab onPrevious={() => {
-                        this.toggle('1');
+                        this.toggle('2');
                     }} onNext={(json) => {
-                        this.toggle('3', json);
+                        this.toggle('4', json);
                     }}/>
                   </TabPane>
                 </TabContent>

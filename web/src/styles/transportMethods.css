@@ -1,0 +1,9 @@
+.transport-method {
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.transport-method.active {
+  border: 2px solid rgba(231, 39, 45, 0.22);
+}

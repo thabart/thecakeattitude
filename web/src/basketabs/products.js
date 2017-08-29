@@ -6,6 +6,13 @@ class Products extends Component {
   constructor(props) {
     super(props);
     this.next = this.next.bind(this);
+    this.previous = this.previous.bind(this);
+  }
+
+  previous() { // Execute when the user clicks on previous.
+    if (this.props.onPrevious) {
+      this.props.onPrevious();
+    }
   }
 
   next() { // Execute when the user click on next.
@@ -20,11 +27,11 @@ class Products extends Component {
       <div className="container rounded">
         <div className="col-md-12">
           <section className="row p-1">
-            <p>Mettrez à jour votre ...</p>
+            <p>Update your basket</p>
             <div className="list-group-default col-md-12">
               <li className="list-group-item">
-                <div className="col-md-3 offset-md-5">Prix</div>
-                <div className="col-md-2">Quantité</div>
+                <div className="col-md-3 offset-md-5">Price</div>
+                <div className="col-md-2">Quantity</div>
               </li>
               <li className="list-group-item">
                 <div className="col-md-2"><img src="http://localhost:5000/products/jean.jpg" width="40" /></div>
@@ -50,7 +57,8 @@ class Products extends Component {
             </div>
           </section>
           <section className="row p-1">
-              <Button color="default" onClick={this.next}>{t('next')}</Button>
+              <Button color="default" onClick={this.previous}>{t('previous')}</Button>
+              <Button color="default" onClick={this.next} style={{marginLeft:"5px"}}>{t('next')}</Button>
           </section>
         </div>
       </div>
