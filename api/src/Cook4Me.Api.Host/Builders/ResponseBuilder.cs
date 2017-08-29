@@ -25,11 +25,19 @@ using Cook4Me.Api.Core.Results;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using Ups.Client.Common;
+using Ups.Client.Responses.Locator;
 
 namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetDistance(Distance distance);
+        JObject GetStandardHours(StandardHours standardHours);
+        JObject GetAddressKeyFormat(AddressKeyFormatType addressKeyFormat);
+        JObject GetDropLocation(LocatorDropLocation dropLocation);
+        JObject GetGeocode(Geocode geocode);
+        JObject GetUpsLocations(LocatorResponse locatorResponse);
         JObject GetMessageAddedEvent(MessageAddedEvent evt);
         JObject GetMessage(MessageAggregate message);
         JObject GetMessageAttachment(MessageAttachment attachment);
@@ -69,6 +77,157 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetUpsLocations(LocatorResponse locatorResponse)
+        {
+            if (locatorResponse == null)
+            {
+                throw new ArgumentNullException(nameof(locatorResponse));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.SearchUpsLocationsResponse.Geocode, GetGeocode(locatorResponse.Geocode));
+            var arr = new JArray();
+            if (locatorResponse.SearchResults != null && locatorResponse.SearchResults.DropLocation != null)
+            {
+                foreach (var searchResult in locatorResponse.SearchResults.DropLocation)
+                {
+                    arr.Add(GetDropLocation(searchResult));
+                }
+            }
+
+            jObj.Add(Constants.DtoNames.SearchUpsLocationsResponse.DropLocations, arr);
+            return jObj;
+        }
+
+        public JObject GetDropLocation(LocatorDropLocation dropLocation)
+        {
+            if (dropLocation == null)
+            {
+                throw new ArgumentNullException(nameof(dropLocation));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.DropLocationResponse.Id, dropLocation.LocationId);
+            if (!string.IsNullOrWhiteSpace(dropLocation.EmailAddress))
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.Email, dropLocation.EmailAddress);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dropLocation.FaxNumber))
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.Fax, dropLocation.FaxNumber);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dropLocation.HomePageURL))
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.HomePage, dropLocation.HomePageURL);
+            }
+
+            if (!string.IsNullOrWhiteSpace(dropLocation.PhoneNumber))
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.Phone, dropLocation.PhoneNumber);
+            }
+
+            if (dropLocation.AddressKeyFormat != null)
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.Address, GetAddressKeyFormat(dropLocation.AddressKeyFormat));
+            }
+
+            if (dropLocation.AccessPointInformation != null)
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.Image, dropLocation.AccessPointInformation.ImageUrl);
+            }
+            
+            if (dropLocation.OperatingHours != null && dropLocation.OperatingHours.StandardHours != null)
+            {
+                var operatingHours = new JArray();
+                foreach(var standardHours in dropLocation.OperatingHours.StandardHours)
+                {
+                    operatingHours.Add(GetStandardHours(standardHours));
+                }
+
+                jObj.Add(Constants.DtoNames.DropLocationResponse.OperatingHours, operatingHours);
+            }
+            
+            if (dropLocation.Distance != null)
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.Distance, GetDistance(dropLocation.Distance));
+            }
+
+            if (dropLocation.Geocode != null)
+            {
+                jObj.Add(Constants.DtoNames.DropLocationResponse.Geocode, GetGeocode(dropLocation.Geocode));
+            }
+
+            return jObj;
+        }
+
+        public JObject GetDistance(Distance distance)
+        {
+            if (distance == null)
+            {
+                throw new ArgumentNullException(nameof(distance));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.LocationDistanceResponse.Value, distance.Value);
+            if (distance.UnitOfMeasurement != null)
+            {
+                result.Add(Constants.DtoNames.LocationDistanceResponse.UnitOfMeasure, distance.UnitOfMeasurement.Code);
+            }
+
+            return result;
+        }
+
+        public JObject GetAddressKeyFormat(AddressKeyFormatType addressKeyFormat)
+        {
+            if (addressKeyFormat == null)
+            {
+                throw new ArgumentNullException(nameof(addressKeyFormat));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.AddressKeyFormatResponse.AddressLine, addressKeyFormat.AddressLine);
+            result.Add(Constants.DtoNames.AddressKeyFormatResponse.City, addressKeyFormat.PoliticalDivision2);
+            result.Add(Constants.DtoNames.AddressKeyFormatResponse.Country, addressKeyFormat.CountryCode);
+            return result;
+        }
+
+        public JObject GetGeocode(Geocode geocode)
+        {
+            if (geocode == null)
+            {
+                throw new ArgumentNullException(nameof(geocode));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.GeocodeResponse.Latitutde, geocode.Latitude);
+            jObj.Add(Constants.DtoNames.GeocodeResponse.Longitude, geocode.Longitude);
+            return jObj;
+        }
+
+        public JObject GetStandardHours(StandardHours standardHours)
+        {
+            if (standardHours == null)
+            {
+                throw new ArgumentNullException(nameof(standardHours));
+            }
+
+            var jObj = new JObject();
+            var daysOfWeek = new JArray();
+            foreach(var dayOfWeek in standardHours.DaysOfWeek)
+            {
+                var rec = new JObject();
+                rec.Add(Constants.DtoNames.DayOfWeekResponse.CloseHours, dayOfWeek.CloseHours);
+                rec.Add(Constants.DtoNames.DayOfWeekResponse.Day, dayOfWeek.Day);
+                rec.Add(Constants.DtoNames.DayOfWeekResponse.OpenHours, dayOfWeek.OpenHours);
+                daysOfWeek.Add(rec);
+            }
+
+            jObj.Add(Constants.DtoNames.StandardHoursResponse.Days, daysOfWeek);
+            return jObj;
+        }
+
         public JObject GetMessageAddedEvent(MessageAddedEvent evt)
         {
             if (evt == null)

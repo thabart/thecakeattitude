@@ -57,10 +57,69 @@ namespace Cook4Me.Api.Host
             public const string Status = "status";
             public const string Messages = "messages";
             public const string Ups = "ups";
+            public const string SearchLocations = "locations/.search";
         }
 
         public static class DtoNames
         {
+            public static class DropLocationResponse
+            {
+                public const string Id = "id";
+                public const string Email = "email";
+                public const string Fax = "fax";
+                public const string HomePage = "home_page";
+                public const string Phone = "phone";
+                public const string Address = "address";
+                public const string Image = "img";
+                public const string OperatingHours = "operating_hours";
+                public const string Distance = "distance";
+                public const string Geocode = "geocode";
+            }
+
+            public static class LocationDistanceResponse
+            {
+                public const string Value = "value";
+                public const string UnitOfMeasure = "unit_of_measure";
+            }
+
+            public static class StandardHoursResponse
+            {
+                public const string Days = "days";
+            }
+
+            public static class DayOfWeekResponse
+            {
+                public const string CloseHours = "close_hours";
+                public const string OpenHours = "open_hours";
+                public const string Day = "day";
+            }
+
+            public static class AddressKeyFormatResponse
+            {
+                public const string AddressLine = "address_line";
+                public const string Country = "country";
+                public const string City = "city";
+            }
+
+            public static class SearchUpsLocationsResponse
+            {
+                public const string Geocode = "geocode";
+                public const string DropLocations = "drop_locations";
+            }
+
+            public static class GeocodeResponse
+            {
+                public const string Latitutde = "lat";
+                public const string Longitude = "long";
+            }
+
+            public static class SearchUpsLocations
+            {
+                public const string AddressLine = "address_line";
+                public const string Country = "country";
+                public const string City = "city";
+            }
+
             public static class SearchUserMessage
             {
                 public const string IsParent = "is_parent";

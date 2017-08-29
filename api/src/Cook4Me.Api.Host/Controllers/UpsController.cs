@@ -16,6 +16,8 @@
 
 using Cook4Me.Api.Host.Operations.Ups;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
 {
@@ -29,9 +31,10 @@ namespace Cook4Me.Api.Host.Controllers
             _getLocationsOperation = getLocationsOperation;
         }
 
-        public IActionResult Index()
+        [HttpPost(Constants.RouteNames.SearchLocations)]
+        public async Task<IActionResult> SearchLocations([FromBody] JObject jObj)
         {
-            return View();
+            return await _getLocationsOperation.Execute(jObj);
         }
     }
 }

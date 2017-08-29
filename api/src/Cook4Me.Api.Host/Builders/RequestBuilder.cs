@@ -27,6 +27,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ups.Client.Params;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -58,11 +59,30 @@ namespace Cook4Me.Api.Host.Builders
         SearchServiceParameter GetSearchServices(JObject jObj);
         SearchClientServicesParameter GetSearchAnnouncements(JObject jObj);
         SearchServiceOccurrenceParameter GetSearchServiceOccurrences(JObject jObj);
+        GetLocationsParameter GetLocationsParameter(JObject jObj);
         OrderBy GetOrderBy(JObject jObj);
     }
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public GetLocationsParameter GetLocationsParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new GetLocationsParameter
+            {
+                Address = new UpsAddressParameter
+                {
+                    AddressLine = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.AddressLine),
+                    City = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.City),
+                    Country = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.Country)
+                }
+            };
+        }
+
         public AddMessageCommand GetAddMessage(JObject jObj)
         {
             if (jObj == null)

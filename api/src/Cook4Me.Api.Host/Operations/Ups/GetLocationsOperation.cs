@@ -14,36 +14,60 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using Ups.Client;
-using Ups.Client.Params;
+using client = Ups.Client;
 
 namespace Cook4Me.Api.Host.Operations.Ups
 {
     public interface IGetLocationsOperation
     {
-        Task<IActionResult> Execute(GetLocationsParameter parameter);   
+        Task<IActionResult> Execute(JObject parameter);   
     }
 
     internal class GetLocationsOperation : IGetLocationsOperation
     {
         private readonly ILocatorClient _locatorClient;
+        private readonly IRequestBuilder _requestBuilder;
+        private readonly IResponseBuilder _responseBuilder;
+        private readonly IControllerHelper _controllerHelper;
 
-        public GetLocationsOperation(ILocatorClient locatorClient)
+        public GetLocationsOperation(ILocatorClient locatorClient, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder, IControllerHelper controllerHelper)
         {
             _locatorClient = locatorClient;
+            _requestBuilder = requestBuilder;
+            _responseBuilder = responseBuilder;
+            _controllerHelper = controllerHelper;
         }
 
-        public async Task<IActionResult> Execute(GetLocationsParameter parameter)
+        public async Task<IActionResult> Execute(JObject jObj)
         {
-            if (parameter == null)
+            if (jObj == null)
             {
-                throw new ArgumentNullException(nameof(parameter));
+                throw new ArgumentNullException(nameof(jObj));
             }
-            
-            return null;
+
+            var searchUpsLocations = _requestBuilder.GetLocationsParameter(jObj);
+            searchUpsLocations.Credentials = new client.Params.UpsCredentials
+            {
+                LicenseNumber = Constants.UpsCredentials._accessLicenseNumber,
+                UserName = Constants.UpsCredentials._userName,
+                Password = Constants.UpsCredentials._password
+            };
+            var result = await _locatorClient.GetLocations(searchUpsLocations);
+            if (result.Response != null && result.Response.Error != null)
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, result.Response.Error.ErrorDescription);
+                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
+            }
+
+            return new OkObjectResult(_responseBuilder.GetUpsLocations(result));
         }
     }
 }

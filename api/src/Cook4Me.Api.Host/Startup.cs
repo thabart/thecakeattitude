@@ -31,6 +31,7 @@ using Cook4Me.Api.Host.Operations.Services;
 using Cook4Me.Api.Host.Operations.Shop;
 using Cook4Me.Api.Host.Operations.ShopCategory;
 using Cook4Me.Api.Host.Operations.Tag;
+using Cook4Me.Api.Host.Operations.Ups;
 using Cook4Me.Api.Host.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -196,6 +197,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IAddServiceOperation, AddServiceOperation>();
             services.AddTransient<IUpdateNotificationOperation, UpdateNotificationOperation>();
             services.AddTransient<ISearchNotificationsOperation, SearchNotificationsOperation>();
+            services.AddTransient<IGetLocationsOperation, GetLocationsOperation>();
             services.AddTransient<ISearchMineClientServices, SearchMineClientServices>();
             services.AddTransient<IServiceCommentEnricher, ServiceCommentEnricher>();
             services.AddTransient<IShopEnricher, ShopEnricher>();

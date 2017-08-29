@@ -48,7 +48,6 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Country = "BE"
                 }
             });
-            string s = "";
         }
     }
 }
