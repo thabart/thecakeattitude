@@ -1,8 +1,12 @@
 import React, { Component } from "react";
 import { Button } from "reactstrap";
 import { translate } from 'react-i18next';
-import { ProductsService } from '../services/index';
+import { ProductsService, OrdersService } from '../services/index';
 import { NavLink } from "react-router-dom";
+import { Guid } from '../utils/index';
+import { BasketStore } from '../stores/index';
+import AppDispatcher from '../appDispatcher';
+import Constants from '../../Constants';
 
 const defaultCount = 5;
 
@@ -15,6 +19,8 @@ class Products extends Component {
     };
     this._page = '1';
     this._order = null;
+    this._waitForToken = null;
+    this._commonId = null;
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.changePage = this.changePage.bind(this);
@@ -96,7 +102,12 @@ class Products extends Component {
     var order = this.state.order;
     var orderLines = order.lines;
     var orderLine = orderLines.filter(function(line) { return line.id === orderLineId; })[0];
+    var product = this.state.products.filter(function(p) { return p.id === orderLine.product_id; })[0];
     orderLine.quantity = value;
+    orderLine.price = value * product.price;
+    var totalPrice = 0;
+    orderLines.forEach(function(l) { totalPrice += l.price; });
+    order.total_price = totalPrice;
     this.setState({
       order: order,
       hasChanged: true
@@ -110,6 +121,9 @@ class Products extends Component {
     var orderLine = orderLines.filter(function(line) { return line.id === orderLineId; })[0];
     var index = orderLines.indexOf(orderLine);
     orderLines.splice(index, 1);
+    var totalPrice = 0;
+    orderLines.forEach(function(l) { totalPrice += l.price; });
+    order.total_price = totalPrice;
     this.setState({
       order: order,
       hasChanged: true
@@ -117,8 +131,38 @@ class Products extends Component {
   }
 
   update() { // Update the order.
-    this.setState({
-      hasChanged: false
+    var self = this;
+    self.setState({
+      isLoading: true
+    });
+    self._commonId = Guid.generate();
+    OrdersService.update(self.state.order.id, self.state.order, self._commonId).then(function() {
+      self.setState({
+        isLoading: false
+      });
+
+      var orders = BasketStore.getOrders();
+      try {
+        console.log(orders);
+      var filteredOrders = orders.filter(function(o) { return o.id === self.state.order.id });
+      if (filteredOrders && filteredOrders.length === 1) {
+        var order = filteredOrders[0];
+        order.total_price = self.state.order.total_price;
+        order.lines = self.state.order.lines;
+      }
+
+      console.log(orders);
+      AppDispatcher.dispatch({
+        actionName: Constants.events.UPDATE_BASKET_INFORMATION_ACT,
+        data: orders
+      });
+    } catch(e) {
+      console.log(e);
+    }
+    }).catch(function() {
+      self.setState({
+        isLoading: false
+      });
     });
   }
 
@@ -183,7 +227,7 @@ class Products extends Component {
             <section style={{marginTop: "10px"}}>
                 <Button color="default" onClick={this.previous}>{t('previous')}</Button>
                 { this.state.hasChanged ? (<Button color="default" onClick={this.update}  style={{marginLeft:"5px"}}>{t('update')}</Button>) : (<Button color="default" style={{marginLeft:"5px"}} disabled>{t('update')}</Button>) }
-                <Button color="default"></Button>
+                <Button color="default" style={{marginLeft:"5px"}}>Reset</Button>
                 <Button color="default" onClick={this.next} style={{marginLeft:"5px"}}>{t('next')}</Button>
             </section>
           </div>

@@ -33,6 +33,10 @@ AppDispatcher.register(function(payload) {
     case Constants.events.BASKET_LOADED:
       loadOrders(payload.data);
       break;
+    case Constants.events.UPDATE_BASKET_INFORMATION_ACT:
+      updateOrders(payload.data);
+      BasketStore.emitChange();
+      break;
     default:
       return true;
   }

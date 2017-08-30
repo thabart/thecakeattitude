@@ -16,17 +16,18 @@ class Shops extends Component {
       start_index: 0,
       count: defaultCount
     };
-    this._orders = [];
     this._page = '1';
     this._waitForToken = null;
     this.next = this.next.bind(this);
-    this.refresh = this.refresh.bind(this);
+    this.display = this.display.bind(this);
     this.changePage = this.changePage.bind(this);
     this.changeActiveShop = this.changeActiveShop.bind(this);
+    this.refreshOrders = this.refreshOrders.bind(this);
     this.state = {
       isLoading: false,
       shops: [],
       navigation: [],
+      orders: [],
       activatedShop: null,
       errorMessage: null
     };
@@ -36,7 +37,7 @@ class Shops extends Component {
       e.preventDefault();
       this._page = page;
       this._request['start_index'] = (page - 1) * defaultCount;
-      this.refresh();
+      this.display();
   }
 
   next() { // Execute when the user click on next.
@@ -54,7 +55,7 @@ class Shops extends Component {
 
     if (this.props.onNext) {
       var self = this;
-      var orders = self._orders.filter(function(o) { return o.shop_id === self.state.activatedShop; });
+      var orders = self.state.orders.filter(function(o) { return o.shop_id === self.state.activatedShop; });
       this.props.onNext({ order: orders[0] });
     }
   }
@@ -65,9 +66,9 @@ class Shops extends Component {
     });
   }
 
-  refresh() { // Refresh the list of shops.
+  display() { // Refresh the list of shops.
     var self = this;
-    var shopIds = self._orders.map(function(o) { return o.shop_id; });
+    var shopIds = self.state.orders.map(function(o) { return o.shop_id; });
     if (!shopIds || shopIds.length === 0) {
       self.setState({
         navigation: [],
@@ -101,6 +102,10 @@ class Shops extends Component {
     });
   }
 
+  refreshOrders() {
+    console.log('refresh orders');
+  }
+
   render() { // Display the component.
     const { t } = this.props;
     if (this.state.isLoading) {
@@ -123,7 +128,7 @@ class Shops extends Component {
     if (this.state.shops && this.state.shops.length > 0) {
       this.state.shops.forEach(function(shop) {
         var profileImage = shop.profile_image || '/images/default-shop.png';
-        var orders = self._orders.filter(function(o) { return o.shop_id === shop.id; });
+        var orders = self.state.orders.filter(function(o) { return o.shop_id === shop.id; });
         var order = orders[0];
         var totalPrice = t('totalPrice').replace('{0}', order.total_price);
         var numberOfProducts = t('numberOfProducts').replace('{0}', order.lines.length);
@@ -168,15 +173,20 @@ class Shops extends Component {
     this._waitForToken = AppDispatcher.register(function (payload) {
       switch (payload.actionName) {
         case Constants.events.BASKET_LOADED:
-          self._orders = payload.data;
-          self.refresh();
+          self.state.orders = payload.data;
+          self.setState({
+            orders: payload.data
+          });
+          self.display();
         break;
       }
     });
+    BasketStore.addChangeListener(self.refreshOrders);
   }
 
   componentWillUnmount() { // Remove listener.
     AppDispatcher.unregister(this._waitForToken);
+    BasketStore.removeChangeListener(self.refreshOrders);
   }
 }
 

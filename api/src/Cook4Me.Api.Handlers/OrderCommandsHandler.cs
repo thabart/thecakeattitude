@@ -55,18 +55,18 @@ namespace Cook4Me.Api.Handlers
 
             order.UpdateDateTime = DateTime.UtcNow;
             order.Status = message.Status;
-            order.OrderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
+            var orderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
                 new OrderAggregateLine
                 {
                     Id = o.Id,
                     ProductId = o.ProductId,
                     Quantity = o.Quantity
                 }
-            );
+            ).ToList();
             order.TotalPrice = 0;
-            if (order.OrderLines != null && order.OrderLines.Any())
+            if (orderLines != null && orderLines.Any())
             {
-                var productIds = message.OrderLines.Select(line => line.ProductId);
+                var productIds = orderLines.Select(line => line.ProductId);
                 var products = await _productRepository.Search(new SearchProductsParameter
                 {
                     ProductIds = productIds,
@@ -77,13 +77,14 @@ namespace Cook4Me.Api.Handlers
                     return;
                 }
 
-                foreach(var orderLine in order.OrderLines)
+                foreach(var orderLine in orderLines)
                 {
                     var product = products.Content.First(p => p.Id == orderLine.ProductId);
                     orderLine.Price = product.Price * orderLine.Quantity;
                 }
 
-                order.TotalPrice = order.OrderLines.Sum(line => line.Price);
+                order.OrderLines = orderLines;
+                order.TotalPrice = orderLines.Sum(line => line.Price);
             }
 
             await _orderRepository.Update(order);

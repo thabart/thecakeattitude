@@ -13,7 +13,7 @@ class Basket extends Component {
         super(props);
         this.data = {};
         this.toggle = this.toggle.bind(this);
-        this.refresh = this.refresh.bind(this);
+        this.display = this.display.bind(this);
         this.displayProducts = this.displayProducts.bind(this);
         this.state = {
           activeTab: '1',
@@ -35,7 +35,7 @@ class Basket extends Component {
         }
     }
 
-    refresh() { // Refresh the view.
+    display() { // Refresh the view.
       var self = this;
       self.setState({
         isLoading: true
@@ -113,7 +113,7 @@ class Basket extends Component {
     }
 
     componentDidMount() { // Execute before the render.
-      this.refresh();
+      this.display();
     }
 }
 
