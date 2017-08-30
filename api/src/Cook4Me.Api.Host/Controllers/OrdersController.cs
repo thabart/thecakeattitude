@@ -14,12 +14,14 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Operations.Orders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Controllers
@@ -27,12 +29,30 @@ namespace Cook4Me.Api.Host.Controllers
     [Route(Constants.RouteNames.Orders)]
     public class OrdersController : BaseController
     {
-        public ISearchOrdersOperation _searchOrdersOperation;
+        private readonly ISearchOrdersOperation _searchOrdersOperation;
+        private readonly IResponseBuilder _responseBuilder;
+        private readonly IUpdateOrderOperation _updateOrderOperation;
 
-        public OrdersController(ISearchOrdersOperation searchOrdersOperation,
-            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+        public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
+            IUpdateOrderOperation updateOrderOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
+            _responseBuilder = responseBuilder;
+            _updateOrderOperation = updateOrderOperation;
+        }
+
+        [HttpPut("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> UpdateOrder(string id, [FromBody] JObject jObj)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _updateOrderOperation.Execute(jObj, id, subject, this.GetCommonId());
         }
 
         [Authorize("Connected")]

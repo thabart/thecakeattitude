@@ -14,9 +14,11 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Core.Commands.Messages;
 using Cook4Me.Api.Core.Commands.Notifications;
+using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
@@ -33,6 +35,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        UpdateOrderCommand GetUpdateOrder(JObject jObj);
         SearchOrdersParameter GetSearchOrdersParameter(JObject jObj);
         AddMessageCommand GetAddMessage(JObject jObj);
         SearchMessagesParameter GetSearchMessages(JObject jObj);
@@ -66,6 +69,60 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public UpdateOrderCommand GetUpdateOrder(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var orderLines = new List<UpdateOrderLine>();
+            var arrObj = jObj.GetValue(Constants.DtoNames.OrderNames.Lines);
+            if (arrObj != null)
+            {
+                var arr = arrObj as JArray;
+                if (arr != null)
+                {
+                    foreach(var rec in arr)
+                    {
+                        orderLines.Add(GetUpdateOrderLine(rec as JObject));
+                    }
+                }
+            }
+
+            var status = jObj.TryGetString(Constants.DtoNames.OrderNames.Status);
+            var st = OrderAggregateStatus.Created;
+            switch (status)
+            {
+                case "created":
+                    st = OrderAggregateStatus.Created;
+                    break;
+            }
+
+            var result = new UpdateOrderCommand
+            {
+                Id = jObj.TryGetString(Constants.DtoNames.OrderNames.Id),
+                OrderLines = orderLines,
+                Status = st
+            };
+            return result;
+        }
+
+        public UpdateOrderLine GetUpdateOrderLine(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpdateOrderLine
+            {
+                Id = jObj.TryGetString(Constants.DtoNames.OrderLineNames.Id),
+                ProductId = jObj.TryGetString(Constants.DtoNames.OrderLineNames.ProductId),
+                Quantity = jObj.Value<int>(Constants.DtoNames.OrderLineNames.Quantity)
+            };
+        }
+
         public SearchOrdersParameter GetSearchOrdersParameter(JObject jObj)
         {
             if (jObj == null)
@@ -925,6 +982,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new SearchProductsParameter
             {
+                ProductIds = jObj.TryGetStringArray(Constants.DtoNames.SearchProduct.ProductIds),
                 ShopIds = jObj.TryGetStringArray(Constants.DtoNames.Product.ShopId),
                 IsPagingEnabled = true,
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),

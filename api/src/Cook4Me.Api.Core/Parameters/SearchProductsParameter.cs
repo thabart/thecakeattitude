@@ -47,6 +47,7 @@ namespace Cook4Me.Api.Core.Parameters
             };
         }
 
+        public IEnumerable<string> ProductIds { get; set; }
         public IEnumerable<string> ShopIds { get; set; }
         public IEnumerable<string> CategoryIds { get; set; }
         public IEnumerable<string> ShopCategoryIds { get; set; }

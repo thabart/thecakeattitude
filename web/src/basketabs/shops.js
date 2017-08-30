@@ -7,7 +7,7 @@ import { BasketStore } from '../stores/index';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
 
-const defaultCount = 2;
+const defaultCount = 5;
 
 class Shops extends Component {
   constructor(props) {
@@ -22,10 +22,13 @@ class Shops extends Component {
     this.next = this.next.bind(this);
     this.refresh = this.refresh.bind(this);
     this.changePage = this.changePage.bind(this);
+    this.changeActiveShop = this.changeActiveShop.bind(this);
     this.state = {
       isLoading: false,
       shops: [],
-      navigation: []
+      navigation: [],
+      activatedShop: null,
+      errorMessage: null
     };
   }
 
@@ -37,9 +40,29 @@ class Shops extends Component {
   }
 
   next() { // Execute when the user click on next.
-    if (this.props.onNext) {
-      this.props.onNext();
+    if (this.state.activatedShop === null) {
+      const {t} = this.props;
+      this.setState({
+        errorMessage: t('selectOneShopError')
+      });
+      return;
     }
+
+    this.setState({
+      errorMessage: null
+    });
+
+    if (this.props.onNext) {
+      var self = this;
+      var orders = self._orders.filter(function(o) { return o.shop_id === self.state.activatedShop; });
+      this.props.onNext({ order: orders[0] });
+    }
+  }
+
+  changeActiveShop(shopId) { // Change the active shop.
+    this.setState({
+      activatedShop: shopId
+    });
   }
 
   refresh() { // Refresh the list of shops.
@@ -104,7 +127,11 @@ class Shops extends Component {
         var order = orders[0];
         var totalPrice = t('totalPrice').replace('{0}', order.total_price);
         var numberOfProducts = t('numberOfProducts').replace('{0}', order.lines.length);
-        shops.push((<li className="list-group-item">
+        shops.push((<li className="list-group-item list-group-item-action" onClick={() => self.changeActiveShop(shop.id) }>
+          { self.state.activatedShop === shop.id ? (
+             <div className="checkbox-container">
+                 <i className="fa fa-check checkbox txt-info"/>
+             </div>) : ''  }
           <div className="col-md-3"><img src={profileImage} width="50" /></div>
           <div className="col-md-3"><NavLink to={"/shops/" + shop.id + '/view/profile'} className="no-decoration red" href="#"><h4>{shop.name}</h4></NavLink></div>
           <div className="col-md-6">
@@ -118,17 +145,18 @@ class Shops extends Component {
     return (
       <div className="container rounded">
         <p>{t('basketShopsDescription')}</p>
-        <div className="col-md-12">
-          <section className="row p-1">
-            <ul className="list-group-default col-md-12">
+        {this.state.errorMessage !== null && (<span style={{color: "#d9534f"}}>{this.state.errorMessage}</span>)}
+        <div>
+          <section>
+            <ul className="list-group-default clickable">
               {shops}
             </ul>
             {pagination.length > 0 && (<ul className="pagination">
                 {pagination}
             </ul>)}
           </section>
-          <section className="row p-1">
-            <Button color="default" onClick={this.next}>{t('next')}</Button>
+          <section>
+            <Button color="default" onClick={this.next} >{t('next')}</Button>
           </section>
         </div>
       </div>

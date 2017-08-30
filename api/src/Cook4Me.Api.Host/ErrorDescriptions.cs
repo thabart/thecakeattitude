@@ -65,5 +65,8 @@ namespace Cook4Me.Api.Host
         public const string TheProductAndServiceCannotBeSpecifiedAtSameTime = "the product, shop service and client service parameters cannot be specified at same time";
         public const string TheParentMessageDoesntExist = "the parent message doesn't exist";
         public const string TheMessageCannotBeSentToYourself = "the message cannot be sent to yourself";
+        public const string TheOrderDoesntExist = "the order doesn't exist";
+        public const string TheOrderLineProductIsInvalid = "One or more products don't exist";
+        public const string TheOrderLineQuantityIsInvalid = "The quantity should be > 0";
     }
 }

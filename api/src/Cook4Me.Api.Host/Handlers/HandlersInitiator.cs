@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Notification;
+using Cook4Me.Api.Core.Events.Orders;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
@@ -40,11 +41,13 @@ namespace Cook4Me.Api.Host.Handlers
         private readonly ClientServiceEventsHandler _clientServiceEventsHandler;
         private readonly NotificationEventsHandler _notificationEventsHandler;
         private readonly MessageEventsHandler _messageEventsHandler;
+        private readonly OrderEventsHandler _orderEventsHandler;
         private readonly IBus _bus;
 
         public HandlersInitiator(ShopEventsHandler shopEventsHandler, ProductEventsHandler productEventsHandler, 
             ServiceEventsHandler serviceEventsHandler, ClientServiceEventsHandler clientServiceEventsHandlers,
-            NotificationEventsHandler notificationEventsHandler, MessageEventsHandler messageEventsHandler, IBus bus)
+            NotificationEventsHandler notificationEventsHandler, MessageEventsHandler messageEventsHandler,
+            OrderEventsHandler orderEventsHandler, IBus bus)
         {
             _shopEventsHandler = shopEventsHandler;
             _productEventsHandler = productEventsHandler;
@@ -52,6 +55,7 @@ namespace Cook4Me.Api.Host.Handlers
             _clientServiceEventsHandler = clientServiceEventsHandlers;
             _notificationEventsHandler = notificationEventsHandler;
             _messageEventsHandler = messageEventsHandler;
+            _orderEventsHandler = orderEventsHandler;
             _bus = bus;
         }
 
@@ -80,6 +84,7 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<NotificationUpdatedEvent>(_notificationEventsHandler.Handle);
                 _bus.RegisterHandler<NotificationAddedEvent>(_notificationEventsHandler.Handle);
                 _bus.RegisterHandler<MessageAddedEvent>(_messageEventsHandler.Handle);
+                _bus.RegisterHandler<OrderUpdatedEvent>(_orderEventsHandler.Handle);
                 _isInitiated = true;
             }
         }

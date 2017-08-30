@@ -339,6 +339,8 @@
   "yourShoppingCartTitle": "Votre panier",
   "transports": "Transports",
   "basketShopsDescription": "Sélectionnez pour quel magasin vous souhaitez acheter les produits",
-  "totalPrice": "Prix total {0}",
-  "numberOfProducts": "Nombre de produits {0}"
+  "totalPrice": "Prix total € {0}",
+  "numberOfProducts": "Nombre de produits {0}",
+  "selectOneShopError": "Un magasin doit être sélectionné",
+  "productBasketDescription": "Mettre à jour le contenu de votre panier"
 }

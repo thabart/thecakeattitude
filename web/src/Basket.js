@@ -14,6 +14,7 @@ class Basket extends Component {
         this.data = {};
         this.toggle = this.toggle.bind(this);
         this.refresh = this.refresh.bind(this);
+        this.displayProducts = this.displayProducts.bind(this);
         this.state = {
           activeTab: '1',
           isLoading: false,
@@ -39,7 +40,7 @@ class Basket extends Component {
       self.setState({
         isLoading: true
       });
-      OrdersService.search({ }).then(function(res) {
+      OrdersService.search({  }).then(function(res) {
         var embedded = res['_embedded'];
         if (!(embedded instanceof Array)) {
           embedded = [embedded];
@@ -59,6 +60,10 @@ class Basket extends Component {
           orders: []
         });
       });
+    }
+
+    displayProducts(order) { // Display the products.
+      this.refs.productTab.getWrappedInstance().display(order);
     }
 
     render() { // Renders the view.
@@ -81,12 +86,13 @@ class Basket extends Component {
                   { /* Shops tab */ }
                   <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
                     <ShopsTab onNext={(json) => {
-                        this.toggle('2', json);
+                        this.toggle('2');
+                        this.displayProducts(json.order);
                     }} orders={this.state.orders} />
                   </TabPane>
                   { /* Products tab */ }
                   <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-                      <ProductsTab onPrevious={() => {
+                      <ProductsTab ref="productTab" onPrevious={() => {
                           this.toggle('1');
                       }} onNext={(json) => {
                           this.toggle('3', json);

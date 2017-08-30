@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.ClientService;
 using Cook4Me.Api.Core.Commands.Messages;
 using Cook4Me.Api.Core.Commands.Notifications;
+using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
@@ -52,6 +53,7 @@ namespace Cook4Me.Api.Handlers
             var clientServiceCommandHandler = new ClientServiceCommandsHandler(provider.GetService<IClientServiceRepository>(), bus);
             var notificationCommandHandler = new NotificationCommandsHandler(provider.GetService<INotificationRepository>(), bus);
             var messageCommandsHandler = new MessageCommandsHandler(provider.GetService<IMessageRepository>(), bus);
+            var orderCommandsHandler = new OrderCommandsHandler(provider.GetService<IOrderRepository>(), provider.GetService<IProductRepository>(), bus);
             var notificationEventsHandler = new NotificationEventsHandler(provider.GetService<INotificationRepository>(), provider.GetService<IShopRepository>(), bus);
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddShopCommentCommand>(shopCommandHandler.Handle);
@@ -76,6 +78,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<ClientServiceAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ServiceAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductAddedEvent>(notificationEventsHandler.Handle);
+            bus.RegisterHandler<UpdateOrderCommand>(orderCommandsHandler.Handle);
             return serviceCollection;
         }
     }

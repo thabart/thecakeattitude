@@ -484,6 +484,7 @@ namespace Cook4Me.Api.Host
                 public const string MaxPrice = "max_price";
                 public const string ContainsValidPromotions = "contains_valid_promotions";
                 public const string Orders = "orders";
+                public const string ProductIds = "product_ids";
             }
 
             public static class OrderBy

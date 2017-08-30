@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Notification;
+using Cook4Me.Api.Core.Events.Orders;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
@@ -32,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderUpdatedEvent(OrderUpdatedEvent evt);
         JObject GetOrder(OrderAggregate order);
         JObject GetOrderLine(OrderAggregateLine orderLine);
         JObject GetDistance(Distance distance);
@@ -79,6 +81,19 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrderUpdatedEvent(OrderUpdatedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return result;
+        }
+
         public JObject GetOrder(OrderAggregate order)
         {
             if (order == null)
