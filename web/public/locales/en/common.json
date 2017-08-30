@@ -344,5 +344,9 @@
   "totalPrice": "Total price € {0}",
   "numberOfProducts": "Number of products {0}",
   "selectOneShopError": "A shop should be selected",
-  "productBasketDescription": "Update the content of your basket"
+  "productBasketDescription": "Update the content of your basket",
+  "reset": "Reset",
+  "basketUpdated": "Your basket has been updated",
+  "basketUpdatedError": "An error occured while trying to update your basket, please contact the administrator",
+  "basketHasChanged": "(*) Your basket has changed"
 }

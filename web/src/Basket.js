@@ -35,7 +35,7 @@ class Basket extends Component {
         }
     }
 
-    display() { // Refresh the view.
+    display() { // Display the view.
       var self = this;
       self.setState({
         isLoading: true

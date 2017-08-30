@@ -3,14 +3,14 @@ var EventEmitter = require('events').EventEmitter;
 var $ = require('jquery');
 import Constants from '../../Constants';
 
-var _orders = {};
+var _orders = [];
 
 function loadOrders(orders) {
   _orders = orders;
 }
 
 function updateOrders(json) {
-  _orders = $.extend({}, _orders, json);
+  _orders = json;
 }
 
 var BasketStore = $.extend({} , EventEmitter.prototype, {

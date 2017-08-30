@@ -342,5 +342,9 @@
   "totalPrice": "Prix total € {0}",
   "numberOfProducts": "Nombre de produits {0}",
   "selectOneShopError": "Un magasin doit être sélectionné",
-  "productBasketDescription": "Mettre à jour le contenu de votre panier"
+  "productBasketDescription": "Mettre à jour le contenu de votre panier",
+  "reset": "Réinitialiser",
+  "basketUpdated": "Votre panier a été mis à jour",
+  "basketUpdatedError": "Une erreur est survenue durant la mise à jour de votre panier, veuillez prendre contact avec l'administrateur",
+  "basketHasChanged": "(*) Votre panier a changé"
 }

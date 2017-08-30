@@ -4,9 +4,10 @@ import { translate } from 'react-i18next';
 import { ProductsService, OrdersService } from '../services/index';
 import { NavLink } from "react-router-dom";
 import { Guid } from '../utils/index';
-import { BasketStore } from '../stores/index';
+import { BasketStore, ApplicationStore } from '../stores/index';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
+import $ from 'jquery';
 
 const defaultCount = 5;
 
@@ -28,6 +29,7 @@ class Products extends Component {
     this.changeOrderLineQuantity = this.changeOrderLineQuantity.bind(this);
     this.update = this.update.bind(this);
     this.removeOrderLine = this.removeOrderLine.bind(this);
+    this.reset = this.reset.bind(this);
     this.state = {
       isLoading: false,
       products: [],
@@ -89,16 +91,22 @@ class Products extends Component {
   }
 
   display(order) { // Display the products.
-    this._order = order;
+    this._order = $.extend(true, {}, order);
     this.state.order = order;
     this.setState({
-      order: order
+      order: order,
+      hasChanged: false
     });
     this.refresh();
   }
 
   changeOrderLineQuantity(e, orderLineId) { // Change the order line quantity.
     var value = e.target.value;
+    if (value <= 0) {
+      e.preventDefault();
+      return;
+    }
+
     var order = this.state.order;
     var orderLines = order.lines;
     var orderLine = orderLines.filter(function(line) { return line.id === orderLineId; })[0];
@@ -130,20 +138,34 @@ class Products extends Component {
     });
   }
 
+  reset() { // Reset the changes.
+    this.setState({
+      order: $.extend(true, {}, this._order),
+      hasChanged: false
+    });
+  }
+
   update() { // Update the order.
     var self = this;
     self.setState({
       isLoading: true
     });
+    const {t} = this.props;
     self._commonId = Guid.generate();
     OrdersService.update(self.state.order.id, self.state.order, self._commonId).then(function() {
+      self._order = $.extend(true, {}, self.state.order);
       self.setState({
-        isLoading: false
+        isLoading: false,
+        hasChanged: false
+      });
+
+      ApplicationStore.sendMessage({
+        message: t('basketUpdated'),
+        level: 'success',
+        position: 'bl'
       });
 
       var orders = BasketStore.getOrders();
-      try {
-        console.log(orders);
       var filteredOrders = orders.filter(function(o) { return o.id === self.state.order.id });
       if (filteredOrders && filteredOrders.length === 1) {
         var order = filteredOrders[0];
@@ -151,17 +173,18 @@ class Products extends Component {
         order.lines = self.state.order.lines;
       }
 
-      console.log(orders);
       AppDispatcher.dispatch({
         actionName: Constants.events.UPDATE_BASKET_INFORMATION_ACT,
         data: orders
       });
-    } catch(e) {
-      console.log(e);
-    }
     }).catch(function() {
       self.setState({
         isLoading: false
+      });
+      ApplicationStore.sendMessage({
+        message: t('basketUpdatedError'),
+        level: 'success',
+        position: 'tr'
       });
     });
   }
@@ -207,7 +230,7 @@ class Products extends Component {
           <div>
             <section>
               <p>{t('productBasketDescription')}</p>
-
+              { this.state.hasChanged && ( <p>{t('basketHasChanged')}</p>) }
               { /* Display products */ }
               { products.length === 0 ? (<span>{t('noProducts')}</span>) : (
                 <div className="list-group-default">
@@ -227,7 +250,7 @@ class Products extends Component {
             <section style={{marginTop: "10px"}}>
                 <Button color="default" onClick={this.previous}>{t('previous')}</Button>
                 { this.state.hasChanged ? (<Button color="default" onClick={this.update}  style={{marginLeft:"5px"}}>{t('update')}</Button>) : (<Button color="default" style={{marginLeft:"5px"}} disabled>{t('update')}</Button>) }
-                <Button color="default" style={{marginLeft:"5px"}}>Reset</Button>
+                { this.state.hasChanged ? (<Button color="default" onClick={this.reset}  style={{marginLeft:"5px"}}>{t('reset')}</Button>) : (<Button color="default" style={{marginLeft:"5px"}} disabled>{t('reset')}</Button>) }
                 <Button color="default" onClick={this.next} style={{marginLeft:"5px"}}>{t('next')}</Button>
             </section>
           </div>

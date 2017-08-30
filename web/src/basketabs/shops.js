@@ -6,6 +6,7 @@ import { ShopsService } from '../services/index';
 import { BasketStore } from '../stores/index';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
+import $ from 'jquery';
 
 const defaultCount = 5;
 
@@ -56,7 +57,8 @@ class Shops extends Component {
     if (this.props.onNext) {
       var self = this;
       var orders = self.state.orders.filter(function(o) { return o.shop_id === self.state.activatedShop; });
-      this.props.onNext({ order: orders[0] });
+      var order = $.extend(true, {}, orders[0]);
+      this.props.onNext({ order: order });
     }
   }
 
@@ -102,8 +104,11 @@ class Shops extends Component {
     });
   }
 
-  refreshOrders() {
-    console.log('refresh orders');
+  refreshOrders() { // Refresh the orders.
+    var orders = BasketStore.getOrders();
+    this.setState({
+      orders: orders
+    });
   }
 
   render() { // Display the component.
@@ -186,7 +191,7 @@ class Shops extends Component {
 
   componentWillUnmount() { // Remove listener.
     AppDispatcher.unregister(this._waitForToken);
-    BasketStore.removeChangeListener(self.refreshOrders);
+    BasketStore.removeChangeListener(this.refreshOrders);
   }
 }
 
