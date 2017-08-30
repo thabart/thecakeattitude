@@ -1,3 +1,5 @@
+REQUEST : https://wwwcie.ups.com/rest/Ship
+
 {	
 	"UPSSecurity": {
 		"UsernameToken": { 
@@ -22,7 +24,7 @@
 				"AttentionName": "Shipper Attn Name", 
 				"TaxIdentificationNumber": "123456",
 				"Phone": { "Number": "1234567890", "Extension": "1" }, 
-				"ShipperNumber": "123456", 
+				"ShipperNumber": "98FF76", 
 				"FaxNumber": "1234567890", 
 				"Address": { "AddressLine": "223 avenue des croix du feu", "City": "Bruxelles", "PostalCode": "1020", "CountryCode": "BE" } 
 			}, 
@@ -30,7 +32,12 @@
 				"Name": "Ship To Name", 
 				"AttentionName": "Ship To Attn Name",
 				"Phone": { "Number": "1234567890" },
-				"Address": { "AddressLine": "Avenue J. Brel 30", "City": "Bruxelles", "PostalCode": "1200", "CountryCode": "BE" }
+				"Address": {
+					"AddressLine": [ "rue solleveld 20" ],   
+					"City": "Bruxelles",
+					"PostalCode": "1200",
+					"CountryCode": "BE"
+				}
 			}, 
 			"ShipFrom": { 
 				"Name": "Ship From Name", 

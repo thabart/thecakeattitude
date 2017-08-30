@@ -49,6 +49,8 @@ namespace Cook4Me.Api.Host.Enrichers
             halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetOrder(order),
                 (l) =>
                 {
+                    l.AddOtherItem("shop", new Dtos.Link("/" + Constants.RouteNames.Shops + "/" + order.ShopId));
+                    l.AddOtherItem("user", new Dtos.Link("/" + Constants.RouteNames.Users + "/" + order.Subject));
                     l.AddSelf(Constants.RouteNames.Orders + "/" + order.Id);
                 }));
         }

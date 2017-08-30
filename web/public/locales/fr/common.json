@@ -335,6 +335,10 @@
   "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Ajouter quelques caractéristiques à votre produit par exemple : <i>Couleur = Bleu, Taille = Moyenne</i>",
   "add": "Ajouter",
   "characteriticValuePlaceHolder": "Valeurs",
-  "add_product": "Un nouveau produit a été ajouté"
-
+  "add_product": "Un nouveau produit a été ajouté",
+  "yourShoppingCartTitle": "Votre panier",
+  "transports": "Transports",
+  "basketShopsDescription": "Sélectionnez pour quel magasin vous souhaitez acheter les produits",
+  "totalPrice": "Prix total {0}",
+  "numberOfProducts": "Nombre de produits {0}"
 }

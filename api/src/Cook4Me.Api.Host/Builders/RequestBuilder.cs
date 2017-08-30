@@ -587,6 +587,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new SearchShopsParameter
             {
+                ShopIds = jObj.TryGetStringArray(Constants.DtoNames.SearchShop.ShopIds),
                 CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.CategoryId),
                 CategoryMapNames = jObj.TryGetStringArray(Constants.DtoNames.Shop.CategoryMapName),
                 PlaceIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.Place),

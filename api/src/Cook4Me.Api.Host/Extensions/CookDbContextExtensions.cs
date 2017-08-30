@@ -27,6 +27,8 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _shoesCategoryId = "a20ab67b-f046-40c5-b5cd-566b3fca2749"; //Guid.NewGuid().ToString();
         private static string _bakeryCategoryId = Guid.NewGuid().ToString();
         private static string _firstShopId = Guid.NewGuid().ToString();
+        private static string _secondShopId = Guid.NewGuid().ToString();
+        private static string _thirdShopId = Guid.NewGuid().ToString();
         private static string _ecoTagName = "eco";
         private static string _secondHandTagName = "second hand";
         private static string _womenProductCategory = Guid.NewGuid().ToString();
@@ -82,6 +84,47 @@ namespace Cook4Me.Api.Host.Extensions
                         UpdateDateTime = DateTime.UtcNow,
                         TotalPrice = 1000,
                         Subject = "administrator",
+                        ShopId = _firstShopId,
+                        OrderLines = new []
+                        {
+                            new OrderLine
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Price = 1000,
+                                ProductId = _jeanProductId,
+                                Quantity = 2
+                            }
+                        }
+                    },
+                    new Order
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Status = 0,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        TotalPrice = 1000,
+                        Subject = "administrator",
+                        ShopId = _secondShopId,
+                        OrderLines = new []
+                        {
+                            new OrderLine
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Price = 1000,
+                                ProductId = _jeanProductId,
+                                Quantity = 2
+                            }
+                        }
+                    },
+                    new Order
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Status = 0,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        TotalPrice = 1000,
+                        Subject = "administrator",
+                        ShopId = _thirdShopId,
                         OrderLines = new []
                         {
                             new OrderLine
@@ -181,6 +224,98 @@ namespace Cook4Me.Api.Host.Extensions
                         Id = _firstShopId,
                         Subject = "administrator",
                         Name = "shop 1",
+                        Description = "description 1",
+                        CategoryId = _shoesCategoryId,
+                        CategoryMapName = "first_shoes_map",
+                        StreetAddress = "street adr 1",
+                        PostalCode = "postal code 1",
+                        Locality = "locality 1",
+                        Country = "country 1",
+                        PlaceId = "place3",
+                        GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
+                        Longitude = 4.3630615F,
+                        Latitude = 50.8939195F,
+                        TotalScore = 16,
+                        AverageScore = 3.2,
+                        PaymentMethods = new List<PaymentMethod>
+                        {
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 0
+                            },
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 1,
+                                Iban = "BE400000000000000"
+                            },
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 2,
+                                PaypalAccount = "habarthierry@hotmail.fr"
+                            }
+                        },
+                        ShopMap = new Map
+                        {
+                            MapName = "first_shop",
+                            PartialMapUrl = "/shops/first_shop.json",
+                            OverviewName = "first_shop_overview",
+                            PartialOverviewUrl = "/shops/shop_overview.png"
+                        }
+                    },
+                    new Shop
+                    {
+                        Id = _secondShopId,
+                        Subject = "administrator",
+                        Name = "shop 2",
+                        Description = "description 1",
+                        CategoryId = _shoesCategoryId,
+                        CategoryMapName = "first_shoes_map",
+                        StreetAddress = "street adr 1",
+                        PostalCode = "postal code 1",
+                        Locality = "locality 1",
+                        Country = "country 1",
+                        PlaceId = "place3",
+                        GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
+                        Longitude = 4.3630615F,
+                        Latitude = 50.8939195F,
+                        TotalScore = 16,
+                        AverageScore = 3.2,
+                        PaymentMethods = new List<PaymentMethod>
+                        {
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 0
+                            },
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 1,
+                                Iban = "BE400000000000000"
+                            },
+                            new PaymentMethod
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Method = 2,
+                                PaypalAccount = "habarthierry@hotmail.fr"
+                            }
+                        },
+                        ShopMap = new Map
+                        {
+                            MapName = "first_shop",
+                            PartialMapUrl = "/shops/first_shop.json",
+                            OverviewName = "first_shop_overview",
+                            PartialOverviewUrl = "/shops/shop_overview.png"
+                        }
+                    },
+                    new Shop
+                    {
+                        Id = _thirdShopId,
+                        Subject = "administrator",
+                        Name = "shop 3",
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
                         CategoryMapName = "first_shoes_map",

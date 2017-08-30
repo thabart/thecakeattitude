@@ -40,6 +40,7 @@ namespace Cook4Me.Api.EF.Extensions
                 Subject = order.Subject,
                 TotalPrice = order.TotalPrice,
                 UpdateDateTime = order.UpdateDateTime,
+                ShopId = order.ShopId,
                 OrderLines = order.OrderLines == null ? new List<OrderLine>() : order.OrderLines.Select(o => o.ToModel()).ToList()
             };
         }
@@ -75,6 +76,7 @@ namespace Cook4Me.Api.EF.Extensions
                 Subject = order.Subject,
                 TotalPrice = order.TotalPrice,
                 UpdateDateTime = order.UpdateDateTime,
+                ShopId = order.ShopId,
                 OrderLines = order.OrderLines == null ? null : order.OrderLines.Select(o => o.ToAggregate())
             };
         }

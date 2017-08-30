@@ -91,6 +91,7 @@ namespace Cook4Me.Api.Host
                 public const string Status = "status";
                 public const string Subject = "subject";
                 public const string Lines = "lines";
+                public const string ShopId = "shop_id";
             }
 
             public static class OrderLineNames
@@ -473,6 +474,7 @@ namespace Cook4Me.Api.Host
                 public const string SouthWest = "sw";
                 public const string Orders = "orders";
                 public const string Tag = "tag";
+                public const string ShopIds = "shop_ids";
             }
 
             public static class SearchProduct

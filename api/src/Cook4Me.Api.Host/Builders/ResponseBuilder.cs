@@ -101,6 +101,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderNames.UpdateDateTime, order.UpdateDateTime);
             result.Add(Constants.DtoNames.OrderNames.TotalPrice, order.TotalPrice);
             result.Add(Constants.DtoNames.OrderNames.Subject, order.Subject);
+            result.Add(Constants.DtoNames.OrderNames.ShopId, order.ShopId);
             string status = null;
             switch(order.Status)
             {

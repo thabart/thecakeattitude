@@ -31,6 +31,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public DateTime UpdateDateTime { get; set; }
         public OrderAggregateStatus Status { get; set; }
         public string Subject { get; set; }
+        public string ShopId { get; set; }
         public IEnumerable<OrderAggregateLine> OrderLines { get; set; }
         public double TotalPrice { get; set; }
     }

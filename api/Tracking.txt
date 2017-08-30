@@ -1,0 +1,58 @@
+CLIENT : Choisir moyen de transport (recevoir colis) => confirmer l'adresse de l'envoie => choisir entre UPS ou BPOST => si point de dépot est affiché alors montrer la carte => résumé de l'achat (afficher le prix + un certain montant variable selon l'envoie)
+Lorsqu'on clique sur UPS alors montrer les frais d'envoie : choisir parmis les services => appeler la méthode : https://wwwcie.ups.com/rest/Rate
+Lorsqu'on clique sur BPOST alors montrer les frais d'envoie : choisir parmis les services => appeler la méthode : https://parcel.bpost.be/fr/select-weight
+VENDEUR : Reçoit la demande => afficher les préférences de réception de la commande (BPOST) OU UPS ou HAND TO HAND => Si BPOST alors afficher le site / Si UPS alors afficher le site => Saisir le prix d'envoie => et confirmer la commande (un email sera ensuite envoyé au client)
+
+Pour BPOST il est possible d'envoyer un colis via cet URL : https://parcel.bpost.be/fr
+Exécuter cette requête :
+
+HTTP GET : http://track.bpost.be/btr/api/items?itemIdentifier=LVS2015933300108328N1
+
+Résultat : 
+{"items":[{
+	"key":{"id":1,"created":0,"version":0,"primaryKey":"1"},
+	"itemCode":"LVS2015933300108328N1",
+	"productCategory":"parcel",
+	"retourOrBackToSender":false,
+	"processOverview":{
+		"activeStepTextKey":"INTERNATIONAL",
+		"textKey":"step.text.international",
+		"alert":false,
+		"processSteps":[
+		{"name":"international","status":"active","label":{"main":"processing","detail":"abroad"},"knownProcessStep":"PROCESSING_INTERNATIONAL"},
+		{"name":"processing","status":"upcoming","label":{"main":"processing","detail":"byBpost"},"knownProcessStep":"PROCESSING"},
+		{"name":"out_for_delivery","status":"upcoming","label":{"main":"onTheWay","detail":"toYou"},"knownProcessStep":"ON_THE_WAY_TO_YOU"},
+		{"name":"delivered","status":"upcoming","label":{"main":"delivered","detail":"atHome"},"knownProcessStep":"DELIVERED_AT_HOME"}]},
+		"events":[{"date":"2017-08-04","time":"18:15","key":"distribution-office.arrival-on_the_round","location":{},"irregularity":false},
+		{"date":"2017-08-02","time":"07:46","key":"office-of-exchange.depart.outward-sent_off_office_of_exchange","location":{},"irregularity":false},
+		{"date":"2017-08-02","time":"07:46","key":"office-of-exchange.depart.outward-sent_off_office_of_exchange","location":{},"irregularity":false},
+		{"date":"2017-07-25","time":"13:00","key":"office-of-exchange.arrive.outward-outward","location":{},"irregularity":false}],
+	"requestedDeliveryMethod":"HOME","services":[],"faqs":[{"id":"faqid_1","title":{"fr":"J'aurais déjà dû recevoir mon paquet, mais il n'a pas encore été livré. Où se trouve-t-il ?","nl":"Ik had mijn pakje al verwacht, maar het is nog niet bezorgd. Waar is mijn pakje nu?","en":"I had expected to receive my parcel but it has not been delivered yet. Where is it now?"}},{"id":"faqid_2","title":{"fr":"Quid si je ne suis pas chez moi lorsque le facteur vient livrer mon paquet ?","nl":"Wat als ik niet thuis ben als de postbode mijn pakje komt afleveren?","en":"What if I am not home when the parcel is delivered?"}},{"id":"faqid_3","title":{"fr":"Qui peut réceptionner mon paquet ?","nl":"Wie mag mijn pakje in ontvangst nemen?","en":"Who can pick up my parcel?"}}],"signatureViewType":"NONE"}]}
+	
+Pour UPS : 
+Il est possible d'envoyer un colis via cet URL : https://www.ups.com/ship?loc=fr_FR#/init
+	
+Exécuter cette requête :
+HTTP POST : https://wwwcie.ups.com/ups.app/xml/Track
+BODY :
+<?xml version="1.0"?>
+<AccessRequest xml:lang="en-US">
+  <AccessLicenseNumber>FD300339C9051F5C</AccessLicenseNumber>
+  <UserId>thabart1</UserId>
+  <Password>CakeAttitude1989</Password>
+</AccessRequest>
+<?xml version="1.0"?>
+<TrackRequest xml:lang="en-US">
+  <Request>
+    <TransactionReference>
+      <CustomerContext>Your Test Case Summary
+Description</CustomerContext>
+       <XpciVersion>1.0</XpciVersion>
+    </TransactionReference>
+    <RequestAction>Track</RequestAction>
+    <RequestOption>activity</RequestOption>
+  </Request>
+  <TrackingNumber>1Z12345E0291980793</TrackingNumber>
+</TrackRequest>
+	
+	

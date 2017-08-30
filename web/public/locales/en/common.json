@@ -337,5 +337,10 @@
   "productCharacteristicDescription": "<i className='fa fa-exclamation-triangle'></i> Add some characteristics to your product for example : <i>Color = Blue, Size = Medium</i>",
   "add": "Add",
   "characteriticValuePlaceHolder": "Values",
-  "add_product": "A new product has been added"
+  "add_product": "A new product has been added",
+  "yourShoppingCartTitle": "Your shopping cart",
+  "transports": "Transports",
+  "basketShopsDescription": "Select the shop which you want to purchase the products",
+  "totalPrice": "Total price {0}",
+  "numberOfProducts": "Number of products {0}"
 }
