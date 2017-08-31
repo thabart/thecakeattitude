@@ -35,6 +35,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        AddOrderLineCommand GetAddOrderLine(JObject jObj);
         UpdateOrderCommand GetUpdateOrder(JObject jObj);
         SearchOrdersParameter GetSearchOrdersParameter(JObject jObj);
         AddMessageCommand GetAddMessage(JObject jObj);
@@ -69,6 +70,19 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public AddOrderLineCommand GetAddOrderLine(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new AddOrderLineCommand
+            {
+                ProductId = jObj.TryGetString(Constants.DtoNames.OrderLineNames.ProductId)
+            };
+        }
+
         public UpdateOrderCommand GetUpdateOrder(JObject jObj)
         {
             if (jObj == null)

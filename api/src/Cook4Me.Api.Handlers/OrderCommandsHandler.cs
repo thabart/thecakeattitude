@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>
+    public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
@@ -39,6 +39,8 @@ namespace Cook4Me.Api.Handlers
             _productRepository = productRepository;
             _eventPublisher = eventPublisher;
         }
+
+        // TODO : Update the stock when the order is confirmed.
 
         public async Task Handle(UpdateOrderCommand message)
         {
@@ -114,6 +116,84 @@ namespace Cook4Me.Api.Handlers
                 Id = message.OrderId,
                 CommonId = message.CommonId,
                 Subject = message.Subject
+            });
+        }
+
+        public async Task Handle(AddOrderLineCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            string id = null;
+            var product = await _productRepository.Get(message.ProductId);
+            var orders = await _orderRepository.Search(new SearchOrdersParameter { Shops = new[] { product.ShopId }, Subjects = new[] { message.Subject } });
+            if (orders.Content.Count() > 1)
+            {
+                return;
+            }
+
+            if (orders.Content.Count() == 1) // Update existing order.
+            {
+                var order = orders.Content.First();
+                var orderLines = order.OrderLines.ToList();
+                var orderLine = orderLines.FirstOrDefault(l => l.ProductId == message.ProductId);
+                if (orderLine == null)
+                {
+                    orderLine = new OrderAggregateLine
+                    {
+                        Id = message.Id,
+                        Price = product.NewPrice * message.Quantity,
+                        ProductId = message.ProductId,
+                        Quantity = message.Quantity
+                    };
+                    orderLines.Add(orderLine);
+                }
+                else
+                {
+                    orderLine.Quantity += message.Quantity;
+                    orderLine.Price = orderLine.Quantity * product.NewPrice;
+                }
+
+                order.OrderLines = orderLines;
+                order.TotalPrice = orderLines.Sum(line => line.Price);
+                await _orderRepository.Update(order);
+                id = order.Id;
+            }
+            else // Add new order.
+            {
+                var newOrder = new OrderAggregate
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    CreateDateTime = DateTime.UtcNow,
+                    ShopId = product.ShopId,
+                    Subject = message.Subject,
+                    Status = OrderAggregateStatus.Created,
+                    UpdateDateTime = DateTime.UtcNow,
+                    TotalPrice = product.NewPrice * message.Quantity,
+                    OrderLines = new[]
+                    {
+                    new OrderAggregateLine
+                    {
+                        Id = message.Id,
+                        Price = product.NewPrice * message.Quantity,
+                        ProductId = product.Id,
+                        Quantity = message.Quantity
+                    }
+                }
+                };
+
+                await _orderRepository.Insert(newOrder);
+                id = newOrder.Id;
+            }
+
+            _eventPublisher.Publish(new OrderAddedEvent
+            {
+                CommonId = message.CommonId,
+                Subject = message.Subject,
+                OrderId = id,
+                OrderLineId = message.Id
             });
         }
     }

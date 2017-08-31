@@ -180,6 +180,11 @@ namespace Cook4Me.Api.EF.Repositories
                 orders = orders.Where(s => parameter.Subjects.Contains(s.Subject));
             }
 
+            if (parameter.Shops != null && parameter.Shops.Any())
+            {
+                orders = orders.Where(s => parameter.Shops.Contains(s.ShopId));
+            }
+
             if (parameter.OrderBy != null)
             {
                 foreach (var orderBy in parameter.OrderBy)

@@ -80,6 +80,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<ProductAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<UpdateOrderCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<RemoveOrderCommand>(orderCommandsHandler.Handle);
+            bus.RegisterHandler<AddOrderLineCommand>(orderCommandsHandler.Handle);
             return serviceCollection;
         }
     }

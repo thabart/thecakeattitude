@@ -14,24 +14,15 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Bus;
 
-namespace Cook4Me.Api.Core.Parameters
+namespace Cook4Me.Api.Core.Commands.Orders
 {
-    public class SearchOrdersParameter
+    public class AddOrderLineCommand : Command
     {
-        public SearchOrdersParameter()
-        {
-            StartIndex = 0;
-            Count = 100;
-            IsPagingEnabled = true;
-        }
-
-        public int StartIndex { get; set; }
-        public int Count { get; set; }
-        public bool IsPagingEnabled { get; set; }
-        public IEnumerable<string> Subjects { get; set; }
-        public IEnumerable<string> Shops { get; set; }
-        public IEnumerable<OrderBy> OrderBy { get; set; }
+        public string Id { get; set; }
+        public string Subject { get; set; }
+        public int Quantity { get; set; }
+        public string ProductId { get; set; }
     }
 }

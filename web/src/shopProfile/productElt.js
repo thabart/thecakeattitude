@@ -1,12 +1,23 @@
 import React, {Component} from "react";
 import { NavLink } from "react-router-dom";
 import { translate } from 'react-i18next';
+import { SessionService, OrdersService } from '../services/index';
 import Rater from "react-rater";
 import "../styles/productElt.css";
 
 class ProductElt extends Component {
     constructor(props) {
         super(props);
+        this.addToCart = this.addToCart.bind(this);
+    }
+
+    addToCart(e) { // Add the product to the cart.
+      e.stopPropagation();
+      e.preventDefault();
+      var product = this.props.product;
+      OrdersService.add({ product_id: product.id }).catch(function() {
+        
+      });
     }
 
     render() { // Returns the view.
@@ -44,6 +55,7 @@ class ProductElt extends Component {
         }
 
         var description = product.description.length > 70 ? product.description.substring(0, 67) + "..." : product.description;
+        var isLoggedIn = SessionService.isLoggedIn();
         return (
             <div className={this.props.className + " product-item"}>
               <div className="content">
@@ -78,7 +90,7 @@ class ProductElt extends Component {
                         <ul>
                             {filters}
                         </ul>
-                        <button className="btn btn-default">{t('addToCart')}</button>
+                        {isLoggedIn && ( <button className="btn btn-default" onClick={this.addToCart}>{t('addToCart')}</button> )}
                     </div>
                 </NavLink>
               </div>

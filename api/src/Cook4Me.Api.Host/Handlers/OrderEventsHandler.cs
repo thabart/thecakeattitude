@@ -27,7 +27,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Handlers
 {
-    public class OrderEventsHandler : Handles<OrderUpdatedEvent>, Handles<OrderRemovedEvent>
+    public class OrderEventsHandler : Handles<OrderUpdatedEvent>, Handles<OrderRemovedEvent>, Handles<OrderAddedEvent>
     {
         private readonly IConnectionManager _connectionManager;
         private readonly IResponseBuilder _responseBuilder;
@@ -36,6 +36,26 @@ namespace Cook4Me.Api.Host.Handlers
         {
             _connectionManager = connectionManager;
             _responseBuilder = responseBuilder;
+        }
+
+        public Task Handle(OrderAddedEvent message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var notifier = _connectionManager.GetHubContext<SecuredHub>();
+            var lst = new[] { message.Subject };
+            lst.Distinct();
+            var connectionIds = new List<string>();
+            foreach (var r in lst)
+            {
+                connectionIds.AddRange(SecuredHub.Connections.GetConnections(r).ToList());
+            }
+
+            notifier.Clients.Clients(connectionIds).orderAdded(_responseBuilder.GetOrderAddedEvent(message));
+            return Task.FromResult(0);
         }
 
         public Task Handle(OrderRemovedEvent message)

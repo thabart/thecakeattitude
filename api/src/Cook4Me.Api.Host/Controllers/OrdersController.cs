@@ -34,15 +34,31 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IResponseBuilder _responseBuilder;
         private readonly IUpdateOrderOperation _updateOrderOperation;
         private readonly IDeleteOrderOperation _deleteOrderOperation;
+        private readonly IAddOrderLineOperation _addOrderLineOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
-            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IAddOrderLineOperation addOrderLineOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
             _updateOrderOperation = updateOrderOperation;
             _deleteOrderOperation = deleteOrderOperation;
+            _addOrderLineOperation = addOrderLineOperation;
+        }
+
+        [HttpPost]
+        [Authorize("Connected")]
+        public async Task<IActionResult> AddOrderLine([FromBody] JObject jObj)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _addOrderLineOperation.Execute(jObj, subject, this.GetCommonId());
         }
 
         [HttpDelete("{id}")]
