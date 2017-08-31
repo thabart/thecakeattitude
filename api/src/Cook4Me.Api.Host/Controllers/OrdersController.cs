@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Handlers;
@@ -32,13 +33,35 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly ISearchOrdersOperation _searchOrdersOperation;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IUpdateOrderOperation _updateOrderOperation;
+        private readonly IDeleteOrderOperation _deleteOrderOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
-            IUpdateOrderOperation updateOrderOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
+            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
             _updateOrderOperation = updateOrderOperation;
+            _deleteOrderOperation = deleteOrderOperation;
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> DeleteOrder(string id)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _deleteOrderOperation.Execute(new RemoveOrderCommand
+            {
+                CommonId = this.GetCommonId(),
+                OrderId = id,
+                Subject = subject
+            });
         }
 
         [HttpPut("{id}")]

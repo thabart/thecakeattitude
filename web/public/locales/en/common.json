@@ -340,7 +340,7 @@
   "add_product": "A new product has been added",
   "yourShoppingCartTitle": "Your shopping cart",
   "transports": "Transports",
-  "basketShopsDescription": "Select the shop which you want to purchase the products",
+  "basketShopsDescription": "Select the shop which you want to pay the bill",
   "totalPrice": "Total price € {0}",
   "numberOfProducts": "Number of products {0}",
   "selectOneShopError": "A shop should be selected",
@@ -348,5 +348,12 @@
   "reset": "Reset",
   "basketUpdated": "Your basket has been updated",
   "basketUpdatedError": "An error occured while trying to update your basket, please contact the administrator",
-  "basketHasChanged": "(*) Your basket has changed"
+  "basketHasChanged": "(*) Your basket has changed",
+  "oneUnitEqualTo": "One unit : {0}",
+  "pricePerUnit": "Price per unit : {0}",
+  "availableInStock": "Available in stock : {0}",
+  "bills": "Bills",
+  "orderRemoved": "The bill has been removed",
+  "removeOrderError": "An error occured while trying to remove the bill, please contact the administrator",
+  "noBills": "No bills"
 }

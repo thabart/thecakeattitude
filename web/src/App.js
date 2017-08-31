@@ -169,6 +169,12 @@ class App extends Component {
                 data: message
             });
         });
+        securedProxy.on('orderRemoved', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.ORDER_REMOVED_ARRIVED,
+                data: message
+            });
+        });
         proxy.on('notificationUpdated', function(message) {
             AppDispatcher.dispatch({
                 actionName: 'update-notification',

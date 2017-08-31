@@ -111,6 +111,15 @@ class Products extends Component {
     var orderLines = order.lines;
     var orderLine = orderLines.filter(function(line) { return line.id === orderLineId; })[0];
     var product = this.state.products.filter(function(p) { return p.id === orderLine.product_id; })[0];
+    if (value > product.available_in_stock) {
+      e.preventDefault();
+      return;
+    }
+
+    var order = this.state.order;
+    var orderLines = order.lines;
+    var orderLine = orderLines.filter(function(line) { return line.id === orderLineId; })[0];
+    var product = this.state.products.filter(function(p) { return p.id === orderLine.product_id; })[0];
     orderLine.quantity = value;
     orderLine.price = value * product.price;
     var totalPrice = 0;
@@ -183,7 +192,7 @@ class Products extends Component {
       });
       ApplicationStore.sendMessage({
         message: t('basketUpdatedError'),
-        level: 'success',
+        level: 'error',
         position: 'tr'
       });
     });
@@ -216,9 +225,18 @@ class Products extends Component {
 
         products.push((<li className="list-group-item">
           <div className="col-md-2"><img src={productImage} width="40" /></div>
-          <div className="col-md-3"><NavLink to={"/products/" + product.id} className="no-decoration red" href="#"><h4>{product.name}</h4></NavLink></div>
-          <div className="col-md-3"><h4>€ {orderLine.price}</h4></div>
-          <div className="col-md-2"><input type="number" className="form-control" value={orderLine.quantity} min="0" onChange={(e) => self.changeOrderLineQuantity(e, orderLine.id)} /></div>
+          <div className="col-md-3">
+            <NavLink to={"/products/" + product.id} className="no-decoration red" href="#"><h4>{product.name}</h4></NavLink>
+            <p>
+              {t('oneUnitEqualTo').replace('{0}', product.quantity + ' ' + t(product.unit_of_measure))} <br />
+              {t('pricePerUnit').replace('{0}', '€ ' + product.new_price)} <br />
+              {t('availableInStock').replace('{0}', product.available_in_stock)}
+            </p>
+          </div>
+          <div className="col-md-3">
+            <h4>€ {orderLine.price}</h4>
+          </div>
+          <div className="col-md-2"><input type="number" className="form-control" value={orderLine.quantity} max={product.available_in_stock} min="0" onChange={(e) => self.changeOrderLineQuantity(e, orderLine.id)} /></div>
           <div className="col-md-2"><a href="#" className="btn-light red" onClick={(e) => { self.removeOrderLine(e, orderLine.id) }}><i className="fa fa-trash"></i></a></div>
         </li>));
       });

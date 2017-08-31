@@ -68,5 +68,7 @@ namespace Cook4Me.Api.Host
         public const string TheOrderDoesntExist = "the order doesn't exist";
         public const string TheOrderLineProductIsInvalid = "One or more products don't exist";
         public const string TheOrderLineQuantityIsInvalid = "The quantity should be > 0";
+        public const string TheOrderLineQuantityIsTooMuch = "There is not enough product";
+        public const string TheOrderCannotBeRemovedByYou = "The order cannot be removed by you";
     }
 }

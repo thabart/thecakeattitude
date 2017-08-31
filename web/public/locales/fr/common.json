@@ -338,7 +338,7 @@
   "add_product": "Un nouveau produit a été ajouté",
   "yourShoppingCartTitle": "Votre panier",
   "transports": "Transports",
-  "basketShopsDescription": "Sélectionnez pour quel magasin vous souhaitez acheter les produits",
+  "basketShopsDescription": "Sélectionnez pour quel magasin vous souhaitez payer la facture",
   "totalPrice": "Prix total € {0}",
   "numberOfProducts": "Nombre de produits {0}",
   "selectOneShopError": "Un magasin doit être sélectionné",
@@ -346,5 +346,12 @@
   "reset": "Réinitialiser",
   "basketUpdated": "Votre panier a été mis à jour",
   "basketUpdatedError": "Une erreur est survenue durant la mise à jour de votre panier, veuillez prendre contact avec l'administrateur",
-  "basketHasChanged": "(*) Votre panier a changé"
+  "basketHasChanged": "(*) Votre panier a changé",
+  "oneUnitEqualTo": "Une unité : {0}",
+  "pricePerUnit": "Prix par unité : {0}",
+  "availableInStock": "En stock : {0}",
+  "bills": "Factures",
+  "orderRemoved": "La facture a été supprimée",
+  "removeOrderError": "Une erreur est survenue durant la suppression de la facture, veuillez prendre contact avec l'administrateur",
+  "noBills": "Aucune facture"
 }

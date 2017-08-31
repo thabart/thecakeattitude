@@ -74,7 +74,7 @@ class Basket extends Component {
                 <h2>{t('yourShoppingCartTitle')}</h2>
                 <div className="mt-1 mb-1 p-1 bg-white rounded">
                     <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
-                      <li className="col-2 active"><div className="counter-rounded">1</div>{t('shops')}</li>
+                      <li className="col-2 active"><div className="counter-rounded">1</div>{t('bills')}</li>
                       <li className={this.state.activeTab >= '2' ? "col-2 active" : "col-2"}><div className="counter-rounded">2</div>{t('products')}</li>
                       <li className={this.state.activeTab >= '3' ? "col-2 active" : "col-2"}><div className="counter-rounded">3</div>{t('transports')}</li>
                     </ul>

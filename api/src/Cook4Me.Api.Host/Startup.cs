@@ -157,6 +157,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IAddServiceValidator, AddServiceValidator>();
             services.AddTransient<IAddMessageValidator, AddMessageValidator>();
             services.AddTransient<IUpdateOrderValidator, UpdateOrderValidator>();
+            services.AddTransient<IRemoveOrderValidator, RemoveOrderValidator>();
             services.AddTransient<IControllerHelper, ControllerHelper>();
             services.AddTransient<IAddShopOperation, AddShopOperation>();
             services.AddTransient<IAddShopCommentOperation, AddShopCommentOperation>();

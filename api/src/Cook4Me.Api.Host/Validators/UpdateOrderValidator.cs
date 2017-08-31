@@ -77,7 +77,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderDoesntExist);
             }
 
-            if (order.OrderLines != null)
+            if (order.OrderLines != null && order.OrderLines.Any())
             {
                 var productIds = order.OrderLines.Select(o => o.ProductId);
                 var products = await _productRepository.Search(new SearchProductsParameter { ProductIds = productIds });
@@ -89,6 +89,15 @@ namespace Cook4Me.Api.Host.Validators
                 if (order.OrderLines.Any(o => o.Quantity <= 0))
                 {
                     return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderLineQuantityIsInvalid);
+                }
+
+                foreach (var orderLine in order.OrderLines)
+                {
+                    var product = products.Content.First(p => p.Id == orderLine.ProductId);
+                    if (orderLine.Quantity > product.AvailableInStock)
+                    {
+                        return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderLineQuantityIsTooMuch);
+                    }
                 }
             }
 

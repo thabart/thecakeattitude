@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderRemovedEvent(OrderRemovedEvent evt);
         JObject GetOrderUpdatedEvent(OrderUpdatedEvent evt);
         JObject GetOrder(OrderAggregate order);
         JObject GetOrderLine(OrderAggregateLine orderLine);
@@ -81,6 +82,19 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrderRemovedEvent(OrderRemovedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderNames.Id, evt.Id);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return result;
+        }
+
         public JObject GetOrderUpdatedEvent(OrderUpdatedEvent evt)
         {
             if (evt == null)
@@ -1068,6 +1082,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Product.TotalScore, product.TotalScore);
             jObj.Add(Constants.DtoNames.Product.CreateDateTime, product.CreateDateTime);
             jObj.Add(Constants.DtoNames.Product.UpdateDateTime, product.UpdateDateTime);
+            jObj.Add(Constants.DtoNames.Product.AvailableInStock, product.AvailableInStock);
             jObj.Add(Constants.DtoNames.Product.NbComments, nbComments);
             if (product.Tags != null && product.Tags.Any())
             {
