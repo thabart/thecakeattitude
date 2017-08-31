@@ -188,12 +188,25 @@ class App extends Component {
             });
         });
         this._connection.start({jsonp: false})
-            .done(function () {
-                console.log('Now connected, connection ID=' + self._connection.id);
-            })
-            .fail(function () {
-                console.log('Could not connect');
-            });
+          .done(function () {
+            console.log('Now connected, connection ID=' + self._connection.id);
+          })
+          .fail(function () {
+            console.log('Could not connect');
+        });
+        this._connection.stateChanged(function(change) {
+          if ($.signalR.connectionState.connected === change.newState) {
+
+          } else if ($.signalR.connectionState.disconnected === change.newState) {
+
+          }
+        });
+        this._connection.disconnected(function() {
+          setTimeout(function() {
+            self._connection.start();
+          }, 1000);
+        });
+
         var session = SessionService.getSession();
         if (!session || session == null) {
             self.setState({
@@ -234,6 +247,11 @@ class App extends Component {
                   .fail(function () {
                       console.log('Could not connect');
                   });
+              self._securedConnection.disconnected(function() {
+                setTimeout(function() {
+                  self._securedConnection.start();
+                }, 1000);
+              });
             break;
             case Constants.events.USER_LOGGED_OUT:
               self._connection.qs = '';

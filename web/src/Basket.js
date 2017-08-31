@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import { TabContent, TabPane, Alert } from "reactstrap";
 import { translate } from 'react-i18next';
+import { withRouter } from "react-router";
 import { ProductsTab, TransportMethodsTab, ShopsTab } from './basketabs/index';
 import { OrdersService } from './services/index';
+import { BasketStore, ApplicationStore } from './stores/index';
 import AppDispatcher from './appDispatcher';
 import MainLayout from './MainLayout';
 import Constants from '../Constants';
@@ -11,6 +13,7 @@ import $ from "jquery";
 class Basket extends Component {
     constructor(props) {
         super(props);
+        this._waitForToken = null;
         this.data = {};
         this.toggle = this.toggle.bind(this);
         this.display = this.display.bind(this);
@@ -55,6 +58,10 @@ class Basket extends Component {
           data: embedded
         });
       }).catch(function() {
+        AppDispatcher.dispatch({
+          actionName: Constants.events.BASKET_LOADED,
+          data: []
+        });
         self.setState({
           isLoading: false,
           orders: []
@@ -62,8 +69,8 @@ class Basket extends Component {
       });
     }
 
-    displayProducts(order) { // Display the products.
-      this.refs.productTab.getWrappedInstance().display(order);
+    displayProducts() { // Display the products.x
+      this.refs.productTab.getWrappedInstance().refresh();
     }
 
     render() { // Renders the view.
@@ -87,8 +94,8 @@ class Basket extends Component {
                   <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
                     <ShopsTab onNext={(json) => {
                         this.toggle('2');
-                        this.displayProducts(json.order);
-                    }} orders={this.state.orders} />
+                        this.displayProducts();
+                    }} />
                   </TabPane>
                   { /* Products tab */ }
                   <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
@@ -113,7 +120,33 @@ class Basket extends Component {
     }
 
     componentDidMount() { // Execute before the render.
+      var self = this;
+      const {t} = this.props;
       this.display();
+      this._waitForToken = AppDispatcher.register(function (payload) {
+          switch (payload.actionName) {
+            case Constants.events.ORDER_REMOVED_ARRIVED:
+              ApplicationStore.sendMessage({
+                message: t('orderRemoved'),
+                level: 'success',
+                position: 'bl'
+              });
+              self.display();
+            break;
+            case Constants.events.ORDER_UPDATED_ARRIVED:
+              ApplicationStore.sendMessage({
+                message: t('basketUpdated'),
+                level: 'success',
+                position: 'bl'
+              });
+              self.display();
+            break;
+          }
+      });
+    }
+
+    componentWillUnmount() { // Remove listener.
+        AppDispatcher.unregister(this._waitForToken);
     }
 }
 

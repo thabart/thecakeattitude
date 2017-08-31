@@ -19,7 +19,7 @@ class Products extends Component {
       count: defaultCount
     };
     this._page = '1';
-    this._order = null;
+    this._order = {};
     this._waitForToken = null;
     this._commonId = null;
     this.next = this.next.bind(this);
@@ -34,7 +34,7 @@ class Products extends Component {
       isLoading: false,
       products: [],
       pagination: [],
-      order: null,
+      order: {},
       hasChanged: false
     };
   }
@@ -60,14 +60,19 @@ class Products extends Component {
 
   refresh() { // Refresh the page.
     var self = this;
-    if (self.state.order === null) {
+    var selectedOrderId = BasketStore.getSelectedOrderId();
+    var orders = BasketStore.getOrders();
+    var order = orders.filter(function(o) { return o.id === selectedOrderId; })[0];
+    if (!order) {
       return;
     }
 
+    order = $.extend(true, {}, order);
+    self._order = $.extend(true, {}, order);
     self.setState({
       isLoading: true
     });
-    var productIds = self.state.order.lines.map(function(line) { return line.product_id; });
+    var productIds = order.lines.map(function(line) { return line.product_id; });
     self._request['product_ids'] = productIds;
     ProductsService.search(self._request).then(function(res) {
       var products = res['_embedded'];
@@ -79,25 +84,19 @@ class Products extends Component {
       self.setState({
         isLoading: false,
         products: products,
-        pagination: pagination
+        pagination: pagination,
+        hasChanged: false,
+        order: order
       });
     }).catch(function() {
       self.setState({
         isLoading: false,
         products: [],
-        pagination: []
+        pagination: [],
+        hasChanged: false,
+        order: order
       });
     });
-  }
-
-  display(order) { // Display the products.
-    this._order = $.extend(true, {}, order);
-    this.state.order = order;
-    this.setState({
-      order: order,
-      hasChanged: false
-    });
-    this.refresh();
   }
 
   changeOrderLineQuantity(e, orderLineId) { // Change the order line quantity.
@@ -161,32 +160,7 @@ class Products extends Component {
     });
     const {t} = this.props;
     self._commonId = Guid.generate();
-    OrdersService.update(self.state.order.id, self.state.order, self._commonId).then(function() {
-      self._order = $.extend(true, {}, self.state.order);
-      self.setState({
-        isLoading: false,
-        hasChanged: false
-      });
-
-      ApplicationStore.sendMessage({
-        message: t('basketUpdated'),
-        level: 'success',
-        position: 'bl'
-      });
-
-      var orders = BasketStore.getOrders();
-      var filteredOrders = orders.filter(function(o) { return o.id === self.state.order.id });
-      if (filteredOrders && filteredOrders.length === 1) {
-        var order = filteredOrders[0];
-        order.total_price = self.state.order.total_price;
-        order.lines = self.state.order.lines;
-      }
-
-      AppDispatcher.dispatch({
-        actionName: Constants.events.UPDATE_BASKET_INFORMATION_ACT,
-        data: orders
-      });
-    }).catch(function() {
+    OrdersService.update(self.state.order.id, self.state.order, self._commonId).catch(function() {
       self.setState({
         isLoading: false
       });
@@ -266,6 +240,9 @@ class Products extends Component {
               </ul>)}
             </section>
             <section style={{marginTop: "10px"}}>
+              <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)}</h4>
+            </section>
+            <section style={{marginTop: "10px"}}>
                 <Button color="default" onClick={this.previous}>{t('previous')}</Button>
                 { this.state.hasChanged ? (<Button color="default" onClick={this.update}  style={{marginLeft:"5px"}}>{t('update')}</Button>) : (<Button color="default" style={{marginLeft:"5px"}} disabled>{t('update')}</Button>) }
                 { this.state.hasChanged ? (<Button color="default" onClick={this.reset}  style={{marginLeft:"5px"}}>{t('reset')}</Button>) : (<Button color="default" style={{marginLeft:"5px"}} disabled>{t('reset')}</Button>) }
@@ -275,6 +252,14 @@ class Products extends Component {
         )}
       </div>
     );
+  }
+
+  componentDidMount() { // Execute before the render.
+    BasketStore.addLoadListener(this.refresh);
+  }
+
+  componentWillUnmount() { // Remove listener.
+    BasketStore.removeLoadListener(this.refresh);
   }
 }
 

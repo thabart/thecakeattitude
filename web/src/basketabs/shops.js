@@ -18,12 +18,10 @@ class Shops extends Component {
       count: defaultCount
     };
     this._page = '1';
-    this._waitForToken = null;
     this.next = this.next.bind(this);
-    this.display = this.display.bind(this);
     this.changePage = this.changePage.bind(this);
     this.changeActiveShop = this.changeActiveShop.bind(this);
-    this.refreshOrders = this.refreshOrders.bind(this);
+    this.refresh = this.refresh.bind(this);
     this.removeOrder = this.removeOrder.bind(this);
     this.state = {
       isLoading: false,
@@ -51,15 +49,18 @@ class Shops extends Component {
       return;
     }
 
-    this.setState({
+    var self = this;
+    self.setState({
       errorMessage: null
     });
 
     if (this.props.onNext) {
-      var self = this;
-      var orders = self.state.orders.filter(function(o) { return o.shop_id === self.state.activatedShop; });
-      var order = $.extend(true, {}, orders[0]);
-      this.props.onNext({ order: order });
+      var order = self.state.orders.filter(function(o) { return o.shop_id === self.state.activatedShop; })[0];
+      AppDispatcher.dispatch({
+        actionName: Constants.events.SELECT_ORDER_ACT,
+        data: order.id
+      });
+      this.props.onNext();
     }
   }
 
@@ -69,18 +70,24 @@ class Shops extends Component {
     });
   }
 
-  display() { // Refresh the list of shops.
+  refresh() { // Refresh all the bills.
+    var orders = BasketStore.getOrders();
     var self = this;
-    var shopIds = self.state.orders.map(function(o) { return o.shop_id; });
+    var shopIds = orders.map(function(o) { return o.shop_id; });
     if (!shopIds || shopIds.length === 0) {
       self.setState({
+        activatedShop: null,
+        isLoading: false,
         navigation: [],
-        shops: []
+        shops: [],
+        orders: []
       });
+      return;
     }
 
     self.setState({
-      isLoading: true
+      isLoading: true,
+      activatedShop: null
     });
     self._request['shop_ids'] = shopIds;
     ShopsService.search(self._request).then(function(res) {
@@ -93,22 +100,17 @@ class Shops extends Component {
       self.setState({
         isLoading: false,
         shops: shops,
-        pagination: pagination
+        pagination: pagination,
+        orders: orders
       });
     }).catch(function() {
       self.setState({
         isLoading: false,
         shops: [],
         navigation: [],
-        pagination: []
+        pagination: [],
+        orders: []
       });
-    });
-  }
-
-  refreshOrders() { // Refresh the orders.
-    var orders = BasketStore.getOrders();
-    this.setState({
-      orders: orders
     });
   }
 
@@ -119,21 +121,7 @@ class Shops extends Component {
       isLoading: true
     });
     const {t} = this.props;
-    OrdersService.remove(orderId).then(function() {
-      var orders = self.state.orders;
-      var order = orders.filter(function(o) { return o.id === orderId ; })[0];
-      var index = orders.indexOf(order);
-      orders.splice(index, 1);
-      self.setState({
-        isLoading: false,
-        orders: orders
-      });
-      ApplicationStore.sendMessage({
-        message: t('orderRemoved'),
-        level: 'success',
-        position: 'bl'
-      });
-    }).catch(function() {
+    OrdersService.remove(orderId).catch(function() {
       self.setState({
         isLoading: false
       });
@@ -212,24 +200,11 @@ class Shops extends Component {
   }
 
   componentDidMount() { // Execute before the render.
-    var self = this;
-    this._waitForToken = AppDispatcher.register(function (payload) {
-      switch (payload.actionName) {
-        case Constants.events.BASKET_LOADED:
-          self.state.orders = payload.data;
-          self.setState({
-            orders: payload.data
-          });
-          self.display();
-        break;
-      }
-    });
-    BasketStore.addChangeListener(self.refreshOrders);
+    BasketStore.addLoadListener(this.refresh);
   }
 
   componentWillUnmount() { // Remove listener.
-    AppDispatcher.unregister(this._waitForToken);
-    BasketStore.removeChangeListener(this.refreshOrders);
+    BasketStore.removeLoadListener(this.refresh);
   }
 }
 

@@ -69,8 +69,7 @@ namespace Cook4Me.Api.Handlers
                 var productIds = orderLines.Select(line => line.ProductId);
                 var products = await _productRepository.Search(new SearchProductsParameter
                 {
-                    ProductIds = productIds,
-                    ShopIds = new [] { order.ShopId }
+                    ProductIds = productIds
                 });
                 if (products.Content.Count() != productIds.Count())
                 {
@@ -83,10 +82,10 @@ namespace Cook4Me.Api.Handlers
                     orderLine.Price = product.Price * orderLine.Quantity;
                 }
 
-                order.OrderLines = orderLines;
                 order.TotalPrice = orderLines.Sum(line => line.Price);
             }
 
+            order.OrderLines = orderLines;
             await _orderRepository.Update(order);
             _eventPublisher.Publish(new OrderUpdatedEvent
             {
