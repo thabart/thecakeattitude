@@ -14,22 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System;
-using System.Collections.Generic;
+using Cook4Me.Api.Core.Bus;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Events.Orders
 {
-    public class Order
+    public class OrderConfirmedEvent : Event
     {
-        public string Id { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public int Status { get; set; }
-        public int TransportMode { get; set; }
-        public string Subject { get; set; }
-        public string ShopId { get; set; }
-        public double TotalPrice { get; set; }
-        public virtual ICollection<OrderLine> OrderLines { get; set; }
-        public virtual Shop Shop { get; set; }
+        public string OrderId { get; set; }
+        public string Seller { get; set; }
+        public string Client { get; set; }
     }
 }

@@ -30,7 +30,9 @@ namespace Cook4Me.Api.Core.Parameters
         public int StartIndex { get; set; }
         public int Count { get; set; }
         public bool IsPagingEnabled { get; set; }
-        public IEnumerable<string> Subjects { get; set; }
+        public IEnumerable<int> Status { get; set; }
+        public IEnumerable<string> Clients { get; set; }
+        public IEnumerable<string> Sellers { get; set; }
         public IEnumerable<string> Shops { get; set; }
         public IEnumerable<OrderBy> OrderBy { get; set; }
     }

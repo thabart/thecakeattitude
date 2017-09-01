@@ -24,6 +24,7 @@ using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Messages;
+using Cook4Me.Api.Core.Events.Orders;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
@@ -71,6 +72,9 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<RemoveClientServiceCommand>(clientServiceCommandHandler.Handle);
             bus.RegisterHandler<UpdateNotificationCommand>(notificationCommandHandler.Handle);
             bus.RegisterHandler<AddMessageCommand>(messageCommandsHandler.Handle);
+            bus.RegisterHandler<UpdateOrderCommand>(orderCommandsHandler.Handle);
+            bus.RegisterHandler<RemoveOrderCommand>(orderCommandsHandler.Handle);
+            bus.RegisterHandler<AddOrderLineCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ShopCommentAddedEvent>(notificationEventsHandler.Handle);
@@ -79,9 +83,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<ClientServiceAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ServiceAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductAddedEvent>(notificationEventsHandler.Handle);
-            bus.RegisterHandler<UpdateOrderCommand>(orderCommandsHandler.Handle);
-            bus.RegisterHandler<RemoveOrderCommand>(orderCommandsHandler.Handle);
-            bus.RegisterHandler<AddOrderLineCommand>(orderCommandsHandler.Handle);
+            bus.RegisterHandler<OrderConfirmedEvent>(notificationEventsHandler.Handle);
             return serviceCollection;
         }
     }

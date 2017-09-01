@@ -77,6 +77,11 @@ namespace Cook4Me.Api.Host.Validators
                 return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderDoesntExist);
             }
 
+            if (record.Status != OrderAggregateStatus.Created && record.Status == order.Status)
+            {
+                return new UpdateOrderValidationResult(string.Format(ErrorDescriptions.TheOrderCannotBeUpdatedBecauseOfItsState, Enum.GetName(typeof(OrderAggregateStatus), order.Status)));
+            }
+
             if (order.OrderLines != null && order.OrderLines.Any())
             {
                 var productIds = order.OrderLines.Select(o => o.ProductId);

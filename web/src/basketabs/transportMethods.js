@@ -28,7 +28,7 @@ class TransportMethods extends Component {
       var selectedOrderId = BasketStore.getSelectedOrderId();
       var orders = BasketStore.getOrders();
       var order = orders.filter(function(o) { return o.id === selectedOrderId; })[0];
-      order.transport_method = this.state.transportMethod;
+      order.transport_mode = this.state.transportMethod;
       AppDispatcher.dispatch({
         actionName: Constants.events.UPDATE_BASKET_INFORMATION_ACT,
         data: orders

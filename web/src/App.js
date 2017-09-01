@@ -181,6 +181,12 @@ class App extends Component {
                 data: message
             });
         });
+        securedProxy.on('orderConfirmed', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.ORDER_CONFIRMED_ARRIVED,
+                data: message
+            });
+        });
         proxy.on('notificationUpdated', function(message) {
             AppDispatcher.dispatch({
                 actionName: Constants.events.NOTIFICATION_UPDATED_ARRIVED,

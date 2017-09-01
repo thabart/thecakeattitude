@@ -32,6 +32,7 @@ namespace Cook4Me.Api.Core.Commands.Orders
     {
         public string Id { get; set; }
         public OrderAggregateStatus Status { get; set; }
+        public OrderTransportModes TransportMode { get; set; }
         public IEnumerable<UpdateOrderLine> OrderLines { get; set; }
     }
 }

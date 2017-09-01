@@ -361,8 +361,10 @@
   "addProductToBasket": "A new product has been added to your basket",
   "summary": "Summary",
   "summaryTabDescription": "Summary of your order",
-  "chooseHandToHandTransport": "You've chosen the 'hand to hand' transport method. The bill must be paid by cash",
+  "chooseHandToHandTransport": "You choose to meet the seller. The bill must be paid by cash",
   "basketTransportTabDescription": "Select a transport method",
   "handToHandTransport": "Meet the person",
-  "receivePackage": "Receive a package"
+  "receivePackage": "Receive a package",
+  "confirmRequestError": "An error occured while trying to confirm the request, please contact the administrator",
+  "confirm_order": "An order has been confirmed"
 }

@@ -71,5 +71,6 @@ namespace Cook4Me.Api.Host
         public const string TheOrderLineQuantityIsTooMuch = "There is not enough product";
         public const string TheOrderCannotBeRemovedByYou = "The order cannot be removed by you";
         public const string TheProductCannotBeOrderedByYou = "You cannot order your own product";
+        public const string TheOrderCannotBeUpdatedBecauseOfItsState = "An order with the state {0} cannot be updated";
     }
 }

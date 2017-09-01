@@ -37,6 +37,7 @@ namespace Cook4Me.Api.EF.Extensions
                 Id = order.Id,
                 CreateDateTime = order.CreateDateTime,
                 Status = (int)order.Status,
+                TransportMode = (int)order.TransportMode,
                 Subject = order.Subject,
                 TotalPrice = order.TotalPrice,
                 UpdateDateTime = order.UpdateDateTime,
@@ -68,15 +69,18 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(order));
             }
 
+            var sellerId = order.Shop != null ? order.Shop.Subject : null;
             return new OrderAggregate
             {
                 Id = order.Id,
                 CreateDateTime = order.CreateDateTime,
                 Status = (OrderAggregateStatus)order.Status,
+                TransportMode = (OrderTransportModes)order.TransportMode,
                 Subject = order.Subject,
                 TotalPrice = order.TotalPrice,
                 UpdateDateTime = order.UpdateDateTime,
                 ShopId = order.ShopId,
+                SellerId = sellerId,
                 OrderLines = order.OrderLines == null ? null : order.OrderLines.Select(o => o.ToAggregate())
             };
         }

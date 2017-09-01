@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderConfirmeddEvent(OrderConfirmedEvent evt);
         JObject GetOrderAddedEvent(OrderAddedEvent evt);
         JObject GetOrderRemovedEvent(OrderRemovedEvent evt);
         JObject GetOrderUpdatedEvent(OrderUpdatedEvent evt);
@@ -94,6 +95,22 @@ namespace Cook4Me.Api.Host.Builders
             var obj = new JObject();
             obj.Add(Constants.DtoNames.OrderStatusNames.NumberOfOrdersCreated, result.NumberOfOrderCreated);
             obj.Add(Constants.DtoNames.OrderStatusNames.NumberOfOrderLinesCreated, result.NumberOfOrderLinesCreated);
+            return obj;
+        }
+
+        public JObject GetOrderConfirmeddEvent(OrderConfirmedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var obj = new JObject();
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
+            result.Add(Constants.DtoNames.OrderNames.Subject, evt.Client);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return obj;
         }
 
@@ -161,13 +178,28 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderNames.Subject, order.Subject);
             result.Add(Constants.DtoNames.OrderNames.ShopId, order.ShopId);
             string status = null;
+            string transportMode = null;
             switch(order.Status)
             {
                 case OrderAggregateStatus.Created:
                     status = "created";
                     break;
+                case OrderAggregateStatus.Confirmed:
+                    status = "confirmed";
+                    break;
+            }
+
+            switch(order.TransportMode)
+            {
+                case OrderTransportModes.Manual:
+                    transportMode = "manual";
+                    break;
+                case OrderTransportModes.Packet:
+                    transportMode = "packet";
+                    break;
             }
             result.Add(Constants.DtoNames.OrderNames.Status, status);
+            result.Add(Constants.DtoNames.OrderNames.TransportMode, transportMode);
             result.Add(Constants.DtoNames.OrderNames.Lines, arr);
             return result;
         }

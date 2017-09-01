@@ -23,7 +23,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Orders
@@ -59,23 +58,17 @@ namespace Cook4Me.Api.Host.Operations.Orders
             }
 
             var request = _requestBuilder.GetSearchOrdersParameter(jObj);
-            var subjects = request.Subjects == null ? new List<string>() : request.Subjects.ToList();
-            if (!subjects.Contains(subject))
-            {
-                subjects.Add(subject);
-            }
-
-            request.Subjects = subjects;
             var searchResult = await _repository.Search(request);
-            if (searchResult.Content == null || !searchResult.Content.Any())
-            {
-                return new NotFoundResult();
-            }
-
+            searchResult.Content = searchResult.Content == null ? new List<OrderAggregate>() : searchResult.Content;
             var href = "/" + Constants.RouteNames.Orders + "/" + Constants.RouteNames.Search;
             _halResponseBuilder.AddLinks(l => l.AddSelf(href));
             foreach (var order in searchResult.Content)
             {
+                if (order.Subject != subject && order.SellerId != subject)
+                {
+                    continue;
+                }
+
                 if (order.Status == OrderAggregateStatus.Created)
                 {
                     await _orderPriceCalculatorHelper.Update(order);

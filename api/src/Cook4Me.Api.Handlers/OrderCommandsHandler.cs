@@ -61,6 +61,7 @@ namespace Cook4Me.Api.Handlers
 
             order.UpdateDateTime = DateTime.UtcNow;
             order.Status = message.Status;
+            order.TransportMode = message.TransportMode;
             order.OrderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
                 new OrderAggregateLine
                 {
@@ -72,6 +73,15 @@ namespace Cook4Me.Api.Handlers
             if (order.Status == OrderAggregateStatus.Confirmed)
             {
                 await _orderPriceCalculatorHelper.Update(order);
+                await _orderRepository.Update(order);
+                _eventPublisher.Publish(new OrderConfirmedEvent
+                {
+                    CommonId = message.CommonId,
+                    OrderId = order.Id,
+                    Client = order.Subject,
+                    Seller = order.SellerId
+                });
+                return;
             }
 
             await _orderRepository.Update(order);
@@ -114,7 +124,7 @@ namespace Cook4Me.Api.Handlers
 
             string id = null;
             var product = await _productRepository.Get(message.ProductId);
-            var orders = await _orderRepository.Search(new SearchOrdersParameter { Shops = new[] { product.ShopId }, Subjects = new[] { message.Subject } });
+            var orders = await _orderRepository.Search(new SearchOrdersParameter { Shops = new[] { product.ShopId }, Clients = new[] { message.Subject } });
             if (orders.Content.Count() > 1)
             {
                 return;

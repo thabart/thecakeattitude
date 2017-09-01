@@ -19,6 +19,7 @@ using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Notification;
+using Cook4Me.Api.Core.Events.Orders;
 using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
@@ -28,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>
+    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>, Handles<OrderConfirmedEvent>
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IShopRepository _shopRepository;
@@ -287,6 +288,38 @@ namespace Cook4Me.Api.Handlers
                     }
                 }
             };
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(OrderConfirmedEvent message)
+        {
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "confirm_order",
+                IsRead = false,
+                From = message.Client,
+                To = message.Seller,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.OrderId,
+                        Value = message.OrderId
+                    }
+                }
+            };
+
             await _notificationRepository.Add(notification);
             _eventPublisher.Publish(new NotificationAddedEvent
             {

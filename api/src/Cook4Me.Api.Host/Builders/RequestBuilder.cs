@@ -105,11 +105,27 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var status = jObj.TryGetString(Constants.DtoNames.OrderNames.Status);
+            var transportMode = jObj.TryGetString(Constants.DtoNames.OrderNames.TransportMode);
             var st = OrderAggregateStatus.Created;
+            var tm = OrderTransportModes.None;
             switch (status)
             {
                 case "created":
                     st = OrderAggregateStatus.Created;
+                    break;
+                case "confirmed":
+                    st = OrderAggregateStatus.Confirmed;
+                    break;
+            }
+            
+
+            switch(transportMode)
+            {
+                case "manual":
+                    tm = OrderTransportModes.Manual;
+                    break;
+                case "packet":
+                    tm = OrderTransportModes.Packet;
                     break;
             }
 
@@ -117,7 +133,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Id = jObj.TryGetString(Constants.DtoNames.OrderNames.Id),
                 OrderLines = orderLines,
-                Status = st
+                Status = st,
+                TransportMode = tm
             };
             return result;
         }
@@ -144,7 +161,7 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchUserMessage.Orders);
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchOrdersParameterNames.Orders);
             var orderBy = new List<OrderBy>();
             if (ordersObj != null)
             {
@@ -158,12 +175,36 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
+            var statutsLst = new List<int>();
+            var statutsObj = jObj.GetValue(Constants.DtoNames.SearchOrdersParameterNames.Status);
+            if (statutsObj != null)
+            {
+                var statuts = statutsObj as JArray;
+                if (statuts != null)
+                {
+                    foreach(var statut in statuts)
+                    {
+                        switch(statut.ToString())
+                        {
+                            case "created":
+                                statutsLst.Add((int)OrderAggregateStatus.Created);
+                                break;
+                            case "confirmed":
+                                statutsLst.Add((int)OrderAggregateStatus.Confirmed);
+                                break;
+                        }
+                    }
+                }
+            }
+
             var result = new SearchOrdersParameter
             {
                 IsPagingEnabled = true,
                 StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
                 OrderBy = orderBy,
-                Subjects = jObj.TryGetStringArray(Constants.DtoNames.SearchOrdersParameterNames.Subjects)
+                Status = statutsLst,
+                Clients = jObj.TryGetStringArray(Constants.DtoNames.SearchOrdersParameterNames.Clients),
+                Sellers = jObj.TryGetStringArray(Constants.DtoNames.SearchOrdersParameterNames.Sellers)
             };
 
             var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);

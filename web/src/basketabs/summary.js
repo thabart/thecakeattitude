@@ -16,6 +16,7 @@ class Summary extends Component {
       count: defaultCount
     };
     this.previous = this.previous.bind(this);
+    this.confirm = this.confirm.bind(this);
     this.refresh = this.refresh.bind(this);
     this.changePage = this.changePage.bind(this);
     this.state = {
@@ -36,6 +37,12 @@ class Summary extends Component {
   previous() { // Execute when the user clicks on previous.
     if (this.props.onPrevious) {
       this.props.onPrevious();
+    }
+  }
+
+  confirm() { // Execute when the user clicks on "confirm".
+    if (this.props.onConfirm) {
+      this.props.onConfirm();
     }
   }
 
@@ -144,7 +151,7 @@ class Summary extends Component {
                 </ul>)}
               </div>
               <div className="col-md-4">
-                {this.state.order.transport_method === 'manual' && (<span>{t('chooseHandToHandTransport')}</span>)}
+                {this.state.order.transport_mode === 'manual' && (<span>{t('chooseHandToHandTransport')}</span>)}
               </div>
             </section>
             <section style={{marginTop: "10px"}}>
@@ -152,7 +159,7 @@ class Summary extends Component {
             </section>
             <section style={{marginTop: "10px"}}>
               <Button color="default" onClick={this.previous} >{t('previous')}</Button>
-              <Button color="default" style={{marginLeft: "5px"}}>{t('confirm')}</Button>
+              <Button color="default" onClick={this.confirm} style={{marginLeft: "5px"}}>{t('confirm')}</Button>
             </section>
           </div>
         )}

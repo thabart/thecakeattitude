@@ -65,7 +65,10 @@ namespace Cook4Me.Api.Host
         {
             public static class SearchOrdersParameterNames
             {
-                public const string Subjects = "subjects";
+                public const string Clients = "clients";
+                public const string Sellers = "sellers";
+                public const string Orders = "orders";
+                public const string Status = "status";
             }
 
             public static class DropLocationResponse
@@ -98,6 +101,7 @@ namespace Cook4Me.Api.Host
                 public const string Subject = "subject";
                 public const string Lines = "lines";
                 public const string ShopId = "shop_id";
+                public const string TransportMode = "transport_mode";
             }
 
             public static class OrderLineNames

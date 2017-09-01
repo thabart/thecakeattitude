@@ -19,6 +19,7 @@ class Basket extends Component {
         this.display = this.display.bind(this);
         this.displayProducts = this.displayProducts.bind(this);
         this.displaySummary = this.displaySummary.bind(this);
+        this.confirm = this.confirm.bind(this);
         this.state = {
           activeTab: '1',
           isLoading: false,
@@ -44,7 +45,8 @@ class Basket extends Component {
       self.setState({
         isLoading: true
       });
-      OrdersService.search({  }).then(function(res) {
+      var sub = ApplicationStore.getUser().sub;
+      OrdersService.search({ status: [ "created" ], clients: [ sub ]  }).then(function(res) {
         var embedded = res['_embedded'];
         if (!(embedded instanceof Array)) {
           embedded = [embedded];
@@ -76,6 +78,36 @@ class Basket extends Component {
 
     displaySummary() { // Display the summary.
       this.refs.summaryTab.getWrappedInstance().refresh();
+    }
+
+    confirm() { // Confirm the order.
+      var selectedOrderId = BasketStore.getSelectedOrderId();
+      var orders = BasketStore.getOrders();
+      var order = orders.filter(function(o) { return o.id === selectedOrderId; })[0];
+      if (!order) {
+        return;
+      }
+
+      var self = this;
+      self.setState({
+        isLoading: true
+      });
+      order['status'] = 'confirmed';
+      const {t} = this.props;
+      OrdersService.update(order.id, order).then(function() {
+        self.props.history.push('/');
+      }).catch(function(e) {
+        var errorMsg = t('confirmRequestError');
+        if (e.responseJSON && e.responseJSON.error_description) {
+          errorMsg = e.responseJSON.error_description;
+        }
+
+        ApplicationStore.sendMessage({
+          message: errorMsg,
+          level: 'error',
+          position: 'tr'
+        });
+      });
     }
 
     render() { // Renders the view.
@@ -124,7 +156,7 @@ class Basket extends Component {
                   <TabPane tabId='4' className={this.state.isLoading ? 'hidden': ''}>
                     <SummaryTab ref="summaryTab" onPrevious={() => {
                       this.toggle('3');
-                    }} />
+                    }} onConfirm={this.confirm} />
                   </TabPane>
                 </TabContent>
               </div>
@@ -163,4 +195,4 @@ class Basket extends Component {
     }
 }
 
-export default translate('common', { wait: process && !process.release })(Basket);
+export default translate('common', { wait: process && !process.release })(withRouter(Basket));

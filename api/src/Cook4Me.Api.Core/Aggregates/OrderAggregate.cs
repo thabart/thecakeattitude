@@ -25,14 +25,23 @@ namespace Cook4Me.Api.Core.Aggregates
         Confirmed
     }
 
+    public enum OrderTransportModes
+    {
+        None,
+        Manual,
+        Packet
+    }
+
     public class OrderAggregate
     {
         public string Id { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public OrderAggregateStatus Status { get; set; }
+        public OrderTransportModes TransportMode { get; set; }
         public string Subject { get; set; }
         public string ShopId { get; set; }
+        public string SellerId { get; set; }
         public IEnumerable<OrderAggregateLine> OrderLines { get; set; }
         public double TotalPrice { get; set; }
     }

@@ -359,8 +359,10 @@
   "addProductToBasket": "Un nouveau produit a été ajouté dans votre panier",
   "summary": "Résumé",
   "summaryTabDescription": "Résumé de votre commande",
-  "chooseHandToHandTransport": "Vous avez choisi le moyen de livraison 'rencontrer la personne'. La facture doit être payée par cash.",
+  "chooseHandToHandTransport": "Vous avez choisi de rencontrer le vendeur. La facture doit être payée par cash.",
   "basketTransportTabDescription": "Choisir un moyen de transport",
   "handToHandTransport": "Rencontrer la personne",
-  "receivePackage": "Receive a package"
+  "receivePackage": "Receive a package",
+  "confirmRequestError": "Une erreur est survenue durant la confirmation de la requête, veuillez prendre contact avec l'administrateur",
+  "confirm_order": "Une commande a été confirmée"
 }

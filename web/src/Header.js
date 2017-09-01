@@ -535,6 +535,7 @@ class Header extends Component {
               case Constants.events.ORDER_ADDED_ARRIVED:
               case Constants.events.ORDER_REMOVED_ARRIVED:
               case Constants.events.ORDER_UPDATED_ARRIVED:
+              case Constants.events.ORDER_CONFIRMED_ARRIVED:
                 if (payload.actionName === Constants.events.ORDER_ADDED_ARRIVED) {
                   ApplicationStore.sendMessage({
                     message: t('addProductToBasket'),
@@ -542,7 +543,7 @@ class Header extends Component {
                     position: 'bl'
                   });
                 }
-
+                
                 self.refreshOrders();
               break;
           }
