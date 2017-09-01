@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { ManageServices, ManageShops } from './manageTabs/index';
+import { ManageServices, ManageShops, ManageOrders } from './manageTabs/index';
 import { UserProfile } from './users/index';
 import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router";
@@ -33,6 +33,8 @@ class Manage extends Component {
       content = (<ManageServices />);
     } else if (action === "shops") {
       content = (<ManageShops />);
+    } else if (action === 'orders') {
+      content = (<ManageOrders />);
     } else {
       action = "profile";
     }
@@ -54,6 +56,9 @@ class Manage extends Component {
                   <li className={action === "services" ? "menu-item hoverable active" : "menu-item hoverable"}>
                     <NavLink to="/manage/services" className="nav-link"><h3 className="uppercase"><img src="/images/information.png" width="30" /> {t('services')}</h3></NavLink>
                   </li>
+                  <li className={action === "orders" ? "menu-item hoverable active" : "menu-item hoverable"}>
+                    <NavLink to='/manage/orders' className="nav-link"><h3 className="uppercase"><img src="/images/invoice.png" width="30" /> {t('orders')}</h3></NavLink>
+                  </li>
                 </ul>
               ) : (
                 <ul>
@@ -65,6 +70,9 @@ class Manage extends Component {
                   </li>
                   <li className={action === "services" ? "menu-item hoverable active" : "menu-item hoverable"}>
                     <NavLink to="/manage/services" className="nav-link"><img src="/images/information.png" width="30" /></NavLink>
+                  </li>
+                  <li className={action === "orders" ? "menu-item hoverable active" : "menu-item hoverable"}>
+                    <NavLink to='/manage/orders' className="nav-link"><img src="/images/invoice.png" width="30" /></NavLink>
                   </li>
                 </ul>
               )}

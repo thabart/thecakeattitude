@@ -40,6 +40,7 @@ class Header extends Component {
         this.manageProfile = this.manageProfile.bind(this);
         this.manageShops = this.manageShops.bind(this);
         this.manageServices = this.manageServices.bind(this);
+        this.manageOrders = this.manageOrders.bind(this);
         this.switchLanguage = this.switchLanguage.bind(this);
         this.refreshNotifications = this.refreshNotifications.bind(this);
         this.refreshOrders = this.refreshOrders.bind(this);
@@ -180,6 +181,10 @@ class Header extends Component {
 
     manageServices() { // Manage client services.
       this.props.history.push('/manage/services');
+    }
+
+    manageOrders() { // Manage your orders.
+      this.props.history.push('/manage/orders');
     }
 
     displayUser(isLoggedIn, user) { // Display the user information.
@@ -430,6 +435,7 @@ class Header extends Component {
                               <DropdownItem onClick={self.manageProfile}>{t('manageYourProfileMenuItem')}</DropdownItem>
                               <DropdownItem onClick={self.manageServices}>{t('manageYourOffersMenuItem')}</DropdownItem>
                               <DropdownItem onClick={self.manageShops}>{t('manageYourShopsMenuItem')}</DropdownItem>
+                              <DropdownItem onClick={self.manageOrders}>{t('manageYourOrdersMenuItem')}</DropdownItem>
                             </DropdownMenu>
                           </NavDropdown></li> : ''
                         }
@@ -543,7 +549,7 @@ class Header extends Component {
                     position: 'bl'
                   });
                 }
-                
+
                 self.refreshOrders();
               break;
           }

@@ -364,5 +364,7 @@
   "handToHandTransport": "Rencontrer la personne",
   "receivePackage": "Receive a package",
   "confirmRequestError": "Une erreur est survenue durant la confirmation de la requête, veuillez prendre contact avec l'administrateur",
-  "confirm_order": "Une commande a été confirmée"
+  "confirm_order": "Une commande a été confirmée",
+  "orders": "Commandes",
+  "manageYourOrdersMenuItem": "Gérer vos commandes"
 }

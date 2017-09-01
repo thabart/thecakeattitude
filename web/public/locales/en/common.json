@@ -366,5 +366,7 @@
   "handToHandTransport": "Meet the person",
   "receivePackage": "Receive a package",
   "confirmRequestError": "An error occured while trying to confirm the request, please contact the administrator",
-  "confirm_order": "An order has been confirmed"
+  "confirm_order": "An order has been confirmed",
+  "orders": "Orders",
+  "manageYourOrdersMenuItem": "Manage your orders"
 }
