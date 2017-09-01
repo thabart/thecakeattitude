@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Core.Events.Orders;
+using Cook4Me.Api.Core.Helpers;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using System;
@@ -32,12 +33,15 @@ namespace Cook4Me.Api.Handlers
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
         private readonly IEventPublisher _eventPublisher;
+        private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
 
-        public OrderCommandsHandler(IOrderRepository orderRepository, IProductRepository productRepository, IEventPublisher eventPublisher)
+        public OrderCommandsHandler(IOrderRepository orderRepository, IProductRepository productRepository, 
+            IEventPublisher eventPublisher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _eventPublisher = eventPublisher;
+            _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
         }
 
         // TODO : Update the stock when the order is confirmed.
@@ -57,7 +61,7 @@ namespace Cook4Me.Api.Handlers
 
             order.UpdateDateTime = DateTime.UtcNow;
             order.Status = message.Status;
-            var orderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
+            order.OrderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
                 new OrderAggregateLine
                 {
                     Id = o.Id,
@@ -65,29 +69,11 @@ namespace Cook4Me.Api.Handlers
                     Quantity = o.Quantity
                 }
             ).ToList();
-            order.TotalPrice = 0;
-            if (orderLines != null && orderLines.Any())
+            if (order.Status == OrderAggregateStatus.Confirmed)
             {
-                var productIds = orderLines.Select(line => line.ProductId);
-                var products = await _productRepository.Search(new SearchProductsParameter
-                {
-                    ProductIds = productIds
-                });
-                if (products.Content.Count() != productIds.Count())
-                {
-                    return;
-                }
-
-                foreach(var orderLine in orderLines)
-                {
-                    var product = products.Content.First(p => p.Id == orderLine.ProductId);
-                    orderLine.Price = product.Price * orderLine.Quantity;
-                }
-
-                order.TotalPrice = orderLines.Sum(line => line.Price);
+                await _orderPriceCalculatorHelper.Update(order);
             }
 
-            order.OrderLines = orderLines;
             await _orderRepository.Update(order);
             _eventPublisher.Publish(new OrderUpdatedEvent
             {

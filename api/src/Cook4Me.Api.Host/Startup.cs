@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core;
 using Cook4Me.Api.EF;
 using Cook4Me.Api.Handlers;
 using Cook4Me.Api.Host.Authentications;
@@ -138,6 +139,7 @@ namespace Cook4Me.Api.Host
         private static void RegisterDependencies(IServiceCollection services)
         {
             services.AddCookForMeStoreInMemory()
+                .AddCore()
                 .AddHandlers()
                 .AddUpsClient();
             services.AddTransient<IResponseBuilder, ResponseBuilder>();

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { TabContent, TabPane, Alert } from "reactstrap";
 import { translate } from 'react-i18next';
 import { withRouter } from "react-router";
-import { ProductsTab, TransportMethodsTab, ShopsTab } from './basketabs/index';
+import { ProductsTab, TransportMethodsTab, ShopsTab, SummaryTab } from './basketabs/index';
 import { OrdersService } from './services/index';
 import { BasketStore, ApplicationStore } from './stores/index';
 import AppDispatcher from './appDispatcher';
@@ -18,6 +18,7 @@ class Basket extends Component {
         this.toggle = this.toggle.bind(this);
         this.display = this.display.bind(this);
         this.displayProducts = this.displayProducts.bind(this);
+        this.displaySummary = this.displaySummary.bind(this);
         this.state = {
           activeTab: '1',
           isLoading: false,
@@ -73,6 +74,10 @@ class Basket extends Component {
       this.refs.productTab.getWrappedInstance().refresh();
     }
 
+    displaySummary() { // Display the summary.
+      this.refs.summaryTab.getWrappedInstance().refresh();
+    }
+
     render() { // Renders the view.
       const {t} = this.props;
         return (
@@ -84,6 +89,7 @@ class Basket extends Component {
                       <li className="col-2 active"><div className="counter-rounded">1</div>{t('bills')}</li>
                       <li className={this.state.activeTab >= '2' ? "col-2 active" : "col-2"}><div className="counter-rounded">2</div>{t('products')}</li>
                       <li className={this.state.activeTab >= '3' ? "col-2 active" : "col-2"}><div className="counter-rounded">3</div>{t('transports')}</li>
+                      <li className={this.state.activeTab >= '4' ? "col-2 active" : "col-2"}><div className="counter-rounded">4</div>{t('summary')}</li>
                     </ul>
                 </div>
                 <TabContent activeTab={this.state.activeTab}>
@@ -111,7 +117,14 @@ class Basket extends Component {
                         this.toggle('2');
                     }} onNext={(json) => {
                         this.toggle('4', json);
+                        this.displaySummary();
                     }}/>
+                  </TabPane>
+                  { /* Summary tab */ }
+                  <TabPane tabId='4' className={this.state.isLoading ? 'hidden': ''}>
+                    <SummaryTab ref="summaryTab" onPrevious={() => {
+                      this.toggle('3');
+                    }} />
                   </TabPane>
                 </TabContent>
               </div>

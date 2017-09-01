@@ -358,5 +358,11 @@
   "noBills": "No bills",
   "addBasketError": "An error occured while trying to add the product into the basket, please contact the administrator",
   "numberOfProductsInYourBasket": "Number of products in your basket {0}",
-  "addProductToBasket": "A new product has been added to your basket"
+  "addProductToBasket": "A new product has been added to your basket",
+  "summary": "Summary",
+  "summaryTabDescription": "Summary of your order",
+  "chooseHandToHandTransport": "You've chosen the 'hand to hand' transport method. The bill must be paid by cash",
+  "basketTransportTabDescription": "Select a transport method",
+  "handToHandTransport": "Meet the person",
+  "receivePackage": "Receive a package"
 }

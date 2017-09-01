@@ -14,26 +14,23 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Helpers;
+using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Aggregates
+namespace Cook4Me.Api.Core
 {
-    public enum OrderAggregateStatus
+    public static class ServiceCollectionExtensions
     {
-        Created,
-        Confirmed
-    }
+        public static IServiceCollection AddCore(this IServiceCollection serviceCollection)
+        {
+            if (serviceCollection == null)
+            {
+                throw new ArgumentNullException(nameof(serviceCollection));
+            }
 
-    public class OrderAggregate
-    {
-        public string Id { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public OrderAggregateStatus Status { get; set; }
-        public string Subject { get; set; }
-        public string ShopId { get; set; }
-        public IEnumerable<OrderAggregateLine> OrderLines { get; set; }
-        public double TotalPrice { get; set; }
+            serviceCollection.AddTransient<IOrderPriceCalculatorHelper, OrderPriceCalculatorHelper>();
+            return serviceCollection;
+        }
     }
 }

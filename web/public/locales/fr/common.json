@@ -356,5 +356,11 @@
   "noBills": "Aucune facture",
   "addBasketError": "Une erreur est survenue durant l'insertion du produit dans le panier, veuillez prendre contact avec l'administrateur",
   "numberOfProductsInYourBasket": "Nombre de produits dans votre panier {0}",
-  "addProductToBasket": "Un nouveau produit a été ajouté dans votre panier"
+  "addProductToBasket": "Un nouveau produit a été ajouté dans votre panier",
+  "summary": "Résumé",
+  "summaryTabDescription": "Résumé de votre commande",
+  "chooseHandToHandTransport": "Vous avez choisi le moyen de livraison 'rencontrer la personne'. La facture doit être payée par cash.",
+  "basketTransportTabDescription": "Choisir un moyen de transport",
+  "handToHandTransport": "Rencontrer la personne",
+  "receivePackage": "Receive a package"
 }

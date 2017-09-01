@@ -190,6 +190,10 @@ class Products extends Component {
     if (this.state.order && this.state.order.lines && this.state.order.lines.length > 0) {
       this.state.order.lines.forEach(function(orderLine) {
         var product = self.state.products.filter(function(prod) { return prod.id === orderLine.product_id; })[0];
+        if (!product) {
+          return;
+        }
+
         var productImage = product['images'];
         if (!productImage || productImage.length === 0) {
             productImage = "/images/default-product.jpg";
