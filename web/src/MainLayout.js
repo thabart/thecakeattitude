@@ -36,7 +36,6 @@ class MainLayout extends Component {
 
   componentWillUnmount() {
     ApplicationStore.removeMessageListener(this.displayNotification);
-
   }
 }
 

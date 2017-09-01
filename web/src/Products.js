@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
-import { ProductsService, ShopsService } from "./services/index";
+import { ProductsService, ShopsService, OrdersService } from "./services/index";
 import { DescriptionTab, ProductComment } from "./productabs";
 import { ApplicationStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
@@ -23,6 +23,7 @@ class Products extends Component {
         this.refreshScore = this.refreshScore.bind(this);
         this.navigateGeneral = this.navigateGeneral.bind(this);
         this.navigateComments = this.navigateComments.bind(this);
+        this.addToCart = this.addToCart.bind(this);
         this.state = {
             isLoading: false,
             errorMessage: null,
@@ -30,6 +31,25 @@ class Products extends Component {
             product: null,
             shop: null
         };
+    }
+
+    addToCart(e) { // Add the product into your cart.
+      e.stopPropagation();
+      e.preventDefault();
+      const {t} = this.props;
+      var product = this.state.product;
+      OrdersService.add({ product_id: product.id }).catch(function(e) {
+        var errorMsg = t('addBasketError');
+        if (e.responseJSON && e.responseJSON.error_description) {
+          errorMsg = e.responseJSON.error_description;
+        }
+
+        ApplicationStore.sendMessage({
+          message: errorMsg,
+          level: 'error',
+          position: 'tr'
+        });
+      });
     }
 
     refreshScore(data) { // Refresht the score.
@@ -221,7 +241,7 @@ class Products extends Component {
                                     <h4 className="inline ml-1">€ {newPrice}</h4>
                                 </div>
                             )}
-                            <button className="btn btn-default">{t('addToCart')}</button>
+                              { user && user.sub !== this.state.shop.subject && (<a href="#" className="btn btn-default" onClick={this.addToCart}>{t('addToCart')}</a>) }
                             { user && user.sub !== this.state.shop.subject && (<a href="#" style={{marginLeft: "5px"}} onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/products/' + self.state.product.id); }} className="btn btn-default">{t('contactTheShop')}</a>) }
                         </div>
                     </div>

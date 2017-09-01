@@ -82,6 +82,12 @@ namespace Cook4Me.Api.Host
                 public const string Geocode = "geocode";
             }
 
+            public static class OrderStatusNames
+            {
+                public const string NumberOfOrdersCreated = "number_of_orders_created";
+                public const string NumberOfOrderLinesCreated = "number_of_lines_created";
+            }
+
             public static class OrderNames
             {
                 public const string Id = "id";

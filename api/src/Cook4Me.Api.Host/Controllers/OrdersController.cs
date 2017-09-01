@@ -35,16 +35,34 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IUpdateOrderOperation _updateOrderOperation;
         private readonly IDeleteOrderOperation _deleteOrderOperation;
         private readonly IAddOrderLineOperation _addOrderLineOperation;
+        private readonly IGetOrderStatusOperation _getOrderStatusOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
-            IAddOrderLineOperation addOrderLineOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
             _updateOrderOperation = updateOrderOperation;
             _deleteOrderOperation = deleteOrderOperation;
             _addOrderLineOperation = addOrderLineOperation;
+            _getOrderStatusOperation = getOrderStatusOperation;
+        }
+
+
+        [HttpGet(Constants.RouteNames.Status)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Status()
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _getOrderStatusOperation.Execute(subject);
+
         }
 
         [HttpPost]

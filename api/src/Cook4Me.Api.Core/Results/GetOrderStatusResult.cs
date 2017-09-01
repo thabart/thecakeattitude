@@ -14,20 +14,11 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
-
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Results
 {
-    public interface IOrderRepository
+    public class GetOrderStatusResult
     {
-        Task<OrderAggregate> Get(string id);
-        Task<bool> Remove(OrderAggregate orderAggregate);
-        Task<bool> Insert(OrderAggregate orderAggregate);
-        Task<bool> Update(OrderAggregate orderAggregate);
-        Task<SearchOrdersResult> Search(SearchOrdersParameter parameter);
-        Task<GetOrderStatusResult> GetStatus(GetOrderStatusParameter parameter);
+        public int NumberOfOrderCreated { get; set; }
+        public int NumberOfOrderLinesCreated { get; set; }
     }
 }

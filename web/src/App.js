@@ -175,15 +175,21 @@ class App extends Component {
                 data: message
             });
         });
+        securedProxy.on('orderAdded', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.ORDER_ADDED_ARRIVED,
+                data: message
+            });
+        });
         proxy.on('notificationUpdated', function(message) {
             AppDispatcher.dispatch({
-                actionName: 'update-notification',
+                actionName: Constants.events.NOTIFICATION_UPDATED_ARRIVED,
                 data: message
             });
         });
         securedProxy.on('notificationAdded', function(message) {
             AppDispatcher.dispatch({
-                actionName: 'update-notification',
+                actionName: Constants.events.NOTIFICATION_ADDED_ARRIVED,
                 data: message
             });
         });

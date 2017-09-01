@@ -353,5 +353,8 @@
   "bills": "Factures",
   "orderRemoved": "La facture a été supprimée",
   "removeOrderError": "Une erreur est survenue durant la suppression de la facture, veuillez prendre contact avec l'administrateur",
-  "noBills": "Aucune facture"
+  "noBills": "Aucune facture",
+  "addBasketError": "Une erreur est survenue durant l'insertion du produit dans le panier, veuillez prendre contact avec l'administrateur",
+  "numberOfProductsInYourBasket": "Nombre de produits dans votre panier {0}",
+  "addProductToBasket": "Un nouveau produit a été ajouté dans votre panier"
 }

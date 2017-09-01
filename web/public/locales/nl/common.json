@@ -355,5 +355,8 @@
   "bills": "Bills",
   "orderRemoved": "The bill has been removed",
   "removeOrderError": "An error occured while trying to remove the bill, please contact the administrator",
-  "noBills": "No bills"
+  "noBills": "No bills",
+  "addBasketError": "An error occured while trying to add the product into the basket, please contact the administrator",
+  "numberOfProductsInYourBasket": "Number of products in your basket {0}",
+  "addProductToBasket": "A new product has been added to your basket"
 }

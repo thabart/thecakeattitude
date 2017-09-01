@@ -209,6 +209,29 @@ namespace Cook4Me.Api.EF.Repositories
             return result;
         }
 
+        public async Task<GetOrderStatusResult> GetStatus(GetOrderStatusParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            if (string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                throw new ArgumentNullException(nameof(parameter.Subject));
+            }
+
+            IQueryable<Models.Order> orders = _context.Orders.Include(c => c.OrderLines);
+            var createdOrders = orders.Where(o => o.Status == 0 && o.Subject == parameter.Subject);
+            var numberOfOrderCreated = await createdOrders.CountAsync().ConfigureAwait(false);
+            var numberOfOrderLinesCreated = await createdOrders.Select(o => o.OrderLines.Count()).SumAsync().ConfigureAwait(false);
+            return new GetOrderStatusResult
+            {
+                NumberOfOrderCreated = numberOfOrderCreated,
+                NumberOfOrderLinesCreated = numberOfOrderLinesCreated
+            };
+        }
+
         private static IQueryable<Models.Order> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Order, TKey>> keySelector, IQueryable<Models.Order> orders)
         {
             if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))

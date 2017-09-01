@@ -17,7 +17,7 @@ import {
 import Promise from "bluebird";
 import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router";
-import { OpenIdService, AuthenticateService, SessionService, NotificationService, UserService } from "./services/index";
+import { OpenIdService, AuthenticateService, SessionService, NotificationService, UserService, OrdersService } from "./services/index";
 import { translate } from 'react-i18next';
 import { Guid } from './utils/index';
 import { ApplicationStore } from './stores/index';
@@ -42,6 +42,7 @@ class Header extends Component {
         this.manageServices = this.manageServices.bind(this);
         this.switchLanguage = this.switchLanguage.bind(this);
         this.refreshNotifications = this.refreshNotifications.bind(this);
+        this.refreshOrders = this.refreshOrders.bind(this);
         this.readNotification = this.readNotification.bind(this);
         this.state = {
             user: null,
@@ -50,6 +51,7 @@ class Header extends Component {
             isAccountOpen: false,
             isNotificationOpened: false,
             isAuthenticateOpened: false,
+            isOrderOpened: false,
             isErrorDisplayed: false,
             isLoading: false,
             isAccountOpened: false,
@@ -58,7 +60,9 @@ class Header extends Component {
             isChooseLanguageOpened: false,
             isMobileMenuOpened: false,
             isNotificationLoading: false,
+            isOrderLoading: false,
             notifications: [],
+            orderStatus: {},
             nbUnread: 0
         };
     }
@@ -262,6 +266,25 @@ class Header extends Component {
       });
     }
 
+    refreshOrders() { // Refresh the orders.
+      var self = this;
+      self.setState({
+        isOrderLoading: true
+      });
+      OrdersService.status().then(function(r) {
+        var embedded = r['_embedded'];
+        self.setState({
+          isOrderLoading: false,
+          orderStatus: embedded
+        });
+      }).catch(function() {
+        self.setState({
+          isOrderLoading: false,
+          orderStatus: {}
+        });
+      });
+    }
+
     readNotification(notificationId) { // Read the notification.
       var self = this;
       self.setState({
@@ -280,7 +303,8 @@ class Header extends Component {
     render() { // Renders the view.
         var self = this;
         const { t } = self.props;
-        var notificationLst = [];
+        var notificationLst = [],
+          orderLst = [];
         if (self.state.notifications) {
             var headerTitle = t('pendingNotifications').replace('{0}', self.state.nbUnread);
             notificationLst.push((<DropdownItem header>{headerTitle}</DropdownItem>));
@@ -324,6 +348,13 @@ class Header extends Component {
             notificationLst.push((<DropdownItem style={{textAlign: "center"}}><NavLink to="/notifications">({t('viewAll')})</NavLink></DropdownItem>));
         }
 
+        var numberOfLinesCreated = self.state.orderStatus.number_of_lines_created || 0;
+        if (self.state.orderStatus) {
+          var headerTitle = t('numberOfProductsInYourBasket').replace('{0}', numberOfLinesCreated);
+          orderLst.push((<DropdownItem header>{headerTitle}</DropdownItem>));
+          orderLst.push((<DropdownItem style={{textAlign: "center"}}><NavLink to="/basket">({t('viewAll')})</NavLink></DropdownItem>));
+        }
+
         return (
             <div>
               <div className="navigation">
@@ -355,7 +386,19 @@ class Header extends Component {
                         { /* Basket */ }
                         {
                           (self.state.isLoggedIn && (
-                            <li><NavLink to="/basket" className="nav-link no-style"><i className="fa fa-shopping-cart"></i></NavLink></li>
+                            <li className="dropdown dropdown-extended dropdown-notification open">
+                              <NavDropdown isOpen={self.state.isOrderOpened} toggle={() => { if (self.state.isOrderOpened) { self.toggle('isOrderOpened'); return; } self.toggle('isOrderOpened'); self.refreshOrders(); }}>
+                                <DropdownToggle nav>
+                                  <i className="fa fa-shopping-cart"></i>
+                                  <span className="badge badge-notify">{numberOfLinesCreated}</span>
+                                </DropdownToggle>
+                                { self.state.isOrderLoading ? (
+                                  <DropdownMenu style={{textAlign: "center"}}>
+                                    <i className='fa fa-spinner fa-spin'></i>
+                                  </DropdownMenu>
+                                ) : (<DropdownMenu>{orderLst}</DropdownMenu>) }
+                              </NavDropdown>
+                            </li>
                           ))
                         }
                         {/* Notifications */}
@@ -478,16 +521,30 @@ class Header extends Component {
 
     componentDidMount() { // Execute before the view is displayed.
       var self = this;
+      const {t} = this.props;
       self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
-              case Constants.events.ADD_NOTIFICATION_ARRIVED:
-              case 'update-notification':
+              case Constants.events.NOTIFICATION_ADDED_ARRIVED:
+              case Constants.events.NOTIFICATION_UPDATED_ARRIVED:
                   var sub = ApplicationStore.getUser().sub;
                   if (payload.data.to === sub) {
                     self.refreshNotifications();
                   }
 
                   break;
+              case Constants.events.ORDER_ADDED_ARRIVED:
+              case Constants.events.ORDER_REMOVED_ARRIVED:
+              case Constants.events.ORDER_UPDATED_ARRIVED:
+                if (payload.actionName === Constants.events.ORDER_ADDED_ARRIVED) {
+                  ApplicationStore.sendMessage({
+                    message: t('addProductToBasket'),
+                    level: 'success',
+                    position: 'bl'
+                  });
+                }
+
+                self.refreshOrders();
+              break;
           }
       });
     }
@@ -502,6 +559,7 @@ class Header extends Component {
                 isConnectHidden: false
             });
             self.refreshNotifications();
+            self.refreshOrders();
         }).catch(function () {
             self.setState({
                 isConnectHidden: false

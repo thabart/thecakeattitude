@@ -48,6 +48,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetMessage(MessageAggregate message);
         JObject GetMessageAttachment(MessageAttachment attachment);
         JObject GetNotificationAddedEvent(NotificationAddedEvent evt);
+        JObject GetOrderStatus(GetOrderStatusResult result);
         JObject GetNotificationStatus(GetNotificationStatusResult result);
         JObject GetNotificationUpdatedEvent(NotificationUpdatedEvent evt);
         JObject GetNotification(NotificationAggregate notification);
@@ -83,6 +84,19 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrderStatus(GetOrderStatusResult result)
+        {
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
+            var obj = new JObject();
+            obj.Add(Constants.DtoNames.OrderStatusNames.NumberOfOrdersCreated, result.NumberOfOrderCreated);
+            obj.Add(Constants.DtoNames.OrderStatusNames.NumberOfOrderLinesCreated, result.NumberOfOrderLinesCreated);
+            return obj;
+        }
+
         public JObject GetOrderAddedEvent(OrderAddedEvent evt)
         {
             if (evt == null)
