@@ -36,10 +36,12 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IDeleteOrderOperation _deleteOrderOperation;
         private readonly IAddOrderLineOperation _addOrderLineOperation;
         private readonly IGetOrderStatusOperation _getOrderStatusOperation;
+        private readonly IGetOrderOperation _getOrderOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
-            IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
+            IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -47,6 +49,7 @@ namespace Cook4Me.Api.Host.Controllers
             _deleteOrderOperation = deleteOrderOperation;
             _addOrderLineOperation = addOrderLineOperation;
             _getOrderStatusOperation = getOrderStatusOperation;
+            _getOrderOperation = getOrderOperation;
         }
 
 
@@ -117,6 +120,20 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Search([FromBody] JObject jObj)
         {
             return await _searchOrdersOperation.Execute(jObj, User.GetSubject());
+        }
+
+        [HttpGet("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _getOrderOperation.Execute(id, subject);
         }
     }
 }

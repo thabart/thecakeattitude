@@ -373,5 +373,9 @@
   "shop": "Shop",
   "status": "Status",
   "status_created": "Created",
-  "status_confirmed": "Confirmed"
+  "status_confirmed": "Confirmed",
+  "orderTitle": "Order",
+  "buyer": "Buyer",
+  "seller": "Seller",
+  "transport": "Transport"
 }

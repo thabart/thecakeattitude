@@ -371,5 +371,9 @@
   "shop": "Magasin",
   "status": "Statut",
   "status_created": "Créée",
-  "status_confirmed": "Confirmée"
+  "status_confirmed": "Confirmée",
+  "orderTitle": "Commande",
+  "buyer": "Acheteur",
+  "seller": "Vendeur",
+  "transport": "Transport"
 }

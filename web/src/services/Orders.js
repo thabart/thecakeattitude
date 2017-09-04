@@ -46,10 +46,15 @@ module.exports = {
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
-                $.get(configuration.orders_endpoint + '/' + id).then(function (r) {
-                    resolve(r);
-                }).fail(function (e) {
-                    reject(e);
+                $.ajax(configuration.orders_endpoint + '/' + id, {
+                  method: 'GET',
+                  headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                  }
+                }).then(function(r) {
+                  resolve(r);
+                }).fail(function(e) {
+                  reject(e);
                 });
             });
         });

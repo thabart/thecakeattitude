@@ -10,7 +10,7 @@ import Constants from '../../Constants';
 import moment from 'moment';
 import $ from 'jquery';
 
-const defaultCount = 2;
+const defaultCount = 5;
 
 class ManageOrders extends Component {
   constructor(props) {
@@ -163,7 +163,7 @@ class ManageOrders extends Component {
           <td><span className="badge badge-default">{status}</span></td>
           <td>
             <a href="#" className="btn-light red" style={{marginRight: "5px"}} onClick={(e) => { self.deleteOrder(e, order.id) }}><i className="fa fa-trash"></i>  {t('delete')}</a>
-            <NavLink to={'/clientservices/'} className="btn-light green" style={{textDecoration: 'none !important'}}>
+            <NavLink to={'/orders/' + order.id} className="btn-light green" style={{textDecoration: 'none !important'}}>
               <i className="fa fa-external-link"></i>  {t('view')}
             </NavLink>
           </td>

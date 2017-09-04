@@ -12,6 +12,7 @@ import AddProduct from './AddProduct';
 import AddClientService from "./AddClientService";
 import AddService from './AddService';
 import Notifications from './Notifications';
+import Order from './Order';
 import Home from './Home';
 import Tags from './Tags';
 import Users from './Users';
@@ -309,6 +310,7 @@ class App extends Component {
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
+                <Route path="/orders/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Order />))}/>
                 <Route path="/basket" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Basket />))}/>
                 <Route path="/addservice/:id"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>

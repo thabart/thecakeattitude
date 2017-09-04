@@ -1,0 +1,183 @@
+import React, {Component} from "react";
+import { translate } from 'react-i18next';
+import { OrdersService, ProductsService, ShopsService, UserService } from './services/index';
+import { withRouter } from "react-router";
+import { NavLink } from "react-router-dom";
+import MainLayout from './MainLayout';
+import Promise from "bluebird";
+
+const defaultCount = 2;
+
+class Order extends Component {
+    constructor(props) {
+      super(props);
+      this._waitForToken = null;
+      this._page = '1';
+      this._request = {
+        start_index: 0,
+        count: defaultCount
+      };
+      this.changePage = this.changePage.bind(this);
+      this.refresh = this.refresh.bind(this);
+      this.state = {
+        isLoading: false,
+        pagination: [],
+        products: [],
+        order: {},
+        shop: {},
+        user: {}
+      };
+    }
+
+    changePage(e, page) { // Change the page.
+        e.preventDefault();
+        this._page = page;
+        this._request['start_index'] = (page - 1) * defaultCount;
+        this.refresh();
+    }
+
+    refresh() { // Refresh the order.
+      var self = this,
+        orderId = self.props.match.params.id;
+      self.setState({
+        isLoading: true
+      });
+
+      OrdersService.get(orderId).then(function(r) {
+        var order = r['_embedded'];
+        var productIds = order.lines.map(function(line) { return line.product_id; });
+        self._request['product_ids'] = productIds;
+        Promise.all([ ProductsService.search(self._request), UserService.getPublicClaims(order.subject), ShopsService.get(order.shop_id) ]).then(function(res) {
+          var products = res[0]['_embedded'];
+          var claims = res[1]['claims'];
+          var shop = res[2]['_embedded'];
+          var pagination = res[0]['_links'].navigation;
+          if (!(products instanceof Array)) {
+            products = [products];
+          }
+
+          self.setState({
+            isLoading: false,
+            order: order,
+            products: products,
+            pagination: pagination,
+            shop: shop,
+            user: claims
+          });
+        }).catch(function() {
+          self.setState({
+            isLoading: false,
+            order: {},
+            products: [],
+            pagination: [],
+            shop: {},
+            user: {}
+          });
+        });
+      }).catch(function() {
+        self.setState({
+          isLoading: false,
+          order: {},
+          products: [],
+          pagination: [],
+          shop: {},
+          user: {}
+        });
+      });
+    }
+
+    render() { // Render the view.
+      const {t} = this.props;
+      var pagination = [],
+        products = [],
+        self = this;
+      if (this.state.pagination && this.state.pagination.length > 1) {
+        this.state.pagination.forEach(function (page) {
+          pagination.push((<li className="page-item">
+            <a className={self._page === page.name ? "page-link active" : "page-link"} href="#" onClick={(e) => { self.changePage(e, page.name);}}>
+              {page.name}
+            </a>
+          </li>))
+        });
+      }
+
+      if (this.state.order && this.state.order.lines && this.state.order.lines.length > 0) {
+        this.state.order.lines.forEach(function(orderLine) {
+          var product = self.state.products.filter(function(prod) { return prod.id === orderLine.product_id; })[0];
+          if (!product) {
+            return;
+          }
+
+          var productImage = product['images'];
+          if (!productImage || productImage.length === 0) {
+              productImage = "/images/default-product.jpg";
+          } else {
+              productImage = productImage[0];
+          }
+
+          products.push((<li className="list-group-item">
+            <div className="col-md-2"><img src={productImage} width="40" /></div>
+            <div className="col-md-4">
+              <NavLink to={"/products/" + product.id} className="no-decoration red" href="#"><h4>{product.name}</h4></NavLink>
+              <p>
+                {t('oneUnitEqualTo').replace('{0}', product.quantity + ' ' + t(product.unit_of_measure))} <br />
+                {t('pricePerUnit').replace('{0}', '€ ' + product.new_price)} <br />
+                {t('availableInStock').replace('{0}', product.available_in_stock)}
+              </p>
+            </div>
+            <div className="col-md-3">
+              <h4>€ {orderLine.price}</h4>
+            </div>
+            <div className="col-md-3">{orderLine.quantity}</div>
+          </li>));
+        });
+      }
+
+      return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
+        { this.state.isLoading ? (<div className="container"><i className="fa fa-spinner fa-spin"></i></div>) : (
+          <div className="container">
+            <h2>{t('orderTitle')}</h2>
+            <section className="section" style={{padding: "10px"}}>
+              <div className="row">
+                <div className="col-md-8">
+                  { /* Display products */ }
+                  { products.length === 0 ? (<span>{t('noProducts')}</span>) : (
+                    <div className="list-group-default">
+                      <li className="list-group-item">
+                        <div className="col-md-3 offset-md-6">{t('price')}</div>
+                        <div className="col-md-2">{t('productQuantity')}</div>
+                      </li>
+                      {products}
+                    </div>
+                  ) }
+                  { /* Display pagination */ }
+                  {pagination.length > 0 && (<ul className="pagination">
+                      {pagination}
+                  </ul>)}
+                </div>
+                <div className="col-md-4">
+                  <h5>{t('buyer')}</h5>
+                  <p>{this.state.user.name}</p>
+                  <h5>{t('shop')}</h5>
+                  <p>{this.state.shop.name}</p>
+                  <h5>{t('status')}</h5>
+                  <span className="badge badge-default">{t('status_' + this.state.order.status)}</span>
+                  <h5>{t('transport')}</h5>
+                  {this.state.order.transport_mode === 'manual' && (<span>{t('chooseHandToHandTransport')}</span>)}
+                </div>
+              </div>
+              <div style={{marginTop: "10px"}}>
+                <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)}</h4>
+              </div>
+            </section>
+          </div>
+        ) }
+      </MainLayout>);
+    }
+
+    componentDidMount() { // Execute before the render.
+      this.refresh();
+    }
+}
+
+export default translate('common', { wait: process && !process.release })(withRouter(Order));
