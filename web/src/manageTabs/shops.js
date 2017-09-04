@@ -101,13 +101,13 @@ class ManageShops extends Component {
           <td>{shop.category.name}</td>
           <td>{moment(shop.create_datetime).format('LLL')}</td>
           <td>
-            <a href="#" className="btn-light red" style={{textDecoration: 'none !important'}} onClick={(e) => { self.removeShop(shop.id); }}>
+            <a href="#" className="btn-light red" style={{textDecoration: 'none !important', marginRight: "5px"}} onClick={(e) => { self.removeShop(shop.id); }}>
               <i className="fa fa-trash"></i> {t('delete')}
             </a>
-            <NavLink to={'/shops/' + shop.id + '/view/profile'} className="btn-light green" style={{textDecoration: 'none !important', marginLeft: "5px"}}>
+            <NavLink to={'/shops/' + shop.id + '/view/profile'} className="btn-light green" style={{textDecoration: 'none !important', marginRight: "5px"}}>
               <i className="fa fa-external-link"></i> {t('view')}
             </NavLink>
-            <NavLink to={'/shops/' + shop.id + '/edit/profile'} className="btn-light gray" style={{textDecoration: 'none !important', marginLeft: "5px"}}>
+            <NavLink to={'/shops/' + shop.id + '/edit/profile'} className="btn-light gray" style={{textDecoration: 'none !important'}}>
               <i className="fa fa-pencil"></i> {t('edit')}
             </NavLink>
           </td>

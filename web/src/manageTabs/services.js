@@ -101,13 +101,13 @@ class ManageServices extends Component {
           <td>{clientService.price}</td>
           <td>{moment(clientService.create_datetime).format('LLL')}</td>
           <td>
-            <a href="#" className="btn-light red" style={{textDecoration: 'none !important'}} onClick={(e) => { self.remove(clientService.id); }}>
+            <a href="#" className="btn-light red" style={{textDecoration: 'none !important', marginRight: "5px"}} onClick={(e) => { self.remove(clientService.id); }}>
               <i className="fa fa-trash"></i> {t('delete')}
             </a>
-            <NavLink to={'/clientservices/' + clientService.id} className="btn-light green" style={{textDecoration: 'none !important', marginLeft: "5px"}}>
+            <NavLink to={'/clientservices/' + clientService.id} className="btn-light green" style={{textDecoration: 'none !important', marginRight: "5px"}}>
               <i className="fa fa-external-link"></i> {t('view')}
             </NavLink>
-            <NavLink to={'/clientservices/' + clientService.id + '/edit'} className="btn-light gray" style={{textDecoration: 'none !important', marginLeft: "5px"}}>
+            <NavLink to={'/clientservices/' + clientService.id + '/edit'} className="btn-light gray" style={{textDecoration: 'none !important'}}>
               <i className="fa fa-pencil"></i> {t('edit')}
             </NavLink>
           </td>

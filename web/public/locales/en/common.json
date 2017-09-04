@@ -368,5 +368,10 @@
   "confirmRequestError": "An error occured while trying to confirm the request, please contact the administrator",
   "confirm_order": "An order has been confirmed",
   "orders": "Orders",
-  "manageYourOrdersMenuItem": "Manage your orders"
+  "manageYourOrdersMenuItem": "Manage your orders",
+  "noOrder": "No order",
+  "shop": "Shop",
+  "status": "Status",
+  "status_created": "Created",
+  "status_confirmed": "Confirmed"
 }

@@ -366,5 +366,10 @@
   "confirmRequestError": "Une erreur est survenue durant la confirmation de la requête, veuillez prendre contact avec l'administrateur",
   "confirm_order": "Une commande a été confirmée",
   "orders": "Commandes",
-  "manageYourOrdersMenuItem": "Gérer vos commandes"
+  "manageYourOrdersMenuItem": "Gérer vos commandes",
+  "noOrder": "Aucune commande",
+  "shop": "Magasin",
+  "status": "Statut",
+  "status_created": "Créée",
+  "status_confirmed": "Confirmée"
 }
