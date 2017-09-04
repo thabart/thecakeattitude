@@ -22,7 +22,8 @@ namespace Cook4Me.Api.Core.Aggregates
     public enum OrderAggregateStatus
     {
         Created,
-        Confirmed
+        Confirmed,
+        Received
     }
 
     public enum OrderTransportModes

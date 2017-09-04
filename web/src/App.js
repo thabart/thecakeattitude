@@ -188,6 +188,12 @@ class App extends Component {
                 data: message
             });
         });
+        securedProxy.on('orderReceived', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.ORDER_RECEIVED_ARRIVED,
+                data: message
+            });
+        });
         proxy.on('notificationUpdated', function(message) {
             AppDispatcher.dispatch({
                 actionName: Constants.events.NOTIFICATION_UPDATED_ARRIVED,

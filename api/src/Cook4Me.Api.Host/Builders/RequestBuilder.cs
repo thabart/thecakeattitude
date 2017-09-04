@@ -116,6 +116,9 @@ namespace Cook4Me.Api.Host.Builders
                 case "confirmed":
                     st = OrderAggregateStatus.Confirmed;
                     break;
+                case "received":
+                    st = OrderAggregateStatus.Received;
+                    break;
             }
             
 

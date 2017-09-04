@@ -73,5 +73,8 @@ namespace Cook4Me.Api.Host
         public const string TheProductCannotBeOrderedByYou = "You cannot order your own product";
         public const string TheOrderCannotBeUpdatedBecauseOfItsState = "An order with the state {0} cannot be updated";
         public const string TheOrderCannotBeAccessedByYou = "You cannot access to the order";
+        public const string TheOrderReceptionCanBeConfirmedOnlyByItsCreator = "You cannot confirm the reception";
+        public const string TheOrderStateCannotBeUpdated = "Not possible to pass from {0} state to {1}";
+        public const string TheReceivedOrderCannotBeUpdated = "The received order cannot be updated";
     }
 }

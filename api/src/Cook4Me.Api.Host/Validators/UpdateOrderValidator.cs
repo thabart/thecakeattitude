@@ -77,12 +77,35 @@ namespace Cook4Me.Api.Host.Validators
                 return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderDoesntExist);
             }
 
-            if (record.Status != OrderAggregateStatus.Created && record.Status == order.Status)
+            if (record.Status == OrderAggregateStatus.Received) // Cannot update received order.
+            {
+                return new UpdateOrderValidationResult(ErrorDescriptions.TheReceivedOrderCannotBeUpdated);
+            }
+
+            if (record.Status != OrderAggregateStatus.Created && record.Status == order.Status) // Confirmed & received order cannot be updated.
             {
                 return new UpdateOrderValidationResult(string.Format(ErrorDescriptions.TheOrderCannotBeUpdatedBecauseOfItsState, Enum.GetName(typeof(OrderAggregateStatus), order.Status)));
             }
 
-            if (order.OrderLines != null && order.OrderLines.Any())
+            if (record.Status != order.Status)
+            {
+                if (record.Status == OrderAggregateStatus.Created && order.Status != OrderAggregateStatus.Confirmed) // created => confirmed.
+                {
+                    return new UpdateOrderValidationResult(string.Format(ErrorDescriptions.TheOrderStateCannotBeUpdated, Enum.GetName(typeof(OrderAggregateStatus), record.Status), Enum.GetName(typeof(OrderAggregateStatus), order)));
+                }
+
+                if (record.Status == OrderAggregateStatus.Confirmed && order.Status != OrderAggregateStatus.Received) // confirmed => received
+                {
+                    return new UpdateOrderValidationResult(string.Format(ErrorDescriptions.TheOrderStateCannotBeUpdated, Enum.GetName(typeof(OrderAggregateStatus), record.Status), Enum.GetName(typeof(OrderAggregateStatus), order)));
+                }
+            }
+
+            if (order.TransportMode ==  OrderTransportModes.Manual && order.Status == OrderAggregateStatus.Received && record.Subject != subject) // Only the creator can confirm the order.
+            {
+                return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderReceptionCanBeConfirmedOnlyByItsCreator);
+            }
+
+            if (order.OrderLines != null && order.OrderLines.Any()) // Check the lines.
             {
                 var productIds = order.OrderLines.Select(o => o.ProductId);
                 var products = await _productRepository.Search(new SearchProductsParameter { ProductIds = productIds });
@@ -99,7 +122,7 @@ namespace Cook4Me.Api.Host.Validators
                 foreach (var orderLine in order.OrderLines)
                 {
                     var product = products.Content.First(p => p.Id == orderLine.ProductId);
-                    if (orderLine.Quantity > product.AvailableInStock)
+                    if (orderLine.Quantity > product.AvailableInStock && product.AvailableInStock.HasValue)
                     {
                         return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderLineQuantityIsTooMuch);
                     }

@@ -225,6 +225,7 @@ namespace Cook4Me.Api.EF.Repositories
                     record.TotalScore = productAggregate.TotalScore;
                     record.UnitOfMeasure = productAggregate.UnitOfMeasure;
                     record.UpdateDateTime = productAggregate.UpdateDateTime;
+                    record.AvailableInStock = productAggregate.AvailableInStock;
                     var comments = productAggregate.Comments == null ? new List<ProductComment>() : productAggregate.Comments;
                     var commentIds = comments.Select(c => c.Id);
                     // Update the comments

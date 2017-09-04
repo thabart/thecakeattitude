@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Commands.Orders;
 using System.Threading.Tasks;
 using System;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Core.Aggregates;
 
 namespace Cook4Me.Api.Host.Validators
 {

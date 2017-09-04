@@ -33,6 +33,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderReceivedEvent(OrderReceivedEvent evt);
         JObject GetOrderConfirmeddEvent(OrderConfirmedEvent evt);
         JObject GetOrderAddedEvent(OrderAddedEvent evt);
         JObject GetOrderRemovedEvent(OrderRemovedEvent evt);
@@ -95,6 +96,22 @@ namespace Cook4Me.Api.Host.Builders
             var obj = new JObject();
             obj.Add(Constants.DtoNames.OrderStatusNames.NumberOfOrdersCreated, result.NumberOfOrderCreated);
             obj.Add(Constants.DtoNames.OrderStatusNames.NumberOfOrderLinesCreated, result.NumberOfOrderLinesCreated);
+            return obj;
+        }
+
+        public JObject GetOrderReceivedEvent(OrderReceivedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var obj = new JObject();
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
+            result.Add(Constants.DtoNames.OrderNames.Subject, evt.Client);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return obj;
         }
 
@@ -186,6 +203,9 @@ namespace Cook4Me.Api.Host.Builders
                     break;
                 case OrderAggregateStatus.Confirmed:
                     status = "confirmed";
+                    break;
+                case OrderAggregateStatus.Received:
+                    status = "received";
                     break;
             }
 

@@ -375,5 +375,9 @@
   "orderTitle": "Commande",
   "buyer": "Acheteur",
   "seller": "Vendeur",
-  "transport": "Transport"
+  "transport": "Transport",
+  "confirmReception": "Confirmer la réception",
+  "confirmReceptionError": "Une erreur est survenue durant la confirmation de réception de la commande, veuillez prendre contact avec l'administrateur",
+  "status_received": "Reçue",
+  "orderReceived": "La commande a été reçue"
 }

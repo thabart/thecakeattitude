@@ -124,6 +124,7 @@ namespace Cook4Me.Api.EF.Repositories
                     record.TotalPrice = orderAggregate.TotalPrice;
                     record.UpdateDateTime = orderAggregate.UpdateDateTime;
                     record.ShopId = orderAggregate.ShopId;
+                    record.TransportMode = (int)orderAggregate.TransportMode;
                     var orderLines = orderAggregate.OrderLines == null ? new List<OrderAggregateLine>() : orderAggregate.OrderLines;
                     var orderIds = orderLines.Select(c => c.Id);
                     var orderLinesToUpdate = record.OrderLines.Where(c => orderIds.Contains(c.Id));

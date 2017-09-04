@@ -377,5 +377,9 @@
   "orderTitle": "Order",
   "buyer": "Buyer",
   "seller": "Seller",
-  "transport": "Transport"
+  "transport": "Transport",
+  "confirmReception": "Confirm the reception",
+  "confirmReceptionError": "An error occured while trying to confirm the reception of the request, please contact the administrator",
+  "status_received": "Received",
+  "orderReceived": "The order has been received"
 }

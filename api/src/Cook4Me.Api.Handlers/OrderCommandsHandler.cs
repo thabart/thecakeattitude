@@ -44,8 +44,6 @@ namespace Cook4Me.Api.Handlers
             _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
         }
 
-        // TODO : Update the stock when the order is confirmed.
-
         public async Task Handle(UpdateOrderCommand message)
         {
             if (message == null)
@@ -61,19 +59,28 @@ namespace Cook4Me.Api.Handlers
 
             order.UpdateDateTime = DateTime.UtcNow;
             order.Status = message.Status;
-            order.TransportMode = message.TransportMode;
-            order.OrderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
-                new OrderAggregateLine
-                {
-                    Id = o.Id,
-                    ProductId = o.ProductId,
-                    Quantity = o.Quantity
-                }
-            ).ToList();
-            if (order.Status == OrderAggregateStatus.Confirmed)
+            if (order.Status == OrderAggregateStatus.Received)
             {
+                await _orderRepository.Update(order);
+                _eventPublisher.Publish(new OrderReceivedEvent
+                {
+                    CommonId = message.CommonId,
+                    OrderId = order.Id,
+                    Client = order.Subject,
+                    Seller = order.SellerId
+                });
+                return;
+            }
+            else if (order.Status == OrderAggregateStatus.Confirmed)
+            {
+                order.TransportMode = message.TransportMode;
                 await _orderPriceCalculatorHelper.Update(order);
                 await _orderRepository.Update(order);
+                if (order.OrderLines != null)
+                {
+                    await UpdateProductStock(order, false);
+                }
+
                 _eventPublisher.Publish(new OrderConfirmedEvent
                 {
                     CommonId = message.CommonId,
@@ -84,6 +91,14 @@ namespace Cook4Me.Api.Handlers
                 return;
             }
 
+            order.OrderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
+                new OrderAggregateLine
+                {
+                    Id = o.Id,
+                    ProductId = o.ProductId,
+                    Quantity = o.Quantity
+                }
+            ).ToList();
             await _orderRepository.Update(order);
             _eventPublisher.Publish(new OrderUpdatedEvent
             {
@@ -106,6 +121,11 @@ namespace Cook4Me.Api.Handlers
                 return;
             }
 
+            if (record.Status == OrderAggregateStatus.Confirmed)
+            {
+                await UpdateProductStock(record, true);
+            }
+
             await _orderRepository.Remove(record);
             _eventPublisher.Publish(new OrderRemovedEvent
             {
@@ -124,7 +144,12 @@ namespace Cook4Me.Api.Handlers
 
             string id = null;
             var product = await _productRepository.Get(message.ProductId);
-            var orders = await _orderRepository.Search(new SearchOrdersParameter { Shops = new[] { product.ShopId }, Clients = new[] { message.Subject } });
+            var orders = await _orderRepository.Search(new SearchOrdersParameter
+            {
+                Shops = new[] { product.ShopId },
+                Clients = new[] { message.Subject },
+                Status =  new[] { (int)OrderAggregateStatus.Created }
+            });
             if (orders.Content.Count() > 1)
             {
                 return;
@@ -191,6 +216,45 @@ namespace Cook4Me.Api.Handlers
                 OrderId = id,
                 OrderLineId = message.Id
             });
+        }
+
+        private async Task UpdateProductStock(OrderAggregate order, bool addQuantity)
+        {
+            if (order.OrderLines == null || !order.OrderLines.Any())
+            {
+                return;
+            }
+
+            var products = await _productRepository.Search(new SearchProductsParameter
+            {
+                ProductIds = order.OrderLines.Select(o => o.ProductId),
+                IsPagingEnabled = false
+            });
+            if (products.Content != null)
+            {
+                foreach (var orderLine in order.OrderLines)
+                {
+                    var product = products.Content.FirstOrDefault(c => c.Id == orderLine.ProductId);
+                    if (product == null)
+                    {
+                        continue;
+                    }
+
+                    if (product.AvailableInStock.HasValue) // Update the available stock.
+                    {
+                        if (addQuantity)
+                        {
+                            product.AvailableInStock = product.AvailableInStock + orderLine.Quantity;
+                        }
+                        else
+                        {
+                            product.AvailableInStock = product.AvailableInStock - orderLine.Quantity;
+                        }
+
+                        await _productRepository.Update(product);
+                    }
+                }
+            }
         }
     }
 }

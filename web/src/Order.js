@@ -22,6 +22,7 @@ class Order extends Component {
       };
       this.changePage = this.changePage.bind(this);
       this.refresh = this.refresh.bind(this);
+      this.confirmReception = this.confirmReception.bind(this);
       this.state = {
         isLoading: false,
         pagination: [],
@@ -89,6 +90,29 @@ class Order extends Component {
       });
     }
 
+    confirmReception() { // Confirm the reception of the packet.
+      var self = this;
+      self.setState({
+        isLoading: true
+      });
+      var request = {
+        'status': 'received'
+      };
+      const {t} = this.props;
+      OrdersService.update(self.state.order.id, request).catch(function(e) {
+        var errorMsg = t('confirmRequestError');
+        if (e.responseJSON && e.responseJSON.error_description) {
+          errorMsg = e.responseJSON.error_description;
+        }
+
+        ApplicationStore.sendMessage({
+          message: errorMsg,
+          level: 'error',
+          position: 'tr'
+        });
+      });
+    }
+
     render() { // Render the view.
       const {t} = this.props;
       var pagination = [],
@@ -141,6 +165,8 @@ class Order extends Component {
         img = this.state.user.picture;
       }
 
+      var sub = ApplicationStore.getUser().sub;
+      var isBuyer = this.state.order && this.state.order.subject === sub;
       return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         { this.state.isLoading ? (<div className="container"><i className="fa fa-spinner fa-spin"></i></div>) : (
           <div className="container">
@@ -188,6 +214,11 @@ class Order extends Component {
               <div style={{marginTop: "10px"}}>
                 <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)}</h4>
               </div>
+              <div style={{marginTop: "10px"}}>
+                { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (
+                  <button className="btn btn-default" onClick={this.confirmReception}>{t('confirmReception')}</button>
+                ) }
+              </div>
             </section>
           </div>
         ) }
@@ -203,6 +234,14 @@ class Order extends Component {
             case Constants.events.ORDER_UPDATED_ARRIVED:
               ApplicationStore.sendMessage({
                 message: t('basketUpdated'),
+                level: 'success',
+                position: 'bl'
+              });
+              self.refresh();
+            break;
+            case Constants.events.ORDER_RECEIVED_ARRIVED:
+              ApplicationStore.sendMessage({
+                message: t('orderReceived'),
                 level: 'success',
                 position: 'bl'
               });
