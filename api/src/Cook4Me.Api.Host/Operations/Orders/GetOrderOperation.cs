@@ -14,6 +14,8 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Helpers;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
@@ -36,15 +38,17 @@ namespace Cook4Me.Api.Host.Operations.Orders
         private readonly IOrderEnricher _orderEnricher;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
+        private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
 
         public GetOrderOperation(IOrderRepository orderRepository, IHalResponseBuilder halResponseBuilder, IOrderEnricher orderEnricher,
-            IResponseBuilder responseBuilder, IControllerHelper controllerHelper)
+            IResponseBuilder responseBuilder, IControllerHelper controllerHelper, IOrderPriceCalculatorHelper orderPriceCalculatorHelper)
         {
             _orderRepository = orderRepository;
             _halResponseBuilder = halResponseBuilder;
             _orderEnricher = orderEnricher;
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
+            _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
         }
 
         public async Task<IActionResult> Execute(string orderId, string subject)
@@ -67,6 +71,11 @@ namespace Cook4Me.Api.Host.Operations.Orders
             }
 
             _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Orders + "/" + orderId));
+            if (order.Status == OrderAggregateStatus.Created)
+            {
+                await _orderPriceCalculatorHelper.Update(order);
+            }
+
             _orderEnricher.Enrich(_halResponseBuilder, order);
             return new OkObjectResult(_halResponseBuilder.Build());
         }

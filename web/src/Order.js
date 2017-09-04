@@ -3,7 +3,10 @@ import { translate } from 'react-i18next';
 import { OrdersService, ProductsService, ShopsService, UserService } from './services/index';
 import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
+import { ApplicationStore } from './stores/index';
 import MainLayout from './MainLayout';
+import AppDispatcher from './appDispatcher';
+import Constants from '../Constants';
 import Promise from "bluebird";
 
 const defaultCount = 2;
@@ -133,6 +136,11 @@ class Order extends Component {
         });
       }
 
+      var img = "/images/profile-picture.png";
+      if (this.state.user.picture && this.state.user.picture !== null) {
+        img = this.state.user.picture;
+      }
+
       return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         { this.state.isLoading ? (<div className="container"><i className="fa fa-spinner fa-spin"></i></div>) : (
           <div className="container">
@@ -157,13 +165,24 @@ class Order extends Component {
                 </div>
                 <div className="col-md-4">
                   <h5>{t('buyer')}</h5>
-                  <p>{this.state.user.name}</p>
+                  <div className="row">
+                    <div className="col-md-2">
+                      <img src={img} className="rounded-circle image-small"/>
+                    </div>
+                    <div className="col-md-10">
+                      <p><NavLink to={"/users/" + this.state.user.sub} style={{color: "inherit"}}>{this.state.user.name}</NavLink></p>
+                    </div>
+                  </div>
                   <h5>{t('shop')}</h5>
-                  <p>{this.state.shop.name}</p>
+                  <p><NavLink to={"/shops/" + this.state.shop.id + "/view/profile"}  style={{color: "inherit"}}>{this.state.shop.name}</NavLink></p>
                   <h5>{t('status')}</h5>
                   <span className="badge badge-default">{t('status_' + this.state.order.status)}</span>
-                  <h5>{t('transport')}</h5>
-                  {this.state.order.transport_mode === 'manual' && (<span>{t('chooseHandToHandTransport')}</span>)}
+                  { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && (
+                    <div>
+                      <h5>{t('transport')}</h5>
+                      <span>{t('chooseHandToHandTransport')}</span>
+                    </div>
+                  ) }
                 </div>
               </div>
               <div style={{marginTop: "10px"}}>
@@ -176,7 +195,25 @@ class Order extends Component {
     }
 
     componentDidMount() { // Execute before the render.
-      this.refresh();
+      var self = this;
+      const {t} = this.props;
+      self.refresh();
+      self._waitForToken = AppDispatcher.register(function (payload) {
+          switch (payload.actionName) {
+            case Constants.events.ORDER_UPDATED_ARRIVED:
+              ApplicationStore.sendMessage({
+                message: t('basketUpdated'),
+                level: 'success',
+                position: 'bl'
+              });
+              self.refresh();
+            break;
+          }
+      });
+    }
+
+    componentWillUnmount() { // Remove listener.
+        AppDispatcher.unregister(this._waitForToken);
     }
 }
 
