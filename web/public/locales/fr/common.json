@@ -351,7 +351,7 @@
   "pricePerUnit": "Prix par unité : {0}",
   "availableInStock": "En stock : {0}",
   "bills": "Factures",
-  "orderRemoved": "La facture a été supprimée",
+  "orderRemoved": "La commande a été supprimée",
   "removeOrderError": "Une erreur est survenue durant la suppression de la facture, veuillez prendre contact avec l'administrateur",
   "noBills": "Aucune facture",
   "addBasketError": "Une erreur est survenue durant l'insertion du produit dans le panier, veuillez prendre contact avec l'administrateur",

@@ -353,7 +353,7 @@
   "pricePerUnit": "Price per unit : {0}",
   "availableInStock": "Available in stock : {0}",
   "bills": "Bills",
-  "orderRemoved": "The bill has been removed",
+  "orderRemoved": "The order has been removed",
   "removeOrderError": "An error occured while trying to remove the bill, please contact the administrator",
   "noBills": "No bills",
   "addBasketError": "An error occured while trying to add the product into the basket, please contact the administrator",

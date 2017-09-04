@@ -13,6 +13,7 @@ import $ from 'jquery';
 class ManageServices extends Component {
   constructor(props) {
     super(props);
+    this._waitForToken = null;
     this._request = {count: 10, start_index: 0};
     this._common_id = null;
     this.remove = this.remove.bind(this);
@@ -154,7 +155,7 @@ class ManageServices extends Component {
   componentDidMount() { // Execute before the render.
     var self = this;
     const {t} = this.props;
-    AppDispatcher.register(function (payload) {
+    self._waitForToken = AppDispatcher.register(function (payload) {
         switch (payload.actionName) {
             case Constants.events.REMOVE_CLIENT_SERVICE_ARRIVED:
               if (payload.data && payload.data.common_id === self._common_id) {
@@ -170,6 +171,10 @@ class ManageServices extends Component {
         }
     });
     this.refresh();
+  }
+
+  componentWillUnmount() { // Remove listener.
+      AppDispatcher.unregister(this._waitForToken);
   }
 }
 

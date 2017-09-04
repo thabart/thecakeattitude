@@ -4,6 +4,9 @@ import { translate } from 'react-i18next';
 import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
 import { ApplicationStore } from '../stores/index';
+import { Guid } from '../utils/index';
+import AppDispatcher from "../appDispatcher";
+import Constants from '../../Constants';
 import moment from 'moment';
 import $ from 'jquery';
 
@@ -13,6 +16,8 @@ class ManageOrders extends Component {
   constructor(props) {
     super(props);
     this._page = '1';
+    this._waitForToken = null;
+    this._common_id = null;
     // var sub = ApplicationStore.getUser().sub;
     this._request = {
       count: defaultCount,
@@ -27,6 +32,7 @@ class ManageOrders extends Component {
     this.navToReceived = this.navToReceived.bind(this);
     this.changePage = this.changePage.bind(this);
     this.refresh = this.refresh.bind(this);
+    this.deleteOrder = this.deleteOrder.bind(this);
     this.state = {
       isLoading: false,
       orders: [],
@@ -112,6 +118,26 @@ class ManageOrders extends Component {
     });
   }
 
+  deleteOrder(e, orderId) { // Remove the order.
+    e.preventDefault();
+    var self = this;
+    self.setState({
+      isLoading: true
+    });
+    const {t} = this.props;
+    self._common_id = Guid.generate();
+    OrdersService.remove(orderId, self._common_id).catch(function() {
+      self.setState({
+        isLoading: false
+      });
+      ApplicationStore.sendMessage({
+        message: t('removeOrderError'),
+        level: 'error',
+        position: 'tr'
+      });
+    });
+  }
+
   render() { // Display the component.
     const {t} = this.props;
     var self = this;
@@ -136,7 +162,7 @@ class ManageOrders extends Component {
           <td>{moment(order.create_datetime).format('LLL')}</td>
           <td><span className="badge badge-default">{status}</span></td>
           <td>
-            <a href="#" className="btn-light red" style={{marginRight: "5px"}}><i className="fa fa-trash"></i>  {t('delete')}</a>
+            <a href="#" className="btn-light red" style={{marginRight: "5px"}} onClick={(e) => { self.deleteOrder(e, order.id) }}><i className="fa fa-trash"></i>  {t('delete')}</a>
             <NavLink to={'/clientservices/'} className="btn-light green" style={{textDecoration: 'none !important'}}>
               <i className="fa fa-external-link"></i>  {t('view')}
             </NavLink>
@@ -200,6 +226,28 @@ class ManageOrders extends Component {
     } else {
       self.navToSent();
     }
+
+    const {t} = this.props;
+    self._waitForToken = AppDispatcher.register(function (payload) {
+        switch (payload.actionName) {
+            case Constants.events.ORDER_REMOVED_ARRIVED:
+              if (payload.data && payload.data.common_id === self._common_id) {
+                ApplicationStore.sendMessage({
+                  message: t('orderRemoved'),
+                  level: 'success',
+                  position: 'bl'
+                });
+
+                self.refresh();
+              }
+
+              break;
+        }
+    });
+  }
+
+  componentWillUnmount() { // Remove listener.
+      AppDispatcher.unregister(this._waitForToken);
   }
 }
 
