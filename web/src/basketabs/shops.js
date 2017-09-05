@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Button } from "reactstrap";
 import { translate } from 'react-i18next';
 import { NavLink } from "react-router-dom";
-import { DropLocations } from '../components/index';
 import { ShopsService, OrdersService } from '../services/index';
 import { BasketStore, ApplicationStore } from '../stores/index';
 import AppDispatcher from '../appDispatcher';
@@ -181,7 +180,6 @@ class Shops extends Component {
       <div className="container rounded">
         <p>{t('basketShopsDescription')}</p>
         {this.state.errorMessage !== null && (<span style={{color: "#d9534f"}}>{this.state.errorMessage}</span>)}
-        <DropLocations />
         <div>
           <section>
             {shops.length === 0 ? (<span>{t('noBills')}</span>) : (

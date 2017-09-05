@@ -382,5 +382,8 @@
   "confirmReceptionError": "An error occured while trying to confirm the reception of the request, please contact the administrator",
   "status_received": "Received",
   "orderReceived": "The order has been received",
-  "receive_order": "An order has been received"
+  "receive_order": "An order has been received",
+  "businessHours": "Business hours",
+  "noDropLocationSelected": "No drop location is selected",
+  "closed": "Closed"
 }

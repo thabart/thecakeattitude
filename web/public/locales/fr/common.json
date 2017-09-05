@@ -380,5 +380,8 @@
   "confirmReceptionError": "Une erreur est survenue durant la confirmation de réception de la commande, veuillez prendre contact avec l'administrateur",
   "status_received": "Reçue",
   "orderReceived": "La commande a été reçue",
-  "receive_order": "Une commande a été reçue"
+  "receive_order": "Une commande a été reçue",
+  "businessHours": "Heures d'ouverture",
+  "noDropLocationSelected": "Pas de point d'enlèvement sélectionné",
+  "closed": "Fermé"
 }

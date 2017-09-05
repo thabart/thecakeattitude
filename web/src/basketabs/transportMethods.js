@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Button } from "reactstrap";
 import { translate } from 'react-i18next';
 import { BasketStore } from '../stores/index';
-import { Address } from '../components/index';
+import { Address, DropLocations } from '../components/index';
 import AppDispatcher from '../appDispatcher';
 import '../styles/transportMethods.css';
 import Constants from '../../Constants';
@@ -58,15 +58,19 @@ class TransportMethods extends Component {
     return (
       <div className="container rounded">
         <p>{t('basketTransportTabDescription')} <i className="fa fa-info-circle txt-info"/></p>
-        <div className="col-md-12">
+        <div>
           <section className="row p-1">
-            <div className={this.state.transportMethod === 'manual' ? "col-md-3 text-center transport-method active" : "col-md-3 text-center transport-method"} onClick={() => { self.selectTransportMethod('manual'); }}>
-              <img src="/images/agreement.png" />
-              <h3>{t('handToHandTransport')}</h3>
+            <div className="col-md-3 text-center" onClick={() => { self.selectTransportMethod('manual'); }}>
+              <div className={this.state.transportMethod === 'manual' ? "transport-method active" : "transport-method"}>
+                <img src="/images/agreement.png" />
+                <h3>{t('handToHandTransport')}</h3>
+              </div>
             </div>
-            <div className={this.state.transportMethod === 'packet' ? "col-md-3 offset-md-3 text-center transport-method active" : "col-md-3 offset-md-3 text-center transport-method"} onClick={() => { self.selectTransportMethod('packet'); }}>
-              <img src="/images/package.png" />
-              <h3>{t('receivePackage')}</h3>
+            <div className="col-md-3 offset-md-3 text-center" onClick={() => { self.selectTransportMethod('packet'); }}>
+              <div className={this.state.transportMethod === 'packet' ? "transport-method active" : "transport-method"} >
+                <img src="/images/package.png" />
+                <h3>{t('receivePackage')}</h3>
+              </div>
             </div>
           </section>
           { this.state.transportMethod === 'packet' && (
@@ -75,15 +79,23 @@ class TransportMethods extends Component {
               <Address />
               <h5>Choose a transporter</h5>
               <div className="row">
-                <div className={this.state.transporter === 'ups' ? 'col-md-3 transport-method text-center active' : 'col-md-3 transport-method text-center'} onClick={() => self.selectTransporter('ups') }>
-                  <img src="/images/UPS.png" width="100" />
-                  <h3>UPS</h3>
+                <div className='col-md-3 text-center' onClick={() => self.selectTransporter('ups') }>
+                  <div className={this.state.transporter === 'ups' ? 'transport-method active' : 'transport-method'}>
+                    <img src="/images/UPS.png" width="100" />
+                    <h3>UPS</h3>
+                  </div>
                 </div>
-                <div className={this.state.transporter === 'dhl' ? 'col-md-3 offset-md-3 transport-method text-center active' : 'col-md-3 offset-md-3 transport-method text-center'} onClick={() => self.selectTransporter('dhl') }>
-                  <img src="/images/DHL.png" width="100" />
-                  <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>DHL PARCEL</a></h3>
+                <div className="col-md-3 offset-md-3 text-center" onClick={() => self.selectTransporter('dhl') }>
+                  <div className={this.state.transporter === 'dhl' ? 'transport-method active' : 'transport-method'}>
+                    <img src="/images/DHL.png" width="100" />
+                    <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>DHL PARCEL</a></h3>
+                  </div>
                 </div>
               </div>
+              { /* Deliver to a pick-up point */ }
+              { this.state.transporter === 'dhl' && ( <section><h5>Choose a Pick-up point</h5><DropLocations /></section> ) }
+              { /* Deliver directly at home */ }
+              <h4>Total price</h4>
             </section>
           ) }
           <section className="row p-1">
