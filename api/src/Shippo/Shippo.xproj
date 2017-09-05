@@ -6,8 +6,8 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>92e78ee8-abb8-4641-ade4-f1b96e57803e</ProjectGuid>
-    <RootNamespace>Cook4Me.Api.Core</RootNamespace>
+    <ProjectGuid>dad583c2-c51e-4631-9cfb-865297e480a4</ProjectGuid>
+    <RootNamespace>Shippo</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
   </PropertyGroup>
