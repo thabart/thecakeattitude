@@ -55,6 +55,7 @@ class ManageOrders extends Component {
   navToSent() { // Navigate to sent orders.
     var sub = ApplicationStore.getUser().sub;
     this._request['clients'] = [ sub ];
+    delete this._request.status;
     delete this._request.sellers;
     this.refresh();
   }
@@ -62,6 +63,7 @@ class ManageOrders extends Component {
   navToReceived() { // Navigate to received orders.
     var sub = ApplicationStore.getUser().sub;
     this._request['sellers'] = [ sub ];
+    this._request['status'] = [ 'received', 'confirmed' ];
     delete this._request.clients;
     this.refresh();
   }
@@ -162,7 +164,7 @@ class ManageOrders extends Component {
           <td>{moment(order.create_datetime).format('LLL')}</td>
           <td><span className="badge badge-default">{status}</span></td>
           <td>
-            <a href="#" className="btn-light red" style={{marginRight: "5px"}} onClick={(e) => { self.deleteOrder(e, order.id) }}><i className="fa fa-trash"></i>  {t('delete')}</a>
+            {action === 'sent' && order.status !== 'received' && (<a href="#" className="btn-light red" style={{marginRight: "5px"}} onClick={(e) => { self.deleteOrder(e, order.id) }}><i className="fa fa-trash"></i>  {t('delete')}</a>)}
             <NavLink to={'/orders/' + order.id} className="btn-light green" style={{textDecoration: 'none !important'}}>
               <i className="fa fa-external-link"></i>  {t('view')}
             </NavLink>

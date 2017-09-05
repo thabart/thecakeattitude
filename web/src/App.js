@@ -273,7 +273,7 @@ class App extends Component {
               });
             break;
             case Constants.events.USER_LOGGED_OUT:
-              self._connection.qs = '';
+              self._securedConnection.qs = '';
               self._securedConnection.stop();
             break;
           }

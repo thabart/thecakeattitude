@@ -560,6 +560,9 @@ namespace Cook4Me.Api.Host.Builders
                 case NotificationParameterTypes.ShopServiceId:
                     type = "shop_service_id";
                     break;
+                case NotificationParameterTypes.OrderId:
+                    type = "order_id";
+                    break;
             }
 
             var result = new JObject();

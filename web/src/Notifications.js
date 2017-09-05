@@ -108,6 +108,7 @@ class Notifications extends Component {
             var messageId = notification.parameters.filter(function(param) { return param.type === "message_id"; }).map(function(param) { return param.value; });
             var clientServiceId = notification.parameters.filter(function(param) { return param.type === "client_service_id"; }).map(function(param) { return param.value; });
             var shopServiceId = notification.parameters.filter(function(param) { return param.type === "shop_service_id"; }).map(function(param) { return param.value; });
+            var orderId = notification.parameters.filter(function(param) { return param.type === "order_id"; }).map(function(param) { return param.value; });
             if (shopId && shopId.length === 1) {
               link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/shops/'+shopId[0]+'/view/profile')}></i>);
             } else if (productId && productId.length === 1  && notification.content === 'add_product_comment') {
@@ -122,6 +123,8 @@ class Notifications extends Component {
               link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/services/'+shopServiceId[0])}></i>);
             } else if (productId && productId.length === 1 && notification.content === 'add_product') {
               link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/products/'+productId[0])}></i>);
+            } else if (orderId && orderId.length === 1) {
+              link = (<i className="fa fa-link" style={{cursor: "pointer"}} onClick={() => self.props.history.push('/orders/'+orderId[0])}></i>);
             }
           }
 
