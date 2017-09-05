@@ -21,8 +21,8 @@ namespace Dhl.Client.Results.ShopParcelLocations
     public class ShopParcelLocationGeo
     {
         [JsonProperty(PropertyName = Constants.DtoNames.ShopParcelLocationGeoNames.Latitude)]
-        public string Latitude { get; set; }
+        public double Latitude { get; set; }
         [JsonProperty(PropertyName = Constants.DtoNames.ShopParcelLocationGeoNames.Longitude)]
-        public string Longitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

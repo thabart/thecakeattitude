@@ -38,6 +38,7 @@ var getAddress = function (adrComponents) {
 
         if (adrComponent.types.includes("country")) {
             result['country'] = adrComponent.long_name;
+            result['country_code'] = adrComponent.short_name;
             return;
         }
     });
@@ -58,7 +59,7 @@ var getPlace = function(url) {
 
       var result = r.results[0];
       var adr = getAddress(result.address_components);
-      resolve({adr: adr, place_id: result.place_id, geometry: result.geometry});
+      resolve({adr: adr, place_id: result.place_id, geometry: result.geometry, formatted_address: result.formatted_address});
     }).catch(function() {
       reject();
     });

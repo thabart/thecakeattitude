@@ -12,6 +12,7 @@ import ShopProductFilter from './shopProductFilter';
 import ProductCategories from './productCategories';
 import ImagesUploader from './imagesUploader';
 import SelectDate from './selectDate';
+import DropLocations from './dropLocations';
 
 exports.CommentLst = CommentLst;
 exports.EditableText = EditableText;
@@ -27,3 +28,4 @@ exports.ShopProductFilter = ShopProductFilter;
 exports.ProductCategories = ProductCategories;
 exports.ImagesUploader = ImagesUploader;
 exports.SelectDate = SelectDate;
+exports.DropLocations = DropLocations;

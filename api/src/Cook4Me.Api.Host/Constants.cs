@@ -91,7 +91,7 @@ namespace Cook4Me.Api.Host
             public static class DropLocationGeoloc
             {
                 public const string Latitude = "lat";
-                public const string Longitude = "long";
+                public const string Longitude = "lng";
             }
 
             public static class DropLocationOpeningTime

@@ -14,6 +14,7 @@ import NotificationService from './Notification';
 import AuthenticateService from './Authenticate';
 import MessageService from './Messages';
 import OrdersService from './Orders';
+import DhlService from './Dhl';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -31,3 +32,4 @@ exports.NotificationService = NotificationService;
 exports.AuthenticateService = AuthenticateService;
 exports.MessageService = MessageService;
 exports.OrdersService = OrdersService;
+exports.DhlService = DhlService;
