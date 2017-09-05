@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>, Handles<OrderConfirmedEvent>
+    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>, Handles<OrderConfirmedEvent>, Handles<OrderReceivedEvent>
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IShopRepository _shopRepository;
@@ -305,6 +305,38 @@ namespace Cook4Me.Api.Handlers
             {
                 Id = Guid.NewGuid().ToString(),
                 Content = "confirm_order",
+                IsRead = false,
+                From = message.Client,
+                To = message.Seller,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.OrderId,
+                        Value = message.OrderId
+                    }
+                }
+            };
+
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(OrderReceivedEvent message)
+        {
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "receive_order",
                 IsRead = false,
                 From = message.Client,
                 To = message.Seller,

@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Host.Handlers;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 namespace Cook4Me.Api.Host.Controllers
 {
@@ -23,6 +24,7 @@ namespace Cook4Me.Api.Host.Controllers
     {
         public BaseController(IHandlersInitiator handlersInitiator)
         {
+            Hashtable tab;
             handlersInitiator.Init();
         }
     }

@@ -76,5 +76,6 @@ namespace Cook4Me.Api.Host
         public const string TheOrderReceptionCanBeConfirmedOnlyByItsCreator = "You cannot confirm the reception";
         public const string TheOrderStateCannotBeUpdated = "Not possible to pass from {0} state to {1}";
         public const string TheReceivedOrderCannotBeUpdated = "The received order cannot be updated";
+        public const string TheReceivedOrderCannotBeRemoved = "The received order cannot be removed";
     }
 }

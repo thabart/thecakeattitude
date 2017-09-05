@@ -71,6 +71,11 @@ namespace Cook4Me.Api.Host.Validators
                 return new RemoveOrderValidationResult(ErrorDescriptions.TheOrderCannotBeRemovedByYou);
             }
 
+            if (order.Status == OrderAggregateStatus.Received)
+            {
+                return new RemoveOrderValidationResult(ErrorDescriptions.TheReceivedOrderCannotBeRemoved);
+            }
+
             return new RemoveOrderValidationResult();
         }
     }
