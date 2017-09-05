@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0-*",
+  "description": "Dhl.Client Class Library",
+  "authors": [ "thierry habart" ],
+  "packOptions": {
+    "tags": [ "" ],
+    "licenseUrl": "",
+    "projectUrl": ""
+  },
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools": {
+      "imports": [ "dnxcore50", "portable-net451+win8" ],
+      "version": "1.0.0-preview2-final"
+    }
+  },
+  "dependencies": {
+    "Newtonsoft.Json": "9.0.1",
+    "System.Xml.XmlSerializer": "4.0.10",
+    "System.Xml.XmlDocument": "4.0.1",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
+    "System.Net.Http": "4.1.0"
+  },
+  "frameworks": {
+    "net46": {
+      "dependencies": {
+        "System.Runtime": "4.0.20"
+      },
+      "buildOptions": {
+        "define": [
+          "NET"
+        ]
+      }
+    },
+    "netcoreapp1.0": {
+      "imports": [ "dnxcore50", "portable-net451+win8" ],
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0"
+        }
+      }
+    }
+  }
+}

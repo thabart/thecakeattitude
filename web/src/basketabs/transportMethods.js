@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button } from "reactstrap";
 import { translate } from 'react-i18next';
 import { BasketStore } from '../stores/index';
+import { Address } from '../components/index';
 import AppDispatcher from '../appDispatcher';
 import '../styles/transportMethods.css';
 import Constants from '../../Constants';
@@ -12,8 +13,10 @@ class TransportMethods extends Component {
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.selectTransportMethod = this.selectTransportMethod.bind(this);
+    this.selectTransporter = this.selectTransporter.bind(this);
     this.state = {
-      transportMethod: 'manual'
+      transportMethod: 'manual',
+      transporter: null
     };
   }
 
@@ -43,6 +46,12 @@ class TransportMethods extends Component {
     });
   }
 
+  selectTransporter(transporter) { // Select a transporter.
+    this.setState({
+      transporter: transporter
+    });
+  }
+
   render() { // Display the component.
     const { t } = this.props;
     var self = this;
@@ -60,6 +69,23 @@ class TransportMethods extends Component {
               <h3>{t('receivePackage')}</h3>
             </div>
           </section>
+          { this.state.transportMethod === 'packet' && (
+            <section>
+              <h5>Your address</h5>
+              <Address />
+              <h5>Choose a transporter</h5>
+              <div className="row">
+                <div className={this.state.transporter === 'ups' ? 'col-md-3 transport-method text-center active' : 'col-md-3 transport-method text-center'} onClick={() => self.selectTransporter('ups') }>
+                  <img src="/images/UPS.png" width="100" />
+                  <h3>UPS</h3>
+                </div>
+                <div className={this.state.transporter === 'dhl' ? 'col-md-3 offset-md-3 transport-method text-center active' : 'col-md-3 offset-md-3 transport-method text-center'} onClick={() => self.selectTransporter('dhl') }>
+                  <img src="/images/DHL.png" width="100" />
+                  <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>DHL PARCEL</a></h3>
+                </div>
+              </div>
+            </section>
+          ) }
           <section className="row p-1">
             <Button color="default" onClick={this.previous}>{t('previous')}</Button>
             <Button color="default" onClick={this.next} style={{marginLeft:"5px"}}>{t('next')}</Button>

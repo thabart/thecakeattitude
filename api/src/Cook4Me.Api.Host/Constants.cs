@@ -59,10 +59,58 @@ namespace Cook4Me.Api.Host
             public const string Ups = "ups";
             public const string SearchLocations = "locations/.search";
             public const string Orders = "orders";
+            public const string Dhl = "dhl";
+            public const string ParcelShopLocations = "parcelshops/.search";
         }
 
         public static class DtoNames
         {
+            public static class DropLocationsNames
+            {
+                public const string Locations = "locations";
+            }
+
+            public static class DropLocationNames
+            {
+                public const string Id = "id";
+                public const string Name = "name";
+                public const string Address = "address";
+                public const string Geolocation = "location";
+                public const string OpeningTimes = "opening_times";
+            }
+
+            public static class DropLocationAddressNames
+            {
+                public const string CountryCode = "country";
+                public const string ZipCode = "zip";
+                public const string City = "city";
+                public const string Street = "street";
+                public const string Number = "number";
+            }
+
+            public static class DropLocationGeoloc
+            {
+                public const string Latitude = "lat";
+                public const string Longitude = "long";
+            }
+
+            public static class DropLocationOpeningTime
+            {
+                public const string TimeFrom = "time_from";
+                public const string TimeTo = "time_to";
+                public const string Day = "day";
+            }
+
+            public static class SearchDhlParcelShopLocationsParameterNames
+            {
+                public const string Country = "country";
+                public const string City = "city";
+                public const string HouseNumber = "house_number";
+                public const string Street = "street";
+                public const string ZipCode = "zip_code";
+                public const string Query = "query";
+            }
+
             public static class SearchOrdersParameterNames
             {
                 public const string Clients = "clients";

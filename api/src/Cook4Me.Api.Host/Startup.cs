@@ -25,6 +25,7 @@ using Cook4Me.Api.Host.Handlers;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Hubs;
 using Cook4Me.Api.Host.Operations.Announcement;
+using Cook4Me.Api.Host.Operations.Dhl;
 using Cook4Me.Api.Host.Operations.Messages;
 using Cook4Me.Api.Host.Operations.Notifications;
 using Cook4Me.Api.Host.Operations.Orders;
@@ -35,6 +36,7 @@ using Cook4Me.Api.Host.Operations.ShopCategory;
 using Cook4Me.Api.Host.Operations.Tag;
 using Cook4Me.Api.Host.Operations.Ups;
 using Cook4Me.Api.Host.Validators;
+using Dhl.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -141,7 +143,8 @@ namespace Cook4Me.Api.Host
             services.AddCookForMeStoreInMemory()
                 .AddCore()
                 .AddHandlers()
-                .AddUpsClient();
+                .AddUpsClient()
+                .AddDhlClient();
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
@@ -168,6 +171,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetShopsOperation, GetShopsOperation>();
             services.AddTransient<ISearchShopsOperation, SearchShopsOperation>();
             services.AddTransient<IGetMineShopsOperation, GetMineShopsOperation>();
+            services.AddTransient<ISearchParcelShopLocationsOperation, SearchParcelShopLocationsOperation>();
             services.AddTransient<IRemoveShopCommentOperation, RemoveShopCommentOperation>();
             services.AddTransient<ISearchShopCommentsOperation, SearchShopCommentsOperation>();
             services.AddTransient<ISearchProductsOperation, SearchProductsOperation>();

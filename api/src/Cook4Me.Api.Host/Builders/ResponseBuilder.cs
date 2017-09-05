@@ -23,8 +23,10 @@ using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.Core.Results;
+using Dhl.Client.Results.ShopParcelLocations;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Ups.Client.Common;
 using Ups.Client.Responses.Locator;
@@ -33,6 +35,11 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetShopParcelLocations(IEnumerable<ShopParcelLocation> locations);
+        JObject GetShopParcelLocation(ShopParcelLocation location);
+        JObject GetShopDropLocationAddress(ShopParcelLocationAddress adr);
+        JObject GetShopDropLocationGeoloc(ShopParcelLocationGeo geoloc);
+        JObject GetShopDropLocationOpeningTime(ShopParcelLocationOpeningTime openingTime);
         JObject GetOrderReceivedEvent(OrderReceivedEvent evt);
         JObject GetOrderConfirmeddEvent(OrderConfirmedEvent evt);
         JObject GetOrderAddedEvent(OrderAddedEvent evt);
@@ -86,6 +93,92 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetShopParcelLocations(IEnumerable<ShopParcelLocation> locations)
+        {
+            if (locations == null)
+            {
+                throw new ArgumentNullException(nameof(locations));
+            }
+
+            var jObj = new JObject();
+            var arr = new JArray();
+            foreach(var location in locations)
+            {
+                arr.Add(GetShopParcelLocation(location));
+            }
+
+            jObj.Add(Constants.DtoNames.DropLocationsNames.Locations, arr);
+            return jObj;
+        }
+
+        public JObject GetShopParcelLocation(ShopParcelLocation location)
+        {
+            if (location == null)
+            {
+                throw new ArgumentNullException(nameof(location));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.DropLocationNames.Id, location.Id);
+            jObj.Add(Constants.DtoNames.DropLocationNames.Name, location.Name);
+            jObj.Add(Constants.DtoNames.DropLocationNames.Address, GetShopDropLocationAddress(location.Address));
+            jObj.Add(Constants.DtoNames.DropLocationNames.Geolocation, GetShopDropLocationGeoloc(location.GeoLocation));
+            var arr = new JArray();
+            if (location.OpeningTimes != null)
+            {
+                foreach(var openingTime in location.OpeningTimes)
+                {
+                    arr.Add(GetShopDropLocationOpeningTime(openingTime));
+                }
+            }
+            
+            jObj.Add(Constants.DtoNames.DropLocationNames.OpeningTimes, arr);
+            return jObj;
+        }
+
+        public JObject GetShopDropLocationAddress(ShopParcelLocationAddress adr)
+        {
+            if (adr == null)
+            {
+                throw new ArgumentNullException(nameof(adr));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.DropLocationAddressNames.City, adr.City);
+            jObj.Add(Constants.DtoNames.DropLocationAddressNames.ZipCode, adr.ZipCode);
+            jObj.Add(Constants.DtoNames.DropLocationAddressNames.CountryCode, adr.CountryCode);
+            jObj.Add(Constants.DtoNames.DropLocationAddressNames.Street, adr.Street);
+            jObj.Add(Constants.DtoNames.DropLocationAddressNames.Number, adr.Number);
+            return jObj;
+        }
+
+        public JObject GetShopDropLocationGeoloc(ShopParcelLocationGeo geoloc)
+        {
+            if (geoloc == null)
+            {
+                throw new ArgumentNullException(nameof(geoloc));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.DropLocationGeoloc.Latitude, geoloc.Latitude);
+            jObj.Add(Constants.DtoNames.DropLocationGeoloc.Longitude, geoloc.Longitude);
+            return jObj;
+        }
+
+        public JObject GetShopDropLocationOpeningTime(ShopParcelLocationOpeningTime openingTime)
+        {
+            if (openingTime == null)
+            {
+                throw new ArgumentNullException(nameof(openingTime));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.DropLocationOpeningTime.Day, openingTime.WeekDay);
+            jObj.Add(Constants.DtoNames.DropLocationOpeningTime.TimeFrom, openingTime.TimeFrom);
+            jObj.Add(Constants.DtoNames.DropLocationOpeningTime.TimeTo, openingTime.TimeTo);
+            return jObj;
+        }
+
         public JObject GetOrderStatus(GetOrderStatusResult result)
         {
             if (result == null)
