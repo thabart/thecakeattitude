@@ -16,6 +16,7 @@ class TransportMethods extends Component {
     this.selectTransporter = this.selectTransporter.bind(this);
     this.selectParcelType = this.selectParcelType.bind(this);
     this.selectRating = this.selectRating.bind(this);
+    this.addressCorrect = this.addressCorrect.bind(this);
     this.state = {
       transportMethod: 'manual',
       parcelType: null,
@@ -68,12 +69,14 @@ class TransportMethods extends Component {
     DhlService.searchCapabalities({ parcel_type: parcelType, to_zip_code: adr.country_code }).then(function(r) {
       self.setState({
         isDhlRatingsLoading: false,
-        dhlRatings: r['ratings']
+        dhlRatings: r['ratings'],
+        dhlRating: null
       });
     }).catch(function() {
       self.setState({
         isDhlRatingsLoading: false,
-        dhlRatings: []
+        dhlRatings: [],
+        dhlRating: null
       });
     });
   }
@@ -84,10 +87,17 @@ class TransportMethods extends Component {
     });
   }
 
+  addressCorrect(b) { // Update the drop locations.
+    if (!b || !this.refs.dropLocation || !this.refs.address) return;
+    var adr = this.refs.address.getWrappedInstance().getAddress();
+    this.refs.dropLocation.getWrappedInstance().setAddress(adr);
+  }
+
   render() { // Display the component.
     const { t } = this.props;
     var self = this;
     var ratings = [];
+    var currentAdr = {};
     if (this.state.dhlRatings) {
       this.state.dhlRatings.forEach(function(rating) {
         ratings.push((
@@ -122,6 +132,10 @@ class TransportMethods extends Component {
       });
     }
 
+    if (this.state.transportMethod === 'packet' && this.state.transporter === 'dhl' && this.state.dhlRating && this.state.dhlRating.code === 'PS' && this.refs.address) {
+      currentAdr = this.refs.address.getWrappedInstance().getAddress();
+    }
+
     return (
       <div className="container rounded">
         <p>{t('basketTransportTabDescription')} <i className="fa fa-info-circle txt-info"/></p>
@@ -143,7 +157,7 @@ class TransportMethods extends Component {
           { this.state.transportMethod === 'packet' && (
             <section className="section" style={{padding: "5px"}}>
               <h5>Your address</h5>
-              <Address ref="address" />
+              <Address ref="address" addressCorrect={this.addressCorrect} />
               <h5>Choose a transporter</h5>
               { /* Choose a transporter */ }
               <div className="row">
@@ -202,8 +216,13 @@ class TransportMethods extends Component {
                     ) }
                   </section>
                   { /* Display pick-up points */}
+                  { this.state.dhlRating && this.state.dhlRating.code === 'PS' && (
+                    <section style={{marginTop: "10px"}}>
+                      <h5>Select a parcel shop</h5>
+                      <DropLocations ref="dropLocation" address={currentAdr} />
+                    </section>
+                    ) }
                   <section>
-                    { this.state.dhlRating && this.state.dhlRating.code === 'PS' && ( <DropLocations /> ) }
                   </section>
                 </div>
               ) }

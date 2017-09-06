@@ -51,13 +51,6 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
         ref={props.onMapLoad}
         defaultOptions={{draggable: false, zoomControl: false, scrollwheel: false, disableDoubleClickZoom: true, fullscreenControl: false}}
     >
-        <SearchBox
-            ref={props.onSearchBoxCreated}
-            bounds={props.bounds}
-            onPlacesChanged={props.onPlacesChanged}
-            inputPlaceholder="Enter your address" controlPosition={window.google.maps.ControlPosition.TOP_LEFT}
-            inputStyle={INPUT_STYLE}
-        />
         { props.currentLocation &&
           <Marker position={props.currentLocation} title='Current location'>
           </Marker>
@@ -75,8 +68,6 @@ class DropLocations extends Component {
         super(props);
         this._currentAdr = null;
         this.onMapLoad = this.onMapLoad.bind(this);
-        this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
-        this.onPlacesChanged = this.onPlacesChanged.bind(this);
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.refresh = this.refresh.bind(this);
         this.state = {
@@ -94,39 +85,6 @@ class DropLocations extends Component {
     onMapLoad(map) { // Save the google map reference.
         if (!map) return;
         this._googleMap = map;
-    }
-
-    onSearchBoxCreated(searchBox) { // Save the searchbox reference.
-        this._searchBox = searchBox;
-    }
-
-    onPlacesChanged() { // This method is triggered when the place changes.
-        var self = this;
-        const {t} = this.props;
-        const places = this._searchBox.getPlaces();
-        var enableNext = function (b) {
-            if (self.props.addressCorrect) self.props.addressCorrect(b);
-            self.setState({
-                isAddressCorrect: b
-            });
-        };
-        // Only one address should be returned.
-        if (places.length !== 1) {
-            if (self.props.onError) self.props.onError(t('uniqueAddressError'));
-            enableNext(false);
-            return;
-        }
-
-        var firstPlace = places[0];
-        var country = firstPlace.address_components.filter(function(adrComp) { return adrComp.types.indexOf('country') !== -1; })[0];
-        if (country) {
-          country = country.short_name;
-        } else {
-          country = 'BE';
-        }
-
-        self._currentAdr = { country: country, name: firstPlace.name, location: firstPlace.geometry.location, place_id: firstPlace.place_id };
-        self.refresh();
     }
 
     display() { // Display the map.
@@ -149,6 +107,12 @@ class DropLocations extends Component {
         return json;
     }
 
+    setAddress(adr) { // Set the current address.
+      var self = this;
+      self._currentAdr = { country: adr.country_code, place_id: adr.google_place_id, name: adr.locality, location: adr.location };
+      self.refresh();
+    }
+
     onMarkerClick(marker) { // Select a drop location.
       var locations = this.state.locations;
       var location = locations.filter(function(loc) { return loc === marker; })[0];
@@ -169,6 +133,7 @@ class DropLocations extends Component {
           placeId: currentAdr.place_id,
           currentLocation: currentAdr.location,
           center: currentAdr.location,
+          selectedDropLocation: null,
           locations: locations
         });
       }).catch(function() {
@@ -176,6 +141,7 @@ class DropLocations extends Component {
           placeId: currentAdr.place_id,
           currentLocation: currentAdr.location,
           center: currentAdr.location,
+          selectedDropLocation: null,
           locations: []
         });
       });
@@ -251,44 +217,8 @@ class DropLocations extends Component {
     componentDidMount() { // Execute the the view is displayed.
         var self = this;
         const {t} = this.props;
-        var promise = null;
-        if (self.props.position) { // Retrieve position from the parent.
-            promise = new Promise(function (resolve) {
-                resolve(self.props.position);
-            });
-        }
-        else if ("geolocation" in navigator) { // Retrieve position from current location.
-            promise = new Promise(function (resolve) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    var location = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    resolve(location);
-                });
-            });
-        } else { // Get default location.
-            promise = new Promise(function (resolve) {
-                resolve({
-                    lat: 50,
-                    lng: 50
-                })
-            });
-        }
-
-        promise.then(function (location) {
-            GoogleMapService.getPlaceByLocation({latitude: location.lat, longitude: location.lng}).then(function (adr) {
-                self._currentAdr = { country: adr.adr.country_code, place_id: adr.place_id, name: adr.adr.locality, location: adr.geometry.location };
-                self.refresh();
-            }).catch(function () {
-                self.setState({
-                    center: {
-                        lat: 50,
-                        lng: 50
-                    }
-                });
-            });
-        });
+        var adr = this.props.address;
+        self.setAddress(adr);
     }
 }
 
