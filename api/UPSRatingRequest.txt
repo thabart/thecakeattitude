@@ -1,4 +1,4 @@
-URL : https://wwwcie.ups.com/rest/Rate
+URL : https://onlinetools.ups.com/rest/Rate
 
 {     
 	"UPSSecurity": {
@@ -18,9 +18,18 @@ URL : https://wwwcie.ups.com/rest/Rate
 			}
 		},
 		"Shipment": {
+			"AlternateDeliveryAddress": {
+				"Name": "U31095277",
+				"Address": {
+					"AddressLine1": "RUE EMILE VANDERVELD 39",
+					"City": "Bruxelles",
+					"PostalCode": "1200",
+					"CountryCode": "BE"
+				}
+			},
 			"Shipper": {
 				"Name": "Shipper Name",
-				"ShipperNumber": "Shipper Number",   
+				"ShipperNumber": "98FF76",   
 				"Address": {  
 					"AddressLine": [ "223 avenue des croix du feu" ],
 					"City": "Bruxelles",
@@ -47,8 +56,11 @@ URL : https://wwwcie.ups.com/rest/Rate
 				}
 			},
 			"Service": {
-				"Code": "03",  
-				"Description": "Service Code Description"   
+				"Code": "070",  
+				"Description": "UPS Access Point™ Economy"   
+			},
+			"ShipmentIndicationType": {
+				"Code": "02"
 			},
 			"Package": {   
 				"PackagingType": {  
@@ -58,7 +70,7 @@ URL : https://wwwcie.ups.com/rest/Rate
 				"Dimensions": {  
 					"UnitOfMeasurement": {  
 						"Code": "CM",  
-						"Description": "inches"  
+						"Description": "cm"  
 					},  
 					"Length": "5",   
 					"Width": "4",
@@ -66,15 +78,12 @@ URL : https://wwwcie.ups.com/rest/Rate
 				},    
 				"PackageWeight": { 
 					"UnitOfMeasurement": {   
-						"Code": "Lbs",  
-						"Description": "pounds"       
+						"Code": "KGS",  
+						"Description": "kgs"       
 					},  
 					"Weight": "1"    
 				}     
-			},  
-			"ShipmentRatingOptions": {    
-				"NegotiatedRatesIndicator": ""
-			} 
+			}
 		}  
 	}
 } 

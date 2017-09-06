@@ -383,5 +383,17 @@
   "receive_order": "Une commande a été reçue",
   "businessHours": "Heures d'ouverture",
   "noDropLocationSelected": "Pas de point d'enlèvement sélectionné",
-  "closed": "Fermé"
+  "closed": "Fermé",
+  "dhlParcelShop": "DHL Parcelshop",
+  "dhlParcelShopDescription": "Le colis sera livré dans le DHL Parcelshop le plus proche du destinataire.",
+  "atYourRecipientsHome": "Livraison à domicile",
+  "atYourRecipientsHomeDescription": "Le colis sera livré chez le destinataire.",
+  "yourAddress": "Votre adresse",
+  "chooseTransporter": "Choisir une compagnie de transport",
+  "ups": "UPS",
+  "dhlParcel": "DHL PARCEL",
+  "chooseTheoricalPacketSize": "Choisir un taille de paquet théorique",
+  "noRating": "Aucune offre",
+  "selectParcelShop": "Sélectionner un point d'enlèvement",
+  "estimatedPrice": "Prix estimé € {0}"
 }

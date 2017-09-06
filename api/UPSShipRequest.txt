@@ -1,66 +1,140 @@
-REQUEST : https://wwwcie.ups.com/rest/Ship
+https://onlinetools.ups.com/ups.app/xml/ShipConfirm 
 
-{	
-	"UPSSecurity": {
-		"UsernameToken": { 
-			"Username": "thabart1",
-			"Password": "CakeAttitude1989" 
-		},
-		"ServiceAccessToken": { 
-			"AccessLicenseNumber": "FD300339C9051F5C"
-		} 
-	}, 
-	"ShipmentRequest": { 
-		"Request": { 
-			"RequestOption": "validate", 
-			"TransactionReference": { 
-				"CustomerContext": "Your Customer Context" 
-			} 
-		}, 
-		"Shipment": { 
-			"Description": "Description",
-			"Shipper": { 
-				"Name": "Shipper Name", 
-				"AttentionName": "Shipper Attn Name", 
-				"TaxIdentificationNumber": "123456",
-				"Phone": { "Number": "1234567890", "Extension": "1" }, 
-				"ShipperNumber": "98FF76", 
-				"FaxNumber": "1234567890", 
-				"Address": { "AddressLine": "223 avenue des croix du feu", "City": "Bruxelles", "PostalCode": "1020", "CountryCode": "BE" } 
-			}, 
-			"ShipTo": { 
-				"Name": "Ship To Name", 
-				"AttentionName": "Ship To Attn Name",
-				"Phone": { "Number": "1234567890" },
-				"Address": {
-					"AddressLine": [ "rue solleveld 20" ],   
-					"City": "Bruxelles",
-					"PostalCode": "1200",
-					"CountryCode": "BE"
-				}
-			}, 
-			"ShipFrom": { 
-				"Name": "Ship From Name", 
-				"AttentionName": "Ship From Attn Name", 
-				"Phone": { "Number": "1234567890" }, 
-				"FaxNumber": "1234567890", 
-				"Address": { "AddressLine": "223 avenue des croix du feu", "City": "Bruxelles", "PostalCode": "1020", "CountryCode": "BE" } 
-			}, 
-			"PaymentInformation": { 
-				"ShipmentCharge": { "Type": "01", "BillShipper": { "AccountNumber": "98FF76" }	} 
-			}, 
-			"Service": { 
-				"Code": "11"
-			}, 
-			"Package": {
-				"Description": "Description", 
-				"Packaging": { "Code": "02", "Description": "Description" }, 
-				"Dimensions": { "UnitOfMeasurement": { "Code": "IN", "Description": "Inches" }, "Length": "7", "Width": "5", "Height": "2" }
-			} 
-		}, 
-		"LabelSpecification": { 
-			"LabelImageFormat": { "Code": "GIF","Description": "GIF" }, 
-			"HTTPUserAgent": "Mozilla/4.5" 
-		} 
-	} 
-}
+<?xml version="1.0"?>
+<AccessRequest xml:lang="en-US">
+  <AccessLicenseNumber>FD300339C9051F5C</AccessLicenseNumber>
+  <UserId>thabart1</UserId>
+  <Password>CakeAttitude1989</Password>
+</AccessRequest>
+<?xml version="1.0"?>
+<ShipmentConfirmRequest xml:lang="en-US">
+  <Request>
+    <TransactionReference>
+      <CustomerContext>Customer Comment</CustomerContext>
+      <XpciVersion/>
+    </TransactionReference>
+    <RequestAction>ShipConfirm</RequestAction>
+    <RequestOption>validate</RequestOption>
+  </Request>
+  <Shipment>
+	<Description/>
+	<AlternateDeliveryAddress>
+		<Name>WOLU-PRESS</Name>
+		<AttentionName>WOLU-PRESS</AttentionName>
+		<UPSAccessPointID>U31095277</UPSAccessPointID>
+		<Address>
+			<AddressLine1>RUE EMILE VANDERVELD 39</AddressLine1>
+			<City>WOLUWE SAINT LAMBERTS</City>
+			<PostalCode>1200</PostalCode>
+			<CountryCode>BE</CountryCode>
+		</Address>
+	</AlternateDeliveryAddress>
+    <Shipper>
+      <Name>Shipper Name</Name>
+      <PhoneNumber>1234567890</PhoneNumber>
+      <ShipperNumber>98FF76</ShipperNumber>
+	  <TaxIdentificationNumber>123456</TaxIdentificationNumber>
+      <Address>
+    	<AddressLine1>223 avenue des croix du feu</AddressLine1>
+    	<City>Bruxelles</City>
+    	<PostalCode>1020</PostalCode>
+    	<CountryCode>BE</CountryCode>
+     </Address>
+    </Shipper>
+	<ShipTo>
+	  <CompanyName>Ship To Company Name</CompanyName>
+      <AttentionName>Ship To Attn Name</AttentionName>
+      <PhoneNumber>1234567890</PhoneNumber>
+      <Address>
+        <AddressLine1>rue solleveld 20</AddressLine1>
+        <City>Bruxelles</City>
+        <PostalCode>1200</PostalCode>
+        <CountryCode>BE</CountryCode>
+      </Address>
+    </ShipTo>
+    <ShipFrom>
+      <CompanyName>Ship From Company Name</CompanyName>
+      <AttentionName>Ship From Attn Name</AttentionName>
+      <PhoneNumber>1234567890</PhoneNumber>
+	  <TaxIdentificationNumber>123456</TaxIdentificationNumber>
+      <Address>
+    	<AddressLine1>223 avenue des croix du feu</AddressLine1>
+    	<City>Bruxelles</City>
+    	<StateProvinceCode>MD</StateProvinceCode>
+    	<PostalCode>1020</PostalCode>
+    	<CountryCode>BE</CountryCode>
+      </Address>
+    </ShipFrom>
+    <PaymentInformation>
+      <ShipmentCharge>
+		<Type>01</Type>
+		<BillShipper>
+			<AlternatePaymentMethod>01</AlternatePaymentMethod>
+		</BillShipper>
+	  </ShipmentCharge>
+    </PaymentInformation>
+    <Service>
+      <Code>070</Code>
+      <Description>UPS Access Point™ Economy</Description>
+    </Service>
+    <Package>
+      <Description>Package Description</Description>
+      <PackagingType>
+        <Code>02</Code>
+        <Description>Emballage personnalisé</Description>
+      </PackagingType>
+      <PackageWeight>
+        <UnitOfMeasurement>
+			<Code>KGS</Code>
+			<Description>kgs</Description>
+		</UnitOfMeasurement>
+        <Weight>1</Weight>
+      </PackageWeight>
+	  <Dimensions>
+		<UnitOfMeasurement>
+			<Code>CM</Code>
+			<Description>cm</Description>			
+		</UnitOfMeasurement>
+		<Length>5</Length>
+		<Width>4</Width>
+		<Height>3</Height>
+	  </Dimensions>	  
+    </Package>
+	<ShipmentIndicationType>
+		<Code>02</Code>
+	</ShipmentIndicationType>
+	<ShipmentServiceOptions>
+		<Notification>
+			<NotificationCode>012</NotificationCode>
+			<EMailMessage>
+				<EMailAddress>habarthierry@hotmail.fr</EMailAddress>
+			</EMailMessage>
+			<Locale>
+				<Language>ENG</Language>
+				<Dialect>GB</Dialect>
+			</Locale>
+		</Notification>
+		<Notification>
+			<NotificationCode>013</NotificationCode>
+			<EMailMessage>
+				<EMailAddress>habarthierry@hotmail.fr</EMailAddress>
+			</EMailMessage>
+			<Locale>
+				<Language>ENG</Language>
+				<Dialect>GB</Dialect>
+			</Locale>
+		</Notification>
+	</ShipmentServiceOptions>
+  </Shipment>
+  <LabelSpecification>
+	<LabelPrintMethod>
+      <Code>GIF</Code>
+      <Description>gif file</Description>
+    </LabelPrintMethod>
+    <HTTPUserAgent>Mozilla/4.5</HTTPUserAgent>
+    <LabelImageFormat>
+      <Code>GIF</Code>
+      <Description>gif</Description>
+    </LabelImageFormat>
+  </LabelSpecification>
+</ShipmentConfirmRequest> 

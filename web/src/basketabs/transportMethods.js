@@ -23,6 +23,7 @@ class TransportMethods extends Component {
       transporter: null,
       dhlRating: null,
       isDhlRatingsLoading: false,
+      estimatedPrice: 0,
       dhlRatings: []
     };
   }
@@ -83,7 +84,8 @@ class TransportMethods extends Component {
 
   selectRating(rating) { // Select the rating.
     this.setState({
-      dhlRating: rating
+      dhlRating: rating,
+      estimatedPrice: rating.price_with_tax
     });
   }
 
@@ -113,14 +115,14 @@ class TransportMethods extends Component {
               <div className="col-md-7">
                 { rating.code === 'PS' && (
                   <div>
-                    <h5>DHL Parcelshop</h5>
-                    <p>Le colis sera livré dans le DHL Parcelshop le plus proche du destinataire.</p>
+                    <h5>{t('dhlParcelShop')}</h5>
+                    <p>{t('dhlParcelShopDescription')}</p>
                   </div>
                 ) }
                 { rating.code === 'DOOR' && (
                   <div>
-                    <h5>Livraison à domicile</h5>
-                    <p>Le colis sera livré chez le destinataire</p>
+                    <h5>{t('atYourRecipientsHome')}</h5>
+                    <p>{t('atYourRecipientsHomeDescription')}</p>
                   </div>
                 )}
               </div>
@@ -156,29 +158,29 @@ class TransportMethods extends Component {
           </section>
           { this.state.transportMethod === 'packet' && (
             <section className="section" style={{padding: "5px"}}>
-              <h5>Your address</h5>
+              <h5>{t('yourAddress')}</h5>
               <Address ref="address" addressCorrect={this.addressCorrect} />
-              <h5>Choose a transporter</h5>
+              <h5>{t('chooseTransporter')}</h5>
               { /* Choose a transporter */ }
               <div className="row">
                 <div className='col-md-3 text-center' onClick={() => self.selectTransporter('ups') }>
                   <div className={this.state.transporter === 'ups' ? 'choice active' : 'choice'}  style={{height: "140px"}}>
                     <div style={{height: "100px"}}><img src="/images/UPS.png" width="100" /></div>
-                    <h3>UPS</h3>
+                    <h3>{t('ups')}</h3>
                   </div>
                 </div>
                 <div className="col-md-3 offset-md-3 text-center" onClick={() => self.selectTransporter('dhl') }>
                   <div className={this.state.transporter === 'dhl' ? 'choice active' : 'choice'}  style={{height: "140px"}}>
                     <div style={{height: "100px"}}><img src="/images/DHL.png" width="100" /></div>
-                    <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>DHL PARCEL</a></h3>
+                    <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>{t('dhlParcel')}</a></h3>
                   </div>
                 </div>
               </div>
-              { /* Display the ratings */ }
+              { /* Display the DHL */ }
               { this.state.transporter === 'dhl' && (
                 <div>
                   { /* Display different package size */ }
-                  <h5>Select a packet size</h5>
+                  <h5>{t('chooseTheoricalPacketSize')}</h5>
                   <section className="row">
                     <label className="col-md-3 text-center">
                       <div className={this.state.parcelType === 'SMALL' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('SMALL')}>
@@ -208,7 +210,7 @@ class TransportMethods extends Component {
                   { /* Display the different transport method */ }
                   <section>
                     { this.state.isDhlRatingsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
-                    { !this.state.isDhlRatingsLoading && ratings.length === 0 && (<span>No rating</span>) }
+                    { !this.state.isDhlRatingsLoading && ratings.length === 0 && (<span>{t('noRating')}</span>) }
                     { !this.state.isDhlRatingsLoading && ratings.length > 0 && (
                       <div className="list-group-default clickable">
                         {ratings}
@@ -218,14 +220,16 @@ class TransportMethods extends Component {
                   { /* Display pick-up points */}
                   { this.state.dhlRating && this.state.dhlRating.code === 'PS' && (
                     <section style={{marginTop: "10px"}}>
-                      <h5>Select a parcel shop</h5>
+                      <h5>{t('selectParcelShop')}</h5>
                       <DropLocations ref="dropLocation" address={currentAdr} />
                     </section>
                     ) }
-                  <section>
-                  </section>
                 </div>
               ) }
+              { /* Display total price */}
+              <section style={{marginTop: "10px"}}>
+                <h4>{t('estimatedPrice').replace('{0}', this.state.estimatedPrice)}</h4>
+              </section>
             </section>
           ) }
           <section className="row p-1">

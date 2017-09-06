@@ -386,4 +386,16 @@
   "businessHours": "Openingstijden",
   "noDropLocationSelected": "No drop location is selected",
   "closed": "Gesloten",
+  "dhlParcelShop": "DHL Parcelshop",
+  "dhlParcelShopDescription": "Je pakket wordt geleverd in de dichtstbijzijnde DHL Parcelshop van de ontvanger.",
+  "atYourRecipientsHome": "Bij de ontvanger thuis",
+  "atYourRecipientsHomeDescription": "Je pakket wordt geleverd bij de ontvanger thuis.",
+  "yourAddress": "Your address",
+  "chooseTransporter": "Choose a transporter",
+  "ups": "UPS",
+  "dhlParcel": "DHL PARCEL",
+  "chooseTheoricalPacketSize": "Choose a theorical packet size",
+  "noRating": "No rating",
+  "selectParcelShop": "Select a parcel shop",
+  "estimatedPrice": "Estimated price € {0}"
 }

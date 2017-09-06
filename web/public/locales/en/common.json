@@ -385,5 +385,17 @@
   "receive_order": "An order has been received",
   "businessHours": "Business hours",
   "noDropLocationSelected": "No drop location is selected",
-  "closed": "Closed"
+  "closed": "Closed",
+  "dhlParcelShop": "At a DHL Parcelshop",
+  "dhlParcelShopDescription": "Your parcel will be delivered at the nearest DHL Parcelshop of the recipient.",
+  "atYourRecipientsHome": "At your recipients home",
+  "atYourRecipientsHomeDescription": "Your parcel will be delivered at the recipients home.",
+  "yourAddress": "Your address",
+  "chooseTransporter": "Choose a transporter",
+  "ups": "UPS",
+  "dhlParcel": "DHL PARCEL",
+  "chooseTheoricalPacketSize": "Choose a theorical packet size",
+  "noRating": "No rating",
+  "selectParcelShop": "Select a parcel shop",
+  "estimatedPrice": "Estimated price € {0}"
 }

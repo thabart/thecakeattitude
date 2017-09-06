@@ -1,5 +1,3 @@
-https://wwwcie.ups.com/ups.app/xml/Locator
-
 <?xml version="1.0"?>
 <AccessRequest xml:lang="en-US">
   <AccessLicenseNumber>FD300339C9051F5C</AccessLicenseNumber>
@@ -24,9 +22,10 @@ https://wwwcie.ups.com/ups.app/xml/Locator
     		</StructuredPhoneNumber>
     	</PhoneNumber>
         <AddressKeyFormat>
-          	<AddressLine>223 avenue des croix du feu</AddressLine>
+          	<AddressLine>20 rue solleveld</AddressLine>
           	<PoliticalDivision2>Bruxelles</PoliticalDivision2>
           	<CountryCode>BE</CountryCode>
+          	<PostcodePrimaryLow>1200</PostcodePrimaryLow>
         </AddressKeyFormat>      
     <MaximumListSize/>    
     </OriginAddress>
