@@ -14,14 +14,17 @@
 // limitations under the License.
 #endregion
 
-namespace Dhl.Client.Params
+using Newtonsoft.Json;
+
+namespace Dhl.Client.Results.Capabalities
 {
-    public class SearchDhlParcelShopLocationsParameter
+    public class DhlExclusion
     {
-        public string City { get; set; }
-        public string HouseNumber { get; set; }
-        public string Street { get; set; }
-        public string ZipCode { get; set; }
-        public string Query { get; set; }
+        [JsonProperty(PropertyName = Constants.DtoNames.DhlExclusionNames.Key)]
+        public string Key { get; set; }
+        [JsonProperty(PropertyName = Constants.DtoNames.DhlExclusionNames.Rank)]
+        public int Rank { get; set; }
+        [JsonProperty(PropertyName = Constants.DtoNames.DhlExclusionNames.InputType)]
+        public string InputType { get; set; }
     }
 }

@@ -61,10 +61,17 @@ namespace Cook4Me.Api.Host
             public const string Orders = "orders";
             public const string Dhl = "dhl";
             public const string ParcelShopLocations = "parcelshops/.search";
+            public const string SearchCapabalities = "capabalities/.search";
         }
 
         public static class DtoNames
         {
+            public static class SearchDhlCapabilitiesParameterNames
+            {
+                public const string ParcelType = "parcel_type";
+                public const string ToZipCode = "to_zip_code";
+            }
+
             public static class DropLocationsNames
             {
                 public const string Locations = "locations";
@@ -103,7 +110,6 @@ namespace Cook4Me.Api.Host
 
             public static class SearchDhlParcelShopLocationsParameterNames
             {
-                public const string Country = "country";
                 public const string City = "city";
                 public const string HouseNumber = "house_number";
                 public const string Street = "street";

@@ -16,12 +16,9 @@
 
 namespace Dhl.Client.Params
 {
-    public class SearchDhlParcelShopLocationsParameter
+    public class SearchDhlCapabilitiesParameter
     {
-        public string City { get; set; }
-        public string HouseNumber { get; set; }
-        public string Street { get; set; }
-        public string ZipCode { get; set; }
-        public string Query { get; set; }
+        public string ParcelType { get; set; }
+        public string ToZipCode { get; set; }
     }
 }

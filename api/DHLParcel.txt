@@ -1,3 +1,14 @@
+Avoir le type de colis :
+
+==> https://my.dhlparcel.be/api/parcel-types?fromBusiness=false&fromCountry=BE&toCountry=BE
+
+Simuler le prix :
+
+==> Numéro de compte : var accountNumber = CountryCode === 'BE' ? '48000005' : '106871';
+==> https://my.dhlparcel.be/api/capabilities?accountNumber=48000005&fromBusiness=false&fromCountry=BE&parcelType=MEDIUM&toBusiness=false&toCountry=BE&toZipCode=1200
+
+
+
 Colis sera livré au :
 https://api-gw.dhlparcel.nl/parcel-shop-locations/BE?city=Bruxelles&houseNumber=20&limit=1&street=rue+solleveld&zipCode=1200
 

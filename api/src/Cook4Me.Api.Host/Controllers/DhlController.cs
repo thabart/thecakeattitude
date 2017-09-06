@@ -25,16 +25,24 @@ namespace Cook4Me.Api.Host.Controllers
     public class DhlController : Controller
     {
         private readonly ISearchParcelShopLocationsOperation _searchParcelShopLocationsOperation;
+        private readonly ISearchDhlCapabalitiesOperation _searchDhlCapabalitiesOperation;
 
-        public DhlController(ISearchParcelShopLocationsOperation searchParcelShopLocationsOperation)
+        public DhlController(ISearchParcelShopLocationsOperation searchParcelShopLocationsOperation, ISearchDhlCapabalitiesOperation searchDhlCapabalitiesOperation)
         {
             _searchParcelShopLocationsOperation = searchParcelShopLocationsOperation;
+            _searchDhlCapabalitiesOperation = searchDhlCapabalitiesOperation;
         }
 
         [HttpPost(Constants.RouteNames.ParcelShopLocations)]
         public async Task<IActionResult> GetParcelShopLocations([FromBody] JObject jObj)
         {
             return await _searchParcelShopLocationsOperation.Execute(jObj);
+        }
+
+        [HttpPost(Constants.RouteNames.SearchCapabalities)]
+        public async Task<IActionResult> GetCapabalities([FromBody] JObject jObj)
+        {
+            return await _searchDhlCapabalitiesOperation.Execute(jObj);
         }
     }
 }

@@ -55,6 +55,54 @@ namespace Dhl.Client
                 public const string TimeTo = "timeTo";
                 public const string WeekDay = "weekDay";
             }
+
+            public static class DhlCapabalityNames
+            {
+                public const string Rank = "rank";
+                public const string FromCountryCode = "fromCountryCode";
+                public const string ToCountryCode = "toCountryCode";
+                public const string ProductKey = "productKey";
+                public const string ParcelTypes = "parcelTypes";
+                public const string Options = "options";
+            }
+
+            public static class DhlCapabalityOptionNames
+            {
+                public const string Key = "key";
+                public const string Rank = "rank";
+                public const string Price = "price";
+                public const string InputType = "inputType";
+                public const string Exclusions = "exclusions";
+            }
+
+            public static class DhlParcelTypeNames
+            {
+                public const string Key = "key";
+                public const string MinWeightKg = "minWeightKg";
+                public const string MaxWeightKg = "maxWeightKg";
+                public const string Dimensions = "dimensions";
+                public const string Price = "price";
+            }
+
+            public static class DhlExclusionNames
+            {
+                public const string Key = "key";
+                public const string Rank = "rank";
+                public const string InputType = "inputType";
+            }
+
+            public static class DhlPriceNames
+            {
+                public const string WithoutTax = "withoutTax";
+                public const string WithTax = "withTax";
+            }
+
+            public static class DhlDimensionNames
+            {
+                public const string MaxLengthCm = "maxLengthCm";
+                public const string MaxWidthCm = "maxWidthCm";
+                public const string MaxHeightCm = "maxHeightCm";
+            }
         }
     }
 }

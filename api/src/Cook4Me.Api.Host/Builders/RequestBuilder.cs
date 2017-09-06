@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        SearchDhlCapabilitiesParameter GetSearchDhlCapabilitiesParameter(JObject jObj);
         SearchDhlParcelShopLocationsParameter GetSearchDhlParcelShopLocations(JObject jObj);
         AddOrderLineCommand GetAddOrderLine(JObject jObj);
         UpdateOrderCommand GetUpdateOrder(JObject jObj);
@@ -72,6 +73,20 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public SearchDhlCapabilitiesParameter GetSearchDhlCapabilitiesParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new SearchDhlCapabilitiesParameter
+            {
+                ParcelType = jObj.TryGetString(Constants.DtoNames.SearchDhlCapabilitiesParameterNames.ParcelType),
+                ToZipCode = jObj.TryGetString(Constants.DtoNames.SearchDhlCapabilitiesParameterNames.ToZipCode)
+            };
+        }
+
         public SearchDhlParcelShopLocationsParameter GetSearchDhlParcelShopLocations(JObject jObj)
         {
             if (jObj == null)
@@ -81,7 +96,6 @@ namespace Cook4Me.Api.Host.Builders
 
             return new SearchDhlParcelShopLocationsParameter
             {
-                Country = jObj.TryGetString(Constants.DtoNames.SearchDhlParcelShopLocationsParameterNames.Country),
                 City = jObj.TryGetString(Constants.DtoNames.SearchDhlParcelShopLocationsParameterNames.City),
                 HouseNumber = jObj.TryGetString(Constants.DtoNames.SearchDhlParcelShopLocationsParameterNames.HouseNumber),
                 Street = jObj.TryGetString(Constants.DtoNames.SearchDhlParcelShopLocationsParameterNames.Street),

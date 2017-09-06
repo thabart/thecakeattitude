@@ -74,7 +74,7 @@ class TransportMethods extends Component {
             </div>
           </section>
           { this.state.transportMethod === 'packet' && (
-            <section>
+            <section className="section" style={{padding: "5px"}}>
               <h5>Your address</h5>
               <Address />
               <h5>Choose a transporter</h5>
