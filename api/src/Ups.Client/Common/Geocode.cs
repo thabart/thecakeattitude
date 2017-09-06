@@ -21,8 +21,8 @@ namespace Ups.Client.Common
     public class Geocode
     {
         [XmlElement(ElementName = Constants.DtoNames.GeocodeNames.Latitude)]
-        public string Latitude { get; set; }
+        public double Latitude { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.GeocodeNames.Longitude)]
-        public string Longitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
