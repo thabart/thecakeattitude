@@ -37,6 +37,7 @@ namespace Dhl.Client
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private const string _url = "https://my.dhlparcel.be/api";
+        private const string _gUrl = "https://api-gw.dhlparcel.nl";
         private const string _countryCode = "BE";
 
         public DhlClient(IHttpClientFactory httpClientFactory)
@@ -78,7 +79,7 @@ namespace Dhl.Client
             }
 
             var query = queryBuilder.ToQueryString();
-            var requestUri = new Uri(_url + "/parcel-shop-locations/" + _countryCode + query);
+            var requestUri = new Uri(_gUrl + "/parcel-shop-locations/" + _countryCode + query);
             var request = new HttpRequestMessage
             {
                 RequestUri = requestUri

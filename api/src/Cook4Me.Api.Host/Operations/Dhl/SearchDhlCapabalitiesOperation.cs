@@ -49,8 +49,8 @@ namespace Cook4Me.Api.Host.Operations.Dhl
             }
 
             var parameter = _requestBuilder.GetSearchDhlCapabilitiesParameter(jObj);
-            var shopLocations = await _dhlClient.GetCapabilities(parameter);
-            return new OkResult();
+            var capabalities = await _dhlClient.GetCapabilities(parameter);
+            return new OkObjectResult(_responseBuilder.GetCapabalities(capabalities));
         }
     }
 }

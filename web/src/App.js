@@ -42,6 +42,7 @@ import './styles/image-selector.css';
 import './styles/datePicker.css';
 import './styles/profile.css';
 import "./styles/rc-time-picker.css";
+import './styles/choice.css';
 import "bootstrap/dist/css/bootstrap.css";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";

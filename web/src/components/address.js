@@ -132,7 +132,8 @@ class Address extends Component {
             locality: this.state.address.locality,
             country: this.state.address.country,
             location: this.state.currentLocation,
-            google_place_id: this.state.placeId
+            google_place_id: this.state.placeId,
+            country_code: this.state.address.country_code
         };
         return json;
     }

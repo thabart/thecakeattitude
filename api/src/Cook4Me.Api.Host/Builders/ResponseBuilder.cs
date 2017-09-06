@@ -23,6 +23,7 @@ using Cook4Me.Api.Core.Events.Product;
 using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.Core.Results;
+using Dhl.Client.Results.Capabalities;
 using Dhl.Client.Results.ShopParcelLocations;
 using Newtonsoft.Json.Linq;
 using System;
@@ -35,6 +36,8 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities);
+        JArray GetCapabality(DhlCapabality capabality);
         JObject GetShopParcelLocations(IEnumerable<ShopParcelLocation> locations);
         JObject GetShopParcelLocation(ShopParcelLocation location);
         JObject GetShopDropLocationAddress(ShopParcelLocationAddress adr);
@@ -93,6 +96,52 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities)
+        {
+            if (capabilities == null)
+            {
+                throw new ArgumentNullException(nameof(capabilities));
+            }
+
+            var jObj = new JObject();
+            var arr = new JArray();
+            foreach(var capabality in capabilities)
+            {
+                arr.Merge(GetCapabality(capabality));
+            }
+
+            jObj.Add(Constants.DtoNames.RatingsNames.Ratings, arr);
+            return jObj;
+        }
+
+        public JArray GetCapabality(DhlCapabality capabality)
+        {
+            if (capabality == null)
+            {
+                throw new ArgumentNullException(nameof(capabality));
+            }
+
+            var arr = new JArray();
+            if (capabality.Options != null)
+            {
+                var opts = capabality.Options.Where(opt => opt.Key == "PS" || opt.Key == "DOOR");
+                foreach(var opt in opts)
+                {
+                    var jObj = new JObject();
+                    var optPrice = opt.Price == null ? new DhlPrice() : opt.Price;
+                    var priceWithTax = capabality.ParcelTypes.Price.WithTax + optPrice.WithTax;
+                    var priceWithoutTax = capabality.ParcelTypes.Price.WithoutTax + optPrice.WithoutTax;
+                    jObj.Add(Constants.DtoNames.RatingNames.PriceWithTax, priceWithTax);
+                    jObj.Add(Constants.DtoNames.RatingNames.PriceWithoutTax, priceWithoutTax);
+                    jObj.Add(Constants.DtoNames.RatingNames.Code, opt.Key);
+                    jObj.Add(Constants.DtoNames.DhlRatingNames.ParcelType, capabality.ParcelTypes.Key);
+                    arr.Add(jObj);
+                }
+            }
+
+            return arr;
+        }
+
         public JObject GetShopParcelLocations(IEnumerable<ShopParcelLocation> locations)
         {
             if (locations == null)

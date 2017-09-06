@@ -61,11 +61,28 @@ namespace Cook4Me.Api.Host
             public const string Orders = "orders";
             public const string Dhl = "dhl";
             public const string ParcelShopLocations = "parcelshops/.search";
-            public const string SearchCapabalities = "capabalities/.search";
+            public const string SearchCapabalities = "ratings/.search";
         }
 
         public static class DtoNames
         {
+            public static class RatingsNames
+            {
+                public const string Ratings = "ratings";
+            }
+
+            public static class RatingNames
+            {
+                public const string Code = "code";
+                public const string PriceWithTax = "price_with_tax";
+                public const string PriceWithoutTax = "price_without_tax";
+            }
+
+            public static class DhlRatingNames
+            {
+                public const string ParcelType = "parcel_type";
+            }
+
             public static class SearchDhlCapabilitiesParameterNames
             {
                 public const string ParcelType = "parcel_type";
