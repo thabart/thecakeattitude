@@ -225,6 +225,7 @@ namespace Cook4Me.Api.Host
                 public const string AddressLine = "address_line";
                 public const string Country = "country";
                 public const string City = "city";
+                public const string PostalCode = "postal_code";
             }
 
             public static class SearchUserMessage

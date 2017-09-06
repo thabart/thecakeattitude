@@ -134,7 +134,7 @@ class TransportMethods extends Component {
       });
     }
 
-    if (this.state.transportMethod === 'packet' && this.state.transporter === 'dhl' && this.state.dhlRating && this.state.dhlRating.code === 'PS' && this.refs.address) {
+    if (this.refs.address) {
       currentAdr = this.refs.address.getWrappedInstance().getAddress();
     }
 
@@ -221,10 +221,13 @@ class TransportMethods extends Component {
                   { this.state.dhlRating && this.state.dhlRating.code === 'PS' && (
                     <section style={{marginTop: "10px"}}>
                       <h5>{t('selectParcelShop')}</h5>
-                      <DropLocations ref="dropLocation" address={currentAdr} />
+                      <DropLocations ref="dropLocation" transporter="dhl" address={currentAdr} />
                     </section>
                     ) }
                 </div>
+              ) }
+              { this.state.transporter === 'ups' && (
+                <DropLocations transporter="ups" address={currentAdr} />
               ) }
               { /* Display total price */}
               <section style={{marginTop: "10px"}}>

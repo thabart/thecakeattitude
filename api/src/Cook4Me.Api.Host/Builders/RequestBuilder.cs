@@ -269,7 +269,8 @@ namespace Cook4Me.Api.Host.Builders
                 {
                     AddressLine = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.AddressLine),
                     City = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.City),
-                    Country = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.Country)
+                    Country = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.Country),
+                    PostalCode = jObj.TryGetString(Constants.DtoNames.SearchUpsLocations.PostalCode)
                 }
             };
         }

@@ -51,7 +51,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetOrder(OrderAggregate order);
         JObject GetOrderLine(OrderAggregateLine orderLine);
         JObject GetDistance(Distance distance);
-        JObject GetStandardHours(StandardHours standardHours);
+        JArray GetStandardHours(StandardHours standardHours);
         JObject GetAddressKeyFormat(AddressKeyFormatType addressKeyFormat);
         JObject GetDropLocation(LocatorDropLocation dropLocation);
         JObject GetGeocode(Geocode geocode);
@@ -389,7 +389,6 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.SearchUpsLocationsResponse.Geocode, GetGeocode(locatorResponse.Geocode));
             var arr = new JArray();
             if (locatorResponse.SearchResults != null && locatorResponse.SearchResults.DropLocation != null)
             {
@@ -399,7 +398,7 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
-            jObj.Add(Constants.DtoNames.SearchUpsLocationsResponse.DropLocations, arr);
+            jObj.Add(Constants.DtoNames.DropLocationsNames.Locations, arr);
             return jObj;
         }
 
@@ -411,7 +410,34 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.DropLocationResponse.Id, dropLocation.LocationId);
+            jObj.Add(Constants.DtoNames.DropLocationNames.Id, dropLocation.LocationId);
+            if (dropLocation.AddressKeyFormat != null)
+            {
+                if (!string.IsNullOrWhiteSpace(dropLocation.AddressKeyFormat.ConsigneeName))
+                {
+                    jObj.Add(Constants.DtoNames.DropLocationNames.Name, dropLocation.AddressKeyFormat.ConsigneeName);
+                }
+
+                jObj.Add(Constants.DtoNames.DropLocationNames.Address, GetAddressKeyFormat(dropLocation.AddressKeyFormat));
+            }
+
+            if (dropLocation.Geocode != null)
+            {
+                jObj.Add(Constants.DtoNames.DropLocationNames.Geolocation, GetGeocode(dropLocation.Geocode));
+            }
+
+            if (dropLocation.OperatingHours != null && dropLocation.OperatingHours.StandardHours != null)
+            {
+                var operatingHours = new JArray();
+                foreach (var standardHours in dropLocation.OperatingHours.StandardHours)
+                {
+                    operatingHours.Merge(GetStandardHours(standardHours));
+                }
+
+                jObj.Add(Constants.DtoNames.DropLocationNames.OpeningTimes, operatingHours);
+            }
+
+            /*
             if (!string.IsNullOrWhiteSpace(dropLocation.EmailAddress))
             {
                 jObj.Add(Constants.DtoNames.DropLocationResponse.Email, dropLocation.EmailAddress);
@@ -432,36 +458,15 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.DropLocationResponse.Phone, dropLocation.PhoneNumber);
             }
 
-            if (dropLocation.AddressKeyFormat != null)
-            {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.Address, GetAddressKeyFormat(dropLocation.AddressKeyFormat));
-            }
-
             if (dropLocation.AccessPointInformation != null)
             {
                 jObj.Add(Constants.DtoNames.DropLocationResponse.Image, dropLocation.AccessPointInformation.ImageUrl);
             }
-            
-            if (dropLocation.OperatingHours != null && dropLocation.OperatingHours.StandardHours != null)
-            {
-                var operatingHours = new JArray();
-                foreach(var standardHours in dropLocation.OperatingHours.StandardHours)
-                {
-                    operatingHours.Add(GetStandardHours(standardHours));
-                }
-
-                jObj.Add(Constants.DtoNames.DropLocationResponse.OperatingHours, operatingHours);
-            }
-            
             if (dropLocation.Distance != null)
             {
                 jObj.Add(Constants.DtoNames.DropLocationResponse.Distance, GetDistance(dropLocation.Distance));
             }
-
-            if (dropLocation.Geocode != null)
-            {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.Geocode, GetGeocode(dropLocation.Geocode));
-            }
+            */
 
             return jObj;
         }
@@ -491,9 +496,10 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var result = new JObject();
-            result.Add(Constants.DtoNames.AddressKeyFormatResponse.AddressLine, addressKeyFormat.AddressLine);
-            result.Add(Constants.DtoNames.AddressKeyFormatResponse.City, addressKeyFormat.PoliticalDivision2);
-            result.Add(Constants.DtoNames.AddressKeyFormatResponse.Country, addressKeyFormat.CountryCode);
+            result.Add(Constants.DtoNames.DropLocationAddressNames.Street, addressKeyFormat.AddressLine);
+            result.Add(Constants.DtoNames.DropLocationAddressNames.City, addressKeyFormat.PoliticalDivision2);
+            result.Add(Constants.DtoNames.DropLocationAddressNames.CountryCode, addressKeyFormat.CountryCode);
+            result.Add(Constants.DtoNames.DropLocationAddressNames.ZipCode, addressKeyFormat.PostcodePrimaryLow);
             return result;
         }
 
@@ -505,31 +511,29 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.GeocodeResponse.Latitutde, geocode.Latitude);
-            jObj.Add(Constants.DtoNames.GeocodeResponse.Longitude, geocode.Longitude);
+            jObj.Add(Constants.DtoNames.DropLocationGeoloc.Latitude, geocode.Latitude);
+            jObj.Add(Constants.DtoNames.DropLocationGeoloc.Longitude, geocode.Longitude);
             return jObj;
         }
 
-        public JObject GetStandardHours(StandardHours standardHours)
+        public JArray GetStandardHours(StandardHours standardHours)
         {
             if (standardHours == null)
             {
                 throw new ArgumentNullException(nameof(standardHours));
             }
 
-            var jObj = new JObject();
             var daysOfWeek = new JArray();
             foreach(var dayOfWeek in standardHours.DaysOfWeek)
             {
                 var rec = new JObject();
-                rec.Add(Constants.DtoNames.DayOfWeekResponse.CloseHours, dayOfWeek.CloseHours);
-                rec.Add(Constants.DtoNames.DayOfWeekResponse.Day, dayOfWeek.Day);
-                rec.Add(Constants.DtoNames.DayOfWeekResponse.OpenHours, dayOfWeek.OpenHours);
+                rec.Add(Constants.DtoNames.DropLocationOpeningTime.TimeFrom, dayOfWeek.CloseHours);
+                rec.Add(Constants.DtoNames.DropLocationOpeningTime.Day, dayOfWeek.Day);
+                rec.Add(Constants.DtoNames.DropLocationOpeningTime.TimeTo, dayOfWeek.OpenHours);
                 daysOfWeek.Add(rec);
             }
 
-            jObj.Add(Constants.DtoNames.StandardHoursResponse.Days, daysOfWeek);
-            return jObj;
+            return daysOfWeek;
         }
 
         public JObject GetMessageAddedEvent(MessageAddedEvent evt)

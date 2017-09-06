@@ -88,7 +88,8 @@ namespace Ups.Client
                         {
                             AddressLine = parameter.Address.AddressLine,
                             PoliticalDivision2 = parameter.Address.City,
-                            CountryCode = parameter.Address.Country
+                            CountryCode = parameter.Address.Country,
+                            PostcodePrimaryLow = parameter.Address.PostalCode
                         }
                     },
                     Translate = new TranslateType

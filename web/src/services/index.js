@@ -15,6 +15,7 @@ import AuthenticateService from './Authenticate';
 import MessageService from './Messages';
 import OrdersService from './Orders';
 import DhlService from './Dhl';
+import UpsService from './Ups';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -33,3 +34,4 @@ exports.AuthenticateService = AuthenticateService;
 exports.MessageService = MessageService;
 exports.OrdersService = OrdersService;
 exports.DhlService = DhlService;
+exports.UpsService = UpsService;

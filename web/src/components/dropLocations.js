@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import { Form, FormGroup, Label, Col, Input } from "reactstrap";
-import { GoogleMapService, DhlService } from "../services/index";
+import { GoogleMapService, DhlService, UpsService } from "../services/index";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { MAP } from "react-google-maps/lib/constants";
 import { translate } from 'react-i18next';
@@ -109,7 +109,7 @@ class DropLocations extends Component {
 
     setAddress(adr) { // Set the current address.
       var self = this;
-      self._currentAdr = { country: adr.country_code, place_id: adr.google_place_id, name: adr.locality, location: adr.location };
+      self._currentAdr = adr;
       self.refresh();
     }
 
@@ -127,25 +127,49 @@ class DropLocations extends Component {
     refresh() { // Refresh the markers.
       var self = this;
       var currentAdr = self._currentAdr;
-      DhlService.searchParcelShops({ country: currentAdr.country, query: currentAdr.name}).then(function(adr) {
-        var locations = adr['locations'];
-        self.setState({
-          placeId: currentAdr.place_id,
-          currentLocation: currentAdr.location,
-          center: currentAdr.location,
-          selectedDropLocation: null,
-          locations: locations
+      if (self.props.transporter === 'dhl') {
+        DhlService.searchParcelShops({ country: currentAdr.country_code, query: currentAdr.locality}).then(function(adr) {
+          var locations = adr['locations'];
+          self.setState({
+            placeId: currentAdr.google_place_id,
+            currentLocation: currentAdr.location,
+            center: currentAdr.location,
+            selectedDropLocation: null,
+            locations: locations
+          });
+        }).catch(function() {
+          self.setState({
+            placeId: currentAdr.google_place_id,
+            currentLocation: currentAdr.location,
+            center: currentAdr.location,
+            selectedDropLocation: null,
+            locations: []
+          });
         });
-      }).catch(function() {
-        self.setState({
-          placeId: currentAdr.place_id,
-          currentLocation: currentAdr.location,
-          center: currentAdr.location,
-          selectedDropLocation: null,
-          locations: []
-        });
-      });
+        return;
+      }
 
+      if (self.props.transporter === 'ups') {
+        var request = { address_line: currentAdr.street_address, postal_code: currentAdr.postal_code, country: currentAdr.country_code, city: currentAdr.locality };
+        UpsService.searchParcelShops(request).then(function(adr) {
+          var locations = adr['locations'];
+          self.setState({
+            placeId: currentAdr.google_place_id,
+            currentLocation: currentAdr.location,
+            center: currentAdr.location,
+            selectedDropLocation: null,
+            locations: locations
+          });
+        }).catch(function() {
+          self.setState({
+            placeId: currentAdr.google_place_id,
+            currentLocation: currentAdr.location,
+            center: currentAdr.location,
+            selectedDropLocation: null,
+            locations: []
+          });
+        });
+      }
     }
 
     render() { // Return the view.

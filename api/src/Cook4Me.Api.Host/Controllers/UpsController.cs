@@ -31,7 +31,7 @@ namespace Cook4Me.Api.Host.Controllers
             _getLocationsOperation = getLocationsOperation;
         }
 
-        [HttpPost(Constants.RouteNames.SearchLocations)]
+        [HttpPost(Constants.RouteNames.ParcelShopLocations)]
         public async Task<IActionResult> SearchLocations([FromBody] JObject jObj)
         {
             return await _getLocationsOperation.Execute(jObj);
