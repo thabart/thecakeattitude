@@ -52,7 +52,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetOrderLine(OrderAggregateLine orderLine);
         JObject GetDistance(Distance distance);
         JArray GetStandardHours(StandardHours standardHours);
-        JObject GetAddressKeyFormat(AddressKeyFormatType addressKeyFormat);
+        JObject GetAddressKeyFormat(AddressKeyFormat addressKeyFormat);
         JObject GetDropLocation(LocatorDropLocation dropLocation);
         JObject GetGeocode(Geocode geocode);
         JObject GetUpsLocations(LocatorResponse locatorResponse);
@@ -488,7 +488,7 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
-        public JObject GetAddressKeyFormat(AddressKeyFormatType addressKeyFormat)
+        public JObject GetAddressKeyFormat(AddressKeyFormat addressKeyFormat)
         {
             if (addressKeyFormat == null)
             {

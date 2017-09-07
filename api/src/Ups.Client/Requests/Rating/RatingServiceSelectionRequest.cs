@@ -22,10 +22,6 @@ namespace Ups.Client.Requests.Rating
     {
         [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Request)]
         public RatingServiceSelectionRequestBody Request { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.PickupType)]
-        public PickupType PickupType { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.CustomerClassification)]
-        public CustomerClassification CustomerClassification { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Shipment)]
         public Shipment Shipment { get; set; }
     }

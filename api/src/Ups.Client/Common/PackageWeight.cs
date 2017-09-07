@@ -16,13 +16,13 @@
 
 using System.Xml.Serialization;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Common
 {
-    public class TransactionReferenceType
+    public class PackageWeight
     {
-        [XmlElement(ElementName = Constants.DtoNames.TransactionReferenceTypeNames.CustomerContext)]
-        public string CustomerContext { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.TransactionReferenceTypeNames.XpciVersion)]
-        public string XpciVersion { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageWeightTypeNames.UnitOfMeasurement)]
+        public UnitOfMeasurement UnitOfMeasurement { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageWeightTypeNames.Weight)]
+        public double Weight { get; set; }
     }
 }

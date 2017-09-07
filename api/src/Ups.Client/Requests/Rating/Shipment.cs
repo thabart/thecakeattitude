@@ -14,10 +14,27 @@
 // limitations under the License.
 #endregion
 
+using System.Xml.Serialization;
+using Ups.Client.Common;
+using Ups.Client.Params;
+
 namespace Ups.Client.Requests.Rating
 {
     public class Shipment
     {
-
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.AlternateDeliveryAddress)]
+        public AlternateDeliveryAddress AlternateDeliveryAddress { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.Shipper)]
+        public Shipper Shipper { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.ShipTo)]
+        public Ship ShipTo { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.ShipFrom)]
+        public Ship ShipFrom { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.Service)]
+        public TypeParameter Service { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.ShipmentIndicationType)]
+        public TypeParameter ShipmentIndicationType { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.Package)]
+        public Package Package { get; set; }
     }
 }

@@ -15,15 +15,18 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Common
 {
-    public class PackageWeightType
+    public class AlternateDeliveryAddress
     {
-        [XmlElement(ElementName = Constants.DtoNames.PackageWeightTypeNames.UnitOfMeasurement)]
-        public UnitOfMeasurementType UnitOfMeasurement { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.PackageWeightTypeNames.Weight)]
-        public string Weight { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AlternateDeliveryAddressNames.Name)]
+        public string Name { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AlternateDeliveryAddressNames.AttentionName)]
+        public string AttentionName { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AlternateDeliveryAddressNames.UPSAccessPointID)]
+        public string UPSAccessPointID { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.AlternateDeliveryAddressNames.Address)]
+        public Address Address { get; set; }
     }
 }

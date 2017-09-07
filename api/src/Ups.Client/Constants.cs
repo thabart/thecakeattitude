@@ -20,6 +20,42 @@ namespace Ups.Client
     {
         public static class DtoNames
         {
+            public static class DimensionsNames
+            {
+                public const string UnitOfMeasurement = "UnitOfMeasurement";
+                public const string Length = "Length";
+                public const string Width = "Width";
+                public const string Height = "Height";
+            }
+
+            public static class PackageNames
+            {
+                public const string PackagingType = "PackagingType";
+                public const string Dimensions = "Dimensions";
+                public const string PackageWeight = "PackageWeight";
+            }
+
+            public static class ShipperNames
+            {
+                public const string Name = "Name";
+                public const string ShipperNumber = "ShipperNumber";
+                public const string Address = "Address";
+            }
+
+            public static class ShipNames
+            {
+                public const string Name = "Name";
+                public const string Address = "Address";
+            }
+
+            public static class AlternateDeliveryAddressNames
+            {
+                public const string Name = "Name";
+                public const string AttentionName = "AttentionName";
+                public const string UPSAccessPointID = "UPSAccessPointID";
+                public const string Address = "Address";
+            }
+
             public static class AvailableLocationAttributeNames
             {
                 public const string OptionType = "OptionType";
@@ -255,6 +291,14 @@ namespace Ups.Client
                 public const string ConsigneeName = "ConsigneeName";
                 public const string PostcodePrimaryLow = "PostcodePrimaryLow";
                 public const string PostcodeExtendedLow = "PostcodeExtendedLow";
+            }
+
+            public static class AddressNames
+            {
+                public const string AddressLine1 = "AddressLine1";
+                public const string City = "City";
+                public const string PostalCode = "PostalCode";
+                public const string CountryCode = "CountryCode";
             }
 
             public static class UnitOfMeasurementTypeNames
@@ -517,6 +561,17 @@ namespace Ups.Client
             public static class CustomerClassificationNames
             {
                 public const string Code = "Code";
+            }
+
+            public static class ShipmentNames
+            {
+                public const string AlternateDeliveryAddress = "AlternateDeliveryAddress";
+                public const string Shipper = "Shipper";
+                public const string ShipTo = "ShipTo";
+                public const string ShipFrom = "ShipFrom";
+                public const string Service = "Service";
+                public const string ShipmentIndicationType = "ShipmentIndicationType";
+                public const string Package = "Package";
             }
         }
     }

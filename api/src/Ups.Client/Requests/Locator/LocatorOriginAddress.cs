@@ -24,6 +24,6 @@ namespace Ups.Client.Params.Locator
         [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.PhoneNumber)]
         public StructuredPhoneNumberType PhoneNumber { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorOriginAddressNames.Address)]
-        public AddressKeyFormatType Address { get; set; }
+        public AddressKeyFormat Address { get; set; }
     }
 }

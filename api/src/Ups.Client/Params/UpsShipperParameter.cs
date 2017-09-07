@@ -14,15 +14,12 @@
 // limitations under the License.
 #endregion
 
-using System.Xml.Serialization;
-
 namespace Ups.Client.Params
 {
-    public class UsernameTokenType
+    public class UpsShipperParameter
     {
-        [XmlElement(ElementName = Constants.DtoNames.UsernameTokenTypeNames.Username)]
-        public string Username { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.UsernameTokenTypeNames.Password)]
-        public string Password { get; set; }
+        public string Name { get; set; }
+        public string ShipperNumber { get; set; }
+        public UpsAddressParameter Address { get; set; }
     }
 }

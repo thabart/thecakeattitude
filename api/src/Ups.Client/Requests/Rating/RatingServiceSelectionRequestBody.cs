@@ -15,7 +15,7 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Params;
+using Ups.Client.Common;
 
 namespace Ups.Client.Requests.Rating
 {
@@ -28,6 +28,6 @@ namespace Ups.Client.Requests.Rating
         [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestBodyNames.SubVersion)]
         public string SubVersion { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestBodyNames.TransactionReference)]
-        public TransactionReferenceType TransactionReference { get; set; }
+        public TransactionReference TransactionReference { get; set; }
     }
 }

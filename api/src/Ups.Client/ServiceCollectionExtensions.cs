@@ -30,7 +30,7 @@ namespace Ups.Client
             }
 
             serviceCollection.AddTransient<IHttpClientFactory, HttpClientFactory>();
-            serviceCollection.AddTransient<ILocatorClient, LocatorClient>();
+            serviceCollection.AddTransient<IUpsClient, UpsClient>();
             return serviceCollection;
         }
     }

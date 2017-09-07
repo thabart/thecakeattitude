@@ -14,16 +14,13 @@
 // limitations under the License.
 #endregion
 
-using System.Xml.Serialization;
-using Ups.Client.Common;
-
-namespace Ups.Client.Responses.Locator
+namespace Ups.Client.Params
 {
-    public class Distance
+    public class UpsPackageParameter
     {
-        [XmlElement(ElementName = Constants.DtoNames.DistanceNames.Value)]
-        public string Value { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.DistanceNames.UnitOfMeasurement)]
-        public UnitOfMeasurement UnitOfMeasurement { get; set; }
+        public double Length { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double Weight { get; set; }
     }
 }

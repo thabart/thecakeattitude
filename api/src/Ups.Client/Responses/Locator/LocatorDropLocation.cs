@@ -31,7 +31,7 @@ namespace Ups.Client.Responses.Locator
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.Geocode)]
         public Geocode Geocode { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.AddressKeyFormat)]
-        public AddressKeyFormatType AddressKeyFormat { get; set; }
+        public AddressKeyFormat AddressKeyFormat { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.PhoneNumber)]
         public string PhoneNumber { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorDropLocationNames.FaxNumber)]

@@ -29,6 +29,6 @@ namespace Ups.Client.Params.Locator
         [XmlElement(ElementName = Constants.DtoNames.LocatorRequestBodyNames.Translate)]
         public TranslateType Translate { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorRequestBodyNames.UnitOfMeasurement)]
-        public UnitOfMeasurementType UnitOfMeasurement { get; set; }
+        public UnitOfMeasurement UnitOfMeasurement { get; set; }
     }
 }

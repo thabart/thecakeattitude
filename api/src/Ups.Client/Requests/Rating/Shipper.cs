@@ -17,13 +17,15 @@
 using System.Xml.Serialization;
 using Ups.Client.Common;
 
-namespace Ups.Client.Responses.Locator
+namespace Ups.Client.Requests.Rating
 {
-    public class Distance
+    public class Shipper
     {
-        [XmlElement(ElementName = Constants.DtoNames.DistanceNames.Value)]
-        public string Value { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.DistanceNames.UnitOfMeasurement)]
-        public UnitOfMeasurement UnitOfMeasurement { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipperNames.Name)]
+        public string Name { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipperNames.ShipperNumber)]
+        public string ShipperNumber { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipperNames.Address)]
+        public Address Address { get; set; }
     }
 }

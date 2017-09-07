@@ -18,11 +18,11 @@ using System.Xml.Serialization;
 
 namespace Ups.Client.Common
 {
-    public class UnitOfMeasurementType
+    public class TransactionReference
     {
-        [XmlElement(ElementName = Constants.DtoNames.UnitOfMeasurementTypeNames.Code)]
-        public string Code { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.UnitOfMeasurementTypeNames.Description)]
-        public string Description { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.TransactionReferenceTypeNames.CustomerContext)]
+        public string CustomerContext { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.TransactionReferenceTypeNames.XpciVersion)]
+        public string XpciVersion { get; set; }
     }
 }

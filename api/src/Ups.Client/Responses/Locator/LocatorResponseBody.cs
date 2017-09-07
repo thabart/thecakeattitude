@@ -15,6 +15,7 @@
 #endregion
 
 using System.Xml.Serialization;
+using Ups.Client.Common;
 using Ups.Client.Params;
 
 namespace Ups.Client.Responses.Locator
@@ -22,7 +23,7 @@ namespace Ups.Client.Responses.Locator
     public class LocatorResponseBody
     {
         [XmlElement(ElementName = Constants.DtoNames.LocatorResponseBodyNames.TransactionReference)]
-        public TransactionReferenceType TransactionReference { get; set; }
+        public TransactionReference TransactionReference { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorResponseBodyNames.ResponseStatusCode)]
         public string ResponseStatusCode { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorResponseBodyNames.ResponseStatusDescription)]

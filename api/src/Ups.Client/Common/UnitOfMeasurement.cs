@@ -15,15 +15,14 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
 
-namespace Ups.Client.Responses.Locator
+namespace Ups.Client.Common
 {
-    public class Distance
+    public class UnitOfMeasurement
     {
-        [XmlElement(ElementName = Constants.DtoNames.DistanceNames.Value)]
-        public string Value { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.DistanceNames.UnitOfMeasurement)]
-        public UnitOfMeasurement UnitOfMeasurement { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.UnitOfMeasurementTypeNames.Code)]
+        public string Code { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.UnitOfMeasurementTypeNames.Description)]
+        public string Description { get; set; }
     }
 }

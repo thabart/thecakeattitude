@@ -16,13 +16,15 @@
 
 using System.Xml.Serialization;
 
-namespace Ups.Client.Params
+namespace Ups.Client.Common
 {
-    public class UpsSecurity
+    public class Package
     {
-        [XmlElement(ElementName = Constants.DtoNames.UpsSecurityNames.UserNameToken)]
-        public UsernameTokenType UsernameToken { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.UpsSecurityNames.ServiceAccessToken)]
-        public ServiceAccessToken ServiceAccessToken { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageNames.PackagingType)]
+        public TypeParameter PackagingType { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageNames.Dimensions)]
+        public Dimensions Dimensions { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageNames.PackageWeight)]
+        public PackageWeight PackageWeight { get; set; }
     }
 }

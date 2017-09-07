@@ -16,6 +16,7 @@
 
 
 using System.Xml.Serialization;
+using Ups.Client.Common;
 
 namespace Ups.Client.Params
 {
@@ -26,6 +27,6 @@ namespace Ups.Client.Params
         [XmlElement(ElementName = Constants.DtoNames.RequestTypeNames.RequestOption)]
         public string RequestOption { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.RequestTypeNames.TransactionReferenceType)]
-        public TransactionReferenceType TransactionReferenceType { get; set; }
+        public TransactionReference TransactionReferenceType { get; set; }
     }
 }

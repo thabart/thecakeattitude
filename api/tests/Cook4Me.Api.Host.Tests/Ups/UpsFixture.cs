@@ -32,7 +32,7 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
         public async Task GetLocations()
         {
             var httpClientFactory = new HttpClientFactory();
-            var locatorClient = new LocatorClient(httpClientFactory);
+            var locatorClient = new UpsClient(httpClientFactory);
             var result = await locatorClient.GetLocations(new GetLocationsParameter
             {
                 Credentials = new UpsCredentials
@@ -46,6 +46,73 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     AddressLine = "05555 avenue des croix du feu",
                     City = "Bruxelles",
                     Country = "BE"
+                }
+            });
+        }
+
+        [Fact]
+        public async Task GetRatings()
+        {
+            var httpClientFactory = new HttpClientFactory();
+            var upsClient = new UpsClient(httpClientFactory);
+            await upsClient.GetRatings(new GetUpsRatingsParameter
+            {
+                Credentials = new UpsCredentials
+                {
+                    LicenseNumber = _accessLicenseNumber,
+                    Password = _password,
+                    UserName = _userName
+                },
+                AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
+                {
+                    Name = "U31095277",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "RUE EMILE VANDERVELD 39",
+                        City = "Bruxelles",
+                        PostalCode = "1200",
+                        Country = "BE"
+                    }
+                },
+                Shipper = new UpsShipperParameter
+                {
+                    Name = "Habart Thierry",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "223 avenue des croix du feu",
+                        City = "Bruxelles",
+                        PostalCode = "1020",
+                        Country = "BE"
+                    }
+                },
+                ShipFrom = new UpsShipParameter
+                {
+                    Name = "Habart Thierry",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "223 avenue des croix du feu",
+                        City = "Bruxelles",
+                        PostalCode = "1020",
+                        Country = "BE"
+                    }
+                },
+                ShipTo = new UpsShipParameter
+                {
+                    Name = "David Donab",
+                    Address = new UpsAddressParameter
+                    {
+                         AddressLine = "rue solleveld 20",
+                         City = "Bruxelles",
+                         PostalCode = "1200",
+                         Country = "BE"
+                    }
+                },
+                Package = new UpsPackageParameter
+                {
+                    Length = 5,
+                    Width = 4,
+                    Height = 3,
+                    Weight = 1
                 }
             });
         }

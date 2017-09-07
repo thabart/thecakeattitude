@@ -18,7 +18,7 @@ using System.Xml.Serialization;
 
 namespace Ups.Client.Common
 {
-    public class AddressKeyFormatType
+    public class AddressKeyFormat
     {
         [XmlElement(ElementName = Constants.DtoNames.AddressKeyFormatTypeNames.ConsigneeName)]
         public string ConsigneeName { get; set; }

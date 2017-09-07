@@ -33,14 +33,14 @@ namespace Cook4Me.Api.Host.Operations.Ups
 
     internal class GetLocationsOperation : IGetLocationsOperation
     {
-        private readonly ILocatorClient _locatorClient;
+        private readonly IUpsClient _upsClient;
         private readonly IRequestBuilder _requestBuilder;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
 
-        public GetLocationsOperation(ILocatorClient locatorClient, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder, IControllerHelper controllerHelper)
+        public GetLocationsOperation(IUpsClient upsClient, IRequestBuilder requestBuilder, IResponseBuilder responseBuilder, IControllerHelper controllerHelper)
         {
-            _locatorClient = locatorClient;
+            _upsClient = upsClient;
             _requestBuilder = requestBuilder;
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
@@ -60,7 +60,7 @@ namespace Cook4Me.Api.Host.Operations.Ups
                 UserName = Constants.UpsCredentials._userName,
                 Password = Constants.UpsCredentials._password
             };
-            var result = await _locatorClient.GetLocations(searchUpsLocations);
+            var result = await _upsClient.GetLocations(searchUpsLocations);
             if (result.Response != null && result.Response.Error != null)
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Request, result.Response.Error.ErrorDescription);

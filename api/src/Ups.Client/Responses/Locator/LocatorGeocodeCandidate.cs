@@ -22,7 +22,7 @@ namespace Ups.Client.Responses.Locator
     public class LocatorGeocodeCandidate
     {
         [XmlElement(ElementName = Constants.DtoNames.LocatorGeocodeCandidateNames.AddressKeyFormat)]
-        public AddressKeyFormatType AddressKeyFormat { get; set; }
+        public AddressKeyFormat AddressKeyFormat { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorGeocodeCandidateNames.Geocode)]
         public Geocode Geocode { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.LocatorGeocodeCandidateNames.LandmarkName)]
