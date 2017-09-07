@@ -28,14 +28,16 @@ const GettingStartedGoogleMap = withGoogleMap(props => (
         defaultZoom={props.zoom}
         center={props.center}
         ref={props.onMapLoad}
+        defaultOptions={{fullscreenControl: false}}
     >
+      {props.searchEnabled && (
         <SearchBox
             ref={props.onSearchBoxCreated}
             bounds={props.bounds}
             onPlacesChanged={props.onPlacesChanged}
             inputPlaceholder="Enter your address" controlPosition={window.google.maps.ControlPosition.TOP_LEFT}
             inputStyle={INPUT_STYLE}
-        />
+        /> )}
         {props.currentLocation &&
         <Marker position={props.currentLocation} title='Current location'>
         </Marker>
@@ -144,6 +146,7 @@ class Address extends Component {
             return (<section className="col-md-12 section">{t('loadingMessage')}</section>)
         }
 
+        var searchEnabled = this.props.searchEnabled == null || this.props.searchEnabled == undefined ? true : this.props.searchEnabled;
         return (
             <div className="row col-md-12">
                 <div className="col-md-6">
@@ -202,6 +205,8 @@ class Address extends Component {
                         onSearchBoxCreated={this.onSearchBoxCreated}
                         onPlacesChanged={this.onPlacesChanged}
                         bounds={this.state.bounds}
+                        defaultOptions={this.props.defaultOptions}
+                        searchEnabled={searchEnabled}
                         containerElement={
                             <div style={{height: `100%`}}/>
                         }

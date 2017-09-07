@@ -395,5 +395,6 @@
   "chooseTheoricalPacketSize": "Choisir une taille de paquet théorique",
   "noRating": "Aucune offre",
   "selectParcelShop": "Sélectionner un point d'enlèvement",
-  "estimatedPrice": "Prix estimé € {0}"
+  "estimatedPrice": "Prix estimé € {0}",
+  "destinationAddress": "Adresse de destination"
 }

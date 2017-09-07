@@ -397,5 +397,6 @@
   "chooseTheoricalPacketSize": "Choose a theorical packet size",
   "noRating": "No rating",
   "selectParcelShop": "Select a parcel shop",
-  "estimatedPrice": "Estimated price € {0}"
+  "estimatedPrice": "Estimated price € {0}",
+  "destinationAddress": "Destination address"
 }

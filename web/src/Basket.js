@@ -19,6 +19,7 @@ class Basket extends Component {
         this.display = this.display.bind(this);
         this.displayProducts = this.displayProducts.bind(this);
         this.displaySummary = this.displaySummary.bind(this);
+        this.displayTransports = this.displayTransports.bind(this);
         this.confirm = this.confirm.bind(this);
         this.state = {
           activeTab: '1',
@@ -78,6 +79,10 @@ class Basket extends Component {
 
     displaySummary() { // Display the summary.
       this.refs.summaryTab.getWrappedInstance().refresh();
+    }
+
+    displayTransports() { // Display transports.
+      this.refs.transportTab.getWrappedInstance().display();
     }
 
     confirm() { // Confirm the order.
@@ -141,11 +146,12 @@ class Basket extends Component {
                           this.toggle('1');
                       }} onNext={(json) => {
                           this.toggle('3', json);
+                          this.displayTransports();
                       }} />
                   </TabPane>
                   { /* Transports tab */ }
                   <TabPane tabId='3' className={this.state.isLoading ? 'hidden': ''}>
-                    <TransportMethodsTab onPrevious={() => {
+                    <TransportMethodsTab ref="transportTab" onPrevious={() => {
                         this.toggle('2');
                     }} onNext={(json) => {
                         this.toggle('4', json);
