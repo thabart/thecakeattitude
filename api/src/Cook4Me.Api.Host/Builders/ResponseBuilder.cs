@@ -31,11 +31,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Ups.Client.Common;
 using Ups.Client.Responses.Locator;
+using Ups.Client.Responses.Rating;
 
 namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetUpsRatings(RatingServiceSelectionResponse response);
         JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities);
         JArray GetCapabality(DhlCapabality capabality);
         JObject GetShopParcelLocations(IEnumerable<ShopParcelLocation> locations);
@@ -96,6 +98,24 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetUpsRatings(RatingServiceSelectionResponse response)
+        {
+            if (response == null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            double price = 0;
+            if (response.RatedShipment != null && response.RatedShipment.TotalCharges != null)
+            {
+                price = response.RatedShipment.TotalCharges.MonetaryValue;
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.UpsRatingsNames.TotalPrice, price);
+            return jObj;
+        }
+
         public JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities)
         {
             if (capabilities == null)

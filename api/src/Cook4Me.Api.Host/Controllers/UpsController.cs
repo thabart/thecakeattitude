@@ -25,8 +25,9 @@ namespace Cook4Me.Api.Host.Controllers
     public class UpsController : Controller
     {
         private readonly IGetLocationsOperation _getLocationsOperation;
+        private readonly IGetRatingsOperation _getRatingsOperation;
 
-        public UpsController(IGetLocationsOperation getLocationsOperation)
+        public UpsController(IGetLocationsOperation getLocationsOperation, IGetRatingsOperation getRatingsOperation)
         {
             _getLocationsOperation = getLocationsOperation;
         }
@@ -35,6 +36,12 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> SearchLocations([FromBody] JObject jObj)
         {
             return await _getLocationsOperation.Execute(jObj);
+        }
+
+        [HttpPost(Constants.RouteNames.SearchCapabalities)]
+        public async Task<IActionResult> GetRatings([FromBody] JObject jObj)
+        {
+            return await _getRatingsOperation.Execute(jObj);
         }
     }
 }

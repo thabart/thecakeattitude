@@ -36,6 +36,12 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        GetUpsRatingsParameter GetUpsRatingsParameter(JObject jObj);
+        UpsAlternateDeliveryAddressParameter GetUpsAlternateDeliveryAddressParameter(JObject jObj);
+        UpsShipParameter GetUpsShipParameter(JObject jObj);
+        UpsAddressParameter GetUpsAddressParameter(JObject jObj);
+        UpsPackageParameter GetUpsPackageParameter(JObject jObj);
+        UpsShipperParameter GetUpsShipperParameter(JObject jObj);
         SearchDhlCapabilitiesParameter GetSearchDhlCapabilitiesParameter(JObject jObj);
         SearchDhlParcelShopLocationsParameter GetSearchDhlParcelShopLocations(JObject jObj);
         AddOrderLineCommand GetAddOrderLine(JObject jObj);
@@ -73,6 +79,134 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public GetUpsRatingsParameter GetUpsRatingsParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var alternateAdrObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.AlternateDeliveryAddress) as JObject;
+            var shipperObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.Shipper) as JObject;
+            var shipToObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.ShipTo) as JObject;
+            var shipFromObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.ShipFrom) as JObject;
+            var packageObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.Package) as JObject;
+
+            return new GetUpsRatingsParameter
+            {
+                AlternateDeliveryAddress = alternateAdrObj == null ? null : GetUpsAlternateDeliveryAddressParameter(alternateAdrObj),
+                Package = packageObj == null ? null : GetUpsPackageParameter(packageObj),
+                ShipFrom = shipFromObj == null ? null : GetUpsShipParameter(shipFromObj),
+                ShipTo = shipToObj == null ? null : GetUpsShipParameter(shipToObj),
+                Shipper = shipperObj == null ? null : GetUpsShipperParameter(shipperObj)
+            };
+        }
+
+        public UpsAlternateDeliveryAddressParameter GetUpsAlternateDeliveryAddressParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new UpsAlternateDeliveryAddressParameter
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.UpsAlternateDeliveryAddressParameterNames.Name)
+            };
+            var adrObj = jObj.GetValue(Constants.DtoNames.UpsAlternateDeliveryAddressParameterNames.Address);
+            if (adrObj != null)
+            {
+                var adr = adrObj as JObject;
+                if (adr != null)
+                {
+                    result.Address = GetUpsAddressParameter(adr);
+                }
+            }
+
+            return result;
+        }
+
+        public UpsShipperParameter GetUpsShipperParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new UpsShipperParameter
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.UpsShipperParameterNames.Name)
+            };
+            var adrObj = jObj.GetValue(Constants.DtoNames.UpsShipParameterNames.Address);
+            if (adrObj != null)
+            {
+                var adr = adrObj as JObject;
+                if (adr != null)
+                {
+                    result.Address = GetUpsAddressParameter(adr);
+                }
+            }
+
+            return result;
+        }
+
+        public UpsShipParameter GetUpsShipParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new UpsShipParameter
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.UpsShipParameterNames.Name)
+            };
+
+            var adrObj = jObj.GetValue(Constants.DtoNames.UpsShipParameterNames.Address);
+            if (adrObj != null)
+            {
+                var adr = adrObj as JObject;
+                if (adr != null)
+                {
+                    result.Address = GetUpsAddressParameter(adr);
+                }
+            }
+
+            return result;
+        }
+
+        public UpsAddressParameter GetUpsAddressParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpsAddressParameter
+            {
+                AddressLine = jObj.TryGetString(Constants.DtoNames.UpsAddressParameterNames.AddressLine),
+                City = jObj.TryGetString(Constants.DtoNames.UpsAddressParameterNames.City),
+                Country = jObj.TryGetString(Constants.DtoNames.UpsAddressParameterNames.Country),
+                PostalCode = jObj.TryGetString(Constants.DtoNames.UpsAddressParameterNames.PostalCode)
+            };
+        }
+
+        public UpsPackageParameter GetUpsPackageParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpsPackageParameter
+            {
+                Height = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Height),
+                Length = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Length),
+                Weight = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Weight),
+                Width = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Width)
+            };
+        }
+
         public SearchDhlCapabilitiesParameter GetSearchDhlCapabilitiesParameter(JObject jObj)
         {
             if (jObj == null)

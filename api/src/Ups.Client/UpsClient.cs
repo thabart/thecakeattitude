@@ -33,6 +33,7 @@ namespace Ups.Client
     public interface IUpsClient
     {
         Task<LocatorResponse> GetLocations(GetLocationsParameter parameter);
+        Task<RatingServiceSelectionResponse> GetRatings(GetUpsRatingsParameter parameter);
     }
 
     internal class UpsClient : IUpsClient

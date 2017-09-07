@@ -66,6 +66,54 @@ namespace Cook4Me.Api.Host
 
         public static class DtoNames
         {
+            public static class UpsRatingsNames
+            {
+                public const string TotalPrice = "total_price";
+            }
+
+            public static class GetUpsRatingsParameterNames
+            {
+                public const string AlternateDeliveryAddress = "alternate_delivery_address";
+                public const string Shipper = "shipper";
+                public const string ShipTo = "ship_to";
+                public const string ShipFrom = "ship_from";
+                public const string Package = "package";
+            }
+
+            public static class UpsPackageParameterNames
+            {
+                public const string Length = "length";
+                public const string Width = "width";
+                public const string Height = "height";
+                public const string Weight = "weight";
+            }
+
+            public static class UpsShipParameterNames
+            {
+                public const string Name = "name";
+                public const string Address = "address";
+            }
+
+            public static class UpsShipperParameterNames
+            {
+                public const string Name = "name";
+                public const string Address = "address";
+            }
+
+            public static class UpsAlternateDeliveryAddressParameterNames
+            {
+                public const string Name = "name";
+                public const string Address = "address";
+            }
+
+            public static class UpsAddressParameterNames
+            {
+                public const string AddressLine = "address_line";
+                public const string City = "city";
+                public const string Country = "country_code";
+                public const string PostalCode = "postal_code";
+            }
+
             public static class RatingsNames
             {
                 public const string Ratings = "ratings";
