@@ -26,6 +26,7 @@ using Ups.Client.Params;
 using Ups.Client.Params.Locator;
 using Ups.Client.Requests.Rating;
 using Ups.Client.Responses.Locator;
+using Ups.Client.Responses.Rating;
 
 namespace Ups.Client
 {
@@ -144,7 +145,7 @@ namespace Ups.Client
             }
         }
 
-        public async Task GetRatings(GetUpsRatingsParameter parameter)
+        public async Task<RatingServiceSelectionResponse> GetRatings(GetUpsRatingsParameter parameter)
         {
             if (parameter == null)
             {
@@ -329,7 +330,11 @@ namespace Ups.Client
             };
             var serializedContent = await client.SendAsync(req).ConfigureAwait(false);
             var res = await serializedContent.Content.ReadAsStringAsync();
-            string s = "";
+            var deserializer = new XmlSerializer(typeof(RatingServiceSelectionResponse));
+            using (TextReader reader = new StringReader(res))
+            {
+                return (RatingServiceSelectionResponse)deserializer.Deserialize(reader);
+            }
         }
     }
 }

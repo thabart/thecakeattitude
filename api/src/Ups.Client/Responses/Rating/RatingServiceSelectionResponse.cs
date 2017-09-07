@@ -17,18 +17,13 @@
 using System.Xml.Serialization;
 using Ups.Client.Common;
 
-namespace Ups.Client.Responses.Locator
+namespace Ups.Client.Responses.Rating
 {
-    [XmlRoot(ElementName = Constants.DtoNames.LocatorResponseNames.LocatorResponse)]
-    public class LocatorResponse
+    public class RatingServiceSelectionResponse
     {
-        [XmlElement(ElementName = Constants.DtoNames.LocatorResponseNames.Response)]
+        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionResponseNames.Response)]
         public ResponseBody Response { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorResponseNames.Geocode)]
-        public Geocode Geocode { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorResponseNames.SearchResults)]
-        public LocatorSearchResults SearchResults { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorResponseNames.AllowAllConfidenceLevels)]
-        public string AllowAllConfidenceLevels { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionResponseNames.RatedShipment)]
+        public RatedShipment RatedShipment { get; set; }
     }
 }

@@ -20,6 +20,26 @@ namespace Ups.Client
     {
         public static class DtoNames
         {
+            public static class RatedShipmentNames
+            {
+                public const string Service = "Service";
+                public const string TransportationCharges = "TransportationCharges";
+                public const string ServiceOptionsCharges = "ServiceOptionsCharges";
+                public const string TotalCharges = "TotalCharges";
+            }
+
+            public static class RatingChargesNames
+            {
+                public const string CurrencyCode = "CurrencyCode";
+                public const string MonetaryValue = "MonetaryValue";
+            }
+
+            public static class RatingServiceSelectionResponseNames
+            {
+                public const string Response = "Response";
+                public const string RatedShipment = "RatedShipment";
+            }
+
             public static class DimensionsNames
             {
                 public const string UnitOfMeasurement = "UnitOfMeasurement";
@@ -364,7 +384,7 @@ namespace Ups.Client
             }
 
             // Locator response
-            public static class LocatorResponseBodyNames
+            public static class ResponseBodyNames
             {
                 public const string TransactionReference = "TransactionReference";
                 public const string ResponseStatusCode = "ResponseStatusCode";
@@ -496,7 +516,7 @@ namespace Ups.Client
                 public const string LandmarkName = "LandmarkName";
             }
 
-            public static class LocatorErrorResponseNames
+            public static class ErrorResponseNames
             {
                 public const string ErrorSeverity = "ErrorSeverity";
                 public const string ErrorCode = "ErrorCode";

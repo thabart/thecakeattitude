@@ -79,7 +79,7 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Name = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "223 avenue des croix du feu",
+                        AddressLine = "10 avenue des croix du feu",
                         City = "Bruxelles",
                         PostalCode = "1020",
                         Country = "BE"
@@ -90,7 +90,7 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Name = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "223 avenue des croix du feu",
+                        AddressLine = "10 avenue des croix du feu",
                         City = "Bruxelles",
                         PostalCode = "1020",
                         Country = "BE"

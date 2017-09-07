@@ -16,19 +16,19 @@
 
 using System.Xml.Serialization;
 
-namespace Ups.Client.Responses.Locator
+namespace Ups.Client.Common
 {
-    public class LocatorErrorResponse
+    public class ErrorResponse
     {
-        [XmlElement(ElementName = Constants.DtoNames.LocatorErrorResponseNames.ErrorSeverity)]
+        [XmlElement(ElementName = Constants.DtoNames.ErrorResponseNames.ErrorSeverity)]
         public string ErrorSeverity { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorErrorResponseNames.ErrorCode)]
+        [XmlElement(ElementName = Constants.DtoNames.ErrorResponseNames.ErrorCode)]
         public string ErrorCode { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorErrorResponseNames.ErrorDescription)]
+        [XmlElement(ElementName = Constants.DtoNames.ErrorResponseNames.ErrorDescription)]
         public string ErrorDescription { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorErrorResponseNames.MinimumRetrySeconds)]
+        [XmlElement(ElementName = Constants.DtoNames.ErrorResponseNames.MinimumRetrySeconds)]
         public string MinimumRetrySeconds { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LocatorErrorResponseNames.ErrorDigest)]
+        [XmlElement(ElementName = Constants.DtoNames.ErrorResponseNames.ErrorDigest)]
         public string ErrorDigest { get; set; }
     }
 }
