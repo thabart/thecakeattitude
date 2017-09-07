@@ -3,13 +3,15 @@ import { Button } from "reactstrap";
 import { translate } from 'react-i18next';
 import { BasketStore } from '../stores/index';
 import { Address, DropLocations } from '../components/index';
-import { DhlService } from '../services/index';
+import { DhlService, ShopsService, UpsService, UserService } from '../services/index';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
+import Promise from 'bluebird';
 
 class TransportMethods extends Component {
   constructor(props) {
     super(props);
+    this._upsMarker = null;
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.selectTransportMethod = this.selectTransportMethod.bind(this);
@@ -17,12 +19,16 @@ class TransportMethods extends Component {
     this.selectParcelType = this.selectParcelType.bind(this);
     this.selectRating = this.selectRating.bind(this);
     this.addressCorrect = this.addressCorrect.bind(this);
+    this.refreshUpsRatings = this.refreshUpsRatings.bind(this);
+    this.refreshDhlRatings = this.refreshDhlRatings.bind(this);
+    this.onMarkerClick = this.onMarkerClick.bind(this);
     this.state = {
       transportMethod: 'manual',
       parcelType: null,
       transporter: null,
       dhlRating: null,
       isDhlRatingsLoading: false,
+      isUpsLoading: false,
       estimatedPrice: 0,
       dhlRatings: []
     };
@@ -56,18 +62,147 @@ class TransportMethods extends Component {
 
   selectTransporter(transporter) { // Select a transporter.
     this.setState({
-      transporter: transporter
+      transporter: transporter,
+      estimatedPrice: 0
     });
   }
 
   selectParcelType(parcelType) { // Select the parcel type.
-    var self = this;
-    self.setState({
-      isDhlRatingsLoading: true,
+    this.state.parcelType = parcelType;
+    this.setState({
       parcelType: parcelType
     });
+    if (this.state.transporter === 'ups') {
+      this.refreshUpsRatings();
+      return;
+    }
+
+    this.refreshDhlRatings();
+  }
+
+  selectRating(rating) { // Select the rating.
+    this.setState({
+      dhlRating: rating,
+      estimatedPrice: rating.price_with_tax
+    });
+  }
+
+  addressCorrect(b) { // Update the drop locations.
+    if (!b || !this.refs.address) return;
     var adr = this.refs.address.getWrappedInstance().getAddress();
-    DhlService.searchCapabalities({ parcel_type: parcelType, to_zip_code: adr.country_code }).then(function(r) {
+    if (this.refs.dropLocation) this.refs.dropLocation.getWrappedInstance().setAddress(adr);
+    if (this.refs.upsDropLocation) this.refs.upsDropLocation.getWrappedInstance().setAddress(adr);
+  }
+
+  refreshUpsRatings() { // Refresh ups ratings.
+    var request = {};
+    var self = this;
+    if (!self._upsMarker) return;
+    if (!self.state.parcelType) return;
+    var orders = BasketStore.getOrders();
+    var selectedOrderId = BasketStore.getSelectedOrderId();
+    var order = orders.filter(function(o) { return o.id === selectedOrderId })[0];
+    var adr = self.refs.address.getWrappedInstance().getAddress();
+    var fromAdr = {
+      address_line: adr.street_address,
+      postal_code: adr.postal_code,
+      country_code: adr.country_code,
+      city: adr.locality
+    };
+    var altAdr = {
+      address_line: self._upsMarker.address.street,
+      postal_code: self._upsMarker.address.zip,
+      country_code: self._upsMarker.address.country,
+      city: self._upsMarker.address.city
+    };
+    var weight = 0;
+    switch(self.state.parcelType) {
+      case "SMALL":
+        weight = 2;
+      break;
+      case "MEDIUM":
+        weight = 5;
+      break;
+      case "LARGE":
+        weight = 10;
+      break;
+      case "XLARGE":
+        weight = 20;
+      break;
+    }
+    var pkg = {
+      height: 35,
+      length: 50,
+      weight: weight,
+      width: 80
+    };
+
+    self.setState({
+      isUpsLoading: true
+    });
+    ShopsService.get(order.shop_id).then(function(shop) {
+      shop = shop['_embedded'];
+      console.log(Promise);
+      Promise.all([ UserService.getPublicClaims(order.subject), UserService.getPublicClaims(shop.subject) ]).then(function(res) {
+        var buyerClaims = res[0]['claims'];
+        var sellerClaims = res[1]['claims'];
+        var toAdr = {
+          address_line: shop.street_address,
+          postal_code: shop.postal_code,
+          country_code: shop.country,
+          city: shop.locality
+        };
+        var request = {
+          alternate_delivery_address: {
+            name: self._upsMarker.name,
+            address: altAdr
+          },
+          shipper : {
+            name: buyerClaims.name,
+            address: fromAdr
+          },
+          ship_to: {
+            name: sellerClaims.name,
+            address: toAdr
+          },
+          ship_from: {
+            name: buyerClaims.name,
+            address: fromAdr
+          },
+          package: pkg
+        };
+        UpsService.searchRatings(request).then(function(r) {
+          self.setState({
+            isUpsLoading: false,
+            estimatedPrice: r.total_price
+          });
+        }).catch(function() {
+          self.setState({
+            isUpsLoading: false,
+            estimatedPrice: 0
+          });
+        });
+      }).catch(function() {
+        self.setState({
+          isUpsLoading: false,
+          estimatedPrice: 0
+        });
+      });
+    }).catch(function() {
+      self.setState({
+        isUpsLoading: false,
+        estimatedPrice: 0
+      });
+    });
+  }
+
+  refreshDhlRatings() { // Refresh dhl ratings
+    var self = this;
+    self.setState({
+      isDhlRatingsLoading: true
+    });
+    var adr = this.refs.address.getWrappedInstance().getAddress();
+    DhlService.searchCapabalities({ parcel_type: self.state.parcelType, to_zip_code: adr.country_code }).then(function(r) {
       self.setState({
         isDhlRatingsLoading: false,
         dhlRatings: r['ratings'],
@@ -82,17 +217,9 @@ class TransportMethods extends Component {
     });
   }
 
-  selectRating(rating) { // Select the rating.
-    this.setState({
-      dhlRating: rating,
-      estimatedPrice: rating.price_with_tax
-    });
-  }
-
-  addressCorrect(b) { // Update the drop locations.
-    if (!b || !this.refs.dropLocation || !this.refs.address) return;
-    var adr = this.refs.address.getWrappedInstance().getAddress();
-    this.refs.dropLocation.getWrappedInstance().setAddress(adr);
+  onMarkerClick(location) { // Execute when the user clicks on the marker (UPS).
+    this._upsMarker = location;
+    this.refreshUpsRatings();
   }
 
   render() { // Display the component.
@@ -176,42 +303,42 @@ class TransportMethods extends Component {
                   </div>
                 </div>
               </div>
+              { /* Display different package size */ }
+              <h5>{t('chooseTheoricalPacketSize')}</h5>
+              <section className="row">
+                <label className="col-md-3 text-center">
+                  <div className={this.state.parcelType === 'SMALL' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('SMALL')}>
+                    <img src="/images/parcel-small.png" width="50" />
+                    <h3>0 - 2kg</h3>
+                  </div>
+                </label>
+                <label className="col-md-3 text-center">
+                  <div className={this.state.parcelType === 'MEDIUM' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('MEDIUM')}>
+                    <img src="/images/parcel-medium.png" width="50" />
+                    <h3>2 - 5kg</h3>
+                  </div>
+                </label>
+                <label className="col-md-3 text-center">
+                  <div className={this.state.parcelType === 'LARGE' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('LARGE')}>
+                    <img src="/images/parcel-large.png" width="50" />
+                    <h3>5 - 10kg</h3>
+                  </div>
+                </label>
+                <label className="col-md-3 text-center">
+                  <div className={this.state.parcelType === 'XLARGE' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('XLARGE')}>
+                    <img src="/images/parcel-xlarge.png" width="50" />
+                    <h3>10 - 20kg</h3>
+                  </div>
+                </label>
+              </section>
               { /* Display the DHL */ }
-              { this.state.transporter === 'dhl' && (
+              { this.state.transporter === 'dhl' && this.state.isDhlRatingsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
+              { this.state.transporter === 'dhl' && !this.state.isDhlRatingsLoading && (
                 <div>
-                  { /* Display different package size */ }
-                  <h5>{t('chooseTheoricalPacketSize')}</h5>
-                  <section className="row">
-                    <label className="col-md-3 text-center">
-                      <div className={this.state.parcelType === 'SMALL' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('SMALL')}>
-                        <img src="/images/parcel-small.png" width="50" />
-                        <h3>0 - 2kg</h3>
-                      </div>
-                    </label>
-                    <label className="col-md-3 text-center">
-                      <div className={this.state.parcelType === 'MEDIUM' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('MEDIUM')}>
-                        <img src="/images/parcel-medium.png" width="50" />
-                        <h3>2 - 5kg</h3>
-                      </div>
-                    </label>
-                    <label className="col-md-3 text-center">
-                      <div className={this.state.parcelType === 'LARGE' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('LARGE')}>
-                        <img src="/images/parcel-large.png" width="50" />
-                        <h3>5 - 10kg</h3>
-                      </div>
-                    </label>
-                    <label className="col-md-3 text-center">
-                      <div className={this.state.parcelType === 'XLARGE' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('XLARGE')}>
-                        <img src="/images/parcel-xlarge.png" width="50" />
-                        <h3>10 - 20kg</h3>
-                      </div>
-                    </label>
-                  </section>
                   { /* Display the different transport method */ }
                   <section>
-                    { this.state.isDhlRatingsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
-                    { !this.state.isDhlRatingsLoading && ratings.length === 0 && (<span>{t('noRating')}</span>) }
-                    { !this.state.isDhlRatingsLoading && ratings.length > 0 && (
+                    { ratings.length === 0 && (<span>{t('noRating')}</span>) }
+                    { ratings.length > 0 && (
                       <div className="list-group-default clickable">
                         {ratings}
                       </div>
@@ -225,10 +352,12 @@ class TransportMethods extends Component {
                     </section>
                     ) }
                 </div>
-              ) }
+              )}
+              { /* Display UPS */ }
+              { this.state.transporter === 'ups' && this.state.isUpsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
               { this.state.transporter === 'ups' && (
-                <DropLocations transporter="ups" address={currentAdr} />
-              ) }
+                <DropLocations ref="upsDropLocation" onMarkerClick={this.onMarkerClick} transporter="ups" address={currentAdr} />
+              )}
               { /* Display total price */}
               <section style={{marginTop: "10px"}}>
                 <h4>{t('estimatedPrice').replace('{0}', this.state.estimatedPrice)}</h4>

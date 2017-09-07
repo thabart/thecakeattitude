@@ -9,14 +9,24 @@ import Constants from "../../Constants";
 import Promise from "bluebird";
 import moment from 'moment';
 
-var daysMapping = {
+var dhlDaysMapping = {
     "0": "sunday",
     "1": "monday",
     "2": "tuesday",
     "3": "wednesday",
     "4": "thursday",
     "5": "friday",
-    "6": "saturday",
+    "6": "saturday"
+};
+
+var upsDaysMapping = {
+    "1": "sunday",
+    "2": "monday",
+    "3": "tuesday",
+    "4": "wednesday",
+    "5": "thursday",
+    "6": "friday",
+    "7": "saturday"
 };
 
 const INPUT_STYLE = {
@@ -122,6 +132,9 @@ class DropLocations extends Component {
         selectedDropLocation: marker,
         locations: locations
       });
+      if (this.props.onMarkerClick) {
+        this.props.onMarkerClick(location);
+      }
     }
 
     refresh() { // Refresh the markers.
@@ -181,9 +194,22 @@ class DropLocations extends Component {
         var openingTimes = [];
         var adr = null;
         if (this.state.selectedDropLocation) {
+          var daysMapping = this.props.transporter === 'dhl' ? dhlDaysMapping : upsDaysMapping;
           for(var day in daysMapping) {
             var openingTime = this.state.selectedDropLocation.opening_times.filter(function(ot) { return ot.day === day })[0];
-            var hour = openingTime ? moment(openingTime.time_from, 'HH:mm').format('HH:mm') + ' - ' + moment(openingTime.time_to, 'HH:mm').format('HH:mm') : t('closed');
+            if (openingTime && openingTime.time_to && openingTime.time_from) {
+              var timeTo = moment(openingTime.time_to, 'HH:mm').format('H:mm');
+              var timeFrom = moment(openingTime.time_from, 'HH:mm').format('H:mm');
+              if (timeTo) {
+                timeTo = moment(openingTime.time_to, 'Hmm').format('HH:mm');
+              }
+
+              if (timeFrom) {
+                timeFrom = moment(openingTime.time_from, 'Hmm').format('HH:mm');
+              }
+            }
+
+            var hour = openingTime && openingTime.time_to && openingTime.time_from ? timeFrom + ' - ' + timeTo : t('closed');
             openingTimes.push((<tr><td>{t(daysMapping[day])}</td><td>{hour}</td></tr>));
           }
 

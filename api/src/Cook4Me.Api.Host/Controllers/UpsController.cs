@@ -30,6 +30,7 @@ namespace Cook4Me.Api.Host.Controllers
         public UpsController(IGetLocationsOperation getLocationsOperation, IGetRatingsOperation getRatingsOperation)
         {
             _getLocationsOperation = getLocationsOperation;
+            _getRatingsOperation = getRatingsOperation;
         }
 
         [HttpPost(Constants.RouteNames.ParcelShopLocations)]

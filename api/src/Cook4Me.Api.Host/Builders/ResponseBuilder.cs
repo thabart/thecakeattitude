@@ -547,9 +547,9 @@ namespace Cook4Me.Api.Host.Builders
             foreach(var dayOfWeek in standardHours.DaysOfWeek)
             {
                 var rec = new JObject();
-                rec.Add(Constants.DtoNames.DropLocationOpeningTime.TimeFrom, dayOfWeek.CloseHours);
+                rec.Add(Constants.DtoNames.DropLocationOpeningTime.TimeFrom, dayOfWeek.OpenHours);
                 rec.Add(Constants.DtoNames.DropLocationOpeningTime.Day, dayOfWeek.Day);
-                rec.Add(Constants.DtoNames.DropLocationOpeningTime.TimeTo, dayOfWeek.OpenHours);
+                rec.Add(Constants.DtoNames.DropLocationOpeningTime.TimeTo, dayOfWeek.CloseHours);
                 daysOfWeek.Add(rec);
             }
 
