@@ -143,6 +143,7 @@ class DropLocations extends Component {
       if (self.props.transporter === 'dhl') {
         DhlService.searchParcelShops({ country: currentAdr.country_code, query: currentAdr.locality}).then(function(adr) {
           var locations = adr['locations'];
+          locations.forEach(function(location) { location.isSelected = false; });
           self.setState({
             placeId: currentAdr.google_place_id,
             currentLocation: currentAdr.location,
@@ -198,13 +199,17 @@ class DropLocations extends Component {
           for(var day in daysMapping) {
             var openingTime = this.state.selectedDropLocation.opening_times.filter(function(ot) { return ot.day === day })[0];
             if (openingTime && openingTime.time_to && openingTime.time_from) {
-              var timeTo = moment(openingTime.time_to, 'HH:mm').format('H:mm');
-              var timeFrom = moment(openingTime.time_from, 'HH:mm').format('H:mm');
-              if (timeTo) {
+              var timeTo = null;
+              var timeFrom = null;
+              if (moment(openingTime.time_to, 'HH:mm').isValid()) {
+                timeTo = moment(openingTime.time_to, 'HH:mm').format('HH:mm');
+              } else {
                 timeTo = moment(openingTime.time_to, 'Hmm').format('HH:mm');
               }
 
-              if (timeFrom) {
+              if (moment(openingTime.time_from, 'HH:mm').isValid()) {
+                timeFrom = moment(openingTime.time_from, 'HH:mm').format('HH:mm');
+              } else {
                 timeFrom = moment(openingTime.time_from, 'Hmm').format('HH:mm');
               }
             }
@@ -213,7 +218,21 @@ class DropLocations extends Component {
             openingTimes.push((<tr><td>{t(daysMapping[day])}</td><td>{hour}</td></tr>));
           }
 
-          adr = this.state.selectedDropLocation.address.street + " , " + this.state.selectedDropLocation.address.number + " , " + this.state.selectedDropLocation.address.city;
+          var info = [];
+          var addr = this.state.selectedDropLocation.address;
+          if (addr.street) {
+            info.push(addr.street);
+          }
+
+          if (addr.number) {
+            info.push(addr.number);
+          }
+
+          if (addr.city) {
+            info.push(addr.city);
+          }
+
+          adr = info.join(',');
         }
 
         return (
@@ -225,7 +244,7 @@ class DropLocations extends Component {
                       <div className="row">
                         <div className="col-md-4">
                           <h5>{this.state.selectedDropLocation.name}</h5>
-                          <p>{adr}</p>
+                          <p style={{wordWrap: "break-word"}}>{adr}</p>
                         </div>
                         <div className="col-md-8">
                           <h5>{t('businessHours')}</h5>

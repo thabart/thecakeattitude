@@ -4,6 +4,7 @@ import { translate } from 'react-i18next';
 import { BasketStore } from '../stores/index';
 import { Address, DropLocations } from '../components/index';
 import { DhlService, ShopsService, UpsService, UserService } from '../services/index';
+import { ApplicationStore } from '../stores/index';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
 import Promise from 'bluebird';
@@ -14,16 +15,20 @@ class TransportMethods extends Component {
     this._order = null;
     this._shop = null;
     this._upsMarker = null;
+    this._dhlMarker = null;
+    this._buyer = null;
+    this._seller = null;
     this.next = this.next.bind(this);
     this.previous = this.previous.bind(this);
     this.selectTransportMethod = this.selectTransportMethod.bind(this);
     this.selectTransporter = this.selectTransporter.bind(this);
     this.selectParcelType = this.selectParcelType.bind(this);
-    this.selectRating = this.selectRating.bind(this);
+    this.selectDhlRating = this.selectDhlRating.bind(this);
     this.addressCorrect = this.addressCorrect.bind(this);
     this.refreshUpsRatings = this.refreshUpsRatings.bind(this);
     this.refreshDhlRatings = this.refreshDhlRatings.bind(this);
-    this.onMarkerClick = this.onMarkerClick.bind(this);
+    this.onUpsMarkerClick = this.onUpsMarkerClick.bind(this);
+    this.onDhlMarkerClick = this.onDhlMarkerClick.bind(this);
     this.state = {
       isLoading: false,
       transportMethod: 'manual',
@@ -33,7 +38,8 @@ class TransportMethods extends Component {
       isDhlRatingsLoading: false,
       isUpsLoading: false,
       estimatedPrice: 0,
-      dhlRatings: []
+      dhlRatings: [],
+      isNextBtnEnabled: true
     };
   }
 
@@ -49,11 +55,74 @@ class TransportMethods extends Component {
       var orders = BasketStore.getOrders();
       var order = orders.filter(function(o) { return o.id === selectedOrderId; })[0];
       order.transport_mode = this.state.transportMethod;
+      if (order.transport_mode === 'packet') {
+        var adr = this.refs.address.getWrappedInstance().getAddress();
+        var fromAdr = {
+          address_line: adr.street_address,
+          city: adr.locality,
+          postal_code: adr.postal_code,
+          country_code: adr.country_code
+        };
+        var toAdr = {
+          address_line: this._shop.street_address,
+          city: this._shop.locality,
+          postal_code: this._shop.postal_code,
+          country_code: this._shop.country,
+        };
+        var estimatedPrice = this.state.estimatedPrice;
+        var parcelShop = null;
+        if (this.state.transporter === 'dhl' && this.state.dhlRating.code === 'PS') {
+          var addressLine = [];
+          var dhlMarkerAdr = this._dhlMarker.address;
+          if (dhlMarkerAdr) {
+            if (dhlMarkerAdr.number) {
+              addressLine.push(dhlMarkerAdr.number);
+            }
+
+            if (dhlMarkerAdr.street) {
+              addressLine.push(dhlMarkerAdr.street);
+            }
+          }
+
+          parcelShop = {
+            id: this._dhlMarker.id,
+            name: this._dhlMarker.name,
+            address: {
+              address_line: addressLine.join(' '),
+              city: dhlMarkerAdr.city,
+              postal_code: dhlMarkerAdr.zip,
+              country_code: dhlMarkerAdr.country
+            }
+          };
+        } else if (this.state.transporter === 'ups') {
+          parcelShop = {
+            id: this._upsMarker.id,
+            name: this._upsMarker.name,
+            address: {
+              address_line: this._upsMarker.address.street,
+              city: this._upsMarker.address.city,
+              postal_code: this._upsMarker.address.zip,
+              country_code: this._upsMarker.address.country
+            }
+          };
+        }
+
+        order.package = {
+          from_address: fromAdr,
+          to_address: toAdr,
+          parcel_shop: parcelShop,
+          estimated_price: estimatedPrice
+        };
+      }
+
+      console.log(order);
+      /*
       AppDispatcher.dispatch({
         actionName: Constants.events.UPDATE_BASKET_INFORMATION_ACT,
         data: orders
       });
       this.props.onNext();
+      */
     }
   }
 
@@ -67,6 +136,7 @@ class TransportMethods extends Component {
       isDhlRatingsLoading: false,
       isUpsLoading: false,
       estimatedPrice: 0,
+      isNextBtnEnabled: transportMethod === 'manual'
     });
   }
 
@@ -79,7 +149,8 @@ class TransportMethods extends Component {
       dhlRatings: [],
       isDhlRatingsLoading: false,
       isUpsLoading: false,
-      estimatedPrice: 0
+      estimatedPrice: 0,
+      isNextBtnEnabled: false
     });
   }
 
@@ -100,18 +171,22 @@ class TransportMethods extends Component {
     this.refreshDhlRatings();
   }
 
-  selectRating(rating) { // Select the rating.
+  selectDhlRating(rating) { // Select the rating.
     this.setState({
       dhlRating: rating,
-      estimatedPrice: rating.price_with_tax
+      estimatedPrice: rating.price_with_tax,
+      isNextBtnEnabled: rating.code === 'DOOR'
     });
   }
 
   addressCorrect(b) { // Update the drop locations.
     if (!b || !this.refs.address) return;
     var adr = this.refs.address.getWrappedInstance().getAddress();
-    if (this.refs.dropLocation) this.refs.dropLocation.getWrappedInstance().setAddress(adr);
+    if (this.refs.dhlDropLocation) this.refs.dhlDropLocation.getWrappedInstance().setAddress(adr);
     if (this.refs.upsDropLocation) this.refs.upsDropLocation.getWrappedInstance().setAddress(adr);
+    this.setState({
+      isNextBtnEnabled: false
+    });
   }
 
   refreshUpsRatings() { // Refresh ups ratings.
@@ -155,51 +230,50 @@ class TransportMethods extends Component {
     };
 
     self.setState({
-      isUpsLoading: true
+      isUpsLoading: true,
+      isNextBtnEnabled: false
     });
-    Promise.all([ UserService.getPublicClaims(self._order.subject), UserService.getPublicClaims(self._shop.subject) ]).then(function(res) {
-      var buyerClaims = res[0]['claims'];
-      var sellerClaims = res[1]['claims'];
-      var toAdr = {
-        address_line: self._shop.street_address,
-        postal_code: self._shop.postal_code,
-        country_code: self._shop.country,
-        city: self._shop.locality
-      };
-      var request = {
-        alternate_delivery_address: {
-          name: self._upsMarker.name,
-          address: altAdr
-        },
-        shipper : {
-          name: buyerClaims.name,
-          address: fromAdr
-        },
-        ship_to: {
-          name: sellerClaims.name,
-          address: toAdr
-        },
-        ship_from: {
-          name: buyerClaims.name,
-          address: fromAdr
-        },
-        package: pkg
-      };
-      UpsService.searchRatings(request).then(function(r) {
-        self.setState({
-          isUpsLoading: false,
-          estimatedPrice: r.total_price
-        });
-      }).catch(function() {
-        self.setState({
-          isUpsLoading: false,
-          estimatedPrice: 0
-        });
+    const {t} = this.props;
+    var toAdr = {
+      address_line: self._shop.street_address,
+      postal_code: self._shop.postal_code,
+      country_code: self._shop.country,
+      city: self._shop.locality
+    };
+    var request = {
+      alternate_delivery_address: {
+        name: self._upsMarker.name,
+        address: altAdr
+      },
+      shipper : {
+        name: self._buyer.name,
+        address: fromAdr
+      },
+      ship_to: {
+        name: self._seller.name,
+        address: toAdr
+      },
+      ship_from: {
+        name: self._buyer.name,
+        address: fromAdr
+      },
+      package: pkg
+    };
+    UpsService.searchRatings(request).then(function(r) {
+      self.setState({
+        isUpsLoading: false,
+        estimatedPrice: r.total_price,
+        isNextBtnEnabled: true
       });
     }).catch(function() {
       self.setState({
         isUpsLoading: false,
         estimatedPrice: 0
+      });
+      ApplicationStore.sendMessage({
+          message: t('retrieveRatingError'),
+          level: 'error',
+          position: 'tr'
       });
     });
   }
@@ -207,9 +281,11 @@ class TransportMethods extends Component {
   refreshDhlRatings() { // Refresh dhl ratings
     var self = this;
     self.setState({
-      isDhlRatingsLoading: true
+      isDhlRatingsLoading: true,
+      isNextBtnEnabled: false
     });
     var adr = this.refs.address.getWrappedInstance().getAddress();
+    const {t} = this.props;
     DhlService.searchCapabalities({ parcel_type: self.state.parcelType, to_zip_code: adr.country_code }).then(function(r) {
       self.setState({
         isDhlRatingsLoading: false,
@@ -222,12 +298,24 @@ class TransportMethods extends Component {
         dhlRatings: [],
         dhlRating: null
       });
+      ApplicationStore.sendMessage({
+          message: t('retrieveRatingError'),
+          level: 'error',
+          position: 'tr'
+      });
     });
   }
 
-  onMarkerClick(location) { // Execute when the user clicks on the marker (UPS).
+  onUpsMarkerClick(location) { // Execute when the user clicks on the marker (UPS).
     this._upsMarker = location;
     this.refreshUpsRatings();
+  }
+
+  onDhlMarkerClick(location) { // Execute when the user clicks on the marker (DHL)
+    this._dhlMarker = location;
+    this.setState({
+      isNextBtnEnabled: true
+    });
   }
 
   render() { // Display the component.
@@ -238,7 +326,7 @@ class TransportMethods extends Component {
     if (this.state.dhlRatings) {
       this.state.dhlRatings.forEach(function(rating) {
         ratings.push((
-          <li className="list-group-item list-group-item-action" onClick={() => self.selectRating(rating)}>
+          <li className="list-group-item list-group-item-action" onClick={() => self.selectDhlRating(rating)}>
             { self.state.dhlRating === rating && (
                <div className="checkbox-container">
                    <i className="fa fa-check checkbox txt-info"/>
@@ -360,7 +448,7 @@ class TransportMethods extends Component {
                       { this.state.dhlRating && this.state.dhlRating.code === 'PS' && (
                         <section style={{marginTop: "10px"}}>
                           <h5>{t('selectParcelShop')}</h5>
-                          <DropLocations ref="dropLocation" transporter="dhl" address={currentAdr} />
+                          <DropLocations ref="dhlDropLocation" onMarkerClick={this.onDhlMarkerClick} transporter="dhl" address={currentAdr} />
                         </section>
                         ) }
                     </div>
@@ -368,7 +456,7 @@ class TransportMethods extends Component {
                   { /* Display UPS */ }
                   { this.state.transporter === 'ups' && this.state.isUpsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
                   { this.state.transporter === 'ups' && (
-                    <DropLocations ref="upsDropLocation" onMarkerClick={this.onMarkerClick} transporter="ups" address={currentAdr} />
+                    <DropLocations ref="upsDropLocation" onMarkerClick={this.onUpsMarkerClick} transporter="ups" address={currentAdr} />
                   )}
                   { /* Display total price */}
                   <section style={{marginTop: "10px"}}>
@@ -378,7 +466,7 @@ class TransportMethods extends Component {
               ) }
               <section className="row p-1">
                 <Button color="default" onClick={this.previous}>{t('previous')}</Button>
-                <Button color="default" onClick={this.next} style={{marginLeft:"5px"}}>{t('next')}</Button>
+                <Button color="default" onClick={this.next} style={{marginLeft:"5px"}} disabled={!this.state.isNextBtnEnabled}>{t('next')}</Button>
               </section>
             </div>
           </div>
@@ -400,18 +488,37 @@ class TransportMethods extends Component {
       estimatedPrice: 0,
       dhlRatings: []
     });
+    const {t} = this.props;
     var orders = BasketStore.getOrders();
     var selectedOrderId = BasketStore.getSelectedOrderId();
     var order = orders.filter(function(o) { return o.id === selectedOrderId })[0];
     self._order = order;
     ShopsService.get(order.shop_id).then(function(shop) {
       self._shop = shop['_embedded'];
-      self.setState({
-        isLoading: false
+      Promise.all([ UserService.getPublicClaims(self._order.subject), UserService.getPublicClaims(self._shop.subject) ]).then(function(res) {
+        self._buyer = res[0]['claims'];
+        self._seller = res[1]['claims'];
+        self.setState({
+          isLoading: false
+        });
+      }).catch(function() {
+        self.setState({
+          isLoading: false
+        });
+        ApplicationStore.sendMessage({
+            message: t('retrieveUserInformationError'),
+            level: 'error',
+            position: 'tr'
+        });
       });
     }).catch(function() {
       self.setState({
         isLoading: false
+      });
+      ApplicationStore.sendMessage({
+          message: t('shopDoesntExistError'),
+          level: 'error',
+          position: 'tr'
       });
     });
   }

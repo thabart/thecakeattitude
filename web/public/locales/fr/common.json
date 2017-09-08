@@ -396,5 +396,7 @@
   "noRating": "Aucune offre",
   "selectParcelShop": "Sélectionner un point d'enlèvement",
   "estimatedPrice": "Prix estimé € {0}",
-  "destinationAddress": "Adresse de destination"
+  "destinationAddress": "Adresse de destination",
+  "retrieveRatingError": "Une erreur est survenue durant le calcul des frais, veuillez prendre contact avec l'administrateur",
+  "retrieveUserInformationError": "Une erreur est survenue durant le rapatriement des informations de l'utilisateur, veuillez prendre contact avec l'administrateur"
 }

@@ -186,7 +186,8 @@ namespace Ups.Client
                     },
                     ShipmentIndicationType = new TypeParameter
                     {
-                        Code = "02"
+                        Code = "02",
+                        Description = "UPS Access Point™ Delivery"
                     },
                     Package = new Package
                     {
