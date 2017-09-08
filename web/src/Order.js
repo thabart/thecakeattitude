@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { OrdersService, ProductsService, ShopsService, UserService } from './services/index';
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
 import { ApplicationStore } from './stores/index';
@@ -9,7 +10,26 @@ import AppDispatcher from './appDispatcher';
 import Constants from '../Constants';
 import Promise from "bluebird";
 
-const defaultCount = 2;
+const defaultCount = 5;
+
+const markerOpts = {
+    url: '/images/shop-pin.png',
+    scaledSize: new window.google.maps.Size(34, 38)
+};
+
+const GettingStartedGoogleMap = withGoogleMap(props => {
+    return (
+        <GoogleMap
+            center={props.center}
+            defaultZoom={12}
+            defaultOptions={{fullscreenControl: false}}
+        >
+            <Marker
+                icon={markerOpts}
+                position={props.center}/>
+        </GoogleMap>
+    );
+});
 
 class Order extends Component {
     constructor(props) {
@@ -209,10 +229,35 @@ class Order extends Component {
                       <span>{t('chooseHandToHandTransport')}</span>
                     </div>
                   ) }
+                  { this.state.order.transport_mode === 'packet' && (
+                    <div>
+                      <p>{t('choosePackageTransport').replace('{0}', t(this.state.order.package.transporter))}</p>
+                      <h5>{t('estimatedPrice').replace('{0}', this.state.order.package.estimated_price)}</h5>
+                    </div>
+                  )}
+                  { this.state.order.transport_mode === 'packet' && !this.state.order.package.parcel_shop && (
+                    <h5>{t('deliveredAtHome')}</h5>
+                  )}
+                  { this.state.order.transport_mode === 'packet' && this.state.order.package.parcel_shop && (
+                    <div>
+                      <h5>{t('parcelShop')}</h5>
+                      <div style={{width: "100%", height: "200px"}}>
+                          <GettingStartedGoogleMap
+                              center={this.state.order.package.parcel_shop.location}
+                              containerElement={
+                                  <div style={{height: `100%`}}/>
+                              }
+                              mapElement={
+                                  <div style={{height: `100%`}}/>
+                              }>
+                          </GettingStartedGoogleMap>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               <div style={{marginTop: "10px"}}>
-                <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)}</h4>
+                <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)} {this.state.order.transport_mode === 'packet' && (<span className="badge badge-default">{t('additionalTransportFeeds').replace('{0}', this.state.order.package.estimated_price)}</span>)}</h4>
               </div>
               <div style={{marginTop: "10px"}}>
                 { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (

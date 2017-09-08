@@ -307,6 +307,96 @@ namespace Cook4Me.Api.Host.Builders
                 Status = st,
                 TransportMode = tm
             };
+            AddOrderParcelCommand orderParcel = null;
+            var orderParcelObj = jObj.GetValue(Constants.DtoNames.OrderNames.Package) as JObject;
+            if (orderParcelObj != null)
+            {
+                orderParcel = GetAddOrderParcel(orderParcelObj);
+            }
+
+            result.OrderParcel = orderParcel;
+            return result;
+        }
+
+        public AddOrderParcelCommand GetAddOrderParcel(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var transporter = jObj.TryGetString(Constants.DtoNames.ParcelNames.Transporter);
+            Transporters transporterEnum = Transporters.None;
+            switch (transporter)
+            {
+                case "ups":
+                    transporterEnum = Transporters.Ups;
+                    break;
+                case "dhl":
+                    transporterEnum = Transporters.Dhl;
+                    break;
+            }
+
+            var result = new AddOrderParcelCommand
+            {
+                EstimatedPrice = jObj.TryGetDouble(Constants.DtoNames.ParcelNames.EstimatedPrice),
+                Transporter = transporterEnum
+            };
+
+            var buyerObj = jObj.GetValue(Constants.DtoNames.ParcelNames.Buyer) as JObject;
+            var sellerObj = jObj.GetValue(Constants.DtoNames.ParcelNames.Seller) as JObject;
+            var parcelShopObj = jObj.GetValue(Constants.DtoNames.ParcelNames.ParcelShop) as JObject;
+            if (buyerObj != null)
+            {
+                result.BuyerName = buyerObj.TryGetString(Constants.DtoNames.ParcelActorNames.Name);
+                var buyerAdrObj = buyerObj.GetValue(Constants.DtoNames.ParcelActorNames.Address) as JObject;
+                if (buyerAdrObj != null)
+                {
+                    result.BuyerAddressLine = buyerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.AddressLine);
+                    result.BuyerCity = buyerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.City);
+                    result.BuyerCountryCode = buyerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.CountryCode);
+                    result.BuyerAddressLine = buyerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.AddressLine);
+                    result.BuyerPostalCode = buyerAdrObj.TryGetInt(Constants.DtoNames.ParcelAddressNames.PostalCode);
+                }
+            }
+
+            if (sellerObj != null)
+            {
+                result.SellerName = sellerObj.TryGetString(Constants.DtoNames.ParcelActorNames.Name);
+                var sellerAdrObj = sellerObj.GetValue(Constants.DtoNames.ParcelActorNames.Address) as JObject;
+                if (sellerAdrObj != null)
+                {
+                    result.SellerAddressLine = sellerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.AddressLine);
+                    result.SellerCity = sellerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.City);
+                    result.SellerCountryCode = sellerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.CountryCode);
+                    result.SellerAddressLine = sellerAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.AddressLine);
+                    result.SellerPostalCode = sellerAdrObj.TryGetInt(Constants.DtoNames.ParcelAddressNames.PostalCode);
+                }
+            }
+
+            if (parcelShopObj != null)
+            {
+                result.ParcelShopId = parcelShopObj.TryGetString(Constants.DtoNames.ParcelShopNames.Id);
+                result.ParcelShopName = parcelShopObj.TryGetString(Constants.DtoNames.ParcelShopNames.Name);
+                var parcelShopLocation = parcelShopObj.GetValue(Constants.DtoNames.ParcelShopNames.Location) as JObject;
+                if (parcelShopLocation != null)
+                {
+                    var location = GetLocation(parcelShopLocation);
+                    result.ParcelShopLatitude = location.Latitude;
+                    result.ParcelShopLongitude = location.Longitude;
+                }
+
+                var parcelAdrObj = parcelShopObj.GetValue(Constants.DtoNames.ParcelActorNames.Address) as JObject;
+                if (parcelAdrObj != null)
+                {
+                    result.ParcelShopAddressLine = parcelAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.AddressLine);
+                    result.ParcelShopCity = parcelAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.City);
+                    result.ParcelShopCountryCode = parcelAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.CountryCode);
+                    result.ParcelShopAddressLine = parcelAdrObj.TryGetString(Constants.DtoNames.ParcelAddressNames.AddressLine);
+                    result.ParcelShopPostalCode = parcelAdrObj.TryGetInt(Constants.DtoNames.ParcelAddressNames.PostalCode);
+                }
+            }
+
             return result;
         }
 

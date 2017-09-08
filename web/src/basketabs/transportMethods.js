@@ -110,8 +110,14 @@ class TransportMethods extends Component {
         }
 
         order.package = {
-          from_address: fromAdr,
-          to_address: toAdr,
+          buyer: {
+            name: this._buyer.name,
+            address: fromAdr
+          },
+          seller: {
+            name: this._seller.name,
+            address: toAdr
+          },
           parcel_shop: parcelShop,
           estimated_price: estimatedPrice,
           transporter: this.state.transporter

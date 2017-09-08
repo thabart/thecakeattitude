@@ -129,6 +129,11 @@ namespace Cook4Me.Api.Host.Validators
                 }
             }
 
+            if (order.Status == OrderAggregateStatus.Confirmed)
+            {
+                // TODO : Check the Parcel.
+            }
+
             return new UpdateOrderValidationResult(record);
         }
     }

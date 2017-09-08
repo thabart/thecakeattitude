@@ -221,6 +221,7 @@ namespace Cook4Me.Api.Host
                 public const string Lines = "lines";
                 public const string ShopId = "shop_id";
                 public const string TransportMode = "transport_mode";
+                public const string Package = "package";
             }
 
             public static class OrderLineNames
@@ -480,6 +481,37 @@ namespace Cook4Me.Api.Host
                 public const string Orders = "orders";
                 public const string Tag = "tag";
                 public const string ShopCategoryIds = "shop_category_ids";
+            }
+
+            public static class ParcelNames
+            {
+                public const string Transporter = "transporter";
+                public const string EstimatedPrice = "estimated_price";
+                public const string Buyer = "buyer";
+                public const string Seller = "seller";
+                public const string ParcelShop = "parcel_shop";
+            }
+
+            public static class ParcelActorNames
+            {
+                public const string Name = "name";
+                public const string Address = "address";
+            }
+
+            public static class ParcelShopNames
+            {
+                public const string Name = "name";
+                public const string Id = "id";
+                public const string Address = "address";
+                public const string Location = "location";
+            }
+
+            public static class ParcelAddressNames
+            {
+                public const string AddressLine = "address_line";
+                public const string City = "city";
+                public const string CountryCode = "country_code";
+                public const string PostalCode = "postal_code";
             }
 
             public static class Comment

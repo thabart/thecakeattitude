@@ -16,7 +16,6 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
-using System;
 using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Commands.Orders
@@ -34,5 +33,6 @@ namespace Cook4Me.Api.Core.Commands.Orders
         public OrderAggregateStatus Status { get; set; }
         public OrderTransportModes TransportMode { get; set; }
         public IEnumerable<UpdateOrderLine> OrderLines { get; set; }
+        public AddOrderParcelCommand OrderParcel { get; set; }
     }
 }

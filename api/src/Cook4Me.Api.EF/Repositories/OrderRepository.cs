@@ -46,6 +46,7 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             IQueryable<Order> orders = _context.Orders
+                .Include(c => c.OrderParcel)
                 .Include(p => p.OrderLines)
                 .Include(p => p.Shop);
             var result = await orders.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
@@ -125,6 +126,34 @@ namespace Cook4Me.Api.EF.Repositories
                     record.UpdateDateTime = orderAggregate.UpdateDateTime;
                     record.ShopId = orderAggregate.ShopId;
                     record.TransportMode = (int)orderAggregate.TransportMode;
+                    if (orderAggregate.OrderParcel != null)
+                    {
+                        record.OrderParcel = new OrderParcel
+                        {
+                            BuyerAddressLine = orderAggregate.OrderParcel.BuyerAddressLine,
+                            BuyerCity = orderAggregate.OrderParcel.BuyerCity,
+                            BuyerCountryCode = orderAggregate.OrderParcel.BuyerCountryCode,
+                            BuyerName = orderAggregate.OrderParcel.BuyerName,
+                            BuyerPostalCode = orderAggregate.OrderParcel.BuyerPostalCode,
+                            EstimatedPrice = orderAggregate.OrderParcel.EstimatedPrice,
+                            Id = orderAggregate.OrderParcel.Id,
+                            OrderId = record.Id,
+                            ParcelShopAddressLine = orderAggregate.OrderParcel.ParcelShopAddressLine,
+                            ParcelShopCity = orderAggregate.OrderParcel.ParcelShopCity,
+                            ParcelShopCountryCode = orderAggregate.OrderParcel.ParcelShopCountryCode,
+                            ParcelShopId = orderAggregate.OrderParcel.ParcelShopId,
+                            ParcelShopLatitude = orderAggregate.OrderParcel.ParcelShopLatitude,
+                            ParcelShopLongitude = orderAggregate.OrderParcel.ParcelShopLongitude,
+                            ParcelShopName = orderAggregate.OrderParcel.ParcelShopName,
+                            ParcelShopPostalCode = orderAggregate.OrderParcel.ParcelShopPostalCode,
+                            SellerAddressLine = orderAggregate.OrderParcel.SellerAddressLine,
+                            SellerCity = orderAggregate.OrderParcel.SellerCity,
+                            SellerCountryCode = orderAggregate.OrderParcel.SellerCountryCode,
+                            SellerName = orderAggregate.OrderParcel.SellerName,
+                            SellerPostalCode = orderAggregate.OrderParcel.SellerPostalCode,
+                            Transporter = (int)orderAggregate.OrderParcel.Transporter
+                        };
+                    }
                     var orderLines = orderAggregate.OrderLines == null ? new List<OrderAggregateLine>() : orderAggregate.OrderLines;
                     var orderIds = orderLines.Select(c => c.Id);
                     var orderLinesToUpdate = record.OrderLines.Where(c => orderIds.Contains(c.Id));
@@ -176,7 +205,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Order> orders = _context.Orders.Include(c => c.OrderLines).Include(c => c.Shop);
+            IQueryable<Models.Order> orders = _context.Orders.Include(c => c.OrderParcel).Include(c => c.OrderLines).Include(c => c.Shop);
             if (parameter.Clients != null && parameter.Clients.Any())
             {
                 orders = orders.Where(s => parameter.Clients.Contains(s.Subject));

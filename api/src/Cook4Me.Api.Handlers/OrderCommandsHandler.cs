@@ -74,6 +74,35 @@ namespace Cook4Me.Api.Handlers
             else if (order.Status == OrderAggregateStatus.Confirmed)
             {
                 order.TransportMode = message.TransportMode;
+                // TODO : Order parcel
+                if (message.OrderParcel != null)
+                {
+                    order.OrderParcel = new OrderAggregateParcel
+                    {
+                        BuyerAddressLine = message.OrderParcel.BuyerAddressLine,
+                        BuyerCity = message.OrderParcel.BuyerCity,
+                        BuyerCountryCode = message.OrderParcel.BuyerCountryCode,
+                        BuyerName = message.OrderParcel.BuyerName,
+                        BuyerPostalCode = message.OrderParcel.BuyerPostalCode,
+                        EstimatedPrice = message.OrderParcel.EstimatedPrice,
+                        Id = Guid.NewGuid().ToString(),
+                        OrderId = message.Id,
+                        ParcelShopAddressLine = message.OrderParcel.ParcelShopAddressLine,
+                        ParcelShopCity = message.OrderParcel.ParcelShopCity,
+                        ParcelShopCountryCode = message.OrderParcel.ParcelShopCountryCode,
+                        ParcelShopId = message.OrderParcel.ParcelShopId,
+                        ParcelShopLatitude = message.OrderParcel.ParcelShopLatitude,
+                        ParcelShopLongitude = message.OrderParcel.ParcelShopLongitude,
+                        ParcelShopName = message.OrderParcel.ParcelShopName,
+                        ParcelShopPostalCode = message.OrderParcel.ParcelShopPostalCode,
+                        SellerAddressLine = message.OrderParcel.SellerAddressLine,
+                        SellerCity = message.OrderParcel.SellerCity,
+                        SellerCountryCode = message.OrderParcel.SellerCountryCode,
+                        SellerName = message.OrderParcel.SellerName,
+                        SellerPostalCode = message.OrderParcel.SellerPostalCode,
+                        Transporter = message.OrderParcel.Transporter
+                    };
+                }
                 await _orderPriceCalculatorHelper.Update(order);
                 await _orderRepository.Update(order);
                 if (order.OrderLines != null)

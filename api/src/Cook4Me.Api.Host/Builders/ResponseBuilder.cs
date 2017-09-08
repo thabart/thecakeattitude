@@ -37,6 +37,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderParcel(OrderAggregateParcel orderParcel);
         JObject GetUpsRatings(RatingServiceSelectionResponse response);
         JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities);
         JArray GetCapabality(DhlCapabality capabality);
@@ -383,7 +384,75 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderNames.Status, status);
             result.Add(Constants.DtoNames.OrderNames.TransportMode, transportMode);
             result.Add(Constants.DtoNames.OrderNames.Lines, arr);
+            if (order.OrderParcel != null)
+            {
+                result.Add(Constants.DtoNames.OrderNames.Package, GetOrderParcel(order.OrderParcel));
+            }
+
             return result;
+        }
+
+        public JObject GetOrderParcel(OrderAggregateParcel orderParcel)
+        {
+            if (orderParcel == null)
+            {
+                throw new ArgumentNullException(nameof(orderParcel));
+            }
+
+            var jObj = new JObject();
+
+            var buyerObj = new JObject();
+            var adrBuyerObj = new JObject();
+            buyerObj.Add(Constants.DtoNames.ParcelActorNames.Name, orderParcel.BuyerName);
+            buyerObj.Add(Constants.DtoNames.ParcelActorNames.Address, adrBuyerObj);
+            adrBuyerObj.Add(Constants.DtoNames.ParcelAddressNames.AddressLine, orderParcel.BuyerAddressLine);
+            adrBuyerObj.Add(Constants.DtoNames.ParcelAddressNames.City, orderParcel.BuyerCity);
+            adrBuyerObj.Add(Constants.DtoNames.ParcelAddressNames.PostalCode, orderParcel.BuyerPostalCode);
+            adrBuyerObj.Add(Constants.DtoNames.ParcelAddressNames.CountryCode, orderParcel.BuyerCountryCode);
+            
+            var sellerObj = new JObject();
+            var adrSellerObj = new JObject();
+            sellerObj.Add(Constants.DtoNames.ParcelActorNames.Name, orderParcel.SellerName);
+            sellerObj.Add(Constants.DtoNames.ParcelActorNames.Address, adrSellerObj);
+            adrSellerObj.Add(Constants.DtoNames.ParcelAddressNames.AddressLine, orderParcel.SellerAddressLine);
+            adrSellerObj.Add(Constants.DtoNames.ParcelAddressNames.City, orderParcel.SellerCity);
+            adrSellerObj.Add(Constants.DtoNames.ParcelAddressNames.PostalCode, orderParcel.SellerPostalCode);
+            adrSellerObj.Add(Constants.DtoNames.ParcelAddressNames.CountryCode, orderParcel.SellerCountryCode);
+
+            var parcelShop = new JObject();
+            var adrParcelShop = new JObject();
+            var parcelShopLocation = new JObject();
+            parcelShop.Add(Constants.DtoNames.ParcelShopNames.Id, orderParcel.ParcelShopId);
+            parcelShop.Add(Constants.DtoNames.ParcelShopNames.Name, orderParcel.ParcelShopName);
+            parcelShopLocation.Add(Constants.DtoNames.Location.Latitude, orderParcel.ParcelShopLatitude);
+            parcelShopLocation.Add(Constants.DtoNames.Location.Longitude, orderParcel.ParcelShopLongitude);
+            adrParcelShop.Add(Constants.DtoNames.ParcelAddressNames.AddressLine, orderParcel.ParcelShopAddressLine);
+            adrParcelShop.Add(Constants.DtoNames.ParcelAddressNames.City, orderParcel.ParcelShopCity);
+            adrParcelShop.Add(Constants.DtoNames.ParcelAddressNames.PostalCode, orderParcel.ParcelShopPostalCode);
+            adrParcelShop.Add(Constants.DtoNames.ParcelAddressNames.CountryCode, orderParcel.ParcelShopCountryCode);
+            parcelShop.Add(Constants.DtoNames.ParcelShopNames.Location, parcelShopLocation);
+
+            jObj.Add(Constants.DtoNames.ParcelNames.Buyer, buyerObj);
+            jObj.Add(Constants.DtoNames.ParcelNames.Seller, sellerObj);
+            jObj.Add(Constants.DtoNames.ParcelNames.EstimatedPrice, orderParcel.EstimatedPrice);
+            if (orderParcel.Transporter != Transporters.None)
+            {
+                string transporter = null;
+                switch(orderParcel.Transporter)
+                {
+                    case Transporters.Dhl:
+                        transporter = "dhl";
+                        break;
+                    case Transporters.Ups:
+                        transporter = "ups";
+                        break;
+                }
+
+                jObj.Add(Constants.DtoNames.ParcelNames.Transporter, transporter);
+            }
+
+            jObj.Add(Constants.DtoNames.ParcelNames.ParcelShop, parcelShop);
+            return jObj;
         }
 
         public JObject GetOrderLine(OrderAggregateLine orderLine)
