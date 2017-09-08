@@ -391,12 +391,16 @@
   "yourAddress": "Votre adresse",
   "chooseTransporter": "Choisir une compagnie de transport",
   "ups": "UPS",
-  "dhlParcel": "DHL PARCEL",
+  "dhl": "DHL PARCEL",
   "chooseTheoricalPacketSize": "Choisir une taille de paquet théorique",
   "noRating": "Aucune offre",
   "selectParcelShop": "Sélectionner un point d'enlèvement",
   "estimatedPrice": "Prix estimé € {0}",
   "destinationAddress": "Adresse de destination",
   "retrieveRatingError": "Une erreur est survenue durant le calcul des frais, veuillez prendre contact avec l'administrateur",
-  "retrieveUserInformationError": "Une erreur est survenue durant le rapatriement des informations de l'utilisateur, veuillez prendre contact avec l'administrateur"
+  "retrieveUserInformationError": "Une erreur est survenue durant le rapatriement des informations de l'utilisateur, veuillez prendre contact avec l'administrateur",
+  "choosePackageTransport": "Vous avez choisi de recevoir votre paquet par {0}.",
+  "additionalTransportFeeds": "+ € {0} (transport)",
+  "deliveredAtHome": "Livré à domicile",
+  "parcelShop": "Point de retrait"
 }

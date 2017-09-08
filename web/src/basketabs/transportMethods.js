@@ -87,6 +87,7 @@ class TransportMethods extends Component {
           parcelShop = {
             id: this._dhlMarker.id,
             name: this._dhlMarker.name,
+            location: this._dhlMarker.location,
             address: {
               address_line: addressLine.join(' '),
               city: dhlMarkerAdr.city,
@@ -98,6 +99,7 @@ class TransportMethods extends Component {
           parcelShop = {
             id: this._upsMarker.id,
             name: this._upsMarker.name,
+            location: this._upsMarker.location,
             address: {
               address_line: this._upsMarker.address.street,
               city: this._upsMarker.address.city,
@@ -111,18 +113,15 @@ class TransportMethods extends Component {
           from_address: fromAdr,
           to_address: toAdr,
           parcel_shop: parcelShop,
-          estimated_price: estimatedPrice
+          estimated_price: estimatedPrice,
+          transporter: this.state.transporter
         };
       }
-
-      console.log(order);
-      /*
       AppDispatcher.dispatch({
         actionName: Constants.events.UPDATE_BASKET_INFORMATION_ACT,
         data: orders
       });
       this.props.onNext();
-      */
     }
   }
 
@@ -132,6 +131,7 @@ class TransportMethods extends Component {
       transportMethod: transportMethod,
       parcelType: null,
       dhlRating: null,
+      transporter: null,
       dhlRatings: [],
       isDhlRatingsLoading: false,
       isUpsLoading: false,
@@ -399,7 +399,7 @@ class TransportMethods extends Component {
                     <div className="col-md-3 offset-md-3 text-center" onClick={() => self.selectTransporter('dhl') }>
                       <div className={this.state.transporter === 'dhl' ? 'choice active' : 'choice'}  style={{height: "140px"}}>
                         <div style={{height: "100px"}}><img src="/images/DHL.png" width="100" /></div>
-                        <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>{t('dhlParcel')}</a></h3>
+                        <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>{t('dhl')}</a></h3>
                       </div>
                     </div>
                   </div>

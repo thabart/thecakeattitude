@@ -1,11 +1,31 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { BasketStore } from '../stores/index';
+import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { ProductsService } from '../services/index';
 import { Button } from 'reactstrap';
 import { NavLink } from "react-router-dom";
 
 const defaultCount = 5;
+
+const markerOpts = {
+    url: '/images/shop-pin.png',
+    scaledSize: new window.google.maps.Size(34, 38)
+};
+
+const GettingStartedGoogleMap = withGoogleMap(props => {
+    return (
+        <GoogleMap
+            center={props.center}
+            defaultZoom={12}
+            defaultOptions={{fullscreenControl: false}}
+        >
+            <Marker
+                icon={markerOpts}
+                position={props.center}/>
+        </GoogleMap>
+    );
+});
 
 class Summary extends Component {
   constructor(props) {
@@ -152,10 +172,35 @@ class Summary extends Component {
               </div>
               <div className="col-md-4">
                 {this.state.order.transport_mode === 'manual' && (<span>{t('chooseHandToHandTransport')}</span>)}
+                {this.state.order.transport_mode === 'packet' && (
+                  <div>
+                    <p>{t('choosePackageTransport').replace('{0}', t(this.state.order.package.transporter))}</p>
+                    <h5>{t('estimatedPrice').replace('{0}', this.state.order.package.estimated_price)}</h5>
+                  </div>
+                )}
+                { this.state.order.transport_mode === 'packet' && !this.state.order.package.parcel_shop && (
+                  <h5>{t('deliveredAtHome')}</h5>
+                )}
+                { this.state.order.transport_mode === 'packet' && this.state.order.package.parcel_shop && (
+                  <div>
+                    <h5>{t('parcelShop')}</h5>
+                    <div style={{width: "100%", height: "200px"}}>
+                        <GettingStartedGoogleMap
+                            center={this.state.order.package.parcel_shop.location}
+                            containerElement={
+                                <div style={{height: `100%`}}/>
+                            }
+                            mapElement={
+                                <div style={{height: `100%`}}/>
+                            }>
+                        </GettingStartedGoogleMap>
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
             <section style={{marginTop: "10px"}}>
-              <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)}</h4>
+              <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)} {this.state.order.transport_mode === 'packet' && (<span className="badge badge-default">{t('additionalTransportFeeds').replace('{0}', this.state.order.package.estimated_price)}</span>)}</h4>
             </section>
             <section style={{marginTop: "10px"}}>
               <Button color="default" onClick={this.previous} >{t('previous')}</Button>
