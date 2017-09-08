@@ -235,10 +235,10 @@ class Order extends Component {
                       <h5>{t('estimatedPrice').replace('{0}', this.state.order.package.estimated_price)}</h5>
                     </div>
                   )}
-                  { this.state.order.transport_mode === 'packet' && !this.state.order.package.parcel_shop && (
+                  { (this.state.order.transport_mode === 'packet' && (!this.state.order.package.parcel_shop || !this.state.order.package.parcel_shop.id)) && (
                     <h5>{t('deliveredAtHome')}</h5>
                   )}
-                  { this.state.order.transport_mode === 'packet' && this.state.order.package.parcel_shop && (
+                  { (this.state.order.transport_mode === 'packet' && (this.state.order.package.parcel_shop && this.state.order.package.parcel_shop.id)) && (
                     <div>
                       <h5>{t('parcelShop')}</h5>
                       <div style={{width: "100%", height: "200px"}}>
