@@ -116,5 +116,78 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 }
             });
         }
+
+        [Fact]
+        public async Task GetShip()
+        {
+            var httpClientFactory = new HttpClientFactory();
+            var upsClient = new UpsClient(httpClientFactory);
+            var tmp = await upsClient.GetShip(new ShipParameter
+            {
+                Credentials = new UpsCredentials
+                {
+                    LicenseNumber = _accessLicenseNumber,
+                    Password = _password,
+                    UserName = _userName
+                },
+                AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
+                {
+                    Name = "WOLU-PRESS",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "RUE EMILE VANDERVELD 39",
+                        City = "Bruxelles",
+                        PostalCode = "1200",
+                        Country = "BE"
+                    }
+                },
+                Shipper = new UpsShipperParameter
+                {
+                    Name = "Habart Thierry",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "10 avenue des croix du feu",
+                        City = "Bruxelles",
+                        PostalCode = "1020",
+                        Country = "BE"
+                    }
+                },
+                ShipFrom = new UpsShipParameter
+                {
+                    Name = "Habart Thierry",
+                    AttentionName = "Habart Thierry",
+                    CompanyName = "Habart Thierry",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "10 avenue des croix du feu",
+                        City = "Bruxelles",
+                        PostalCode = "1020",
+                        Country = "BE"
+                    }
+                },
+                ShipTo = new UpsShipParameter
+                {
+                    Name = "David Donab",
+                    AttentionName = "David Donab.",
+                    CompanyName = "David Donab.",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "rue solleveld 20",
+                        City = "Bruxelles",
+                        PostalCode = "1200",
+                        Country = "BE"
+                    }
+                },
+                Package = new UpsPackageParameter
+                {
+                    Length = 5,
+                    Width = 4,
+                    Height = 3,
+                    Weight = 1
+                },
+                EmailAddress = "habarthierry@hotmail.fr"
+            });
+            var res = "";
+        }
     }
 }

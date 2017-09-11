@@ -16,9 +16,8 @@
 
 using System.Xml.Serialization;
 using Ups.Client.Common;
-using Ups.Client.Params;
 
-namespace Ups.Client.Requests.Rating
+namespace Ups.Client.Common
 {
     public class Shipment
     {
@@ -30,11 +29,15 @@ namespace Ups.Client.Requests.Rating
         public Ship ShipTo { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.ShipFrom)]
         public Ship ShipFrom { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.PaymentInformation)]
+        public PaymentInformation PaymentInformation { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.Service)]
         public TypeParameter Service { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.ShipmentIndicationType)]
         public TypeParameter ShipmentIndicationType { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.Package)]
         public Package Package { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentNames.ShipmentServiceOptions)]
+        public ShipmentServiceOptions ShipmentServiceOptions { get; set; }
     }
 }

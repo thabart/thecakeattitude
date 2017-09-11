@@ -32,7 +32,6 @@ https://onlinetools.ups.com/ups.app/xml/ShipConfirm
     <Shipper>
       <Name>Shipper Name</Name>
       <PhoneNumber>1234567890</PhoneNumber>
-      <ShipperNumber>98FF76</ShipperNumber>
 	  <TaxIdentificationNumber>123456</TaxIdentificationNumber>
       <Address>
     	<AddressLine1>223 avenue des croix du feu</AddressLine1>
@@ -66,12 +65,11 @@ https://onlinetools.ups.com/ups.app/xml/ShipConfirm
       </Address>
     </ShipFrom>
     <PaymentInformation>
-      <ShipmentCharge>
-		<Type>01</Type>
-		<BillShipper>
-			<AlternatePaymentMethod>01</AlternatePaymentMethod>
-		</BillShipper>
-	  </ShipmentCharge>
+    	<Prepaid>
+			<BillShipper>
+				<AlternatePaymentMethod>01</AlternatePaymentMethod>
+			</BillShipper>
+		</Prepaid>
     </PaymentInformation>
     <Service>
       <Code>070</Code>

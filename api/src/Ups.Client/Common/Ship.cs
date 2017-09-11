@@ -17,13 +17,17 @@
 using System.Xml.Serialization;
 using Ups.Client.Common;
 
-namespace Ups.Client.Requests.Rating
+namespace Ups.Client.Common
 {
-    public class RatingServiceSelectionRequest
+    public class Ship
     {
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Request)]
-        public RatingServiceSelectionRequestBody Request { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Shipment)]
-        public Shipment Shipment { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipNames.Name)]
+        public string Name { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipNames.AttentionName)]
+        public string AttentionName { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipNames.CompanyName)]
+        public string CompanyName { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipNames.Address)]
+        public Address Address { get; set; }
     }
 }

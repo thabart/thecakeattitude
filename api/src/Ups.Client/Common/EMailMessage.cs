@@ -15,15 +15,12 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
 
-namespace Ups.Client.Params.Shipment
+namespace Ups.Client.Common
 {
-    public class ShipmentRequest
+    public class EMailMessage
     {
-        [XmlElement(ElementName = Constants.DtoNames.ShipmentRequestNames.Security)]
-        public UpsSecurity Security { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.ShipmentRequestNames.Body)]
-        public ShipmentRequestBody Body { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.EMailMessageNames.EMailAddress)]
+        public string EMailAddress { get; set; }
     }
 }

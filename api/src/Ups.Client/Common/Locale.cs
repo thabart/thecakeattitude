@@ -15,15 +15,14 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
 
-namespace Ups.Client.Requests.Rating
+namespace Ups.Client.Common
 {
-    public class Ship
+    public class Locale
     {
-        [XmlElement(ElementName = Constants.DtoNames.ShipperNames.Name)]
-        public string Name { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.ShipperNames.Address)]
-        public Address Address { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocaleNames.Language)]
+        public string Language { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LocaleNames.Dialect)]
+        public string Dialect { get; set; }
     }
 }

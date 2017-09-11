@@ -16,11 +16,11 @@
 
 using System.Xml.Serialization;
 
-namespace Ups.Client.Params.Shipment
+namespace Ups.Client.Common
 {
-    public class ShipmentRequestBody
+    public class Prepaid
     {
-        [XmlElement(ElementName = Constants.DtoNames.ShipmentRequestBodyNames.Request)]
-        public RequestType Request { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PrepaidNames.BillShipper)]
+        public BillShipper BillShipper { get; set; }
     }
 }

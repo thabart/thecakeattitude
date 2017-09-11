@@ -15,15 +15,16 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
 
-namespace Ups.Client.Requests.Rating
+namespace Ups.Client.Common
 {
-    public class RatingServiceSelectionRequest
+    public class BillShipper
     {
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Request)]
-        public RatingServiceSelectionRequestBody Request { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Shipment)]
-        public Shipment Shipment { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.BillShipperNames.AccountNumber)]
+        public string AccountNumber { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.BillShipperNames.CreditCard)]
+        public CreditCard CreditCard { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.BillShipperNames.AlternatePaymentMethod)]
+        public string AlternatePaymentMethod { get; set; }
     }
 }

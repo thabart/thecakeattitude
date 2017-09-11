@@ -14,16 +14,17 @@
 // limitations under the License.
 #endregion
 
-using System.Xml.Serialization;
-using Ups.Client.Common;
-
-namespace Ups.Client.Requests.Rating
+namespace Ups.Client.Params
 {
-    public class RatingServiceSelectionRequest
+    public class ShipParameter
     {
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Request)]
-        public RatingServiceSelectionRequestBody Request { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Shipment)]
-        public Shipment Shipment { get; set; }
+        public string EmailAddress { get; set; }
+        public UpsCredentials Credentials { get; set; }
+        public UpsAlternateDeliveryAddressParameter AlternateDeliveryAddress { get; set; }
+        public UpsShipperParameter Shipper { get; set; }
+        public UpsShipParameter ShipTo { get; set; }
+        public UpsShipParameter ShipFrom { get; set; }
+        public UpsPackageParameter Package { get; set; }
+        public UpsPaymentInformationParameter PaymentInformation { get; set; }
     }
 }

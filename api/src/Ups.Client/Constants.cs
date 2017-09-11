@@ -20,6 +20,83 @@ namespace Ups.Client
     {
         public static class DtoNames
         {
+            public static class ShipmentConfirmResponseNames
+            {
+                public const string Response = "Response";
+                public const string ShipmentCharges = "ShipmentCharges";
+                public const string ShipmentIdentificationNumber = "ShipmentIdentificationNumber";
+                public const string MIDualReturnShipmentKey = "MIDualReturnShipmentKey";
+                public const string ShipmentDigest = "ShipmentDigest";
+            }
+
+            public static class ShipmentChargesNames
+            {
+                public const string RateChart = "RateChart";
+                public const string BaseServiceCharge = "BaseServiceCharge";
+                public const string TransportationCharges = "TransportationCharges";
+                public const string ServiceOptionsCharges = "ServiceOptionsCharges";
+                public const string TaxCharges = "TaxCharges";
+                public const string TotalCharges = "TotalCharges";
+                public const string TotalChargesWithTaxes = "TotalChargesWithTaxes";
+
+            }
+
+            public static class LabelSpecificationNames
+            {
+                public const string LabelPrintMethod = "LabelPrintMethod";
+                public const string HTTPUserAgent = "HTTPUserAgent";
+                public const string LabelImageFormat = "LabelImageFormat";
+            }
+
+            public static class PaymentInformationNames
+            {
+                public const string Prepaid = "Prepaid";
+            }
+
+            public static class PrepaidNames
+            {
+                public const string BillShipper = "BillShipper";
+            }
+
+            public static class BillShipperNames
+            {
+                public const string AccountNumber = "AccountNumber";
+                public const string CreditCard = "CreditCard";
+                public const string AlternatePaymentMethod = "AlternatePaymentMethod";
+            }
+
+            public static class CreditCardNames
+            {
+                public const string Type = "Type";
+                public const string Number = "Number";
+                public const string ExpirationDate = "ExpirationDate";
+                public const string SecurityCode = "SecurityCode";
+                public const string Address = "Address";
+            }
+
+            public static class ShipmentServiceOptionsNames
+            {
+                public const string Notification = "Notification";
+            }
+
+            public static class NotificationNames
+            {
+                public const string NotificationCode = "NotificationCode";
+                public const string EMailMessage = "EMailMessage";
+                public const string Locale = "Locale";
+            }
+
+            public static class EMailMessageNames
+            {
+                public const string EMailAddress = "EMailAddress";
+            }
+
+            public static class LocaleNames
+            {
+                public const string Language = "Language";
+                public const string Dialect = "Dialect";
+            }
+
             public static class RatedShipmentNames
             {
                 public const string Service = "Service";
@@ -58,6 +135,8 @@ namespace Ups.Client
             public static class ShipperNames
             {
                 public const string Name = "Name";
+                public const string CompanyName = "CompanyName";
+                public const string PhoneNumber = "PhoneNumber";
                 public const string ShipperNumber = "ShipperNumber";
                 public const string Address = "Address";
             }
@@ -66,6 +145,8 @@ namespace Ups.Client
             {
                 public const string Name = "Name";
                 public const string Address = "Address";
+                public const string AttentionName = "AttentionName";
+                public const string CompanyName = "CompanyName";
             }
 
             public static class AlternateDeliveryAddressNames
@@ -592,6 +673,15 @@ namespace Ups.Client
                 public const string Service = "Service";
                 public const string ShipmentIndicationType = "ShipmentIndicationType";
                 public const string Package = "Package";
+                public const string PaymentInformation = "PaymentInformation";
+                public const string ShipmentServiceOptions = "ShipmentServiceOptions";
+            }
+
+            public static class ShipmentConfirmRequestNames
+            {
+                public const string Request = "Request";
+                public const string Shipment = "Shipment";
+                public const string LabelSpecification = "LabelSpecification";
             }
         }
     }

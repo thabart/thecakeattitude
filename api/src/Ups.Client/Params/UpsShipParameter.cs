@@ -19,6 +19,8 @@ namespace Ups.Client.Params
     public class UpsShipParameter
     {
         public string Name { get; set; }
+        public string CompanyName { get; set; }
+        public string AttentionName { get; set; }
         public UpsAddressParameter Address { get; set; }
     }
 }

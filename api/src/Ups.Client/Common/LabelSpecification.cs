@@ -15,15 +15,16 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
 
-namespace Ups.Client.Requests.Rating
+namespace Ups.Client.Common
 {
-    public class RatingServiceSelectionRequest
+    public class LabelSpecification
     {
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Request)]
-        public RatingServiceSelectionRequestBody Request { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Shipment)]
-        public Shipment Shipment { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LabelSpecificationNames.LabelPrintMethod)]
+        public TypeParameter LabelPrintMethod { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LabelSpecificationNames.HTTPUserAgent)]
+        public string HTTPUserAgent { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.LabelSpecificationNames.LabelImageFormat)]
+        public TypeParameter LabelImageFormat { get; set; }
     }
 }
