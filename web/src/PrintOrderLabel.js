@@ -4,13 +4,16 @@ import { Alert, TabContent, TabPane, Breadcrumb, BreadcrumbItem } from 'reactstr
 import { NavLink } from "react-router-dom";
 import { OrdersService } from './services/index';
 import { withRouter } from "react-router";
-import { PackagingType } from './printOrderLabelTabs/index';
+import { PackagingTypeTab, PaymentTab, SummaryTab } from './printOrderLabelTabs/index';
 import MainLayout from './MainLayout';
+import AppDispatcher from './appDispatcher';
+import Constants from '../Constants';
 
 class PrintOrderLabel extends Component {
   constructor(props) {
     super(props);
     this.refresh = this.refresh.bind(this);
+    this.toggle = this.toggle.bind(this);
     this.state = {
       activeTab: '1',
       order: {},
@@ -26,9 +29,14 @@ class PrintOrderLabel extends Component {
     });
     const {t} = self.props;
     OrdersService.get(this.props.match.params.id).then(function(res) {
+      var order = res['_embedded'];
       self.setState({
         isLoading: false,
-        order: res['_embedded']
+        order: order
+      });
+      AppDispatcher.dispatch({
+        actionName: Constants.events.PRINT_ORDER_LABEL_LOADED,
+        data: order
       });
     }).catch(function() {
       self.setState({
@@ -39,8 +47,18 @@ class PrintOrderLabel extends Component {
     });
   }
 
+  toggle(tab) { // Toggle the tab content.
+    var self = this;
+    if (self.state.activeTab !== tab) {
+      self.setState({
+        activeTab: tab
+      });
+    }
+  }
+
   render() { // Display the component.
     const {t} = this.props;
+    var self = this;
     if (this.state.errorMessage !== null) {
       return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         <div className="container">
@@ -53,8 +71,9 @@ class PrintOrderLabel extends Component {
         <div className="container">
           <div className="mt-1 mb-1 p-1 bg-white rounded">
             <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
-              <li className={(parseInt(this.state.activeTab) >= 1) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">1</div>{t('parcel')}</li>
-              <li className={(parseInt(this.state.activeTab) >= 2) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">2</div>{t('payment')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 1) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">1</div>{t('parcel')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 2) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">2</div>{t('payment')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 3) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">3</div>{t('summary')}</li>
             </ul>
           </div>
           <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
@@ -72,17 +91,20 @@ class PrintOrderLabel extends Component {
               <i className='fa fa-spinner fa-spin'></i>
             </div>
             <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
-              <PackagingType />
+              <PackagingTypeTab onNext={() => self.toggle('2')}/>
             </TabPane>
             <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-
+              <PaymentTab onPrevious={() => self.toggle('1')} onNext={() => self.toggle('3')}/>
+            </TabPane>
+            <TabPane tabId="3" className={this.state.isLoading ? 'hidden' : ''}>
+              <SummaryTab onPrevious={() => self.toggle('2')} />
             </TabPane>
           </TabContent>
       </div>
     </MainLayout>);
   }
 
-  componentDidMount() {
+  componentDidMount() { // Execute before the render.
     this.refresh();
   }
 }

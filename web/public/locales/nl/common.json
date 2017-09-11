@@ -410,5 +410,12 @@
   "printLabel": "Print the label",
   "orderDoesntExistError": "An error occured while trying to retrieve the order, please contact the administrator",
   "parcel": "Parcel",
-  "buyLabel": "Buy label"
+  "buyLabel": "Buy label",
+  "packagingTypeWeight": "Weight (kgs)",
+  "packagingTypeLength": "Length (cm)",
+  "packagingTypeWidth": "Width (cm)",
+  "packagingTypeHeight": "Height (cm)",
+  "valueShouldBeInRange": "The value should be between {0} and {1}",
+  "updatePrice": "Update the price",
+  "calculateOrderLabelPriceError": "An error occured while trying to calculate the order price, please contact the administrator"
 }

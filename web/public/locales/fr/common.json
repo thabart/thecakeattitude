@@ -409,5 +409,12 @@
   "printLabel": "Imprimer le label",
   "orderDoesntExistError": "Une erreur est survenue durant la récupération de la commande, veuillez prendre contact avec l'administrateur",
   "parcel": "Colis",
-  "buyLabel": "Acheter un label"
+  "buyLabel": "Acheter un label",
+  "packagingTypeWeight": "Poids (kgs)",
+  "packagingTypeLength": "Longueur (cm)",
+  "packagingTypeWidth": "Largeur (cm)",
+  "packagingTypeHeight": "Hauteur (cm)",
+  "valueShouldBeInRange": "La valeur doit être entre {0} et {1}",
+  "updatePrice": "Mettre à jour le prix",
+  "calculateOrderLabelPriceError": "Une erreur est survenue lors du calcul du prix de la commande, veuillez prendre contact avec l'administrateur"
 }
