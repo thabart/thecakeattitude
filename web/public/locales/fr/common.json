@@ -402,5 +402,7 @@
   "choosePackageTransport": "Vous avez choisi de recevoir votre paquet par {0}.",
   "additionalTransportFeeds": "+ € {0} (transport)",
   "deliveredAtHome": "Livré à domicile",
-  "parcelShop": "Point de retrait"
+  "parcelShop": "Point de retrait",
+  "buyerAddress": "Adresse de l'acheteur",
+  "sellerAddress": "Adresse du vendeur"
 }

@@ -404,5 +404,7 @@
   "choosePackageTransport": "You choose to receive the package via {0}.",
   "additionalTransportFeeds": "+ € {0} (transport)",
   "deliveredAtHome": "Delivered at home",
-  "parcelShop": "Parcel shop"
+  "parcelShop": "Parcel shop",
+  "buyerAddress": "Buyer address",
+  "sellerAddress": "Seller address"
 }

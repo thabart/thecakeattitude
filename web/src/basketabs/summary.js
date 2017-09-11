@@ -171,16 +171,22 @@ class Summary extends Component {
                 </ul>)}
               </div>
               <div className="col-md-4">
-                {this.state.order.transport_mode === 'manual' && (<span>{t('chooseHandToHandTransport')}</span>)}
-                {this.state.order.transport_mode === 'packet' && (
-                  <div>
-                    <p>{t('choosePackageTransport').replace('{0}', t(this.state.order.package.transporter))}</p>
-                    <h5>{t('estimatedPrice').replace('{0}', this.state.order.package.estimated_price)}</h5>
-                  </div>
-                )}
-                { this.state.order.transport_mode === 'packet' && !this.state.order.package.parcel_shop && (
-                  <h5>{t('deliveredAtHome')}</h5>
-                )}
+                { /* Display transport mode */ }
+                { this.state.order.transport_mode === 'manual' && (
+                  <section>
+                    <h5>{t('transport')}</h5>
+                    <p>{t('chooseHandToHandTransport')}</p>
+                  </section>
+                ) }
+                { this.state.order.transport_mode === 'packet' && (
+                  <section>
+                    <h5>{t('transport')}</h5>
+                    { this.state.order.package.transporter === 'dhl' && (<img src="/images/DHL.png" width="100" />) }
+                    { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="100" />) }
+                    { (!this.state.order.package.parcel_shop || !this.state.order.package.parcel_shop.id) && (<p>{t('deliveredAtHome')}</p>) }
+                  </section>
+                ) }
+                { /* Display parcel shop */ }
                 { this.state.order.transport_mode === 'packet' && this.state.order.package.parcel_shop && (
                   <div>
                     <h5>{t('parcelShop')}</h5>
@@ -196,7 +202,13 @@ class Summary extends Component {
                         </GettingStartedGoogleMap>
                     </div>
                   </div>
-                )}
+                ) }
+                { /* Display the price */ }
+                { this.state.order && this.state.order.package && (
+                  <section>
+                    <h5>{t('estimatedPrice').replace('{0}', this.state.order.package.estimated_price)}</h5>
+                  </section>
+                ) }
               </div>
             </section>
             <section style={{marginTop: "10px"}}>

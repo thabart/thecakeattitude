@@ -431,6 +431,7 @@ namespace Cook4Me.Api.Host.Builders
             adrParcelShop.Add(Constants.DtoNames.ParcelAddressNames.PostalCode, orderParcel.ParcelShopPostalCode);
             adrParcelShop.Add(Constants.DtoNames.ParcelAddressNames.CountryCode, orderParcel.ParcelShopCountryCode);
             parcelShop.Add(Constants.DtoNames.ParcelShopNames.Location, parcelShopLocation);
+            parcelShop.Add(Constants.DtoNames.ParcelShopNames.Address, adrParcelShop);
 
             jObj.Add(Constants.DtoNames.ParcelNames.Buyer, buyerObj);
             jObj.Add(Constants.DtoNames.ParcelNames.Seller, sellerObj);

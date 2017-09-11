@@ -210,49 +210,79 @@ class Order extends Component {
                   </ul>)}
                 </div>
                 <div className="col-md-4">
-                  <h5>{t('buyer')}</h5>
-                  <div className="row">
-                    <div className="col-md-2">
-                      <img src={img} className="rounded-circle image-small"/>
-                    </div>
-                    <div className="col-md-10">
-                      <p><NavLink to={"/users/" + this.state.user.sub} style={{color: "inherit"}}>{this.state.user.name}</NavLink></p>
-                    </div>
-                  </div>
-                  <h5>{t('shop')}</h5>
-                  <p><NavLink to={"/shops/" + this.state.shop.id + "/view/profile"}  style={{color: "inherit"}}>{this.state.shop.name}</NavLink></p>
-                  <h5>{t('status')}</h5>
-                  <span className="badge badge-default">{t('status_' + this.state.order.status)}</span>
-                  { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && (
-                    <div>
-                      <h5>{t('transport')}</h5>
-                      <span>{t('chooseHandToHandTransport')}</span>
-                    </div>
-                  ) }
-                  { this.state.order.transport_mode === 'packet' && (
-                    <div>
-                      <p>{t('choosePackageTransport').replace('{0}', t(this.state.order.package.transporter))}</p>
-                      <h5>{t('estimatedPrice').replace('{0}', this.state.order.package.estimated_price)}</h5>
-                    </div>
-                  )}
-                  { (this.state.order.transport_mode === 'packet' && (!this.state.order.package.parcel_shop || !this.state.order.package.parcel_shop.id)) && (
-                    <h5>{t('deliveredAtHome')}</h5>
-                  )}
-                  { (this.state.order.transport_mode === 'packet' && (this.state.order.package.parcel_shop && this.state.order.package.parcel_shop.id)) && (
-                    <div>
-                      <h5>{t('parcelShop')}</h5>
-                      <div style={{width: "100%", height: "200px"}}>
-                          <GettingStartedGoogleMap
-                              center={this.state.order.package.parcel_shop.location}
-                              containerElement={
-                                  <div style={{height: `100%`}}/>
-                              }
-                              mapElement={
-                                  <div style={{height: `100%`}}/>
-                              }>
-                          </GettingStartedGoogleMap>
+                  { /* Display buyer */ }
+                  <section>
+                    <h5>{t('buyer')}</h5>
+                    <div className="row">
+                      <div className="col-md-2">
+                        <img src={img} className="rounded-circle image-small"/>
+                      </div>
+                      <div className="col-md-10">
+                        <p><NavLink to={"/users/" + this.state.user.sub} style={{color: "inherit"}}>{this.state.user.name}</NavLink></p>
                       </div>
                     </div>
+                  </section>
+                  { /* Display shop information */ }
+                  <section>
+                    <h5>{t('shop')}</h5>
+                    <p><NavLink to={"/shops/" + this.state.shop.id + "/view/profile"}  style={{color: "inherit"}}>{this.state.shop.name}</NavLink></p>
+                  </section>
+                  { /* Display status */ }
+                  <section>
+                    <h5>{t('status')}</h5>
+                    <span className="badge badge-default">{t('status_' + this.state.order.status)}</span>
+                  </section>
+                  { /* Display transport method */ }
+                  { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && (
+                    <section>
+                      <h5>{t('transport')}</h5>
+                      <p>{t('chooseHandToHandTransport')}</p>
+                    </section>
+                  ) }
+                  { this.state.order.transport_mode === 'packet' && (
+                    <section>
+                      <h5>{t('transport')}</h5>
+                      { this.state.order.package.transporter === 'dhl' && (<img src="/images/DHL.png" width="100" />) }
+                      { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="100" />) }
+                      { (!this.state.order.package.parcel_shop || !this.state.order.package.parcel_shop.id) && (<p>{t('deliveredAtHome')}</p>) }
+                    </section>
+                  ) }
+                  { /* Display buyer & seller address & parcel shop */ }
+                  { this.state.order.transport_mode === 'packet' && (
+                    <section>
+                      <div>
+                        <h5>{t('buyerAddress')}</h5>
+                        <p>{this.state.order.package.buyer.address.address_line}, {this.state.order.package.buyer.address.city}, {this.state.order.package.buyer.address.postal_code}, {this.state.order.package.buyer.address.country_code}</p>
+                      </div>
+                      <div>
+                        <h5>{t('sellerAddress')}</h5>
+                        <p>{this.state.order.package.seller.address.address_line}, {this.state.order.package.seller.address.city}, {this.state.order.package.seller.address.postal_code}, {this.state.order.package.seller.address.country_code}</p>
+                      </div>
+                      { /* Display the parcel shop */ }
+                      { (this.state.order.transport_mode === 'packet' && (this.state.order.package.parcel_shop && this.state.order.package.parcel_shop.id)) && (
+                        <div>
+                          <h5>{t('parcelShop')}</h5>
+                          <p>{this.state.order.package.parcel_shop.address.address_line}, {this.state.order.package.parcel_shop.address.city}, {this.state.order.package.parcel_shop.address.postal_code}, {this.state.order.package.parcel_shop.address.country_code}</p>
+                          <div style={{width: "100%", height: "200px"}}>
+                              <GettingStartedGoogleMap
+                                  center={this.state.order.package.parcel_shop.location}
+                                  containerElement={
+                                      <div style={{height: `100%`}}/>
+                                  }
+                                  mapElement={
+                                      <div style={{height: `100%`}}/>
+                                  }>
+                              </GettingStartedGoogleMap>
+                          </div>
+                        </div>
+                      )}
+                    </section>
+                  ) }
+                  { /* Display price */ }
+                  { this.state.order.transport_mode === 'packet' && (
+                    <section>
+                      <h5>{t('estimatedPrice').replace('{0}', this.state.order.package.estimated_price)}</h5>
+                    </section>
                   )}
                 </div>
               </div>
