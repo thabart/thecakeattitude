@@ -5,6 +5,7 @@
   "addOfferMenuItem": "Demander un service",
   "connectMenuItem": "Se connecter",
   "manageMenuItem": "Gérer",
+  "disconnectMenuItem": "Se déconnecter",
   "manageYourProfileMenuItem": "Gérer votre profil",
   "manageYourOffersMenuItem": "Gérer vos services",
   "manageYourShopsMenuItem": "Gérer vos magasins",
@@ -404,5 +405,9 @@
   "deliveredAtHome": "Livré à domicile",
   "parcelShop": "Point de retrait",
   "buyerAddress": "Adresse de l'acheteur",
-  "sellerAddress": "Adresse du vendeur"
+  "sellerAddress": "Adresse du vendeur",
+  "printLabel": "Imprimer le label",
+  "orderDoesntExistError": "Une erreur est survenue durant la récupération de la commande, veuillez prendre contact avec l'administrateur",
+  "parcel": "Colis",
+  "buyLabel": "Acheter un label"
 }

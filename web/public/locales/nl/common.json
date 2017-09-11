@@ -406,5 +406,9 @@
   "deliveredAtHome": "Delivered at home",
   "parcelShop": "Parcel shop",
   "buyerAddress": "Buyer address",
-  "sellerAddress": "Seller address"
+  "sellerAddress": "Seller address",
+  "printLabel": "Print the label",
+  "orderDoesntExistError": "An error occured while trying to retrieve the order, please contact the administrator",
+  "parcel": "Parcel",
+  "buyLabel": "Buy label"
 }

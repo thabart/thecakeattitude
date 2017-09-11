@@ -24,6 +24,6 @@ namespace Ups.Client.Requests.Rating
         [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Request)]
         public RatingServiceSelectionRequestBody Request { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.RatingServiceSelectionRequestNames.Shipment)]
-        public Shipment Shipment { get; set; }
+        public Common.Shipment Shipment { get; set; }
     }
 }

@@ -187,6 +187,7 @@ class Order extends Component {
 
       var sub = ApplicationStore.getUser().sub;
       var isBuyer = this.state.order && this.state.order.subject === sub;
+      var isSeller = this.state.shop && this.state.shop.subject === sub;
       return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         { this.state.isLoading ? (<div className="container"><i className="fa fa-spinner fa-spin"></i></div>) : (
           <div className="container">
@@ -292,6 +293,9 @@ class Order extends Component {
               <div style={{marginTop: "10px"}}>
                 { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (
                   <button className="btn btn-default" onClick={this.confirmReception}>{t('confirmReception')}</button>
+                ) }
+                { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && isSeller && (
+                  <NavLink to={'/printlabel/' + this.state.order.id } className="btn btn-default">{t('buyLabel')}</NavLink>
                 ) }
               </div>
             </section>
