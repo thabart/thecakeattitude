@@ -26,7 +26,9 @@ using Ups.Client.Factories;
 using Ups.Client.Params;
 using Ups.Client.Params.Locator;
 using Ups.Client.Params.Shipment;
+using Ups.Client.Requests.LabelRecovery;
 using Ups.Client.Requests.Rating;
+using Ups.Client.Responses.LabelRecovery;
 using Ups.Client.Responses.Locator;
 using Ups.Client.Responses.Rating;
 using Ups.Client.Responses.Ship;
@@ -38,6 +40,7 @@ namespace Ups.Client
         Task<LocatorResponse> GetLocations(GetLocationsParameter parameter);
         Task<RatingServiceSelectionResponse> GetRatings(GetUpsRatingsParameter parameter);
         Task<ShipmentConfirmResponse> GetShip(ShipParameter parameter);
+        Task<LabelRecoveryResponse> GetLabel(GetLabelParameter parameter);
     }
 
     internal class UpsClient : IUpsClient
@@ -46,6 +49,7 @@ namespace Ups.Client
         private const string _locationUrl = "https://onlinetools.ups.com/ups.app/xml/Locator";
         private const string _rateUrl = "https://onlinetools.ups.com/ups.app/xml/Rate";
         private const string _shipUrl = "https://onlinetools.ups.com/ups.app/xml/ShipConfirm ";
+        private const string _labelRecovery = "https://onlinetools.ups.com/ups.app/xml/LabelRecovery";
 
         public UpsClient(IHttpClientFactory httpClientFactory)
         {
@@ -434,15 +438,14 @@ namespace Ups.Client
                 {
                     LabelPrintMethod = new TypeParameter
                     {
-                        Code = "GIF",
-                        Description = "gif file"
+                        Code = "PDF",
+                        Description = "pdf file"
                     },
                     LabelImageFormat = new TypeParameter
                     {
-                        Code = "GIF",
-                        Description = "gif file"
-                    },
-                    HTTPUserAgent = "Mozilla/4.5"
+                        Code = "PDF",
+                        Description = "pdf file"
+                    }
                 }
             };
 
@@ -626,6 +629,79 @@ namespace Ups.Client
             using (TextReader reader = new StringReader(res))
             {
                 return (ShipmentConfirmResponse)deserializer.Deserialize(reader);
+            }
+        }
+
+        public async Task<LabelRecoveryResponse> GetLabel(GetLabelParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            if (parameter.Credentials == null)
+            {
+                throw new ArgumentNullException(nameof(parameter.Credentials));
+            }
+
+            var client = _httpClientFactory.GetHttpClient();
+            var security = new AccessRequestType
+            {
+                AccessLicenseNumber = parameter.Credentials.LicenseNumber,
+                Password = parameter.Credentials.Password,
+                UserId = parameter.Credentials.UserName
+            };
+            var request = new LabelRecoveryRequest
+            {
+                Request = new RequestType
+                {
+                    RequestAction = "LabelRecovery",
+                    TransactionReferenceType = new TransactionReference
+                    {
+                        CustomerContext = "Your Test Case Summary Description",
+                        XpciVersion = "1.0014"
+                    }
+                },
+                TrackingNumber = parameter.TrackingNumber
+            };
+
+
+            var serializerSecurity = new XmlSerializer(typeof(AccessRequestType));
+            var serializerBody = new XmlSerializer(typeof(LabelRecoveryRequest));
+            var xmlSecurity = "";
+            var xmlBody = "";
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerSecurity.Serialize(writer, security);
+                    xmlSecurity = sww.ToString();
+                }
+            }
+
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerBody.Serialize(writer, request);
+                    xmlBody = sww.ToString();
+                }
+            }
+
+            var xml = xmlSecurity + "" + xmlBody;
+            var body = new StringContent(xml);
+            var req = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = body,
+                RequestUri = new Uri(_labelRecovery)
+            };
+            var serializedContent = await client.SendAsync(req).ConfigureAwait(false);
+            var res = await serializedContent.Content.ReadAsStringAsync();
+            var deserializer = new XmlSerializer(typeof(LabelRecoveryResponse));
+            using (TextReader reader = new StringReader(res))
+            {
+                return (LabelRecoveryResponse)deserializer.Deserialize(reader);
             }
         }
     }

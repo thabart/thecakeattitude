@@ -14,6 +14,8 @@
 // limitations under the License.
 #endregion
 
+using System;
+using System.IO;
 using System.Threading.Tasks;
 using Ups.Client;
 using Ups.Client.Factories;
@@ -188,6 +190,31 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 EmailAddress = "habarthierry@hotmail.fr"
             });
             var res = "";
+        }
+
+        [Fact]
+        public async Task GetLabel()
+        {
+            var httpClientFactory = new HttpClientFactory();
+            var upsClient = new UpsClient(httpClientFactory);
+            var res = await upsClient.GetLabel(new GetLabelParameter
+            {
+                Credentials = new UpsCredentials
+                {
+                    LicenseNumber = _accessLicenseNumber,
+                    Password = _password,
+                    UserName = _userName
+                },
+                TrackingNumber = "1ZC4RT41YZ00313825"
+            });
+            if (res.LabelResults != null && res.LabelResults.LabelImage != null)
+            {
+                var b64 = res.LabelResults.LabelImage.GraphicImage;
+                var bytes = Convert.FromBase64String(b64);
+                File.WriteAllBytes(@"C:\Output\output.gif", bytes);
+            }
+
+            string s = "";
         }
     }
 }

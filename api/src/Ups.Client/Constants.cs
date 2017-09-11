@@ -20,6 +20,43 @@ namespace Ups.Client
     {
         public static class DtoNames
         {
+            public static class LabelRecoveryResponseNames
+            {
+                public const string Response = "Response";
+                public const string ShipmentIdentificationNumber = "ShipmentIdentificationNumber";
+                public const string LabelResults = "LabelResults";
+            }
+
+            public static class LabelResultsNames
+            {
+                public const string TrackingNumber = "TrackingNumber";
+                public const string LabelImage = "LabelImage";
+                public const string Receipt = "Receipt";
+            }
+
+            public static class LabelImageNames
+            {
+                public const string LabelImageFormat = "LabelImageFormat";
+                public const string GraphicImage = "GraphicImage";
+            }
+
+            public static class ReceiptNames
+            {
+                public const string Image = "Image";
+            }
+
+            public static class ImageNames
+            {
+                public const string ImageFormat = "ImageFormat";
+                public const string GraphicImage = "GraphicImage";
+            }
+
+            public static class LabelRecoveryRequestNames
+            {
+                public const string Request = "Request";
+                public const string TrackingNumber = "TrackingNumber";
+            }
+
             public static class ShipmentConfirmResponseNames
             {
                 public const string Response = "Response";
