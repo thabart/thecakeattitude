@@ -28,6 +28,7 @@ using Ups.Client.Params.Locator;
 using Ups.Client.Params.Shipment;
 using Ups.Client.Requests.LabelRecovery;
 using Ups.Client.Requests.Rating;
+using Ups.Client.Requests.Shipment;
 using Ups.Client.Responses.LabelRecovery;
 using Ups.Client.Responses.Locator;
 using Ups.Client.Responses.Rating;
@@ -39,7 +40,8 @@ namespace Ups.Client
     {
         Task<LocatorResponse> GetLocations(GetLocationsParameter parameter);
         Task<RatingServiceSelectionResponse> GetRatings(GetUpsRatingsParameter parameter);
-        Task<ShipmentConfirmResponse> GetShip(ShipParameter parameter);
+        Task<ShipmentConfirmResponse> ConfirmShip(ConfirmShipParameter parameter);
+        Task<ShipmentAcceptResponse> AcceptShip(AcceptShipParameter parameter);
         Task<LabelRecoveryResponse> GetLabel(GetLabelParameter parameter);
     }
 
@@ -48,8 +50,9 @@ namespace Ups.Client
         private readonly IHttpClientFactory _httpClientFactory;
         private const string _locationUrl = "https://onlinetools.ups.com/ups.app/xml/Locator";
         private const string _rateUrl = "https://onlinetools.ups.com/ups.app/xml/Rate";
-        private const string _shipUrl = "https://onlinetools.ups.com/ups.app/xml/ShipConfirm ";
+        private const string _shipConfirmUrl = "https://onlinetools.ups.com/ups.app/xml/ShipConfirm ";
         private const string _labelRecovery = "https://onlinetools.ups.com/ups.app/xml/LabelRecovery";
+        private const string _shipAcceptUrl = "https://onlinetools.ups.com/ups.app/xml/ShipAccept ";
 
         public UpsClient(IHttpClientFactory httpClientFactory)
         {
@@ -348,7 +351,7 @@ namespace Ups.Client
             }
         }
 
-        public async Task<ShipmentConfirmResponse> GetShip(ShipParameter parameter)
+        public async Task<ShipmentConfirmResponse> ConfirmShip(ConfirmShipParameter parameter)
         {
             if (parameter == null)
             {
@@ -621,7 +624,7 @@ namespace Ups.Client
             {
                 Method = HttpMethod.Post,
                 Content = body,
-                RequestUri = new Uri(_shipUrl)
+                RequestUri = new Uri(_shipConfirmUrl)
             };
             var serializedContent = await client.SendAsync(req).ConfigureAwait(false);
             var res = await serializedContent.Content.ReadAsStringAsync();
@@ -629,6 +632,79 @@ namespace Ups.Client
             using (TextReader reader = new StringReader(res))
             {
                 return (ShipmentConfirmResponse)deserializer.Deserialize(reader);
+            }
+        }
+
+        public async Task<ShipmentAcceptResponse> AcceptShip(AcceptShipParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            if (parameter.Credentials == null)
+            {
+                throw new ArgumentNullException(nameof(parameter.Credentials));
+            }
+
+
+            var client = _httpClientFactory.GetHttpClient();
+            var security = new AccessRequestType
+            {
+                AccessLicenseNumber = parameter.Credentials.LicenseNumber,
+                Password = parameter.Credentials.Password,
+                UserId = parameter.Credentials.UserName
+            };
+            var request = new ShipmentAcceptRequest
+            {
+                Request = new RequestType
+                {
+                    RequestAction = "ShipAccept",
+                    TransactionReferenceType = new TransactionReference
+                    {
+                        CustomerContext = "Your Test Case Summary Description",
+                        XpciVersion = "1.0014"
+                    }
+                },
+                ShipmentDigest = parameter.ShipmentDigest
+            };
+
+            var serializerSecurity = new XmlSerializer(typeof(AccessRequestType));
+            var serializerBody = new XmlSerializer(typeof(ShipmentAcceptRequest));
+            var xmlSecurity = "";
+            var xmlBody = "";
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerSecurity.Serialize(writer, security);
+                    xmlSecurity = sww.ToString();
+                }
+            }
+
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerBody.Serialize(writer, request);
+                    xmlBody = sww.ToString();
+                }
+            }
+
+            var xml = xmlSecurity + "" + xmlBody;
+            var body = new StringContent(xml);
+            var req = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = body,
+                RequestUri = new Uri(_shipAcceptUrl)
+            };
+            var serializedContent = await client.SendAsync(req).ConfigureAwait(false);
+            var res = await serializedContent.Content.ReadAsStringAsync();
+            var deserializer = new XmlSerializer(typeof(ShipmentAcceptResponse));
+            using (TextReader reader = new StringReader(res))
+            {
+                return (ShipmentAcceptResponse)deserializer.Deserialize(reader);
             }
         }
 

@@ -16,15 +16,9 @@
 
 namespace Ups.Client.Params
 {
-    public class ShipParameter
+    public class AcceptShipParameter
     {
-        public string EmailAddress { get; set; }
         public UpsCredentials Credentials { get; set; }
-        public UpsAlternateDeliveryAddressParameter AlternateDeliveryAddress { get; set; }
-        public UpsShipperParameter Shipper { get; set; }
-        public UpsShipParameter ShipTo { get; set; }
-        public UpsShipParameter ShipFrom { get; set; }
-        public UpsPackageParameter Package { get; set; }
-        public UpsPaymentInformationParameter PaymentInformation { get; set; }
+        public string ShipmentDigest { get; set; }
     }
 }

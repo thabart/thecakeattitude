@@ -14,18 +14,17 @@
 // limitations under the License.
 #endregion
 
-using System.Xml.Serialization;
-using Ups.Client.Common;
-
-namespace Ups.Client.Responses.LabelRecovery
+namespace Ups.Client.Params
 {
-    public class LabelImage
+    public class ConfirmShipParameter
     {
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.LabelImageFormat)]
-        public TypeParameter LabelImageFormat { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.GraphicImage)]
-        public string GraphicImage { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.HTMLImage)]
-        public string HTMLImage { get; set; }
+        public string EmailAddress { get; set; }
+        public UpsCredentials Credentials { get; set; }
+        public UpsAlternateDeliveryAddressParameter AlternateDeliveryAddress { get; set; }
+        public UpsShipperParameter Shipper { get; set; }
+        public UpsShipParameter ShipTo { get; set; }
+        public UpsShipParameter ShipFrom { get; set; }
+        public UpsPackageParameter Package { get; set; }
+        public UpsPaymentInformationParameter PaymentInformation { get; set; }
     }
 }

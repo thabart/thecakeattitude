@@ -15,17 +15,18 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
+using Ups.Client.Responses.LabelRecovery;
+using Ups.Client.Responses.Rating;
 
-namespace Ups.Client.Responses.LabelRecovery
+namespace Ups.Client.Responses.Ship
 {
-    public class LabelImage
+    public class PackageResults
     {
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.LabelImageFormat)]
-        public TypeParameter LabelImageFormat { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.GraphicImage)]
-        public string GraphicImage { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.HTMLImage)]
-        public string HTMLImage { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageResultsNames.TrackingNumber)]
+        public string TrackingNumber { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageResultsNames.ServiceOptionsCharges)]
+        public RatingCharges ServiceOptionsCharges { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.PackageResultsNames.LabelImage)]
+        public LabelImage LabelImage { get; set; }
     }
 }

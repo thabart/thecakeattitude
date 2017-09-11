@@ -120,11 +120,11 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
         }
 
         [Fact]
-        public async Task GetShip()
+        public async Task ConfirmShip()
         {
             var httpClientFactory = new HttpClientFactory();
             var upsClient = new UpsClient(httpClientFactory);
-            var tmp = await upsClient.GetShip(new ShipParameter
+            var tmp = await upsClient.ConfirmShip(new ConfirmShipParameter
             {
                 Credentials = new UpsCredentials
                 {
@@ -190,6 +190,22 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 EmailAddress = "habarthierry@hotmail.fr"
             });
             var res = "";
+        }
+
+        [Fact]
+        public async Task AcceptShip()
+        {
+            var httpClientFactory = new HttpClientFactory();
+            var upsClient = new UpsClient(httpClientFactory);
+            var res = await upsClient.AcceptShip(new AcceptShipParameter
+            {
+                Credentials = new UpsCredentials
+                {
+                    LicenseNumber = _accessLicenseNumber,
+                    Password = _password,
+                    UserName = _userName
+                }
+            });
         }
 
         [Fact]

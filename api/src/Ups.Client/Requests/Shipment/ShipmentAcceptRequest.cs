@@ -15,17 +15,15 @@
 #endregion
 
 using System.Xml.Serialization;
-using Ups.Client.Common;
+using Ups.Client.Params;
 
-namespace Ups.Client.Responses.LabelRecovery
+namespace Ups.Client.Requests.Shipment
 {
-    public class LabelImage
+    public class ShipmentAcceptRequest
     {
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.LabelImageFormat)]
-        public TypeParameter LabelImageFormat { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.GraphicImage)]
-        public string GraphicImage { get; set; }
-        [XmlElement(ElementName = Constants.DtoNames.LabelImageNames.HTMLImage)]
-        public string HTMLImage { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentAcceptRequestNames.Request)]
+        public RequestType Request { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.ShipmentAcceptRequestNames.ShipmentDigest)]
+        public string ShipmentDigest { get; set; }
     }
 }
