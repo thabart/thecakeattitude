@@ -417,5 +417,8 @@
   "packagingTypeHeight": "Height (cm)",
   "valueShouldBeInRange": "The value should be between {0} and {1}",
   "updatePrice": "Update the price",
-  "calculateOrderLabelPriceError": "An error occured while trying to calculate the order price, please contact the administrator"
+  "calculateOrderLabelPriceError": "An error occured while trying to calculate the order price, please contact the administrator",
+  "validity": "Validity",
+  "cvc": "CVC",
+  "cardNumber": "Card number"
 }

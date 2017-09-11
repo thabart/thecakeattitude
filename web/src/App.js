@@ -51,6 +51,7 @@ import "react-rater/lib/react-rater.css";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import "react-magnify/lib/react-magnify.css";
 import "react-grid-layout/css/styles.css";
+import "react-credit-cards/lib/styles-compiled.css";
 import { translate } from 'react-i18next';
 
 var history = createBrowserHistory();
