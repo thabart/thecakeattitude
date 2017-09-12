@@ -22,6 +22,7 @@ using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
+using Cook4Me.Api.Core.Commands.Ups;
 using Cook4Me.Api.Core.Events.ClientService;
 using Cook4Me.Api.Core.Events.Messages;
 using Cook4Me.Api.Core.Events.Orders;
@@ -32,6 +33,7 @@ using Cook4Me.Api.Core.Helpers;
 using Cook4Me.Api.Core.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Ups.Client;
 
 namespace Cook4Me.Api.Handlers
 {
@@ -57,6 +59,7 @@ namespace Cook4Me.Api.Handlers
             var messageCommandsHandler = new MessageCommandsHandler(provider.GetService<IMessageRepository>(), bus);
             var orderCommandsHandler = new OrderCommandsHandler(provider.GetService<IOrderRepository>(), provider.GetService<IProductRepository>(), bus, provider.GetService<IOrderPriceCalculatorHelper>());
             var notificationEventsHandler = new NotificationEventsHandler(provider.GetService<INotificationRepository>(), provider.GetService<IShopRepository>(), bus);
+            var upsCommandsHandler = new UpsCommandsHandler(provider.GetService<IEventPublisher>(), provider.GetService<IUpsClient>());
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddShopCommentCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<RemoveShopCommentCommand>(shopCommandHandler.Handle);
@@ -75,6 +78,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<UpdateOrderCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<RemoveOrderCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<AddOrderLineCommand>(orderCommandsHandler.Handle);
+            bus.RegisterHandler<BuyUpsLabelCommand>(upsCommandsHandler.Handle);
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ShopCommentAddedEvent>(notificationEventsHandler.Handle);

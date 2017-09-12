@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { Alert, TabContent, TabPane, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { NavLink } from "react-router-dom";
-import { OrdersService } from './services/index';
+import { OrdersService, UpsService } from './services/index';
 import { withRouter } from "react-router";
 import { PackagingTypeTab, PaymentTab, SummaryTab } from './printOrderLabelTabs/index';
 import MainLayout from './MainLayout';
@@ -68,7 +68,11 @@ class PrintOrderLabel extends Component {
     self.setState({
       isLoading: true
     });
-    console.log(json);
+    UpsService.purchaseLabel(json).catch(function() {
+      self.setState({
+        isLoading: false
+      });
+    });
   }
 
   render() { // Display the component.

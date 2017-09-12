@@ -121,7 +121,7 @@ class Summary extends Component {
           <section>
             <h5>{t('parcelSize')}</h5>
             <ParcelSize isEditable={false} weight={this.state.order.package.parcel.weight} height={this.state.order.package.parcel.height}
-              weight={this.state.order.package.parcel.weight} width={this.state.order.package.parcel.width}/>
+              length={this.state.order.package.parcel.length} width={this.state.order.package.parcel.width}/>
           </section>
         </div>
       </div>

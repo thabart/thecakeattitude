@@ -6,6 +6,7 @@ import Cards from 'react-credit-cards';
 import Pay from 'payment';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
+import moment from 'moment';
 
 class Payment extends Component {
   constructor(props) {
@@ -77,11 +78,49 @@ class Payment extends Component {
     }
 
     var order = PrintOrderLabelStore.getOrder();
+    var type = Pay.fns.cardType(self.state.number);
+    var typeEnum = null;
+    switch(type) {
+      case 'amex':
+        typeEnum = '01';
+      break;
+      case 'dankort':
+        typeEnum = '13';
+      break;
+      case 'hipercard':
+        typeEnum = '14';
+      break;
+      case 'dinersclub':
+        typeEnum = '08';
+      break;
+      case 'discover':
+        typeEnum = '03';
+      break;
+      case 'jcb':
+        typeEnum = '15';
+      break;
+      case 'mastercard':
+        typeEnum = '04';
+      break;
+      case 'unionpay':
+        typeEnum = '18';
+      break;
+      case 'visa':
+        typeEnum = '06';
+      break;
+    }
+
+    if (!typeEnum) {
+      console.log('the card is not supported by UPS');
+      return;
+    }
+
     order.package.card = {
       number: self.state.number,
       name: self.state.name,
-      expiration: self.state.exp,
-      cvc: self.state.cvc
+      expiration: moment(self.state.exp, 'MM / YY' ).format('MMYYYY'),
+      cvc: self.state.cvc,
+      type: typeEnum
     };
     AppDispatcher.dispatch({
       actionName: Constants.events.UPDATE_ORDER_LABEL_ACT,

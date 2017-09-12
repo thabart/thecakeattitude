@@ -78,6 +78,7 @@ class PackagingType extends Component {
 
     UpsService.searchRatings(request).then(function(res) {
       order.package.parcel = request.package;
+      order.package.estimated_price = res['total_price'];
       AppDispatcher.dispatch({
         actionName: Constants.events.UPDATE_ORDER_LABEL_ACT,
         data: order

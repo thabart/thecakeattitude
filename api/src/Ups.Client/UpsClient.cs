@@ -441,13 +441,13 @@ namespace Ups.Client
                 {
                     LabelPrintMethod = new TypeParameter
                     {
-                        Code = "PDF",
-                        Description = "pdf file"
+                        Code = "GIF",
+                        Description = "gif file"
                     },
                     LabelImageFormat = new TypeParameter
                     {
-                        Code = "PDF",
-                        Description = "pdf file"
+                        Code = "GIF",
+                        Description = "gif file"
                     }
                 }
             };

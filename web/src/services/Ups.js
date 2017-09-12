@@ -33,5 +33,20 @@ module.exports = {
                 });
             });
         });
+    },
+    purchaseLabel: function(content) { // Purchase the label.
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.ups_endpoint + '/buylabel', {
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(content)
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     }
 };

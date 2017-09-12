@@ -134,12 +134,12 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 },
                 AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
                 {
-                    Name = "WOLU-PRESS",
+                    Name = "PRESSE D'OR",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "RUE EMILE VANDERVELD 39",
-                        City = "Bruxelles",
-                        PostalCode = "1200",
+                        AddressLine = "CHAUSSéE D'IXELLES 33-35",
+                        City = "IXELLES",
+                        PostalCode = "1050",
                         Country = "BE"
                     }
                 },
@@ -148,9 +148,9 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Name = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "10 avenue des croix du feu",
+                        AddressLine = "5 - 9 Place de Dinant",
                         City = "Bruxelles",
-                        PostalCode = "1020",
+                        PostalCode = "1000",
                         Country = "BE"
                     }
                 },
@@ -161,9 +161,9 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     CompanyName = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "10 avenue des croix du feu",
+                        AddressLine = "5 - 9 Place de Dinant",
                         City = "Bruxelles",
-                        PostalCode = "1020",
+                        PostalCode = "1000",
                         Country = "BE"
                     }
                 },
@@ -187,7 +187,21 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Height = 3,
                     Weight = 1
                 },
-                EmailAddress = "habarthierry@hotmail.fr"
+                EmailAddress = "habarthierry@hotmail.fr",
+                PaymentInformation = new UpsPaymentInformationParameter
+                {
+                    ExpirationDate = "102019",
+                    Number = "4236084304940630",
+                    SecurityCode = "0630",
+                    Type = "06",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "5 - 9 Place de Dinant",
+                        City = "Bruxelles",
+                        PostalCode = "1000",
+                        Country = "BE"
+                    }
+                }
             });
             var res = "";
         }

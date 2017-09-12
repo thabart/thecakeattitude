@@ -22,6 +22,7 @@ using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Core.Commands.Product;
 using Cook4Me.Api.Core.Commands.Service;
 using Cook4Me.Api.Core.Commands.Shop;
+using Cook4Me.Api.Core.Commands.Ups;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Host.Extensions;
 using Dhl.Client.Params;
@@ -36,6 +37,8 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        BuyUpsLabelCommand GetBuyUpsLabelCommand(JObject jObj);
+        UpsPaymentInformationParameter GetUpsPaymentInformation(JObject jObj);
         GetUpsRatingsParameter GetUpsRatingsParameter(JObject jObj);
         UpsAlternateDeliveryAddressParameter GetUpsAlternateDeliveryAddressParameter(JObject jObj);
         UpsShipParameter GetUpsShipParameter(JObject jObj);
@@ -79,6 +82,52 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public BuyUpsLabelCommand GetBuyUpsLabelCommand(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+            
+            var alternateAdrObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.AlternateDeliveryAddress) as JObject;
+            var shipperObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.Shipper) as JObject;
+            var shipToObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.ShipTo) as JObject;
+            var shipFromObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.ShipFrom) as JObject;
+            var packageObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.Package) as JObject;
+            var cardObj = jObj.GetValue(Constants.DtoNames.GetUpsConfirmShipParameterNames.Card) as JObject;
+            var result = new BuyUpsLabelCommand
+            {
+                AlternateDeliveryAddress = alternateAdrObj == null ? null : GetUpsAlternateDeliveryAddressParameter(alternateAdrObj),
+                Package = packageObj == null ? null : GetUpsPackageParameter(packageObj),
+                ShipFrom = shipFromObj == null ? null : GetUpsShipParameter(shipFromObj),
+                ShipTo = shipToObj == null ? null : GetUpsShipParameter(shipToObj),
+                Shipper = shipperObj == null ? null : GetUpsShipperParameter(shipperObj),
+                PaymentInformation = cardObj == null ? null : GetUpsPaymentInformation(cardObj)
+            };
+            if (result.PaymentInformation != null && result.ShipFrom != null && result.ShipFrom.Address != null)
+            {
+                result.PaymentInformation.Address = result.ShipFrom.Address;    
+            }
+
+            return result;
+        }
+
+        public UpsPaymentInformationParameter GetUpsPaymentInformation(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpsPaymentInformationParameter
+            {
+                ExpirationDate = jObj.TryGetString(Constants.DtoNames.UpsPaymentInformationNames.Expiration),
+                Number = jObj.TryGetString(Constants.DtoNames.UpsPaymentInformationNames.Number),
+                SecurityCode = jObj.TryGetString(Constants.DtoNames.UpsPaymentInformationNames.Cvc),
+                Type = jObj.TryGetString(Constants.DtoNames.UpsPaymentInformationNames.Type)
+            };
+        }
+
         public GetUpsRatingsParameter GetUpsRatingsParameter(JObject jObj)
         {
             if (jObj == null)
@@ -159,7 +208,9 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new UpsShipParameter
             {
-                Name = jObj.TryGetString(Constants.DtoNames.UpsShipParameterNames.Name)
+                Name = jObj.TryGetString(Constants.DtoNames.UpsShipParameterNames.Name),
+                AttentionName = jObj.TryGetString(Constants.DtoNames.UpsShipParameterNames.Name),
+                CompanyName = jObj.TryGetString(Constants.DtoNames.UpsShipParameterNames.Name)
             };
 
             var adrObj = jObj.GetValue(Constants.DtoNames.UpsShipParameterNames.Address);

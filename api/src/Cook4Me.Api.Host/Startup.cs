@@ -141,10 +141,10 @@ namespace Cook4Me.Api.Host
         private static void RegisterDependencies(IServiceCollection services)
         {
             services.AddCookForMeStoreInMemory()
-                .AddCore()
-                .AddHandlers()
                 .AddUpsClient()
-                .AddDhlClient();
+                .AddDhlClient()
+                .AddCore()
+                .AddHandlers();
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
@@ -215,6 +215,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetOrderOperation, GetOrderOperation>();
             services.AddTransient<IDeleteOrderOperation, DeleteOrderOperation>();
             services.AddTransient<IAddOrderLineOperation, AddOrderLineOperation>();
+            services.AddTransient<IPurchaseUpsLabelOperation, PurchaseUpsLabelOperation>();
             services.AddTransient<ISearchDhlCapabalitiesOperation, SearchDhlCapabalitiesOperation>();
             services.AddTransient<ISearchMineClientServices, SearchMineClientServices>();
             services.AddTransient<IServiceCommentEnricher, ServiceCommentEnricher>();
