@@ -14,6 +14,7 @@ class PrintOrderLabel extends Component {
     super(props);
     this.refresh = this.refresh.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.buy = this.buy.bind(this);
     this.state = {
       activeTab: '1',
       order: {},
@@ -30,6 +31,12 @@ class PrintOrderLabel extends Component {
     const {t} = self.props;
     OrdersService.get(this.props.match.params.id).then(function(res) {
       var order = res['_embedded'];
+      order.package.parcel = {
+        weight: 2,
+        length: 50,
+        width: 80,
+        height: 35
+      };
       self.setState({
         isLoading: false,
         order: order
@@ -54,6 +61,14 @@ class PrintOrderLabel extends Component {
         activeTab: tab
       });
     }
+  }
+
+  buy(json) { // Buy the order.
+    var self = this;
+    self.setState({
+      isLoading: true
+    });
+    console.log(json);
   }
 
   render() { // Display the component.
@@ -94,10 +109,13 @@ class PrintOrderLabel extends Component {
               <PackagingTypeTab onNext={() => self.toggle('2')}/>
             </TabPane>
             <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-              <PaymentTab onPrevious={() => self.toggle('1')} onNext={() => self.toggle('3')}/>
+              <PaymentTab onPrevious={() => self.toggle('1')} onNext={() => {
+                self.toggle('3');
+                self.refs.summary.getWrappedInstance().refresh();
+              }}/>
             </TabPane>
             <TabPane tabId="3" className={this.state.isLoading ? 'hidden' : ''}>
-              <SummaryTab onPrevious={() => self.toggle('2')} />
+              <SummaryTab ref="summary" onPrevious={() => self.toggle('2')} onBuy={self.buy} />
             </TabPane>
           </TabContent>
       </div>

@@ -79,7 +79,7 @@ class Order extends Component {
           if (!(products instanceof Array)) {
             products = [products];
           }
-
+          
           self.setState({
             isLoading: false,
             order: order,

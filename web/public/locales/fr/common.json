@@ -419,5 +419,11 @@
   "calculateOrderLabelPriceError": "Une erreur est survenue lors du calcul du prix de la commande, veuillez prendre contact avec l'administrateur",
   "validity": "Validité",
   "cvc": "CVC",
-  "cardNumber": "Numéro de carte"
+  "cardNumber": "Numéro de carte",
+  "parcelSize": "Taille du colis",
+  "packagingTypeDescription": "Indiquer la taille de votre colis",
+  "packagingPaymentDescription": "Rentrez vos données bancaires",
+  "buy": "Acheter",
+  "valueShouldContains": "La valeur doit contenir {0} caractères",
+  "expiryInvalid": "Date d'expiration est invalide"
 }

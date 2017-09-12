@@ -13,6 +13,7 @@ import ProductCategories from './productCategories';
 import ImagesUploader from './imagesUploader';
 import SelectDate from './selectDate';
 import DropLocations from './dropLocations';
+import ParcelSize from './parcelSize';
 
 exports.CommentLst = CommentLst;
 exports.EditableText = EditableText;
@@ -29,3 +30,4 @@ exports.ProductCategories = ProductCategories;
 exports.ImagesUploader = ImagesUploader;
 exports.SelectDate = SelectDate;
 exports.DropLocations = DropLocations;
+exports.ParcelSize = ParcelSize;
