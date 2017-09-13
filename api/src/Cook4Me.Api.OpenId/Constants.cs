@@ -20,6 +20,9 @@ namespace Cook4Me.Api.OpenId
     {
         public const string CookieName = "Cook4MeOpenIdCookie";
         public const string ExternalCookieName = "ExternalCook4MeOpenIdCookie";
+        public const string SumUpClientId = "WmHaR9DdeX83Vs3ULFd8UPtB4fDP";
+        public const string SumUpClientSecret = "ddbd6de1beb66337604569a3572084e9513301430812fa605cd8e4e037c6b63a";
+        public const string BaseSumupApi = "https://api.sumup.com";
 
         public static class RouteNames
         {
@@ -29,6 +32,7 @@ namespace Cook4Me.Api.OpenId
             public const string Image = "image";
             public const string PublicClaims = "{id}/public";
             public const string BulkPublicClaims = "bulk/public";
+            public const string CreditCard = "creditcard";
         }
 
         public static class ErrorMessages
@@ -44,6 +48,7 @@ namespace Cook4Me.Api.OpenId
             public const string HomePhoneNumber = "home_phone_number";
             public const string GooglePlaceId = "google_place_id";
             public const string BannerImage = "banner_image";
+            public const string SumUpCustomerId = "sumup_customer_id";
         }
 
         public static class Dtos
@@ -53,6 +58,15 @@ namespace Cook4Me.Api.OpenId
                 public const string Claims = "claims";
                 public const string Password = "password";
                 public const string IsLocalAccount = "is_local_account";
+            }
+
+            public static class UpdateCreditCard
+            {
+                public const string Name = "name";
+                public const string Number = "number";
+                public const string ExpiryYear = "expiry_year";
+                public const string ExpiryMonth = "expiry_month";
+                public const string Cvv = "cvv";
             }
 
             public static class UpdateClaim

@@ -22,7 +22,8 @@
     "Ups.Client": { "target": "project" },
     "Shippo": { "target": "project" },
     "Sumup.Client": { "target": "project" },
-    "SimpleIdentityServer.Client": { "target": "project" }
+    "SimpleIdentityServer.Client": { "target": "project" },
+    "Paypal.Client": { "target": "project" }
   },
   "frameworks": {
     "net46": {

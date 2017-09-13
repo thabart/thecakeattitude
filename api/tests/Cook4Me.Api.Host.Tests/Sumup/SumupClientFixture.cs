@@ -32,23 +32,21 @@ namespace Cook4Me.Api.Host.Tests.Sumup
             var factory = new IdentityServerClientFactory();
             var result = await factory.CreateAuthSelector()
                 .UseClientSecretBasicAuth("WmHaR9DdeX83Vs3ULFd8UPtB4fDP", "ddbd6de1beb66337604569a3572084e9513301430812fa605cd8e4e037c6b63a")
-                .UseClientCredentials("user.subaccounts")
+                .UseClientCredentials("user.subaccounts", "user.payout-settings")
                 .ExecuteAsync("https://api.sumup.com/token");
             var sumUpClient = new SumupClient(new HttpClientFactory());
-            await sumUpClient.AddClient(new AddClientParameter
+            var r = await sumUpClient.AddClient(new AddClientParameter
             {
                 AccessToken = result.AccessToken,
                 Id = Guid.NewGuid().ToString(),
                 Name = "Thierry Habart",
-                Phone = "0485350536",
-                Address = new SumupAddress
-                {
-                    City = "Bruxelles",
-                    Country = "BE",
-                    Line1 = "223 avenue des croix du feu",
-                    PostalCode = "1020"
-                }
+                Phone = "0485350536"
             });
+            var res = await sumUpClient.AddClientPayment(r.CustomerId, new AddClientPaymentParameter
+            {
+                AccessToken = result.AccessToken
+            });
+            string s = "";
         }
     }
 }

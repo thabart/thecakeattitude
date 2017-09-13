@@ -187,21 +187,7 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Height = 3,
                     Weight = 1
                 },
-                EmailAddress = "habarthierry@hotmail.fr",
-                PaymentInformation = new UpsPaymentInformationParameter
-                {
-                    ExpirationDate = "102019",
-                    Number = "4236084304940630",
-                    SecurityCode = "0630",
-                    Type = "06",
-                    Address = new UpsAddressParameter
-                    {
-                        AddressLine = "5 - 9 Place de Dinant",
-                        City = "Bruxelles",
-                        PostalCode = "1000",
-                        Country = "BE"
-                    }
-                }
+                EmailAddress = "habarthierry@hotmail.fr"
             });
             var res = "";
         }

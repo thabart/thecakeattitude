@@ -20,13 +20,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json.Linq;
+using SimpleIdentityServer.Client;
 using SimpleIdentityServer.Core.Errors;
 using SimpleIdentityServer.Core.Models;
 using SimpleIdentityServer.Core.Repositories;
 using SimpleIdentityServer.Core.Services;
 using SimpleIdentityServer.Core.Validators;
-using SimpleIdentityServer.Core.WebSite.User.Actions;
 using SimpleIdentityServer.Host.Extensions;
+using Sumup.Client;
+using Sumup.Client.Params;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -67,13 +69,15 @@ namespace Cook4Me.Api.OpenId.Controllers
         private readonly IResourceOwnerRepository _resourceOwnerRepository;
         private readonly IAuthenticateResourceOwnerService _authenticateResourceOwnerService;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ISumupClient _sumUpClient;
 
         public UsersController(IGrantedTokenValidator grantedTokenValidator,
             IGrantedTokenRepository grantedTokenRepository,
             IRequestBuilder requestBuilder,
             IHostingEnvironment hostingEnvironment,
             IResourceOwnerRepository resourceOwnerRepository,
-            IAuthenticateResourceOwnerService authenticateResourceOwnerService)
+            IAuthenticateResourceOwnerService authenticateResourceOwnerService,
+            ISumupClient sumUpClient)
         {
             _grantedTokenValidator = grantedTokenValidator;
             _grantedTokenRepository = grantedTokenRepository;
@@ -81,6 +85,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             _hostingEnvironment = hostingEnvironment;
             _resourceOwnerRepository = resourceOwnerRepository;
             _authenticateResourceOwnerService = authenticateResourceOwnerService;
+            _sumUpClient = sumUpClient;
         }
 
         [HttpGet(Constants.RouteNames.UserClaims)] // User Authentication enabled.
@@ -282,6 +287,68 @@ namespace Cook4Me.Api.OpenId.Controllers
             }
 
             return new OkObjectResult(arr);
+        }
+
+        [HttpPost(Constants.RouteNames.CreditCard)] // Update the credit card information.
+        public async Task<IActionResult> UpdateCreditCard([FromBody] JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            // 1. Get the subject.
+            var subjectResult = await GetSubject();
+            if (!subjectResult.IsValid)
+            {
+                return subjectResult.Error;
+            }
+
+            // 2. Check the user exists.
+            var user = await _resourceOwnerRepository.GetAsync(subjectResult.Subject);
+            if (user == null)
+            {
+                return this.BuildError(ErrorCodes.InvalidRequestCode, ErrorDescriptions.TheRoDoesntExist, HttpStatusCode.NotFound);
+            }
+
+            // 3. Fetch the customer_id && update the user.
+            var factory = new IdentityServerClientFactory();
+            var tokenResult = await factory.CreateAuthSelector()
+                .UseClientSecretBasicAuth(Constants.SumUpClientId, Constants.SumUpClientSecret)
+                .UseClientCredentials("user.subaccounts")
+                .ExecuteAsync(Constants.BaseSumupApi + "/token");
+            var sumUpClient = await _sumUpClient.GetClientPayments(subjectResult.Subject, tokenResult.AccessToken);
+            if (sumUpClient == null)
+            {
+                var result = await _sumUpClient.AddClient(new AddClientParameter
+                {
+                    Id = subjectResult.Subject,
+                    AccessToken = tokenResult.AccessToken,
+                    Name = TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name),
+                    Phone = TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber)
+                });
+                
+            }
+
+            /*
+            var sumUpCustomerId = TryGetValue(user.Claims, Constants.Claims.SumUpCustomerId);
+            if (string.IsNullOrWhiteSpace(sumUpCustomerId))
+            {
+                var result = await _sumUpClient.AddClient(new AddClientParameter
+                {
+                    Id = subjectResult.Subject,
+                    AccessToken = tokenResult.AccessToken,
+                    Name = TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name),
+                    Phone = TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber)
+                });
+
+                sumUpCustomerId = result.CustomerId;
+                user.Claims.Add(new Claim(Constants.Claims.SumUpCustomerId, sumUpCustomerId));
+                await _resourceOwnerRepository.UpdateAsync(user);
+            }
+            */
+
+            return null;
         }
 
         private async Task<GetSubjectResult> GetSubject()

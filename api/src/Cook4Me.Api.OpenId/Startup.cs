@@ -29,6 +29,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
 using SimpleIdentityServer.DataAccess.SqlServer;
 using SimpleIdentityServer.Host;
+using Sumup.Client;
 using System.Collections.Generic;
 using System.Net.Http;
 
@@ -141,6 +142,7 @@ namespace Cook4Me.Api.OpenId
         private static void RegisterDependencies(IServiceCollection services)
         {
             services.AddTransient<IRequestBuilder, RequestBuilder>();
+            services.AddSumUpClient();
         }
 
         private static OAuthOptions GetFacebookOptions(IDataProtector protector)

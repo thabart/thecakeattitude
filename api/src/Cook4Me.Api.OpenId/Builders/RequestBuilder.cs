@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.OpenId.Params;
 using Newtonsoft.Json.Linq;
 using SimpleIdentityServer.Core.Models;
 using SimpleIdentityServer.Core.Parameters;
@@ -26,6 +27,7 @@ namespace Cook4Me.Api.OpenId.Builders
 {
     public interface IRequestBuilder
     {
+        UpdateUserCreditCardParameter GetUpdateUserCreditCardParameter(JObject json);
         UpdateUserParameter GetUpdateUserParameter(JObject json);
         SearchResourceOwnerParameter GetSearchResourceOwner(JObject json);
         string GetUploadImage(JObject json);
@@ -52,6 +54,23 @@ namespace Cook4Me.Api.OpenId.Builders
             { Constants.Dtos.UpdateClaim.Locality, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Locality, v) },
             { Constants.Dtos.UpdateClaim.Country, (o, v) => o.Add(SimpleIdentityServer.Core.Jwt.Constants.StandardAddressClaimNames.Country, v) }
         };
+
+        public UpdateUserCreditCardParameter GetUpdateUserCreditCardParameter(JObject json)
+        {
+            if (json == null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+
+            return new UpdateUserCreditCardParameter
+            {
+                Cvv = json.Value<string>(Constants.Dtos.UpdateCreditCard.Cvv),
+                ExpiryMonth = json.Value<string>(Constants.Dtos.UpdateCreditCard.ExpiryMonth),
+                ExpiryYear = json.Value<string>(Constants.Dtos.UpdateCreditCard.ExpiryYear),
+                Name = json.Value<string>(Constants.Dtos.UpdateCreditCard.Name),
+                Number = json.Value<string>(Constants.Dtos.UpdateCreditCard.Number)
+            };
+        }
 
         public SearchResourceOwnerParameter GetSearchResourceOwner(JObject json)
         {

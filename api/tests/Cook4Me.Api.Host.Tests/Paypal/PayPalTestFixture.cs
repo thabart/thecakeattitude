@@ -1,5 +1,24 @@
-﻿using Newtonsoft.Json.Linq;
+﻿#region copyright
+// Copyright 2017 Habart Thierry
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+#endregion
+
+using Newtonsoft.Json.Linq;
+using Paypal.Client;
+using Paypal.Client.Factories;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -10,6 +29,8 @@ namespace Cook4Me.Api.Host.Tests.Paypal
 {
     public class PayPalTestFixture
     {
+        private const string _baseUrl = "https://api.sandbox.paypal.com/v1";
+
         internal class PayResponseEnvelope
         {
             public string Timestamp { get; set; }
@@ -23,6 +44,47 @@ namespace Cook4Me.Api.Host.Tests.Paypal
             public PayResponseEnvelope Envelope { get; set;}
             public string PayKey { get; set; }
             public string PaymentExecStatus { get; set; }
+        }
+
+        [Fact]
+        public async Task ExecutePayment()
+        {
+            var httpClientFactory = new HttpClientFactory();
+            var oAuthTokenCredential = new PaypalOauthClient(httpClientFactory);
+            var token = await oAuthTokenCredential.GetAccessToken("AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt",
+                "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0git",
+                new PaypalOauthClientOptions
+                {
+                    ApplicationMode = PaypalApplicationModes.sandbox
+                });
+            string s = "";
+            /*
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            var tokenResult = await factory.CreateAuthSelector()
+                .UseClientSecretPostAuth("AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt", "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0gi")
+                .UseClientCredentials()
+                .ExecuteAsync("https://api-3t.sandbox.paypal.com/v1/oauth2/token");
+
+            string s = "";
+            */
+            /*
+            var client = new HttpClient();
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            var jObj = new JObject();
+            jObj.Add("intent", "authorize");
+            var content = new StringContent(jObj.ToString(), Encoding.UTF8, "application/json");
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = content,
+                RequestUri = new Uri($"{_baseUrl}/payments/payment")
+            };
+            var result = await client.SendAsync(request);
+            var responseObj = JObject.Parse(await result.Content.ReadAsStringAsync());
+            string s = "";
+            */
+            // When user clicks on buy then create a payment.
+
         }
 
         [Fact]
@@ -64,7 +126,7 @@ namespace Cook4Me.Api.Host.Tests.Paypal
             var content = new StringContent(jObj.ToString(), Encoding.UTF8, "application/json");
             var request = new HttpRequestMessage
             {
-                Method = HttpMethod.Post,
+                Method = System.Net.Http.HttpMethod.Post,
                 Content = content,
                 RequestUri = new Uri("https://svcs.sandbox.paypal.com/AdaptivePayments/Pay")
             };
@@ -76,6 +138,7 @@ namespace Cook4Me.Api.Host.Tests.Paypal
             request.Headers.Add("X-PAYPAL-RESPONSE-DATA-FORMAT", "JSON");
             request.Headers.Add("X-PAYPAL-APPLICATION-ID", "APP-80W284485P519543T");
 
+            // /v1/payments/payment
             var result = await client.SendAsync(request);
             var responseObj = JObject.Parse(await result.Content.ReadAsStringAsync());
             var paymentResponse = GetPayResponse(responseObj);
