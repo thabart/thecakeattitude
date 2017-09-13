@@ -32,6 +32,7 @@ namespace Dhl.Client
 
             serviceCollection.AddTransient<IHttpClientFactory, HttpClientFactory>();
             serviceCollection.AddTransient<IPaypalOauthClient, PaypalOauthClient>();
+            serviceCollection.AddTransient<IPaypalClient, PaypalClient>();
             return serviceCollection;
         }
     }

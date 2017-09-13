@@ -16,9 +16,10 @@
 
 using Newtonsoft.Json.Linq;
 using Paypal.Client;
+using Paypal.Client.Common;
 using Paypal.Client.Factories;
+using Paypal.Client.Params;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -57,6 +58,42 @@ namespace Cook4Me.Api.Host.Tests.Paypal
                 {
                     ApplicationMode = PaypalApplicationModes.sandbox
                 });
+            var paypalClient = new PaypalClient(httpClientFactory);
+            var r = await paypalClient.CreatePayment(new CreatePaymentParameter
+            {
+                AccessToken = token.AccessToken,
+                Intent = IntentPayments.authorize,
+                Payer = new PaypalPayer
+                {
+                    Email = "habarthierry-facilitator@hotmail.fr"
+                },
+                Transactions = new []
+                {
+                   new PaymentTransaction
+                   {
+                       Currency = "EUR",
+                       Total = 8,
+                       Shipping = 3,
+                       SubTotal = 5,
+                       Items = new []
+                       {
+                           new PaypalItem
+                           {
+                               Currency = "EUR",
+                               Name = "Red hat",
+                               Price = 5,
+                               Quantity = 1
+                           }
+                       },
+                       Payee = new PaypalPayee
+                       {
+                           Email = "habarthierry@first-receiver.fr"
+                       }
+                   }
+                },
+                CancelUrl = "http://localhost:3000/cancel",
+                ReturnUrl = "http://localhost:3000/accept"
+            });
             string s = "";
             /*
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
