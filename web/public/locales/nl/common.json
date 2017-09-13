@@ -426,5 +426,6 @@
   "packagingPaymentDescription": "Fill-in the card information which will be used to pay the label",
   "buy": "Buy",
   "valueShouldContains": "The value should contains {0} characters",
-  "expiryInvalid": "The expiration date is invalid"
+  "expiryInvalid": "The expiration date is invalid",
+  "loginPaypal": "Login with PayPal"
 }

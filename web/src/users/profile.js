@@ -350,8 +350,17 @@ class Profile extends Component {
           ) }
         </ul>
       </section>
+      { /* Paypal information */ }
+      <section className="section row" style={{marginTop: "20px", paddingTop: "20px", paddingBottom: "20px"}}>
+        <div className="col-md-12">
+          <h5>{t('payment')}</h5>
+          { !this.state.user.claims.paypal_email ? (<div>
+            <span id="loginPaypal"></span>
+          </div>) : (<span id="lippButton"></span>) }
+        </div>
+      </section>
       { /* Contact information */ }
-      <section className="section row" style={{marginTop: "20px", paddingTop: "20px"}}>
+      <section className="section row" style={{marginTop: "20px", paddingTop: "20px", paddingBottom: "20px"}}>
         <div className="col-md-12">
           <h5>{t('contactInformation')}</h5>
           <div className="row">
@@ -425,6 +434,7 @@ class Profile extends Component {
     self.setState({
       isLoading: true
     });
+
     const {t} = this.props;
     var sub = this.props.sub;
     var canBeEdited = this.props.canBeEdited;
@@ -449,6 +459,20 @@ class Profile extends Component {
             e.preventDefault();
             self.save();
           }
+        });
+      }
+
+      if (!user.claims.paypal_email) {
+        var btn = window.paypal.use( ['login'], function (login) {
+          login.render ({
+            "appid": Constants.PaypalClientId,
+            "authend":"sandbox",
+            "scopes":"openid email",
+            "containerid":"loginPaypal",
+            "locale":"fr-fr",
+            "returnurl": Constants.PayPalCallbackUrl
+          });
+          console.log(login);
         });
       }
     }).catch(function() {

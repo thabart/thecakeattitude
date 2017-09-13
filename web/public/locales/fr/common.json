@@ -425,5 +425,6 @@
   "packagingPaymentDescription": "Rentrez vos données bancaires",
   "buy": "Acheter",
   "valueShouldContains": "La valeur doit contenir {0} caractères",
-  "expiryInvalid": "Date d'expiration est invalide"
+  "expiryInvalid": "Date d'expiration est invalide",
+  "loginPaypal": "Se connecter avec PayPal"
 }
