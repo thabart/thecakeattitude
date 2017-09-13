@@ -14,18 +14,25 @@
 // limitations under the License.
 #endregion
 
-using Paypal.Client.Common;
-using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
-namespace Paypal.Client.Responses
+namespace Paypal.Client.Common
 {
-    public class CreatePaymentResponse : BaseResponse
+    public enum JsonPatchOperations
     {
-        public string Id { get; set; }
-        public IntentPayments Intent { get; set; }
-        public PaymentStates State { get; set; }
-        public PaypalPayer Payer { get; set; }
-        public IEnumerable<PaymentTransaction> Transactions { get; set; }
-        public IEnumerable<HalLink> Links { get; set; }
+        add,
+        remove,
+        replace,
+        move,
+        copy,
+        test
+    }
+
+    public class JsonPatch
+    {
+        public JsonPatchOperations Operation { get; set; }
+        public string Path { get; set; }
+        public JObject Value { get; set; }
+        public string From { get; set; }
     }
 }

@@ -14,18 +14,13 @@
 // limitations under the License.
 #endregion
 
-using Paypal.Client.Common;
-using System.Collections.Generic;
-
-namespace Paypal.Client.Responses
+namespace Paypal.Client.Common
 {
-    public class CreatePaymentResponse : BaseResponse
+    public class ErrorResponse
     {
-        public string Id { get; set; }
-        public IntentPayments Intent { get; set; }
-        public PaymentStates State { get; set; }
-        public PaypalPayer Payer { get; set; }
-        public IEnumerable<PaymentTransaction> Transactions { get; set; }
-        public IEnumerable<HalLink> Links { get; set; }
+        public string Name { get; set; }
+        public string Message { get; set; }
+        public string InformationLink { get; set; }
+        public string DebugId { get; set; }
     }
 }

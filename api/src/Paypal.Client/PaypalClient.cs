@@ -29,7 +29,9 @@ namespace Paypal.Client
 {
     public interface IPaypalClient
     {
-
+        Task<CreatePaymentResponse> CreatePayment(CreatePaymentParameter parameter);
+        Task<CreatePaymentResponse> UpdatePayment(string paymentId, UpdatePaymentParameter parameter);
+        Task<ExecutePaymentResponse> ExecutePayment(string paymentId, ExecutePaymentParameter parameter);
     }
 
     internal class PaypalClient : IPaypalClient
@@ -66,7 +68,114 @@ namespace Paypal.Client
             var response = await client.SendAsync(request).ConfigureAwait(false);
             var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             var jObj = JObject.Parse(content);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception)
+            {
+                return new CreatePaymentResponse
+                {
+                    IsValid = false,
+                    ErrorResponse = ToErrorResponseModel(jObj)
+                };
+            }
+
             return ToCreatePaymentModel(jObj);
+        }
+
+        public async Task<CreatePaymentResponse> UpdatePayment(string paymentId, UpdatePaymentParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+
+
+            var jObj = ToDto(parameter);
+            var client = _httpClientFactory.GetHttpClient();
+            var method = new HttpMethod("PATCH");
+            var request = new HttpRequestMessage(method, new Uri($"{BaseConstants.RESTSandboxEndpoint}v1/payments/payment/{paymentId}"))
+            {
+                Content = new StringContent(jObj.ToString(), Encoding.UTF8, "application/json")
+            };
+
+            request.Headers.Add("Authorization", $"Bearer {parameter.AccessToken}");
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var obj = JObject.Parse(content);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception)
+            {
+                return new CreatePaymentResponse
+                {
+                    IsValid = false,
+                    ErrorResponse = ToErrorResponseModel(obj)
+                };
+            }
+
+            return ToCreatePaymentModel(obj);
+        }
+
+        public async Task<ExecutePaymentResponse> ExecutePayment(string paymentId, ExecutePaymentParameter parameter)
+        {
+            if (string.IsNullOrWhiteSpace(paymentId))
+            {
+                throw new ArgumentNullException(nameof(paymentId));
+            }
+
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            var jObj = ToDto(parameter);
+            var client = _httpClientFactory.GetHttpClient();
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = new StringContent(jObj.ToString(), Encoding.UTF8, "application/json"),
+                RequestUri = new Uri($"{BaseConstants.RESTSandboxEndpoint}v1/payments/payment/{paymentId}/execute")
+            };
+
+            request.Headers.Add("Authorization", $"Bearer {parameter.AccessToken}");
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var obj = JObject.Parse(content);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception)
+            {
+                return new ExecutePaymentResponse
+                {
+                    IsValid = false,
+                    ErrorResponse = ToErrorResponseModel(obj)
+                };
+            }
+
+            return ToExecutePaymentModel(obj);
+        }
+
+        private static ErrorResponse ToErrorResponseModel(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new ErrorResponse
+            {
+                DebugId = jObj.Value<string>("debug_id"),
+                InformationLink = jObj.Value<string>("information_link"),
+                Message = jObj.Value<string>("message"),
+                Name = jObj.Value<string>("name")
+            };
         }
 
         private static CreatePaymentResponse ToCreatePaymentModel(JObject jObj)
@@ -130,6 +239,20 @@ namespace Paypal.Client
             return result;
         }
 
+        private static ExecutePaymentResponse ToExecutePaymentModel(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new ExecutePaymentResponse
+            {
+
+            };
+            return result;
+        }
+
         private static HalLink ToHalLinkModel(JObject jObj)
         {
             if (jObj == null)
@@ -177,6 +300,29 @@ namespace Paypal.Client
             return result;
         }
 
+        private static JObject ToDto(ExecutePaymentParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            var jObj = new JObject();
+            jObj.Add("payer_id", parameter.PayerId);
+            if (parameter.Transactions != null)
+            {
+                var arr = new JArray();
+                foreach(var transaction in parameter.Transactions)
+                {
+                    jObj.Add(ToDto(transaction));
+                }
+
+                jObj.Add("transactions", arr);
+            }
+
+            return jObj;
+        }
+
         private static JObject ToDto(CreatePaymentParameter parameter)
         {
             if (parameter == null)
@@ -185,7 +331,6 @@ namespace Paypal.Client
             }
 
             var jObj = new JObject();
-            var payer = new JObject();
             var redirectUrls = new JObject();
             var transactions = new JArray();
             var intent = string.Empty;
@@ -212,12 +357,34 @@ namespace Paypal.Client
 
             redirectUrls.Add("return_url", parameter.ReturnUrl);
             redirectUrls.Add("cancel_url", parameter.CancelUrl);
-            payer.Add("payment_method", "paypal");
             jObj.Add("intent", intent);
-            jObj.Add("payer", payer);
+            if (parameter.Payer != null)
+            {
+                jObj.Add("payer", ToDto(parameter.Payer));
+            }
+
             jObj.Add("transactions", transactions);
             jObj.Add("redirect_urls", redirectUrls);
             return jObj;
+        }
+
+        private static JArray ToDto(UpdatePaymentParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var arr = new JArray();
+            if (parameter.JsonPatches != null)
+            {
+                foreach(var patch in parameter.JsonPatches)
+                {
+                    arr.Add(ToDto(patch));
+                }
+            }
+
+            return arr;
         }
 
         private static JObject ToDto(PaymentTransaction parameter)
@@ -292,9 +459,9 @@ namespace Paypal.Client
             }
 
             payerInfo.Add("email", payer.Email);
-            payerInfo.Add("first_name", payer.FirstName);
-            payerInfo.Add("last_name", payer.LastName);
-            payerInfo.Add("middle_name", payer.MiddleName);
+            // payerInfo.Add("first_name", payer.FirstName);
+            // payerInfo.Add("last_name", payer.LastName);
+            // payerInfo.Add("middle_name", payer.MiddleName);
             // TODO : Continue
             jObj.Add("payment_method", paymentMethod);
             jObj.Add("payer_info", payerInfo);
@@ -347,6 +514,21 @@ namespace Paypal.Client
             jObj.Add("postal_code", adr.PostalCode);
             jObj.Add("phone", adr.Phone);
             jObj.Add("state", adr.State);
+            return jObj;
+        }
+
+        private static JObject ToDto(JsonPatch patch)
+        {
+            if (patch == null)
+            {
+                throw new ArgumentNullException(nameof(patch));
+            }
+
+            var jObj = new JObject();
+            jObj.Add("op", Enum.GetName(typeof(JsonPatchOperations), patch.Operation));
+            jObj.Add("path", patch.Path);
+            jObj.Add("value", patch.Value);
+            jObj.Add("from", patch.From);
             return jObj;
         }
     }

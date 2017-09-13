@@ -20,6 +20,7 @@ namespace Paypal.Client.Common
 {
     public class PaymentTransaction
     {
+        public string ReferenceId { get; set; }
         public double Total { get; set; }
         public PaypalPayee Payee { get; set; }
         public string Currency { get; set; }

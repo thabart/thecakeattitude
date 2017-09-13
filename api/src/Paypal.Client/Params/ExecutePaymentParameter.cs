@@ -17,15 +17,12 @@
 using Paypal.Client.Common;
 using System.Collections.Generic;
 
-namespace Paypal.Client.Responses
+namespace Paypal.Client.Params
 {
-    public class CreatePaymentResponse : BaseResponse
+    public class ExecutePaymentParameter
     {
-        public string Id { get; set; }
-        public IntentPayments Intent { get; set; }
-        public PaymentStates State { get; set; }
-        public PaypalPayer Payer { get; set; }
+        public string AccessToken { get; set; }
+        public string PayerId { get; set; }
         public IEnumerable<PaymentTransaction> Transactions { get; set; }
-        public IEnumerable<HalLink> Links { get; set; }
     }
 }

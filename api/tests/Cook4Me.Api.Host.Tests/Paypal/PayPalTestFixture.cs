@@ -65,6 +65,7 @@ namespace Cook4Me.Api.Host.Tests.Paypal
                 Intent = IntentPayments.authorize,
                 Payer = new PaypalPayer
                 {
+                    PaymentMethod = PaypalPaymentMethods.Paypal,
                     Email = "habarthierry-facilitator@hotmail.fr"
                 },
                 Transactions = new []
@@ -72,8 +73,8 @@ namespace Cook4Me.Api.Host.Tests.Paypal
                    new PaymentTransaction
                    {
                        Currency = "EUR",
-                       Total = 8,
-                       Shipping = 3,
+                       Total = 10,
+                       Shipping = 5,
                        SubTotal = 5,
                        Items = new []
                        {
@@ -93,6 +94,32 @@ namespace Cook4Me.Api.Host.Tests.Paypal
                 },
                 CancelUrl = "http://localhost:3000/cancel",
                 ReturnUrl = "http://localhost:3000/accept"
+            });
+
+            var newPrice = new JObject();
+            var newPriceDetails = new JObject();
+            newPriceDetails.Add("subtotal", "5");
+            newPriceDetails.Add("shipping", "3");
+            newPrice.Add("total", "8");
+            newPrice.Add("currency", "EUR");
+            newPrice.Add("details", newPriceDetails);
+            var r2 = await paypalClient.UpdatePayment(r.Id, new UpdatePaymentParameter
+            {
+                AccessToken = token.AccessToken,
+                JsonPatches = new []
+                {
+                    new JsonPatch
+                    {
+                        Operation = JsonPatchOperations.replace,
+                        Path = "/transactions/0/amount",
+                        Value = newPrice
+                    }
+                }
+            });
+            var r3 = await paypalClient.ExecutePayment(r.Id, new ExecutePaymentParameter
+            {
+                AccessToken = token.AccessToken,
+                PayerId = "" // Return the payer id returned in the http://localhost:3000/accept?paymentId=PAY-52K97665BJ176034HLG4V4EY&token=EC-0AG28408B7828094W&PayerID=RTTQKS7QPPFXL
             });
             string s = "";
             /*

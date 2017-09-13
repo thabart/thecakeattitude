@@ -15,17 +15,17 @@
 #endregion
 
 using Paypal.Client.Common;
-using System.Collections.Generic;
 
 namespace Paypal.Client.Responses
 {
-    public class CreatePaymentResponse : BaseResponse
+    public class BaseResponse
     {
-        public string Id { get; set; }
-        public IntentPayments Intent { get; set; }
-        public PaymentStates State { get; set; }
-        public PaypalPayer Payer { get; set; }
-        public IEnumerable<PaymentTransaction> Transactions { get; set; }
-        public IEnumerable<HalLink> Links { get; set; }
+        public BaseResponse()
+        {
+            IsValid = true;
+        }
+
+        public ErrorResponse ErrorResponse { get; set; }
+        public bool IsValid { get; set; }
     }
 }
