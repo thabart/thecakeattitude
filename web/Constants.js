@@ -3,6 +3,7 @@
 module.exports = {
     ClientId: 'website',
     ClientSecret: 'website',
+    PaypalAuthorizeUrl: 'https://www.sandbox.paypal.com/webapps/auth/protocol/openidconnect/v1/authorize',
     PaypalClientId: 'AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt',
     PayPalBaseUrl : 'https://www.sandbox.paypal.com',
     PayPalCallbackUrl: 'http://localhost:3000/paypalcallback',
