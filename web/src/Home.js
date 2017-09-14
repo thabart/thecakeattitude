@@ -55,7 +55,7 @@ class Home extends Component {
           <div className="container">
             <div className="row">
               <div className="col-md-7">
-                <h2>Comment utiliser ShopInGame ?</h2>
+                <h2>TEST</h2>
               </div>
               <div className="col-md-4">
                 <div className="">

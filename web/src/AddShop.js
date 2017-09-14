@@ -30,7 +30,7 @@ class AddShop extends Component {
             isLoading: false
         };
     }
-    
+
     toggle(tab, json) { // Change tab.
         var self = this;
         if (json) {
