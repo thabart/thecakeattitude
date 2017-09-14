@@ -80,7 +80,7 @@ namespace Paypal.Client
             
             if (string.IsNullOrEmpty(_paypalToken.AccessToken))
             {
-                var base64ClientId = ConvertClientCredentialsToBase64String(_paypalToken.ClientId, _paypalToken.ClientSecret);
+                var base64ClientId = Converters.ConvertClientCredentialsToBase64String(_paypalToken.ClientId, _paypalToken.ClientSecret);
                 await UpdateOauthToken(base64ClientId);
             }
 
@@ -149,36 +149,6 @@ namespace Paypal.Client
             public string GetSDKVersion()
             {
                 return BaseConstants.SdkVersion;
-            }
-        }
-        
-        private static string ConvertClientCredentialsToBase64String(string clientId, string clientSecret)
-        {
-            if (string.IsNullOrEmpty(clientId))
-            {
-                throw new ArgumentNullException(nameof(clientId));
-            }
-            else if (string.IsNullOrEmpty(clientSecret))
-            {
-                throw new ArgumentNullException(nameof(clientSecret));
-            }
-
-            try
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(string.Format("{0}:{1}", clientId, clientSecret));
-                return Convert.ToBase64String(bytes);
-            }
-            catch (Exception ex)
-            {
-                if (ex is FormatException || ex is ArgumentNullException)
-                {
-                    throw new Exception("Unable to convert client credentials to base-64 string.\n" +
-                                                         "  clientId: \"" + clientId + "\"\n" +
-                                                         "  clientSecret: \"" + clientSecret + "\"\n" +
-                                                         "  Error: " + ex.Message);
-                }
-
-                throw new Exception(ex.Message, ex);
             }
         }
     }    

@@ -31,6 +31,8 @@ namespace Cook4Me.Api.Host.Tests.Paypal
     public class PayPalTestFixture
     {
         private const string _baseUrl = "https://api.sandbox.paypal.com/v1";
+        private const string _clientId = "AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt";
+        private const string _clientSecret = "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0git";
 
         internal class PayResponseEnvelope
         {
@@ -48,12 +50,26 @@ namespace Cook4Me.Api.Host.Tests.Paypal
         }
 
         [Fact]
+        public async Task GetOpenIdAccessToken()
+        {
+            var httpClientFactory = new HttpClientFactory();
+            var openidClient = new PaypalOpenidClient(httpClientFactory);
+            await openidClient.GetUserAccessToken(new GetOpenidAccessTokenParameter
+            {
+                ApplicationMode = PaypalApplicationModes.sandbox,
+                AuthorizationCode = "C21AAFJAePslUxjm6u_hh0HxlKhbeJOoDwAIjDXYTghuT5szFu8p6Z01PwKsfrxAQwm9sZQwNImnRVT2FHte9v3gdEwYzSTzQ",
+                ClientId = _clientId,
+                ClientSecret = _clientSecret
+            });
+        }
+
+        [Fact]
         public async Task ExecutePayment()
         {
             var httpClientFactory = new HttpClientFactory();
             var oAuthTokenCredential = new PaypalOauthClient(httpClientFactory);
-            var token = await oAuthTokenCredential.GetAccessToken("AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt",
-                "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0git",
+            var token = await oAuthTokenCredential.GetAccessToken(_clientId,
+                _clientSecret,
                 new PaypalOauthClientOptions
                 {
                     ApplicationMode = PaypalApplicationModes.sandbox
@@ -122,32 +138,6 @@ namespace Cook4Me.Api.Host.Tests.Paypal
                 PayerId = "" // Return the payer id returned in the http://localhost:3000/accept?paymentId=PAY-52K97665BJ176034HLG4V4EY&token=EC-0AG28408B7828094W&PayerID=RTTQKS7QPPFXL
             });
             string s = "";
-            /*
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var tokenResult = await factory.CreateAuthSelector()
-                .UseClientSecretPostAuth("AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt", "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0gi")
-                .UseClientCredentials()
-                .ExecuteAsync("https://api-3t.sandbox.paypal.com/v1/oauth2/token");
-
-            string s = "";
-            */
-            /*
-            var client = new HttpClient();
-            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-            var jObj = new JObject();
-            jObj.Add("intent", "authorize");
-            var content = new StringContent(jObj.ToString(), Encoding.UTF8, "application/json");
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                Content = content,
-                RequestUri = new Uri($"{_baseUrl}/payments/payment")
-            };
-            var result = await client.SendAsync(request);
-            var responseObj = JObject.Parse(await result.Content.ReadAsStringAsync());
-            string s = "";
-            */
-            // When user clicks on buy then create a payment.
 
         }
 

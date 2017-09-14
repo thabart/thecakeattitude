@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { Alert, Tooltip, Button, Input, FormFeedback, FormGroup, Label } from "reactstrap";
 import { NavLink } from "react-router-dom";
-import { UserService } from '../services/index';
+import { UserService, PaypalService } from '../services/index';
 import { ApplicationStore, EditUserStore } from '../stores/index';
 import { EditableText } from '../components/index';
 import AppDispatcher from '../appDispatcher';
@@ -268,7 +268,7 @@ class Profile extends Component {
           return decodeURIComponent(results[2].replace(/\+/g, " "));
       };
       var self = this;
-      var url = Constants.PaypalAuthorizeUrl + '?client_id=' + Constants.PaypalClientId +'&response_type=code&scope=openid%20email&redirect_uri=' + Constants.PayPalCallbackUrl + '&nonce=86655724&newUI=Y';
+      var url = PaypalService.getAuthorizeUrl();
       var w = window.open(url, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
       var interval = setInterval(function () {
           if (w.closed) {
@@ -279,7 +279,7 @@ class Profile extends Component {
           var href = w.location.href;
           var authCode = getParameterByName('code', href);
           if (authCode) {
-              console.log(authCode); // TODO :Use authorization token.
+              console.log(authCode);
               clearInterval(interval);
               w.close();
           }

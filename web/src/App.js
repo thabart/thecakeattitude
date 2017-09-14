@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
+import { OpenIdService, SessionService } from "./services/index";
 import Map from "./Map";
 import Sellers from "./Sellers";
 import AddShop from "./AddShop";
@@ -21,13 +22,12 @@ import Messages from './Messages';
 import Message from './Message';
 import NewMessage from './NewMessage';
 import Basket from './Basket';
-import {OpenIdService, SessionService} from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
+import AppDispatcher from "./appDispatcher";
 import $ from "jquery";
 import "ms-signalr-client";
-import AppDispatcher from "./appDispatcher";
 import "./styles/app.css"; // Import all the styles.
 import "./styles/index.css";
 import './styles/fonts.css';

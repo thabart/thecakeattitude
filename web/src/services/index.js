@@ -16,6 +16,7 @@ import MessageService from './Messages';
 import OrdersService from './Orders';
 import DhlService from './Dhl';
 import UpsService from './Ups';
+import PaypalService from './Paypal';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -35,3 +36,4 @@ exports.MessageService = MessageService;
 exports.OrdersService = OrdersService;
 exports.DhlService = DhlService;
 exports.UpsService = UpsService;
+exports.PaypalService = PaypalService;
