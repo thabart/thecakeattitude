@@ -1,4 +1,5 @@
 var http = require('http');
+var https = require('https');
 var URL = require('url');
 var Promise = require('bluebird');
 var querystring = require('querystring');
@@ -29,7 +30,7 @@ module.exports = {
       getRequest.end();
     });
   },
-  post: function(url, content, type) { // Execute post request.
+  post: function(url, content, type, authValue) { // Execute post request.
     return new Promise(function(resolve, reject) {
       type = type || 'application/json';
       if (type === 'application/x-www-form-urlencoded') {
@@ -40,6 +41,11 @@ module.exports = {
       }
 
       url = URL.parse(url);
+      var requester = url.protocol.indexOf('https') !== -1 ? https : http;
+      if (authValue)
+      {
+
+      }
       var postOptions = {
         hostname: url.hostname,
         port    : url.port,
@@ -52,7 +58,11 @@ module.exports = {
         }
       };
 
-      var postRequest = http.request(postOptions, function (res) {
+      if (authValue) {
+        postOptions.headers['Authorization'] = authValue;
+      }
+
+      var postRequest = requester.request(postOptions, function (res) {
           res.setEncoding('utf8');
           var body = '';
           res.on('data', function (chunk) {

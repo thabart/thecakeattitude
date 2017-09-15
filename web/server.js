@@ -36,8 +36,19 @@ app.post('/login', function(req, res) { // TODO : Implement logs function.
 		res.sendStatus(401);
 	});
 });
-app.post('/paypalcallback', function(req, res) { // TODO : get authorization code + get access token.
+app.get('/paypalcallback', function(req, res) { // TODO : get authorization code + get access token.
+	var code = req.query['code'];
+	if (!code) {
+		res.sendStatus(500);
+		return;
+	}
 
+	services.PaypalService.getOpenIdAccessToken(code).then(function() {
+		res.sendStatus(200);
+	}).catch(function(e) {
+		console.log(e);
+		res.sendStatus(500);
+	});
 });
 
 app.listen(3003, function() {

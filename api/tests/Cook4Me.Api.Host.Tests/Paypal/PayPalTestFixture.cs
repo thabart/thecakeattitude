@@ -57,7 +57,8 @@ namespace Cook4Me.Api.Host.Tests.Paypal
             await openidClient.GetUserAccessToken(new GetOpenidAccessTokenParameter
             {
                 ApplicationMode = PaypalApplicationModes.sandbox,
-                AuthorizationCode = "C21AAFJAePslUxjm6u_hh0HxlKhbeJOoDwAIjDXYTghuT5szFu8p6Z01PwKsfrxAQwm9sZQwNImnRVT2FHte9v3gdEwYzSTzQ",
+                // 
+                AuthorizationCode = "Okh4QCEPufYqr37pozUP1Za9ke0M06xJYxVWgrGZDe4cumoHzgAweDREydl43uj5U_V6tlYYBXmMfLs56oPt0OxHilXyVNwcZGCRDOxQy25t-FazOKuC3uErv81XWXj8SOUtqEXQh3tH_adQO8wgzZjRQFL6p91cpV6oSTyrxCtsOesR0KDPY2EjLacl5EjgOVliiX71wfXVvit1",
                 ClientId = _clientId,
                 ClientSecret = _clientSecret
             });
