@@ -426,5 +426,9 @@
   "buy": "Acheter",
   "valueShouldContains": "La valeur doit contenir {0} caractères",
   "expiryInvalid": "Date d'expiration est invalide",
-  "loginPaypal": "Se connecter avec PayPal"
+  "linkPaypal": "Lier un nouveau compte Paypal",
+  "switchPaypal": "Changer de compte Paypal",
+  "loginPaypalProcessing": "En cours ...",
+  "paypalAccountLinked": "A Paypal account {0} has been linked to your profile",
+  "noPaypalAccount": "Aucun compte PayPal associé"
 }

@@ -40,6 +40,7 @@ class Profile extends Component {
       isUpdateUserTooltipOpened: false,
       isBannerImageTooltipOpened: false,
       isEditProfileTooltipOpened: false,
+      isPaypableDisabled: false,
       valid: {
         isPasswordInvalid: false,
         isPasswordConfirmationInvalid: false
@@ -270,6 +271,10 @@ class Profile extends Component {
       var self = this;
       var url = PaypalService.getAuthorizeUrl();
       var w = window.open(url, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
+      self.setState({
+        isPaypableDisabled: true
+      });
+      var isLoadingUserInformation = false;
       var interval = setInterval(function () {
           if (w.closed) {
               clearInterval(interval);
@@ -277,11 +282,29 @@ class Profile extends Component {
           }
 
           var href = w.location.href;
-          var authCode = getParameterByName('code', href);
-          if (authCode) {
-              console.log(authCode);
-              clearInterval(interval);
-              w.close();
+          var accessToken = getParameterByName('access_token', href);
+          if (accessToken && !isLoadingUserInformation) {
+              isLoadingUserInformation = true;
+              PaypalService.getUserInformation(accessToken).then(function(userInfo) {
+                var user = self.state.user;
+                user.claims.paypal_email = userInfo.email;
+                self.setState({
+                  user: user,
+                  isPaypableDisabled: false
+                });
+                AppDispatcher.dispatch({
+                    actionName: Constants.events.UPDATE_USER_INFORMATION_ACT,
+                    data: { claims: user.claims }
+                });
+                clearInterval(interval);
+                w.close();
+              }).catch(function(e) {
+                self.setState({
+                  isPaypableDisabled: false
+                });
+                clearInterval(interval);
+                w.close();
+              });
           }
       });
   }
@@ -384,12 +407,18 @@ class Profile extends Component {
       <section className="section row" style={{marginTop: "20px", paddingTop: "20px", paddingBottom: "20px"}}>
         <div className="col-md-12">
           <h5>{t('payment')}</h5>
-          { !this.state.user.claims.paypal_email ? (<div>
-            <button className="paypal-blue" onClick={this.navigatePaypal}>
-              <svg className="PPTM" xmlns="http://www.w3.org/2000/svg" version="1.1" width="16px" height="17px" viewBox="0 0 16 17"><path className="PPTM-btm" fill="#0079c1" d="m15.603 3.917c-0.264-0.505-0.651-0.917-1.155-1.231-0.025-0.016-0.055-0.029-0.081-0.044 0.004 0.007 0.009 0.014 0.013 0.021 0.265 0.506 0.396 1.135 0.396 1.891 0 1.715-0.712 3.097-2.138 4.148-1.425 1.052-3.418 1.574-5.979 1.574h-0.597c-0.45 0-0.9 0.359-1.001 0.798l-0.719 3.106c-0.101 0.438-0.552 0.797-1.002 0.797h-1.404l-0.105 0.457c-0.101 0.438 0.184 0.798 0.633 0.798h2.1c0.45 0 0.9-0.359 1.001-0.798l0.718-3.106c0.101-0.438 0.551-0.797 1.002-0.797h0.597c2.562 0 4.554-0.522 5.979-1.574 1.426-1.052 2.139-2.434 2.139-4.149 0-0.755-0.132-1.385-0.397-1.891z"></path><path className="PPTM-top" fill="#00457c" d="m9.27 6.283c-0.63 0.46-1.511 0.691-2.641 0.691h-0.521c-0.45 0-0.736-0.359-0.635-0.797l0.628-2.72c0.101-0.438 0.552-0.797 1.002-0.797h0.686c0.802 0 1.408 0.136 1.814 0.409 0.409 0.268 0.611 0.683 0.611 1.244 0 0.852-0.315 1.507-0.944 1.97zm3.369-5.42c-0.913-0.566-2.16-0.863-4.288-0.863h-4.372c-0.449 0-0.9 0.359-1.001 0.797l-2.957 12.813c-0.101 0.439 0.185 0.798 0.634 0.798h2.099c0.45 0 0.901-0.358 1.003-0.797l0.717-3.105c0.101-0.438 0.552-0.797 1.001-0.797h0.598c2.562 0 4.554-0.524 5.979-1.575 1.427-1.051 2.139-2.433 2.139-4.148-0.001-1.365-0.439-2.425-1.552-3.123z"></path></svg>
-              <b>{t('loginPaypal')}</b>
-            </button>
-          </div>) : (<span id="lippButton"></span>) }
+          { this.state.user.claims.paypal_email && (<p>{t('paypalAccountLinked').replace('{0}', this.state.user.claims.paypal_email)}</p>) }
+          { !this.state.user.claims.paypal_email && (<p>{t('noPaypalAccount')}</p>) }
+          { this.state.isEditable && (
+            <div>
+              <button className="paypal-blue" onClick={this.navigatePaypal} disabled={this.state.isPaypableDisabled ? 'disabled': ''}>
+                <svg className="PPTM" xmlns="http://www.w3.org/2000/svg" version="1.1" width="16px" height="17px" viewBox="0 0 16 17"><path className="PPTM-btm" fill="#0079c1" d="m15.603 3.917c-0.264-0.505-0.651-0.917-1.155-1.231-0.025-0.016-0.055-0.029-0.081-0.044 0.004 0.007 0.009 0.014 0.013 0.021 0.265 0.506 0.396 1.135 0.396 1.891 0 1.715-0.712 3.097-2.138 4.148-1.425 1.052-3.418 1.574-5.979 1.574h-0.597c-0.45 0-0.9 0.359-1.001 0.798l-0.719 3.106c-0.101 0.438-0.552 0.797-1.002 0.797h-1.404l-0.105 0.457c-0.101 0.438 0.184 0.798 0.633 0.798h2.1c0.45 0 0.9-0.359 1.001-0.798l0.718-3.106c0.101-0.438 0.551-0.797 1.002-0.797h0.597c2.562 0 4.554-0.522 5.979-1.574 1.426-1.052 2.139-2.434 2.139-4.149 0-0.755-0.132-1.385-0.397-1.891z"></path><path className="PPTM-top" fill="#00457c" d="m9.27 6.283c-0.63 0.46-1.511 0.691-2.641 0.691h-0.521c-0.45 0-0.736-0.359-0.635-0.797l0.628-2.72c0.101-0.438 0.552-0.797 1.002-0.797h0.686c0.802 0 1.408 0.136 1.814 0.409 0.409 0.268 0.611 0.683 0.611 1.244 0 0.852-0.315 1.507-0.944 1.97zm3.369-5.42c-0.913-0.566-2.16-0.863-4.288-0.863h-4.372c-0.449 0-0.9 0.359-1.001 0.797l-2.957 12.813c-0.101 0.439 0.185 0.798 0.634 0.798h2.099c0.45 0 0.901-0.358 1.003-0.797l0.717-3.105c0.101-0.438 0.552-0.797 1.001-0.797h0.598c2.562 0 4.554-0.524 5.979-1.575 1.427-1.051 2.139-2.433 2.139-4.148-0.001-1.365-0.439-2.425-1.552-3.123z"></path></svg>
+                { this.state.isPaypableDisabled && (<b>{t('loginPaypalProcessing')}</b>) }
+                { !this.state.isPaypableDisabled && !this.state.user.claims.paypal_email && ( <b>{t('linkPaypal')}</b> )}
+                { !this.state.isPaypableDisabled && this.state.user.claims.paypal_email && ( <b>{t('switchPaypal')}</b> )}
+              </button>
+            </div>
+          )}
         </div>
       </section>
       { /* Contact information */ }

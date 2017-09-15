@@ -5,13 +5,14 @@ var bodyParser = require('body-parser');
 var app = express();
 var services = require('./server/services');
 
+var baseUrl = 'http://localhost:3000';
 var options = {
 	clientId : 'website',
 	clientSecret: 'website'
 };
 
 var allowCrossDomain = function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Origin', baseUrl);
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
@@ -43,10 +44,9 @@ app.get('/paypalcallback', function(req, res) { // TODO : get authorization code
 		return;
 	}
 
-	services.PaypalService.getOpenIdAccessToken(code).then(function() {
-		res.sendStatus(200);
+	services.PaypalService.getOpenIdAccessToken(code).then(function(result) {
+		res.redirect(baseUrl + '/paypal?access_token=' + result.access_token);
 	}).catch(function(e) {
-		console.log(e);
 		res.sendStatus(500);
 	});
 });

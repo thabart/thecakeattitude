@@ -137,6 +137,7 @@ class Header extends Component {
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         };
         var self = this;
+        var isLoadingClaims = false;
         OpenIdService.getAuthorizationurl().then(function (url) {
             var w = window.open(url, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
             var interval = setInterval(function () {
@@ -147,7 +148,8 @@ class Header extends Component {
 
                 var href = w.location.href;
                 var accessToken = getParameterByName('access_token', href);
-                if (accessToken) {
+                if (accessToken && !isLoadingClaims) {
+                    isLoadingClaims = true;
                     var session = {
                       access_token: accessToken
                     };
@@ -168,6 +170,8 @@ class Header extends Component {
                     }).catch(function() {
                       SessionService.remove();
                       self.handleAuthenticationError();
+                      clearInterval(interval);
+                      w.close();
                     });
                 }
             })

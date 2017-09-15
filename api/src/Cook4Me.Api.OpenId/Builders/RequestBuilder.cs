@@ -44,6 +44,7 @@ namespace Cook4Me.Api.OpenId.Builders
             { Constants.Claims.MobilePhoneNumber, (u, v) => u.Add(new Claim(Constants.Claims.MobilePhoneNumber, v)) },
             { Constants.Claims.GooglePlaceId, (u, v) => u.Add(new Claim(Constants.Claims.GooglePlaceId, v)) },
             { Constants.Claims.BannerImage, (u, v) => u.Add(new Claim(Constants.Claims.BannerImage, v)) },
+            { Constants.Claims.PaypalEmail, (u, v) => u.Add(new Claim(Constants.Claims.PaypalEmail, v)) },
             { Constants.Dtos.UpdateClaim.Picture, (u, v) => u.Add(new Claim(SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Picture, v)) }
         };
 
