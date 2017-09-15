@@ -93,14 +93,6 @@ class Header extends Component {
         });
     }
 
-    handeAuthenticationSuccess(i) {
-        var self = this;
-        AppDispatcher.dispatch({
-          actionName: Constants.events.USER_LOGGED_IN,
-          data: i
-        });
-    }
-
     authenticate(e) { // Authenticate with login and password.
         e.preventDefault();
         var self = this;
@@ -125,7 +117,7 @@ class Header extends Component {
             });
             self.refreshNotifications(claims);
           }).catch(function() {
-            SessionService.setSession(null);
+            SessionService.remove();
             self.handleAuthenticationError();
           });
           self.refreshNotifications();
@@ -156,12 +148,26 @@ class Header extends Component {
                 var href = w.location.href;
                 var accessToken = getParameterByName('access_token', href);
                 if (accessToken) {
-                    AuthenticateService.authenticate(accessToken).then(function (i) {
-                        clearInterval(interval);
-                        w.close();
-                        self.handeAuthenticationSuccess(i);
-                    }).catch(function () {
-                        self.handleAuthenticationError();
+                    var session = {
+                      access_token: accessToken
+                    };
+                    SessionService.setSession(session);
+                    UserService.getClaims().then(function(claims) {
+                      AppDispatcher.dispatch({
+                        actionName: Constants.events.USER_LOGGED_IN,
+                        data: claims
+                      });
+                      self.setState({
+                          isErrorDisplayed: false,
+                          isLoading: false,
+                          isAuthenticateOpened: false,
+                          isLoggedIn: true
+                      });
+                      clearInterval(interval);
+                      w.close();
+                    }).catch(function() {
+                      SessionService.remove();
+                      self.handleAuthenticationError();
                     });
                 }
             })
@@ -197,7 +203,8 @@ class Header extends Component {
 
     refreshUser() { // Display the user information.
       var user = ApplicationStore.getUser();
-      if (!user) {
+      console.log(user);
+      if (!user || !user.name) {
         this.setState({
           isLoggedIn: false,
           user: null

@@ -21,7 +21,7 @@ import Messages from './Messages';
 import Message from './Message';
 import NewMessage from './NewMessage';
 import Basket from './Basket';
-import {OpenIdService, SessionService} from "./services/index";
+import { SessionService, UserService } from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
 import createBrowserHistory from "history/createBrowserHistory";
@@ -238,7 +238,7 @@ class App extends Component {
             return;
         }
 
-        OpenIdService.introspect(session.access_token).then(function (i) {
+        UserService.getClaims().then(function (i) {
             AppDispatcher.dispatch({
               actionName: Constants.events.USER_LOGGED_IN,
               data: i
