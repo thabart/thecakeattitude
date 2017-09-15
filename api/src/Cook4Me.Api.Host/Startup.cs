@@ -143,6 +143,7 @@ namespace Cook4Me.Api.Host
             services.AddCookForMeStoreInMemory()
                 .AddUpsClient()
                 .AddDhlClient()
+                .AddPaypalClient()
                 .AddCore()
                 .AddHandlers();
             services.AddTransient<IResponseBuilder, ResponseBuilder>();

@@ -63,6 +63,7 @@ namespace Cook4Me.Api.Host
             public const string ParcelShopLocations = "parcelshops/.search";
             public const string SearchCapabalities = "ratings/.search";
             public const string BuyLabel = "buylabel";
+            public const string BuyOrder = "buy/{id}";
         }
 
         public static class DtoNames
@@ -223,6 +224,12 @@ namespace Cook4Me.Api.Host
             {
                 public const string NumberOfOrdersCreated = "number_of_orders_created";
                 public const string NumberOfOrderLinesCreated = "number_of_lines_created";
+            }
+
+            public static class OrderPurchasedNames
+            {
+                public const string PaymentId = "payment_id";
+                public const string ApprovalUrl = "approval_url";
             }
 
             public static class OrderNames

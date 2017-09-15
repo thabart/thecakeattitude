@@ -37,6 +37,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderPurchasedEvent(OrderPurchasedEvent evt);
         JObject GetOrderParcel(OrderAggregateParcel orderParcel);
         JObject GetUpsRatings(RatingServiceSelectionResponse response);
         JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities);
@@ -99,6 +100,20 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrderPurchasedEvent(OrderPurchasedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderPurchasedNames.PaymentId, evt.PaymentId);
+            result.Add(Constants.DtoNames.OrderPurchasedNames.ApprovalUrl, evt.ApprovalUrl);
+            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return result;
+        }
+
         public JObject GetUpsRatings(RatingServiceSelectionResponse response)
         {
             if (response == null)
@@ -268,14 +283,12 @@ namespace Cook4Me.Api.Host.Builders
             {
                 throw new ArgumentNullException(nameof(evt));
             }
-
-            var obj = new JObject();
-
+            
             var result = new JObject();
             result.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
             result.Add(Constants.DtoNames.OrderNames.Subject, evt.Client);
             result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
-            return obj;
+            return result;
         }
 
         public JObject GetOrderConfirmeddEvent(OrderConfirmedEvent evt)
