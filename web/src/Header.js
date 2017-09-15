@@ -17,7 +17,7 @@ import {
 import Promise from "bluebird";
 import { NavLink } from "react-router-dom";
 import { withRouter } from "react-router";
-import { OpenIdService, AuthenticateService, SessionService, NotificationService, UserService, OrdersService } from "./services/index";
+import { OpenIdService, AuthenticateService, SessionService, NotificationService, UserService, OrdersService, WebsiteService } from "./services/index";
 import { translate } from 'react-i18next';
 import { Guid } from './utils/index';
 import { ApplicationStore } from './stores/index';
@@ -45,6 +45,7 @@ class Header extends Component {
         this.refreshNotifications = this.refreshNotifications.bind(this);
         this.refreshOrders = this.refreshOrders.bind(this);
         this.readNotification = this.readNotification.bind(this);
+        this.refreshUser = this.refreshUser.bind(this);
         this.state = {
             user: null,
             activeItem: null,
@@ -94,14 +95,6 @@ class Header extends Component {
 
     handeAuthenticationSuccess(i) {
         var self = this;
-        self.displayUserName().then(function () {
-            self.setState({
-                isErrorDisplayed: false,
-                isLoading: false,
-                isAuthenticateOpened: false,
-                isLoggedIn: true
-            });
-        });
         AppDispatcher.dispatch({
           actionName: Constants.events.USER_LOGGED_IN,
           data: i
@@ -114,14 +107,29 @@ class Header extends Component {
         self.setState({
             isLoading: true
         });
-        OpenIdService.passwordAuthentication(this.state.login, this.state.password).then(function (resp) {
-            AuthenticateService.authenticate(resp.access_token).then(function (i) {
-              self.handeAuthenticationSuccess(i);
-              self.refreshNotifications();
-            }).catch(function () {
-              self.handleAuthenticationError();
+        WebsiteService.login(this.state.login, this.state.password).then(function(resp) {
+          var session = {
+            access_token: resp.access_token
+          };
+          SessionService.setSession(session);
+          UserService.getClaims().then(function(claims) {
+            AppDispatcher.dispatch({
+              actionName: Constants.events.USER_LOGGED_IN,
+              data: claims
             });
-        }).catch(function (e) {
+            self.setState({
+                isErrorDisplayed: false,
+                isLoading: false,
+                isAuthenticateOpened: false,
+                isLoggedIn: true
+            });
+            self.refreshNotifications(claims);
+          }).catch(function() {
+            SessionService.setSession(null);
+            self.handleAuthenticationError();
+          });
+          self.refreshNotifications();
+        }).catch(function() {
             self.handleAuthenticationError();
         });
     }
@@ -187,32 +195,22 @@ class Header extends Component {
       this.props.history.push('/manage/orders');
     }
 
-    displayUser(isLoggedIn, user) { // Display the user information.
+    refreshUser() { // Display the user information.
+      var user = ApplicationStore.getUser();
+      if (!user) {
         this.setState({
-            isLoggedIn: isLoggedIn,
-            user: user
+          isLoggedIn: false,
+          user: null
         });
-    }
+        return;
+      }
 
-    displayUserName() { // Display username
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            var session = SessionService.getSession();
-            var isLoggedIn = session && session != null;
-            if (!isLoggedIn) {
-                self.displayUser(isLoggedIn);
-                resolve();
-                return;
-            }
-
-            OpenIdService.getUserInfo(session.access_token).then(function (userInfo) {
-                self.displayUser(true, userInfo);
-                resolve();
-            }).catch(function () {
-                self.displayUser(false);
-                reject();
-            });
-        });
+      this.setState({
+        isLoggedIn: true,
+        user: user
+      });
+      this.refreshOrders();
+      this.refreshNotifications();
     }
 
     switchLanguage(lng) { // Switch language.
@@ -555,26 +553,16 @@ class Header extends Component {
 
                 self.refreshOrders();
               break;
+              case Constants.events.USER_LOGGED_IN:
+                self.refreshUser();
+              break;
           }
       });
     }
 
     componentWillMount() { // Execute after the view is displayed.
         var self = this;
-        this.setState({
-            isConnectHidden: true
-        });
-        this.displayUserName().then(function () {
-            self.setState({
-                isConnectHidden: false
-            });
-            self.refreshNotifications();
-            self.refreshOrders();
-        }).catch(function () {
-            self.setState({
-                isConnectHidden: false
-            });
-        });
+        self.refreshUser();
     }
 
     componentWillUnmount() { // Remove the registration.
