@@ -48,7 +48,8 @@ namespace Cook4Me.Api.EF.Repositories
             IQueryable<Order> orders = _context.Orders
                 .Include(c => c.OrderParcel)
                 .Include(p => p.OrderLines)
-                .Include(p => p.Shop);
+                .Include(p => p.Shop)
+                .Include(c => c.OrderPayment);
             var result = await orders.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
             if (result == null)
             {
@@ -205,7 +206,7 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Order> orders = _context.Orders.Include(c => c.OrderParcel).Include(c => c.OrderLines).Include(c => c.Shop);
+            IQueryable<Models.Order> orders = _context.Orders.Include(c => c.OrderParcel).Include(c => c.OrderLines).Include(c => c.Shop).Include(c => c.OrderPayment);
             if (parameter.Clients != null && parameter.Clients.Any())
             {
                 orders = orders.Where(s => parameter.Clients.Contains(s.Subject));

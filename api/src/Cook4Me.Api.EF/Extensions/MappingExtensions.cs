@@ -25,6 +25,40 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static OrderAggregatePayment ToAggregate(this OrderPayment orderPayment)
+        {
+            if (orderPayment == null)
+            {
+                throw new ArgumentNullException(nameof(orderPayment));
+            }
+
+            return new OrderAggregatePayment
+            {
+                Id = orderPayment.Id,
+                OrderId = orderPayment.OrderId,
+                PaymentMethod = (OrderPayments)orderPayment.PaymentMethod,
+                Status = (OrderPaymentStatus)orderPayment.Status,
+                TransactionId = orderPayment.TransactionId
+            };
+        }
+
+        public static OrderPayment ToModel(this OrderAggregatePayment orderPayment)
+        {
+            if (orderPayment == null)
+            {
+                throw new ArgumentNullException(nameof(orderPayment));
+            }
+
+            return new OrderPayment
+            {
+                Id = orderPayment.Id,
+                OrderId = orderPayment.OrderId,
+                PaymentMethod = (int)orderPayment.PaymentMethod,
+                Status = (int)orderPayment.Status,
+                TransactionId = orderPayment.TransactionId
+            };
+        }
+
         public static OrderParcel ToModel(this OrderAggregateParcel orderParcel)
         {
             if (orderParcel == null)
@@ -101,6 +135,7 @@ namespace Cook4Me.Api.EF.Extensions
             }
 
             var orderParcel = order.OrderParcel == null ? null : order.OrderParcel.ToModel();
+            var orderPayment = order.OrderPayment == null ? null : order.OrderPayment.ToModel();
             return new Order
             {
                 Id = order.Id,
@@ -112,7 +147,8 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = order.UpdateDateTime,
                 ShopId = order.ShopId,
                 OrderLines = order.OrderLines == null ? new List<OrderLine>() : order.OrderLines.Select(o => o.ToModel()).ToList(),
-                OrderParcel = orderParcel
+                OrderParcel = orderParcel,
+                OrderPayment = orderPayment
             };
         }
 
@@ -142,6 +178,7 @@ namespace Cook4Me.Api.EF.Extensions
             var sellerId = order.Shop != null ? order.Shop.Subject : null;
 
             var orderParcel = order.OrderParcel == null ? null : order.OrderParcel.ToAggregate();
+            var orderPayment = order.OrderPayment == null ? null : order.OrderPayment.ToAggregate();
             return new OrderAggregate
             {
                 Id = order.Id,
@@ -154,7 +191,8 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopId = order.ShopId,
                 SellerId = sellerId,
                 OrderLines = order.OrderLines == null ? null : order.OrderLines.Select(o => o.ToAggregate()),
-                OrderParcel = orderParcel
+                OrderParcel = orderParcel,
+                OrderPayment=  orderPayment
             };
         }
 

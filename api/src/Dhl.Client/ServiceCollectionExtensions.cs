@@ -16,7 +16,6 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Dhl.Client.Factories;
 
 namespace Dhl.Client
 {
@@ -29,7 +28,6 @@ namespace Dhl.Client
                 throw new ArgumentNullException(nameof(serviceCollection));
             }
 
-            serviceCollection.AddTransient<IHttpClientFactory, HttpClientFactory>();
             serviceCollection.AddTransient<IDhlClient, DhlClient>();
             return serviceCollection;
         }

@@ -36,12 +36,14 @@ using Cook4Me.Api.Host.Operations.ShopCategory;
 using Cook4Me.Api.Host.Operations.Tag;
 using Cook4Me.Api.Host.Operations.Ups;
 using Cook4Me.Api.Host.Validators;
+using Cook4Me.Common;
 using Dhl.Client;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Openid.Client;
 using SimpleIdentityServer.Oauth2Instrospection.Authentication;
 using Ups.Client;
 
@@ -140,7 +142,10 @@ namespace Cook4Me.Api.Host
 
         private static void RegisterDependencies(IServiceCollection services)
         {
+            services.AddTransient<ISettingsProvider, SettingsProvider>();
             services.AddCookForMeStoreInMemory()
+                .AddCommon()
+                .AddOpenidClient()
                 .AddUpsClient()
                 .AddDhlClient()
                 .AddPaypalClient()

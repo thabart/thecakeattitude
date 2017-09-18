@@ -14,29 +14,23 @@
 // limitations under the License.
 #endregion
 
-#if NET
-using System.Net;
-#endif
-using System.Net.Http;
+using Cook4Me.Common.Factories;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 
-namespace Ups.Client.Factories
+namespace Dhl.Client
 {
-    public interface IHttpClientFactory
+    public static class ServiceCollectionExtensions
     {
-        HttpClient GetHttpClient();
-    }
-
-    public class HttpClientFactory : IHttpClientFactory
-    {
-        public HttpClient GetHttpClient()
+        public static IServiceCollection AddCommon(this IServiceCollection serviceCollection)
         {
-            var httpHandler = new HttpClientHandler();
-#if NET
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-#else
-            httpHandler.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true;
-#endif
-            return new HttpClient(httpHandler);
+            if (serviceCollection == null)
+            {
+                throw new ArgumentNullException(nameof(serviceCollection));
+            }
+
+            serviceCollection.AddTransient<IHttpClientFactory, HttpClientFactory>();
+            return serviceCollection;
         }
     }
 }

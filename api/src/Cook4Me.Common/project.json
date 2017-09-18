@@ -1,6 +1,6 @@
 {
   "version": "1.0.0-*",
-  "description": "Dhl.Client Class Library",
+  "description": "Cook4Me.Common Class Library",
   "authors": [ "thierry habart" ],
   "packOptions": {
     "tags": [ "" ],
@@ -19,15 +19,9 @@
     "System.Xml.XmlDocument": "4.0.1",
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
     "System.Net.Http": "4.1.0",
-    "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
-    "Cook4Me.Common": { "target": "project" }
+    "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final"
   },
   "frameworks": {
-    "net46": {
-      "dependencies": {
-        "System.Runtime": "4.0.20"
-      }
-    },
     "netcoreapp1.0": {
       "imports": [ "dnxcore50", "portable-net451+win8" ],
       "dependencies": {
@@ -35,6 +29,16 @@
           "type": "platform",
           "version": "1.0.0"
         }
+      }
+    },
+    "net46": {
+      "dependencies": {
+        "System.Runtime": "4.0.20"
+      },
+      "buildOptions": {
+        "define": [
+          "NET"
+        ]
       }
     }
   }

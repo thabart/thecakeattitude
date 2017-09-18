@@ -30,7 +30,6 @@ using Newtonsoft.Json.Linq;
 using SimpleIdentityServer.DataAccess.SqlServer;
 using SimpleIdentityServer.Host;
 using Sumup.Client;
-using System.Collections.Generic;
 using System.Net.Http;
 
 namespace Cook4Me.Api.OpenId

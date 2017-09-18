@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
+using Cook4Me.Common;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
@@ -37,13 +38,15 @@ namespace Cook4Me.Api.Host.Operations.Ups
         private readonly IUpsClient _upsClient;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
+        private readonly ISettingsProvider _settingsProvider;
 
-        public GetRatingsOperation(IRequestBuilder requestBuilder, IUpsClient upsClient, IResponseBuilder responseBuilder, IControllerHelper controllerHelper)
+        public GetRatingsOperation(IRequestBuilder requestBuilder, IUpsClient upsClient, IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ISettingsProvider settingsProvider)
         {
             _requestBuilder = requestBuilder;
             _upsClient = upsClient;
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
+            _settingsProvider = settingsProvider;
         }
 
         public async Task<IActionResult> Execute(JObject jObj)
@@ -56,9 +59,9 @@ namespace Cook4Me.Api.Host.Operations.Ups
             var parameter = _requestBuilder.GetUpsRatingsParameter(jObj);
             parameter.Credentials = new client.Params.UpsCredentials
             {
-                LicenseNumber = Constants.UpsCredentials._accessLicenseNumber,
-                UserName = Constants.UpsCredentials._userName,
-                Password = Constants.UpsCredentials._password
+                LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
+                UserName = _settingsProvider.GetUpsUsername(),
+                Password = _settingsProvider.GetUpsPassword()
             };
             var result = await _upsClient.GetRatings(parameter);
             if (result.Response != null && result.Response.Error != null)

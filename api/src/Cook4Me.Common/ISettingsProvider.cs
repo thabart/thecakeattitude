@@ -14,22 +14,16 @@
 // limitations under the License.
 #endregion
 
-using Microsoft.Extensions.DependencyInjection;
-using System;
-
-namespace Ups.Client
+namespace Cook4Me.Common
 {
-    public static class ServiceCollectionExtensions
+    public interface ISettingsProvider
     {
-        public static IServiceCollection AddUpsClient(this IServiceCollection serviceCollection)
-        {
-            if (serviceCollection == null)
-            {
-                throw new ArgumentNullException(nameof(serviceCollection));
-            }
-
-            serviceCollection.AddTransient<IUpsClient, UpsClient>();
-            return serviceCollection;
-        }
+        string GetPaypalClientId();
+        string GetPaypalClientSecret();
+        string GetBaseOpenidUrl();
+        string GetUpsLicenseNumber();
+        string GetUpsUsername();
+        string GetUpsPassword();
+        string GetBaseWebsite();
     }
 }

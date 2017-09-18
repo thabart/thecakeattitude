@@ -14,22 +14,26 @@
 // limitations under the License.
 #endregion
 
-using Microsoft.Extensions.DependencyInjection;
-using System;
-
-namespace Ups.Client
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public static class ServiceCollectionExtensions
+    public enum OrderPayments
     {
-        public static IServiceCollection AddUpsClient(this IServiceCollection serviceCollection)
-        {
-            if (serviceCollection == null)
-            {
-                throw new ArgumentNullException(nameof(serviceCollection));
-            }
+        Paypal
+    }
 
-            serviceCollection.AddTransient<IUpsClient, UpsClient>();
-            return serviceCollection;
-        }
+    public enum OrderPaymentStatus
+    {
+        Created,
+        Accepted,
+        Confirmed
+    }
+    
+    public class OrderAggregatePayment
+    {
+        public string Id { get; set; }
+        public string OrderId { get; set; }
+        public OrderPayments PaymentMethod { get; set; }
+        public OrderPaymentStatus Status { get; set; }
+        public string TransactionId { get; set; }
     }
 }

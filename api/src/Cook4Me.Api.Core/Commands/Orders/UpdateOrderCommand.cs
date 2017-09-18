@@ -34,5 +34,6 @@ namespace Cook4Me.Api.Core.Commands.Orders
         public OrderTransportModes TransportMode { get; set; }
         public IEnumerable<UpdateOrderLine> OrderLines { get; set; }
         public AddOrderParcelCommand OrderParcel { get; set; }
+        public AddPaymentOrder PaymentOrder { get; set; }
     }
 }

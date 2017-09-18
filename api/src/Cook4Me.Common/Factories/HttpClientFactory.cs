@@ -14,14 +14,29 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
+#if NET
+using System.Net;
+#endif
+using System.Net.Http;
 
-namespace Cook4Me.Api.Core.Events.Orders
+namespace Cook4Me.Common.Factories
 {
-    public class OrderPurchasedEvent : Event
+    public interface IHttpClientFactory
     {
-        public string Buyer { get; set; }
-        public string PaymentId { get; set; }
-        public string ApprovalUrl { get; set; }
+        HttpClient GetHttpClient();
+    }
+
+    internal class HttpClientFactory : IHttpClientFactory
+    {
+        public HttpClient GetHttpClient()
+        {
+            var httpHandler = new HttpClientHandler();
+#if NET
+            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
+#else
+            httpHandler.ServerCertificateCustomValidationCallback = (_, __, ___, ____) => true;
+#endif
+            return new HttpClient(httpHandler);
+        }
     }
 }

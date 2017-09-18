@@ -14,22 +14,29 @@
 // limitations under the License.
 #endregion
 
-using Microsoft.Extensions.DependencyInjection;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Ups.Client
+namespace Cook4Me.Api.EF.Mappings
 {
-    public static class ServiceCollectionExtensions
+    public static class OrderPaymentMapping
     {
-        public static IServiceCollection AddUpsClient(this IServiceCollection serviceCollection)
+        public static ModelBuilder AddOrderPayment(this ModelBuilder modelBuilder)
         {
-            if (serviceCollection == null)
+            if (modelBuilder == null)
             {
-                throw new ArgumentNullException(nameof(serviceCollection));
+                throw new ArgumentNullException(nameof(modelBuilder));
             }
 
-            serviceCollection.AddTransient<IUpsClient, UpsClient>();
-            return serviceCollection;
+
+            modelBuilder.Entity<OrderPayment>()
+                .HasKey(a => a.Id);
+            modelBuilder.Entity<OrderPayment>()
+                .HasOne(op => op.Order)
+                .WithOne(a => a.OrderPayment)
+                .HasForeignKey<Order>(a => a.OrderPaymentId);
+            return modelBuilder;
         }
     }
 }

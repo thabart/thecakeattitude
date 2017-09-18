@@ -16,11 +16,16 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Orders;
-using System.Threading.Tasks;
-using System;
-using Cook4Me.Api.Core.Repositories;
-using System.Linq;
 using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Common;
+using Openid.Client;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Ups.Client;
+using Ups.Client.Params;
 
 namespace Cook4Me.Api.Host.Validators
 {
@@ -31,9 +36,13 @@ namespace Cook4Me.Api.Host.Validators
 
     public class UpdateOrderValidationResult
     {
-        public UpdateOrderValidationResult(OrderAggregate order)
+        public UpdateOrderValidationResult(OrderAggregate order, IEnumerable<ProductAggregate> products, string payerPaypalEmail, string sellerPaypalEmail, double shippingPrice)
         {
             Order = order;
+            Products = products;
+            PayerPaypalEmail = payerPaypalEmail;
+            SellerPaypalEmail = sellerPaypalEmail;
+            ShippingPrice = shippingPrice;
             IsValid = true;
         }
 
@@ -46,17 +55,31 @@ namespace Cook4Me.Api.Host.Validators
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
         public OrderAggregate Order { get; set; }
+        public IEnumerable<ProductAggregate> Products { get; set; }
+        public string PayerPaypalEmail { get; set; }
+        public string SellerPaypalEmail { get; set; }
+        public double ShippingPrice { get; set; }
     }
 
     internal class UpdateOrderValidator : IUpdateOrderValidator
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
+        private readonly IOpenidClient _openidClient;
+        private readonly ISettingsProvider _settingsProvider;
+        private readonly IShopRepository _shopRepository;
+        private readonly IUpsClient _upsClient;
 
-        public UpdateOrderValidator(IOrderRepository orderRepository, IProductRepository productRepository)
+        public UpdateOrderValidator(IOrderRepository orderRepository, IProductRepository productRepository, 
+            IOpenidClient openidClient, ISettingsProvider settingsProvider, IShopRepository shopRepository,
+            IUpsClient upsClient)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
+            _openidClient = openidClient;
+            _settingsProvider = settingsProvider;
+            _shopRepository = shopRepository;
+            _upsClient = upsClient;
         }
 
         public async Task<UpdateOrderValidationResult> Validate(UpdateOrderCommand order, string subject)
@@ -105,6 +128,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderReceptionCanBeConfirmedOnlyByItsCreator);
             }
 
+            IEnumerable<ProductAggregate> prods = null;
             if (order.OrderLines != null && order.OrderLines.Any()) // Check the lines.
             {
                 var productIds = order.OrderLines.Select(o => o.ProductId);
@@ -127,14 +151,132 @@ namespace Cook4Me.Api.Host.Validators
                         return new UpdateOrderValidationResult(ErrorDescriptions.TheOrderLineQuantityIsTooMuch);
                     }
                 }
+
+                prods = products.Content;
             }
 
-            if (order.Status == OrderAggregateStatus.Confirmed)
+            double shippingPrice = 0;
+            string payerEmail = string.Empty;
+            string sellerEmail = string.Empty;
+            if (order.Status == OrderAggregateStatus.Confirmed && order.TransportMode == OrderTransportModes.Packet)
             {
-                // TODO : Check the Parcel.
+                if (order.OrderParcel == null)
+                {
+                    return new UpdateOrderValidationResult(ErrorDescriptions.TheParcelDoesntExist);
+                }
+
+                var payer = await _openidClient.GetPublicClaims(_settingsProvider.GetBaseOpenidUrl(), subject);
+                if (payer == null)
+                {
+                    return new UpdateOrderValidationResult(ErrorDescriptions.ThePayerPaypalAccountNotExist);
+                }
+
+                var shopid = prods.Any() ? prods.First().ShopId : string.Empty;
+                var shop = await _shopRepository.Get(shopid);
+                if (shop == null)
+                {
+                    return new UpdateOrderValidationResult(ErrorDescriptions.TheShopDoesntExist);
+                }
+
+                var seller = await _openidClient.GetPublicClaims(_settingsProvider.GetBaseOpenidUrl(), shop.Subject);
+                if (seller == null)
+                {
+                    return new UpdateOrderValidationResult(ErrorDescriptions.TheSellerPaypalAccountNotExist);
+                }
+
+                var paypalBuyer = payer.Claims.FirstOrDefault(c => c.Type == "paypal_email");
+                var paypalSeller = seller.Claims.FirstOrDefault(c => c.Type == "paypal_email");
+                if (paypalBuyer == null)
+                {
+                    return new UpdateOrderValidationResult(ErrorDescriptions.ThePayerPaypalAccountNotExist);
+                }
+
+                if (paypalSeller == null)
+                {
+                    return new UpdateOrderValidationResult(ErrorDescriptions.TheSellerPaypalAccountNotExist);
+                }
+
+                if (order.OrderParcel.Transporter == Transporters.Ups)
+                {
+                    var buyerName = payer.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;
+                    var sellerName = seller.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;
+                    var parameter = new GetUpsRatingsParameter
+                    {
+                        Credentials = new UpsCredentials
+                        {
+                            LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
+                            Password = _settingsProvider.GetUpsPassword(),
+                            UserName = _settingsProvider.GetUpsUsername()
+                        },
+                        Shipper = new UpsShipperParameter
+                        {
+                            Name = buyerName,
+                            Address = new UpsAddressParameter
+                            {
+                                AddressLine = order.OrderParcel.BuyerAddressLine,
+                                City = order.OrderParcel.BuyerCity,
+                                Country = order.OrderParcel.BuyerCountryCode,
+                                PostalCode = order.OrderParcel.BuyerPostalCode.ToString()
+                            }
+                        },
+                        ShipFrom = new UpsShipParameter
+                        {
+                            Name = buyerName,
+                            AttentionName = buyerName,
+                            CompanyName = buyerName,
+                            Address = new UpsAddressParameter
+                            {
+                                AddressLine = order.OrderParcel.BuyerAddressLine,
+                                City = order.OrderParcel.BuyerCity,
+                                Country = order.OrderParcel.BuyerCountryCode,
+                                PostalCode = order.OrderParcel.BuyerPostalCode.ToString()
+                            }
+                        },
+                        ShipTo = new UpsShipParameter
+                        {
+                            Name = sellerName,
+                            AttentionName = sellerName,
+                            CompanyName = sellerName,
+                            Address = new UpsAddressParameter
+                            {
+                                AddressLine = order.OrderParcel.SellerAddressLine,
+                                City = order.OrderParcel.SellerCity,
+                                Country = order.OrderParcel.SellerCountryCode,
+                                PostalCode = order.OrderParcel.SellerPostalCode.ToString()
+                            }
+                        },
+                        Package = new UpsPackageParameter
+                        {
+                            Height = Constants.PackageInfo.Height,
+                            Length = Constants.PackageInfo.Length,
+                            Weight = Constants.PackageInfo.Weight,
+                            Width = Constants.PackageInfo.Width
+                        },
+                        AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
+                        {
+                            Name = order.OrderParcel.ParcelShopName,
+                            Address = new UpsAddressParameter
+                            {
+                                AddressLine = order.OrderParcel.ParcelShopAddressLine,
+                                City = order.OrderParcel.ParcelShopCity,
+                                Country = order.OrderParcel.ParcelShopCountryCode,
+                                PostalCode = order.OrderParcel.ParcelShopPostalCode.ToString()
+                            }
+                        }
+                    };
+                    var ratingsResponse = await _upsClient.GetRatings(parameter);
+                    if (ratingsResponse.Response.Error != null)
+                    {
+                        return new UpdateOrderValidationResult(ratingsResponse.Response.Error.ErrorDescription);
+                    }
+
+                    shippingPrice = ratingsResponse.RatedShipment.TotalCharges.MonetaryValue;
+                    payerEmail = paypalBuyer.Value;
+                    sellerEmail = paypalSeller.Value;
+               }
             }
 
-            return new UpdateOrderValidationResult(record);
+            return new UpdateOrderValidationResult(record, prods, payerEmail, sellerEmail, shippingPrice);
         }
     }
 }

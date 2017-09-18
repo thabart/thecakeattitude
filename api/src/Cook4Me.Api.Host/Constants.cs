@@ -18,6 +18,16 @@ namespace Cook4Me.Api.Host
 {
     internal static class Constants
     {
+        public const string Currency = "EUR";
+
+        public static class PackageInfo
+        {
+            public const double Height = 35;
+            public const double Length = 50;
+            public const double Weight = 20;
+            public const double Width = 80;
+        }
+
         public static class UpsCredentials
         {
             public const string _userName = "thabart1";
@@ -142,6 +152,15 @@ namespace Cook4Me.Api.Host
                 public const string PriceWithoutTax = "price_without_tax";
             }
 
+            public static class OrderPaymentNames
+            {
+                public const string Id = "id";
+                public const string OrderId = "order_id";
+                public const string PaymentMethod = "payment_method";
+                public const string Status = "status";
+                public const string TransactionId = "transaction_id";
+            }
+
             public static class DhlRatingNames
             {
                 public const string ParcelType = "parcel_type";
@@ -244,6 +263,7 @@ namespace Cook4Me.Api.Host
                 public const string ShopId = "shop_id";
                 public const string TransportMode = "transport_mode";
                 public const string Package = "package";
+                public const string Payment = "payment";
             }
 
             public static class OrderLineNames

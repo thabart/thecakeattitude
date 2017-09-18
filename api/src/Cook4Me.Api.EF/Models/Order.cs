@@ -23,6 +23,7 @@ namespace Cook4Me.Api.EF.Models
     {
         public string Id { get; set; }
         public string OrderParcelId { get; set; }
+        public string OrderPaymentId { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public int Status { get; set; }
@@ -33,5 +34,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual ICollection<OrderLine> OrderLines { get; set; }
         public virtual OrderParcel OrderParcel { get; set; }
         public virtual Shop Shop { get; set; }
+        public virtual OrderPayment OrderPayment { get; set; }
     }
 }

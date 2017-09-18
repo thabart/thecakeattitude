@@ -37,7 +37,6 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
-        JObject GetOrderPurchasedEvent(OrderPurchasedEvent evt);
         JObject GetOrderParcel(OrderAggregateParcel orderParcel);
         JObject GetUpsRatings(RatingServiceSelectionResponse response);
         JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities);
@@ -100,20 +99,6 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
-        public JObject GetOrderPurchasedEvent(OrderPurchasedEvent evt)
-        {
-            if (evt == null)
-            {
-                throw new ArgumentNullException(nameof(evt));
-            }
-
-            var result = new JObject();
-            result.Add(Constants.DtoNames.OrderPurchasedNames.PaymentId, evt.PaymentId);
-            result.Add(Constants.DtoNames.OrderPurchasedNames.ApprovalUrl, evt.ApprovalUrl);
-            result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
-            return result;
-        }
-
         public JObject GetUpsRatings(RatingServiceSelectionResponse response)
         {
             if (response == null)
@@ -400,6 +385,42 @@ namespace Cook4Me.Api.Host.Builders
             if (order.OrderParcel != null)
             {
                 result.Add(Constants.DtoNames.OrderNames.Package, GetOrderParcel(order.OrderParcel));
+            }
+
+            if (order.OrderPayment != null)
+            {
+                result.Add(Constants.DtoNames.OrderNames.Payment, GetOrderPayment(order.OrderPayment));
+            }
+
+            return result;
+        }
+
+        public JObject GetOrderPayment(OrderAggregatePayment payment)
+        {
+            if (payment == null)
+            {
+                throw new ArgumentNullException(nameof(payment));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderPaymentNames.Id, payment.Id);
+            result.Add(Constants.DtoNames.OrderPaymentNames.OrderId, payment.OrderId);
+            result.Add(Constants.DtoNames.OrderPaymentNames.TransactionId, payment.TransactionId);
+            switch(payment.PaymentMethod)
+            {
+                case OrderPayments.Paypal:
+                    result.Add(Constants.DtoNames.OrderPaymentNames.PaymentMethod, "paypal");
+                    break;
+            }
+
+            switch(payment.Status)
+            {
+                case OrderPaymentStatus.Accepted:
+                    result.Add(Constants.DtoNames.OrderPaymentNames.Status, "accepted");
+                    break;
+                case OrderPaymentStatus.Confirmed:
+                    result.Add(Constants.DtoNames.OrderPaymentNames.Status, "confirmed");
+                    break;
             }
 
             return result;

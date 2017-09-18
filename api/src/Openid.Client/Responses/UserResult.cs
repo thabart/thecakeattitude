@@ -14,22 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Microsoft.Extensions.DependencyInjection;
-using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 
-namespace Ups.Client
+namespace Openid.Client.Responses
 {
-    public static class ServiceCollectionExtensions
+    public class UserResult
     {
-        public static IServiceCollection AddUpsClient(this IServiceCollection serviceCollection)
-        {
-            if (serviceCollection == null)
-            {
-                throw new ArgumentNullException(nameof(serviceCollection));
-            }
-
-            serviceCollection.AddTransient<IUpsClient, UpsClient>();
-            return serviceCollection;
-        }
+        public bool IsLocalAccount { get; set; }
+        public IEnumerable<Claim> Claims { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0-*",
-  "description": "Dhl.Client Class Library",
+  "description": "Openid.Client Class Library",
   "authors": [ "thierry habart" ],
   "packOptions": {
     "tags": [ "" ],
@@ -23,11 +23,6 @@
     "Cook4Me.Common": { "target": "project" }
   },
   "frameworks": {
-    "net46": {
-      "dependencies": {
-        "System.Runtime": "4.0.20"
-      }
-    },
     "netcoreapp1.0": {
       "imports": [ "dnxcore50", "portable-net451+win8" ],
       "dependencies": {
@@ -35,6 +30,16 @@
           "type": "platform",
           "version": "1.0.0"
         }
+      }
+    },
+    "net46": {
+      "dependencies": {
+        "System.Runtime": "4.0.20"
+      },
+      "buildOptions": {
+        "define": [
+          "NET"
+        ]
       }
     }
   }

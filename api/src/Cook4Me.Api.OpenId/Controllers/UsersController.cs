@@ -330,24 +330,6 @@ namespace Cook4Me.Api.OpenId.Controllers
                 
             }
 
-            /*
-            var sumUpCustomerId = TryGetValue(user.Claims, Constants.Claims.SumUpCustomerId);
-            if (string.IsNullOrWhiteSpace(sumUpCustomerId))
-            {
-                var result = await _sumUpClient.AddClient(new AddClientParameter
-                {
-                    Id = subjectResult.Subject,
-                    AccessToken = tokenResult.AccessToken,
-                    Name = TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name),
-                    Phone = TryGetValue(user.Claims, SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.PhoneNumber)
-                });
-
-                sumUpCustomerId = result.CustomerId;
-                user.Claims.Add(new Claim(Constants.Claims.SumUpCustomerId, sumUpCustomerId));
-                await _resourceOwnerRepository.UpdateAsync(user);
-            }
-            */
-
             return null;
         }
 

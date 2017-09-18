@@ -31,6 +31,7 @@ using Cook4Me.Api.Core.Events.Service;
 using Cook4Me.Api.Core.Events.Shop;
 using Cook4Me.Api.Core.Helpers;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Paypal.Client;
 using System;
@@ -58,8 +59,7 @@ namespace Cook4Me.Api.Handlers
             var clientServiceCommandHandler = new ClientServiceCommandsHandler(provider.GetService<IClientServiceRepository>(), bus);
             var notificationCommandHandler = new NotificationCommandsHandler(provider.GetService<INotificationRepository>(), bus);
             var messageCommandsHandler = new MessageCommandsHandler(provider.GetService<IMessageRepository>(), bus);
-            var orderCommandsHandler = new OrderCommandsHandler(provider.GetService<IOrderRepository>(), provider.GetService<IProductRepository>(), bus, provider.GetService<IOrderPriceCalculatorHelper>()
-                , provider.GetService<IPaypalClient>(), provider.GetService<IPaypalOauthClient>());
+            var orderCommandsHandler = new OrderCommandsHandler(provider.GetService<IOrderRepository>(), provider.GetService<IProductRepository>(), bus, provider.GetService<IOrderPriceCalculatorHelper>());
             var notificationEventsHandler = new NotificationEventsHandler(provider.GetService<INotificationRepository>(), provider.GetService<IShopRepository>(), bus);
             var upsCommandsHandler = new UpsCommandsHandler(provider.GetService<IEventPublisher>(), provider.GetService<IUpsClient>());
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);

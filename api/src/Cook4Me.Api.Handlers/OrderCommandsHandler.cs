@@ -21,9 +21,6 @@ using Cook4Me.Api.Core.Events.Orders;
 using Cook4Me.Api.Core.Helpers;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
-using Paypal.Client;
-using Paypal.Client.Common;
-using Paypal.Client.Params;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,29 +30,20 @@ namespace Cook4Me.Api.Handlers
 {
     public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>
     {
-        // TODO : Move those data to a common class.
-        private const string _clientId = "AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt";
-        private const string _clientSecret = "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0git";
-
         private const string _approvalUrl = "approval_url";
 
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
-        private readonly IPaypalClient _paypalClient;
-        private readonly IPaypalOauthClient _paypalOauthClient;
 
         public OrderCommandsHandler(IOrderRepository orderRepository, IProductRepository productRepository, 
-            IEventPublisher eventPublisher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IPaypalClient paypalClient,
-            IPaypalOauthClient paypalOauthClient)
+            IEventPublisher eventPublisher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _eventPublisher = eventPublisher;
             _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
-            _paypalClient = paypalClient;
-            _paypalOauthClient = paypalOauthClient;
         }
 
         public async Task Handle(UpdateOrderCommand message)
@@ -116,69 +104,21 @@ namespace Cook4Me.Api.Handlers
                         Transporter = message.OrderParcel.Transporter
                     };
                 }
-                await _orderPriceCalculatorHelper.Update(order);
-                await _orderRepository.Update(order);
-                if (order.TransportMode == OrderTransportModes.Packet) // Purchase the packet (create PAYPAL transaction).
+
+                if (message.PaymentOrder != null)
                 {
-                    var token = await _paypalOauthClient.GetAccessToken(_clientId, _clientSecret,
-                        new PaypalOauthClientOptions
-                        {
-                            ApplicationMode = PaypalApplicationModes.sandbox
-                        });
-                    var products = await _productRepository.Search(new SearchProductsParameter
+                    order.OrderPayment = new OrderAggregatePayment
                     {
-                        ProductIds = order.OrderLines.Select(o => o.ProductId),
-                        IsPagingEnabled = false
-                    });
-                    var items = order.OrderLines.Select(o =>
-                    {
-                        var product = products.Content.First(p => p.Id == o.ProductId);
-                        return new PaypalItem
-                        {
-                            Name = product.Name,
-                            Description = product.Description,
-                            Currency = "EUR",
-                            Quantity = o.Quantity,
-                            Price = product.Price
-                        };
-                    });
-                    var res = await _paypalClient.CreatePayment(new CreatePaymentParameter
-                    {
-                        AccessToken = token.AccessToken,
-                        Intent = IntentPayments.authorize,
-                        Payer = new PaypalPayer
-                        {
-                            PaymentMethod = PaypalPaymentMethods.Paypal,
-                            Email = "habarthierry-facilitator@hotmail.fr" // TODO : Retrieve this email.
-                        },
-                        Transactions = new []
-                        {
-                            new PaymentTransaction
-                            {
-                               Currency = "EUR", // TODO : Calculate the estimated price.
-                               Total = 4 + items.Sum(i => i.Price * i.Quantity),
-                               Shipping = 4,
-                               SubTotal = items.Sum(i => i.Price * i.Quantity),
-                               Items = items,
-                               Payee = new PaypalPayee
-                               {
-                                   Email = "habarthierry@first-receiver.fr" // TODO : Retrieve this EMAIL.
-                               }
-                            }
-                        },
-                        CancelUrl = "http://localhost:3000/cancel",
-                        ReturnUrl = "http://localhost:3000/accept"
-                    });
-                    _eventPublisher.Publish(new OrderPurchasedEvent
-                    {
-                        Buyer = order.Subject,
-                        CommonId = message.CommonId,
-                        ApprovalUrl = res.Links.First(l => l.Rel == _approvalUrl).Href,
-                        PaymentId = res.Id
-                    });
-                    return;
+                        Id = Guid.NewGuid().ToString(),
+                        OrderId = order.Id,
+                        PaymentMethod = message.PaymentOrder.PaymentMethod,
+                        Status = OrderPaymentStatus.Created,
+                        TransactionId = message.PaymentOrder.TransactionId
+                    };
                 }
 
+                await _orderPriceCalculatorHelper.Update(order);
+                await _orderRepository.Update(order);
                 if (order.OrderLines != null)
                 {
                     await UpdateProductStock(order, false);

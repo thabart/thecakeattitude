@@ -77,5 +77,9 @@ namespace Cook4Me.Api.Host
         public const string TheOrderStateCannotBeUpdated = "Not possible to pass from {0} state to {1}";
         public const string TheReceivedOrderCannotBeUpdated = "The received order cannot be updated";
         public const string TheReceivedOrderCannotBeRemoved = "The received order cannot be removed";
+        public const string ThePayerPaypalAccountNotExist = "the payer doesn't have a valid Paypal account";
+        public const string TheSellerPaypalAccountNotExist = "the seller doesn't have a valid Paypal account";
+        public const string TheParcelDoesntExist = "the parcel doesn't exist";
+        public const string ThePaypalPaymentDoesntWork = "an error occured while trying to pay with Paypal";
     }
 }

@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Common.Factories;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Ups.Client.Common;
-using Ups.Client.Factories;
 using Ups.Client.Params;
 using Ups.Client.Params.Locator;
 using Ups.Client.Params.Shipment;

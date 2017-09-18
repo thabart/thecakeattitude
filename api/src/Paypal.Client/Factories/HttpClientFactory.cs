@@ -24,12 +24,12 @@ using System.Net.Http;
 
 namespace Paypal.Client.Factories
 {
-    public interface IHttpClientFactory
+    internal interface IHttpClientFactory
     {
         HttpClient GetHttpClient();
     }
 
-    public class HttpClientFactory : IHttpClientFactory
+    internal class HttpClientFactory : IHttpClientFactory
     {
         public HttpClient GetHttpClient()
         {

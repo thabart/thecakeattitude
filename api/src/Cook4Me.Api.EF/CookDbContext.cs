@@ -79,7 +79,8 @@ namespace Cook4Me.Api.EF
                 .AddMessageMapping()
                 .AddOrderLine()
                 .AddOrder()
-                .AddOrderParcel();
+                .AddOrderParcel()
+                .AddOrderPayment();
         }
     }
 }
