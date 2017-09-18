@@ -14,28 +14,13 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.Core.Aggregates
-{
-    public enum OrderPayments
-    {
-        Paypal
-    }
+using Cook4Me.Api.Core.Bus;
 
-    public enum OrderPaymentStatus
+namespace Cook4Me.Api.Core.Events.Orders
+{
+    public class OrderTransactionApprovedEvent : Event
     {
-        Created,
-        Approved,
-        Confirmed,
-        Failed
-    }
-    
-    public class OrderAggregatePayment
-    {
-        public string Id { get; set; }
         public string OrderId { get; set; }
-        public OrderPayments PaymentMethod { get; set; }
-        public OrderPaymentStatus Status { get; set; }
-        public string TransactionId { get; set; }
-        public string PayerId { get; set; }
+        public string Subject { get; set; }
     }
 }

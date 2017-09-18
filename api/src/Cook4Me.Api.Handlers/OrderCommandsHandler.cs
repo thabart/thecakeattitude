@@ -28,7 +28,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>
+    public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>, Handles<AcceptOrderTransactionCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
@@ -256,6 +256,29 @@ namespace Cook4Me.Api.Handlers
                 Subject = message.Subject,
                 OrderId = id,
                 OrderLineId = message.Id
+            });
+        }
+
+        public async Task Handle(AcceptOrderTransactionCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var order = await _orderRepository.Get(message.OrderId);
+            if (order == null)
+            {
+                return;
+            }
+
+            order.OrderPayment.Status = OrderPaymentStatus.Approved;
+            order.OrderPayment.PayerId = message.PayerId;
+            await _orderRepository.Update(order);
+            _eventPublisher.Publish(new OrderTransactionApprovedEvent
+            {
+                OrderId = message.OrderId,
+                Subject = order.Subject
             });
         }
 

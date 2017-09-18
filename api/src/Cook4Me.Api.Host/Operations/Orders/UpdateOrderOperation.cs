@@ -160,8 +160,8 @@ namespace Cook4Me.Api.Host.Operations.Orders
                     new PaymentTransaction
                     {
                        Currency = Constants.Currency, // TODO : Calculate the estimated price.
-                       Total = 4 + items.Sum(i => i.Price * i.Quantity),
-                       Shipping = 4,
+                       Total = result.ShippingPrice + items.Sum(i => i.Price * i.Quantity),
+                       Shipping = result.ShippingPrice,
                        SubTotal = items.Sum(i => i.Price * i.Quantity),
                        Items = items,
                        Payee = new PaypalPayee

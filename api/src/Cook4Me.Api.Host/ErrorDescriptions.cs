@@ -83,5 +83,8 @@ namespace Cook4Me.Api.Host
         public const string ThePaypalPaymentDoesntWork = "an error occured while trying to pay with Paypal";
         public const string TheOrderDoesntHavePayment = "the order doesn't have payment";
         public const string ThePaymentMethodIsNotSupported = "the payment method is not yet supported";
+        public const string TheOrderTransactionIsNotCorrect = "the order transaction is not correct";
+        public const string TheOrderTransactionHasBeenApproved = "the order transaciton has already been approved";
+        public const string TheOrderCanBeApprovedOnlyByItsCreator = "the order can be approved only by its creator";
     }
 }

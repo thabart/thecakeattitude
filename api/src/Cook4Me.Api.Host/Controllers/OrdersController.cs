@@ -38,11 +38,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetOrderStatusOperation _getOrderStatusOperation;
         private readonly IGetOrderOperation _getOrderOperation;
         private readonly IGetOrderTransactionOperation _getOrderTransactionOperation;
+        private readonly IAcceptOrderTransactionOperation _acceptOrderTransactionOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
             IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
-            IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation) : base(handlersInitiator)
+            IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation,
+            IAcceptOrderTransactionOperation acceptOrderTransactionOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -52,6 +54,7 @@ namespace Cook4Me.Api.Host.Controllers
             _getOrderStatusOperation = getOrderStatusOperation;
             _getOrderOperation = getOrderOperation;
             _getOrderTransactionOperation = getOrderTransactionOperation;
+            _acceptOrderTransactionOperation = acceptOrderTransactionOperation;
         }
 
 
@@ -150,6 +153,20 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return await _getOrderTransactionOperation.Execute(id, subject);
+        }
+
+        [HttpPost(Constants.RouteNames.OrderAcceptTransaction)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> AcceptTransaction(string id, [FromBody] JObject jObj)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _acceptOrderTransactionOperation.Execute(id, subject, this.GetCommonId(), jObj);
         }
     }
 }

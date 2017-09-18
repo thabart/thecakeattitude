@@ -59,6 +59,23 @@ module.exports = {
             });
         });
     },
+    getTransaction: function(id) { // Get the order transaction.
+      var accessToken = Session.getSession().access_token;
+      return new Promise(function (resolve, reject) {
+          ConfigurationService.get().then(function (configuration) {
+              $.ajax(configuration.orders_endpoint + '/' + id + '/transaction', {
+                method: 'GET',
+                headers: {
+                  'Authorization': 'Bearer ' + accessToken
+                }
+              }).then(function(r) {
+                resolve(r);
+              }).fail(function(e) {
+                reject(e);
+              });
+          });
+      });
+    },
     remove: function (id, commonId) { // Remove the order
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {

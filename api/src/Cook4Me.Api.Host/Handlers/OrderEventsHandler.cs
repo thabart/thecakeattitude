@@ -27,7 +27,8 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Handlers
 {
-    public class OrderEventsHandler : Handles<OrderUpdatedEvent>, Handles<OrderRemovedEvent>, Handles<OrderAddedEvent>, Handles<OrderConfirmedEvent>, Handles<OrderReceivedEvent>
+    public class OrderEventsHandler : Handles<OrderUpdatedEvent>, Handles<OrderRemovedEvent>, Handles<OrderAddedEvent>, Handles<OrderConfirmedEvent>, 
+        Handles<OrderReceivedEvent>, Handles<OrderTransactionApprovedEvent>
     {
         private readonly IConnectionManager _connectionManager;
         private readonly IResponseBuilder _responseBuilder;
@@ -36,6 +37,26 @@ namespace Cook4Me.Api.Host.Handlers
         {
             _connectionManager = connectionManager;
             _responseBuilder = responseBuilder;
+        }
+
+        public Task Handle(OrderTransactionApprovedEvent message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var notifier = _connectionManager.GetHubContext<SecuredHub>();
+            var lst = new[] { message.Subject };
+            lst.Distinct();
+            var connectionIds = new List<string>();
+            foreach (var r in lst)
+            {
+                connectionIds.AddRange(SecuredHub.Connections.GetConnections(r).ToList());
+            }
+
+            notifier.Clients.Clients(connectionIds).orderTransactionReceived(_responseBuilder.GetOrderTransactionApproved(message));
+            return Task.FromResult(0);
         }
 
         public Task Handle(OrderReceivedEvent message)

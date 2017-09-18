@@ -39,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderTransactionApproved(OrderTransactionApprovedEvent evt);
         JObject GetPaypalTransaction(CreatePaymentResponse paymentResponse);
         JObject GetOrderParcel(OrderAggregateParcel orderParcel);
         JObject GetUpsRatings(RatingServiceSelectionResponse response);
@@ -102,6 +103,16 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrderTransactionApproved(OrderTransactionApprovedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var result = new JObject();
+            return result;
+        }
         public JObject GetPaypalTransaction(CreatePaymentResponse paymentResponse)
         {
             if (paymentResponse == null)
@@ -111,17 +122,10 @@ namespace Cook4Me.Api.Host.Builders
 
             var result = new JObject();
             result.Add(Constants.DtoNames.OrderTransactionNames.Id, paymentResponse.Id);
-            switch(paymentResponse.State)
+            var stateKvp = CommonBuilder.MappingPayPalPaymentStatus.FirstOrDefault(kvp => kvp.Key == paymentResponse.State);
+            if (!stateKvp.Equals(default(KeyValuePair<PaymentStates, string>)) && !string.IsNullOrWhiteSpace(stateKvp.Value))
             {
-                case PaymentStates.Approved:
-                    result.Add(Constants.DtoNames.OrderTransactionNames.State, "approved");
-                    break;
-                case PaymentStates.Created:
-                    result.Add(Constants.DtoNames.OrderTransactionNames.State, "created");
-                    break;
-                case PaymentStates.Failed:
-                    result.Add(Constants.DtoNames.OrderTransactionNames.State, "failed");
-                    break;
+                result.Add(Constants.DtoNames.OrderTransactionNames.State, stateKvp.Value);
             }
 
             var approvalLink = paymentResponse.Links.FirstOrDefault(l => l.Rel == "approval_url");
@@ -324,7 +328,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
             result.Add(Constants.DtoNames.OrderNames.Subject, evt.Client);
             result.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
-            return obj;
+            return result;
         }
 
         public JObject GetOrderAddedEvent(OrderAddedEvent evt)
@@ -390,32 +394,18 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderNames.TotalPrice, order.TotalPrice);
             result.Add(Constants.DtoNames.OrderNames.Subject, order.Subject);
             result.Add(Constants.DtoNames.OrderNames.ShopId, order.ShopId);
-            string status = null;
-            string transportMode = null;
-            switch(order.Status)
+            var kvpStatus = CommonBuilder.MappingOrderAggregateStatus.FirstOrDefault(kvp => kvp.Key == order.Status);
+            if (!kvpStatus.Equals(default(KeyValuePair<OrderAggregateStatus, string>)) && !string.IsNullOrWhiteSpace(kvpStatus.Value))
             {
-                case OrderAggregateStatus.Created:
-                    status = "created";
-                    break;
-                case OrderAggregateStatus.Confirmed:
-                    status = "confirmed";
-                    break;
-                case OrderAggregateStatus.Received:
-                    status = "received";
-                    break;
+                result.Add(Constants.DtoNames.OrderNames.Status, kvpStatus.Value);
             }
 
-            switch(order.TransportMode)
+            var kvpTransport = CommonBuilder.MappingOrderTransportModes.FirstOrDefault(kvp => kvp.Key == order.TransportMode);
+            if (!kvpTransport.Equals(default(KeyValuePair<OrderTransportModes, string>)) && !string.IsNullOrWhiteSpace(kvpTransport.Value))
             {
-                case OrderTransportModes.Manual:
-                    transportMode = "manual";
-                    break;
-                case OrderTransportModes.Packet:
-                    transportMode = "packet";
-                    break;
+                result.Add(Constants.DtoNames.OrderNames.TransportMode, kvpTransport.Value);
             }
-            result.Add(Constants.DtoNames.OrderNames.Status, status);
-            result.Add(Constants.DtoNames.OrderNames.TransportMode, transportMode);
+
             result.Add(Constants.DtoNames.OrderNames.Lines, arr);
             if (order.OrderParcel != null)
             {
@@ -441,21 +431,16 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderPaymentNames.Id, payment.Id);
             result.Add(Constants.DtoNames.OrderPaymentNames.OrderId, payment.OrderId);
             result.Add(Constants.DtoNames.OrderPaymentNames.TransactionId, payment.TransactionId);
-            switch(payment.PaymentMethod)
+            var kvpPayment = CommonBuilder.MappingOrderPayments.FirstOrDefault(kvp => kvp.Key == payment.PaymentMethod);
+            if (!kvpPayment.Equals(default(KeyValuePair<OrderPayments, string>)) && !string.IsNullOrWhiteSpace(kvpPayment.Value))
             {
-                case OrderPayments.Paypal:
-                    result.Add(Constants.DtoNames.OrderPaymentNames.PaymentMethod, "paypal");
-                    break;
+                result.Add(Constants.DtoNames.OrderPaymentNames.PaymentMethod, kvpPayment.Value);
             }
 
-            switch(payment.Status)
+            var kvpStatus = CommonBuilder.MappingOrderPaymentStatus.FirstOrDefault(kvp => kvp.Key == payment.Status);
+            if (!kvpStatus.Equals(default(KeyValuePair<OrderPaymentStatus, string>)) && !string.IsNullOrWhiteSpace(kvpStatus.Value))
             {
-                case OrderPaymentStatus.Approved:
-                    result.Add(Constants.DtoNames.OrderPaymentNames.Status, "approved");
-                    break;
-                case OrderPaymentStatus.Confirmed:
-                    result.Add(Constants.DtoNames.OrderPaymentNames.Status, "confirmed");
-                    break;
+                result.Add(Constants.DtoNames.OrderPaymentNames.Status, kvpStatus.Value);
             }
 
             return result;

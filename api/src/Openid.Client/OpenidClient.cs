@@ -50,7 +50,7 @@ namespace Openid.Client
 
             var request = new HttpRequestMessage
             {
-                RequestUri = new  Uri(baseUrl + $"/users/{subject}/claims"),
+                RequestUri = new  Uri(baseUrl + $"/users/{subject}/public"),
                 Method = HttpMethod.Get
             };
             var client = _httpClientFactory.GetHttpClient();
@@ -76,16 +76,17 @@ namespace Openid.Client
             {
                 foreach(var child in claimsObj.Children())
                 {
-                    var childObj = child as JObject;
+                    var childObj = child as JProperty;
                     if (childObj == null)
                     {
                         continue;
                     }
 
-                    claims.Add(new Claim(childObj.Properties().First().Name, childObj.Value<string>()));
+                    claims.Add(new Claim(childObj.Name, childObj.Value.ToString()));
                 }
             }
 
+            result.Claims = claims;
             return result;
         }
     }

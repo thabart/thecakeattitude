@@ -49,7 +49,8 @@ class Order extends Component {
         products: [],
         order: {},
         shop: {},
-        user: {}
+        user: {},
+        transaction: {}
       };
     }
 
@@ -71,22 +72,29 @@ class Order extends Component {
         var order = r['_embedded'];
         var productIds = order.lines.map(function(line) { return line.product_id; });
         self._request['product_ids'] = productIds;
-        Promise.all([ ProductsService.search(self._request), UserService.getPublicClaims(order.subject), ShopsService.get(order.shop_id) ]).then(function(res) {
+        var requests = [ ProductsService.search(self._request), UserService.getPublicClaims(order.subject), ShopsService.get(order.shop_id) ];
+        if (order.payment) {
+          requests.push(OrdersService.getTransaction(orderId));
+        }
+
+        Promise.all(requests).then(function(res) {
           var products = res[0]['_embedded'];
           var claims = res[1]['claims'];
           var shop = res[2]['_embedded'];
+          var transaction = res[3];
           var pagination = res[0]['_links'].navigation;
           if (!(products instanceof Array)) {
             products = [products];
           }
-          
+
           self.setState({
             isLoading: false,
             order: order,
             products: products,
             pagination: pagination,
             shop: shop,
-            user: claims
+            user: claims,
+            transaction: transaction
           });
         }).catch(function() {
           self.setState({
@@ -95,7 +103,8 @@ class Order extends Component {
             products: [],
             pagination: [],
             shop: {},
-            user: {}
+            user: {},
+            transaction: {}
           });
         });
       }).catch(function() {
@@ -293,6 +302,9 @@ class Order extends Component {
               <div style={{marginTop: "10px"}}>
                 { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (
                   <button className="btn btn-default" onClick={this.confirmReception}>{t('confirmReception')}</button>
+                ) }
+                { this.state.transaction && this.state.transaction.approval_url && isBuyer && this.state.transaction.state === 'created' && (
+                  <a href={this.state.transaction.approval_url} className="btn btn-default">{t('buyWithPaypal')}</a>
                 ) }
                 { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && isSeller && (
                   <NavLink to={'/printlabel/' + this.state.order.id } className="btn btn-default">{t('buyLabel')}</NavLink>

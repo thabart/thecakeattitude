@@ -186,12 +186,12 @@ namespace Cook4Me.Api.Host.Validators
 
                 var paypalBuyer = payer.Claims.FirstOrDefault(c => c.Type == "paypal_email");
                 var paypalSeller = seller.Claims.FirstOrDefault(c => c.Type == "paypal_email");
-                if (paypalBuyer == null)
+                if (paypalBuyer == null || string.IsNullOrWhiteSpace(paypalBuyer.Value))
                 {
                     return new UpdateOrderValidationResult(ErrorDescriptions.ThePayerPaypalAccountNotExist);
                 }
 
-                if (paypalSeller == null)
+                if (paypalSeller == null || string.IsNullOrWhiteSpace(paypalSeller.Value))
                 {
                     return new UpdateOrderValidationResult(ErrorDescriptions.TheSellerPaypalAccountNotExist);
                 }

@@ -463,6 +463,12 @@ namespace Cook4Me.Api.OpenId.Extensions
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = Constants.Claims.GooglePlaceId,
                                 Value = "ChIJQdeO0VXCw0cReXpimsXR89g"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = Constants.Claims.PaypalEmail,
+                                Value = "habarthierry-facilitator@hotmail.fr"
                             }
                         },
                         Password = ComputeHash("password"),
@@ -514,6 +520,12 @@ namespace Cook4Me.Api.OpenId.Extensions
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = Constants.Claims.HomePhoneNumber,
                                 Value = "0485350536"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = Constants.Claims.PaypalEmail,
+                                Value = "habarthierry@first-receiver.fr"
                             }
                         },
                         Password = ComputeHash("password"),

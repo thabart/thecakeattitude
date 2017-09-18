@@ -38,7 +38,8 @@ namespace Cook4Me.Api.EF.Extensions
                 OrderId = orderPayment.OrderId,
                 PaymentMethod = (OrderPayments)orderPayment.PaymentMethod,
                 Status = (OrderPaymentStatus)orderPayment.Status,
-                TransactionId = orderPayment.TransactionId
+                TransactionId = orderPayment.TransactionId,
+                PayerId = orderPayment.PayerId
             };
         }
 
@@ -55,7 +56,8 @@ namespace Cook4Me.Api.EF.Extensions
                 OrderId = orderPayment.OrderId,
                 PaymentMethod = (int)orderPayment.PaymentMethod,
                 Status = (int)orderPayment.Status,
-                TransactionId = orderPayment.TransactionId
+                TransactionId = orderPayment.TransactionId,
+                PayerId = orderPayment.PayerId
             };
         }
 

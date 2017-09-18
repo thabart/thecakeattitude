@@ -37,6 +37,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        AcceptOrderTransactionCommand GetAcceptOrderTransactionCommand(JObject jObj);
         BuyUpsLabelCommand GetBuyUpsLabelCommand(JObject jObj);
         UpsPaymentInformationParameter GetUpsPaymentInformation(JObject jObj);
         GetUpsRatingsParameter GetUpsRatingsParameter(JObject jObj);
@@ -82,6 +83,27 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {
+        public AcceptOrderTransactionCommand GetAcceptOrderTransactionCommand(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new AcceptOrderTransactionCommand();
+            result.CommonId = jObj.TryGetString(Constants.DtoNames.Message.CommonId);
+            result.OrderId = jObj.TryGetString(Constants.DtoNames.AcceptOrderTransactionCommandNames.OrderId);
+            result.PayerId = jObj.TryGetString(Constants.DtoNames.AcceptOrderTransactionCommandNames.PayerId);
+            result.TransactionId = jObj.TryGetString(Constants.DtoNames.AcceptOrderTransactionCommandNames.TransactionId);
+            var kvpPayment = CommonBuilder.MappingOrderPayments.FirstOrDefault(kvp => kvp.Value == jObj.TryGetString(Constants.DtoNames.OrderPaymentNames.PaymentMethod));
+            if (!kvpPayment.Equals(default(KeyValuePair<OrderPayments, string>)) && !string.IsNullOrWhiteSpace(kvpPayment.Value))
+            {
+                result.PaymentMethod = kvpPayment.Key;
+            }
+
+            return result;
+        }
+
         public BuyUpsLabelCommand GetBuyUpsLabelCommand(JObject jObj)
         {
             if (jObj == null)

@@ -75,6 +75,7 @@ namespace Cook4Me.Api.Host
             public const string BuyLabel = "buylabel";
             public const string BuyOrder = "buy/{id}";
             public const string OrderTransaction = "{id}/transaction";
+            public const string OrderAcceptTransaction = "{id}/transaction/accept";
         }
 
         public static class DtoNames
@@ -356,6 +357,13 @@ namespace Cook4Me.Api.Host
                 public const string Id = "id";
                 public const string Link = "link";
                 public const string Name = "name";
+            }
+
+            public static class AcceptOrderTransactionCommandNames
+            {
+                public const string OrderId = "order_id";
+                public const string PayerId = "payer_id";
+                public const string TransactionId = "transaction_id";
             }
 
             public static class Message
