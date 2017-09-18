@@ -94,6 +94,12 @@ namespace Cook4Me.Api.Host.Tests.Paypal
                 ReturnUrl = "http://localhost:3000/accept"
             });
 
+            var res = await paypalClient.GetPayment(new GetPaymentParameter
+            {
+                AccessToken = token.AccessToken,
+                PaymentId = r.Id
+            });
+
             var newPrice = new JObject();
             var newPriceDetails = new JObject();
             newPriceDetails.Add("subtotal", "5");

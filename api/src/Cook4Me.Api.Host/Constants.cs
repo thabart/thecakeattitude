@@ -74,10 +74,19 @@ namespace Cook4Me.Api.Host
             public const string SearchCapabalities = "ratings/.search";
             public const string BuyLabel = "buylabel";
             public const string BuyOrder = "buy/{id}";
+            public const string OrderTransaction = "{id}/transaction";
         }
 
         public static class DtoNames
         {
+            public static class OrderTransactionNames
+            {
+                public const string Id = "id";
+                public const string PaymentMethod = "payment_method";
+                public const string ApprovalUrl = "approval_url";
+                public const string State = "state";
+            }
+
             public static class UpsPaymentInformationNames
             {
                 public const string Number = "number";

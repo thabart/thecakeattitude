@@ -37,11 +37,12 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IAddOrderLineOperation _addOrderLineOperation;
         private readonly IGetOrderStatusOperation _getOrderStatusOperation;
         private readonly IGetOrderOperation _getOrderOperation;
+        private readonly IGetOrderTransactionOperation _getOrderTransactionOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
             IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
-            IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -50,6 +51,7 @@ namespace Cook4Me.Api.Host.Controllers
             _addOrderLineOperation = addOrderLineOperation;
             _getOrderStatusOperation = getOrderStatusOperation;
             _getOrderOperation = getOrderOperation;
+            _getOrderTransactionOperation = getOrderTransactionOperation;
         }
 
 
@@ -134,6 +136,20 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return await _getOrderOperation.Execute(id, subject);
+        }
+
+        [HttpGet(Constants.RouteNames.OrderTransaction)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> GetTransaction(string id)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _getOrderTransactionOperation.Execute(id, subject);
         }
     }
 }

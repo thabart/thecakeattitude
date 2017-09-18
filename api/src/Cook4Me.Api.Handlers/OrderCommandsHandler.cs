@@ -30,8 +30,6 @@ namespace Cook4Me.Api.Handlers
 {
     public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>
     {
-        private const string _approvalUrl = "approval_url";
-
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
         private readonly IEventPublisher _eventPublisher;

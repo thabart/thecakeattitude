@@ -81,5 +81,7 @@ namespace Cook4Me.Api.Host
         public const string TheSellerPaypalAccountNotExist = "the seller doesn't have a valid Paypal account";
         public const string TheParcelDoesntExist = "the parcel doesn't exist";
         public const string ThePaypalPaymentDoesntWork = "an error occured while trying to pay with Paypal";
+        public const string TheOrderDoesntHavePayment = "the order doesn't have payment";
+        public const string ThePaymentMethodIsNotSupported = "the payment method is not yet supported";
     }
 }

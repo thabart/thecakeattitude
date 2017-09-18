@@ -30,6 +30,7 @@ namespace Paypal.Client
     public interface IPaypalClient
     {
         Task<CreatePaymentResponse> CreatePayment(CreatePaymentParameter parameter);
+        Task<CreatePaymentResponse> GetPayment(GetPaymentParameter parameter);
         Task<CreatePaymentResponse> UpdatePayment(string paymentId, UpdatePaymentParameter parameter);
         Task<ExecutePaymentResponse> ExecutePayment(string paymentId, ExecutePaymentParameter parameter);
     }
@@ -62,6 +63,45 @@ namespace Paypal.Client
                 Method = HttpMethod.Post,
                 Content = new StringContent(jobj.ToString(), Encoding.UTF8, "application/json"),
                 RequestUri = new Uri($"{BaseConstants.RESTSandboxEndpoint}v1/payments/payment")
+            };
+
+            request.Headers.Add("Authorization", $"Bearer {parameter.AccessToken}");
+            var response = await client.SendAsync(request).ConfigureAwait(false);
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var jObj = JObject.Parse(content);
+            try
+            {
+                response.EnsureSuccessStatusCode();
+            }
+            catch (Exception)
+            {
+                return new CreatePaymentResponse
+                {
+                    IsValid = false,
+                    ErrorResponse = ToErrorResponseModel(jObj)
+                };
+            }
+
+            return ToCreatePaymentModel(jObj);
+        }
+
+        public async Task<CreatePaymentResponse> GetPayment(GetPaymentParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+            
+            if (string.IsNullOrWhiteSpace(parameter.AccessToken))
+            {
+                throw new ArgumentNullException(nameof(parameter.AccessToken));
+            }
+
+            var client = _httpClientFactory.GetHttpClient();
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"{BaseConstants.RESTSandboxEndpoint}v1/payments/payment/{parameter.PaymentId}")
             };
 
             request.Headers.Add("Authorization", $"Bearer {parameter.AccessToken}");

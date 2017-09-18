@@ -14,26 +14,11 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.Core.Aggregates
+namespace Paypal.Client.Params
 {
-    public enum OrderPayments
+    public class GetPaymentParameter
     {
-        Paypal
-    }
-
-    public enum OrderPaymentStatus
-    {
-        Created,
-        Approved,
-        Confirmed
-    }
-    
-    public class OrderAggregatePayment
-    {
-        public string Id { get; set; }
-        public string OrderId { get; set; }
-        public OrderPayments PaymentMethod { get; set; }
-        public OrderPaymentStatus Status { get; set; }
-        public string TransactionId { get; set; }
+        public string AccessToken { get; set; }
+        public string PaymentId { get; set; }
     }
 }

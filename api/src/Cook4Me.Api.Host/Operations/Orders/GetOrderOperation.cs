@@ -64,6 +64,12 @@ namespace Cook4Me.Api.Host.Operations.Orders
             }
 
             var order = await _orderRepository.Get(orderId);
+            if (order == null)
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheOrderDoesntExist);
+                return _controllerHelper.BuildResponse(System.Net.HttpStatusCode.NotFound, error);
+            }
+
             if (order.Subject != subject && order.SellerId != subject)
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheOrderCannotBeAccessedByYou);

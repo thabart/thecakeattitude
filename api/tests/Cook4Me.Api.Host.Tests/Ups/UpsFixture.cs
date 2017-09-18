@@ -14,11 +14,11 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Common.Factories;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 using Ups.Client;
-using Ups.Client.Factories;
 using Ups.Client.Params;
 using Xunit;
 

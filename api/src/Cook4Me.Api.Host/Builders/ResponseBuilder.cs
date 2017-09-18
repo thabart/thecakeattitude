@@ -26,6 +26,8 @@ using Cook4Me.Api.Core.Results;
 using Dhl.Client.Results.Capabalities;
 using Dhl.Client.Results.ShopParcelLocations;
 using Newtonsoft.Json.Linq;
+using Paypal.Client.Common;
+using Paypal.Client.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetPaypalTransaction(CreatePaymentResponse paymentResponse);
         JObject GetOrderParcel(OrderAggregateParcel orderParcel);
         JObject GetUpsRatings(RatingServiceSelectionResponse response);
         JObject GetCapabalities(IEnumerable<DhlCapabality> capabilities);
@@ -99,6 +102,38 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetPaypalTransaction(CreatePaymentResponse paymentResponse)
+        {
+            if (paymentResponse == null)
+            {
+                throw new ArgumentNullException(nameof(paymentResponse));
+            }
+
+            var result = new JObject();
+            result.Add(Constants.DtoNames.OrderTransactionNames.Id, paymentResponse.Id);
+            switch(paymentResponse.State)
+            {
+                case PaymentStates.Approved:
+                    result.Add(Constants.DtoNames.OrderTransactionNames.State, "approved");
+                    break;
+                case PaymentStates.Created:
+                    result.Add(Constants.DtoNames.OrderTransactionNames.State, "created");
+                    break;
+                case PaymentStates.Failed:
+                    result.Add(Constants.DtoNames.OrderTransactionNames.State, "failed");
+                    break;
+            }
+
+            var approvalLink = paymentResponse.Links.FirstOrDefault(l => l.Rel == "approval_url");
+            if (approvalLink != null)
+            {
+                result.Add(Constants.DtoNames.OrderTransactionNames.ApprovalUrl, approvalLink.Href);
+            }
+
+            result.Add(Constants.DtoNames.OrderTransactionNames.PaymentMethod, "paypal");
+            return result;
+        }
+
         public JObject GetUpsRatings(RatingServiceSelectionResponse response)
         {
             if (response == null)
@@ -415,8 +450,8 @@ namespace Cook4Me.Api.Host.Builders
 
             switch(payment.Status)
             {
-                case OrderPaymentStatus.Accepted:
-                    result.Add(Constants.DtoNames.OrderPaymentNames.Status, "accepted");
+                case OrderPaymentStatus.Approved:
+                    result.Add(Constants.DtoNames.OrderPaymentNames.Status, "approved");
                     break;
                 case OrderPaymentStatus.Confirmed:
                     result.Add(Constants.DtoNames.OrderPaymentNames.Status, "confirmed");
