@@ -432,5 +432,6 @@
   "loginPaypalProcessing": "Processing ...",
   "paypalAccountLinked": "A Paypal account {0} has been linked to your profile",
   "noPaypalAccount": "No PayPal account has been configured",
-  "buyWithPaypal": "Buy with PayPal"
+  "buyWithPaypal": "Buy with PayPal",
+  "orderTransactionCannotBeConfirmed": "Order transaction cannot be approved"
 }

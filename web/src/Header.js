@@ -207,7 +207,6 @@ class Header extends Component {
 
     refreshUser() { // Display the user information.
       var user = ApplicationStore.getUser();
-      console.log(user);
       if (!user || !user.name) {
         this.setState({
           isLoggedIn: false,

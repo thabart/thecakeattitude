@@ -431,5 +431,6 @@
   "loginPaypalProcessing": "En cours ...",
   "paypalAccountLinked": "A Paypal account {0} has been linked to your profile",
   "noPaypalAccount": "Aucun compte PayPal associé",
-  "buyWithPaypal": "Acheter avec PayPal"
+  "buyWithPaypal": "Acheter avec PayPal",
+  "orderTransactionCannotBeConfirmed": "La paiement de la commande ne peut pas être confirmé"
 }

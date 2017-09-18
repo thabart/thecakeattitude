@@ -131,5 +131,24 @@ module.exports = {
               });
           });
       });
+    },
+    acceptPayment: function(orderId, content) { // Accept the payment.
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.orders_endpoint + '/' + orderId + '/transaction/accept', {
+                    method: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    },
+                    data: JSON.stringify(content)
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     }
 };

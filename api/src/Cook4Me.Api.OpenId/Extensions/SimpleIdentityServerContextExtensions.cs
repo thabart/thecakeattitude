@@ -468,7 +468,7 @@ namespace Cook4Me.Api.OpenId.Extensions
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = Constants.Claims.PaypalEmail,
-                                Value = "habarthierry-facilitator@hotmail.fr"
+                                Value = "habarthierry@buyer.com"
                             }
                         },
                         Password = ComputeHash("password"),

@@ -40,8 +40,10 @@ class Order extends Component {
         start_index: 0,
         count: defaultCount
       };
+      this._isActionExecuted = false;
       this.changePage = this.changePage.bind(this);
       this.refresh = this.refresh.bind(this);
+      this.executeAction = this.executeAction.bind(this);
       this.confirmReception = this.confirmReception.bind(this);
       this.state = {
         isLoading: false,
@@ -96,6 +98,7 @@ class Order extends Component {
             user: claims,
             transaction: transaction
           });
+          self.executeAction();
         }).catch(function() {
           self.setState({
             isLoading: false,
@@ -115,6 +118,69 @@ class Order extends Component {
           pagination: [],
           shop: {},
           user: {}
+        });
+      });
+    }
+
+    executeAction() { // Confirm or cancel the transaction.
+      if (this._isActionExecuted) {
+        return;
+      }
+
+      var self = this,
+        action = self.props.match.params.action;
+      var getQueryVariable = function (variable) {
+          var query = self.props.location.search.substring(1);
+          var vars = query.split('&');
+          for (var i = 0; i < vars.length; i++) {
+              var pair = vars[i].split('=');
+              if (decodeURIComponent(pair[0]) == variable) {
+                  return decodeURIComponent(pair[1]);
+              }
+          }
+
+          return null;
+      };
+
+      if (action !== 'acceptpayment') {
+        return;
+      }
+
+      var paymentId = getQueryVariable('paymentId');
+      var payerId = getQueryVariable('PayerID');
+      const {t} = this.props;
+      if (!paymentId && !payerId) {
+        ApplicationStore.sendMessage({
+          message: t('orderTransactionCannotBeConfirmed'),
+          level: 'error',
+          position: 'tr'
+        });
+        return;
+      }
+
+      self.setState({
+        isLoading: true
+      });
+      OrdersService.acceptPayment({
+        order_id: self.state.order.id,
+        payer_id: payerId,
+        transaction_id: paymentId
+      }).then(function() {
+        self._isActionExecuted = true;
+      }).catch(function(e) {
+        self._isActionExecuted = true;
+        var errorMsg = t('orderTransactionCannotBeConfirmed');
+        if (e.responseJSON && e.responseJSON.error_description) {
+          errorMsg = e.responseJSON.error_description;
+        }
+
+        self.setState({
+          isLoading: false
+        });
+        ApplicationStore.sendMessage({
+          message: errorMsg,
+          level: 'error',
+          position: 'tr'
         });
       });
     }

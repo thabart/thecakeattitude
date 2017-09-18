@@ -321,7 +321,7 @@ class App extends Component {
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                 <Route path='/printlabel/:id' render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<PrintOrderLabel />))}/>
-                <Route path="/orders/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Order />))}/>
+                <Route path="/orders/:id/:action?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Order />))}/>
                 <Route path="/basket" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Basket />))}/>
                 <Route path="/addservice/:id"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>
