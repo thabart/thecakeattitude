@@ -22,6 +22,12 @@ namespace Cook4Me.Api.Host.Builders
 {
     public class CommonBuilder
     {
+        public static Dictionary<UpsAggregateServices, string> MappingUpsAggregateServices = new Dictionary<UpsAggregateServices, string>
+        {
+            { UpsAggregateServices.AccessPointEconomy, "070" },
+            { UpsAggregateServices.Standard, "011" }
+        };
+
         public static Dictionary<OrderPayments, string> MappingOrderPayments = new Dictionary<OrderPayments, string>
         {
             { OrderPayments.Paypal, "paypal" }

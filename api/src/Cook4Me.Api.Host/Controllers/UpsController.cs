@@ -27,12 +27,15 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetLocationsOperation _getLocationsOperation;
         private readonly IGetRatingsOperation _getRatingsOperation;
         private readonly IPurchaseUpsLabelOperation _purchaseUpsLabelOperation;
+        private readonly IGetUpsServicesOperation _getUpsServicesOperation;
 
-        public UpsController(IGetLocationsOperation getLocationsOperation, IGetRatingsOperation getRatingsOperation, IPurchaseUpsLabelOperation purchaseUpsLabelOperation)
+        public UpsController(IGetLocationsOperation getLocationsOperation, IGetRatingsOperation getRatingsOperation, 
+            IPurchaseUpsLabelOperation purchaseUpsLabelOperation, IGetUpsServicesOperation getUpsServicesOperation)
         {
             _getLocationsOperation = getLocationsOperation;
             _getRatingsOperation = getRatingsOperation;
             _purchaseUpsLabelOperation = purchaseUpsLabelOperation;
+            _getUpsServicesOperation = getUpsServicesOperation;
         }
 
         [HttpPost(Constants.RouteNames.ParcelShopLocations)]
@@ -51,6 +54,12 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Purchase([FromBody] JObject jObj)
         {
             return await _purchaseUpsLabelOperation.Execute(jObj);
+        }
+
+        [HttpGet(Constants.RouteNames.UpsServices)]
+        public async Task<IActionResult> GetServices(string id)
+        {
+            return await _getUpsServicesOperation.Execute(id);
         }
     }
 }

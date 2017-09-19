@@ -18,6 +18,9 @@ namespace Ups.Client
 {
     public static class Constants
     {
+        public const string TstBaseUrl = "https://wwwcie.ups.com";
+        public const string PrdBaseUrl = "https://onlinetools.ups.com";
+
         public static class DtoNames
         {
             public static class PackageResultsNames

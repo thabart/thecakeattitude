@@ -25,6 +25,21 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static UpsServiceAggregate ToAggregate(this UpsService upsService)
+        {
+            if (upsService == null)
+            {
+                throw new ArgumentNullException(nameof(upsService));
+            }
+
+            return new UpsServiceAggregate
+            {
+                Id = upsService.Id,
+                CountryCode = upsService.CountryCode,
+                Service = (UpsAggregateServices)upsService.Service
+            };
+        }
+
         public static OrderAggregatePayment ToAggregate(this OrderPayment orderPayment)
         {
             if (orderPayment == null)

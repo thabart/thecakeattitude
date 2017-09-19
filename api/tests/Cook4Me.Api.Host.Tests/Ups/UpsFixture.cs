@@ -33,8 +33,8 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
         [Fact]
         public async Task GetLocations()
         {
-            var httpClientFactory = new HttpClientFactory();
-            var locatorClient = new UpsClient(httpClientFactory);
+            var settingsProvider = new FakeSettingsProvider();
+            var locatorClient = new UpsClient(new FakeHttpClientFactory(), settingsProvider);
             var result = await locatorClient.GetLocations(new GetLocationsParameter
             {
                 Credentials = new UpsCredentials
@@ -45,19 +45,21 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 },
                 Address = new UpsAddressParameter
                 {
-                    AddressLine = "05555 avenue des croix du feu",
-                    City = "Bruxelles",
-                    Country = "BE"
+                    AddressLine = "10 GOERLITZER STRASSE",
+                    City = "NEUSS",
+                    PostalCode = "41460",
+                    Country = "DE"
                 }
             });
+            string s = "";
         }
 
         [Fact]
         public async Task GetRatings()
         {
-            var httpClientFactory = new HttpClientFactory();
-            var upsClient = new UpsClient(httpClientFactory);
-            await upsClient.GetRatings(new GetUpsRatingsParameter
+            var settingsProvider = new FakeSettingsProvider();
+            var upsClient = new UpsClient(new FakeHttpClientFactory(), settingsProvider);
+            var res = await upsClient.GetRatings(new GetUpsRatingsParameter
             {
                 Credentials = new UpsCredentials
                 {
@@ -67,13 +69,13 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 },
                 AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
                 {
-                    Name = "U31095277",
+                    Name = "U91006321",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "RUE EMILE VANDERVELD 39",
-                        City = "Bruxelles",
-                        PostalCode = "1200",
-                        Country = "BE"
+                        AddressLine = "MUEHLENSTRASSE 20",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 Shipper = new UpsShipperParameter
@@ -81,10 +83,10 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Name = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "10 avenue des croix du feu",
-                        City = "Bruxelles",
-                        PostalCode = "1020",
-                        Country = "BE"
+                        AddressLine = "10 GOERLITZER STRASSE",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 ShipFrom = new UpsShipParameter
@@ -92,21 +94,21 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Name = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "10 avenue des croix du feu",
-                        City = "Bruxelles",
-                        PostalCode = "1020",
-                        Country = "BE"
+                        AddressLine = "10 GOERLITZER STRASSE",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 ShipTo = new UpsShipParameter
                 {
-                    Name = "David Donab",
+                    Name = "Laetitia Buyse",
                     Address = new UpsAddressParameter
                     {
-                         AddressLine = "rue solleveld 20",
-                         City = "Bruxelles",
-                         PostalCode = "1200",
-                         Country = "BE"
+                         AddressLine = "NIEDERWALLSTRASSE 29",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 Package = new UpsPackageParameter
@@ -115,15 +117,17 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Width = 4,
                     Height = 3,
                     Weight = 1
-                }
+                },
+                UpsService = UpsServices.UpsStandard
             });
+            string s = "";
         }
 
         [Fact]
         public async Task ConfirmShip()
         {
-            var httpClientFactory = new HttpClientFactory();
-            var upsClient = new UpsClient(httpClientFactory);
+            var settingsProvider = new FakeSettingsProvider();
+            var upsClient = new UpsClient(new FakeHttpClientFactory(), settingsProvider);
             var tmp = await upsClient.ConfirmShip(new ConfirmShipParameter
             {
                 Credentials = new UpsCredentials
@@ -134,13 +138,13 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 },
                 AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
                 {
-                    Name = "PRESSE D'OR",
+                    Name = "U91006321",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "CHAUSSéE D'IXELLES 33-35",
-                        City = "IXELLES",
-                        PostalCode = "1050",
-                        Country = "BE"
+                        AddressLine = "MUEHLENSTRASSE 20",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 Shipper = new UpsShipperParameter
@@ -148,10 +152,10 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Name = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "5 - 9 Place de Dinant",
-                        City = "Bruxelles",
-                        PostalCode = "1000",
-                        Country = "BE"
+                        AddressLine = "10 GOERLITZER STRASSE",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 ShipFrom = new UpsShipParameter
@@ -161,23 +165,23 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     CompanyName = "Habart Thierry",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "5 - 9 Place de Dinant",
-                        City = "Bruxelles",
-                        PostalCode = "1000",
-                        Country = "BE"
+                        AddressLine = "10 GOERLITZER STRASSE",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 ShipTo = new UpsShipParameter
                 {
-                    Name = "David Donab",
-                    AttentionName = "David Donab.",
-                    CompanyName = "David Donab.",
+                    Name = "Laetitia Buyse",
+                    AttentionName = "Laetitia Buyse",
+                    CompanyName = "Laetitia Buyse",
                     Address = new UpsAddressParameter
                     {
-                        AddressLine = "rue solleveld 20",
-                        City = "Bruxelles",
-                        PostalCode = "1200",
-                        Country = "BE"
+                        AddressLine = "NIEDERWALLSTRASSE 29",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
                     }
                 },
                 Package = new UpsPackageParameter
@@ -187,7 +191,8 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                     Height = 3,
                     Weight = 1
                 },
-                EmailAddress = "habarthierry@hotmail.fr"
+                EmailAddress = "habarthierry@hotmail.fr",
+                UpsService = UpsServices.UpsStandard
             });
             var res = "";
         }
@@ -196,7 +201,8 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
         public async Task AcceptShip()
         {
             var httpClientFactory = new HttpClientFactory();
-            var upsClient = new UpsClient(httpClientFactory);
+            var settingsProvider = new FakeSettingsProvider();
+            var upsClient = new UpsClient(httpClientFactory, settingsProvider);
             var res = await upsClient.AcceptShip(new AcceptShipParameter
             {
                 Credentials = new UpsCredentials
@@ -212,7 +218,8 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
         public async Task GetLabel()
         {
             var httpClientFactory = new HttpClientFactory();
-            var upsClient = new UpsClient(httpClientFactory);
+            var settingsProvider = new FakeSettingsProvider();
+            var upsClient = new UpsClient(httpClientFactory, settingsProvider);
             var res = await upsClient.GetLabel(new GetLabelParameter
             {
                 Credentials = new UpsCredentials

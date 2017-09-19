@@ -14,10 +14,12 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Common;
 using Cook4Me.Common.Factories;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
@@ -48,15 +50,28 @@ namespace Ups.Client
     internal class UpsClient : IUpsClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
-        private const string _locationUrl = "https://onlinetools.ups.com/ups.app/xml/Locator";
-        private const string _rateUrl = "https://onlinetools.ups.com/ups.app/xml/Rate";
-        private const string _shipConfirmUrl = "https://onlinetools.ups.com/ups.app/xml/ShipConfirm ";
-        private const string _labelRecovery = "https://onlinetools.ups.com/ups.app/xml/LabelRecovery";
-        private const string _shipAcceptUrl = "https://onlinetools.ups.com/ups.app/xml/ShipAccept ";
+        private readonly ISettingsProvider _settingsProvider;
+        private string _locationUrl;
+        private string _rateUrl;
+        private string _shipConfirmUrl;
+        private string _labelRecovery;
+        private string _shipAcceptUrl;
+        private Dictionary<UpsServices, string> _mappingServices = new Dictionary<UpsServices, string>
+        {
+            { UpsServices.UpsStandard, "011" },
+            { UpsServices.UpsAccessPointEconomy, "070" }
+        };
 
-        public UpsClient(IHttpClientFactory httpClientFactory)
+        public UpsClient(IHttpClientFactory httpClientFactory, ISettingsProvider settingsProvider)
         {
             _httpClientFactory = httpClientFactory;
+            _settingsProvider = settingsProvider;
+            var baseUrl = settingsProvider.IsTstMode() ? Constants.TstBaseUrl : Constants.PrdBaseUrl;
+            _locationUrl = $"{baseUrl}/ups.app/xml/Locator";
+            _rateUrl = $"{baseUrl}/ups.app/xml/Rate";
+            _shipConfirmUrl = $"{baseUrl}/ups.app/xml/ShipConfirm";
+            _labelRecovery = $"{baseUrl}/ups.app/xml/LabelRecovery";
+            _shipAcceptUrl = $"{baseUrl}/ups.app/xml/ShipAccept";
         }
 
         public async Task<LocatorResponse> GetLocations(GetLocationsParameter parameter)
@@ -193,8 +208,7 @@ namespace Ups.Client
                 {
                     Service = new TypeParameter
                     {
-                        Code = "070",
-                        Description = "UPS Access Point™ Economy"
+                        Code = _mappingServices.First(kvp => kvp.Key == parameter.UpsService).Value
                     },
                     ShipmentIndicationType = new TypeParameter
                     {
@@ -396,7 +410,7 @@ namespace Ups.Client
                     },
                     Service = new TypeParameter
                     {
-                        Code = "070",
+                        Code = _mappingServices.First(kvp => kvp.Key == parameter.UpsService).Value,
                         Description = "UPS Access Point™ Economy"
                     },
                     ShipmentIndicationType = new TypeParameter

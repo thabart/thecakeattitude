@@ -14,17 +14,11 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Common
+namespace Ups.Client.Params
 {
-    public interface ISettingsProvider
+    public enum UpsServices
     {
-        string GetPaypalClientId();
-        string GetPaypalClientSecret();
-        string GetBaseOpenidUrl();
-        string GetUpsLicenseNumber();
-        string GetUpsUsername();
-        string GetUpsPassword();
-        string GetBaseWebsite();
-        bool IsTstMode();
+        UpsStandard,
+        UpsAccessPointEconomy
     }
 }

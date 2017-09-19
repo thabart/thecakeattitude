@@ -90,9 +90,8 @@ class PrintOrderLabel extends Component {
         <div className="container">
           <div className="mt-1 mb-1 p-1 bg-white rounded">
             <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
-              <li className={(parseInt(this.state.activeTab) >= 1) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">1</div>{t('parcel')}</li>
-              <li className={(parseInt(this.state.activeTab) >= 2) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">2</div>{t('payment')}</li>
-              <li className={(parseInt(this.state.activeTab) >= 3) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">3</div>{t('summary')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 1) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">1</div>{t('parcel')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 2) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">2</div>{t('summary')}</li>
             </ul>
           </div>
           <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
@@ -109,17 +108,16 @@ class PrintOrderLabel extends Component {
             <div className={this.state.isLoading ? 'loading' : 'loading hidden'}>
               <i className='fa fa-spinner fa-spin'></i>
             </div>
+            {/* Packaging type */}
             <TabPane tabId='1' className={this.state.isLoading ? 'hidden' : ''}>
-              <PackagingTypeTab onNext={() => self.toggle('2')}/>
-            </TabPane>
-            <TabPane tabId='2' className={this.state.isLoading ? 'hidden' : ''}>
-              <PaymentTab onPrevious={() => self.toggle('1')} onNext={() => {
-                self.toggle('3');
+              <PackagingTypeTab onNext={() => {
+                self.toggle('2');
                 self.refs.summary.getWrappedInstance().refresh();
-              }}/>
+              }} />
             </TabPane>
-            <TabPane tabId="3" className={this.state.isLoading ? 'hidden' : ''}>
-              <SummaryTab ref="summary" onPrevious={() => self.toggle('2')} onBuy={self.buy} />
+            {/* Display summary */}
+            <TabPane tabId="2" className={this.state.isLoading ? 'hidden' : ''}>
+              <SummaryTab ref="summary" onPrevious={() => self.toggle('1')} onBuy={self.buy} />
             </TabPane>
           </TabContent>
       </div>

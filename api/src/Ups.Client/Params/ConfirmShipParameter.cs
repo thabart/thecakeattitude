@@ -26,5 +26,6 @@ namespace Ups.Client.Params
         public UpsShipParameter ShipFrom { get; set; }
         public UpsPackageParameter Package { get; set; }
         public UpsPaymentInformationParameter PaymentInformation { get; set; }
+        public UpsServices UpsService { get; set; }
     }
 }

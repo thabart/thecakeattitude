@@ -14,17 +14,18 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Common
+using Cook4Me.Common.Factories;
+using System.Net.Http;
+using System.Net;
+
+namespace Cook4Me.Api.Host.Tests
 {
-    public interface ISettingsProvider
+    public class FakeHttpClientFactory : IHttpClientFactory
     {
-        string GetPaypalClientId();
-        string GetPaypalClientSecret();
-        string GetBaseOpenidUrl();
-        string GetUpsLicenseNumber();
-        string GetUpsUsername();
-        string GetUpsPassword();
-        string GetBaseWebsite();
-        bool IsTstMode();
+        public HttpClient GetHttpClient()
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            return new HttpClient();
+        }
     }
 }

@@ -67,7 +67,30 @@ namespace Cook4Me.Api.Host.Extensions
             InsertNotifications(context);
             InsertMessages(context);
             InsertOrders(context);
+            InsertUpsServices(context);
             context.SaveChanges();
+        }
+
+        private static void InsertUpsServices(CookDbContext context)
+        {
+            if (!context.UpsServices.Any())
+            {
+                context.UpsServices.AddRange(new[]
+                {
+                    new UpsService
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        CountryCode = "BE",
+                        Service = (int)Core.Aggregates.UpsAggregateServices.AccessPointEconomy
+                    },
+                    new UpsService
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        CountryCode = "DE",
+                        Service = (int)Core.Aggregates.UpsAggregateServices.Standard
+                    }
+                });
+            }
         }
 
         private static void InsertOrders(CookDbContext context)

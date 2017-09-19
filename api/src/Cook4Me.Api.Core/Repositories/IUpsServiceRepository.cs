@@ -14,17 +14,14 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Common
+using Cook4Me.Api.Core.Aggregates;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Cook4Me.Api.Core.Repositories
 {
-    public interface ISettingsProvider
+    public interface IUpsServiceRepository
     {
-        string GetPaypalClientId();
-        string GetPaypalClientSecret();
-        string GetBaseOpenidUrl();
-        string GetUpsLicenseNumber();
-        string GetUpsUsername();
-        string GetUpsPassword();
-        string GetBaseWebsite();
-        bool IsTstMode();
+        Task<IEnumerable<UpsServiceAggregate>> Search(string countryCode);
     }
 }

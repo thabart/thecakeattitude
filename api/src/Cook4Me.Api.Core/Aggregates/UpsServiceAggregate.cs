@@ -14,17 +14,18 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Common
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public interface ISettingsProvider
+    public enum UpsAggregateServices
     {
-        string GetPaypalClientId();
-        string GetPaypalClientSecret();
-        string GetBaseOpenidUrl();
-        string GetUpsLicenseNumber();
-        string GetUpsUsername();
-        string GetUpsPassword();
-        string GetBaseWebsite();
-        bool IsTstMode();
+        Standard,
+        AccessPointEconomy
+    }
+
+    public class UpsServiceAggregate
+    {
+        public string Id { get; set; }
+        public string CountryCode { get; set; }
+        public UpsAggregateServices Service { get; set; }
     }
 }

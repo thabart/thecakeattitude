@@ -14,17 +14,25 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Common
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+
+namespace Cook4Me.Api.EF.Mappings
 {
-    public interface ISettingsProvider
+    internal static class UpsServiceMapping
     {
-        string GetPaypalClientId();
-        string GetPaypalClientSecret();
-        string GetBaseOpenidUrl();
-        string GetUpsLicenseNumber();
-        string GetUpsUsername();
-        string GetUpsPassword();
-        string GetBaseWebsite();
-        bool IsTstMode();
+        public static ModelBuilder AddUpsService(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+            modelBuilder.Entity<UpsService>()
+                .ToTable("upsServices")
+                .HasKey(s => s.Id);
+            return modelBuilder;
+        }
     }
 }

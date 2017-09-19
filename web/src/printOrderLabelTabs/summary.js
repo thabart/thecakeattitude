@@ -116,7 +116,7 @@ class Summary extends Component {
           <section>
             <h5>{t('transport')}</h5>
             { this.state.order.package.transporter === 'dhl' && (<img src="/images/DHL.png" width="100" />) }
-            { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="100" />) }
+            { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="50" />) }
           </section>
           <section>
             <h5>{t('parcelSize')}</h5>
@@ -130,7 +130,7 @@ class Summary extends Component {
       </div>
       <div>
         <button className="btn btn-default" onClick={this.previous}>{t('previous')}</button>
-        <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={this.buy}>{t('buy')}</button>
+        <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={this.buy}>{t('buyWithPaypal')}</button>
       </div>
     </div>);
   }

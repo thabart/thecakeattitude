@@ -17,48 +17,48 @@
 using System;
 using Cook4Me.Common;
 
-namespace Cook4Me.Api.Host
+namespace Cook4Me.Api.Host.Tests
 {
-    public class SettingsProvider : ISettingsProvider
+    public class FakeSettingsProvider : ISettingsProvider
     {
         public string GetBaseOpenidUrl()
         {
-            return "http://localhost:5001";
+            return "";
         }
 
         public string GetBaseWebsite()
         {
-            return "http://localhost:3000";
+            return "";
         }
 
         public string GetPaypalClientId()
         {
-            return "AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt";
+            return "";
         }
 
         public string GetPaypalClientSecret()
         {
-            return "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0git";
+            return "";
         }
 
         public string GetUpsLicenseNumber()
         {
-            return "FD300339C9051F5C";
+            return "";
         }
 
         public string GetUpsPassword()
         {
-            return "CakeAttitude1989";
+            return "";
         }
 
         public string GetUpsUsername()
         {
-            return "thabart1";
+            return "";
         }
 
         public bool IsTstMode()
         {
-            return false;
+            return true;
         }
     }
 }

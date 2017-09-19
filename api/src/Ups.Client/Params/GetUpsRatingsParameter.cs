@@ -18,11 +18,17 @@ namespace Ups.Client.Params
 {
     public class GetUpsRatingsParameter
     {
+        public GetUpsRatingsParameter()
+        {
+            UpsService = UpsServices.UpsAccessPointEconomy;
+        }
+
         public UpsCredentials Credentials { get; set; }
         public UpsAlternateDeliveryAddressParameter AlternateDeliveryAddress { get; set; }
         public UpsShipperParameter Shipper { get; set; }
         public UpsShipParameter ShipTo { get; set; }
         public UpsShipParameter ShipFrom { get; set; }
         public UpsPackageParameter Package { get; set; }
+        public UpsServices UpsService { get; set; }
     }
 }

@@ -76,10 +76,18 @@ namespace Cook4Me.Api.Host
             public const string BuyOrder = "buy/{id}";
             public const string OrderTransaction = "{id}/transaction";
             public const string OrderAcceptTransaction = "{id}/transaction/accept";
+            public const string UpsServices = "services/{id}";
         }
 
         public static class DtoNames
         {
+            public static class UpsServiceNames
+            {
+                public const string Id = "id";
+                public const string CountryCode = "country_code";
+                public const string Service = "service";
+            }
+
             public static class OrderTransactionNames
             {
                 public const string Id = "id";
@@ -186,6 +194,7 @@ namespace Cook4Me.Api.Host
             public static class DropLocationsNames
             {
                 public const string Locations = "locations";
+                public const string Services = "services";
             }
 
             public static class DropLocationNames

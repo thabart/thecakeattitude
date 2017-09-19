@@ -47,6 +47,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<Message> Messages { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderLine> OrderLines { get; set; }
+        public virtual DbSet<UpsService> UpsServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,7 +81,8 @@ namespace Cook4Me.Api.EF
                 .AddOrderLine()
                 .AddOrder()
                 .AddOrderParcel()
-                .AddOrderPayment();
+                .AddOrderPayment()
+                .AddUpsService();
         }
     }
 }

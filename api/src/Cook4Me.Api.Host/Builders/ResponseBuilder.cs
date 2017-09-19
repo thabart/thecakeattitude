@@ -39,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetUpsService(UpsServiceAggregate service);
         JObject GetOrderTransactionApproved(OrderTransactionApprovedEvent evt);
         JObject GetPaypalTransaction(CreatePaymentResponse paymentResponse);
         JObject GetOrderParcel(OrderAggregateParcel orderParcel);
@@ -103,6 +104,20 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetUpsService(UpsServiceAggregate service)
+        {
+            if (service == null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            var obj = new JObject();
+            obj.Add(Constants.DtoNames.UpsServiceNames.Id, service.Id);
+            obj.Add(Constants.DtoNames.UpsServiceNames.CountryCode, service.CountryCode);
+            obj.Add(Constants.DtoNames.UpsServiceNames.Id, CommonBuilder.MappingUpsAggregateServices.First(kvp => kvp.Key == service.Service).Value);
+            return obj;
+        }
+
         public JObject GetOrderTransactionApproved(OrderTransactionApprovedEvent evt)
         {
             if (evt == null)
@@ -582,36 +597,16 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.DropLocationNames.OpeningTimes, operatingHours);
             }
 
-            /*
-            if (!string.IsNullOrWhiteSpace(dropLocation.EmailAddress))
+            if (dropLocation.ServiceOfferingList != null && dropLocation.ServiceOfferingList.ServiceOffering != null)
             {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.Email, dropLocation.EmailAddress);
-            }
+                var services = new JArray();
+                foreach(var service in dropLocation.ServiceOfferingList.ServiceOffering)
+                {
+                    services.Add(service.Code);
+                }
 
-            if (!string.IsNullOrWhiteSpace(dropLocation.FaxNumber))
-            {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.Fax, dropLocation.FaxNumber);
+                jObj.Add(Constants.DtoNames.DropLocationsNames.Services, services);
             }
-
-            if (!string.IsNullOrWhiteSpace(dropLocation.HomePageURL))
-            {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.HomePage, dropLocation.HomePageURL);
-            }
-
-            if (!string.IsNullOrWhiteSpace(dropLocation.PhoneNumber))
-            {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.Phone, dropLocation.PhoneNumber);
-            }
-
-            if (dropLocation.AccessPointInformation != null)
-            {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.Image, dropLocation.AccessPointInformation.ImageUrl);
-            }
-            if (dropLocation.Distance != null)
-            {
-                jObj.Add(Constants.DtoNames.DropLocationResponse.Distance, GetDistance(dropLocation.Distance));
-            }
-            */
 
             return jObj;
         }
