@@ -86,5 +86,8 @@ namespace Cook4Me.Api.Host
         public const string TheOrderTransactionIsNotCorrect = "the order transaction is not correct";
         public const string TheOrderTransactionHasBeenApproved = "the order transaciton has already been approved";
         public const string TheOrderCanBeApprovedOnlyByItsCreator = "the order can be approved only by its creator";
+        public const string TheOrderLabelCanBePurchasedOnlyBySeller = "the order label can be purchased only by its seller";
+        public const string TheOrderIsNotConfirmed = "the order is not confirmed";
+        public const string TheOrderPaymentHasNotBeenConfirmed = "the order payment has not been confirmed";
     }
 }

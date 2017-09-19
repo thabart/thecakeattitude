@@ -168,5 +168,19 @@ namespace Cook4Me.Api.Host.Controllers
 
             return await _acceptOrderTransactionOperation.Execute(id, subject, this.GetCommonId(), jObj);
         }
+
+        [HttpPost(Constants.RouteNames.PurchaseLabel)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> PurchaseLabel([FromBody] JObject jObj)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _acceptOrderTransactionOperation.Execute(id, subject, this.GetCommonId(), jObj);
+        }
     }
 }

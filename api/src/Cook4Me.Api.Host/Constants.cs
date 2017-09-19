@@ -77,6 +77,7 @@ namespace Cook4Me.Api.Host
             public const string OrderTransaction = "{id}/transaction";
             public const string OrderAcceptTransaction = "{id}/transaction/accept";
             public const string UpsServices = "services/{id}";
+            public const string PurchaseLabel = "{id}/label/purchase";
         }
 
         public static class DtoNames

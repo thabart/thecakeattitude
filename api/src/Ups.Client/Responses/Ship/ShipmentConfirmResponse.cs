@@ -30,6 +30,6 @@ namespace Ups.Client.Responses.Ship
         [XmlElement(ElementName = Constants.DtoNames.ShipmentConfirmResponseNames.ShipmentCharges)]
         public ShipmentCharges ShipmentCharges { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.ShipmentConfirmResponseNames.ShipmentDigest)]
-        public ShipmentCharges ShipmentDigest { get; set; }
+        public string ShipmentDigest { get; set; }
     }
 }
