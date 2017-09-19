@@ -9,6 +9,11 @@ import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
 import Promise from 'bluebird';
 
+const mappingUpsServiceCode = {
+  "011": "ups_standard",
+  "070": "ups_accesspoint_economy"
+};
+
 class TransportMethods extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +34,8 @@ class TransportMethods extends Component {
     this.refreshDhlRatings = this.refreshDhlRatings.bind(this);
     this.onUpsMarkerClick = this.onUpsMarkerClick.bind(this);
     this.onDhlMarkerClick = this.onDhlMarkerClick.bind(this);
+    this.displayUpsServices = this.displayUpsServices.bind(this);
+    this.selectUpsService = this.selectUpsService.bind(this);
     this.state = {
       isLoading: false,
       transportMethod: 'manual',
@@ -39,7 +46,10 @@ class TransportMethods extends Component {
       isUpsLoading: false,
       estimatedPrice: 0,
       dhlRatings: [],
-      isNextBtnEnabled: true
+      isNextBtnEnabled: true,
+      isUpsServicesLoading: false,
+      upsServices: [],
+      selectedUpsService: null
     };
   }
 
@@ -122,6 +132,10 @@ class TransportMethods extends Component {
           estimated_price: estimatedPrice,
           transporter: this.state.transporter
         };
+
+        if (this.state.transporter === 'ups') {
+          order.package.ups_service = this.state.selectedUpsService;
+        }
       }
       AppDispatcher.dispatch({
         actionName: Constants.events.UPDATE_BASKET_INFORMATION_ACT,
@@ -156,8 +170,14 @@ class TransportMethods extends Component {
       isDhlRatingsLoading: false,
       isUpsLoading: false,
       estimatedPrice: 0,
-      isNextBtnEnabled: false
+      isNextBtnEnabled: false,
+      selectedUpsService: null,
+      upsServices: [],
+      isUpsServicesLoading: false
     });
+    if (transporter === 'ups') {
+      this.displayUpsServices();
+    }
   }
 
   selectParcelType(parcelType) { // Select the parcel type.
@@ -189,7 +209,11 @@ class TransportMethods extends Component {
     if (!b || !this.refs.address) return;
     var adr = this.refs.address.getWrappedInstance().getAddress();
     if (this.refs.dhlDropLocation) this.refs.dhlDropLocation.getWrappedInstance().setAddress(adr);
-    if (this.refs.upsDropLocation) this.refs.upsDropLocation.getWrappedInstance().setAddress(adr);
+    if (this.refs.upsDropLocation) {
+      this.refs.upsDropLocation.getWrappedInstance().setAddress(adr);
+      this.displayUpsServices();
+    }
+
     this.setState({
       isNextBtnEnabled: false
     });
@@ -200,6 +224,7 @@ class TransportMethods extends Component {
     var self = this;
     if (!self._upsMarker) return;
     if (!self.state.parcelType) return;
+    if (!self.state.selectedUpsService) return;
     var adr = self.refs.address.getWrappedInstance().getAddress();
     var fromAdr = {
       address_line: adr.street_address,
@@ -263,7 +288,8 @@ class TransportMethods extends Component {
         name: self._buyer.name,
         address: fromAdr
       },
-      package: pkg
+      package: pkg,
+      ups_service: self.state.selectedUpsService
     };
     UpsService.searchRatings(request).then(function(r) {
       self.setState({
@@ -324,10 +350,46 @@ class TransportMethods extends Component {
     });
   }
 
+  displayUpsServices() { // Display the UPS services.
+    if (!this.refs.address) return;
+    var self = this;
+    var adr = self.refs.address.getWrappedInstance().getAddress();
+    self.setState({
+      isUpsServicesLoading: true
+    });
+    const {t} = this.props;
+    UpsService.getServices(adr.country_code).then(function(services) {
+      self.setState({
+        isUpsServicesLoading: false,
+        upsServices: services
+      });
+    }).catch(function(e) {
+      ApplicationStore.sendMessage({
+          message: t('retrieveUpsServicesError'),
+          level: 'error',
+          position: 'tr'
+      });
+      self.setState({
+        isUpsServicesLoading: false,
+        upsServices: []
+      });
+    });
+  }
+
+  selectUpsService(service) { // Select the UPS service.
+    if (this.state.selectUpsService === service) return;
+    this.state.selectedUpsService = service;
+    this.setState({
+      selectedUpsService: service
+    });
+    this.refreshUpsRatings();
+  }
+
   render() { // Display the component.
     const { t } = this.props;
     var self = this;
     var ratings = [];
+    var upsServices = [];
     var currentAdr = {};
     if (this.state.dhlRatings) {
       this.state.dhlRatings.forEach(function(rating) {
@@ -360,6 +422,23 @@ class TransportMethods extends Component {
               </div>
           </li>
         ));
+      });
+    }
+
+    if (this.state.upsServices) {
+      this.state.upsServices.forEach(function(upsService) {
+        var code = mappingUpsServiceCode[upsService.service];
+        if (!code) {
+          return;
+        }
+
+        upsServices.push(
+          <label className="col-md-3 text-center" onClick={() => self.selectUpsService(upsService.service)}>
+            <div className={self.state.selectedUpsService === upsService.service ? "choice active" : "choice"} style={{minHeight:"100px"}}>
+              <h3 style={{paddingTop:"30px"}}>{t(code)}</h3>
+            </div>
+          </label>
+        );
       });
     }
 
@@ -462,7 +541,16 @@ class TransportMethods extends Component {
                   { /* Display UPS */ }
                   { this.state.transporter === 'ups' && this.state.isUpsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
                   { this.state.transporter === 'ups' && (
-                    <DropLocations ref="upsDropLocation" onMarkerClick={this.onUpsMarkerClick} transporter="ups" address={currentAdr} />
+                    <section>
+                      <h5>{t('upsServices')}</h5>
+                      { this.state.isUpsServicesLoading && (<i className='fa fa-spinner fa-spin'></i>) }
+                      { !this.state.isUpsServicesLoading && (
+                        <section className="row">
+                          {upsServices}
+                        </section>
+                      ) }
+                      <DropLocations ref="upsDropLocation" onMarkerClick={this.onUpsMarkerClick} transporter="ups" address={currentAdr} />
+                    </section>
                   )}
                   { /* Display total price */}
                   <section style={{marginTop: "10px"}}>

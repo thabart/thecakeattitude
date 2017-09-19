@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Host.Builders;
 using Cook4Me.Common;
 using Openid.Client;
 using System;
@@ -262,7 +263,8 @@ namespace Cook4Me.Api.Host.Validators
                                 Country = order.OrderParcel.ParcelShopCountryCode,
                                 PostalCode = order.OrderParcel.ParcelShopPostalCode.ToString()
                             }
-                        }
+                        },
+                        UpsService = CommonBuilder.MappingBothUpsServices.First(kvp => kvp.Key == order.OrderParcel.UpsServiceCode).Value
                     };
                     var ratingsResponse = await _upsClient.GetRatings(parameter);
                     if (ratingsResponse.Response.Error != null)

@@ -17,6 +17,7 @@
 using Cook4Me.Api.Core.Aggregates;
 using Paypal.Client.Common;
 using System.Collections.Generic;
+using Ups.Client.Params;
 
 namespace Cook4Me.Api.Host.Builders
 {
@@ -26,6 +27,18 @@ namespace Cook4Me.Api.Host.Builders
         {
             { UpsAggregateServices.AccessPointEconomy, "070" },
             { UpsAggregateServices.Standard, "011" }
+        };
+
+        public static Dictionary<UpsServices, string> MappingUpsServices = new Dictionary<UpsServices, string>
+        {
+            { UpsServices.UpsAccessPointEconomy, "070" },
+            { UpsServices.UpsStandard, "011" }
+        };
+
+        public static Dictionary<UpsAggregateServices, UpsServices> MappingBothUpsServices = new Dictionary<UpsAggregateServices, UpsServices>
+        {
+            { UpsAggregateServices.AccessPointEconomy, UpsServices.UpsAccessPointEconomy },
+            { UpsAggregateServices.Standard, UpsServices.UpsStandard  }
         };
 
         public static Dictionary<OrderPayments, string> MappingOrderPayments = new Dictionary<OrderPayments, string>

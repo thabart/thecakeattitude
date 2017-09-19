@@ -122,6 +122,7 @@ namespace Cook4Me.Api.Host
                 public const string ShipTo = "ship_to";
                 public const string ShipFrom = "ship_from";
                 public const string Package = "package";
+                public const string UpsService = "ups_service";
             }
 
             public static class UpsPackageParameterNames
@@ -559,6 +560,7 @@ namespace Cook4Me.Api.Host
                 public const string Buyer = "buyer";
                 public const string Seller = "seller";
                 public const string ParcelShop = "parcel_shop";
+                public const string UpsService = "ups_service";
             }
 
             public static class ParcelActorNames

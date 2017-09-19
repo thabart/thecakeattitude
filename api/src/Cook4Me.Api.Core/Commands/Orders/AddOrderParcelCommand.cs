@@ -22,6 +22,7 @@ namespace Cook4Me.Api.Core.Commands.Orders
     {
         public double EstimatedPrice { get; set; }
         public Transporters Transporter { get; set; }
+        public UpsAggregateServices UpsServiceCode { get; set; }
 
         #region Buyer information
 

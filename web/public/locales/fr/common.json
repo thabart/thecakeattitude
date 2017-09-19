@@ -437,5 +437,9 @@
   "payment_status_approved": "Approuvé",
   "payment_status_confirmed": "Confirmé",
   "payment_status_failed": "Erreur",
-  "orderTransactionApproved": "La transaction de la commande a été approuvée"
+  "orderTransactionApproved": "La transaction de la commande a été approuvée",
+  "retrieveUpsServicesError": "Une erreur est survenue lors de la récupération des services UPS, veuillez prendre contact avec l'administrateur",
+  "upsServices": "Services UPS",
+  "ups_standard": "UPS Standard",
+  "ups_accesspoint_economy": "UPS Access point economy"
 }

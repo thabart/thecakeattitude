@@ -62,6 +62,7 @@ namespace Cook4Me.Api.Core.Aggregates
 
         #endregion
 
+        public UpsAggregateServices UpsServiceCode { get; set; }
         public string OrderId { get; set; }
     }
 }

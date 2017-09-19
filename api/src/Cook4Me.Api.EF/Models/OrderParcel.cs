@@ -21,6 +21,7 @@ namespace Cook4Me.Api.EF.Models
         public string Id { get; set; }
         public double EstimatedPrice { get; set; }
         public int Transporter { get; set; }
+        public int UpsServiceCode { get; set; }
 
         #region Buyer information
 

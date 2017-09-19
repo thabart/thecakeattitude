@@ -108,7 +108,8 @@ namespace Cook4Me.Api.EF.Extensions
                 SellerCountryCode = orderParcel.SellerCountryCode,
                 SellerName = orderParcel.SellerName,
                 SellerPostalCode = orderParcel.SellerPostalCode,
-                Transporter = (int)orderParcel.Transporter
+                Transporter = (int)orderParcel.Transporter,
+                UpsServiceCode = (int)orderParcel.UpsServiceCode
             };
         }
 
@@ -142,7 +143,8 @@ namespace Cook4Me.Api.EF.Extensions
                 SellerCountryCode = orderParcel.SellerCountryCode,
                 SellerName = orderParcel.SellerName,
                 SellerPostalCode = orderParcel.SellerPostalCode,
-                Transporter = (Transporters)orderParcel.Transporter
+                Transporter = (Transporters)orderParcel.Transporter,
+                UpsServiceCode = (UpsAggregateServices)orderParcel.UpsServiceCode
             };
         }
 

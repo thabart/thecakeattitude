@@ -48,5 +48,18 @@ module.exports = {
                 });
             });
         });
+    },
+    getServices : function(countryCode) { // Get the UPS services.
+      return new Promise(function(resolve, reject) {
+        ConfigurationService.get().then(function (configuration) {
+          $.ajax(configuration.ups_endpoint + '/services/'+countryCode, {
+              method: 'GET'
+          }).then(function (r) {
+              resolve(r);
+          }).fail(function (e) {
+              reject(e);
+          });
+        });
+      });
     }
 };

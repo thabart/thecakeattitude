@@ -114,7 +114,7 @@ namespace Cook4Me.Api.Host.Builders
             var obj = new JObject();
             obj.Add(Constants.DtoNames.UpsServiceNames.Id, service.Id);
             obj.Add(Constants.DtoNames.UpsServiceNames.CountryCode, service.CountryCode);
-            obj.Add(Constants.DtoNames.UpsServiceNames.Id, CommonBuilder.MappingUpsAggregateServices.First(kvp => kvp.Key == service.Service).Value);
+            obj.Add(Constants.DtoNames.UpsServiceNames.Service, CommonBuilder.MappingUpsAggregateServices.First(kvp => kvp.Key == service.Service).Value);
             return obj;
         }
 
@@ -506,6 +506,12 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.ParcelNames.Buyer, buyerObj);
             jObj.Add(Constants.DtoNames.ParcelNames.Seller, sellerObj);
             jObj.Add(Constants.DtoNames.ParcelNames.EstimatedPrice, orderParcel.EstimatedPrice);
+            var kvpOrderService = CommonBuilder.MappingUpsAggregateServices.FirstOrDefault(kvp => kvp.Key == orderParcel.UpsServiceCode);
+            if (!kvpOrderService.Equals(default(KeyValuePair<UpsAggregateServices, string>)))
+            {
+                jObj.Add(Constants.DtoNames.ParcelNames.UpsService, kvpOrderService.Value);
+            }
+
             if (orderParcel.Transporter != Transporters.None)
             {
                 string transporter = null;

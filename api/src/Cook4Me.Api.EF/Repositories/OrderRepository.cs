@@ -158,6 +158,7 @@ namespace Cook4Me.Api.EF.Repositories
                         record.OrderParcel.SellerName = orderAggregate.OrderParcel.SellerName;
                         record.OrderParcel.SellerPostalCode = orderAggregate.OrderParcel.SellerPostalCode;
                         record.OrderParcel.Transporter = (int)orderAggregate.OrderParcel.Transporter;
+                        record.OrderParcel.UpsServiceCode = (int)orderAggregate.OrderParcel.UpsServiceCode;
                     }
 
                     if (orderAggregate.OrderPayment != null)

@@ -99,7 +99,8 @@ namespace Cook4Me.Api.Handlers
                         SellerCountryCode = message.OrderParcel.SellerCountryCode,
                         SellerName = message.OrderParcel.SellerName,
                         SellerPostalCode = message.OrderParcel.SellerPostalCode,
-                        Transporter = message.OrderParcel.Transporter
+                        Transporter = message.OrderParcel.Transporter,
+                        UpsServiceCode = message.OrderParcel.UpsServiceCode
                     };
                 }
 
@@ -115,7 +116,7 @@ namespace Cook4Me.Api.Handlers
                         ApprovalUrl = message.PaymentOrder.ApprovalUrl
                     };
                 }
-
+                
                 await _orderPriceCalculatorHelper.Update(order);
                 await _orderRepository.Update(order);
                 if (order.OrderLines != null)

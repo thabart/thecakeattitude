@@ -110,7 +110,7 @@ namespace Cook4Me.Api.Host.Builders
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
-            
+
             var alternateAdrObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.AlternateDeliveryAddress) as JObject;
             var shipperObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.Shipper) as JObject;
             var shipToObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.ShipTo) as JObject;
@@ -162,8 +162,8 @@ namespace Cook4Me.Api.Host.Builders
             var shipToObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.ShipTo) as JObject;
             var shipFromObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.ShipFrom) as JObject;
             var packageObj = jObj.GetValue(Constants.DtoNames.GetUpsRatingsParameterNames.Package) as JObject;
-
-            return new GetUpsRatingsParameter
+            var service = jObj.TryGetString(Constants.DtoNames.GetUpsRatingsParameterNames.UpsService);
+            var result = new GetUpsRatingsParameter
             {
                 AlternateDeliveryAddress = alternateAdrObj == null ? null : GetUpsAlternateDeliveryAddressParameter(alternateAdrObj),
                 Package = packageObj == null ? null : GetUpsPackageParameter(packageObj),
@@ -171,6 +171,17 @@ namespace Cook4Me.Api.Host.Builders
                 ShipTo = shipToObj == null ? null : GetUpsShipParameter(shipToObj),
                 Shipper = shipperObj == null ? null : GetUpsShipperParameter(shipperObj)
             };
+
+            if (!string.IsNullOrWhiteSpace(service))
+            {
+                var kvpUpsService = CommonBuilder.MappingUpsServices.FirstOrDefault(kvp => kvp.Value == service);
+                if (!kvpUpsService.Equals(default(KeyValuePair<UpsAggregateServices, string>)))
+                {
+                    result.UpsService = kvpUpsService.Key;
+                }
+            }
+
+            return result;
         }
 
         public UpsAlternateDeliveryAddressParameter GetUpsAlternateDeliveryAddressParameter(JObject jObj)
@@ -415,6 +426,13 @@ namespace Cook4Me.Api.Host.Builders
                 EstimatedPrice = jObj.TryGetDouble(Constants.DtoNames.ParcelNames.EstimatedPrice),
                 Transporter = transporterEnum
             };
+
+            var upsServiceCode = jObj.TryGetString(Constants.DtoNames.ParcelNames.UpsService);
+            var kvpUpsService = CommonBuilder.MappingUpsAggregateServices.FirstOrDefault(kvp => kvp.Value == upsServiceCode);
+            if (!kvpUpsService.Equals(default(KeyValuePair<UpsAggregateServices, string>)))
+            {
+                result.UpsServiceCode = kvpUpsService.Key;
+            }
 
             var buyerObj = jObj.GetValue(Constants.DtoNames.ParcelNames.Buyer) as JObject;
             var sellerObj = jObj.GetValue(Constants.DtoNames.ParcelNames.Seller) as JObject;
