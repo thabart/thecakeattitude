@@ -117,8 +117,9 @@ namespace Cook4Me.Api.Host
                 using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                 {
                     var simpleIdentityServerContext = serviceScope.ServiceProvider.GetService<CookDbContext>();
+                    var isTstMode = serviceScope.ServiceProvider.GetService<ISettingsProvider>().IsTstMode();
                     simpleIdentityServerContext.Database.EnsureCreated();
-                    simpleIdentityServerContext.EnsureSeedData();
+                    simpleIdentityServerContext.EnsureSeedData(isTstMode);
                     _isInitialized = true;
                 }
             }

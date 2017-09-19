@@ -73,7 +73,8 @@ class PackagingType extends Component {
         name: order.package.seller.name,
         address: order.package.seller.address
       },
-      package: size
+      package: size,
+      ups_service: order.package.ups_service
     };
 
     UpsService.searchRatings(request).then(function(res) {

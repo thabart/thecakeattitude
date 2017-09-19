@@ -45,7 +45,7 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _smallShoesId = Guid.NewGuid().ToString();
         private static string _mixtShoesId = Guid.NewGuid().ToString();
 
-        public static void EnsureSeedData(this CookDbContext context)
+        public static void EnsureSeedData(this CookDbContext context, bool isTstMode)
         {
             if (context == null)
             {
@@ -54,7 +54,7 @@ namespace Cook4Me.Api.Host.Extensions
             
             InsertCategories(context);
             InsertTags(context);
-            InsertShops(context);
+            InsertShops(context, isTstMode);
             InsertFilters(context);
             InsertComments(context);
             InsertShopTags(context);
@@ -236,7 +236,7 @@ namespace Cook4Me.Api.Host.Extensions
             }
         }
 
-        private static void InsertShops(CookDbContext context)
+        private static void InsertShops(CookDbContext context, bool isTstMode)
         {
             if (!context.Shops.Any())
             {
@@ -250,14 +250,14 @@ namespace Cook4Me.Api.Host.Extensions
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
                         CategoryMapName = "first_shoes_map",
-                        StreetAddress = "rue solleveld 20",
-                        PostalCode = "1200",
-                        Locality = "Bruxelles",
-                        Country = "BE",
+                        StreetAddress = isTstMode ? "NIEDERWALLSTRASSE 29" : "rue solleveld 20",
+                        PostalCode = isTstMode ? "41460" : "1200",
+                        Locality = isTstMode ? "NEUSS": "Bruxelles",
+                        Country = isTstMode ? "DE" : "BE",
                         PlaceId = "place3",
-                        GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
-                        Longitude = 4.3630615F,
-                        Latitude = 50.8939195F,
+                        GooglePlaceId = "ChIJn9-QVlS0uEcRM-jduPqXdYs",
+                        Longitude = isTstMode ? 6.687952600000017F :4.3630615F,
+                        Latitude = isTstMode ? 51.2010754F : 50.8939195F,
                         TotalScore = 16,
                         AverageScore = 3.2,
                         PaymentMethods = new List<PaymentMethod>
@@ -296,14 +296,14 @@ namespace Cook4Me.Api.Host.Extensions
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
                         CategoryMapName = "first_shoes_map",
-                        StreetAddress = "street adr 1",
-                        PostalCode = "postal code 1",
-                        Locality = "locality 1",
-                        Country = "country 1",
+                        StreetAddress = isTstMode ? "10 GOERLITZER STRASSE" : "223 avenue des croix du feu",
+                        PostalCode = isTstMode ? "41460" : "1020",
+                        Locality = isTstMode ? "NEUSS": "Bruxelles",
+                        Country = isTstMode ? "DE" : "BE",
                         PlaceId = "place3",
-                        GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
-                        Longitude = 4.3630615F,
-                        Latitude = 50.8939195F,
+                        GooglePlaceId = "ChIJ_7RBvmJLv0cRB-1T2vVgJcg",
+                        Longitude = 6.623000000000047F,
+                        Latitude = 51.12947F,
                         TotalScore = 16,
                         AverageScore = 3.2,
                         PaymentMethods = new List<PaymentMethod>
@@ -342,14 +342,14 @@ namespace Cook4Me.Api.Host.Extensions
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
                         CategoryMapName = "first_shoes_map",
-                        StreetAddress = "street adr 1",
-                        PostalCode = "postal code 1",
-                        Locality = "locality 1",
-                        Country = "country 1",
+                        StreetAddress = isTstMode ? "10 GOERLITZER STRASSE" : "223 avenue des croix du feu",
+                        PostalCode = isTstMode ? "41460" : "1020",
+                        Locality = isTstMode ? "NEUSS": "Bruxelles",
+                        Country = isTstMode ? "DE" : "BE",
                         PlaceId = "place3",
-                        GooglePlaceId = "ChIJQdeO0VXCw0cReXpimsXR89g",
-                        Longitude = 4.3630615F,
-                        Latitude = 50.8939195F,
+                        GooglePlaceId = "ChIJ_7RBvmJLv0cRB-1T2vVgJcg",
+                        Longitude = 6.623000000000047F,
+                        Latitude = 51.12947F,
                         TotalScore = 16,
                         AverageScore = 3.2,
                         PaymentMethods = new List<PaymentMethod>

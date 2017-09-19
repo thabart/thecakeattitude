@@ -58,7 +58,7 @@ namespace Cook4Me.Api.Host
 
         public bool IsTstMode()
         {
-            return false;
+            return true;
         }
     }
 }
