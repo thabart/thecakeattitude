@@ -1,11 +1,11 @@
-import Constants from "../../Constants";
+import Constants from "../../Constants-common";
 import Promise from "bluebird";
 import $ from "jquery";
 
 module.exports = {
-    get: function () {
+    get: function () { // Get the configuration.
         return new Promise(function (resolve, reject) {
-            $.get(Constants.configurationApiUrl).then(function (result) {
+            $.get(Constants.ApiWellKnownConfiguration).then(function (result) {
                 resolve(result);
             }).catch(function () {
                 reject();

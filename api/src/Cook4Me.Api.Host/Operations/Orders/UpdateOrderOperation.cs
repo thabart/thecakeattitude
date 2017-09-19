@@ -113,7 +113,8 @@ namespace Cook4Me.Api.Host.Operations.Orders
                     command.PaymentOrder = new AddPaymentOrder
                     {
                         TransactionId = result.Id,
-                        PaymentMethod = OrderPayments.Paypal
+                        PaymentMethod = OrderPayments.Paypal,
+                        ApprovalUrl = result.Links.FirstOrDefault(l => l.Rel == "approval_url").Href
                     };
                 }
                 catch

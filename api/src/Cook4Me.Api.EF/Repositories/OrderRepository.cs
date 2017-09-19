@@ -129,44 +129,53 @@ namespace Cook4Me.Api.EF.Repositories
                     record.TransportMode = (int)orderAggregate.TransportMode;
                     if (orderAggregate.OrderParcel != null)
                     {
-                        record.OrderParcel = new OrderParcel
+                        if (record.OrderParcel == null)
                         {
-                            BuyerAddressLine = orderAggregate.OrderParcel.BuyerAddressLine,
-                            BuyerCity = orderAggregate.OrderParcel.BuyerCity,
-                            BuyerCountryCode = orderAggregate.OrderParcel.BuyerCountryCode,
-                            BuyerName = orderAggregate.OrderParcel.BuyerName,
-                            BuyerPostalCode = orderAggregate.OrderParcel.BuyerPostalCode,
-                            EstimatedPrice = orderAggregate.OrderParcel.EstimatedPrice,
-                            Id = orderAggregate.OrderParcel.Id,
-                            OrderId = record.Id,
-                            ParcelShopAddressLine = orderAggregate.OrderParcel.ParcelShopAddressLine,
-                            ParcelShopCity = orderAggregate.OrderParcel.ParcelShopCity,
-                            ParcelShopCountryCode = orderAggregate.OrderParcel.ParcelShopCountryCode,
-                            ParcelShopId = orderAggregate.OrderParcel.ParcelShopId,
-                            ParcelShopLatitude = orderAggregate.OrderParcel.ParcelShopLatitude,
-                            ParcelShopLongitude = orderAggregate.OrderParcel.ParcelShopLongitude,
-                            ParcelShopName = orderAggregate.OrderParcel.ParcelShopName,
-                            ParcelShopPostalCode = orderAggregate.OrderParcel.ParcelShopPostalCode,
-                            SellerAddressLine = orderAggregate.OrderParcel.SellerAddressLine,
-                            SellerCity = orderAggregate.OrderParcel.SellerCity,
-                            SellerCountryCode = orderAggregate.OrderParcel.SellerCountryCode,
-                            SellerName = orderAggregate.OrderParcel.SellerName,
-                            SellerPostalCode = orderAggregate.OrderParcel.SellerPostalCode,
-                            Transporter = (int)orderAggregate.OrderParcel.Transporter
-                        };
+                            record.OrderParcel = new OrderParcel
+                            {
+                                Id = orderAggregate.OrderParcel.Id
+                            };
+                        }
+
+                        record.OrderParcel.BuyerAddressLine = orderAggregate.OrderParcel.BuyerAddressLine;
+                        record.OrderParcel.BuyerCity = orderAggregate.OrderParcel.BuyerCity;
+                        record.OrderParcel.BuyerCountryCode = orderAggregate.OrderParcel.BuyerCountryCode;
+                        record.OrderParcel.BuyerName = orderAggregate.OrderParcel.BuyerName;
+                        record.OrderParcel.BuyerPostalCode = orderAggregate.OrderParcel.BuyerPostalCode;
+                        record.OrderParcel.EstimatedPrice = orderAggregate.OrderParcel.EstimatedPrice;
+                        record.OrderParcel.OrderId = record.Id;
+                        record.OrderParcel.ParcelShopAddressLine = orderAggregate.OrderParcel.ParcelShopAddressLine;
+                        record.OrderParcel.ParcelShopCity = orderAggregate.OrderParcel.ParcelShopCity;
+                        record.OrderParcel.ParcelShopCountryCode = orderAggregate.OrderParcel.ParcelShopCountryCode; ;
+                        record.OrderParcel.ParcelShopId = orderAggregate.OrderParcel.ParcelShopId;
+                        record.OrderParcel.ParcelShopLatitude = orderAggregate.OrderParcel.ParcelShopLatitude;
+                        record.OrderParcel.ParcelShopLongitude = orderAggregate.OrderParcel.ParcelShopLongitude;
+                        record.OrderParcel.ParcelShopName = orderAggregate.OrderParcel.ParcelShopName;
+                        record.OrderParcel.ParcelShopPostalCode = orderAggregate.OrderParcel.ParcelShopPostalCode;
+                        record.OrderParcel.SellerAddressLine = orderAggregate.OrderParcel.SellerAddressLine;
+                        record.OrderParcel.SellerCity = orderAggregate.OrderParcel.SellerCity;
+                        record.OrderParcel.SellerCountryCode = orderAggregate.OrderParcel.SellerCountryCode;
+                        record.OrderParcel.SellerName = orderAggregate.OrderParcel.SellerName;
+                        record.OrderParcel.SellerPostalCode = orderAggregate.OrderParcel.SellerPostalCode;
+                        record.OrderParcel.Transporter = (int)orderAggregate.OrderParcel.Transporter;
                     }
 
                     if (orderAggregate.OrderPayment != null)
                     {
-                        record.OrderPayment = new OrderPayment
+                        if (record.OrderPayment == null)
                         {
-                            Id = orderAggregate.OrderPayment.Id,
-                            OrderId = orderAggregate.OrderPayment.OrderId,
-                            PaymentMethod = (int)orderAggregate.OrderPayment.PaymentMethod,
-                            Status = (int)orderAggregate.OrderPayment.Status,
-                            TransactionId = orderAggregate.OrderPayment.TransactionId,
-                            PayerId = orderAggregate.OrderPayment.PayerId
-                        };
+                            record.OrderPayment = new OrderPayment
+                            {
+                                Id = orderAggregate.OrderPayment.Id
+                            };
+                        }
+
+                        record.OrderPayment.OrderId = orderAggregate.OrderPayment.OrderId;
+                        record.OrderPayment.PaymentMethod = (int)orderAggregate.OrderPayment.PaymentMethod;
+                        record.OrderPayment.Status = (int)orderAggregate.OrderPayment.Status;
+                        record.OrderPayment.TransactionId = orderAggregate.OrderPayment.TransactionId;
+                        record.OrderPayment.PayerId = orderAggregate.OrderPayment.PayerId;
+                        record.OrderPayment.ApprovalUrl = orderAggregate.OrderPayment.ApprovalUrl;
                     }
 
                     var orderLines = orderAggregate.OrderLines == null ? new List<OrderAggregateLine>() : orderAggregate.OrderLines;

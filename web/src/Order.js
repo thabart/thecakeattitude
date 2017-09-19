@@ -51,8 +51,7 @@ class Order extends Component {
         products: [],
         order: {},
         shop: {},
-        user: {},
-        transaction: {}
+        user: {}
       };
     }
 
@@ -75,15 +74,10 @@ class Order extends Component {
         var productIds = order.lines.map(function(line) { return line.product_id; });
         self._request['product_ids'] = productIds;
         var requests = [ ProductsService.search(self._request), UserService.getPublicClaims(order.subject), ShopsService.get(order.shop_id) ];
-        if (order.payment) {
-          requests.push(OrdersService.getTransaction(orderId));
-        }
-
         Promise.all(requests).then(function(res) {
           var products = res[0]['_embedded'];
           var claims = res[1]['claims'];
           var shop = res[2]['_embedded'];
-          var transaction = res[3];
           var pagination = res[0]['_links'].navigation;
           if (!(products instanceof Array)) {
             products = [products];
@@ -95,10 +89,11 @@ class Order extends Component {
             products: products,
             pagination: pagination,
             shop: shop,
-            user: claims,
-            transaction: transaction
+            user: claims
           });
-          self.executeAction();
+          if (order.payment && order.payment.status === 'created') {
+            self.executeAction(order.id);
+          }
         }).catch(function() {
           self.setState({
             isLoading: false,
@@ -122,7 +117,7 @@ class Order extends Component {
       });
     }
 
-    executeAction() { // Confirm or cancel the transaction.
+    executeAction(orderId) { // Confirm or cancel the transaction.
       if (this._isActionExecuted) {
         return;
       }
@@ -161,8 +156,7 @@ class Order extends Component {
       self.setState({
         isLoading: true
       });
-      OrdersService.acceptPayment({
-        order_id: self.state.order.id,
+      OrdersService.acceptPayment(orderId, {
         payer_id: payerId,
         transaction_id: paymentId
       }).then(function() {
@@ -319,10 +313,17 @@ class Order extends Component {
                     <section>
                       <h5>{t('transport')}</h5>
                       { this.state.order.package.transporter === 'dhl' && (<img src="/images/DHL.png" width="100" />) }
-                      { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="100" />) }
+                      { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="50" />) }
                       { (!this.state.order.package.parcel_shop || !this.state.order.package.parcel_shop.id) && (<p>{t('deliveredAtHome')}</p>) }
                     </section>
                   ) }
+                  { this.state.order.transport_mode === 'packet' && this.state.order.payment && (
+                    <section>
+                      <h5>{t('payment')}</h5>
+                      { this.state.order.payment.payment_method === 'paypal' && (<img src="/images/paypal.png" width="50" />) }
+                      <p><span className="badge badge-default">{t('payment_status_' + this.state.order.payment.status)}</span></p>
+                    </section>
+                  )}
                   { /* Display buyer & seller address & parcel shop */ }
                   { this.state.order.transport_mode === 'packet' && (
                     <section>
@@ -369,10 +370,10 @@ class Order extends Component {
                 { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (
                   <button className="btn btn-default" onClick={this.confirmReception}>{t('confirmReception')}</button>
                 ) }
-                { this.state.transaction && this.state.transaction.approval_url && isBuyer && this.state.transaction.state === 'created' && (
-                  <a href={this.state.transaction.approval_url} className="btn btn-default">{t('buyWithPaypal')}</a>
+                { this.state.order.payment && this.state.order.payment.approval_url && this.state.order.payment.status === 'created' && (
+                  <a href={this.state.order.payment.approval_url} className="btn btn-default">{t('buyWithPaypal')}</a>
                 ) }
-                { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && isSeller && (
+                { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && (
                   <NavLink to={'/printlabel/' + this.state.order.id } className="btn btn-default">{t('buyLabel')}</NavLink>
                 ) }
               </div>
@@ -399,6 +400,14 @@ class Order extends Component {
             case Constants.events.ORDER_RECEIVED_ARRIVED:
               ApplicationStore.sendMessage({
                 message: t('orderReceived'),
+                level: 'success',
+                position: 'bl'
+              });
+              self.refresh();
+            break;
+            case Constants.events.ORDER_TRANSACTION_RECEIVED_ARRIVED:
+              ApplicationStore.sendMessage({
+                message: t('orderTransactionApproved'),
                 level: 'success',
                 position: 'bl'
               });

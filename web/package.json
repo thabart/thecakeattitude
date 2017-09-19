@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "bluebird": "^3.5.0",
-    "bootstrap": "^4.0.0-alpha.6",
     "classnames": "latest",
     "i18next": "^8.4.2",
     "i18next-browser-languagedetector": "^2.0.0",
@@ -33,7 +32,6 @@
     "react-slick": "^0.14.11",
     "react-stepper-horizontal": "^1.0.7",
     "react-tagsinput": "^3.16.1",
-    "reactstrap": "^4.5.0",
     "request": "^2.81.0",
     "signalr": "^2.2.1",
     "slick-carousel": "^1.6.0"
@@ -46,7 +44,8 @@
     "flux": "^3.1.2",
     "mousetrap": "^1.6.1",
     "react-grid-layout": "^0.14.6",
-    "react-scripts": "0.9.5"
+    "react-scripts": "0.9.5",
+    "reactstrap": "^4.8.0"
   },
   "scripts": {
     "start": "react-scripts start",

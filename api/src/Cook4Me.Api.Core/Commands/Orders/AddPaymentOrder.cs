@@ -22,5 +22,6 @@ namespace Cook4Me.Api.Core.Commands.Orders
     {
         public string TransactionId { get; set; }
         public OrderPayments PaymentMethod { get; set; }
+        public string ApprovalUrl { get; set; }
     }
 }

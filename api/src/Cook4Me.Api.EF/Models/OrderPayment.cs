@@ -24,6 +24,7 @@ namespace Cook4Me.Api.EF.Models
         public int Status { get; set; }
         public string TransactionId { get; set; }
         public string PayerId { get; set; }
+        public string ApprovalUrl { get; set; }
         public virtual Order Order { get; set; }
     }
 }

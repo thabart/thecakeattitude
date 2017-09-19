@@ -398,7 +398,7 @@ class TransportMethods extends Component {
                   <div className="row">
                     <div className='col-md-3 text-center' onClick={() => self.selectTransporter('ups') }>
                       <div className={this.state.transporter === 'ups' ? 'choice active' : 'choice'}  style={{height: "140px"}}>
-                        <div style={{height: "100px"}}><img src="/images/UPS.png" width="100" /></div>
+                        <div style={{height: "100px"}}><img src="/images/UPS.png" width="50" /></div>
                         <h3>{t('ups')}</h3>
                       </div>
                     </div>

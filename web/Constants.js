@@ -4,11 +4,9 @@ module.exports = {
     ClientId: 'website',
     ClientSecret: 'website',
     loginUrl: 'http://localhost:3003/login', // Website api definitions.
-    OpenIdWellKnownConfiguration: 'http://localhost:5001/.well-known/openid-configuration',
     googleMapUrl: 'https://maps.googleapis.com/maps/api',
     googleMapKey: 'AIzaSyBN72d3ipuyzbqhJgjwav5HnnKkLqp3KCU',
     apiUrl: 'http://localhost:5000',
-    configurationApiUrl: 'http://localhost:5000/.well-known/configuration',
     openIdUrl: 'http://localhost:5001',
     events: {
       USER_LOGGED_IN: 'USER_LOGGED_IN',
@@ -45,6 +43,7 @@ module.exports = {
       NOTIFICATION_UPDATED_ARRIVED: "NOTIFICATION_UPDATED_ARRIVED",
       NOTIFICATION_ADDED_ARRIVED: "NOTIFICATION_ADDED_ARRIVED",
       ORDER_CONFIRMED_ARRIVED: "ORDER_CONFIRMED_ARRIVED",
-      ORDER_RECEIVED_ARRIVED: "ORDER_RECEIVED_ARRIVED"
+      ORDER_RECEIVED_ARRIVED: "ORDER_RECEIVED_ARRIVED",
+      ORDER_TRANSACTION_RECEIVED_ARRIVED: "ORDER_TRANSACTION_RECEIVED_ARRIVED"
     }
 };

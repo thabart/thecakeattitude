@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public OrderPayments PaymentMethod { get; set; }
         public OrderPaymentStatus Status { get; set; }
         public string TransactionId { get; set; }
+        public string ApprovalUrl { get; set; }
         public string PayerId { get; set; }
     }
 }

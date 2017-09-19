@@ -169,6 +169,7 @@ namespace Cook4Me.Api.Host
                 public const string PaymentMethod = "payment_method";
                 public const string Status = "status";
                 public const string TransactionId = "transaction_id";
+                public const string ApprovalUrl = "approval_url";
             }
 
             public static class DhlRatingNames

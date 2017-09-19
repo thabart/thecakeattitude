@@ -1,10 +1,10 @@
 import request from "request";
-import Constants from "../../Constants";
+import Constants from "../../Constants-common";
 import Promise from "bluebird";
 import $ from "jquery";
 
 module.exports = {
-    getWellKnownConfiguration: function () {
+    getWellKnownConfiguration: function () { // Get wellknown configuration.
         return new Promise(function (resolve, reject) {
             request({method: 'GET', uri: Constants.OpenIdWellKnownConfiguration}, function (error, response, body) {
                 if (error) {
@@ -16,62 +16,7 @@ module.exports = {
             });
         });
     },
-    passwordAuthentication: function (login, password) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.getWellKnownConfiguration().then(function (resp) {
-                var data = {
-                    grant_type: 'password',
-                    username: login,
-                    password: password,
-                    scope: 'openid profile phone email',
-                    client_id: Constants.ClientId,
-                    client_secret: Constants.ClientSecret
-                };
-                $.ajax(resp.token_endpoint, {
-                    data: data,
-                    method: 'POST',
-                    dataType: 'json'
-                }).then(function (r) {
-                    resolve(r);
-                }).fail(function (e) {
-                    reject(e);
-                });
-            }).catch(function () {
-                reject();
-            });
-        });
-    },
-    introspect: function (accessToken) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.getWellKnownConfiguration().then(function (resp) {
-                var data = {
-                    client_id: Constants.ClientId,
-                    client_secret: Constants.ClientSecret,
-                    token: accessToken,
-                    token_type_hint: 'access_token'
-                };
-                $.ajax(resp.introspection_endpoint, {
-                    data: data,
-                    method: 'POST',
-                    dataType: 'json'
-                }).then(function (intro) {
-                    if (intro.active) {
-                        resolve(intro);
-                        return;
-                    }
-
-                    reject();
-                }).fail(function () {
-                    reject();
-                })
-            }).catch(function () {
-                reject();
-            })
-        });
-    },
-    getAuthorizationurl: function () {
+    getAuthorizationurl: function () { // Get authorization url.
         var self = this;
         return new Promise(function (resolve, reject) {
             self.getWellKnownConfiguration().then(function (res) {
@@ -79,25 +24,6 @@ module.exports = {
             }).catch(function () {
                 reject();
             })
-        });
-    },
-    getUserInfo: function (accessToken) {
-        var self = this;
-        return new Promise(function (resolve, reject) {
-            self.getWellKnownConfiguration().then(function (res) {
-                $.ajax(res.userinfo_endpoint, {
-                    type: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + accessToken
-                    }
-                }).then(function (userInfo) {
-                    resolve(userInfo);
-                }).fail(function () {
-                    reject();
-                });
-            }).catch(function () {
-                reject();
-            });
         });
     }
 };

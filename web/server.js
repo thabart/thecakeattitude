@@ -1,6 +1,7 @@
 'use strict';
 var express = require('express');
 var path = require("path");
+var url = require('url');
 var bodyParser = require('body-parser');
 var app = express();
 var services = require('./server/services');
@@ -50,7 +51,6 @@ app.get('/paypalcallback', function(req, res) { // TODO : get authorization code
 		res.sendStatus(500);
 	});
 });
-
 app.listen(3003, function() {
 	console.log('Game is listening on port 3003!');
 });

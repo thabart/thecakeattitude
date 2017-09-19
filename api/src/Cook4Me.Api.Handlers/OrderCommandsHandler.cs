@@ -111,7 +111,8 @@ namespace Cook4Me.Api.Handlers
                         OrderId = order.Id,
                         PaymentMethod = message.PaymentOrder.PaymentMethod,
                         Status = OrderPaymentStatus.Created,
-                        TransactionId = message.PaymentOrder.TransactionId
+                        TransactionId = message.PaymentOrder.TransactionId,
+                        ApprovalUrl = message.PaymentOrder.ApprovalUrl
                     };
                 }
 

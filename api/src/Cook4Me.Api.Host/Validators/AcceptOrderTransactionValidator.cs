@@ -77,7 +77,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AcceptOrderTransactionValidationResult(ErrorDescriptions.TheOrderTransactionIsNotCorrect);
             }
             
-            if (order.OrderPayment.Status == OrderPaymentStatus.Approved)
+            if (order.OrderPayment.Status != OrderPaymentStatus.Created)
             {
                 return new AcceptOrderTransactionValidationResult(ErrorDescriptions.TheOrderTransactionHasBeenApproved);
             }

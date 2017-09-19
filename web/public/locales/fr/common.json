@@ -432,5 +432,10 @@
   "paypalAccountLinked": "A Paypal account {0} has been linked to your profile",
   "noPaypalAccount": "Aucun compte PayPal associé",
   "buyWithPaypal": "Acheter avec PayPal",
-  "orderTransactionCannotBeConfirmed": "La paiement de la commande ne peut pas être confirmé"
+  "orderTransactionCannotBeConfirmed": "La paiement de la commande ne peut pas être confirmé",
+  "payment_status_created": "Créée",
+  "payment_status_approved": "Approuvé",
+  "payment_status_confirmed": "Confirmé",
+  "payment_status_failed": "Erreur",
+  "orderTransactionApproved": "La transaction de la commande a été approuvée"
 }

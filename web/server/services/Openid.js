@@ -1,11 +1,12 @@
-var Constants = require('../../Constants-server');
+var ConstantsServer = require('../../Constants-server');
+var ConstantsCommon = require('../../Constants-common');
 var Promise = require('bluebird');
 var http = require('http');
 var Client = require('./Client');
 
 module.exports = {
     getWellKnownConfiguration: function () { // Get well known configuration.
-      return Client.get(Constants.OpenIdWellKnownConfiguration);
+      return Client.get(ConstantsCommon.OpenIdWellKnownConfiguration);
     },
     introspectAccessToken: function(accessToken) { // Introspect the access token.
       var self = this;
@@ -13,8 +14,8 @@ module.exports = {
         self.getWellKnownConfiguration().then(function(resp) {
           resp = JSON.parse(resp);
           var data = {
-            client_id: Constants.ClientId,
-            client_secret: Constants.ClientSecret,
+            client_id: ConstantsCommon.ClientId,
+            client_secret: ConstantsServer.ClientSecret,
             token: accessToken,
             token_type_hint: 'access_token'
           };
@@ -38,8 +39,8 @@ module.exports = {
             username: login,
             password: password,
             scope: 'openid profile phone email',
-            client_id: Constants.ClientId,
-            client_secret: Constants.ClientSecret
+            client_id: ConstantsCommon.ClientId,
+            client_secret: ConstantsServer.ClientSecret
           };
           Client.post(resp.token_endpoint, data, 'application/x-www-form-urlencoded').then(function(sresp) {
             sresp = JSON.parse(sresp);

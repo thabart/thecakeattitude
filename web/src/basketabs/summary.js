@@ -182,7 +182,7 @@ class Summary extends Component {
                   <section>
                     <h5>{t('transport')}</h5>
                     { this.state.order.package.transporter === 'dhl' && (<img src="/images/DHL.png" width="100" />) }
-                    { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="100" />) }
+                    { this.state.order.package.transporter === 'ups' && (<img src="/images/UPS.png" width="50" />) }
                     { (!this.state.order.package.parcel_shop || !this.state.order.package.parcel_shop.id) && (<p>{t('deliveredAtHome')}</p>) }
                   </section>
                 ) }

@@ -431,6 +431,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderPaymentNames.Id, payment.Id);
             result.Add(Constants.DtoNames.OrderPaymentNames.OrderId, payment.OrderId);
             result.Add(Constants.DtoNames.OrderPaymentNames.TransactionId, payment.TransactionId);
+            result.Add(Constants.DtoNames.OrderPaymentNames.ApprovalUrl, payment.ApprovalUrl);
             var kvpPayment = CommonBuilder.MappingOrderPayments.FirstOrDefault(kvp => kvp.Key == payment.PaymentMethod);
             if (!kvpPayment.Equals(default(KeyValuePair<OrderPayments, string>)) && !string.IsNullOrWhiteSpace(kvpPayment.Value))
             {

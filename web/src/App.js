@@ -45,7 +45,6 @@ import './styles/profile.css';
 import "./styles/rc-time-picker.css";
 import './styles/choice.css';
 import './styles/paypal.css';
-import "bootstrap/dist/css/bootstrap.css";
 import "rc-slider/assets/index.css";
 import "react-datepicker/dist/react-datepicker.css";
 import "react-rater/lib/react-rater.css";
@@ -195,6 +194,12 @@ class App extends Component {
         securedProxy.on('orderReceived', function(message) {
             AppDispatcher.dispatch({
                 actionName: Constants.events.ORDER_RECEIVED_ARRIVED,
+                data: message
+            });
+        });
+        securedProxy.on('orderTransactionReceived', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.ORDER_TRANSACTION_RECEIVED_ARRIVED,
                 data: message
             });
         });
