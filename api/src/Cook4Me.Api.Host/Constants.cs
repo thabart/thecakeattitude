@@ -78,6 +78,7 @@ namespace Cook4Me.Api.Host
             public const string OrderAcceptTransaction = "{id}/transaction/accept";
             public const string UpsServices = "services/{id}";
             public const string PurchaseLabel = "{id}/label/purchase";
+            public const string ConfirmLabel = "{id}/label/confirm";
         }
 
         public static class DtoNames
@@ -379,6 +380,10 @@ namespace Cook4Me.Api.Host
             public static class AcceptOrderTransactionCommandNames
             {
                 public const string OrderId = "order_id";
+            }
+
+            public static class PaypalApprovedNames
+            {
                 public const string PayerId = "payer_id";
                 public const string TransactionId = "transaction_id";
             }

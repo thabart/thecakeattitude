@@ -14,7 +14,6 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
@@ -101,7 +100,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                        Shipping = validationResult.ShippingPrice,
                        Payee = new PaypalPayee
                        {
-                           Email = validationResult.SellerPaypalEmail
+                           Email = _settingsProvider.GetPaypalEmail()
                        }
                     }
                 },
@@ -110,6 +109,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
             });
 
             var approvalUrl = payment.Links.FirstOrDefault(l => l.Rel == "approval_url").Href;
+            _commandSender.Send(command);
             var res = new JObject();
             res.Add("approval_url", approvalUrl);
             return new OkObjectResult(res);

@@ -18,7 +18,6 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.Orders;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
-using Cook4Me.Api.Host.Params;
 using Cook4Me.Common;
 using Openid.Client;
 using System;
@@ -31,7 +30,7 @@ namespace Cook4Me.Api.Host.Validators
 {
     public interface IPurchaseOrderLabelValidator
     {
-        Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderLabelParameter parameter);
+        Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderCommand parameter);
     }
 
     public class PurchaseOrderLabelValidationResult
@@ -74,8 +73,13 @@ namespace Cook4Me.Api.Host.Validators
             _settingsProvider = settingsProvider;
         }
 
-        public async Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderLabelParameter parameter)
+        public async Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderCommand parameter)
         {
+            if (string.IsNullOrWhiteSpace(subject))
+            {
+                throw new ArgumentException(nameof(subject));
+            }
+
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));

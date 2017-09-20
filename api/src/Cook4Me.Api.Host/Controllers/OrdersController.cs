@@ -39,12 +39,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetOrderOperation _getOrderOperation;
         private readonly IGetOrderTransactionOperation _getOrderTransactionOperation;
         private readonly IAcceptOrderTransactionOperation _acceptOrderTransactionOperation;
+        private readonly IConfirmOrderLabelPurchaseOperation _confirmOrderLabelPurchaseOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
             IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
             IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation,
-            IAcceptOrderTransactionOperation acceptOrderTransactionOperation) : base(handlersInitiator)
+            IAcceptOrderTransactionOperation acceptOrderTransactionOperation, IConfirmOrderLabelPurchaseOperation confirmOrderLabelPurchaseOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -55,6 +56,7 @@ namespace Cook4Me.Api.Host.Controllers
             _getOrderOperation = getOrderOperation;
             _getOrderTransactionOperation = getOrderTransactionOperation;
             _acceptOrderTransactionOperation = acceptOrderTransactionOperation;
+            _confirmOrderLabelPurchaseOperation = confirmOrderLabelPurchaseOperation;
         }
 
 
@@ -181,6 +183,20 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return await _acceptOrderTransactionOperation.Execute(id, subject, this.GetCommonId(), jObj);
+        }
+
+        [HttpPost(Constants.RouteNames.ConfirmLabel)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> ConfirmLabel(string id, [FromBody] JObject jObj)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _confirmOrderLabelPurchaseOperation.Execute(id, subject, this.GetCommonId(), jObj);
         }
     }
 }

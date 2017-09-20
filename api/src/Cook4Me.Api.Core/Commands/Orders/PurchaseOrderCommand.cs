@@ -14,18 +14,14 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Common
+using Cook4Me.Api.Core.Bus;
+using Cook4Me.Common;
+
+namespace Cook4Me.Api.Core.Commands.Orders
 {
-    public interface ISettingsProvider
+    public class PurchaseOrderCommand : Command
     {
-        string GetPaypalClientId();
-        string GetPaypalClientSecret();
-        string GetBaseOpenidUrl();
-        string GetUpsLicenseNumber();
-        string GetUpsUsername();
-        string GetUpsPassword();
-        string GetBaseWebsite();
-        string GetPaypalEmail();
-        bool IsTstMode();
+        public string OrderId { get; set; }
+        public ParcelSize ParcelSize { get; set; }
     }
 }

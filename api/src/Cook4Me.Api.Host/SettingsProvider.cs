@@ -41,6 +41,11 @@ namespace Cook4Me.Api.Host
             return "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0git";
         }
 
+        public string GetPaypalEmail()
+        {
+            return "habarthierry-facilitator@hotmail.fr";
+        }
+
         public string GetUpsLicenseNumber()
         {
             return "FD300339C9051F5C";

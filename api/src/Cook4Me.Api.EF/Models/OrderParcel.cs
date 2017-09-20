@@ -23,6 +23,15 @@ namespace Cook4Me.Api.EF.Models
         public int Transporter { get; set; }
         public int UpsServiceCode { get; set; }
 
+        #region Size
+
+        public double Length { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double Weight { get; set; }
+
+        #endregion
+
         #region Buyer information
 
         public string BuyerName { get; set; }

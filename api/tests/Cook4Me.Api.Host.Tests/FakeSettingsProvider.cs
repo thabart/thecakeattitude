@@ -41,6 +41,11 @@ namespace Cook4Me.Api.Host.Tests
             return "";
         }
 
+        public string GetPaypalEmail()
+        {
+            return "habarthierry-facilitator@hotmail.fr";
+        }
+
         public string GetUpsLicenseNumber()
         {
             return "";

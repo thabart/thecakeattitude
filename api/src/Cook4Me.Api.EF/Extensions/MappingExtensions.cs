@@ -109,7 +109,11 @@ namespace Cook4Me.Api.EF.Extensions
                 SellerName = orderParcel.SellerName,
                 SellerPostalCode = orderParcel.SellerPostalCode,
                 Transporter = (int)orderParcel.Transporter,
-                UpsServiceCode = (int)orderParcel.UpsServiceCode
+                UpsServiceCode = (int)orderParcel.UpsServiceCode,
+                Height = orderParcel.Height,
+                Length = orderParcel.Length,
+                Weight = orderParcel.Weight,
+                Width = orderParcel.Width
             };
         }
 
@@ -144,7 +148,11 @@ namespace Cook4Me.Api.EF.Extensions
                 SellerName = orderParcel.SellerName,
                 SellerPostalCode = orderParcel.SellerPostalCode,
                 Transporter = (Transporters)orderParcel.Transporter,
-                UpsServiceCode = (UpsAggregateServices)orderParcel.UpsServiceCode
+                UpsServiceCode = (UpsAggregateServices)orderParcel.UpsServiceCode,
+                Height = orderParcel.Height,
+                Length = orderParcel.Length,
+                Weight = orderParcel.Weight,
+                Width = orderParcel.Width
             };
         }
 

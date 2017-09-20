@@ -29,6 +29,15 @@ namespace Cook4Me.Api.Core.Aggregates
         public double EstimatedPrice { get; set; }
         public Transporters Transporter { get; set; }
 
+        #region Size
+
+        public double Length { get; set; }
+        public double Width { get; set; }
+        public double Height { get; set; }
+        public double Weight { get; set; }
+
+        #endregion
+        
         #region Buyer information
 
         public string BuyerName { get; set; }

@@ -506,6 +506,10 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.ParcelNames.Buyer, buyerObj);
             jObj.Add(Constants.DtoNames.ParcelNames.Seller, sellerObj);
             jObj.Add(Constants.DtoNames.ParcelNames.EstimatedPrice, orderParcel.EstimatedPrice);
+            jObj.Add(Constants.DtoNames.ParcelSizeParameterNames.Height, orderParcel.Height);
+            jObj.Add(Constants.DtoNames.ParcelSizeParameterNames.Length, orderParcel.Length);
+            jObj.Add(Constants.DtoNames.ParcelSizeParameterNames.Weight, orderParcel.Weight);
+            jObj.Add(Constants.DtoNames.ParcelSizeParameterNames.Width, orderParcel.Width);
             var kvpOrderService = CommonBuilder.MappingUpsAggregateServices.FirstOrDefault(kvp => kvp.Key == orderParcel.UpsServiceCode);
             if (!kvpOrderService.Equals(default(KeyValuePair<UpsAggregateServices, string>)))
             {

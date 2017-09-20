@@ -81,6 +81,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<RemoveOrderCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<AddOrderLineCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<AcceptOrderTransactionCommand>(orderCommandsHandler.Handle);
+            bus.RegisterHandler<PurchaseOrderCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<BuyUpsLabelCommand>(upsCommandsHandler.Handle);
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);

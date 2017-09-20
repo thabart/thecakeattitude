@@ -25,7 +25,6 @@ using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Commands.Ups;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Host.Extensions;
-using Cook4Me.Api.Host.Params;
 using Cook4Me.Common;
 using Dhl.Client.Params;
 using Microsoft.AspNetCore.Http;
@@ -39,8 +38,9 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        ConfirmOrderLabelPurchaseCommand GetConfirmOrderLabelPurchase(JObject jObj);
         ParcelSize GetParcelSize(JObject jObj);
-        PurchaseOrderLabelParameter GetPurchaseOrderLabelCommand(JObject jObj);
+        PurchaseOrderCommand GetPurchaseOrderLabelCommand(JObject jObj);
         AcceptOrderTransactionCommand GetAcceptOrderTransactionCommand(JObject jObj);
         BuyUpsLabelCommand GetBuyUpsLabelCommand(JObject jObj);
         UpsPaymentInformationParameter GetUpsPaymentInformation(JObject jObj);
@@ -87,6 +87,20 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {        
+        public ConfirmOrderLabelPurchaseCommand GetConfirmOrderLabelPurchase(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new ConfirmOrderLabelPurchaseCommand();
+            result.CommonId = jObj.TryGetString(Constants.DtoNames.Message.CommonId);
+            result.PayerId = jObj.TryGetString(Constants.DtoNames.PaypalApprovedNames.PayerId);
+            result.TransactionId = jObj.TryGetString(Constants.DtoNames.PaypalApprovedNames.TransactionId);
+            return result;
+        }
+
         public ParcelSize GetParcelSize(JObject jObj)
         {
             if (jObj == null)
@@ -103,14 +117,14 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
-        public PurchaseOrderLabelParameter GetPurchaseOrderLabelCommand(JObject jObj)
+        public PurchaseOrderCommand GetPurchaseOrderLabelCommand(JObject jObj)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            var result = new PurchaseOrderLabelParameter();
+            var result = new PurchaseOrderCommand();
             var package = jObj.GetValue(Constants.DtoNames.PurchaseOrderLabelNames.Package) as JObject;
             if (package != null)
             {
@@ -130,8 +144,8 @@ namespace Cook4Me.Api.Host.Builders
             var result = new AcceptOrderTransactionCommand();
             result.CommonId = jObj.TryGetString(Constants.DtoNames.Message.CommonId);
             result.OrderId = jObj.TryGetString(Constants.DtoNames.AcceptOrderTransactionCommandNames.OrderId);
-            result.PayerId = jObj.TryGetString(Constants.DtoNames.AcceptOrderTransactionCommandNames.PayerId);
-            result.TransactionId = jObj.TryGetString(Constants.DtoNames.AcceptOrderTransactionCommandNames.TransactionId);
+            result.PayerId = jObj.TryGetString(Constants.DtoNames.PaypalApprovedNames.PayerId);
+            result.TransactionId = jObj.TryGetString(Constants.DtoNames.PaypalApprovedNames.TransactionId);
             var kvpPayment = CommonBuilder.MappingOrderPayments.FirstOrDefault(kvp => kvp.Value == jObj.TryGetString(Constants.DtoNames.OrderPaymentNames.PaymentMethod));
             if (!kvpPayment.Equals(default(KeyValuePair<OrderPayments, string>)) && !string.IsNullOrWhiteSpace(kvpPayment.Value))
             {

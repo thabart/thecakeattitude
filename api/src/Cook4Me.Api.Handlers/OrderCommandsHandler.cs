@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 namespace Cook4Me.Api.Handlers
 {
     public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>,
-        Handles<AcceptOrderTransactionCommand>
+        Handles<AcceptOrderTransactionCommand>, Handles<PurchaseOrderCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
@@ -283,6 +283,31 @@ namespace Cook4Me.Api.Handlers
                 OrderId = message.OrderId,
                 Subject = order.Subject
             });
+        }
+
+        public async Task Handle(PurchaseOrderCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            if (message.ParcelSize == null)
+            {
+                throw new ArgumentNullException(nameof(message.ParcelSize));
+            }
+
+            var order = await _orderRepository.Get(message.OrderId);
+            if (order == null)
+            {
+                return;
+            }
+
+            order.OrderParcel.Height = message.ParcelSize.Height;
+            order.OrderParcel.Length = message.ParcelSize.Length;
+            order.OrderParcel.Weight = message.ParcelSize.Weight;
+            order.OrderParcel.Width = message.ParcelSize.Width;
+            await _orderRepository.Update(order);
         }
 
         private async Task UpdateProductStock(OrderAggregate order, bool addQuantity)
