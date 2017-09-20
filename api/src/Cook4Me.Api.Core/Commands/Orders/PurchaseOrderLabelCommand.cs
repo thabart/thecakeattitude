@@ -19,7 +19,7 @@ using Cook4Me.Common;
 
 namespace Cook4Me.Api.Core.Commands.Orders
 {
-    public class PurchaseOrderCommand : Command
+    public class PurchaseOrderLabelCommand : Command
     {
         public string OrderId { get; set; }
         public ParcelSize ParcelSize { get; set; }

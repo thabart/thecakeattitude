@@ -109,7 +109,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
             {
                 try
                 {
-                    var result = await Pay(validationResult);
+                    var result = await CreatePayment(validationResult);
                     command.PaymentOrder = new AddPaymentOrder
                     {
                         TransactionId = result.Id,
@@ -128,7 +128,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
             return new OkResult();
         }
         
-        private async Task<CreatePaymentResponse> Pay(UpdateOrderValidationResult result)
+        private async Task<CreatePaymentResponse> CreatePayment(UpdateOrderValidationResult result)
         {
             var token = await _paypalOauthClient.GetAccessToken(_settingsProvider.GetPaypalClientId(), _settingsProvider.GetPaypalClientSecret(),
                 new PaypalOauthClientOptions
@@ -160,7 +160,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 {
                     new PaymentTransaction
                     {
-                       Currency = Constants.Currency, // TODO : Calculate the estimated price.
+                       Currency = Constants.Currency,
                        Total = result.ShippingPrice + items.Sum(i => i.Price * i.Quantity),
                        Shipping = result.ShippingPrice,
                        SubTotal = items.Sum(i => i.Price * i.Quantity),

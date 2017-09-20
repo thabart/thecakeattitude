@@ -40,14 +40,14 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetOrderTransactionOperation _getOrderTransactionOperation;
         private readonly IPurchaseLabelOperation _purchaseLabelOperation;
         private readonly IConfirmOrderLabelPurchaseOperation _confirmOrderLabelPurchaseOperation;
-        private readonly IAcceptOrderTransactionOperation _acceptOrderTransactionOperation;
+        private readonly IConfirmOrderPurchaseOperation _confirmOrderPurchaseOperation;
         private readonly IGetOrderLabelOperation _getOrderLabelOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
             IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
             IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation,
-            IPurchaseLabelOperation purchaseLabelOperation, IConfirmOrderLabelPurchaseOperation confirmOrderLabelPurchaseOperation, IAcceptOrderTransactionOperation acceptOrderTransactionOperation,
+            IPurchaseLabelOperation purchaseLabelOperation, IConfirmOrderLabelPurchaseOperation confirmOrderLabelPurchaseOperation, IConfirmOrderPurchaseOperation confirmOrderPurchaseOperation,
             IGetOrderLabelOperation getOrderLabelOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
@@ -60,7 +60,7 @@ namespace Cook4Me.Api.Host.Controllers
             _getOrderTransactionOperation = getOrderTransactionOperation;
             _purchaseLabelOperation = purchaseLabelOperation;
             _confirmOrderLabelPurchaseOperation = confirmOrderLabelPurchaseOperation;
-            _acceptOrderTransactionOperation = acceptOrderTransactionOperation;
+            _confirmOrderPurchaseOperation = confirmOrderPurchaseOperation;
             _getOrderLabelOperation = getOrderLabelOperation;
         }
 
@@ -173,7 +173,7 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            return await _acceptOrderTransactionOperation.Execute(id, subject, this.GetCommonId(), jObj);
+            return await _confirmOrderPurchaseOperation.Execute(id, subject, this.GetCommonId(), jObj);
         }
 
         [HttpPost(Constants.RouteNames.PurchaseLabel)]

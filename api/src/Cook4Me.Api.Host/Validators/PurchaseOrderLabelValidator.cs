@@ -30,7 +30,7 @@ namespace Cook4Me.Api.Host.Validators
 {
     public interface IPurchaseOrderLabelValidator
     {
-        Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderCommand parameter);
+        Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderLabelCommand parameter);
     }
 
     public class PurchaseOrderLabelValidationResult
@@ -73,7 +73,7 @@ namespace Cook4Me.Api.Host.Validators
             _settingsProvider = settingsProvider;
         }
 
-        public async Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderCommand parameter)
+        public async Task<PurchaseOrderLabelValidationResult> Validate(string subject, PurchaseOrderLabelCommand parameter)
         {
             if (string.IsNullOrWhiteSpace(subject))
             {

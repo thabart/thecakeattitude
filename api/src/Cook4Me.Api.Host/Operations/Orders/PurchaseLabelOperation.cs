@@ -104,8 +104,8 @@ namespace Cook4Me.Api.Host.Operations.Orders
                        }
                     }
                 },
-                CancelUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{validationResult.Order.Id}/cancelpurchaselabel",
-                ReturnUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{validationResult.Order.Id}/acceptpurchaselabel"
+                CancelUrl = $"{_settingsProvider.GetBaseWebsite()}/cancelpurchaselabel",
+                ReturnUrl = $"{_settingsProvider.GetBaseWebsite()}/acceptpurchaselabel"
             });
 
             if (!payment.IsValid)

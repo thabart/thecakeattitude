@@ -27,12 +27,12 @@ using Cook4Me.Api.Host.Validators;
 
 namespace Cook4Me.Api.Host.Operations.Orders
 {
-    public interface IAcceptOrderTransactionOperation
+    public interface IConfirmOrderPurchaseOperation
     {
         Task<IActionResult> Execute(string orderId, string subject, string commonId, JObject jObj);
     }
 
-    internal class AcceptOrderTransactionOperation : IAcceptOrderTransactionOperation
+    internal class ConfirmOrderPurchaseOperation : IConfirmOrderPurchaseOperation
     {
         private readonly IRequestBuilder _requestBuilder;
         private readonly IResponseBuilder _responseBuilder;
@@ -40,7 +40,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
         private readonly IControllerHelper _controllerHelper;
         private readonly IAcceptOrderTransactionValidator _validator;
 
-        public AcceptOrderTransactionOperation(IRequestBuilder requestBuilder, IResponseBuilder responseBuilder, ICommandSender commandSender, IControllerHelper controllerHelper,
+        public ConfirmOrderPurchaseOperation(IRequestBuilder requestBuilder, IResponseBuilder responseBuilder, ICommandSender commandSender, IControllerHelper controllerHelper,
             IAcceptOrderTransactionValidator validator)
         {
             _requestBuilder = requestBuilder;

@@ -40,7 +40,7 @@ namespace Cook4Me.Api.Host.Builders
     {
         ConfirmOrderLabelPurchaseCommand GetConfirmOrderLabelPurchase(JObject jObj);
         ParcelSize GetParcelSize(JObject jObj);
-        PurchaseOrderCommand GetPurchaseOrderLabelCommand(JObject jObj);
+        PurchaseOrderLabelCommand GetPurchaseOrderLabelCommand(JObject jObj);
         AcceptOrderTransactionCommand GetAcceptOrderTransactionCommand(JObject jObj);
         BuyUpsLabelCommand GetBuyUpsLabelCommand(JObject jObj);
         UpsPaymentInformationParameter GetUpsPaymentInformation(JObject jObj);
@@ -117,14 +117,14 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
-        public PurchaseOrderCommand GetPurchaseOrderLabelCommand(JObject jObj)
+        public PurchaseOrderLabelCommand GetPurchaseOrderLabelCommand(JObject jObj)
         {
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            var result = new PurchaseOrderCommand();
+            var result = new PurchaseOrderLabelCommand();
             var package = jObj.GetValue(Constants.DtoNames.PurchaseOrderLabelNames.Package) as JObject;
             if (package != null)
             {
