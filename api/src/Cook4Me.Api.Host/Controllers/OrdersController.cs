@@ -171,7 +171,7 @@ namespace Cook4Me.Api.Host.Controllers
 
         [HttpPost(Constants.RouteNames.PurchaseLabel)]
         [Authorize("Connected")]
-        public async Task<IActionResult> PurchaseLabel([FromBody] JObject jObj)
+        public async Task<IActionResult> PurchaseLabel(string id, [FromBody] JObject jObj)
         {
             var subject = User.GetSubject();
             if (string.IsNullOrEmpty(subject))

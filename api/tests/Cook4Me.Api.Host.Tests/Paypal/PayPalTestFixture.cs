@@ -128,5 +128,45 @@ namespace Cook4Me.Api.Host.Tests.Paypal
             string s = "";
 
         }
+
+        [Fact]
+        public async Task ExecuteShippingPayment()
+        {
+            var httpClientFactory = new HttpClientFactory();
+            var oAuthTokenCredential = new PaypalOauthClient(httpClientFactory);
+            var token = await oAuthTokenCredential.GetAccessToken(_clientId,
+                _clientSecret,
+                new PaypalOauthClientOptions
+                {
+                    ApplicationMode = PaypalApplicationModes.sandbox
+                });
+            var paypalClient = new PaypalClient(httpClientFactory);
+            var r = await paypalClient.CreatePayment(new CreatePaymentParameter
+            {
+                AccessToken = token.AccessToken,
+                Intent = IntentPayments.sale,
+                Payer = new PaypalPayer
+                {
+                    PaymentMethod = PaypalPaymentMethods.Paypal,
+                    Email = "habarthierry-facilitator@hotmail.fr"
+                },
+                Transactions = new[]
+                {
+                   new PaymentTransaction
+                   {
+                       Currency = "EUR",
+                       Total = 5,
+                       Shipping = 5,
+                       Payee = new PaypalPayee
+                       {
+                           Email = "habarthierry@first-receiver.fr"
+                       }
+                   }
+                },
+                CancelUrl = "http://localhost:3000/cancel",
+                ReturnUrl = "http://localhost:3000/accept"
+            });
+            string s = "";
+        }
     }
 }

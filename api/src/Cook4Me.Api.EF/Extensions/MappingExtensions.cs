@@ -197,7 +197,6 @@ namespace Cook4Me.Api.EF.Extensions
             }
 
             var sellerId = order.Shop != null ? order.Shop.Subject : null;
-
             var orderParcel = order.OrderParcel == null ? null : order.OrderParcel.ToAggregate();
             var orderPayment = order.OrderPayment == null ? null : order.OrderPayment.ToAggregate();
             return new OrderAggregate

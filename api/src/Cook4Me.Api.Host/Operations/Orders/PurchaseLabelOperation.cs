@@ -14,6 +14,8 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Validators;
@@ -24,6 +26,7 @@ using Paypal.Client;
 using Paypal.Client.Common;
 using Paypal.Client.Params;
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -43,10 +46,11 @@ namespace Cook4Me.Api.Host.Operations.Orders
         private readonly ISettingsProvider _settingsProvider;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
+        private readonly ICommandSender _commandSender;
 
         public PurchaseLabelOperation(IPurchaseOrderLabelValidator validator, IRequestBuilder requestBuilder,
              IPaypalOauthClient paypalOauthClient, IPaypalClient paypalClient, ISettingsProvider settingsProvider,
-             IResponseBuilder responseBuilder, IControllerHelper controllerHelper)
+             IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
         {
             _validator = validator;
             _requestBuilder = requestBuilder;
@@ -55,6 +59,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
             _settingsProvider = settingsProvider;
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
+            _commandSender = commandSender;
         }
 
         public async Task<IActionResult> Execute(string id, string subject, JObject jObj)
@@ -64,8 +69,9 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-
-            var validationResult = await _validator.Validate(subject, null); // TODO : Pass the command.
+            var command = _requestBuilder.GetPurchaseOrderLabelCommand(jObj);
+            command.OrderId = id;
+            var validationResult = await _validator.Validate(subject, command);
             if (!validationResult.IsValid)
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
@@ -77,33 +83,36 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 {
                     ApplicationMode = PaypalApplicationModes.sandbox
                 });
-            _paypalClient.CreatePayment(new CreatePaymentParameter
+            var payment = await _paypalClient.CreatePayment(new CreatePaymentParameter
             {
                 AccessToken = token.AccessToken,
                 Intent = IntentPayments.sale,
                 Payer = new PaypalPayer
                 {
                     PaymentMethod = PaypalPaymentMethods.Paypal,
-                    Email = "" // result.PayerPaypalEmail
+                    Email = validationResult.PayerPaypalEmail
                 },
                 Transactions = new[]
                {
                     new PaymentTransaction
                     {
-                       Currency = Constants.Currency, // TODO : Calculate the estimated price.
-                       Total = 0,
-                       Shipping = 0,
+                       Currency = Constants.Currency,
+                       Total = validationResult.ShippingPrice,
+                       Shipping = validationResult.ShippingPrice,
                        Payee = new PaypalPayee
                        {
-                           Email = "" //result.SellerPaypalEmail
+                           Email = validationResult.SellerPaypalEmail
                        }
                     }
                 },
-                CancelUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{result.Order.Id}/cancelpayment",
-                ReturnUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{result.Order.Id}/acceptpayment"
+                CancelUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{validationResult.Order.Id}/cancelpurchaselabel",
+                ReturnUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{validationResult.Order.Id}/acceptpurchaselabel"
             });
 
-            return null;
+            var approvalUrl = payment.Links.FirstOrDefault(l => l.Rel == "approval_url").Href;
+            var res = new JObject();
+            res.Add("approval_url", approvalUrl);
+            return new OkObjectResult(res);
         }
     }
 }

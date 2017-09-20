@@ -82,6 +82,11 @@ namespace Cook4Me.Api.Host
 
         public static class DtoNames
         {
+            public static class PurchaseOrderLabelNames
+            {
+                public const string Package = "package";
+            }
+                            
             public static class UpsServiceNames
             {
                 public const string Id = "id";
@@ -126,7 +131,7 @@ namespace Cook4Me.Api.Host
                 public const string UpsService = "ups_service";
             }
 
-            public static class UpsPackageParameterNames
+            public static class ParcelSizeParameterNames
             {
                 public const string Length = "length";
                 public const string Width = "width";

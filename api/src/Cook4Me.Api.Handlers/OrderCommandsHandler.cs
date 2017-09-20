@@ -28,7 +28,8 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>, Handles<AcceptOrderTransactionCommand>
+    public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>,
+        Handles<AcceptOrderTransactionCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;

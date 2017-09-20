@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
-using Params = Ups.Client.Params;
+using UpsParams = Ups.Client.Params;
 
 namespace Cook4Me.Api.Host.Operations.Ups
 {
@@ -50,7 +50,7 @@ namespace Cook4Me.Api.Host.Operations.Ups
             }
 
             var command = _requestBuilder.GetBuyUpsLabelCommand(jObj);
-            command.Credentials = new Params.UpsCredentials
+            command.Credentials = new UpsParams.UpsCredentials
             {
                 LicenseNumber = Constants.UpsCredentials._accessLicenseNumber,
                 Password = Constants.UpsCredentials._password,

@@ -68,18 +68,15 @@ namespace Cook4Me.Api.Host.Validators
         private readonly IProductRepository _productRepository;
         private readonly IOpenidClient _openidClient;
         private readonly ISettingsProvider _settingsProvider;
-        private readonly IShopRepository _shopRepository;
         private readonly IUpsClient _upsClient;
 
         public UpdateOrderValidator(IOrderRepository orderRepository, IProductRepository productRepository, 
-            IOpenidClient openidClient, ISettingsProvider settingsProvider, IShopRepository shopRepository,
-            IUpsClient upsClient)
+            IOpenidClient openidClient, ISettingsProvider settingsProvider, IUpsClient upsClient)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _openidClient = openidClient;
             _settingsProvider = settingsProvider;
-            _shopRepository = shopRepository;
             _upsClient = upsClient;
         }
 
@@ -172,14 +169,7 @@ namespace Cook4Me.Api.Host.Validators
                     return new UpdateOrderValidationResult(ErrorDescriptions.ThePayerPaypalAccountNotExist);
                 }
 
-                var shopid = prods.Any() ? prods.First().ShopId : string.Empty;
-                var shop = await _shopRepository.Get(shopid);
-                if (shop == null)
-                {
-                    return new UpdateOrderValidationResult(ErrorDescriptions.TheShopDoesntExist);
-                }
-
-                var seller = await _openidClient.GetPublicClaims(_settingsProvider.GetBaseOpenidUrl(), shop.Subject);
+                var seller = await _openidClient.GetPublicClaims(_settingsProvider.GetBaseOpenidUrl(), record.SellerId);
                 if (seller == null)
                 {
                     return new UpdateOrderValidationResult(ErrorDescriptions.TheSellerPaypalAccountNotExist);

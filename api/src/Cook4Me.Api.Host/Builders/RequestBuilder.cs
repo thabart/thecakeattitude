@@ -25,6 +25,8 @@ using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Core.Commands.Ups;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Host.Extensions;
+using Cook4Me.Api.Host.Params;
+using Cook4Me.Common;
 using Dhl.Client.Params;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
@@ -37,6 +39,8 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        ParcelSize GetParcelSize(JObject jObj);
+        PurchaseOrderLabelParameter GetPurchaseOrderLabelCommand(JObject jObj);
         AcceptOrderTransactionCommand GetAcceptOrderTransactionCommand(JObject jObj);
         BuyUpsLabelCommand GetBuyUpsLabelCommand(JObject jObj);
         UpsPaymentInformationParameter GetUpsPaymentInformation(JObject jObj);
@@ -82,7 +86,40 @@ namespace Cook4Me.Api.Host.Builders
     }
 
     internal class RequestBuilder : IRequestBuilder
-    {
+    {        
+        public ParcelSize GetParcelSize(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new ParcelSize
+            {
+                Height = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Height),
+                Length = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Length),
+                Weight = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Weight),
+                Width = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Width)
+            };
+        }
+
+        public PurchaseOrderLabelParameter GetPurchaseOrderLabelCommand(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new PurchaseOrderLabelParameter();
+            var package = jObj.GetValue(Constants.DtoNames.PurchaseOrderLabelNames.Package) as JObject;
+            if (package != null)
+            {
+                result.ParcelSize = GetParcelSize(package);
+            }
+
+            return result;
+        }
+
         public AcceptOrderTransactionCommand GetAcceptOrderTransactionCommand(JObject jObj)
         {
             if (jObj == null)
@@ -284,10 +321,10 @@ namespace Cook4Me.Api.Host.Builders
 
             return new UpsPackageParameter
             {
-                Height = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Height),
-                Length = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Length),
-                Weight = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Weight),
-                Width = jObj.TryGetDouble(Constants.DtoNames.UpsPackageParameterNames.Width)
+                Height = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Height),
+                Length = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Length),
+                Weight = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Weight),
+                Width = jObj.TryGetDouble(Constants.DtoNames.ParcelSizeParameterNames.Width)
             };
         }
 
