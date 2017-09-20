@@ -155,6 +155,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IResponseBuilder, ResponseBuilder>();
             services.AddTransient<IRequestBuilder, RequestBuilder>();
             services.AddTransient<IHalResponseBuilder, HalResponseBuilder>();
+            services.AddTransient<IGetOrderLabelValidator, GetOrderLabelValidator>();
             services.AddTransient<IRemoveServiceCommentValidator, RemoveServiceCommentValidator>();
             services.AddTransient<IAddShopValidator, AddShopValidator>();
             services.AddTransient<IUpdateShopValidator, UpdateShopValidator>();
@@ -216,6 +217,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IDeleteShopOperation, DeleteShopOperation>();
             services.AddTransient<IAddServiceOperation, AddServiceOperation>();
             services.AddTransient<IGetRatingsOperation, GetRatingsOperation>();
+            services.AddTransient<IGetOrderLabelOperation, GetOrderLabelOperation>();
             services.AddTransient<IGetUpsServicesOperation, GetUpsServicesOperation>();
             services.AddTransient<IGetOrderStatusOperation, GetOrderStatusOperation>();
             services.AddTransient<IUpdateNotificationOperation, UpdateNotificationOperation>();

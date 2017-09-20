@@ -2,8 +2,9 @@ import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { Alert, TabContent, TabPane, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { NavLink } from "react-router-dom";
-import { OrdersService, UpsService } from './services/index';
+import { OrdersService } from './services/index';
 import { withRouter } from "react-router";
+import { PrintOrderLabelStore, ApplicationStore } from './stores/index';
 import { PackagingTypeTab, PaymentTab, SummaryTab } from './printOrderLabelTabs/index';
 import MainLayout from './MainLayout';
 import AppDispatcher from './appDispatcher';
@@ -12,6 +13,7 @@ import Constants from '../Constants';
 class PrintOrderLabel extends Component {
   constructor(props) {
     super(props);
+    this._waitForToken  = null;
     this.refresh = this.refresh.bind(this);
     this.toggle = this.toggle.bind(this);
     this.buy = this.buy.bind(this);
@@ -19,7 +21,8 @@ class PrintOrderLabel extends Component {
       activeTab: '1',
       order: {},
       isLoading: false,
-      errorMessage: null
+      errorMessage: null,
+      isPaypalLoading: false
     };
   }
 
@@ -63,16 +66,8 @@ class PrintOrderLabel extends Component {
     }
   }
 
-  buy(json) { // Buy the order.
+  buy() { // Buy the order.
     var self = this;
-    self.setState({
-      isLoading: true
-    });
-    UpsService.purchaseLabel(json).catch(function() {
-      self.setState({
-        isLoading: false
-      });
-    });
   }
 
   render() { // Display the component.
@@ -126,6 +121,18 @@ class PrintOrderLabel extends Component {
 
   componentDidMount() { // Execute before the render.
     this.refresh();
+    var self = this;
+    self._waitForToken = AppDispatcher.register(function (payload) {
+      switch (payload.actionName) {
+        case Constants.events.ORDER_LABEL_PURCHASED_ARRIVED:
+          self.props.history.push('/orders/' + payload.data.id);
+        break;
+      }
+    });
+  }
+
+  componentWillUnmount() { // Remove listener.
+    AppDispatcher.unregister(this._waitForToken);
   }
 }
 

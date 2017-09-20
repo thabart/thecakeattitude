@@ -170,7 +170,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 UpsService = CommonBuilder.MappingBothUpsServices.First(kvp => kvp.Key == order.OrderParcel.UpsServiceCode).Value
             });
 
-            if (confirmShip.Response.Error != null)
+            if (confirmShip.Response.ResponseStatusCode == "0")
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Request, confirmShip.Response.Error.ErrorDescription);
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
@@ -187,7 +187,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 ShipmentDigest = confirmShip.ShipmentDigest
             });
 
-            if (acceptUpsShipment.Response.Error != null)
+            if (acceptUpsShipment.Response.ResponseStatusCode == "0")
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Request, acceptUpsShipment.Response.Error.ErrorDescription);
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
@@ -198,7 +198,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 {
                     ApplicationMode = PaypalApplicationModes.sandbox
                 });
-            var acceptedPayment = await _paypalClient.ExecutePayment(command.PaymentId, new ExecutePaymentParameter // 4. Accept the payment. (seller => my paypal account).
+            var acceptedPayment = await _paypalClient.ExecutePayment(command.TransactionId, new ExecutePaymentParameter // 4. Accept the payment. (seller => my paypal account).
             {
                 AccessToken = token.AccessToken,
                 PayerId = command.PayerId

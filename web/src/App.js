@@ -203,6 +203,12 @@ class App extends Component {
                 data: message
             });
         });
+        securedProxy.on('orderLabelPurchased', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.ORDER_LABEL_PURCHASED_ARRIVED,
+                data: message
+            });
+        });
         proxy.on('notificationUpdated', function(message) {
             AppDispatcher.dispatch({
                 actionName: Constants.events.NOTIFICATION_UPDATED_ARRIVED,

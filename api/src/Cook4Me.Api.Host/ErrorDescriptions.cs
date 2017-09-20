@@ -90,5 +90,9 @@ namespace Cook4Me.Api.Host
         public const string TheOrderIsNotConfirmed = "the order is not confirmed";
         public const string TheOrderPaymentHasNotBeenConfirmed = "the order payment has not been confirmed";
         public const string TheUpsIsOnlySupported = "Only the UPS transport mode is supported";
+        public const string TheShipmentIdDoesntExist = "the shipment id doesn't exist";
+        public const string TheOrderLabelCanBeUploadedOnlyByTheSeller = "the order label can be uploaded only by the seller";
+        public const string TheLabelCannotBeRetrieved = "the order label cannot be retrieved";
+        public const string TheLabelFormatIsNotSupported = "the label format is not supported";
     }
 }

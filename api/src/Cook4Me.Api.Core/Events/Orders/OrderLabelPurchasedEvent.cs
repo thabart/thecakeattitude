@@ -14,17 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 
-namespace Cook4Me.Api.Core.Commands.Orders
+namespace Cook4Me.Api.Core.Events.Orders
 {
-    public class ConfirmOrderLabelPurchaseCommand : Command
+    public class OrderLabelPurchasedEvent : Event
     {
         public string OrderId { get; set; }
-        public string TransactionId { get; set; }
-        public string PayerId { get; set; }
+        public string Subject { get; set; }
         public string ShipmentIdentificationNumber { get; set; }
-        public OrderPayments PaymentMethod { get; set; }
     }
 }

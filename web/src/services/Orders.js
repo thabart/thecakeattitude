@@ -42,6 +42,38 @@ module.exports = {
             });
         });
     },
+    getLabel: function(id) { // Get the label.
+      var accessToken = Session.getSession().access_token;
+      return new Promise(function (resolve, reject) {
+        ConfigurationService.get().then(function (configuration) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', configuration.orders_endpoint + '/' + id + '/label', true);
+          xhr.setRequestHeader("Authorization", "Bearer " + accessToken);
+          xhr.responseType = "blob";
+          xhr.onreadystatechange = function() {
+             if (xhr.readyState == 4) {
+                 resolve(xhr.response);
+             }
+          };
+          xhr.send(null);
+          /*
+          $.ajax(configuration.orders_endpoint + '/' + id + '/label', {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + accessToken
+            },
+            responseType:'arraybuffer',
+            processData: false
+          }).then(function(r) {
+            console.log('coucou');
+            resolve(r);
+          }).fail(function(e) {
+            reject(e);
+          });
+          */
+        });
+      });
+    },
     get: function (id) {   // Get order
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
@@ -137,6 +169,44 @@ module.exports = {
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
                 $.ajax(configuration.orders_endpoint + '/' + orderId + '/transaction/accept', {
+                    method: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    },
+                    data: JSON.stringify(content)
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
+    },
+    purchaseLabel: function(orderId, content) { // Purchase the label.
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.orders_endpoint + '/' + orderId + '/label/purchase', {
+                    method: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    },
+                    data: JSON.stringify(content)
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
+    },
+    confirmLabel: function(orderId, content) { // Confirm purchase label.
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.orders_endpoint + '/' + orderId + '/label/confirm', {
                     method: 'POST',
                     contentType: 'application/json',
                     headers: {

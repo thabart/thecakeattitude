@@ -3,6 +3,8 @@ import { translate } from 'react-i18next';
 import { PrintOrderLabelStore, ApplicationStore } from '../stores/index';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { ParcelSize } from '../components/index';
+import { OrdersService } from '../services/index';
+import { UrlParser } from '../utils/index';
 
 const markerOpts = {
     url: '/images/shop-pin.png',
@@ -26,11 +28,14 @@ const GettingStartedGoogleMap = withGoogleMap(props => {
 class Summary extends Component {
   constructor(props) {
     super(props);
+    this._paypalOpened = false;
+    this._windowPaypal = null;
     this.previous = this.previous.bind(this);
     this.refresh = this.refresh.bind(this);
     this.buy = this.buy.bind(this);
     this.state = {
-      order: null
+      order: null,
+      isPaypalLoading: false
     };
   }
 
@@ -49,31 +54,112 @@ class Summary extends Component {
   }
 
   buy() { // Buy the label.
+    var self = this;
+    if (self._windowPaypal && self._windowPaypal.isClosed == false) return;
     var order = PrintOrderLabelStore.getOrder();
     var request = {
-        alternate_delivery_address: {
-          name: order.package.parcel_shop.name,
-          address: order.package.parcel_shop.address
-        },
-        ship_from: {
-          name: order.package.buyer.name,
-          address: order.package.buyer.address
-        },
-        shipper: {
-          name: order.package.buyer.name,
-          address: order.package.buyer.address
-        },
-        ship_to: {
-          name: order.package.seller.name,
-          address: order.package.seller.address
-        },
-        package: order.package.parcel,
-        card: order.package.card
+      package: order.package.parcel
     };
+    self.setState({
+      isPaypalLoading: true
+    });
+    const {t} = self.props;
+    OrdersService.purchaseLabel(order.id, request).then(function(r) {
+      var approvalUrl = r['approval_url'];
+      self._windowPaypal = window.open(approvalUrl, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
+      var isProcessing = false;
+      var interval = setInterval(function() {
+          if (isProcessing) return;
+          if (self._windowPaypal.closed) {
+              clearInterval(interval);
+              return;
+          }
 
+          var href = null;
+          try
+          {
+            href = self._windowPaypal.location.href;
+          }
+          catch(ex) { return; }
+          var paymentId = UrlParser.getParameterByName('paymentId', href);
+          var payerId = UrlParser.getParameterByName('PayerID', href);
+          if (!paymentId && !payerId) {
+            return;
+          }
+
+          isProcessing = true;
+          OrdersService.confirmLabel(self.state.order.id, {
+            payer_id: payerId,
+            transaction_id: paymentId
+          }).then(function() {
+            self.setState({
+              isPaypalLoading: false
+            });
+            self._windowPaypal.close();
+          }).catch(function(e) {
+            var errorMsg = t('orderPurchaseLabelError');
+            if (e.responseJSON && e.responseJSON.error_description) {
+              errorMsg = e.responseJSON.error_description;
+            }
+            self.setState({
+              isPaypalLoading: false
+            });
+            ApplicationStore.sendMessage({
+              message: errorMsg,
+              level: 'error',
+              position: 'tr'
+            });
+          });
+          /*
+          OrdersService.acceptPayment(self.state.order.id, {
+            payer_id: payerId,
+            transaction_id: paymentId
+          }).then(function() {
+            self.setState({
+              isPaypalLoading: false
+            });
+            self._windowPaypal.close();
+            clearInterval(interval);
+          }).catch(function(e) {
+            var errorMsg = t('orderTransactionCannotBeConfirmed');
+            if (e.responseJSON && e.responseJSON.error_description) {
+              errorMsg = e.responseJSON.error_description;
+            }
+
+            self.setState({
+              isPaypalLoading: false
+            });
+            ApplicationStore.sendMessage({
+              message: errorMsg,
+              level: 'error',
+              position: 'tr'
+            });
+            self._windowPaypal.close();
+            clearInterval(interval);
+          });
+          */
+      });
+    }).catch(function(e) {
+      const {t} = self.props;
+      var errorMsg = t('orderPurchaseLabelError');
+      if (e.responseJSON && e.responseJSON.error_description) {
+        errorMsg = e.responseJSON.error_description;
+      }
+      self.setState({
+        isPaypalLoading: false
+      });
+      ApplicationStore.sendMessage({
+        message: errorMsg,
+        level: 'error',
+        position: 'tr'
+      });
+    });
+
+    /*
     if (this.props.onBuy) {
-      this.props.onBuy(request);
+      this.props.onBuy();
     }
+    */
   }
 
   render() { // Display the component.
@@ -130,7 +216,9 @@ class Summary extends Component {
       </div>
       <div>
         <button className="btn btn-default" onClick={this.previous}>{t('previous')}</button>
-        <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={this.buy}>{t('buyWithPaypal')}</button>
+        <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={this.buy} disabled={this.state.isPaypalLoading && 'disabled'}>
+          { this.state.isPaypalLoading ? (t('loginPaypalProcessing')) : (t('buyWithPaypal')) }
+        </button>
       </div>
     </div>);
   }

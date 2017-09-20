@@ -43,6 +43,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public string Subject { get; set; }
         public string ShopId { get; set; }
         public string SellerId { get; set; }
+        public string ShipmentIdentificationNumber { get; set; }
         public IEnumerable<OrderAggregateLine> OrderLines { get; set; }
         public OrderAggregateParcel OrderParcel { get; set; }
         public OrderAggregatePayment OrderPayment { get; set; }

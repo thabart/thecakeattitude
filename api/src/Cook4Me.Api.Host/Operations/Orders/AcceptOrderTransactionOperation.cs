@@ -62,7 +62,6 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-
             AcceptOrderTransactionCommand command = null;
             try
             {

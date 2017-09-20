@@ -39,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderLabelPurchased(OrderLabelPurchasedEvent evt);
         JObject GetUpsService(UpsServiceAggregate service);
         JObject GetOrderTransactionApproved(OrderTransactionApprovedEvent evt);
         JObject GetPaypalTransaction(CreatePaymentResponse paymentResponse);
@@ -104,6 +105,20 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrderLabelPurchased(OrderLabelPurchasedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+            
+            var obj = new JObject();
+            obj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            obj.Add(Constants.DtoNames.OrderNames.ShipmentIdentificationNumber, evt.ShipmentIdentificationNumber);
+            obj.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
+            return obj;
+        }
+
         public JObject GetUpsService(UpsServiceAggregate service)
         {
             if (service == null)
@@ -128,6 +143,7 @@ namespace Cook4Me.Api.Host.Builders
             var result = new JObject();
             return result;
         }
+
         public JObject GetPaypalTransaction(CreatePaymentResponse paymentResponse)
         {
             if (paymentResponse == null)
@@ -409,6 +425,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderNames.TotalPrice, order.TotalPrice);
             result.Add(Constants.DtoNames.OrderNames.Subject, order.Subject);
             result.Add(Constants.DtoNames.OrderNames.ShopId, order.ShopId);
+            result.Add(Constants.DtoNames.OrderNames.ShipmentIdentificationNumber, order.ShipmentIdentificationNumber);
             var kvpStatus = CommonBuilder.MappingOrderAggregateStatus.FirstOrDefault(kvp => kvp.Key == order.Status);
             if (!kvpStatus.Equals(default(KeyValuePair<OrderAggregateStatus, string>)) && !string.IsNullOrWhiteSpace(kvpStatus.Value))
             {

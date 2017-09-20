@@ -5,6 +5,7 @@ import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
 import { ApplicationStore } from './stores/index';
+import { UrlParser } from './utils/index';
 import MainLayout from './MainLayout';
 import AppDispatcher from './appDispatcher';
 import Constants from '../Constants';
@@ -36,22 +37,24 @@ class Order extends Component {
       super(props);
       this._waitForToken = null;
       this._page = '1';
+      this._windowPaypal = null;
       this._request = {
         start_index: 0,
         count: defaultCount
       };
-      this._isActionExecuted = false;
       this.changePage = this.changePage.bind(this);
       this.refresh = this.refresh.bind(this);
-      this.executeAction = this.executeAction.bind(this);
       this.confirmReception = this.confirmReception.bind(this);
+      this.executePaypal = this.executePaypal.bind(this);
+      this.downloadLabel = this.downloadLabel.bind(this);
       this.state = {
         isLoading: false,
         pagination: [],
         products: [],
         order: {},
         shop: {},
-        user: {}
+        user: {},
+        isPaypalLoading: false
       };
     }
 
@@ -91,9 +94,6 @@ class Order extends Component {
             shop: shop,
             user: claims
           });
-          if (order.payment && order.payment.status === 'created') {
-            self.executeAction(order.id);
-          }
         }).catch(function() {
           self.setState({
             isLoading: false,
@@ -113,68 +113,6 @@ class Order extends Component {
           pagination: [],
           shop: {},
           user: {}
-        });
-      });
-    }
-
-    executeAction(orderId) { // Confirm or cancel the transaction.
-      if (this._isActionExecuted) {
-        return;
-      }
-
-      var self = this,
-        action = self.props.match.params.action;
-      var getQueryVariable = function (variable) {
-          var query = self.props.location.search.substring(1);
-          var vars = query.split('&');
-          for (var i = 0; i < vars.length; i++) {
-              var pair = vars[i].split('=');
-              if (decodeURIComponent(pair[0]) == variable) {
-                  return decodeURIComponent(pair[1]);
-              }
-          }
-
-          return null;
-      };
-
-      if (action !== 'acceptpayment') {
-        return;
-      }
-
-      var paymentId = getQueryVariable('paymentId');
-      var payerId = getQueryVariable('PayerID');
-      const {t} = this.props;
-      if (!paymentId && !payerId) {
-        ApplicationStore.sendMessage({
-          message: t('orderTransactionCannotBeConfirmed'),
-          level: 'error',
-          position: 'tr'
-        });
-        return;
-      }
-
-      self.setState({
-        isLoading: true
-      });
-      OrdersService.acceptPayment(orderId, {
-        payer_id: payerId,
-        transaction_id: paymentId
-      }).then(function() {
-        self._isActionExecuted = true;
-      }).catch(function(e) {
-        self._isActionExecuted = true;
-        var errorMsg = t('orderTransactionCannotBeConfirmed');
-        if (e.responseJSON && e.responseJSON.error_description) {
-          errorMsg = e.responseJSON.error_description;
-        }
-
-        self.setState({
-          isLoading: false
-        });
-        ApplicationStore.sendMessage({
-          message: errorMsg,
-          level: 'error',
-          position: 'tr'
         });
       });
     }
@@ -199,6 +137,76 @@ class Order extends Component {
           level: 'error',
           position: 'tr'
         });
+      });
+    }
+
+    executePaypal() { // Execute the paypal payment.
+      var self = this;
+      if (self._windowPaypal && self._windowPaypal.isClosed == false) return;
+      var url = self.state.order.payment.approval_url;
+      self._windowPaypal = window.open(url, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
+      self.setState({
+        isPaypalLoading: true
+      });
+      const {t} = this.props;
+      var isProcessing = false;
+      var interval = setInterval(function () {
+          if (isProcessing) return;
+          if (self._windowPaypal.closed) {
+              clearInterval(interval);
+              self.setState({
+                isPaypalLoading: false
+              });
+              return;
+          }
+
+          var href = self._windowPaypal.location.href;
+          var paymentId = UrlParser.getParameterByName('paymentId', href);
+          var payerId = UrlParser.getParameterByName('PayerID', href);
+          if (!paymentId && !payerId) {
+            return;
+          }
+
+          isProcessing = true;
+          OrdersService.acceptPayment(self.state.order.id, {
+            payer_id: payerId,
+            transaction_id: paymentId
+          }).then(function() {
+            self.setState({
+              isPaypalLoading: false
+            });
+            self._windowPaypal.close();
+            clearInterval(interval);
+          }).catch(function(e) {
+            var errorMsg = t('orderTransactionCannotBeConfirmed');
+            if (e.responseJSON && e.responseJSON.error_description) {
+              errorMsg = e.responseJSON.error_description;
+            }
+
+            self.setState({
+              isPaypalLoading: false
+            });
+            ApplicationStore.sendMessage({
+              message: errorMsg,
+              level: 'error',
+              position: 'tr'
+            });
+            self._windowPaypal.close();
+            clearInterval(interval);
+          });
+        });
+    }
+
+    downloadLabel() { // Download the label.
+      var self = this;
+      self.setState({
+        isFileLoading: true
+      });
+      var anchor = document.createElement('a');
+      OrdersService.getLabel(this.state.order.id).then(function(r) {
+        var url = window.URL.createObjectURL(r);
+        anchor.href = url
+        anchor.click();
       });
     }
 
@@ -370,10 +378,15 @@ class Order extends Component {
                 { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (
                   <button className="btn btn-default" onClick={this.confirmReception}>{t('confirmReception')}</button>
                 ) }
-                { this.state.order.payment && this.state.order.payment.approval_url && this.state.order.payment.status === 'created' && (
-                  <a href={this.state.order.payment.approval_url} className="btn btn-default">{t('buyWithPaypal')}</a>
+                { this.state.order.payment && this.state.order.payment.approval_url && this.state.order.payment.status === 'created' && isBuyer && (
+                  <button className="btn btn-default" onClick={this.executePaypal} disabled={this.state.isPaypalLoading && 'disabled'}>
+                    { this.state.isPaypalLoading ? (t('loginPaypalProcessing')) : (t('buyWithPaypal')) }
+                  </button>
                 ) }
-                { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && (
+                { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.shipment_identification_number && (
+                  <button className="btn btn-default" onClick={this.downloadLabel}>{t('downloadLabel')}</button>
+                ) }
+                { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && !this.state.order.shipment_identification_number && (
                   <NavLink to={'/printlabel/' + this.state.order.id } className="btn btn-default">{t('buyLabel')}</NavLink>
                 ) }
               </div>

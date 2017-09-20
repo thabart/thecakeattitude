@@ -108,6 +108,12 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 ReturnUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{validationResult.Order.Id}/acceptpurchaselabel"
             });
 
+            if (!payment.IsValid)
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, payment.ErrorResponse.Message);
+                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
+            }
+
             var approvalUrl = payment.Links.FirstOrDefault(l => l.Rel == "approval_url").Href;
             _commandSender.Send(command);
             var res = new JObject();

@@ -79,6 +79,7 @@ namespace Cook4Me.Api.Host
             public const string UpsServices = "services/{id}";
             public const string PurchaseLabel = "{id}/label/purchase";
             public const string ConfirmLabel = "{id}/label/confirm";
+            public const string GetLabel = "{id}/label";
         }
 
         public static class DtoNames
@@ -292,6 +293,7 @@ namespace Cook4Me.Api.Host
                 public const string TransportMode = "transport_mode";
                 public const string Package = "package";
                 public const string Payment = "payment";
+                public const string ShipmentIdentificationNumber = "shipment_identification_number";
             }
 
             public static class OrderLineNames
@@ -386,6 +388,7 @@ namespace Cook4Me.Api.Host
             {
                 public const string PayerId = "payer_id";
                 public const string TransactionId = "transaction_id";
+                public const string PaymentId = "payment_id";
             }
 
             public static class Message

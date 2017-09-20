@@ -442,5 +442,7 @@
   "retrieveUpsServicesError": "An error occured while trying to retrieve the UPS service, please contact the administrator",
   "upsServices": "UPS services",
   "ups_standard": "UPS Standard",
-  "ups_accesspoint_economy": "UPS Access point economy"
+  "ups_accesspoint_economy": "UPS Access point economy",
+  "orderPurchaseLabelError": "An error occured while trying to purchase the label, please contact the administrator",
+  "downloadLabel": "Download the label"
 }

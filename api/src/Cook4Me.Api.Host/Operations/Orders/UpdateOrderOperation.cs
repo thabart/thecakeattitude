@@ -171,8 +171,8 @@ namespace Cook4Me.Api.Host.Operations.Orders
                        }
                     }
                 },
-                CancelUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{result.Order.Id}/cancelpayment",
-                ReturnUrl = $"{_settingsProvider.GetBaseWebsite()}/orders/{result.Order.Id}/acceptpayment"
+                CancelUrl = $"{_settingsProvider.GetBaseWebsite()}/cancelpayment",
+                ReturnUrl = $"{_settingsProvider.GetBaseWebsite()}/acceptpayment"
             });
         }
     }
