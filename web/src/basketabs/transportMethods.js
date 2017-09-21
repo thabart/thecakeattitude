@@ -5,6 +5,7 @@ import { BasketStore } from '../stores/index';
 import { Address, DropLocations } from '../components/index';
 import { DhlService, ShopsService, UpsService, UserService } from '../services/index';
 import { ApplicationStore } from '../stores/index';
+import { UncontrolledTooltip } from 'reactstrap';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
 import Promise from 'bluebird';
@@ -208,9 +209,16 @@ class TransportMethods extends Component {
   addressCorrect(b) { // Update the drop locations.
     if (!b || !this.refs.address) return;
     var adr = this.refs.address.getWrappedInstance().getAddress();
-    if (this.refs.dhlDropLocation) this.refs.dhlDropLocation.getWrappedInstance().setAddress(adr);
+    if (this.refs.dhlDropLocation) {
+      this.refs.dhlDropLocation.getWrappedInstance().setAddress(adr);
+    }
+    
     if (this.refs.upsDropLocation) {
       this.refs.upsDropLocation.getWrappedInstance().setAddress(adr);
+      this._upsMarker = null;
+      this.setState({
+        selectedUpsService: null
+      });
       this.displayUpsServices();
     }
 
@@ -468,12 +476,20 @@ class TransportMethods extends Component {
               </section>
               { this.state.transportMethod === 'packet' && (
                 <section className="section" style={{padding: "5px"}}>
-                  <h5>{t('yourAddress')}</h5>
+                  { /* Your address */ }
+                  <h5>
+                    {t('yourAddress')} <i className="fa fa-info-circle txt-info" id="yourAddressTooltip"/>
+                    <UncontrolledTooltip placement="right" target="yourAddressTooltip" className="red-tooltip-inner">{t('yourAddressTooltipInformation')}</UncontrolledTooltip>
+                  </h5>
                   <Address ref="address" addressCorrect={this.addressCorrect} />
-                  <h5>{t('destinationAddress')}</h5>
+                  { /* Shop address */ }
+                  <h5>
+                    {t('shopAddress')} <i className="fa fa-info-circle txt-info" id="shopAddressTooltip"/>
+                    <UncontrolledTooltip placement="right" target="shopAddressTooltip" className="red-tooltip-inner">{t('shopAddressTooltipInformation')}</UncontrolledTooltip>
+                  </h5>
                   <Address position={this._shop.location} searchEnabled={false} />
-                  <h5>{t('chooseTransporter')}</h5>
                   { /* Choose a transporter */ }
+                  <h5>{t('chooseTransporter')}</h5>
                   <div className="row">
                     <div className='col-md-3 text-center' onClick={() => self.selectTransporter('ups') }>
                       <div className={this.state.transporter === 'ups' ? 'choice active' : 'choice'}  style={{height: "140px"}}>
@@ -489,7 +505,10 @@ class TransportMethods extends Component {
                     </div>
                   </div>
                   { /* Display different package size */ }
-                  <h5>{t('chooseTheoricalPacketSize')}</h5>
+                  <h5>
+                    {t('chooseTheoricalPacketSize')}  <i className="fa fa-info-circle txt-info" id="chooseTheoricalPacketSizeTooltip"/>
+                    <UncontrolledTooltip placement="right" target="chooseTheoricalPacketSizeTooltip" className="red-tooltip-inner">{t('chooseTheoricalPacketSizeTooltipInformation')}</UncontrolledTooltip>
+                  </h5>
                   <section className="row">
                     <label className="col-md-3 text-center">
                       <div className={this.state.parcelType === 'SMALL' ? 'choice active' : 'choice'} onClick={() => self.selectParcelType('SMALL')}>
@@ -542,7 +561,7 @@ class TransportMethods extends Component {
                   { this.state.transporter === 'ups' && this.state.isUpsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
                   { this.state.transporter === 'ups' && (
                     <section>
-                      <h5>{t('upsServices')}</h5>
+                      <h5>{t('upsServices')} <a href="https://www.ups.com/worldshiphelp/WS16/ENU/AppHelp/Codes/UPS_Service_Codes.htm" className="no-decoration red" target="_blank"><i className="fa fa-link"></i></a></h5>
                       { this.state.isUpsServicesLoading && (<i className='fa fa-spinner fa-spin'></i>) }
                       { !this.state.isUpsServicesLoading && (
                         <section className="row">

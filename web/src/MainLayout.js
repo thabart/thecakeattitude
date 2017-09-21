@@ -4,7 +4,6 @@ import Header from "./Header";
 import Footer from './Footer';
 import NotificationSystem from 'react-notification-system';
 import { ApplicationStore } from './stores';
-import { translate } from 'react-i18next';
 
 class MainLayout extends Component {
   constructor(props) {
@@ -12,19 +11,19 @@ class MainLayout extends Component {
     this.displayNotification = this.displayNotification.bind(this);
     this.displayLoading = this.displayLoading.bind(this);
     this.state = {
-      isLoadingDisplayed: false
+      isLoadingDisplayed: false,
+      loadingMessage: null
     };
   }
 
   render() {
-    const {t} = this.props;
     return (<div>
       <div id="app-container" className="red-theme">
         { this.state.isLoadingDisplayed && (
           <div>
             <div className="loader-overlay"></div>
             <div className="loader-spinner fixed">
-              <h2 className="font-secondary redColor">{t('loadingMessage')}</h2>
+              <h2 className="font-secondary redColor">{this.state.loadingMessage}</h2>
               <img src="/images/loader-spinner.gif" />
             </div>
           </div>
@@ -46,9 +45,10 @@ class MainLayout extends Component {
   }
 
   displayLoading() {
-    var isLoading = ApplicationStore.getIsLoading();
+    var loading = ApplicationStore.getLoading();
     this.setState({
-      isLoadingDisplayed: isLoading
+      isLoadingDisplayed: loading.display,
+      loadingMessage: loading.message
     });
   }
 
@@ -63,4 +63,4 @@ class MainLayout extends Component {
   }
 }
 
-export default translate('common', { wait: process && !process.release })(MainLayout);
+export default MainLayout;

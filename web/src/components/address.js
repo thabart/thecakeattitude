@@ -52,6 +52,7 @@ class Address extends Component {
         this.onSearchBoxCreated = this.onSearchBoxCreated.bind(this);
         this.onPlacesChanged = this.onPlacesChanged.bind(this);
         this.state = {
+            isLoading: false,
             zoom: 12,
             placeId: null,
             center: null,
@@ -142,11 +143,16 @@ class Address extends Component {
 
     render() { // Return the view.
         const {t} = this.props;
+        if (this.state.isLoading) {
+            return (<i className='fa fa-spinner fa-spin'></i>);
+        }
+
         if (this.state.isContactInfoHidden) {
-            return (<section className="col-md-12 section">{t('loadingMessage')}</section>)
+            return (<section className="col-md-12 section">{t('loadingMessage')}</section>);
         }
 
         var searchEnabled = this.props.searchEnabled == null || this.props.searchEnabled == undefined ? true : this.props.searchEnabled;
+
         return (
             <div className="row col-md-12">
                 <div className="col-md-6">
@@ -219,10 +225,13 @@ class Address extends Component {
         );
     }
 
-    componentDidMount() { // Execute the the view is displayed.
+    componentDidMount() { // Execute before the view is displayed.
         var self = this;
-        const {t} = this.props;
+        const { t } = self.props;
         if (self.props.onLoading) self.props.onLoading(true);
+        self.setState({
+            isLoading: true
+        });
         var promise = null;
         if (self.props.position) { // Retrieve position from the parent.
             promise = new Promise(function (resolve) {
@@ -255,7 +264,8 @@ class Address extends Component {
                     currentLocation: location,
                     address: adr.adr,
                     isAddressCorrect: true,
-                    placeId: adr.place_id
+                    placeId: adr.place_id,
+                    isLoading: false
                 });
                 if (self.props.addressCorrect) self.props.addressCorrect(true);
                 if (self.props.onLoading) self.props.onLoading(false);
@@ -267,7 +277,8 @@ class Address extends Component {
                     center: {
                         lat: 50,
                         lng: 50
-                    }
+                    },
+                    isLoading: false
                 });
             });
         });

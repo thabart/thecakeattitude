@@ -5,14 +5,14 @@ import Constants from '../../Constants';
 
 var _user = {};
 var _message = {};
-var _isLoading = false;
+var _loading = { displayed: false };
 
 function loadUser(data) {
   _user = data;
 }
 
-function setIsLoading(isLoading) {
-  _isLoading = isLoading;
+function setLoading(loading) {
+  _loading = loading;
 }
 
 var ApplicationStore = $.extend({} , EventEmitter.prototype, {
@@ -22,16 +22,16 @@ var ApplicationStore = $.extend({} , EventEmitter.prototype, {
   getMessage() {
     return _message;
   },
-  getIsLoading() {
-    return _isLoading;
+  getLoading() {
+    return _loading;
   },
   sendMessage(message) {
     _message = message;
     this.emit('message');
   },
-  displayLoading(isLoading) {
-    _isLoading = isLoading;
-    this.emit('isLoading');
+  displayLoading(loading) {
+    _loading = loading;
+    this.emit('loading');
   },
   emitChange: function() {
     this.emit('change');
@@ -49,10 +49,10 @@ var ApplicationStore = $.extend({} , EventEmitter.prototype, {
     this.removeListener('message', callback);
   },
   addLoadingListener: function(callback) {
-    this.on('isloading', callback);
+    this.on('loading', callback);
   },
   removeLoadingListener: function(callback) {
-    this.removeListener('isloading', callback);
+    this.removeListener('loading', callback);
   }
 });
 

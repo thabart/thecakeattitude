@@ -99,12 +99,22 @@ class Basket extends Component {
       });
       order['status'] = 'confirmed';
       const {t} = this.props;
+      ApplicationStore.displayLoading({
+        display: true,
+        message: t('confirmOrderSpinnerMessage')
+      });
       OrdersService.update(order.id, order).catch(function(e) {
         var errorMsg = t('confirmRequestError');
         if (e.responseJSON && e.responseJSON.error_description) {
           errorMsg = e.responseJSON.error_description;
         }
 
+        self.setState({
+          isLoading: false
+        });
+        ApplicationStore.displayLoading({
+          display: false
+        });
         ApplicationStore.sendMessage({
           message: errorMsg,
           level: 'error',

@@ -66,7 +66,7 @@ class Products extends Component {
     if (!order) {
       return;
     }
-
+    
     order = $.extend(true, {}, order);
     self._order = $.extend(true, {}, order);
     self.setState({

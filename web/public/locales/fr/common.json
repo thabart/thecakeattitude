@@ -396,12 +396,12 @@
   "chooseTheoricalPacketSize": "Choisir une taille de paquet théorique",
   "noRating": "Aucune offre",
   "selectParcelShop": "Sélectionner un point d'enlèvement",
-  "estimatedPrice": "Prix estimé € {0}",
+  "estimatedPrice": "Frais de livraison max. estimés € {0}",
   "destinationAddress": "Adresse de destination",
   "retrieveRatingError": "Une erreur est survenue durant le calcul des frais, veuillez prendre contact avec l'administrateur",
   "retrieveUserInformationError": "Une erreur est survenue durant le rapatriement des informations de l'utilisateur, veuillez prendre contact avec l'administrateur",
   "choosePackageTransport": "Vous avez choisi de recevoir votre paquet par {0}.",
-  "additionalTransportFeeds": "+ € {0} (transport)",
+  "additionalTransportFeeds": "+ € {0} (max. transport)",
   "deliveredAtHome": "Livré à domicile",
   "parcelShop": "Point de retrait",
   "buyerAddress": "Adresse de l'acheteur",
@@ -443,5 +443,9 @@
   "ups_standard": "UPS Standard",
   "ups_accesspoint_economy": "UPS Access point economy",
   "orderPurchaseLabelError": "Une erreur est survenue lors de l'achat du ticket de la commande, veuillez prendre contact avec l'administrateur",
-  "downloadLabel": "Télécharger le label"
+  "downloadLabel": "Télécharger le label",
+  "confirmOrderSpinnerMessage": "Confirmation de la commande ...",
+  "yourAddressTooltipInformation": "Adresse où le colis sera livré",
+  "shopAddressTooltipInformation": "Adresse d'où le colis est envoyé",
+  "chooseTheoricalPacketSizeTooltipInformation": "Le calcul du prix se base sur la taille maximum d'un colis (Largeur : 80cm, Hauteur : 35cm, Longueur: 50cm)"
 }

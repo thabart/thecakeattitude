@@ -397,12 +397,12 @@
   "chooseTheoricalPacketSize": "Choose a theorical packet size",
   "noRating": "No rating",
   "selectParcelShop": "Select a parcel shop",
-  "estimatedPrice": "Estimated price € {0}",
-  "destinationAddress": "Destination address",
+  "estimatedPrice": "Max shipping price € {0}",
+  "shopAddress": "Shop address",
   "retrieveRatingError": "An error occured while trying to calculate the rating, please contact the administrator",
   "retrieveUserInformationError": "An error occured while trying to retrieve the user information, please contact the administrator",
   "choosePackageTransport": "You choose to receive the package via {0}.",
-  "additionalTransportFeeds": "+ € {0} (transport)",
+  "additionalTransportFeeds": "+ € {0} (max. shipping)",
   "deliveredAtHome": "Delivered at home",
   "parcelShop": "Parcel shop",
   "buyerAddress": "Buyer address",
@@ -444,5 +444,9 @@
   "ups_standard": "UPS Standard",
   "ups_accesspoint_economy": "UPS Access point economy",
   "orderPurchaseLabelError": "An error occured while trying to purchase the label, please contact the administrator",
-  "downloadLabel": "Download the label"
+  "downloadLabel": "Download the label",
+  "confirmOrderSpinnerMessage": "Confirming the order ...",
+  "yourAddressTooltipInformation": "Address where the parcel will be delivered",
+  "shopAddressTooltipInformation": "Address where the parcel is coming from",
+  "chooseTheoricalPacketSizeTooltipInformation": "Calculation of the price is based on the maximum size of a parcel (Width : 80cm, Height : 35cm, Length: 50cm)"
 }

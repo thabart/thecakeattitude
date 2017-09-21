@@ -4,6 +4,7 @@ import { BasketStore } from '../stores/index';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { ProductsService } from '../services/index';
 import { Button } from 'reactstrap';
+import { ParcelSize } from '../components/index';
 import { NavLink } from "react-router-dom";
 
 const defaultCount = 5;
@@ -75,6 +76,7 @@ class Summary extends Component {
       return;
     }
 
+    console.log(order);
     var productIds = order.lines.map(function(line) { return line.product_id; });
     self._request['product_ids'] = productIds;
     ProductsService.search(self._request).then(function(res) {
@@ -186,6 +188,13 @@ class Summary extends Component {
                     { (!this.state.order.package.parcel_shop || !this.state.order.package.parcel_shop.id) && (<p>{t('deliveredAtHome')}</p>) }
                   </section>
                 ) }
+                { /* Display parcel type */ }
+                <div>
+                  <h5>
+                    {t('parcelSize')} 
+                  </h5>
+                  <ParcelSize isEditable={false} height={35} length={50} width={80} />
+                </div>
                 { /* Display parcel shop */ }
                 { this.state.order.transport_mode === 'packet' && this.state.order.package.parcel_shop && (
                   <div>

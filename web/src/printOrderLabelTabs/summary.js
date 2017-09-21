@@ -110,34 +110,6 @@ class Summary extends Component {
               position: 'tr'
             });
           });
-          /*
-          OrdersService.acceptPayment(self.state.order.id, {
-            payer_id: payerId,
-            transaction_id: paymentId
-          }).then(function() {
-            self.setState({
-              isPaypalLoading: false
-            });
-            self._windowPaypal.close();
-            clearInterval(interval);
-          }).catch(function(e) {
-            var errorMsg = t('orderTransactionCannotBeConfirmed');
-            if (e.responseJSON && e.responseJSON.error_description) {
-              errorMsg = e.responseJSON.error_description;
-            }
-
-            self.setState({
-              isPaypalLoading: false
-            });
-            ApplicationStore.sendMessage({
-              message: errorMsg,
-              level: 'error',
-              position: 'tr'
-            });
-            self._windowPaypal.close();
-            clearInterval(interval);
-          });
-          */
       });
     }).catch(function(e) {
       const {t} = self.props;
@@ -154,12 +126,6 @@ class Summary extends Component {
         position: 'tr'
       });
     });
-
-    /*
-    if (this.props.onBuy) {
-      this.props.onBuy();
-    }
-    */
   }
 
   render() { // Display the component.
