@@ -197,9 +197,9 @@ class App extends Component {
                 data: message
             });
         });
-        securedProxy.on('orderTransactionReceived', function(message) {
+        securedProxy.on('orderTransactionApproved', function(message) {
             AppDispatcher.dispatch({
-                actionName: Constants.events.ORDER_TRANSACTION_RECEIVED_ARRIVED,
+                actionName: Constants.events.ORDER_TRANSACTION_APPROVED_ARRIVED,
                 data: message
             });
         });

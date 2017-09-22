@@ -98,6 +98,11 @@ namespace Cook4Me.Api.Host.Validators
                 return new PurchaseOrderLabelValidationResult(ErrorDescriptions.TheOrderDoesntExist);
             }
 
+            if (parameter.ParcelSize.Height < 0 || parameter.ParcelSize.Length < 0 || parameter.ParcelSize.Weight < 0 || parameter.ParcelSize.Width < 0)
+            {
+                return new PurchaseOrderLabelValidationResult(ErrorDescriptions.TheParcelSizeIsInvalid);
+            }
+
             if (order.SellerId != subject) // Only the seller can purchase the label.
             {
                 return new PurchaseOrderLabelValidationResult(ErrorDescriptions.TheOrderLabelCanBePurchasedOnlyBySeller);
@@ -201,10 +206,10 @@ namespace Cook4Me.Api.Host.Validators
                     },
                     Package = new UpsPackageParameter
                     {
-                        Length = order.OrderParcel.Length,
-                        Height = order.OrderParcel.Height,
-                        Weight = order.OrderParcel.Weight,
-                        Width = order.OrderParcel.Width
+                        Length = parameter.ParcelSize.Length,
+                        Height = parameter.ParcelSize.Height,
+                        Weight = parameter.ParcelSize.Weight,
+                        Width = parameter.ParcelSize.Width
                     },
                     EmailAddress = "habarthierry@hotmail.fr",
                     UpsService = CommonBuilder.MappingBothUpsServices.First(kvp => kvp.Key == order.OrderParcel.UpsServiceCode).Value

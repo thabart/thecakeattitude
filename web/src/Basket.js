@@ -103,7 +103,9 @@ class Basket extends Component {
         display: true,
         message: t('confirmOrderSpinnerMessage')
       });
-      OrdersService.update(order.id, order).catch(function(e) {
+      OrdersService.update(order.id, order).then(function() {
+        self.props.history.push('/orders/' + order.id);
+      }).catch(function(e) {
         var errorMsg = t('confirmRequestError');
         if (e.responseJSON && e.responseJSON.error_description) {
           errorMsg = e.responseJSON.error_description;
@@ -199,9 +201,6 @@ class Basket extends Component {
                 position: 'bl'
               });
               self.display();
-            break;
-            case Constants.events.ORDER_CONFIRMED_ARRIVED:
-              self.props.history.push('/orders/' + payload.data.id);
             break;
           }
       });

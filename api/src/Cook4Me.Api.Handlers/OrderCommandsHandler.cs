@@ -334,7 +334,8 @@ namespace Cook4Me.Api.Handlers
                 CommonId = message.CommonId,
                 OrderId = message.OrderId,
                 TrackingNumber = order.TrackingNumber,
-                Subject = order.SellerId
+                Subject = order.Subject,
+                SellerId = order.SellerId
             });
         }
 

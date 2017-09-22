@@ -270,7 +270,7 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 UpsService = UpsServices.UpsStandard
             });
             var res2 = "";
-            var v = upsClient.Cancel(tmp.ShipmentIdentificationNumber, new UpsCredentials
+            var v = await upsClient.Cancel(tmp.ShipmentIdentificationNumber, new UpsCredentials
             {
                 LicenseNumber = _accessLicenseNumber,
                 Password = _password,

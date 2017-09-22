@@ -81,7 +81,7 @@ class Summary extends Component {
               if (self._confirmingPurchase) {
                 return;
               }
-              
+
               ApplicationStore.displayLoading({
                 display: false,
               });
@@ -114,6 +114,7 @@ class Summary extends Component {
             ApplicationStore.displayLoading({
               display: false,
             });
+            self.props.history.push('/orders/' + self.state.order.id);
           }).catch(function(e) {
             var errorMsg = t('orderPurchaseLabelError');
             if (e.responseJSON && e.responseJSON.error_description) {

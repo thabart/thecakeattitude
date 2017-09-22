@@ -96,5 +96,6 @@ namespace Cook4Me.Api.Host
         public const string TheLabelFormatIsNotSupported = "the label format is not supported";
         public const string TheOrderCannotBeCanceledByYou = "the order cannot be canceled by you";
         public const string TheOrderCannotBeCanceledPurchased = "the order cannot be canceled because its label has been purchased";
+        public const string TheParcelSizeIsInvalid = "the parcel size is invalid";
     }
 }

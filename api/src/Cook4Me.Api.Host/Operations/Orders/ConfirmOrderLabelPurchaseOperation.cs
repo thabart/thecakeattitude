@@ -124,6 +124,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 var newPrice = new JObject();
                 var newPriceDetails = new JObject();
                 newPriceDetails.Add("shipping", order.ShippingPrice);
+                newPriceDetails.Add("subtotal", order.TotalPrice);
                 newPrice.Add("total", order.TotalPrice + order.ShippingPrice);
                 newPrice.Add("currency", "EUR");
                 newPrice.Add("details", newPriceDetails);

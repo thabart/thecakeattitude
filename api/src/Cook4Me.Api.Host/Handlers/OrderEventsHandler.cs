@@ -47,7 +47,7 @@ namespace Cook4Me.Api.Host.Handlers
             }
 
             var notifier = _connectionManager.GetHubContext<SecuredHub>();
-            var lst = new[] { message.Subject };
+            var lst = new[] { message.Subject, message.SellerId };
             lst.Distinct();
             var connectionIds = new List<string>();
             foreach (var r in lst)
@@ -55,7 +55,7 @@ namespace Cook4Me.Api.Host.Handlers
                 connectionIds.AddRange(SecuredHub.Connections.GetConnections(r).ToList());
             }
 
-            notifier.Clients.Clients(connectionIds).orderTransactionReceived(_responseBuilder.GetOrderTransactionApproved(message));
+            notifier.Clients.Clients(connectionIds).orderTransactionApproved(_responseBuilder.GetOrderTransactionApproved(message));
             return Task.FromResult(0);
         }
 
@@ -87,7 +87,7 @@ namespace Cook4Me.Api.Host.Handlers
             }
 
             var notifier = _connectionManager.GetHubContext<SecuredHub>();
-            var lst = new[] { message.Subject };
+            var lst = new[] { message.Subject, message.SellerId };
             lst.Distinct();
             var connectionIds = new List<string>();
             foreach (var r in lst)

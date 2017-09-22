@@ -233,10 +233,10 @@ class Order extends Component {
                       { this.state.isPaypalLoading ? (t('loginPaypalProcessing')) : (t('buyWithPaypal')) }
                     </button>
                   ) }
-                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && !this.state.order.is_label_purchased && (
+                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.is_label_purchased === true && (
                     <button className="btn btn-default" onClick={this.downloadLabel}>{t('downloadLabel')}</button>
                   ) }
-                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.is_label_purchased && (
+                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.is_label_purchased === false && (
                     <NavLink to={'/printlabel/' + this.state.order.id } className="btn btn-default">{t('buyLabel')}</NavLink>
                   ) }
                 </div>
@@ -276,9 +276,17 @@ class Order extends Component {
               });
               self.refresh();
             break;
-            case Constants.events.ORDER_TRANSACTION_RECEIVED_ARRIVED:
+            case Constants.events.ORDER_TRANSACTION_APPROVED_ARRIVED: // The client approve the transaction.
               ApplicationStore.sendMessage({
                 message: t('orderTransactionApproved'),
+                level: 'success',
+                position: 'bl'
+              });
+              self.refresh();
+            break;
+            case Constants.events.ORDER_LABEL_PURCHASED_ARRIVED: // The label has been purchased.
+              ApplicationStore.sendMessage({
+                message: t('orderLabelPurchased'),
                 level: 'success',
                 position: 'bl'
               });
