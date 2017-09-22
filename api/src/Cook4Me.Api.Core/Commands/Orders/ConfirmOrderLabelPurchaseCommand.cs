@@ -24,7 +24,7 @@ namespace Cook4Me.Api.Core.Commands.Orders
         public string OrderId { get; set; }
         public string TransactionId { get; set; }
         public string PayerId { get; set; }
-        public string ShipmentIdentificationNumber { get; set; }
+        public string TrackingNumber { get; set; }
         public OrderPayments PaymentMethod { get; set; }
     }
 }

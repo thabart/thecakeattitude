@@ -461,5 +461,6 @@
   "purchased": "Purchased",
   "notYetPurchased": "Not yet purchased",
   "shippingPrice": "Shipping price € {0}",
-  "order_label_purchased": "The order label has been purchased"
+  "order_label_purchased": "The order label has been purchased",
+  "purchaseOrderSpinnerMessage": "Purchasing the label ..."
 }

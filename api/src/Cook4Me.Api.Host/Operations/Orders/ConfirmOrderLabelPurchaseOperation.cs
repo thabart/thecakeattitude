@@ -101,24 +101,31 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
-            var order = validationResult.Order; // 1. Confirm the Paypal transaction.                        
+            var acceptUpsShipment = await _upsClient.AcceptShip(new AcceptShipParameter // 1. Accept UPS shipment.
+            {
+                Credentials = new UpsCredentials
+                {
+                    LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
+                    Password = _settingsProvider.GetUpsPassword(),
+                    UserName = _settingsProvider.GetUpsUsername()
+                },
+                ShipmentDigest = validationResult.Order.ShipmentDigest
+            });
+
+           if (acceptUpsShipment.Response.ResponseStatusCode == "0")
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, acceptUpsShipment.Response.Error.ErrorDescription);
+                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
+           }
+
+            var order = validationResult.Order;    
             var token = await _paypalOauthClient.GetAccessToken(_settingsProvider.GetPaypalClientId(), _settingsProvider.GetPaypalClientSecret(),
                 new PaypalOauthClientOptions
                 {
                     ApplicationMode = PaypalApplicationModes.sandbox
                 });
-            var acceptedPayment = await _paypalClient.ExecutePayment(command.TransactionId, new ExecutePaymentParameter // 4. Accept the payment. (seller => my paypal account).
-            {
-                AccessToken = token.AccessToken,
-                PayerId = command.PayerId
-            });
-            if (!acceptedPayment.IsValid)
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Request, acceptedPayment.ErrorResponse.Message);
-                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
-            }
 
-            if (order.OrderPayment.PaymentMethod == OrderPayments.Paypal) // 2. Update the "buyer paypal transaction".
+            if (order.OrderPayment.PaymentMethod == OrderPayments.Paypal) // Update transaction.
             {
                 var transactionId = order.OrderPayment.TransactionId;
                 var newPrice = new JObject();
@@ -146,8 +153,26 @@ namespace Cook4Me.Api.Host.Operations.Orders
                     var error = _responseBuilder.GetError(ErrorCodes.Request, updatePayment.ErrorResponse.Message);
                     return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
                 }
-            } 
+            }
 
+            var acceptedPayment = await _paypalClient.ExecutePayment(command.TransactionId, new ExecutePaymentParameter // Accept the payment.
+            {
+                AccessToken = token.AccessToken,
+                PayerId = command.PayerId
+            });
+            if (!acceptedPayment.IsValid)
+            {
+                await _upsClient.Cancel(acceptUpsShipment.ShipmentResults.ShipmentIdentificationNumber, new UpsCredentials
+                {
+                    LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
+                    Password = _settingsProvider.GetUpsPassword(),
+                    UserName = _settingsProvider.GetUpsUsername()
+                });
+                var error = _responseBuilder.GetError(ErrorCodes.Request, acceptedPayment.ErrorResponse.Message);
+                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
+            }
+
+            command.TrackingNumber = acceptUpsShipment.ShipmentResults.PackageResults.TrackingNumber;
             _commandSender.Send(command);
             return new OkResult();
         }

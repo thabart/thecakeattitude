@@ -35,14 +35,14 @@ namespace Cook4Me.Api.Host.Validators
 
     public class PurchaseOrderLabelValidationResult
     {
-        public PurchaseOrderLabelValidationResult(OrderAggregate order, string payerPaypalEmail, string sellerPaypalEmail, double shippingPrice, string trackingNumber)
+        public PurchaseOrderLabelValidationResult(OrderAggregate order, string payerPaypalEmail, string sellerPaypalEmail, double shippingPrice, string shipmentDigest)
         {
             Order = order;
             PayerPaypalEmail = payerPaypalEmail;
             SellerPaypalEmail = sellerPaypalEmail;
             ShippingPrice = shippingPrice;
             IsValid = true;
-            TrackingNumber = trackingNumber;
+            ShipmentDigest = shipmentDigest;
         }
 
         public PurchaseOrderLabelValidationResult(string message)
@@ -58,6 +58,7 @@ namespace Cook4Me.Api.Host.Validators
         public string SellerPaypalEmail { get; set; }
         public double ShippingPrice { get; set; }
         public string TrackingNumber { get; set; }
+        public string ShipmentDigest { get; set; }
     }
 
     internal class PurchaseOrderLabelValidator : IPurchaseOrderLabelValidator
@@ -144,6 +145,7 @@ namespace Cook4Me.Api.Host.Validators
             }
 
             string trackingNumber = null;
+            string shipmentDigest = null;
             if (order.OrderParcel.Transporter == Transporters.Ups) // Retrieve UPS ratings.
             {
                 var buyerName = payer.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;
@@ -220,6 +222,7 @@ namespace Cook4Me.Api.Host.Validators
                     return new PurchaseOrderLabelValidationResult(confirmShip.Response.Error.ErrorDescription);
                 }
 
+                /*
                 var acceptUpsShipment = await _upsClient.AcceptShip(new AcceptShipParameter // 2. Accept UPS shipment.
                 {
                     Credentials = new UpsCredentials
@@ -235,12 +238,14 @@ namespace Cook4Me.Api.Host.Validators
                 {
                     return new PurchaseOrderLabelValidationResult(acceptUpsShipment.Response.Error.ErrorDescription);
                 }
+                */
 
-                shippingPrice = acceptUpsShipment.ShipmentResults.ShipmentCharges.TotalCharges.MonetaryValue;
-                trackingNumber = acceptUpsShipment.ShipmentResults.PackageResults.TrackingNumber;
+                
+                shipmentDigest = confirmShip.ShipmentDigest;
+                shippingPrice = confirmShip.ShipmentCharges.TotalCharges.MonetaryValue;
             }
 
-            return new PurchaseOrderLabelValidationResult(order, paypalBuyer.Value, paypalSeller.Value, shippingPrice, trackingNumber);
+            return new PurchaseOrderLabelValidationResult(order, paypalBuyer.Value, paypalSeller.Value, shippingPrice, shipmentDigest);
         }
     }
 }

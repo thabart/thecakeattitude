@@ -180,7 +180,8 @@ namespace Cook4Me.Api.EF.Extensions
                 OrderLines = order.OrderLines == null ? new List<OrderLine>() : order.OrderLines.Select(o => o.ToModel()).ToList(),
                 OrderParcel = orderParcel,
                 OrderPayment = orderPayment,
-                TrackingNumber = order.TrackingNumber
+                TrackingNumber = order.TrackingNumber,
+                ShipmentDigest = order.ShipmentDigest
             };
         }
 
@@ -226,7 +227,8 @@ namespace Cook4Me.Api.EF.Extensions
                 OrderLines = order.OrderLines == null ? null : order.OrderLines.Select(o => o.ToAggregate()),
                 OrderParcel = orderParcel,
                 OrderPayment=  orderPayment,
-                TrackingNumber = order.TrackingNumber
+                TrackingNumber = order.TrackingNumber,
+                ShipmentDigest = order.ShipmentDigest
             };
         }
 

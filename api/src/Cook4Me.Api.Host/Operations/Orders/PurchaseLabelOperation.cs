@@ -15,6 +15,7 @@
 #endregion
 
 using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Validators;
@@ -45,11 +46,11 @@ namespace Cook4Me.Api.Host.Operations.Orders
         private readonly ISettingsProvider _settingsProvider;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
-        private readonly ICommandSender _commandSender;
+        private readonly IOrderRepository _orderRepository;
 
         public PurchaseLabelOperation(IPurchaseOrderLabelValidator validator, IRequestBuilder requestBuilder,
              IPaypalOauthClient paypalOauthClient, IPaypalClient paypalClient, ISettingsProvider settingsProvider,
-             IResponseBuilder responseBuilder, IControllerHelper controllerHelper, ICommandSender commandSender)
+             IResponseBuilder responseBuilder, IControllerHelper controllerHelper, IOrderRepository orderRepository)
         {
             _validator = validator;
             _requestBuilder = requestBuilder;
@@ -58,7 +59,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
             _settingsProvider = settingsProvider;
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
-            _commandSender = commandSender;
+            _orderRepository = orderRepository;
         }
 
         public async Task<IActionResult> Execute(string id, string subject, JObject jObj)
@@ -117,9 +118,18 @@ namespace Cook4Me.Api.Host.Operations.Orders
             var approvalUrl = payment.Links.FirstOrDefault(l => l.Rel == "approval_url").Href;
             command.TrackingNumber = validationResult.TrackingNumber;
             command.ShippingPrice = validationResult.ShippingPrice;
-            _commandSender.Send(command);
+            command.ShipmentDigest = validationResult.ShipmentDigest;
+            var order = validationResult.Order;
+            order.ShippingPrice = command.ShippingPrice;
+            order.ShipmentDigest = command.ShipmentDigest;
+            order.OrderParcel.Height = command.ParcelSize.Height;
+            order.OrderParcel.Length = command.ParcelSize.Length;
+            order.OrderParcel.Weight = command.ParcelSize.Weight;
+            order.OrderParcel.Width = command.ParcelSize.Width;
+            await _orderRepository.Update(order);
             var res = new JObject();
             res.Add("approval_url", approvalUrl);
+            res.Add("shipping_price", command.ShippingPrice);
             return new OkObjectResult(res);
         }
     }

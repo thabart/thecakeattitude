@@ -33,6 +33,7 @@ namespace Cook4Me.Api.EF.Models
         public double TotalPrice { get; set; }
         public double ShippingPrice { get; set; }
         public string TrackingNumber { get; set; }
+        public string ShipmentDigest { get; set; }
         public bool IsLabelPurchased { get; set; }
         public virtual ICollection<OrderLine> OrderLines { get; set; }
         public virtual OrderParcel OrderParcel { get; set; }

@@ -4,14 +4,22 @@ var $ = require('jquery');
 import Constants from '../../Constants';
 
 var _order = {};
+var _payment = {};
 
 function loadOrder(order) {
   _order = order;
 }
 
+function loadPayment(payment) {
+  _payment = payment;
+}
+
 var PrintOrderLabelStore = $.extend({} , EventEmitter.prototype, {
   getOrder() {
     return _order;
+  },
+  getPayment() {
+    return _payment;
   },
   emitLoad: function() {
     this.emit('load');
@@ -42,6 +50,9 @@ AppDispatcher.register(function(payload) {
     case Constants.events.UPDATE_ORDER_LABEL_ACT:
       loadOrder(payload.data);
       PrintOrderLabelStore.emitChange();
+    break;
+    case Constants.events.SET_LABEL_PAYMENT_ACT:
+      loadPayment(payload.data);
     break;
   }
 

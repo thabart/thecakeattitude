@@ -5,6 +5,8 @@ import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { ParcelSize } from '../components/index';
 import { OrdersService } from '../services/index';
 import { UrlParser } from '../utils/index';
+import AppDispatcher from "../appDispatcher";
+import Constants from '../../Constants';
 
 const markerOpts = {
     url: '/images/shop-pin.png',
@@ -29,7 +31,6 @@ class Summary extends Component {
   constructor(props) {
     super(props);
     this._paypalOpened = false;
-    this._confirmingPurchase = false;
     this._windowPaypal = null;
     this.previous = this.previous.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -56,7 +57,6 @@ class Summary extends Component {
 
   buy() { // Buy the label.
     var self = this;
-    if (self._confirmingPurchase) return;
     if (self._windowPaypal && self._windowPaypal.isClosed == false) return;
     const {t} = self.props;
     var order = PrintOrderLabelStore.getOrder();
@@ -68,20 +68,17 @@ class Summary extends Component {
     });
     ApplicationStore.displayLoading({
       display: true,
-      message: t('confirmOrderLabelPurchaseSpinnerMessage')
+      message: t('purchaseOrderSpinnerMessage')
     });
     OrdersService.purchaseLabel(order.id, request).then(function(r) {
       var approvalUrl = r['approval_url'];
+      var shippingPrice = r['shipping_price'];
       self._windowPaypal = window.open(approvalUrl, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
       var isProcessing = false;
       var interval = setInterval(function() {
           if (isProcessing) return;
           if (self._windowPaypal.closed) {
               clearInterval(interval);
-              if (self._confirmingPurchase) {
-                return;
-              }
-
               ApplicationStore.displayLoading({
                 display: false,
               });
@@ -104,36 +101,30 @@ class Summary extends Component {
           }
 
           isProcessing = true;
-          OrdersService.confirmLabel(self.state.order.id, {
-            payer_id: payerId,
-            transaction_id: paymentId
-          }).then(function() {
-            self.setState({
-              isPaypalLoading: false
-            });
-            ApplicationStore.displayLoading({
-              display: false,
-            });
-            self.props.history.push('/orders/' + self.state.order.id);
-          }).catch(function(e) {
-            var errorMsg = t('orderPurchaseLabelError');
-            if (e.responseJSON && e.responseJSON.error_description) {
-              errorMsg = e.responseJSON.error_description;
-            }
-            self.setState({
-              isPaypalLoading: false
-            });
-            ApplicationStore.sendMessage({
-              message: errorMsg,
-              level: 'error',
-              position: 'tr'
-            });
-            ApplicationStore.displayLoading({
-              display: false,
-            });
-          });
           self._windowPaypal.close();
-          self._confirmingPurchase = true;
+          var order = PrintOrderLabelStore.getOrder();
+          order['shipping_price'] = shippingPrice;
+          AppDispatcher.dispatch({
+            actionName: Constants.events.SET_LABEL_PAYMENT_ACT,
+            data: {
+              payment_id: paymentId,
+              payer_id: payerId
+            }
+          });
+          AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_ORDER_LABEL_ACT,
+            data: order
+          });
+          ApplicationStore.displayLoading({
+            display: false,
+          });
+          self.setState({
+            isPaypalLoading: false
+          });
+          clearInterval(interval);
+          if (self.props.onNext) {
+            self.props.onNext();
+          }
       });
     }).catch(function(e) {
       const {t} = self.props;

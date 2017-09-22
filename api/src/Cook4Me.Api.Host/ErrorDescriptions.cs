@@ -97,5 +97,6 @@ namespace Cook4Me.Api.Host
         public const string TheOrderCannotBeCanceledByYou = "the order cannot be canceled by you";
         public const string TheOrderCannotBeCanceledPurchased = "the order cannot be canceled because its label has been purchased";
         public const string TheParcelSizeIsInvalid = "the parcel size is invalid";
+        public const string ThePurchasedRequestLabelCannotBeRemoved = "the request cannot be removed because its label has been purchased";
     }
 }

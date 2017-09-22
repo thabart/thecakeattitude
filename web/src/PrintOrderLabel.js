@@ -16,7 +16,6 @@ class PrintOrderLabel extends Component {
     this._waitForToken  = null;
     this.refresh = this.refresh.bind(this);
     this.toggle = this.toggle.bind(this);
-    this.buy = this.buy.bind(this);
     this.state = {
       activeTab: '1',
       order: {},
@@ -66,10 +65,6 @@ class PrintOrderLabel extends Component {
     }
   }
 
-  buy() { // Buy the order.
-    var self = this;
-  }
-
   render() { // Display the component.
     const {t} = this.props;
     var self = this;
@@ -85,8 +80,9 @@ class PrintOrderLabel extends Component {
         <div className="container">
           <div className="mt-1 mb-1 p-1 bg-white rounded">
             <ul className="progressbar progressbar-with-counter" style={{width: "100%"}}>
-              <li className={(parseInt(this.state.activeTab) >= 1) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">1</div>{t('parcel')}</li>
-              <li className={(parseInt(this.state.activeTab) >= 2) ? 'col-6 active' : 'col-6'}><div className="counter-rounded">2</div>{t('summary')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 1) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">1</div>{t('parcel')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 2) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">2</div>{t('summary')}</li>
+              <li className={(parseInt(this.state.activeTab) >= 3) ? 'col-4 active' : 'col-4'}><div className="counter-rounded">3</div>{t('payment')}</li>
             </ul>
           </div>
           <TabContent activeTab={this.state.activeTab} className="white-section progressbar-content">
@@ -112,7 +108,13 @@ class PrintOrderLabel extends Component {
             </TabPane>
             {/* Display summary */}
             <TabPane tabId="2" className={this.state.isLoading ? 'hidden' : ''}>
-              <SummaryTab ref="summary" onPrevious={() => self.toggle('1')} onBuy={self.buy} />
+              <SummaryTab ref="summary" onPrevious={() => self.toggle('1')} onNext={() => {
+                self.toggle('3');
+              }} />
+            </TabPane>
+            {/* Display payment */}
+            <TabPane tabId="3" className={this.state.isLoading ? 'hidden' : ''}>
+              <PaymentTab ref="payment" onPrevious={() => self.toggle('2')} />
             </TabPane>
           </TabContent>
       </div>

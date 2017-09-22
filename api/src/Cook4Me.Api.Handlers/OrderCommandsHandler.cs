@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 namespace Cook4Me.Api.Handlers
 {
     public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>,
-        Handles<AcceptOrderTransactionCommand>, Handles<PurchaseOrderLabelCommand>, Handles<ConfirmOrderLabelPurchaseCommand>,
+        Handles<AcceptOrderTransactionCommand>, Handles<ConfirmOrderLabelPurchaseCommand>,
         Handles<CancelOrderCommand>
     {
         private readonly IOrderRepository _orderRepository;
@@ -287,33 +287,6 @@ namespace Cook4Me.Api.Handlers
             });
         }
 
-        public async Task Handle(PurchaseOrderLabelCommand message)  // 2.1 Seller: purchase the label.
-        {
-            if (message == null)
-            {
-                throw new ArgumentNullException(nameof(message));
-            }
-
-            if (message.ParcelSize == null)
-            {
-                throw new ArgumentNullException(nameof(message.ParcelSize));
-            }
-
-            var order = await _orderRepository.Get(message.OrderId);
-            if (order == null)
-            {
-                return;
-            }
-
-            order.TrackingNumber = message.TrackingNumber;
-            order.ShippingPrice = message.ShippingPrice;
-            order.OrderParcel.Height = message.ParcelSize.Height;
-            order.OrderParcel.Length = message.ParcelSize.Length;
-            order.OrderParcel.Weight = message.ParcelSize.Weight;
-            order.OrderParcel.Width = message.ParcelSize.Width;
-            await _orderRepository.Update(order);
-        }
-
         public async Task Handle(ConfirmOrderLabelPurchaseCommand message) // 2.2 Seller : confirm the label purchase.
         {
             if (message == null)
@@ -328,6 +301,8 @@ namespace Cook4Me.Api.Handlers
             }
 
             order.IsLabelPurchased = true;
+            order.TrackingNumber = message.TrackingNumber;
+            order.ShipmentDigest = null;
             await _orderRepository.Update(order);
             _eventPublisher.Publish(new OrderLabelPurchasedEvent
             {

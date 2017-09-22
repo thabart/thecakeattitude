@@ -50,6 +50,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public OrderAggregatePayment OrderPayment { get; set; }
         public double TotalPrice { get; set; }
         public bool IsLabelPurchased { get; set; }
+        public string ShipmentDigest { get; set; }
         public double ShippingPrice { get; set; }
     }
 }

@@ -83,7 +83,6 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<ConfirmOrderLabelPurchaseCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<CancelOrderCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<AcceptOrderTransactionCommand>(orderCommandsHandler.Handle);
-            bus.RegisterHandler<PurchaseOrderLabelCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<BuyUpsLabelCommand>(upsCommandsHandler.Handle);
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);
@@ -96,7 +95,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<OrderConfirmedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<OrderReceivedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<OrderTransactionApprovedEvent>(notificationEventsHandler.Handle);
-            bus.RegisterHandler<OrderLabelPurchasedEvent>(notificationCommandHandler.Handle);
+            bus.RegisterHandler<OrderLabelPurchasedEvent>(notificationEventsHandler.Handle);
             return serviceCollection;
         }
     }

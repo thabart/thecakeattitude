@@ -14,17 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
-using Cook4Me.Common;
-
-namespace Cook4Me.Api.Core.Commands.Orders
+namespace Cook4Me.Api.Host.Operations.Orders
 {
-    public class PurchaseOrderLabelCommand : Command
+    public interface IGetPaymentDetailsOperation
     {
-        public string OrderId { get; set; }
-        public ParcelSize ParcelSize { get; set; }
-        public string TrackingNumber { get; set; }
-        public double ShippingPrice { get; set; }
-        public string ShipmentDigest { get; set; }
+
+    }
+
+    internal class GetPaymentDetailsOperation : IGetPaymentDetailsOperation
+    {
     }
 }
