@@ -6,6 +6,7 @@ import { ProductsService } from '../services/index';
 import { Button } from 'reactstrap';
 import { ParcelSize } from '../components/index';
 import { NavLink } from "react-router-dom";
+import Constants from '../../Constants';
 
 const defaultCount = 5;
 
@@ -76,7 +77,6 @@ class Summary extends Component {
       return;
     }
 
-    console.log(order);
     var productIds = order.lines.map(function(line) { return line.product_id; });
     self._request['product_ids'] = productIds;
     ProductsService.search(self._request).then(function(res) {
@@ -191,9 +191,9 @@ class Summary extends Component {
                 { /* Display parcel type */ }
                 <div>
                   <h5>
-                    {t('parcelSize')} 
+                    {t('parcelSize')}
                   </h5>
-                  <ParcelSize isEditable={false} height={35} length={50} width={80} />
+                  <ParcelSize isEditable={false} height={Constants.maxPackageSize.height} length={Constants.maxPackageSize.length} width={Constants.maxPackageSize.width} />
                 </div>
                 { /* Display parcel shop */ }
                 { this.state.order.transport_mode === 'packet' && this.state.order.package.parcel_shop && (

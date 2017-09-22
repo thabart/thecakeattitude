@@ -452,5 +452,6 @@
   "processingPayment" : "Processing payment ...",
   "information": "Information",
   "products": "Products",
-  "retrieveOrderError": "An error occured while trying to retrieve the order, please contact the administrator"
+  "retrieveOrderError": "An error occured while trying to retrieve the order, please contact the administrator",
+  "order_transaction_approved": "An order transaction has been approved by the buyer"
 }

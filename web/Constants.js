@@ -8,6 +8,11 @@ module.exports = {
     googleMapKey: 'AIzaSyBN72d3ipuyzbqhJgjwav5HnnKkLqp3KCU',
     apiUrl: 'http://localhost:5000',
     openIdUrl: 'http://localhost:5001',
+    maxPackageSize: {
+      length: 50,
+      width: 80,
+      height: 35
+    },
     events: {
       USER_LOGGED_IN: 'USER_LOGGED_IN',
       USER_LOGGED_OUT: 'USER_LOGGED_OUT',

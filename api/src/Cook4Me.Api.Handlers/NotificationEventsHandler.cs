@@ -29,7 +29,8 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>, Handles<OrderConfirmedEvent>, Handles<OrderReceivedEvent>
+    public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>, 
+        Handles<OrderConfirmedEvent>, Handles<OrderReceivedEvent>, Handles<OrderTransactionApprovedEvent>
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IShopRepository _shopRepository;
@@ -340,6 +341,38 @@ namespace Cook4Me.Api.Handlers
                 IsRead = false,
                 From = message.Client,
                 To = message.Seller,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.OrderId,
+                        Value = message.OrderId
+                    }
+                }
+            };
+
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(OrderTransactionApprovedEvent message)
+        {
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "order_transaction_approved",
+                IsRead = false,
+                From = message.Subject,
+                To = message.SellerId,
                 CreatedDateTime = DateTime.UtcNow,
                 Parameters = new[]
                 {

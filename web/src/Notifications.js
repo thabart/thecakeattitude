@@ -182,7 +182,7 @@ class Notifications extends Component {
       self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
             case Constants.events.ADD_NOTIFICATION_ARRIVED:
-            case 'update-notification':
+            case Constants.events.NOTIFICATION_UPDATED_ARRIVED:
               var sub = ApplicationStore.getUser().sub;
               if (payload.data.to === sub) {
                 self.refreshNotifications();

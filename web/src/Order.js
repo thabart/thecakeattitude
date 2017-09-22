@@ -29,7 +29,8 @@ class Order extends Component {
         order: {},
         isPaypalLoading: false,
         errorMessage: null,
-        activeTab: null
+        activeTab: null,
+        seller: null
       };
     }
 
@@ -47,8 +48,14 @@ class Order extends Component {
           order: order,
           isLoading: false
         });
-        self.refs.informationTab.getWrappedInstance().refresh(order);
-        self.refs.productsTab.getWrappedInstance().refresh(order);
+        var informationTab = self.refs.informationTab.getWrappedInstance();
+        var productsTab = self.refs.productsTab.getWrappedInstance();
+        informationTab.refresh(order).then(function(shop) {
+          self.setState({
+            seller: shop.subject
+          });
+        });
+        productsTab.refresh(order);
       }).catch(function(e) {
         self.setState({
           isLoading: false,
@@ -192,12 +199,12 @@ class Order extends Component {
       }
 
       var sub = ApplicationStore.getUser().sub;
-      var isBuyer = this.state.order && this.state.order.subject === sub;
-      var isSeller = this.state.shop && this.state.shop.subject === sub;
+      var isBuyer = self.state.order && self.state.order.subject === sub;
+      var isSeller = self.state.seller && self.state.seller === sub;
       return (
         <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
-          { self.state.isLoading ? (<div className="container"><i className="fa fa-spinner fa-spin"></i></div>) : (
-            <div className="container">
+            <div className={ !self.state.isLoading ? "hidden" : "container" }><i className="fa fa-spinner fa-spin"></i></div>
+            <div className={ self.state.isLoading ? "hidden" : "container" }>
               <h2>{t('orderTitle')}</h2>
               <ul className="nav nav-pills shop-products-menu">
                 <a className={self.state.activeTab === 'information' ? "nav-link active" : "nav-link"} onClick={self.navigateToInformation}>

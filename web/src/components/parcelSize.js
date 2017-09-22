@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { FormGroup, Input, Label, FormFeedback } from 'reactstrap';
+import Constants from '../../Constants';
 
 class ParcelSize extends Component {
     constructor(props) {
@@ -8,13 +9,14 @@ class ParcelSize extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.check = this.check.bind(this);
         this.getSize = this.getSize.bind(this);
+        this.setSize = this.setSize.bind(this);
         this.buildErrorTooltip = this.buildErrorTooltip.bind(this);
         this.state = {
           isEditable: props.isEditable || false,
           weight: props.weight || 2,
-          length: props.length || 50,
-          width: props.width || 80,
-          height: props.height || 35,
+          length: props.length || Constants.maxPackageSize.length,
+          width: props.width || Constants.maxPackageSize.width,
+          height: props.height || Constants.maxPackageSize.height,
           valid: {
             isWeightInvalid: false,
             isLengthInvalid: false,
@@ -94,6 +96,14 @@ class ParcelSize extends Component {
         width: this.state.width,
         height: this.state.height
       };
+    }
+
+    setSize(size) {
+      this.setState({
+        width: size.width,
+        length: size.length,
+        height: size.height
+      });
     }
 
     buildErrorTooltip(validName, description) { // Build the error tooltip.

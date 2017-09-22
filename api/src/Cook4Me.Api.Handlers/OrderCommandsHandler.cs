@@ -262,7 +262,7 @@ namespace Cook4Me.Api.Handlers
             });
         }
 
-        public async Task Handle(AcceptOrderTransactionCommand message)
+        public async Task Handle(AcceptOrderTransactionCommand message)  // 1.2 Accept order transaction.
         {
             if (message == null)
             {
@@ -281,9 +281,10 @@ namespace Cook4Me.Api.Handlers
             _eventPublisher.Publish(new OrderTransactionApprovedEvent
             {
                 OrderId = message.OrderId,
-                Subject = order.Subject
+                Subject = order.Subject,
+                SellerId = order.SellerId
             });
-        } // 1.2 Accept order transaction.
+        }
 
         public async Task Handle(PurchaseOrderLabelCommand message)
         {

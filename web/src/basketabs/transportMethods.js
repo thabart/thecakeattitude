@@ -212,7 +212,7 @@ class TransportMethods extends Component {
     if (this.refs.dhlDropLocation) {
       this.refs.dhlDropLocation.getWrappedInstance().setAddress(adr);
     }
-    
+
     if (this.refs.upsDropLocation) {
       this.refs.upsDropLocation.getWrappedInstance().setAddress(adr);
       this._upsMarker = null;
@@ -262,10 +262,10 @@ class TransportMethods extends Component {
       break;
     }
     var pkg = {
-      height: 35,
-      length: 50,
+      height: Constants.maxPackageSize.height,
+      length: Constants.maxPackageSize.length,
       weight: weight,
-      width: 80
+      width: Constants.maxPackageSize.width
     };
 
     self.setState({

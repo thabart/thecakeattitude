@@ -28,6 +28,7 @@ class Information extends Component {
   constructor(props) {
     super(props);
     this.refresh = this.refresh.bind(this);
+    this.getShop = this.getShop.bind(this);
     this.state = {
       isLoading: true,
       user: {},
@@ -39,23 +40,31 @@ class Information extends Component {
   refresh(order) { // Display user + shop information.
     var self = this;
     var requests = [ UserService.getPublicClaims(order.subject), ShopsService.get(order.shop_id) ];
-    Promise.all(requests).then(function(res) {
-      var claims = res[0]['claims'];
-      var shop = res[1]['_embedded'];
-      self.setState({
-        isLoading: false,
-        shop: shop,
-        user: claims,
-        order: order
-      });
-    }).catch(function() {
-      self.setState({
-        isLoading: false,
-        shop: {},
-        user: {},
-        order: {}
+    return new Promise(function(resolve, reject) {
+      Promise.all(requests).then(function(res) {
+        var claims = res[0]['claims'];
+        var shop = res[1]['_embedded'];
+        self.setState({
+          isLoading: false,
+          shop: shop,
+          user: claims,
+          order: order
+        });
+        resolve(shop);
+      }).catch(function() {
+        self.setState({
+          isLoading: false,
+          shop: {},
+          user: {},
+          order: {}
+        });
+        reject();
       });
     });
+  }
+
+  getShop() { // Get the shop.
+    return this.state.shop;
   }
 
   render() { // Display the order information.

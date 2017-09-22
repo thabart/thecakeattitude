@@ -12,15 +12,16 @@ class PackagingType extends Component {
     super(props);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.updatePrice = this.updatePrice.bind(this);
+    this.reset = this.reset.bind(this);
     this.next = this.next.bind(this);
     this.refresh = this.refresh.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.state = {
       isLoading: false,
       weight: 2, // < 70
-      length: 50, // < 270
-      width: 80, // < 270
-      height: 35,// < 270
+      length: Constants.maxPackageSize.length, // < 270
+      width: Constants.maxPackageSize.width, // < 270
+      height: Constants.maxPackageSize.height,// < 270
       valid: {
         isWeightInvalid: false,
         isLengthInvalid: false,
@@ -102,6 +103,18 @@ class PackagingType extends Component {
     });
   }
 
+  reset() { // Reset the price.
+    var order = PrintOrderLabelStore.getOrder();
+    this.setState({
+      isUpdatePriceEnabled: false
+    });
+    this.refs.parcelSize.getWrappedInstance().setSize({
+      width: order.package.parcel.width,
+      length: order.package.parcel.length,
+      height: order.package.parcel.height
+    });
+  }
+
   next() { // Execute when the user clicks on next.
     if (!this.refs.parcelSize.getWrappedInstance().check()) {
       return;
@@ -139,7 +152,8 @@ class PackagingType extends Component {
         </div>
         <div>
           <button className="btn btn-default" onClick={this.updatePrice} disabled={!this.state.isUpdatePriceEnabled ? 'disabled' : ''}>{t('updatePrice')}</button>
-          <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={this.next}>{t('next')}</button>
+          <button className="btn btn-default" onClick={this.reset}  style={{marginLeft:"5px"}} disabled={!this.state.isUpdatePriceEnabled ? 'disabled' : ''}>{t('reset')}</button>
+          <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={this.next} disabled={this.state.isUpdatePriceEnabled && 'disabled'}>{t('next')}</button>
         </div>
       </div>
     </div>)
