@@ -164,6 +164,15 @@ class ManageOrders extends Component {
           <td>{moment(order.create_datetime).format('LLL')}</td>
           <td><span className="badge badge-default">{status}</span></td>
           <td>
+            { order.transport_mode === 'packet' && order.payment && (
+              <span className="badge badge-default">{t('payment_status_' + order.payment.status)}</span>
+            )}
+          </td>
+          <td>
+            { order.transport_mode === 'packet' && order.is_label_purchased === false && (<span className="badge badge-default">{t('notYetPurchased')}</span>) }
+            { order.transport_mode === 'packet' && order.is_label_purchased === true  && (<span className="badge badge-default">{t('purchased')}</span>) }
+          </td>
+          <td>
             {action === 'sent' && order.status !== 'received' && (<a href="#" className="btn-light red" style={{marginRight: "5px"}} onClick={(e) => { self.deleteOrder(e, order.id) }}><i className="fa fa-trash"></i>  {t('delete')}</a>)}
             <NavLink to={'/orders/' + order.id} className="btn-light green" style={{textDecoration: 'none !important'}}>
               <i className="fa fa-external-link"></i>  {t('view')}
@@ -199,6 +208,8 @@ class ManageOrders extends Component {
                     <th>{t('price')}</th>
                     <th>{t('creationDate')}</th>
                     <th>{t('status')}</th>
+                    <th>{t('payment')}</th>
+                    <th>{t('orderLabel')}</th>
                     <th></th>
                   </tr>
                 </thead>

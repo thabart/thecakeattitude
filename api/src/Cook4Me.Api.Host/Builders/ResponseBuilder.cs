@@ -451,6 +451,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderNames.TotalPrice, order.TotalPrice);
             result.Add(Constants.DtoNames.OrderNames.Subject, order.Subject);
             result.Add(Constants.DtoNames.OrderNames.ShopId, order.ShopId);
+            result.Add(Constants.DtoNames.OrderNames.ShippingPrice, order.ShippingPrice);
             result.Add(Constants.DtoNames.OrderNames.TrackingNumber, order.TrackingNumber);
             var kvpStatus = CommonBuilder.MappingOrderAggregateStatus.FirstOrDefault(kvp => kvp.Key == order.Status);
             if (!kvpStatus.Equals(default(KeyValuePair<OrderAggregateStatus, string>)) && !string.IsNullOrWhiteSpace(kvpStatus.Value))

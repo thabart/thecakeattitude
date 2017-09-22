@@ -111,6 +111,14 @@ class Information extends Component {
             <p><span className="badge badge-default">{t('payment_status_' + self.state.order.payment.status)}</span></p>
           </section>
         )}
+        { /* Display label */ }
+        { self.state.order.transport_mode === 'packet' && (
+          <section>
+            <h5>{t('orderLabel')}</h5>
+            { self.state.order.is_label_purchased === false && (<p><span className="badge badge-default">{t('notYetPurchased')}</span></p>)}
+            { self.state.order.is_label_purchased === true && (<p><span className="badge badge-default">{t('purchased')}</span></p>)}
+          </section>
+        ) }
       </div>
       <div className="col-md-7">
         { /* Display transport method */ }

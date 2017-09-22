@@ -296,6 +296,7 @@ namespace Cook4Me.Api.Host
                 public const string TransportMode = "transport_mode";
                 public const string Package = "package";
                 public const string Payment = "payment";
+                public const string ShippingPrice = "shipping_price";
                 public const string TrackingNumber = "tracking_number";
             }
 

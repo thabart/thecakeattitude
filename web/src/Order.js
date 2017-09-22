@@ -227,7 +227,11 @@ class Order extends Component {
                   <ProductsTab ref="productsTab" />
                 </div>
                 <div style={{marginTop: "10px"}}>
-                  <h4>{t('totalPrice').replace('{0}', self.state.order.total_price)} {this.state.order.transport_mode === 'packet' && (<span className="badge badge-default">{t('additionalTransportFeeds').replace('{0}', this.state.order.package.estimated_price)}</span>)}</h4>
+                  <h4>
+                    {t('totalPrice').replace('{0}', self.state.order.total_price)}
+                    {this.state.order.transport_mode === 'packet' && this.state.order.is_label_purchased === false && (<span className="badge badge-default">{t('additionalTransportFeeds').replace('{0}', this.state.order.package.estimated_price)}</span>)}
+                    {this.state.order.transport_mode === 'packet' && this.state.order.is_label_purchased === true && (<span className="badge badge-default">{t('shippingPrice').replace('{0}', this.state.order.shipping_price)}</span>)}
+                  </h4>
                 </div>
                 <div style={{marginTop: "10px"}}>
                   { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (

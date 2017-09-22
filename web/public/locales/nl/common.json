@@ -456,5 +456,10 @@
   "order_transaction_approved": "An order transaction has been approved by the buyer",
   "confirmOrderLabelPurchaseSpinnerMessage": "Confirming your label purchase ...",
   "orderLabelPurchased": "The order label has been purchased",
-  "downloading": "Downloading ..."
+  "downloading": "Downloading ...",
+  "orderLabel": "Label",
+  "purchased": "Purchased",
+  "notYetPurchased": "Not yet purchased",
+  "shippingPrice": "Shipping price € {0}",
+  "order_label_purchased": "The order label has been purchased"
 }
