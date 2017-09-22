@@ -454,5 +454,6 @@
   "retrieveOrderError": "Une erreur est survenue lors de la récupération de la commande, veuillez prendre contact avec l'administrateur",
   "order_transaction_approved": "Le paiement d'une commande a été approuvé par un acheteur",
   "confirmOrderLabelPurchaseSpinnerMessage": "Confirmation de l'achat de votre label ...",
-  "orderLabelPurchased": "Le label de la commande a été commandé"
+  "orderLabelPurchased": "Le label de la commande a été commandé",
+  "downloading": "Téléchargement ..."
 }

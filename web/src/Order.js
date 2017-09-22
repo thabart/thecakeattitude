@@ -164,10 +164,15 @@ class Order extends Component {
         isFileLoading: true
       });
       var anchor = document.createElement('a');
-      OrdersService.getLabel(this.state.order.id).then(function(r) {
+      document.body.appendChild(anchor);
+      OrdersService.getLabel(self.state.order.id).then(function(r) {
         var url = window.URL.createObjectURL(r);
         anchor.href = url
+        anchor.download = self.state.order.id + '.pdf';
         anchor.click();
+        self.setState({
+          isFileLoading: false
+        });
       });
     }
 
@@ -234,7 +239,7 @@ class Order extends Component {
                     </button>
                   ) }
                   { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.is_label_purchased === true && (
-                    <button className="btn btn-default" onClick={this.downloadLabel}>{t('downloadLabel')}</button>
+                    <button className="btn btn-default" onClick={this.downloadLabel} disabled={this.state.isFileLoading && 'disabled'}>{this.state.isFileLoading ? t('downloading') : t('downloadLabel')}</button>
                   ) }
                   { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.is_label_purchased === false && (
                     <NavLink to={'/printlabel/' + this.state.order.id } className="btn btn-default">{t('buyLabel')}</NavLink>
