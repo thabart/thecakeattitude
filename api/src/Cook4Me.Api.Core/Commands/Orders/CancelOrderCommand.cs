@@ -15,15 +15,11 @@
 #endregion
 
 using Cook4Me.Api.Core.Bus;
-using Cook4Me.Common;
 
 namespace Cook4Me.Api.Core.Commands.Orders
 {
-    public class PurchaseOrderLabelCommand : Command
+    public class CancelOrderCommand : Command
     {
         public string OrderId { get; set; }
-        public ParcelSize ParcelSize { get; set; }
-        public string TrackingNumber { get; set; }
-        public double ShippingPrice { get; set; }
     }
 }

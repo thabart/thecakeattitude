@@ -127,7 +127,9 @@ namespace Cook4Me.Api.EF.Repositories
                     record.UpdateDateTime = orderAggregate.UpdateDateTime;
                     record.ShopId = orderAggregate.ShopId;
                     record.TransportMode = (int)orderAggregate.TransportMode;
-                    record.ShipmentIdentificationNumber = orderAggregate.ShipmentIdentificationNumber;
+                    record.ShippingPrice = orderAggregate.ShippingPrice;
+                    record.TrackingNumber = orderAggregate.TrackingNumber;
+                    record.IsLabelPurchased = orderAggregate.IsLabelPurchased;
                     if (orderAggregate.OrderParcel != null)
                     {
                         if (record.OrderParcel == null)

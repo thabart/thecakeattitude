@@ -72,7 +72,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new OrderLabelValidationResult(ErrorDescriptions.TheOrderDoesntExist);
             }
 
-            if (string.IsNullOrWhiteSpace(record.ShipmentIdentificationNumber))
+            if (!record.IsLabelPurchased)
             {
                 return new OrderLabelValidationResult(ErrorDescriptions.TheShipmentIdDoesntExist);
             }

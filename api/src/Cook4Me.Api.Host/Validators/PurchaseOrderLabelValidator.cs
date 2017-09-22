@@ -35,13 +35,14 @@ namespace Cook4Me.Api.Host.Validators
 
     public class PurchaseOrderLabelValidationResult
     {
-        public PurchaseOrderLabelValidationResult(OrderAggregate order, string payerPaypalEmail, string sellerPaypalEmail, double shippingPrice)
+        public PurchaseOrderLabelValidationResult(OrderAggregate order, string payerPaypalEmail, string sellerPaypalEmail, double shippingPrice, string trackingNumber)
         {
             Order = order;
             PayerPaypalEmail = payerPaypalEmail;
             SellerPaypalEmail = sellerPaypalEmail;
             ShippingPrice = shippingPrice;
             IsValid = true;
+            TrackingNumber = trackingNumber;
         }
 
         public PurchaseOrderLabelValidationResult(string message)
@@ -56,6 +57,7 @@ namespace Cook4Me.Api.Host.Validators
         public string PayerPaypalEmail { get; set; }
         public string SellerPaypalEmail { get; set; }
         public double ShippingPrice { get; set; }
+        public string TrackingNumber { get; set; }
     }
 
     internal class PurchaseOrderLabelValidator : IPurchaseOrderLabelValidator
@@ -136,17 +138,29 @@ namespace Cook4Me.Api.Host.Validators
                 return new PurchaseOrderLabelValidationResult(ErrorDescriptions.TheSellerPaypalAccountNotExist);
             }
 
+            string trackingNumber = null;
             if (order.OrderParcel.Transporter == Transporters.Ups) // Retrieve UPS ratings.
             {
                 var buyerName = payer.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;
                 var sellerName = seller.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;
-                var getUpsRatingsParameter = new GetUpsRatingsParameter
+                var confirmShip = await _upsClient.ConfirmShip(new ConfirmShipParameter // 1. Confirm UPS shippment.
                 {
                     Credentials = new UpsCredentials
                     {
                         LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
                         Password = _settingsProvider.GetUpsPassword(),
                         UserName = _settingsProvider.GetUpsUsername()
+                    },
+                    AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
+                    {
+                        Name = order.OrderParcel.ParcelShopName,
+                        Address = new UpsAddressParameter
+                        {
+                            AddressLine = order.OrderParcel.ParcelShopAddressLine,
+                            City = order.OrderParcel.ParcelShopCity,
+                            Country = order.OrderParcel.ParcelShopCountryCode,
+                            PostalCode = order.OrderParcel.ParcelShopPostalCode.ToString()
+                        }
                     },
                     Shipper = new UpsShipperParameter
                     {
@@ -187,34 +201,41 @@ namespace Cook4Me.Api.Host.Validators
                     },
                     Package = new UpsPackageParameter
                     {
-                        Height = parameter.ParcelSize.Height,
-                        Length = parameter.ParcelSize.Length,
-                        Weight = parameter.ParcelSize.Weight,
-                        Width = parameter.ParcelSize.Width
+                        Length = order.OrderParcel.Length,
+                        Height = order.OrderParcel.Height,
+                        Weight = order.OrderParcel.Weight,
+                        Width = order.OrderParcel.Width
                     },
-                    AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
-                    {
-                        Name = order.OrderParcel.ParcelShopName,
-                        Address = new UpsAddressParameter
-                        {
-                            AddressLine = order.OrderParcel.ParcelShopAddressLine,
-                            City = order.OrderParcel.ParcelShopCity,
-                            Country = order.OrderParcel.ParcelShopCountryCode,
-                            PostalCode = order.OrderParcel.ParcelShopPostalCode.ToString()
-                        }
-                    },
+                    EmailAddress = "habarthierry@hotmail.fr",
                     UpsService = CommonBuilder.MappingBothUpsServices.First(kvp => kvp.Key == order.OrderParcel.UpsServiceCode).Value
-                };
-                var ratingsResponse = await _upsClient.GetRatings(getUpsRatingsParameter);
-                if (ratingsResponse.Response.Error != null)
+                });
+
+                if (confirmShip.Response.ResponseStatusCode == "0")
                 {
-                    return new PurchaseOrderLabelValidationResult(ratingsResponse.Response.Error.ErrorDescription);
+                    return new PurchaseOrderLabelValidationResult(confirmShip.Response.Error.ErrorDescription);
                 }
 
-                shippingPrice = ratingsResponse.RatedShipment.TotalCharges.MonetaryValue;
+                var acceptUpsShipment = await _upsClient.AcceptShip(new AcceptShipParameter // 2. Accept UPS shipment.
+                {
+                    Credentials = new UpsCredentials
+                    {
+                        LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
+                        Password = _settingsProvider.GetUpsPassword(),
+                        UserName = _settingsProvider.GetUpsUsername()
+                    },
+                    ShipmentDigest = confirmShip.ShipmentDigest
+                });
+
+                if (acceptUpsShipment.Response.ResponseStatusCode == "0")
+                {
+                    return new PurchaseOrderLabelValidationResult(acceptUpsShipment.Response.Error.ErrorDescription);
+                }
+
+                shippingPrice = acceptUpsShipment.ShipmentResults.ShipmentCharges.TotalCharges.MonetaryValue;
+                trackingNumber = acceptUpsShipment.ShipmentResults.PackageResults.TrackingNumber;
             }
 
-            return new PurchaseOrderLabelValidationResult(order, paypalBuyer.Value, paypalSeller.Value, shippingPrice);
+            return new PurchaseOrderLabelValidationResult(order, paypalBuyer.Value, paypalSeller.Value, shippingPrice, trackingNumber);
         }
     }
 }

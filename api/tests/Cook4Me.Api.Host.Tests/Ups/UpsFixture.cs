@@ -188,14 +188,95 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
                 Package = new UpsPackageParameter
                 {
                     Length = 5,
-                    Width = 4,
-                    Height = 3,
-                    Weight = 1
+                    Width = 5,
+                    Height = 5,
+                    Weight = 2
                 },
                 EmailAddress = "habarthierry@hotmail.fr",
                 UpsService = UpsServices.UpsStandard
             });
-            var res = "";
+            var res2 = "";
+        }
+
+        [Fact]
+        public async Task Void()
+        {
+            var settingsProvider = new FakeSettingsProvider();
+            var upsClient = new UpsClient(new FakeHttpClientFactory(), settingsProvider);
+            var tmp = await upsClient.ConfirmShip(new ConfirmShipParameter
+            {
+                Credentials = new UpsCredentials
+                {
+                    LicenseNumber = _accessLicenseNumber,
+                    Password = _password,
+                    UserName = _userName
+                },
+                AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
+                {
+                    Name = "U91006321",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "MUEHLENSTRASSE 20",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
+                    }
+                },
+                Shipper = new UpsShipperParameter
+                {
+                    Name = "Habart Thierry",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "10 GOERLITZER STRASSE",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
+                    }
+                },
+                ShipFrom = new UpsShipParameter
+                {
+                    Name = "Habart Thierry",
+                    AttentionName = "Habart Thierry",
+                    CompanyName = "Habart Thierry",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "10 GOERLITZER STRASSE",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
+                    }
+                },
+                ShipTo = new UpsShipParameter
+                {
+                    Name = "Laetitia Buyse",
+                    AttentionName = "Laetitia Buyse",
+                    CompanyName = "Laetitia Buyse",
+                    Address = new UpsAddressParameter
+                    {
+                        AddressLine = "NIEDERWALLSTRASSE 29",
+                        City = "NEUSS",
+                        PostalCode = "41460",
+                        Country = "DE"
+                    }
+                },
+                Package = new UpsPackageParameter
+                {
+                    Length = 5,
+                    Width = 5,
+                    Height = 5,
+                    Weight = 2
+                },
+                EmailAddress = "habarthierry@hotmail.fr",
+                UpsService = UpsServices.UpsStandard
+            });
+            var res2 = "";
+            var v = upsClient.Cancel(tmp.ShipmentIdentificationNumber, new UpsCredentials
+            {
+                LicenseNumber = _accessLicenseNumber,
+                Password = _password,
+                UserName = _userName
+            });
+            string s2 = "";
         }
 
         [Fact]

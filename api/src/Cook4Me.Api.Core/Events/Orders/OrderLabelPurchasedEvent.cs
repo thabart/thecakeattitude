@@ -22,6 +22,6 @@ namespace Cook4Me.Api.Core.Events.Orders
     {
         public string OrderId { get; set; }
         public string Subject { get; set; }
-        public string ShipmentIdentificationNumber { get; set; }
+        public string TrackingNumber { get; set; }
     }
 }

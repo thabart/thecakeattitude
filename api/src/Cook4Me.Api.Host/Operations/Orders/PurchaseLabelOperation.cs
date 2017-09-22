@@ -115,6 +115,8 @@ namespace Cook4Me.Api.Host.Operations.Orders
             }
 
             var approvalUrl = payment.Links.FirstOrDefault(l => l.Rel == "approval_url").Href;
+            command.TrackingNumber = validationResult.TrackingNumber;
+            command.ShippingPrice = validationResult.ShippingPrice;
             _commandSender.Send(command);
             var res = new JObject();
             res.Add("approval_url", approvalUrl);

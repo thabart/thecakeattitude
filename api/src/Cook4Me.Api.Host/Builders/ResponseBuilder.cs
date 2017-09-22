@@ -39,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetOrderCanceled(OrderCanceledEvent evt);
         JObject GetOrderLabelPurchased(OrderLabelPurchasedEvent evt);
         JObject GetUpsService(UpsServiceAggregate service);
         JObject GetOrderTransactionApproved(OrderTransactionApprovedEvent evt);
@@ -105,6 +106,19 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetOrderCanceled(OrderCanceledEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var obj = new JObject();
+            obj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            obj.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
+            return obj;
+        }
+
         public JObject GetOrderLabelPurchased(OrderLabelPurchasedEvent evt)
         {
             if (evt == null)
@@ -114,7 +128,7 @@ namespace Cook4Me.Api.Host.Builders
             
             var obj = new JObject();
             obj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
-            obj.Add(Constants.DtoNames.OrderNames.ShipmentIdentificationNumber, evt.ShipmentIdentificationNumber);
+            obj.Add(Constants.DtoNames.OrderNames.TrackingNumber, evt.TrackingNumber);
             obj.Add(Constants.DtoNames.OrderNames.Id, evt.OrderId);
             return obj;
         }
@@ -184,6 +198,17 @@ namespace Cook4Me.Api.Host.Builders
 
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.UpsRatingsNames.TotalPrice, price);
+            if (response.RatedShipment != null && response.RatedShipment.RatedShipmentWarning != null)
+            {
+                var messages = new JArray();
+                foreach (var message in response.RatedShipment.RatedShipmentWarning)
+                {
+                    messages.Add(message);
+                }
+
+                jObj.Add(Constants.DtoNames.UpsRatingsNames.Messages, messages);
+            }
+
             return jObj;
         }
 
@@ -421,11 +446,12 @@ namespace Cook4Me.Api.Host.Builders
 
             result.Add(Constants.DtoNames.OrderNames.Id, order.Id);
             result.Add(Constants.DtoNames.OrderNames.CreateDateTime, order.CreateDateTime);
+            result.Add(Constants.DtoNames.OrderNames.IsLabelPurchased, order.IsLabelPurchased);
             result.Add(Constants.DtoNames.OrderNames.UpdateDateTime, order.UpdateDateTime);
             result.Add(Constants.DtoNames.OrderNames.TotalPrice, order.TotalPrice);
             result.Add(Constants.DtoNames.OrderNames.Subject, order.Subject);
             result.Add(Constants.DtoNames.OrderNames.ShopId, order.ShopId);
-            result.Add(Constants.DtoNames.OrderNames.ShipmentIdentificationNumber, order.ShipmentIdentificationNumber);
+            result.Add(Constants.DtoNames.OrderNames.TrackingNumber, order.TrackingNumber);
             var kvpStatus = CommonBuilder.MappingOrderAggregateStatus.FirstOrDefault(kvp => kvp.Key == order.Status);
             if (!kvpStatus.Equals(default(KeyValuePair<OrderAggregateStatus, string>)) && !string.IsNullOrWhiteSpace(kvpStatus.Value))
             {

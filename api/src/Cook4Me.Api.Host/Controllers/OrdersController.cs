@@ -42,13 +42,14 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IConfirmOrderLabelPurchaseOperation _confirmOrderLabelPurchaseOperation;
         private readonly IConfirmOrderPurchaseOperation _confirmOrderPurchaseOperation;
         private readonly IGetOrderLabelOperation _getOrderLabelOperation;
+        private readonly ICancelOrderOperation _cancelOrderOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
             IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
             IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation,
             IPurchaseLabelOperation purchaseLabelOperation, IConfirmOrderLabelPurchaseOperation confirmOrderLabelPurchaseOperation, IConfirmOrderPurchaseOperation confirmOrderPurchaseOperation,
-            IGetOrderLabelOperation getOrderLabelOperation) : base(handlersInitiator)
+            IGetOrderLabelOperation getOrderLabelOperation, ICancelOrderOperation cancelOrderOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -62,6 +63,7 @@ namespace Cook4Me.Api.Host.Controllers
             _confirmOrderLabelPurchaseOperation = confirmOrderLabelPurchaseOperation;
             _confirmOrderPurchaseOperation = confirmOrderPurchaseOperation;
             _getOrderLabelOperation = getOrderLabelOperation;
+            _cancelOrderOperation = cancelOrderOperation;
         }
 
 
@@ -216,6 +218,20 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return await _getOrderLabelOperation.Execute(subject, id);
+        }
+
+        [HttpGet(Constants.RouteNames.CancelOrder)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> CancelOrder(string id)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _cancelOrderOperation.Execute(subject, id);
         }
     }
 }

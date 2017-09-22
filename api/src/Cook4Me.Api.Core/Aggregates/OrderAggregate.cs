@@ -23,7 +23,8 @@ namespace Cook4Me.Api.Core.Aggregates
     {
         Created,
         Confirmed,
-        Received
+        Received,
+        Canceled
     }
 
     public enum OrderTransportModes
@@ -41,12 +42,14 @@ namespace Cook4Me.Api.Core.Aggregates
         public OrderAggregateStatus Status { get; set; }
         public OrderTransportModes TransportMode { get; set; }
         public string Subject { get; set; }
-        public string ShopId { get; set; }
         public string SellerId { get; set; }
-        public string ShipmentIdentificationNumber { get; set; }
+        public string ShopId { get; set; }
+        public string TrackingNumber { get; set; }
         public IEnumerable<OrderAggregateLine> OrderLines { get; set; }
         public OrderAggregateParcel OrderParcel { get; set; }
         public OrderAggregatePayment OrderPayment { get; set; }
         public double TotalPrice { get; set; }
+        public bool IsLabelPurchased { get; set; }
+        public double ShippingPrice { get; set; }
     }
 }

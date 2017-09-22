@@ -77,7 +77,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                     Password = _settingsProvider.GetUpsPassword(),
                     UserName = _settingsProvider.GetUpsUsername()
                 },
-                TrackingNumber = _settingsProvider.IsTstMode() ? "1Z12345E8791315509" : validationResult.Order.ShipmentIdentificationNumber
+                TrackingNumber = _settingsProvider.IsTstMode() ? "1Z12345E8791315509" : validationResult.Order.TrackingNumber
             });
 
             if (label.LabelResults == null || label.LabelResults.LabelImage == null)

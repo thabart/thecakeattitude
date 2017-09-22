@@ -24,6 +24,7 @@ using Cook4Me.Common;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Paypal.Client;
+using Paypal.Client.Common;
 using Paypal.Client.Params;
 using System;
 using System.Linq;
@@ -100,99 +101,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
-            var order = validationResult.Order; // 1. Confirm the UPS shippment.
-            var buyerName = validationResult.Payer.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;
-            var sellerName = validationResult.Seller.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;
-            var confirmShip = await _upsClient.ConfirmShip(new ConfirmShipParameter
-            {
-                Credentials = new UpsCredentials
-                {
-                    LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
-                    Password = _settingsProvider.GetUpsPassword(),
-                    UserName = _settingsProvider.GetUpsUsername()
-                },
-                AlternateDeliveryAddress = new UpsAlternateDeliveryAddressParameter
-                {
-                    Name = order.OrderParcel.ParcelShopName,
-                    Address = new UpsAddressParameter
-                    {
-                        AddressLine = order.OrderParcel.ParcelShopAddressLine,
-                        City = order.OrderParcel.ParcelShopCity,
-                        Country = order.OrderParcel.ParcelShopCountryCode,
-                        PostalCode = order.OrderParcel.ParcelShopPostalCode.ToString()
-                    }
-                },
-                Shipper = new UpsShipperParameter
-                {
-                    Name = buyerName,
-                    Address = new UpsAddressParameter
-                    {
-                        AddressLine = order.OrderParcel.BuyerAddressLine,
-                        City = order.OrderParcel.BuyerCity,
-                        Country = order.OrderParcel.BuyerCountryCode,
-                        PostalCode = order.OrderParcel.BuyerPostalCode.ToString()
-                    }
-                },
-                ShipFrom = new UpsShipParameter
-                {
-                    Name = buyerName,
-                    AttentionName = buyerName,
-                    CompanyName = buyerName,
-                    Address = new UpsAddressParameter
-                    {
-                        AddressLine = order.OrderParcel.BuyerAddressLine,
-                        City = order.OrderParcel.BuyerCity,
-                        Country = order.OrderParcel.BuyerCountryCode,
-                        PostalCode = order.OrderParcel.BuyerPostalCode.ToString()
-                    }
-                },
-                ShipTo = new UpsShipParameter
-                {
-                    Name = sellerName,
-                    AttentionName = sellerName,
-                    CompanyName = sellerName,
-                    Address = new UpsAddressParameter
-                    {
-                        AddressLine = order.OrderParcel.SellerAddressLine,
-                        City = order.OrderParcel.SellerCity,
-                        Country = order.OrderParcel.SellerCountryCode,
-                        PostalCode = order.OrderParcel.SellerPostalCode.ToString()
-                    }
-                },
-                Package = new UpsPackageParameter
-                {
-                    Length = order.OrderParcel.Length,
-                    Height = order.OrderParcel.Height,
-                    Weight = order.OrderParcel.Weight,
-                    Width = order.OrderParcel.Width
-                },
-                EmailAddress = "habarthierry@hotmail.fr",
-                UpsService = CommonBuilder.MappingBothUpsServices.First(kvp => kvp.Key == order.OrderParcel.UpsServiceCode).Value
-            });
-
-            if (confirmShip.Response.ResponseStatusCode == "0")
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Request, confirmShip.Response.Error.ErrorDescription);
-                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
-            }
-
-            var acceptUpsShipment = await _upsClient.AcceptShip(new AcceptShipParameter // 2. Accept UPS shipment.
-            {
-                Credentials = new UpsCredentials
-                {
-                    LicenseNumber = _settingsProvider.GetUpsLicenseNumber(),
-                    Password = _settingsProvider.GetUpsPassword(),
-                    UserName = _settingsProvider.GetUpsUsername()
-                },
-                ShipmentDigest = confirmShip.ShipmentDigest
-            });
-
-            if (acceptUpsShipment.Response.ResponseStatusCode == "0")
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Request, acceptUpsShipment.Response.Error.ErrorDescription);
-                return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
-            }
-                        
+            var order = validationResult.Order; // 1. Confirm the Paypal transaction.                        
             var token = await _paypalOauthClient.GetAccessToken(_settingsProvider.GetPaypalClientId(), _settingsProvider.GetPaypalClientSecret(),
                 new PaypalOauthClientOptions
                 {
@@ -205,12 +114,39 @@ namespace Cook4Me.Api.Host.Operations.Orders
             });
             if (!acceptedPayment.IsValid)
             {
-                // TODO : Cancel the Shippment.
                 var error = _responseBuilder.GetError(ErrorCodes.Request, acceptedPayment.ErrorResponse.Message);
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
-            command.ShipmentIdentificationNumber = acceptUpsShipment.ShipmentResults.ShipmentIdentificationNumber;
+            if (order.OrderPayment.PaymentMethod == OrderPayments.Paypal) // 2. Update the "buyer paypal transaction".
+            {
+                var transactionId = order.OrderPayment.TransactionId;
+                var newPrice = new JObject();
+                var newPriceDetails = new JObject();
+                newPriceDetails.Add("shipping", order.ShippingPrice);
+                newPrice.Add("total", order.TotalPrice + order.ShippingPrice);
+                newPrice.Add("currency", "EUR");
+                newPrice.Add("details", newPriceDetails);
+                var updatePayment = await _paypalClient.UpdatePayment(transactionId, new UpdatePaymentParameter
+                {
+                    AccessToken = token.AccessToken,
+                    JsonPatches = new[]
+                    {
+                        new JsonPatch
+                        {
+                            Operation = JsonPatchOperations.replace,
+                            Path = "/transactions/0/amount",
+                            Value = newPrice
+                        }
+                     }
+                });
+                if (!updatePayment.IsValid)
+                {
+                    var error = _responseBuilder.GetError(ErrorCodes.Request, updatePayment.ErrorResponse.Message);
+                    return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
+                }
+            } 
+
             _commandSender.Send(command);
             return new OkResult();
         }

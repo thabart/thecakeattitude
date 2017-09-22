@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using System.Collections.Generic;
 using System.Xml.Serialization;
 using Ups.Client.Common;
 
@@ -29,5 +30,7 @@ namespace Ups.Client.Responses.Rating
         public RatingCharges ServiceOptionsCharges { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.RatedShipmentNames.TotalCharges)]
         public RatingCharges TotalCharges { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.RatedShipmentNames.RatedShipmentWarning)]
+        public List<string> RatedShipmentWarning { get; set; }
     }
 }

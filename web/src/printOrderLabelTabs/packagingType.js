@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
-import { FormGroup, Input, Label, FormFeedback } from 'reactstrap';
+import { FormGroup, Input, Label, FormFeedback, Alert } from 'reactstrap';
 import { PrintOrderLabelStore, ApplicationStore } from '../stores/index';
 import { ParcelSize } from '../components/index';
 import { UpsService } from '../services/index';
@@ -29,7 +29,8 @@ class PackagingType extends Component {
         isHeightInvalid: false
       },
       estimatedPrice: 0,
-      isUpdatePriceEnabled: false
+      isUpdatePriceEnabled: false,
+      warningMessages: []
     };
   }
 
@@ -81,6 +82,7 @@ class PackagingType extends Component {
     UpsService.searchRatings(request).then(function(res) {
       order.package.parcel = request.package;
       order.package.estimated_price = res['total_price'];
+      // TODO: Display the warning messages.
       AppDispatcher.dispatch({
         actionName: Constants.events.UPDATE_ORDER_LABEL_ACT,
         data: order
@@ -88,7 +90,8 @@ class PackagingType extends Component {
       self.setState({
         isLoading: false,
         estimatedPrice: res['total_price'],
-        isUpdatePriceEnabled: false
+        warningMessages: res['messages'],
+        isUpdatePriceEnabled: false,
       });
     }).catch(function() {
       ApplicationStore.sendMessage({
@@ -98,7 +101,8 @@ class PackagingType extends Component {
       });
       self.setState({
         isLoading: false,
-        estimatedPrice: 0
+        estimatedPrice: 0,
+        warningMessages: [ ]
       });
     });
   }
@@ -140,9 +144,21 @@ class PackagingType extends Component {
 
   render() { // Display the component.
     const {t} = this.props;
+    var warningMessages = [];
+    if (this.state.warningMessages && this.state.warningMessages.length > 0) {
+      this.state.warningMessages.forEach(function(warningMessage) {
+        warningMessages.push((<li>{warningMessage}</li>));
+      });
+    }
+
     return (<div>
       { this.state.isLoading && (<i className='fa fa-spinner fa-spin'></i>) }
       <div className={this.state.isLoading && "hidden"}>
+        { warningMessages.length > 0 && (
+          <Alert color="warning" style={{margin: "10px"}}>
+            <ul>{warningMessages}</ul>
+          </Alert>
+        ) }
         <div style={{padding: "10px"}}>
           <p>{t('packagingTypeDescription')}</p>
           <ParcelSize ref="parcelSize" isEditable={true} onValueChange={this.valueChange} />

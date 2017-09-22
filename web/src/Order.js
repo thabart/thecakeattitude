@@ -233,16 +233,15 @@ class Order extends Component {
                       { this.state.isPaypalLoading ? (t('loginPaypalProcessing')) : (t('buyWithPaypal')) }
                     </button>
                   ) }
-                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.shipment_identification_number && (
+                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && !this.state.order.is_label_purchased && (
                     <button className="btn btn-default" onClick={this.downloadLabel}>{t('downloadLabel')}</button>
                   ) }
-                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && !this.state.order.shipment_identification_number && (
+                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isSeller && this.state.order.is_label_purchased && (
                     <NavLink to={'/printlabel/' + this.state.order.id } className="btn btn-default">{t('buyLabel')}</NavLink>
                   ) }
                 </div>
                </section>
             </div>
-          ) }
         </MainLayout>
       );
     }

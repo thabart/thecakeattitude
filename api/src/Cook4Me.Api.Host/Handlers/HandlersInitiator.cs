@@ -91,6 +91,7 @@ namespace Cook4Me.Api.Host.Handlers
                 _bus.RegisterHandler<OrderReceivedEvent>(_orderEventsHandler.Handle);
                 _bus.RegisterHandler<OrderTransactionApprovedEvent>(_orderEventsHandler.Handle);
                 _bus.RegisterHandler<OrderLabelPurchasedEvent>(_orderEventsHandler.Handle);
+                _bus.RegisterHandler<OrderCanceledEvent>(_orderEventsHandler.Handle);
                 _isInitiated = true;
             }
         }

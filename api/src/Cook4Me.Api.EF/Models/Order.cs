@@ -31,7 +31,9 @@ namespace Cook4Me.Api.EF.Models
         public string Subject { get; set; }
         public string ShopId { get; set; }
         public double TotalPrice { get; set; }
-        public string ShipmentIdentificationNumber { get; set; }
+        public double ShippingPrice { get; set; }
+        public string TrackingNumber { get; set; }
+        public bool IsLabelPurchased { get; set; }
         public virtual ICollection<OrderLine> OrderLines { get; set; }
         public virtual OrderParcel OrderParcel { get; set; }
         public virtual Shop Shop { get; set; }

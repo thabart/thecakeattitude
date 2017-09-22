@@ -29,6 +29,7 @@ class Summary extends Component {
   constructor(props) {
     super(props);
     this._paypalOpened = false;
+    this._confirmingPurchase = false;
     this._windowPaypal = null;
     this.previous = this.previous.bind(this);
     this.refresh = this.refresh.bind(this);
@@ -55,7 +56,9 @@ class Summary extends Component {
 
   buy() { // Buy the label.
     var self = this;
+    if (self._confirmingPurchase) return;
     if (self._windowPaypal && self._windowPaypal.isClosed == false) return;
+    const {t} = self.props;
     var order = PrintOrderLabelStore.getOrder();
     var request = {
       package: order.package.parcel
@@ -63,7 +66,10 @@ class Summary extends Component {
     self.setState({
       isPaypalLoading: true
     });
-    const {t} = self.props;
+    ApplicationStore.displayLoading({
+      display: true,
+      message: t('confirmOrderLabelPurchaseSpinnerMessage')
+    });
     OrdersService.purchaseLabel(order.id, request).then(function(r) {
       var approvalUrl = r['approval_url'];
       self._windowPaypal = window.open(approvalUrl, 'targetWindow', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
@@ -72,6 +78,16 @@ class Summary extends Component {
           if (isProcessing) return;
           if (self._windowPaypal.closed) {
               clearInterval(interval);
+              if (self._confirmingPurchase) {
+                return;
+              }
+              
+              ApplicationStore.displayLoading({
+                display: false,
+              });
+              self.setState({
+                isPaypalLoading: false
+              });
               return;
           }
 
@@ -95,7 +111,9 @@ class Summary extends Component {
             self.setState({
               isPaypalLoading: false
             });
-            self._windowPaypal.close();
+            ApplicationStore.displayLoading({
+              display: false,
+            });
           }).catch(function(e) {
             var errorMsg = t('orderPurchaseLabelError');
             if (e.responseJSON && e.responseJSON.error_description) {
@@ -109,7 +127,12 @@ class Summary extends Component {
               level: 'error',
               position: 'tr'
             });
+            ApplicationStore.displayLoading({
+              display: false,
+            });
           });
+          self._windowPaypal.close();
+          self._confirmingPurchase = true;
       });
     }).catch(function(e) {
       const {t} = self.props;
@@ -117,13 +140,17 @@ class Summary extends Component {
       if (e.responseJSON && e.responseJSON.error_description) {
         errorMsg = e.responseJSON.error_description;
       }
-      self.setState({
-        isPaypalLoading: false
-      });
+
       ApplicationStore.sendMessage({
         message: errorMsg,
         level: 'error',
         position: 'tr'
+      });
+      ApplicationStore.displayLoading({
+        display: false,
+      });
+      self.setState({
+        isPaypalLoading: false
       });
     });
   }

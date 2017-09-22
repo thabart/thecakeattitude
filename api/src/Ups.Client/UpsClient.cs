@@ -31,10 +31,12 @@ using Ups.Client.Params.Shipment;
 using Ups.Client.Requests.LabelRecovery;
 using Ups.Client.Requests.Rating;
 using Ups.Client.Requests.Shipment;
+using Ups.Client.Requests.Void;
 using Ups.Client.Responses.LabelRecovery;
 using Ups.Client.Responses.Locator;
 using Ups.Client.Responses.Rating;
 using Ups.Client.Responses.Ship;
+using Ups.Client.Responses.Void;
 
 namespace Ups.Client
 {
@@ -45,6 +47,7 @@ namespace Ups.Client
         Task<ShipmentConfirmResponse> ConfirmShip(ConfirmShipParameter parameter);
         Task<ShipmentAcceptResponse> AcceptShip(AcceptShipParameter parameter);
         Task<LabelRecoveryResponse> GetLabel(GetLabelParameter parameter);
+        Task<VoidShipmentResponse> Cancel(string shipmentIdentificationNumber, UpsCredentials credentials);
     }
 
     internal class UpsClient : IUpsClient
@@ -56,6 +59,7 @@ namespace Ups.Client
         private string _shipConfirmUrl;
         private string _labelRecovery;
         private string _shipAcceptUrl;
+        private string _voidUrl;
         private Dictionary<UpsServices, string> _mappingServices = new Dictionary<UpsServices, string>
         {
             { UpsServices.UpsStandard, "011" },
@@ -72,6 +76,79 @@ namespace Ups.Client
             _shipConfirmUrl = $"{baseUrl}/ups.app/xml/ShipConfirm";
             _labelRecovery = $"{baseUrl}/ups.app/xml/LabelRecovery";
             _shipAcceptUrl = $"{baseUrl}/ups.app/xml/ShipAccept";
+            _voidUrl = $"{baseUrl}/ups.app/xml/Void";
+        }
+
+        public async Task<VoidShipmentResponse> Cancel(string shipmentIdentificationNumber, UpsCredentials credentials)
+        {
+            if (shipmentIdentificationNumber == null)
+            {
+                throw new ArgumentNullException(nameof(shipmentIdentificationNumber));
+            }
+
+            if (credentials == null)
+            {
+                throw new ArgumentNullException(nameof(credentials));
+            }
+            
+            var client = _httpClientFactory.GetHttpClient();
+            var security = new AccessRequestType
+            {
+                AccessLicenseNumber =credentials.LicenseNumber,
+                Password = credentials.Password,
+                UserId = credentials.UserName
+            };
+            var request = new VoidShipmentRequest
+            {
+                Request = new RequestType
+                {
+                    RequestAction = "1",
+                    TransactionReferenceType = new TransactionReference
+                    {
+                        CustomerContext = "Your Test Case Summary Description",
+                        XpciVersion = "1.0014"
+                    }
+                },
+                ShipmentIdentificationNumber = shipmentIdentificationNumber
+            };
+
+            var serializerSecurity = new XmlSerializer(typeof(AccessRequestType));
+            var serializerBody = new XmlSerializer(typeof(VoidShipmentRequest));
+            var xmlSecurity = "";
+            var xmlBody = "";
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerSecurity.Serialize(writer, security);
+                    xmlSecurity = sww.ToString();
+                }
+            }
+
+            using (var sww = new StringWriter())
+            {
+                using (var writer = XmlWriter.Create(sww))
+                {
+                    serializerBody.Serialize(writer, request);
+                    xmlBody = sww.ToString();
+                }
+            }
+
+            var xml = xmlSecurity + "" + xmlBody;
+            var body = new StringContent(xml);
+            var req = new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                Content = body,
+                RequestUri = new Uri(_voidUrl)
+            };
+            var serializedContent = await client.SendAsync(req).ConfigureAwait(false);
+            var res = await serializedContent.Content.ReadAsStringAsync();
+            var deserializer = new XmlSerializer(typeof(LocatorResponse));
+            using (TextReader reader = new StringReader(res))
+            {
+                return (VoidShipmentResponse)deserializer.Deserialize(reader);
+            }
         }
 
         public async Task<LocatorResponse> GetLocations(GetLocationsParameter parameter)

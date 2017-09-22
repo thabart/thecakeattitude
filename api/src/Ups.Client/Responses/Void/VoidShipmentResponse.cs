@@ -14,16 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Bus;
-using Cook4Me.Common;
+using System.Xml.Serialization;
+using Ups.Client.Common;
 
-namespace Cook4Me.Api.Core.Commands.Orders
+namespace Ups.Client.Responses.Void
 {
-    public class PurchaseOrderLabelCommand : Command
+    public class VoidShipmentResponse
     {
-        public string OrderId { get; set; }
-        public ParcelSize ParcelSize { get; set; }
-        public string TrackingNumber { get; set; }
-        public double ShippingPrice { get; set; }
+        [XmlElement(ElementName = Constants.DtoNames.VoidShipmentResponseNames.Response)]
+        public ResponseBody Response { get; set; }
     }
 }

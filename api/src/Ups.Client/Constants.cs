@@ -23,6 +23,17 @@ namespace Ups.Client
 
         public static class DtoNames
         {
+            public static class VoidShipmentResponseNames
+            {
+                public const string Response = "Response";
+            }
+
+            public static class VoidShipmentRequestNames
+            {
+                public const string Request = "Request";
+                public const string ShipmentIdentificationNumber = "ShipmentIdentificationNumber";
+            }
+
             public static class PackageResultsNames
             {
                 public const string TrackingNumber = "TrackingNumber";
@@ -151,6 +162,7 @@ namespace Ups.Client
                 public const string TransportationCharges = "TransportationCharges";
                 public const string ServiceOptionsCharges = "ServiceOptionsCharges";
                 public const string TotalCharges = "TotalCharges";
+                public const string RatedShipmentWarning = "RatedShipmentWarning";
             }
 
             public static class RatingChargesNames
