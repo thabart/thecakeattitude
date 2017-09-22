@@ -448,5 +448,9 @@
   "confirmOrderSpinnerMessage": "Confirming the order ...",
   "yourAddressTooltipInformation": "Address where the parcel will be delivered",
   "shopAddressTooltipInformation": "Address where the parcel is coming from",
-  "chooseTheoricalPacketSizeTooltipInformation": "Calculation of the price is based on the maximum size of a parcel (Width : 80cm, Height : 35cm, Length: 50cm)"
+  "chooseTheoricalPacketSizeTooltipInformation": "Calculation of the price is based on the maximum size of a parcel (Width : 80cm, Height : 35cm, Length: 50cm)",
+  "processingPayment" : "Processing payment ...",
+  "information": "Information",
+  "products": "Products",
+  "retrieveOrderError": "An error occured while trying to retrieve the order, please contact the administrator"
 }

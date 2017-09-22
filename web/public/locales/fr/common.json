@@ -447,5 +447,9 @@
   "confirmOrderSpinnerMessage": "Confirmation de la commande ...",
   "yourAddressTooltipInformation": "Adresse où le colis sera livré",
   "shopAddressTooltipInformation": "Adresse d'où le colis est envoyé",
-  "chooseTheoricalPacketSizeTooltipInformation": "Le calcul du prix se base sur la taille maximum d'un colis (Largeur : 80cm, Hauteur : 35cm, Longueur: 50cm)"
+  "chooseTheoricalPacketSizeTooltipInformation": "Le calcul du prix se base sur la taille maximum d'un colis (Largeur : 80cm, Hauteur : 35cm, Longueur: 50cm)",
+  "processingPayment": "Traitement du paiement ...",
+  "information": "Information",
+  "products": "Produits",
+  "retrieveOrderError": "Une erreur est survenue lors de la récupération de la commande, veuillez prendre contact avec l'administrateur"
 }
