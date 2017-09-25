@@ -1,6 +1,7 @@
 var Game = function () {
 	this.map = null;
 	this.cursors = null;
+	this.editButton = null;
 	this.socket = null;
 	this.isFocusLost = false;
 	this.preventUpdate = false;
@@ -104,6 +105,7 @@ Game.prototype = {
 		self.map.setCurrentPlayer(playerPosition.x, playerPosition.y, GameStateStore.getUser().name);
 
 		self.cursors = self.game.input.keyboard.createCursorKeys();
+		self.editButton = self.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 		// Connect to socket server
 		self.socket = io(Constants.socketServer).connect();
 		self.socket.on('connect', function() {
@@ -151,6 +153,17 @@ Game.prototype = {
 		var self = this;
 		try {
 			if (!this.map.currentPlayer || !this.map.layers.collision || this.preventUpdate) return;
+			// Edit the shop.
+			this.map.updateEdit();
+			if (self.game.input.mousePointer.isDown) {
+				self.map.addFurniture();
+			}
+			/*
+			if (this.editButton.isDown) {
+				this.map.updateEdit();
+			}
+			*/
+
 			// Check collisions.
 			this.map.players.forEach(function(p) {
 				if (!self.game.physics.arcade.collide(p.sprite, self.map.layers.collision)) {

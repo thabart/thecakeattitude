@@ -32,7 +32,6 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 		self.layers.furnitures = self.tileMap.createLayer('Furnitures');
 		self.layers.decorations = self.tileMap.createLayer('Decorations');
 		// Add overview image
-		// self.addNpcsGroup();
 		var npcObjs = self.getNpcObjs(); // Add NPCS.
     self.groups.npcs = self.game.add.group();
 		if (npcObjs) {
@@ -73,6 +72,10 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 				console.log('shop has been updated');
 			}
 		});
+
+		var shopSectionImage = game.cache.getImage('takenShopSection'); // Add shop section marker.
+		self.marker = game.add.sprite(0, 0, 'takenShopSection');
+    self.marker.animations.add('stay');
   },
 	getDefaultPlayerCoordinate: function() {
 		var self = this;
@@ -86,9 +89,19 @@ ShopMap.prototype = $.extend({}, BaseMap.prototype, {
 			return self.getEntryWarpCoordinate();
 		}
 	},
+	updateEdit: function() { // Update the edit mode.
+		var self = this;
+    self.marker.x = self.layers.ground.getTileX(self.game.input.activePointer.worldX) * 32;
+    self.marker.y = self.layers.ground.getTileY(self.game.input.activePointer.worldY) * 32;
+	},
+	addFurniture() { // Add the furniture.
+		var self = this;
+		var shopSectionImage = self.game.cache.getImage('takenShopSection');
+		var furniture = self.game.add.sprite(self.marker.x, self.marker.y, 'takenShopSection');
+		furniture.animations.add('stay');
+	},
 	destroy: function() {
 		var self = this;
 		self.commonDestroy();
-
 	}
 });
