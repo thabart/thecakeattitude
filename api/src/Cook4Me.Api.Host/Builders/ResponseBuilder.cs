@@ -39,6 +39,8 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetPaypalPayment(CreatePaymentResponse response);
+        JObject GetPaypalItem(PaypalItem paypalItem);
         JObject GetOrderCanceled(OrderCanceledEvent evt);
         JObject GetOrderLabelPurchased(OrderLabelPurchasedEvent evt);
         JObject GetUpsService(UpsServiceAggregate service);
@@ -106,6 +108,56 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetPaypalPayment(CreatePaymentResponse response)
+        {
+            if (response == null)
+            {
+                throw new ArgumentNullException(nameof(response));
+            }
+
+            var obj = new JObject();
+            if (response.Transactions != null && response.Transactions.Any())
+            {
+                var transaction = response.Transactions.First();
+                obj.Add(Constants.DtoNames.OrderPaymentDetails.Total, transaction.Total);
+                obj.Add(Constants.DtoNames.OrderPaymentDetails.SubTotal, transaction.SubTotal);
+                var kvpState = CommonBuilder.MappingPayPalPaymentStatus.FirstOrDefault(kvp => kvp.Key == response.State);
+                if (!kvpState.Equals(default(KeyValuePair<PaymentStates, string>)))
+                {
+                    obj.Add(Constants.DtoNames.OrderPaymentItemDetails.State, kvpState.Value);
+                }
+
+                obj.Add(Constants.DtoNames.OrderPaymentDetails.ShippingPrice, transaction.Shipping);
+                var items = new JArray();
+                if (transaction.Items != null)
+                {
+                    foreach(var item in transaction.Items)
+                    {
+                        items.Add(GetPaypalItem(item));
+                    }
+                }
+
+                obj.Add(Constants.DtoNames.OrderPaymentDetails.Items, items);
+            }
+
+            return obj;
+        }
+
+        public JObject GetPaypalItem(PaypalItem paypalItem)
+        {
+            if (paypalItem == null)
+            {
+                throw new ArgumentNullException(nameof(paypalItem));
+            }
+
+            var obj = new JObject();
+            obj.Add(Constants.DtoNames.OrderPaymentItemDetails.Description, paypalItem.Description);
+            obj.Add(Constants.DtoNames.OrderPaymentItemDetails.Name, paypalItem.Name);
+            obj.Add(Constants.DtoNames.OrderPaymentItemDetails.Price, paypalItem.Price);
+            obj.Add(Constants.DtoNames.OrderPaymentItemDetails.Quantity, paypalItem.Quantity);
+            return obj;
+        }
+
         public JObject GetOrderCanceled(OrderCanceledEvent evt)
         {
             if (evt == null)

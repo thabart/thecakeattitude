@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { NavLink } from "react-router-dom";
+import { ApplicationStore } from '../stores/index';
 import { ShopsService, UserService } from '../services/index';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import Promise from "bluebird";
@@ -79,6 +80,9 @@ class Information extends Component {
       return (<div className="container"><i className="fa fa-spinner fa-spin"></i></div>);
     }
 
+
+    var sub = ApplicationStore.getUser().sub;
+    var isBuyer = self.state.order && self.state.order.subject === sub;
     return (<div className="row">
       <div className="col-md-5">
         { /* Display buyer */ }
@@ -106,7 +110,7 @@ class Information extends Component {
         { /* Display payment */ }
         { self.state.order.transport_mode === 'packet' && self.state.order.payment && (
           <section>
-            <h5>{t('payment')}</h5>
+            <h5>{t('payment')} { isBuyer && (<NavLink to={"/payment/" + self.state.order.id} className="no-decoration red"><i className="fa fa-link"></i></NavLink>) }</h5>
             { self.state.order.payment.payment_method === 'paypal' && (<img src="/images/paypal.png" width="50" />) }
             <p><span className="badge badge-default">{t('payment_status_' + self.state.order.payment.status)}</span></p>
           </section>

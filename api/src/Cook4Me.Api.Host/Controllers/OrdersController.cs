@@ -43,13 +43,14 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IConfirmOrderPurchaseOperation _confirmOrderPurchaseOperation;
         private readonly IGetOrderLabelOperation _getOrderLabelOperation;
         private readonly ICancelOrderOperation _cancelOrderOperation;
+        private readonly IGetPaymentDetailsOperation _getPaymentDetailsOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
             IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
             IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation,
             IPurchaseLabelOperation purchaseLabelOperation, IConfirmOrderLabelPurchaseOperation confirmOrderLabelPurchaseOperation, IConfirmOrderPurchaseOperation confirmOrderPurchaseOperation,
-            IGetOrderLabelOperation getOrderLabelOperation, ICancelOrderOperation cancelOrderOperation) : base(handlersInitiator)
+            IGetOrderLabelOperation getOrderLabelOperation, ICancelOrderOperation cancelOrderOperation, IGetPaymentDetailsOperation getPaymentDetailsOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -64,6 +65,7 @@ namespace Cook4Me.Api.Host.Controllers
             _confirmOrderPurchaseOperation = confirmOrderPurchaseOperation;
             _getOrderLabelOperation = getOrderLabelOperation;
             _cancelOrderOperation = cancelOrderOperation;
+            _getPaymentDetailsOperation = getPaymentDetailsOperation;
         }
 
 
@@ -233,9 +235,8 @@ namespace Cook4Me.Api.Host.Controllers
 
             return await _cancelOrderOperation.Execute(id, subject);
         }
-
-        /*
-        [HttpGet(Constants.RouteNames.CancelOrder)]
+        
+        [HttpGet(Constants.RouteNames.GetPaymentDetails)]
         [Authorize("Connected")]
         public async Task<IActionResult> GetPaymentDetails(string id)
         {
@@ -246,8 +247,7 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            return null;
+            return await _getPaymentDetailsOperation.Execute(id, subject);
         }
-        */
     }
 }

@@ -81,10 +81,29 @@ namespace Cook4Me.Api.Host
             public const string ConfirmLabel = "{id}/label/confirm";
             public const string GetLabel = "{id}/label";
             public const string CancelOrder = "{id}/cancel";
+            public const string GetPaymentDetails = "{id}/paymentdetails";
         }
 
         public static class DtoNames
         {
+            public static class OrderPaymentDetails
+            {
+                public const string ShippingPrice = "shipping_price";
+                public const string SubTotal = "sub_total";
+                public const string Total = "total";
+                public const string State = "state";
+                public const string Items = "items";
+            }
+
+            public static class OrderPaymentItemDetails
+            {
+                public const string Name = "name";
+                public const string Description = "description";
+                public const string Quantity = "quantity";
+                public const string Price = "price";
+                public const string State = "state";
+            }
+
             public static class PurchaseOrderLabelNames
             {
                 public const string Package = "package";

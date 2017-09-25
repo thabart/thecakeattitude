@@ -466,5 +466,7 @@
   "cancelOrderLabelPurchaseSpinnerMessage": "Canceling the order ...",
   "orderCancelLabelError": "Une erreur est survenue lors de l'annulation de la commande du label, veuillez prendre contact avec l'administrateur",
   "status_canceled": "Annulé",
-  "order_label_canceled": "Une commande a été annulée"
+  "order_label_canceled": "Une commande a été annulée",
+  "paymentDetailsTitle": "Détails du paiement",
+  "orderPaymentDetailsError": "Une erreur est survenue lors de la récupération des détails de paiement, veuillez prendre contact avec l'administrateur"
 }

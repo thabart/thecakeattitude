@@ -38,6 +38,11 @@ namespace Cook4Me.Api.Host.Hubs
             }
 
             var subject = user.GetSubject();
+            if (string.IsNullOrWhiteSpace(subject))
+            {
+                return Task.FromResult(0);
+            }
+
             Connections.Add(subject, Context.ConnectionId);
             return base.OnConnected();
         }
@@ -51,6 +56,11 @@ namespace Cook4Me.Api.Host.Hubs
             }
 
             var subject = user.GetSubject();
+            if (string.IsNullOrWhiteSpace(subject))
+            {
+                return Task.FromResult(0);
+            }
+
             Connections.Remove(subject, Context.ConnectionId);
             return base.OnDisconnected(stopCalled);
         }

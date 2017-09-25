@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Repositories;
 using System;
 using System.Threading.Tasks;
@@ -27,7 +28,21 @@ namespace Cook4Me.Api.Host.Validators
 
     public class GetPaymentDetailsValidationResult
     {
+        public GetPaymentDetailsValidationResult(OrderAggregate order)
+        {
+            Order = order;
+            IsValid = true;
+        }
 
+        public GetPaymentDetailsValidationResult(string message)
+        {
+            IsValid = false;
+            Message = message;
+        }
+
+        public bool IsValid { get; private set; }
+        public string Message { get; private set; }
+        public OrderAggregate Order { get; set; }
     }
 
     internal class GetPaymentDetailsValidator : IGetPaymentDetailsValidator
@@ -39,9 +54,35 @@ namespace Cook4Me.Api.Host.Validators
             _orderRepository = orderRepository;
         }
 
-        public Task<GetPaymentDetailsValidationResult> Validate(string id, string subject)
+        public async Task<GetPaymentDetailsValidationResult> Validate(string orderId, string subject)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(orderId))
+            {
+                throw new ArgumentNullException(nameof(orderId));
+            }
+
+            if (string.IsNullOrWhiteSpace(subject))
+            {
+                throw new ArgumentNullException(nameof(subject));
+            }
+
+            var record = await _orderRepository.Get(orderId);
+            if (record == null)
+            {
+                return new GetPaymentDetailsValidationResult(ErrorDescriptions.TheOrderDoesntExist);
+            }
+
+            if (record.Subject != subject)
+            {
+                return new GetPaymentDetailsValidationResult(ErrorDescriptions.TheOrderPaymentDetailsCanBeUploadByTheBuyer);
+            }
+
+            if (record.OrderPayment == null || string.IsNullOrWhiteSpace(record.OrderPayment.Id))
+            {
+                return new GetPaymentDetailsValidationResult(ErrorDescriptions.TheOrderPaymentDoesntExist);
+            }
+
+            return new GetPaymentDetailsValidationResult(record);
         }
     }
 }

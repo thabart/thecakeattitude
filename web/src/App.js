@@ -21,6 +21,7 @@ import Messages from './Messages';
 import Message from './Message';
 import NewMessage from './NewMessage';
 import Basket from './Basket';
+import Payment from './Payment';
 import { SessionService, UserService } from "./services/index";
 import Constants from '../Constants';
 import Error from "./Error";
@@ -333,6 +334,7 @@ class App extends Component {
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                 <Route path='/printlabel/:id' render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<PrintOrderLabel />))}/>
                 <Route path="/orders/:id/:action?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Order />))}/>
+                <Route path="/payment/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Payment />))}/>
                 <Route path="/basket" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Basket />))}/>
                 <Route path="/addservice/:id"
                        render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddService />))}/>

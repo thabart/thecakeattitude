@@ -276,6 +276,60 @@ namespace Paypal.Client
                 result.Links = links;
             }
 
+            var transactionsObj = jObj.GetValue("transactions") as JArray;
+            if (transactionsObj != null)
+            {
+                var transactions = new List<PaymentTransaction>();
+                foreach(var transactionObj in transactionsObj)
+                {
+                    transactions.Add(ToPaymentTransaction(transactionObj as JObject));
+                }
+
+                result.Transactions = transactions;
+            }
+
+            return result;
+        }
+
+        private static PaymentTransaction ToPaymentTransaction(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+            
+            var amount = jObj.GetValue("amount") as JObject;
+            var amountDetails = amount.GetValue("details") as JObject;
+            var itemList = jObj.GetValue("item_list") as JObject;
+            var items = itemList.GetValue("items") as JArray;
+            var paypalItems = new List<PaypalItem>();
+            var result = new PaymentTransaction
+            {
+                Total = amount.Value<double>("total"),
+                SubTotal = amountDetails.Value<double>("subtotal"),
+                Tax = amountDetails.Value<double>("tax"),
+                Shipping = amountDetails.Value<double>("shipping"),
+                HandlingFee = amountDetails.Value<double>("handling_fee"),
+                ShippingDiscount = amountDetails.Value<double>("shipping_discount"),
+                Description = jObj.Value<string>("description")
+            };
+
+            if (items != null)
+            {
+                foreach (var item in items)
+                {
+                    var paypalItem = new PaypalItem
+                    {
+                        Name = item.Value<string>("name"),
+                        Description = item.Value<string>("description"),
+                        Price = item.Value<double>("price"),
+                        Quantity = item.Value<int>("quantity")
+                    };
+                    paypalItems.Add(paypalItem);
+                }
+            }
+
+            result.Items = paypalItems;
             return result;
         }
 

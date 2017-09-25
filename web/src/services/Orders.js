@@ -222,5 +222,22 @@ module.exports = {
           });
         });
       });
+    },
+    getPaymentDetails: function(orderId) { // Get the payment details.
+      var accessToken = Session.getSession().access_token;
+      return new Promise(function(resolve, reject) {
+        ConfigurationService.get().then(function(configuration) {
+          $.ajax(configuration.orders_endpoint + '/' + orderId + '/paymentdetails', {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + accessToken
+            }
+          }).then(function(r) {
+            resolve(r);
+          }).fail(function(e) {
+            reject(e);
+          });
+        });
+      });
     }
 };
