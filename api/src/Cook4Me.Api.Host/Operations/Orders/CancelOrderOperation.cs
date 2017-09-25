@@ -14,19 +14,18 @@
 // limitations under the License.
 #endregion
 
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System;
-using Cook4Me.Api.Host.Validators;
-using Cook4Me.Api.Host.Helpers;
-using Cook4Me.Api.Host.Builders;
-using Paypal.Client;
-using Cook4Me.Common;
 using Cook4Me.Api.Core.Bus;
+using Cook4Me.Api.Core.Commands.Orders;
+using Cook4Me.Api.Host.Builders;
+using Cook4Me.Api.Host.Helpers;
+using Cook4Me.Api.Host.Validators;
+using Cook4Me.Common;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
+using System.Threading.Tasks;
 using Ups.Client;
 using Ups.Client.Params;
-using Cook4Me.Api.Core.Commands.Orders;
 
 namespace Cook4Me.Api.Host.Operations.Orders
 {

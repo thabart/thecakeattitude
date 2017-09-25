@@ -462,5 +462,10 @@
   "notYetPurchased": "Not yet purchased",
   "shippingPrice": "Shipping price € {0}",
   "order_label_purchased": "The order label has been purchased",
-  "purchaseOrderSpinnerMessage": "Purchasing the label ..."
+  "purchaseOrderSpinnerMessage": "Purchasing the label ...",
+  "confirmPurchaseLabel": "Do-you confirm to purchase the label € {0}",
+  "cancelOrderLabelPurchaseSpinnerMessage": "Canceling the order ...",
+  "orderCancelLabelError": "An error occured while trying to cancel the order, please contact the administrator",
+  "status_canceled": "Canceled",
+  "order_label_canceled": "An order has been canceled"
 }

@@ -231,9 +231,10 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-            return await _cancelOrderOperation.Execute(subject, id);
+            return await _cancelOrderOperation.Execute(id, subject);
         }
 
+        /*
         [HttpGet(Constants.RouteNames.CancelOrder)]
         [Authorize("Connected")]
         public async Task<IActionResult> GetPaymentDetails(string id)
@@ -247,5 +248,6 @@ namespace Cook4Me.Api.Host.Controllers
 
             return null;
         }
+        */
     }
 }

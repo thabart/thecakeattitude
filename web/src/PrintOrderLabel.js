@@ -14,6 +14,7 @@ class PrintOrderLabel extends Component {
   constructor(props) {
     super(props);
     this._waitForToken  = null;
+    this._paymentTab = null;
     this.refresh = this.refresh.bind(this);
     this.toggle = this.toggle.bind(this);
     this.state = {
@@ -110,11 +111,13 @@ class PrintOrderLabel extends Component {
             <TabPane tabId="2" className={this.state.isLoading ? 'hidden' : ''}>
               <SummaryTab ref="summary" onPrevious={() => self.toggle('1')} onNext={() => {
                 self.toggle('3');
+                console.log(self._paymentTab);
+                self._paymentTab.display();
               }} />
             </TabPane>
             {/* Display payment */}
             <TabPane tabId="3" className={this.state.isLoading ? 'hidden' : ''}>
-              <PaymentTab ref="payment" onPrevious={() => self.toggle('2')} />
+              <PaymentTab ref={(r) => { if (r) { self._paymentTab  = r.getWrappedInstance(); }}} onPrevious={() => self.toggle('2')} history={self.props.history} />
             </TabPane>
           </TabContent>
       </div>

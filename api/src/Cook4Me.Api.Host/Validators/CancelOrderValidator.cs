@@ -72,7 +72,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new CancelOrderValidationResult(ErrorDescriptions.TheOrderDoesntExist);
             }
 
-            if (order.Subject != subject)
+            if (order.SellerId != subject)
             {
                 return new CancelOrderValidationResult(ErrorDescriptions.TheOrderCannotBeCanceledByYou);
             }

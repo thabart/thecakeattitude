@@ -18,7 +18,6 @@ class ManageOrders extends Component {
     this._page = '1';
     this._waitForToken = null;
     this._common_id = null;
-    // var sub = ApplicationStore.getUser().sub;
     this._request = {
       count: defaultCount,
       start_index: 0,

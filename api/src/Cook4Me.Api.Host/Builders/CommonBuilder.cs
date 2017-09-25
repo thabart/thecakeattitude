@@ -65,7 +65,8 @@ namespace Cook4Me.Api.Host.Builders
         {
             { OrderAggregateStatus.Created, "created" },
             { OrderAggregateStatus.Confirmed, "confirmed" },
-            { OrderAggregateStatus.Received, "received" }
+            { OrderAggregateStatus.Received, "received" },
+            { OrderAggregateStatus.Canceled, "canceled" }
         };
 
         public static Dictionary<OrderTransportModes, string> MappingOrderTransportModes = new Dictionary<OrderTransportModes, string>

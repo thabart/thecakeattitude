@@ -56,21 +56,6 @@ module.exports = {
              }
           };
           xhr.send(null);
-          /*
-          $.ajax(configuration.orders_endpoint + '/' + id + '/label', {
-            method: 'GET',
-            headers: {
-              'Authorization': 'Bearer ' + accessToken
-            },
-            responseType:'arraybuffer',
-            processData: false
-          }).then(function(r) {
-            console.log('coucou');
-            resolve(r);
-          }).fail(function(e) {
-            reject(e);
-          });
-          */
         });
       });
     },
@@ -220,5 +205,22 @@ module.exports = {
                 });
             });
         });
+    },
+    cancelLabel: function(orderId) { // Cancel the label purchase.
+      var accessToken = Session.getSession().access_token;
+      return new Promise(function(resolve, reject) {
+        ConfigurationService.get().then(function(configuration) {
+          $.ajax(configuration.orders_endpoint + '/' + orderId + '/cancel', {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + accessToken
+            }
+          }).then(function(r) {
+            resolve(r);
+          }).fail(function(e) {
+            reject(e);
+          });
+        });
+      });
     }
 };

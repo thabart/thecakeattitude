@@ -30,7 +30,8 @@ using System.Threading.Tasks;
 namespace Cook4Me.Api.Handlers
 {
     public class NotificationEventsHandler : Handles<ShopAddedEvent>, Handles<ProductCommentAddedEvent>, Handles<ShopCommentAddedEvent>, 
-        Handles<OrderConfirmedEvent>, Handles<OrderReceivedEvent>, Handles<OrderTransactionApprovedEvent>, Handles<OrderLabelPurchasedEvent>
+        Handles<OrderConfirmedEvent>, Handles<OrderReceivedEvent>, Handles<OrderTransactionApprovedEvent>, Handles<OrderLabelPurchasedEvent>,
+        Handles<OrderCanceledEvent>
     {
         private readonly INotificationRepository _notificationRepository;
         private readonly IShopRepository _shopRepository;
@@ -402,6 +403,38 @@ namespace Cook4Me.Api.Handlers
             {
                 Id = Guid.NewGuid().ToString(),
                 Content = "order_label_purchased",
+                IsRead = false,
+                From = message.SellerId,
+                To = message.Subject,
+                CreatedDateTime = DateTime.UtcNow,
+                Parameters = new[]
+                {
+                    new NotificationParameter
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Type = NotificationParameterTypes.OrderId,
+                        Value = message.OrderId
+                    }
+                }
+            };
+
+            await _notificationRepository.Add(notification);
+            _eventPublisher.Publish(new NotificationAddedEvent
+            {
+                Id = notification.Id,
+                Content = notification.Content,
+                IsRead = notification.IsRead,
+                From = notification.From,
+                To = notification.To
+            });
+        }
+
+        public async Task Handle(OrderCanceledEvent message)
+        {
+            var notification = new NotificationAggregate
+            {
+                Id = Guid.NewGuid().ToString(),
+                Content = "order_label_canceled",
                 IsRead = false,
                 From = message.SellerId,
                 To = message.Subject,
