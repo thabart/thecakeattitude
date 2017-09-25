@@ -467,7 +467,8 @@
   "cancelOrderLabelPurchaseSpinnerMessage": "Canceling the order ...",
   "orderCancelLabelError": "An error occured while trying to cancel the order, please contact the administrator",
   "status_canceled": "Canceled",
-  "order_label_canceled": "An order has been canceled",  
+  "order_label_canceled": "An order has been canceled",
   "paymentDetailsTitle": "Payment details",
-  "orderPaymentDetailsError": "An error occured while trying to retrieve the payment details, please contact the administrator"
+  "orderPaymentDetailsError": "An error occured while trying to retrieve the payment details, please contact the administrator",
+  "quantity": "Quantity {0}"
 }
