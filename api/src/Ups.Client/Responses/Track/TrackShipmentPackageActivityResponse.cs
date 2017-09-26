@@ -23,8 +23,8 @@ namespace Ups.Client.Responses.Track
         [XmlElement(ElementName = Constants.DtoNames.TrackShipmentPackageActivityResponseNames.Status)]
         public TrackShipmentPackageActivityStatusResponse Status { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.TrackShipmentPackageActivityResponseNames.Date)]
-        public int Date { get; set; }
+        public string Date { get; set; }
         [XmlElement(ElementName = Constants.DtoNames.TrackShipmentPackageActivityResponseNames.Time)]
-        public int Time { get; set; }
+        public string Time { get; set; }
     }
 }

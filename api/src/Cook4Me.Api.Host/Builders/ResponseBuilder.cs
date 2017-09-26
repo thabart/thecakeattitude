@@ -30,15 +30,19 @@ using Paypal.Client.Common;
 using Paypal.Client.Responses;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Ups.Client.Common;
 using Ups.Client.Responses.Locator;
 using Ups.Client.Responses.Rating;
+using Ups.Client.Responses.Track;
 
 namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetUpsTrack(TrackResponse track);
+        JObject GetUpsTrackActivity(TrackShipmentPackageActivityResponse activity);
         JObject GetPaypalPayment(CreatePaymentResponse response);
         JObject GetPaypalItem(PaypalItem paypalItem);
         JObject GetOrderCanceled(OrderCanceledEvent evt);
@@ -108,6 +112,56 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetUpsTrack(TrackResponse track)
+        {
+            if (track == null)
+            {
+                throw new ArgumentNullException(nameof(track));
+            }
+
+            var obj = new JObject();
+            var jArr = new JArray();
+            if (track.Shipment != null && track.Shipment.Package != null && track.Shipment.Package.Activity != null)
+            {
+                foreach(var act in track.Shipment.Package.Activity)
+                {
+                    jArr.Add(GetUpsTrackActivity(act));
+                }
+            }
+
+            obj.Add(Constants.DtoNames.OrderTrackNames.Activities, jArr);
+            return obj;
+        }
+
+        public JObject GetUpsTrackActivity(TrackShipmentPackageActivityResponse activity)
+        {
+            if (activity == null)
+            {
+                throw new ArgumentNullException(nameof(activity));
+            }
+
+            var obj = new JObject();
+            DateTime date;
+            DateTime time;
+            if (DateTime.TryParseExact(activity.Date, "YYYYMMDD", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            {
+                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Date, date);
+            }
+
+            if (DateTime.TryParseExact(activity.Time, "HHMMSS", CultureInfo.InvariantCulture, DateTimeStyles.None, out time))
+            {
+                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Date, time);
+            }
+
+            if (activity.Status != null && activity.Status.StatusCode != null)
+            {
+                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Code, activity.Status.StatusCode.Code);
+                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Description, activity.Status.StatusCode.Description);
+            }
+
+            return obj;
+        }
+
         public JObject GetPaypalPayment(CreatePaymentResponse response)
         {
             if (response == null)

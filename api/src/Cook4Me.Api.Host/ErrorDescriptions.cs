@@ -100,5 +100,7 @@ namespace Cook4Me.Api.Host
         public const string ThePurchasedRequestLabelCannotBeRemoved = "the request cannot be removed because its label has been purchased";
         public const string TheOrderPaymentDetailsCanBeUploadByTheBuyer = "the payment details can be retrieved only by the buyer";
         public const string TheOrderPaymentDoesntExist = "the order payment doesn't exist";
+        public const string TheOrderCanBeTrackedBySellerOrBuyer = "the order can be tracker only by the seller or buyer";
+        public const string TheOrderDoesntContainTrackingNumber = "the order doesn't have a valid tracking number";
     }
 }

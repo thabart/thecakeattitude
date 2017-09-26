@@ -44,13 +44,15 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IGetOrderLabelOperation _getOrderLabelOperation;
         private readonly ICancelOrderOperation _cancelOrderOperation;
         private readonly IGetPaymentDetailsOperation _getPaymentDetailsOperation;
+        private readonly ITrackOrderOperation _trackOrderOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
             IAddOrderLineOperation addOrderLineOperation, IGetOrderStatusOperation getOrderStatusOperation, 
             IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation,
             IPurchaseLabelOperation purchaseLabelOperation, IConfirmOrderLabelPurchaseOperation confirmOrderLabelPurchaseOperation, IConfirmOrderPurchaseOperation confirmOrderPurchaseOperation,
-            IGetOrderLabelOperation getOrderLabelOperation, ICancelOrderOperation cancelOrderOperation, IGetPaymentDetailsOperation getPaymentDetailsOperation) : base(handlersInitiator)
+            IGetOrderLabelOperation getOrderLabelOperation, ICancelOrderOperation cancelOrderOperation, IGetPaymentDetailsOperation getPaymentDetailsOperation,
+            ITrackOrderOperation trackOrderOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -66,6 +68,7 @@ namespace Cook4Me.Api.Host.Controllers
             _getOrderLabelOperation = getOrderLabelOperation;
             _cancelOrderOperation = cancelOrderOperation;
             _getPaymentDetailsOperation = getPaymentDetailsOperation;
+            _trackOrderOperation = trackOrderOperation;
         }
 
 
@@ -261,7 +264,7 @@ namespace Cook4Me.Api.Host.Controllers
                 return this.BuildResponse(error, HttpStatusCode.BadRequest);
             }
 
-
+            return await _trackOrderOperation.Execute(id, subject);
         }
     }
 }
