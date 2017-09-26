@@ -1,21 +1,14 @@
 game.PlayScreen = me.ScreenObject.extend({
-
-    /**
-     *  action to perform on state change
-     */
     onResetEvent: function() {
-        // load a level
         me.levelDirector.loadLevel("map");
-        // subscribe to key down event
         this.handle = me.event.subscribe(me.event.KEYDOWN, this.keyPressed.bind(this));
+		var currentLevel = me.levelDirector.getCurrentLevel();
+		me.game.viewport.move(currentLevel.width / 2, 0);
+		me.game.viewport.move(0, currentLevel.height / 2);
+        me.game.repaint();
     },
 
-    /**
-     * update function
-     */
     keyPressed: function (action /*, keyCode, edge */) {
-
-        // navigate the map :)
         if (action === "left") {
             me.game.viewport.move(-(me.levelDirector.getCurrentLevel().tilewidth / 2), 0);
 
@@ -34,14 +27,9 @@ game.PlayScreen = me.ScreenObject.extend({
             me.game.viewport.shake(16, 500);
         }
 
-        // force redraw
         me.game.repaint();
-
     },
 
-    /**
-     *  action to perform when leaving this screen (state change)
-     */
     onDestroyEvent: function() {
         me.event.unsubscribe(this.handle);
     }
