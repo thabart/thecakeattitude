@@ -21,49 +21,59 @@ namespace Cook4Me.Api.Host
 {
     public class SettingsProvider : ISettingsProvider
     {
+        public string BaseOpenidUrl { get; set; }
+        public string BaseWebsite { get; set; }
+        public string PaypalClientId { get; set; }
+        public string PaypalClientSecret { get; set; }
+        public string PaypalEmail { get; set; }
+        public string UpsLicenseNumber { get; set; }
+        public string UpsPassword { get; set; }
+        public string UpsUsername { get; set; }
+        public bool TstMode { get; set; }
+
         public string GetBaseOpenidUrl()
         {
-            return "http://localhost:5001";
+            return BaseOpenidUrl;
         }
 
         public string GetBaseWebsite()
         {
-            return "http://localhost:3000";
+            return BaseWebsite;
         }
 
         public string GetPaypalClientId()
         {
-            return "AQsgq7UBKVB0aTLI3k-2VRP1q1iFK9qsb8t29QJIMC6M_JWejo6mgylGmSLb3fLmaSVPsHCpwBvk5Lxt";
+            return PaypalClientId;
         }
 
         public string GetPaypalClientSecret()
         {
-            return "EA930i2soWpP_XywC1CELPSIDLZxTmiNHvVJuI0qhWna6v_hXSPpATlxSArZJQWBS1pw_e9gOqbf0git";
+            return PaypalClientSecret;
         }
 
         public string GetPaypalEmail()
         {
-            return "habarthierry-facilitator@hotmail.fr";
+            return PaypalEmail;
         }
 
         public string GetUpsLicenseNumber()
         {
-            return "FD300339C9051F5C";
+            return UpsLicenseNumber;
         }
 
         public string GetUpsPassword()
         {
-            return "CakeAttitude1989";
+            return UpsPassword;
         }
 
         public string GetUpsUsername()
         {
-            return "thabart1";
+            return UpsUsername;
         }
 
         public bool IsTstMode()
         {
-            return true;
+            return TstMode;
         }
     }
 }

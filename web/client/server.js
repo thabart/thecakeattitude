@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var services = require('./server/services');
 
-var baseUrl = 'http://localhost:3003';
+var baseUrl = 'http://localhost:3000';
 var options = {
 	clientId : 'website',
 	clientSecret: 'website'
@@ -19,11 +19,13 @@ var allowCrossDomain = function(req, res, next) {
     next();
 }
 
-app.use('/', express.static(__dirname + '/build'));
-
-app.get('*', function(req, res) {
+/*
+app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname + '/build/index.html'));
 });
+*/
+
+// app.use('/', express.static(__dirname + '/build'));
 
 app.use(allowCrossDomain);
 app.use(bodyParser.json());

@@ -83,7 +83,7 @@ namespace Cook4Me.Api.Host
                 options.Hubs.EnableDetailedErrors = true;
             });
             // 4. Add other dependencies.
-            RegisterDependencies(services);
+            RegisterDependencies(services, Configuration);
         }
 
         public void Configure(IApplicationBuilder app,
@@ -141,9 +141,22 @@ namespace Cook4Me.Api.Host
             });
         }
 
-        private static void RegisterDependencies(IServiceCollection services)
+        private static void RegisterDependencies(IServiceCollection services, IConfigurationRoot configuration)
         {
-            services.AddTransient<ISettingsProvider, SettingsProvider>();
+            var settingsProvider = new SettingsProvider
+            {
+                BaseOpenidUrl = configuration["baseOpenid"],
+                BaseWebsite = configuration["baseWebsite"],
+                PaypalClientId = configuration["Paypal:ClientId"],
+                PaypalClientSecret = configuration["Paypal:ClientSecret"],
+                PaypalEmail = configuration["Paypal:email"],
+                TstMode = true,
+                UpsLicenseNumber = configuration["Ups:LicenseNumber"],
+                UpsPassword = configuration["Ups:Password"],
+                UpsUsername = configuration["Ups:Username"]
+            };
+
+            services.AddSingleton(typeof(ISettingsProvider), settingsProvider);
             services.AddCookForMeStoreInMemory()
                 .AddCommon()
                 .AddOpenidClient()

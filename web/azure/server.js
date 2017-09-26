@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var services = require('./server/services');
 
-var baseUrl = 'http://localhost:3003';
+var baseUrl = 'https://shopingamewebsite.azurewebsites.net';
 var options = {
 	clientId : 'website',
 	clientSecret: 'website'
@@ -20,7 +20,6 @@ var allowCrossDomain = function(req, res, next) {
 }
 
 app.use('/', express.static(__dirname + '/build'));
-
 app.get('*', function(req, res) {
 	res.sendFile(path.join(__dirname + '/build/index.html'));
 });
@@ -49,6 +48,8 @@ app.get('/paypalcallback', function(req, res) { // TODO : get authorization code
 		res.sendStatus(500);
 	});
 });
-app.listen(3003, function() {
-	console.log('Game is listening on port 3003!');
+
+var port = process.env.PORT || 3000;
+app.listen(port, function() {
+
 });
