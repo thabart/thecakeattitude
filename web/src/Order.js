@@ -6,7 +6,7 @@ import { Alert } from 'reactstrap';
 import { NavLink } from "react-router-dom";
 import { ApplicationStore } from './stores/index';
 import { UrlParser } from './utils/index';
-import { InformationTab, ProductsTab } from './ordertabs/index';
+import { InformationTab, ProductsTab, WorkflowTab } from './ordertabs/index';
 import MainLayout from './MainLayout';
 import AppDispatcher from './appDispatcher';
 import Constants from '../Constants';
@@ -24,6 +24,7 @@ class Order extends Component {
       this.downloadLabel = this.downloadLabel.bind(this);
       this.navigateToInformation = this.navigateToInformation.bind(this);
       this.navigateToProducts = this.navigateToProducts.bind(this);
+      this.navigateToWorkflow = this.navigateToWorkflow.bind(this);
       this.state = {
         isLoading: false,
         order: {},
@@ -50,12 +51,14 @@ class Order extends Component {
         });
         var informationTab = self.refs.informationTab.getWrappedInstance();
         var productsTab = self.refs.productsTab.getWrappedInstance();
+        var workflowTab = self.refs.workflowTab.getWrappedInstance();
         informationTab.refresh(order).then(function(shop) {
           self.setState({
             seller: shop.subject
           });
         });
         productsTab.refresh(order);
+        workflowTab.refresh(order);
       }).catch(function(e) {
         self.setState({
           isLoading: false,
@@ -192,6 +195,14 @@ class Order extends Component {
       this.props.history.push('/orders/' + this.state.order.id + '/products');
     }
 
+    navigateToWorkflow(e) { // Navigate to the workflow.
+      e.preventDefault();
+      this.setState({
+        activeTab: 'workflow'
+      });
+      this.props.history.push('/orders/' + this.state.order.id + '/workflow');
+    }
+
     render() { // Render the view.
       var self = this;
       const {t} = self.props;
@@ -218,13 +229,19 @@ class Order extends Component {
                 <a className={self.state.activeTab === 'products' ? "nav-link active" : "nav-link"} onClick={self.navigateToProducts}>
                   {t('products')}
                 </a>
+                <a className={self.state.activeTab === 'workflow' ? 'nav-link active': 'nav-link'} onClick={self.navigateToWorkflow}>
+                  {t('workflow')}
+                </a>
               </ul>
               <section className="section" style={{padding: "10px", marginTop: "10px"}}>
-                <div className={self.state.activeTab === 'products' && 'hidden'}>
+                <div className={self.state.activeTab !== 'information' && 'hidden'}>
                   <InformationTab ref="informationTab" />
                 </div>
-                <div className={self.state.activeTab === 'information' && 'hidden'}>
+                <div className={self.state.activeTab !== 'products' && 'hidden'}>
                   <ProductsTab ref="productsTab" />
+                </div>
+                <div className={self.state.activeTab !== 'workflow' && 'hidden'}>
+                  <WorkflowTab ref='workflowTab' />
                 </div>
                 <div style={{marginTop: "10px"}}>
                   <h4>
@@ -259,7 +276,7 @@ class Order extends Component {
       var self = this;
       const {t} = this.props;
       var action = self.props.match.params.action;
-      if (!action || (action !== 'information' && action !== 'products')) {
+      if (!action || (action !== 'information' && action !== 'products' && action !== 'workflow')) {
           action = 'information';
       }
 

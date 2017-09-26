@@ -470,5 +470,6 @@
   "order_label_canceled": "An order has been canceled",
   "paymentDetailsTitle": "Payment details",
   "orderPaymentDetailsError": "An error occured while trying to retrieve the payment details, please contact the administrator",
-  "quantity": "Quantity {0}"
+  "quantity": "Quantity {0}",
+  "workflow": "Workflow"
 }
