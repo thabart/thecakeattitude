@@ -82,3 +82,64 @@
 .progressbar-withimage-counter li:after {
   top: 40px;
 }
+
+/* Progress bar with triangle */
+.progressbartriangle {
+  list-style: none;
+  overflow: hidden;
+}
+
+.progressbartriangle li.active a {
+  color: white !important;
+  background: rgba(231, 39, 45, 0.7) !important;
+}
+
+.progressbartriangle li.active a::after {
+  border-left: 30px solid rgba(231, 39, 45, 0.7) !important;
+}
+
+.progressbartriangle li {
+  float: left;
+  margin-left: 10px;
+}
+
+.progressbartriangle li a {
+  text-decoration: none;
+  padding: 40px 0 10px 65px;
+  background: brown; /* fallback color */
+  background: rgba(231, 39, 45, 0.22);
+  position: relative;
+  display: block;
+  float: left;
+  height: 100px;
+}
+
+.progressbartriangle li a::after {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent; /* Go big on the size, and let overflow hide */
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid rgba(231, 39, 45, 0.22);
+  position: absolute;
+  top: 50%;
+  margin-top: -50px;
+  left: 100%;
+  z-index: 2;
+}
+
+.progressbartriangle li a::before {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 50px solid transparent;
+  border-bottom: 50px solid transparent;
+  border-left: 30px solid white;
+  position: absolute;
+  top: 50%;
+  margin-top: -50px;
+  left: 0%;
+  z-index: 1;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "game",
+  "version": "0.0.0",
+  "description": "Small description for game goes here",
+  "private": true,
+  "repository": "",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "devDependencies": {
+    "body-parser": "^1.16.1",
+    "express": "^4.15.2",
+    "socket.io": "^1.7.3"
+  }
+}

@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var services = require('./server/services');
 
-var baseUrl = 'http://localhost:3003';
+var baseUrl = 'http://localhost:3000';
 var options = {
 	clientId : 'website',
 	clientSecret: 'website'
