@@ -12,6 +12,7 @@ app.get('/', function(req, res) {
 app.get('/callback', function(req, res) {
 	res.sendFile(path.join(__dirname + '/callback.html'));
 });
-app.listen(3002, function() {
-	console.log('Game is listening on port 3002!');
+var port = process.env.PORT || 3002;
+app.listen(port, function() {
+	console.log('Game is listening on port ' + port);
 });

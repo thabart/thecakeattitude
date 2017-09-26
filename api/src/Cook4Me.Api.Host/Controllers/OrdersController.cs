@@ -249,5 +249,19 @@ namespace Cook4Me.Api.Host.Controllers
 
             return await _getPaymentDetailsOperation.Execute(id, subject);
         }
+
+        [HttpGet(Constants.RouteNames.TrackOrder)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Track(string id)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+
+        }
     }
 }

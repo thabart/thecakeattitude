@@ -23,6 +23,41 @@ namespace Ups.Client
 
         public static class DtoNames
         {
+            public static class TrackShipmentPackageActivityStatusResponseNames
+            {
+                public const string StatusType = "StatusType";
+                public const string StatusCode = "StatusCode";
+            }
+
+            public static class TrackShipmentPackageActivityResponseNames
+            {
+                public const string Status = "Status";
+                public const string Date = "Date";
+                public const string Time = "Time";
+            }
+
+            public static class TrackShipmentPackageResponseNames
+            {
+                public const string Activity = "Activity";
+            }
+
+            public static class TrackShipmentResponseNames
+            {
+                public const string Package = "Package";
+            }
+
+            public static class TrackResponseNames
+            {
+                public const string Response = "Response";
+                public const string Shipment = "Shipment";
+            }
+
+            public static class TrackRequestNames
+            {
+                public const string Request = "Request";
+                public const string TrackingNumber = "TrackingNumber";
+            }
+
             public static class VoidShipmentResponseNames
             {
                 public const string Response = "Response";

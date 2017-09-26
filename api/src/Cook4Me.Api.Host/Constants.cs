@@ -82,6 +82,7 @@ namespace Cook4Me.Api.Host
             public const string GetLabel = "{id}/label";
             public const string CancelOrder = "{id}/cancel";
             public const string GetPaymentDetails = "{id}/paymentdetails";
+            public const string TrackOrder = "{id}/track";
         }
 
         public static class DtoNames

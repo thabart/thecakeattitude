@@ -321,5 +321,22 @@ namespace Cook4Me.Api.Host.Tests.MondeRelay
 
             string s = "";
         }
+
+        [Fact]
+        public async Task Track()
+        {
+            var settingsProvider = new FakeSettingsProvider();
+            var upsClient = new UpsClient(new FakeHttpClientFactory(), settingsProvider);
+            var res = await upsClient.Track("1Z12345E0291980793",
+                new UpsCredentials
+                {
+                    LicenseNumber = _accessLicenseNumber,
+                    Password = _password,
+                    UserName = _userName
+                }
+            );
+
+            string s = "";
+        }
     }
 }

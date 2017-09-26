@@ -3,11 +3,11 @@
 module.exports = {
     ClientId: 'website',
     ClientSecret: 'website',
-    loginUrl: 'https://shopingamewebsite.azurewebsites.net/login', // Website api definitions.
+    loginUrl: 'http://localhost:3003/login', // Website api definitions.
     googleMapUrl: 'https://maps.googleapis.com/maps/api',
     googleMapKey: 'AIzaSyBN72d3ipuyzbqhJgjwav5HnnKkLqp3KCU',
-    apiUrl: 'https://shopingameapi.azurewebsites.net',
-    openIdUrl: 'https://shopingameopenid.azurewebsites.net',
+    apiUrl: 'http://localhost:5000',
+    openIdUrl: 'http://localhost:5001',
     maxPackageSize: {
       length: 50,
       width: 80,
