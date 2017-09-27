@@ -470,5 +470,6 @@
   "paymentDetailsTitle": "Détails du paiement",
   "orderPaymentDetailsError": "Une erreur est survenue lors de la récupération des détails de paiement, veuillez prendre contact avec l'administrateur",
   "quantity": "Quantité {0}",
-  "workflow": "Processus"
+  "workflow": "Processus",
+  "trackOrderError": "Une erreur est survenue durant le suivi du colis, veuillez prendre contact avec l'administrateur"
 }

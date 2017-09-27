@@ -94,7 +94,6 @@ namespace Cook4Me.Api.Host
 
             public static class OrderTrackActivityNames
             {
-                public const string Time = "time";
                 public const string Date = "date";
                 public const string Code = "code";
                 public const string Description = "description";

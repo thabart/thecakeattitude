@@ -72,7 +72,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new TrackOrderValidationResult(ErrorDescriptions.TheOrderDoesntExist);
             }
 
-            if (order.SellerId != null && order.Subject != subject)
+            if (order.SellerId != subject && order.Subject != subject)
             {
                 return new TrackOrderValidationResult(ErrorDescriptions.TheOrderCanBeTrackedBySellerOrBuyer);
             }
