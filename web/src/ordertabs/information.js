@@ -52,7 +52,8 @@ class Information extends Component {
           order: order
         });
         resolve(shop);
-      }).catch(function() {
+      }).catch(function(e) {
+        console.log(e);
         self.setState({
           isLoading: false,
           shop: {},

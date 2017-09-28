@@ -158,6 +158,41 @@ namespace Cook4Me.Api.Host.Extensions
                                 Quantity = 2
                             }
                         }
+                    },
+                    new Order
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Status = 1,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        Subject = "administrator",
+                        ShopId = _firstShopId,
+                        TransportMode = 2,
+                        OrderParcel = new OrderParcel
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Transporter = 1
+                        },
+                        OrderPayment = new OrderPayment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Status = 1,
+                            TransactionId = "PAY-9B730475721543104LHGJWMY",
+                            PaymentMethod = 0
+                        },
+                        IsLabelPurchased = true,
+                        TrackingNumber = "1Z12345E0291980793",
+                        TotalPrice = 1000,
+                        OrderLines = new []
+                        {
+                            new OrderLine
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Price = 1000,
+                                ProductId = _jeanProductId,
+                                Quantity = 2
+                            }
+                        }
                     }
                 });
             }

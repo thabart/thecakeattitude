@@ -142,10 +142,10 @@ namespace Cook4Me.Api.Host.Builders
 
             var obj = new JObject();
             DateTime date;
-            if (DateTime.TryParseExact(activity.Date, "YYYYMMDD", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            if (DateTime.TryParseExact(activity.Date, "yyyyMMdd", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
             {
                 DateTime time;
-                if (DateTime.TryParseExact(activity.Time, "HHMMSS", CultureInfo.InvariantCulture, DateTimeStyles.None, out time))
+                if (DateTime.TryParseExact(activity.Time, "hhmmss", CultureInfo.InvariantCulture, DateTimeStyles.None, out time))
                 {
                     date.AddHours(time.Hour);
                     date.AddMinutes(time.Minute);
@@ -155,10 +155,10 @@ namespace Cook4Me.Api.Host.Builders
                 obj.Add(Constants.DtoNames.OrderTrackActivityNames.Date, date);
             }
 
-            if (activity.Status != null && activity.Status.StatusCode != null)
+            if (activity.Status != null && activity.Status.StatusType != null)
             {
-                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Code, activity.Status.StatusCode.Code);
-                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Description, activity.Status.StatusCode.Description);
+                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Code, activity.Status.StatusType.Code);
+                obj.Add(Constants.DtoNames.OrderTrackActivityNames.Description, activity.Status.StatusType.Description);
             }
 
             return obj;

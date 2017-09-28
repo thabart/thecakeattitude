@@ -47,9 +47,10 @@ class Workflow extends Component {
         isParcelHistoryLoading: true,
         isParcelHistoryDisplayed: true
       });
-      OrdersService.track(order.id).then(function() {
+      OrdersService.track(order.id).then(function(activities) {
         self.setState({
           isParcelHistoryLoading: false,
+          parcelHistory: activities
         });
       }).catch(function(e) {
         var errorMsg = t('trackOrderError');
@@ -100,9 +101,12 @@ class Workflow extends Component {
         </ul>
         { self.state.isParcelHistoryDisplayed && self.state.isParcelHistoryLoading && (<i className='fa fa-spinner fa-spin'></i>) }
         { self.state.isParcelHistoryDisplayed && !self.state.isParcelHistoryLoading && (
-          <div className="list-group-default">
-            {parcelHistories}
-          </div>
+          <section>
+            <h5>{t('trackParcel')}</h5>
+            <div className="list-group-default">
+              {parcelHistories}
+            </div>
+          </section>
         )}
     </div>);
   }

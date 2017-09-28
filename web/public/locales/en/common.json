@@ -472,5 +472,6 @@
   "orderPaymentDetailsError": "An error occured while trying to retrieve the payment details, please contact the administrator",
   "quantity": "Quantity {0}",
   "workflow": "Workflow",
-  "trackOrderError": "An error occured while trying to track the parcel, please contact the administrator"
+  "trackOrderError": "An error occured while trying to track the parcel, please contact the administrator",
+  "trackParcel": "Track the parcel"
 }
