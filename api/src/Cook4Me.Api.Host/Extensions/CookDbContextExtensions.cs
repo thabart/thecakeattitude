@@ -99,7 +99,7 @@ namespace Cook4Me.Api.Host.Extensions
             {
                 context.Orders.AddRange(new[]
                 {
-                    new Order
+                    new Order // Empty order.
                     {
                         Id = Guid.NewGuid().ToString(),
                         Status = 0,
@@ -119,15 +119,16 @@ namespace Cook4Me.Api.Host.Extensions
                             }
                         }
                     },
-                    new Order
+                    new Order // Order (hand to hand mode) not yet confirmed.
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Status = 0,
+                        Status = 1,
                         CreateDateTime = DateTime.UtcNow,
                         UpdateDateTime = DateTime.UtcNow,
-                        TotalPrice = 1000,
                         Subject = "administrator",
-                        ShopId = _secondShopId,
+                        ShopId = _firstShopId,
+                        TransportMode = 1,
+                        IsLabelPurchased = false,
                         OrderLines = new []
                         {
                             new OrderLine
@@ -139,15 +140,16 @@ namespace Cook4Me.Api.Host.Extensions
                             }
                         }
                     },
-                    new Order
+                    new Order // Order (hand to hand mode) received
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Status = 0,
+                        Status = 2,
                         CreateDateTime = DateTime.UtcNow,
                         UpdateDateTime = DateTime.UtcNow,
-                        TotalPrice = 1000,
                         Subject = "administrator",
-                        ShopId = _thirdShopId,
+                        ShopId = _firstShopId,
+                        TransportMode = 1,
+                        IsLabelPurchased = false,
                         OrderLines = new []
                         {
                             new OrderLine
@@ -159,7 +161,101 @@ namespace Cook4Me.Api.Host.Extensions
                             }
                         }
                     },
-                    new Order
+                    new Order // Confirmed order (packet mode) + payment created.
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Status = 1,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        Subject = "administrator",
+                        ShopId = _firstShopId,
+                        TransportMode = 2,
+                        IsLabelPurchased = false,
+                        OrderParcel = new OrderParcel
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Transporter = 1,
+                            BuyerAddressLine = "10 GOERLITZER STRASSE",
+                            BuyerCity = "NEUSS",
+                            BuyerCountryCode = "DE",
+                            BuyerName = "HT",
+                            BuyerPostalCode = 41460,
+                            ParcelShopAddressLine = "MUEHLENSTRASSE 20",
+                            ParcelShopCity = "NEUSS",
+                            ParcelShopCountryCode = "DE",
+                            ParcelShopPostalCode = 41460,
+                            SellerAddressLine = "NIEDERWALLSTRASSE 29",
+                            SellerCity = "NEUSS",
+                            SellerCountryCode = "DE",
+                            SellerPostalCode = 41460
+                        },
+                        OrderLines = new []
+                        {
+                            new OrderLine
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Price = 1000,
+                                ProductId = _jeanProductId,
+                                Quantity = 2
+                            }
+                        },
+                        OrderPayment = new OrderPayment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Status = 0,
+                            TransactionId = "PAY-69134876YM8579522LHGMMWI", // THE TRANSACTION ID SHOULD BE UPDATED.
+                            PayerId = "RTTQKS7QPPFXL",
+                            PaymentMethod = 0
+                        }
+                    },
+                    new Order // Confirmed order (packet mode) + payment approved.
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Status = 1,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        Subject = "administrator",
+                        ShopId = _firstShopId,
+                        TransportMode = 2,
+                        IsLabelPurchased = false,
+                        OrderParcel = new OrderParcel
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Transporter = 1,
+                            BuyerAddressLine = "10 GOERLITZER STRASSE",
+                            BuyerCity = "NEUSS",
+                            BuyerCountryCode = "DE",
+                            BuyerName = "HT",
+                            BuyerPostalCode = 41460,
+                            ParcelShopAddressLine = "MUEHLENSTRASSE 20",
+                            ParcelShopCity = "NEUSS",
+                            ParcelShopCountryCode = "DE",
+                            ParcelShopPostalCode = 41460,
+                            SellerAddressLine = "NIEDERWALLSTRASSE 29",
+                            SellerCity = "NEUSS",
+                            SellerCountryCode = "DE",
+                            SellerPostalCode = 41460
+                        },
+                        OrderLines = new []
+                        {
+                            new OrderLine
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Price = 1000,
+                                ProductId = _jeanProductId,
+                                Quantity = 2
+                            }
+                        },
+                        OrderPayment = new OrderPayment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Status = 1,
+                            TransactionId = "PAY-69134876YM8579522LHGMMWI", // THE TRANSACTION ID SHOULD BE UPDATED.
+                            PayerId = "RTTQKS7QPPFXL",
+                            PaymentMethod = 0
+                        }
+                    },
+                    new Order // Order ready to be confirmed (reception).
                     {
                         Id = Guid.NewGuid().ToString(),
                         Status = 1,
@@ -171,13 +267,76 @@ namespace Cook4Me.Api.Host.Extensions
                         OrderParcel = new OrderParcel
                         {
                             Id = Guid.NewGuid().ToString(),
-                            Transporter = 1
+                            Transporter = 1,
+                            BuyerAddressLine = "10 GOERLITZER STRASSE",
+                            BuyerCity = "NEUSS",
+                            BuyerCountryCode = "DE",
+                            BuyerName = "HT",
+                            BuyerPostalCode = 41460,
+                            ParcelShopAddressLine = "MUEHLENSTRASSE 20",
+                            ParcelShopCity = "NEUSS",
+                            ParcelShopCountryCode = "DE",
+                            ParcelShopPostalCode = 41460,
+                            SellerAddressLine = "NIEDERWALLSTRASSE 29",
+                            SellerCity = "NEUSS",
+                            SellerCountryCode = "DE",
+                            SellerPostalCode = 41460
                         },
                         OrderPayment = new OrderPayment
                         {
                             Id = Guid.NewGuid().ToString(),
                             Status = 1,
-                            TransactionId = "PAY-9B730475721543104LHGJWMY",
+                            TransactionId = "PAY-69134876YM8579522LHGMMWI", // THE TRANSACTION ID SHOULD BE UPDATED.
+                            PayerId = "RTTQKS7QPPFXL",
+                            PaymentMethod = 0
+                        },
+                        IsLabelPurchased = true,
+                        TrackingNumber = "1Z12345E0291980793",
+                        TotalPrice = 1000,
+                        OrderLines = new []
+                        {
+                            new OrderLine
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Price = 1000,
+                                ProductId = _jeanProductId,
+                                Quantity = 2
+                            }
+                        }
+                    },
+                    new Order // Order (packet) received
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Status = 2,
+                        CreateDateTime = DateTime.UtcNow,
+                        UpdateDateTime = DateTime.UtcNow,
+                        Subject = "administrator",
+                        ShopId = _firstShopId,
+                        TransportMode = 2,
+                        OrderParcel = new OrderParcel
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Transporter = 1,
+                            BuyerAddressLine = "10 GOERLITZER STRASSE",
+                            BuyerCity = "NEUSS",
+                            BuyerCountryCode = "DE",
+                            BuyerName = "HT",
+                            BuyerPostalCode = 41460,
+                            ParcelShopAddressLine = "MUEHLENSTRASSE 20",
+                            ParcelShopCity = "NEUSS",
+                            ParcelShopCountryCode = "DE",
+                            ParcelShopPostalCode = 41460,
+                            SellerAddressLine = "NIEDERWALLSTRASSE 29",
+                            SellerCity = "NEUSS",
+                            SellerCountryCode = "DE",
+                            SellerPostalCode = 41460
+                        },
+                        OrderPayment = new OrderPayment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Status = 2,
+                            TransactionId = "PAY-69134876YM8579522LHGMMWI", // THE TRANSACTION ID SHOULD BE UPDATED.
+                            PayerId = "RTTQKS7QPPFXL",
                             PaymentMethod = 0
                         },
                         IsLabelPurchased = true,

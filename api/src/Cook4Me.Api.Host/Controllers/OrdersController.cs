@@ -45,6 +45,7 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly ICancelOrderOperation _cancelOrderOperation;
         private readonly IGetPaymentDetailsOperation _getPaymentDetailsOperation;
         private readonly ITrackOrderOperation _trackOrderOperation;
+        private readonly IConfirmOrderReceptionOperation _confirmOrderReceptionOperation;
 
         public OrdersController(ISearchOrdersOperation searchOrdersOperation, IResponseBuilder responseBuilder,
             IUpdateOrderOperation updateOrderOperation, IDeleteOrderOperation deleteOrderOperation,
@@ -52,7 +53,7 @@ namespace Cook4Me.Api.Host.Controllers
             IGetOrderOperation getOrderOperation, IHandlersInitiator handlersInitiator, IGetOrderTransactionOperation getOrderTransactionOperation,
             IPurchaseLabelOperation purchaseLabelOperation, IConfirmOrderLabelPurchaseOperation confirmOrderLabelPurchaseOperation, IConfirmOrderPurchaseOperation confirmOrderPurchaseOperation,
             IGetOrderLabelOperation getOrderLabelOperation, ICancelOrderOperation cancelOrderOperation, IGetPaymentDetailsOperation getPaymentDetailsOperation,
-            ITrackOrderOperation trackOrderOperation) : base(handlersInitiator)
+            ITrackOrderOperation trackOrderOperation, IConfirmOrderReceptionOperation confirmOrderReceptionOperation) : base(handlersInitiator)
         {
             _searchOrdersOperation = searchOrdersOperation;
             _responseBuilder = responseBuilder;
@@ -69,6 +70,7 @@ namespace Cook4Me.Api.Host.Controllers
             _cancelOrderOperation = cancelOrderOperation;
             _getPaymentDetailsOperation = getPaymentDetailsOperation;
             _trackOrderOperation = trackOrderOperation;
+            _confirmOrderReceptionOperation = confirmOrderReceptionOperation;
         }
 
 
@@ -265,6 +267,20 @@ namespace Cook4Me.Api.Host.Controllers
             }
 
             return await _trackOrderOperation.Execute(id, subject);
+        }
+
+        [HttpGet(Constants.RouteNames.ConfirmOrderReception)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> ConfirmReception(string id)
+        {
+            var subject = User.GetSubject();
+            if (string.IsNullOrEmpty(subject))
+            {
+                var error = _responseBuilder.GetError(ErrorCodes.Request, ErrorDescriptions.TheSubjectCannotBeRetrieved);
+                return this.BuildResponse(error, HttpStatusCode.BadRequest);
+            }
+
+            return await _confirmOrderReceptionOperation.Execute(id, subject);
         }
     }
 }

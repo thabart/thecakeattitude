@@ -102,5 +102,8 @@ namespace Cook4Me.Api.Host
         public const string TheOrderPaymentDoesntExist = "the order payment doesn't exist";
         public const string TheOrderCanBeTrackedBySellerOrBuyer = "the order can be tracker only by the seller or buyer";
         public const string TheOrderDoesntContainTrackingNumber = "the order doesn't have a valid tracking number";
+        public const string TheOrderReceptionCanBeConfirmedOnlyByTheBuyer = "the order reception can be confirmed only by the buyer";
+        public const string TheOrderLabelHasNotBeenPurchased = "the order label has not been purchased";
+        public const string TheOrderParcelHasNotBeenDelivered = "the order parcel has not been delivered";
     }
 }

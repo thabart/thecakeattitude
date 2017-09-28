@@ -84,7 +84,7 @@ class Payment extends Component {
 						<div className="col-md-6">
 							<section>
 			          <h5>{t('status')}</h5>
-			          <span className="badge badge-default">{t('status_' + self.state.paymentDetails.state)}</span>
+			          <span className="badge badge-default">{t('payment_status_' + self.state.paymentDetails.state)}</span>
 							</section>
 							<section>
 								<h5>{t('shippingPrice').replace('{0}', self.state.paymentDetails.shipping_price)}</h5>

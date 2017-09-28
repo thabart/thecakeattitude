@@ -30,7 +30,7 @@ namespace Cook4Me.Api.Handlers
 {
     public class OrderCommandsHandler : Handles<UpdateOrderCommand>, Handles<RemoveOrderCommand>, Handles<AddOrderLineCommand>,
         Handles<AcceptOrderTransactionCommand>, Handles<ConfirmOrderLabelPurchaseCommand>,
-        Handles<CancelOrderCommand>
+        Handles<CancelOrderCommand>, Handles<ReceiveOrderCommand>
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
@@ -311,6 +311,35 @@ namespace Cook4Me.Api.Handlers
                 TrackingNumber = order.TrackingNumber,
                 Subject = order.Subject,
                 SellerId = order.SellerId
+            });
+        }
+
+        public async Task Handle(ReceiveOrderCommand message) // 2.3 The order parcel has been received.
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var order = await _orderRepository.Get(message.OrderId);
+            if (order == null)
+            {
+                return;
+            }
+
+            order.Status = OrderAggregateStatus.Received;
+            if (message.IsPaymentReceived && order.OrderPayment != null)
+            {
+                order.OrderPayment.Status = OrderPaymentStatus.Confirmed;
+            }
+
+            await _orderRepository.Update(order);
+            _eventPublisher.Publish(new OrderReceivedEvent
+            {
+                CommonId = message.CommonId,
+                OrderId = order.Id,
+                Client = order.Subject,
+                Seller = order.SellerId
             });
         }
 

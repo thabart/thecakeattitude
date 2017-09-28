@@ -472,5 +472,6 @@
   "quantity": "Quantité {0}",
   "workflow": "Processus",
   "trackOrderError": "Une erreur est survenue durant le suivi du colis, veuillez prendre contact avec l'administrateur",
-  "trackParcel": "Suivi du colis"
+  "trackParcel": "Suivi du colis",
+  "confirmingOrderReception": "Confirmation de la réception de la commande ..."
 }

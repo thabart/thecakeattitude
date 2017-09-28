@@ -19,12 +19,12 @@ class Order extends Component {
       this._waitForToken = null;
       this._windowPaypal = null;
       this.refresh = this.refresh.bind(this);
-      this.confirmReception = this.confirmReception.bind(this);
       this.executePaypal = this.executePaypal.bind(this);
       this.downloadLabel = this.downloadLabel.bind(this);
       this.navigateToInformation = this.navigateToInformation.bind(this);
       this.navigateToProducts = this.navigateToProducts.bind(this);
       this.navigateToWorkflow = this.navigateToWorkflow.bind(this);
+      this.confirmReception = this.confirmReception.bind(this);
       this.state = {
         isLoading: false,
         order: {},
@@ -70,14 +70,22 @@ class Order extends Component {
 
     confirmReception() { // Confirm the reception of the packet.
       var self = this;
+      const {t} = self.props;
       self.setState({
         isLoading: true
       });
-      var request = {
-        'status': 'received'
-      };
-      const {t} = this.props;
-      OrdersService.update(self.state.order.id, request).catch(function(e) {
+      ApplicationStore.displayLoading({
+        display: true,
+        message: t('confirmingOrderReception')
+      });
+      OrdersService.confirmReception(self.state.order.id).then(function() {
+        ApplicationStore.displayLoading({
+          display: false
+        });
+        self.setState({
+          isLoading: false
+        });
+      }).catch(function(e) {
         var errorMsg = t('confirmRequestError');
         if (e.responseJSON && e.responseJSON.error_description) {
           errorMsg = e.responseJSON.error_description;
@@ -87,6 +95,12 @@ class Order extends Component {
           message: errorMsg,
           level: 'error',
           position: 'tr'
+        });
+        ApplicationStore.displayLoading({
+          display: false
+        });
+        self.setState({
+          isLoading: false
         });
       });
     }
@@ -252,6 +266,9 @@ class Order extends Component {
                 </div>
                 <div style={{marginTop: "10px"}}>
                   { this.state.order.transport_mode && this.state.order.transport_mode === 'manual' && this.state.order.status === 'confirmed' && isBuyer && (
+                    <button className="btn btn-default" onClick={this.confirmReception}>{t('confirmReception')}</button>
+                  ) }
+                  { this.state.order.transport_mode && this.state.order.transport_mode === 'packet' && this.state.order.status === 'confirmed' && this.state.order.payment && this.state.order.payment.status === 'approved' && isBuyer && this.state.order.is_label_purchased === true && (
                     <button className="btn btn-default" onClick={this.confirmReception}>{t('confirmReception')}</button>
                   ) }
                   { this.state.order.payment && this.state.order.payment.approval_url && this.state.order.payment.status === 'created' && isBuyer && (

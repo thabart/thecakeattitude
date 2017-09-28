@@ -107,7 +107,7 @@ namespace Cook4Me.Api.Host.Handlers
             }
 
             var notifier = _connectionManager.GetHubContext<SecuredHub>();
-            var lst = new[] { message.Client };
+            var lst = new[] { message.Client, message.Seller };
             lst.Distinct();
             var connectionIds = new List<string>();
             foreach (var r in lst)

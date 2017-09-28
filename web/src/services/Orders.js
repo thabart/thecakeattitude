@@ -256,5 +256,22 @@ module.exports = {
           });
         });
       });
+    },
+    confirmReception(orderId) { // Confirm the order reception.
+      var accessToken = Session.getSession().access_token;
+      return new Promise(function(resolve, reject) {
+        ConfigurationService.get().then(function(configuration) {
+          $.ajax(configuration.orders_endpoint + '/' + orderId + '/confirmreception', {
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ' + accessToken
+            }
+          }).then(function(r) {
+            resolve(r);
+          }).fail(function(e) {
+            reject(e);
+          });
+        });
+      });
     }
 };
