@@ -24,13 +24,12 @@ var game = {
      * callback when everything is loaded
      */
     loaded: function () {
+        game.texture = new me.video.renderer.Texture( // Load texture atlas file.
+            me.loader.getJSON("UI_Assets"),
+            me.loader.getImage("UI_Assets")
+        );
         me.state.set(me.state.PLAY, new game.PlayScreen());
         me.state.transition("fade","#FFFFFF", 250);
-        me.input.bindKey(me.input.KEY.LEFT,  "left");
-        me.input.bindKey(me.input.KEY.RIGHT, "right");
-        me.input.bindKey(me.input.KEY.UP,    "up");
-        me.input.bindKey(me.input.KEY.DOWN,  "down");
-        me.input.bindKey(me.input.KEY.ENTER, "enter");
         me.state.change(me.state.PLAY);
     }
 };
