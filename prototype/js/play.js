@@ -17,13 +17,17 @@ game.PlayScreen = me.ScreenObject.extend({
       this._buildingLayer = me.game.world.getChildByName('Building');
       var zoomOutBtn = new Button(10, 10, "Zoom out", this.onZoomOut.bind(this));
       var zoomIntBtn = new Button(200, 10, "Zoom in", this.onZoomIn.bind(this));
-      var addBlockBtn = new Button(390, 10, "Edit", this.editMode.bind(this));
+      var addBlockBtn = new CheckBox(390, 10, "Edit mode enabled", "Edit mode disabled", this.editMode.bind(this));
       me.game.world.addChild(zoomOutBtn); // Add buttons.
       me.game.world.addChild(zoomIntBtn);
       me.game.world.addChild(addBlockBtn);
+      this._tileSelector = me.game.world.addChild(new TileSelector());
       this.handlePointerDown = me.input.registerPointerEvent('pointerdown', me.game.viewport, this.onMouseDown.bind(this)); // Drag through the map.
       this.handlePointerMove = me.input.registerPointerEvent('pointermove', me.game.viewport, this.onMouseMove.bind(this));
       this.handlePointerUp = me.input.registerPointerEvent('pointerup', me.game.viewport, this.onMouseUp.bind(this));
+      me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
+        me.event.publish("pointermove", [ event ]);
+      }, false);
   		var currentLevel = me.levelDirector.getCurrentLevel(); // Center the camera.
   		me.game.viewport.move(currentLevel.width / 2, 0);
   		me.game.viewport.move(0, currentLevel.height / 2);
@@ -33,8 +37,8 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.repaint();
     },
 
-    editMode: function() {
-      this.state.isInEditMode = true;
+    editMode: function(isInEditMode) {
+      this.state.isInEditMode = isInEditMode;
     },
 
     onMouseDown: function(e) {
@@ -42,10 +46,12 @@ game.PlayScreen = me.ScreenObject.extend({
       this.state.dragInitStartingX = e.gameScreenX;
       this.state.dragInitStartingY = e.gameScreenY;
       if (this.state.isInEditMode) {
-        var MySprite = new me.Sprite(e.gameWorldX, e.gameWorldY, {
-            image : "obj"
-        });
-        me.game.world.addChild(MySprite, 2);
+        var refLayer = me.game.world.getChildByName("Ground")[0];
+        var tile = refLayer.getTile(e.gameWorldX, e.gameWorldY);
+        if (tile) {
+          var MySprite = new BuildingBlock(e.gameWorldX, e.gameWorldY);
+          me.game.world.addChild(MySprite, 2);
+        }
       }
     },
 
@@ -70,6 +76,7 @@ game.PlayScreen = me.ScreenObject.extend({
       if (this.state.currentZoom >= this.state.nbMaxZoom) {
         return;
       }
+
 
       this.state.currentZoom++;
       var viewport = me.game.viewport;

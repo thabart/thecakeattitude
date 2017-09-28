@@ -26,7 +26,7 @@ var Button = me.GUI_Object.extend(
        this.callback();
      }
 
-     return true;
+     return false;
    },
 
   onRelease : function (/* event */) {
