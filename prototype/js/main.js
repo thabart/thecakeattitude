@@ -26,7 +26,8 @@ var game = {
     loaded: function () {
         game.texture = new me.video.renderer.Texture( // Load texture atlas file.
             me.loader.getJSON("UI_Assets"),
-            me.loader.getImage("UI_Assets")
+            me.loader.getImage("UI_Assets"),
+            me.loader.getImage("obj")
         );
         me.state.set(me.state.PLAY, new game.PlayScreen());
         me.state.transition("fade","#FFFFFF", 250);

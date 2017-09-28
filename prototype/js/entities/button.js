@@ -1,7 +1,7 @@
 // create a basic GUI Object
-var zoomButton = me.GUI_Object.extend(
+var Button = me.GUI_Object.extend(
 {
-   init:function (x, y, callback)
+   init:function (x, y, label, callback)
    {
      this.callback = callback;
       // super constructor
@@ -17,7 +17,7 @@ var zoomButton = me.GUI_Object.extend(
       this.font = new me.Font("kenpixel", 12, "black");
       this.font.textAlign = "center";
       this.font.textBaseline = "middle";
-      this.label = 'coucou';
+      this.label = label;
    },
 
    onClick:function (event)
@@ -25,7 +25,7 @@ var zoomButton = me.GUI_Object.extend(
      if (this.callback) {
        this.callback();
      }
-     
+
      return true;
    },
 

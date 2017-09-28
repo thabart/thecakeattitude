@@ -9,14 +9,18 @@ game.PlayScreen = me.ScreenObject.extend({
         currentZoom: 0,
         initBounds: null,
         initViewPortSize: null,
-        newBounds: null
+        newBounds: null,
+        isInEditMode: false // Add block.
       };
 
       me.levelDirector.loadLevel("map");
-      var zoomOutBtn = new zoomButton(10, 10, this.onZoomOut.bind(this));
-      var zoomIntBtn = new zoomButton(200, 10, this.onZoomIn.bind(this));
+      this._buildingLayer = me.game.world.getChildByName('Building');
+      var zoomOutBtn = new Button(10, 10, "Zoom out", this.onZoomOut.bind(this));
+      var zoomIntBtn = new Button(200, 10, "Zoom in", this.onZoomIn.bind(this));
+      var addBlockBtn = new Button(390, 10, "Edit", this.editMode.bind(this));
       me.game.world.addChild(zoomOutBtn); // Add buttons.
       me.game.world.addChild(zoomIntBtn);
+      me.game.world.addChild(addBlockBtn);
       this.handlePointerDown = me.input.registerPointerEvent('pointerdown', me.game.viewport, this.onMouseDown.bind(this)); // Drag through the map.
       this.handlePointerMove = me.input.registerPointerEvent('pointermove', me.game.viewport, this.onMouseMove.bind(this));
       this.handlePointerUp = me.input.registerPointerEvent('pointerup', me.game.viewport, this.onMouseUp.bind(this));
@@ -29,10 +33,20 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.repaint();
     },
 
+    editMode: function() {
+      this.state.isInEditMode = true;
+    },
+
     onMouseDown: function(e) {
       this.state.dragging = true;
       this.state.dragInitStartingX = e.gameScreenX;
       this.state.dragInitStartingY = e.gameScreenY;
+      if (this.state.isInEditMode) {
+        var MySprite = new me.Sprite(e.gameWorldX, e.gameWorldY, {
+            image : "obj"
+        });
+        me.game.world.addChild(MySprite, 2);
+      }
     },
 
     onMouseMove: function(e) {
@@ -94,10 +108,6 @@ game.PlayScreen = me.ScreenObject.extend({
         this.state.newBounds.w = (this.state.initViewPortSize.w * this.state.scale) * multi + this.state.initBounds.w;
         this.state.newBounds.h =  (this.state.initViewPortSize.h * this.state.scale) * multi + this.state.initBounds.h;
       }
-    },
-
-    dragEnd: function() {
-      console.log("drag end");
     },
 
     onDestroyEvent: function() {
