@@ -175,6 +175,7 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             Transporter = 1,
+                            ParcelShopId = "1",
                             BuyerAddressLine = "10 GOERLITZER STRASSE",
                             BuyerCity = "NEUSS",
                             BuyerCountryCode = "DE",
@@ -205,7 +206,8 @@ namespace Cook4Me.Api.Host.Extensions
                             Status = 0,
                             TransactionId = "PAY-69134876YM8579522LHGMMWI", // THE TRANSACTION ID SHOULD BE UPDATED.
                             PayerId = "RTTQKS7QPPFXL",
-                            PaymentMethod = 0
+                            PaymentMethod = 0,
+                            ApprovalUrl = "http://location"
                         }
                     },
                     new Order // Confirmed order (packet mode) + payment approved.
@@ -223,6 +225,7 @@ namespace Cook4Me.Api.Host.Extensions
                             Id = Guid.NewGuid().ToString(),
                             Transporter = 1,
                             BuyerAddressLine = "10 GOERLITZER STRASSE",
+                            ParcelShopId = "1",
                             BuyerCity = "NEUSS",
                             BuyerCountryCode = "DE",
                             BuyerName = "HT",
@@ -268,6 +271,7 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             Transporter = 1,
+                            ParcelShopId = "1",
                             BuyerAddressLine = "10 GOERLITZER STRASSE",
                             BuyerCity = "NEUSS",
                             BuyerCountryCode = "DE",
@@ -317,6 +321,7 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             Transporter = 1,
+                            ParcelShopId = "1",
                             BuyerAddressLine = "10 GOERLITZER STRASSE",
                             BuyerCity = "NEUSS",
                             BuyerCountryCode = "DE",
