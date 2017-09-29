@@ -10819,7 +10819,7 @@ THE SOFTWARE.
             );
 
             this.setDeadzone(w / 6, h / 6);
-            this.moveTo(0, 0);
+            // this.moveTo(0, 0);
             this.update();
             me.event.publish(me.event.VIEWPORT_ONRESIZE, [ this.width, this.height ]);
             return this;
