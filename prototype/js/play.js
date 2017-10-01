@@ -7,7 +7,8 @@ game.PlayScreen = me.ScreenObject.extend({
         scale: 0.04,
         nbMaxZoom: 5, // Zoom
         currentZoom: 0,
-        isInEditMode: false // Add block.
+        isInEditMode: false, // Add block.
+        blocks: []
       };
 
       me.levelDirector.loadLevel("map");
@@ -18,7 +19,7 @@ game.PlayScreen = me.ScreenObject.extend({
       me.game.world.addChild(zoomOutBtn); // Add buttons.
       me.game.world.addChild(zoomIntBtn);
       me.game.world.addChild(addBlockBtn);
-      // this._tileSelector = me.game.world.addChild(new TileSelector());
+      this._tileSelector = me.game.world.addChild(new TileSelector());
       this.handlePointerDown = me.input.registerPointerEvent('pointerdown', me.game.viewport, this.onMouseDown.bind(this)); // Drag through the map.
       this.handlePointerMove = me.input.registerPointerEvent('pointermove', me.game.viewport, this.onMouseMove.bind(this));
       this.handlePointerUp = me.input.registerPointerEvent('pointerup', me.game.viewport, this.onMouseUp.bind(this));
@@ -43,8 +44,23 @@ game.PlayScreen = me.ScreenObject.extend({
         var refLayer = me.game.world.getChildByName("Ground")[0];
         var tile = refLayer.getTile(e.gameWorldX, e.gameWorldY);
         if (tile) {
-          var MySprite = new BuildingBlock(e.gameWorldX, e.gameWorldY);
-          me.game.world.addChild(MySprite, 2);
+            var position = refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
+            var buildingBlockWidth = me.loader.getImage('buildingBlock').width;
+            var MySprite = new BuildingBlock(position.x, position.y);
+            var alreadyExists = false;
+            this.state.blocks.forEach(function(block) {
+              if (MySprite.overlaps(block)) {
+                alreadyExists = true;
+                return;
+              }
+            });
+
+            if (alreadyExists) {
+              return;
+            }
+
+            me.game.world.addChild(MySprite, 2);
+            this.state.blocks.push(MySprite);
         }
       }
     },
