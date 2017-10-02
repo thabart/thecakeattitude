@@ -5,5 +5,8 @@ var BuildingBlock = me.Sprite.extend(
      this._super(me.Sprite, "init", [ x, y, {
        image: "buildingBlock"
      }]);
+   },
+   draw: function() {
+   	console.log('coucou');
    }
 });
