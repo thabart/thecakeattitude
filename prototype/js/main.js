@@ -26,10 +26,13 @@ var game = {
     loaded: function () {
         game.texture = new me.video.renderer.Texture( // Load texture atlas file.
             me.loader.getJSON("UI_Assets"),
-            me.loader.getImage("UI_Assets"),
-            me.loader.getImage("obj")
+            me.loader.getImage("UI_Assets")
         );
-        me.state.set(me.state.PLAY, new game.PlayScreen());
+        game.furnitures = new me.video.renderer.Texture(
+            me.loader.getJSON("Furnitures"),
+            me.loader.getImage("Furnitures")
+        );
+        me.state.set(me.state.PLAY, new game.ShopScreen());
         me.state.transition("fade","#FFFFFF", 250);
         me.state.change(me.state.PLAY);
     }

@@ -1,0 +1,21 @@
+{"frames": [
+
+{
+	"filename": "table",
+	"frame": {"x":0,"y":0,"w":128,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":70},
+	"sourceSize": {"w":128,"h":70},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "Furnitures.png",
+	"format": "INDEXED",
+	"size": {"w":300,"h":70},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:1f7005d38569aab218dc3997aecb68e5:9b74ecbd05a68429ea009da231f6aae1:789186d00ba8d6b41c6c669108d18494$"
+}
+}

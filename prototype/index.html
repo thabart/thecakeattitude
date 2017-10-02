@@ -2,7 +2,9 @@
 <html>
     <head>
         <title>melonJS Boilerplate</title>
-        <link rel="stylesheet" type="text/css" media="screen" href="index.css">
+        <link rel="stylesheet" type="text/css" href="css/site.css">
+        <link rel="stylesheet" type="text/css" href="css/menu.css">
+        <link rel="stylesheet" type="text/css" href="css/common.css">
         <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
@@ -14,17 +16,23 @@
         <link rel="manifest" href="manifest.json">
     </head>
     <body>
-        <div id="screen"></div>
+        <div id="screen" class="game-container"><div class="floating-menu"></div></div>
         <script type="text/javascript" src="lib/melonJS.js"></script>
-        <script type="text/javascript" src="lib/plugins/debug/debugPanel.js"></script>
+        <script type="text/javascript" src="lib/jquery-3.2.1.js"></script>
         <script type="text/javascript" src="js/resources.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
+        <!-- Load containers -->
+        <script type="text/javascript" src="js/containers/movableContainer.js"></script>
+        <!-- Load entities -->
         <script type="text/javascript" src="js/entities/button.js"></script>
         <script type="text/javascript" src="js/entities/buildingBlock.js"></script>
-        <script type="text/javascript" src="js/entities/table.js"></script>
+        <script type="text/javascript" src="js/entities/furniture.js"></script>
         <script type="text/javascript" src="js/entities/checkBox.js"></script>
+        <script type="text/javascript" src="js/entities/furnitureSelector.js"></script>
         <script type="text/javascript" src="js/entities/tileSelector.js"></script>
-        <script type="text/javascript" src="js/zoomContainer.js"></script>
-        <script type="text/javascript" src="js/play.js"></script>
+        <!-- Load stores -->
+        <script type="text/javascript" src="js/stores/shopStore.js"></script>
+        <!-- Load the screens -->
+        <script type="text/javascript" src="js/screens/shopScreen.js"></script>
     </body>
 </html>
