@@ -1,25 +1,21 @@
 var Selector = me.Renderable.extend({
-      init: function(selector) {
-        this.oneTime = false;
-        this.refLayer = me.game.world.getChildByName("Ground")[0];
-        this._super(me.Renderable, 'init', [ 0, 0,
-          selector.getBounds().width,
-          selector.getBounds().height
-        ]);
-        this.diamondShape = selector;
-        this.floating = true;
-        this.dirty = false;
-        console.log('coucou');
+      init: function(x, y, w, h) {
+        this._super(me.Renderable, 'init', [ x, y, w, h ]);
+        this.diamondShape = this.clone().toPolygon().toIso();
       },
 
       update : function(dt) {
         return false;
       },
 
+      getShape: function() {
+        return this.diamondShape;
+      },
+
       draw: function(renderer) {
         renderer.save();
         renderer.setColor("#FF0000");
         renderer.drawShape(this.diamondShape);
-        renderer.restore();      
+        renderer.restore();
       }
 });

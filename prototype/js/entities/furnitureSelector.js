@@ -3,6 +3,7 @@ var FurnitureSelector = me.Renderable.extend({
         this.refLayer = me.game.world.getChildByName("Ground")[0];
         this.isFurnitureSelected = false;
         this.diamondShape = null;
+        this.overlaped = false;
         this._super(me.Renderable, 'init', [ 0, 0, 0, 0 ]);
         this.floating = true;
         this.currentTile = null;
@@ -24,46 +25,48 @@ var FurnitureSelector = me.Renderable.extend({
             var nbRows = Math.ceil(this.width / (this.refLayer.tilewidth));
             var nbCols = Math.ceil(this.height / this.refLayer.tileheight) - 1;
             this.refLayer.getRenderer().tileToPixelCoords(tile.col - nbRows, tile.row - nbCols, this.diamondShape.pos);
+            var clonedDiamonShape = this.diamondShape.clone();
             me.game.viewport.worldToLocal(
               this.diamondShape.pos.x,
               this.diamondShape.pos.y,
               this.diamondShape.pos
             );
             var alreadyExists = false;
-            // var normalPosition = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
-            /*
-            var region = game.furnitures.getRegion(ShopStore.getSelectedFurniture()); 
-            var square = new me.Rect(normalPosition.x, normalPosition.y, 
-              Math.ceil(region.width / (this.refLayer.tilewidth)) * (this.refLayer.tilewidth), 
-              Math.ceil(region.height / this.refLayer.tileheight) * this.refLayer.tileheight);
+            var minX = clonedDiamonShape.pos.x;
+            var maxX = clonedDiamonShape.pos.x + this.width;
+            var minY = clonedDiamonShape.pos.y;
+            var maxY = clonedDiamonShape.pos.y + (this.height / 2);
             existingFurnitures.forEach(function(furniture) {
-              if (square.overlaps(furniture)) {
+              var newMaxX = furniture.getSelector().pos.x + self.width;
+              var newMaxY = furniture.getSelector().pos.y + (self.height / 2);
+              console.log("old y " + minY);
+              console.log("old max y " + maxY);
+              console.log("new y " + furniture.getSelector().pos.y);
+              console.log("new max y " + newMaxY);
+              console.log("old x " + minX);
+              console.log("old max x " + maxX);
+              console.log("new x " + furniture.getSelector().pos.x);
+              console.log("new max x " + newMaxX);
+              if ((minX < newMaxX && maxX > furniture.getSelector().pos.x) && (minY < newMaxY && maxY > furniture.getSelector().pos.y)) {
                 alreadyExists = true;
               }
             });
-            */
 
-            if (alreadyExists) { this.currentTile = null; return; }
+            this.overlaped = alreadyExists;
             this.currentTile = tile;
         };
       },
 
       pointerDown: function(evt) {
-        if (!this.currentTile) { return; }       
+        if (!this.currentTile) { return; }
         var regionName = ShopStore.getSelectedFurniture();
-        var region = game.furnitures.getRegion(regionName); 
+        var region = game.furnitures.getRegion(regionName);
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
         if (!tile) { return; }
         var position = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
-        var container = new game.EditableSpriteContainer(position, { w : this.diamondShape.getBounds().width, h: this.diamondShape.getBounds().height }, 
-          this.diamondShape.clone(), regionName, game.furnitures);
+        var container = new game.EditableSpriteContainer(position, regionName, game.furnitures);
         me.game.world.addChild(container, 10);
         ShopStore.addFurniture(container);
-        /*
-        var furniture = new Furniture(position.x, position.y, ShopStore.getSelectedFurniture(), this.diamondShape.clone());
-        me.game.world.addChild(furniture, 10);
-        ShopStore.addFurniture(furniture);
-        */
       },
 
       setFurniture: function() {
@@ -92,12 +95,13 @@ var FurnitureSelector = me.Renderable.extend({
         }
 
         renderer.save();
-        renderer.setColor("#FF0000");
+        if (!this.overlaped) {
+          renderer.setColor("#FF0000");
+        } else {
+          renderer.setColor("#c0c0c0");
+        }
+
         renderer.drawShape(this.diamondShape);
-        var furnitures = ShopStore.getFurnitures();
-        furnitures.forEach(function(furniture) {
-          renderer.drawShape(furniture.getSelectionShape());          
-        });
         renderer.restore();
       }
 });
