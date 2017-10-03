@@ -24,15 +24,27 @@ game.ShopScreen = me.ScreenObject.extend({
 
     addFloatingMenu: function() {
       var self = this;
-      var menu = $("<ul class='list'><li>Table</li></ul>");
+      var menu = $("<div><ul class='list'>"+
+          "<li data-furniture='table'>Table</li>"+
+          "<li data-furniture='sofatable'>Sofa table</li>"+
+          "<li data-furniture='chair'>Chair</li>"+
+          "</ul><input type='checkbox' id='rotate' /> Rotate</div>");
       $(".floating-menu").append(menu);
       $(menu).find('li').click(function(e) {
           if ($(this).hasClass('active')) {
             return;
           }
           
+          $(menu).find('li').removeClass('active');
           $(this).addClass('active');
-          ShopStore.setSelectedFurniture('table');
+          ShopStore.setSelectedFurniture($(this).data('furniture'));
+      });
+      $(menu).find('#rotate').click(function(e) {
+        if ($(this).is(':checked')) {
+          ShopStore.setOrientation('column');
+        } else {
+          ShopStore.setOrientation('row');
+        }
       });
     }
 });

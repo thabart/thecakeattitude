@@ -10,10 +10,11 @@ var FurnitureSelector = me.Renderable.extend({
         this.dirty = false;
         me.event.subscribe("pointermove", this.pointerMove.bind(this));
         me.event.subscribe('pointerdown', this.pointerDown.bind(this));
-        ShopStore.listenSelectedFurnitureChanged(this.setFurniture.bind(this));
+        ShopStore.listenSelectedFurnitureChanged(this.updateFurniture.bind(this));
+        ShopStore.listenOrientationChanged(this.updateFurniture.bind(this));
       },
 
-      pointerMove : function (evt) {
+      pointerMove : function (evt) { // Move the selection square.
         if (!this.isFurnitureSelected) {
           return;
         }
@@ -24,31 +25,34 @@ var FurnitureSelector = me.Renderable.extend({
         var nbRows = Math.round(diamond2d.getBounds().height / this.refLayer.tileheight);
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
         var existingFurnitures = ShopStore.getFurnitures();
-        if (tile && tile !== this.currentTile) {
-            var bottomLeftTileCoordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col + nbCols - 1, tile.row + nbRows - 1);
-            var bottomLeftTile = this.refLayer.getTile(bottomLeftTileCoordinates.x, bottomLeftTileCoordinates.y);
-            if (!bottomLeftTile) return;
-            this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row, this.diamondShape.pos);
-            var clonedDiamonShape = this.diamondShape.clone();
-            me.game.viewport.worldToLocal(
-              this.diamondShape.pos.x,
-              this.diamondShape.pos.y,
-              this.diamondShape.pos
-            );
-            var diamon2dShape = new me.Rect(tile.col, tile.row, nbCols, nbRows);
-            var alreadyExists = false;
-            existingFurnitures.forEach(function(furniture) {
-              if (furniture.get2dShape().overlaps(diamon2dShape)) {
-                alreadyExists = true;
-              }
-            });
+        if (!tile || tile === this.currentTile) { return; }
+        var bottomLeftTileCoordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col + nbCols - 1, tile.row + nbRows - 1);
+        var bottomLeftTile = this.refLayer.getTile(bottomLeftTileCoordinates.x, bottomLeftTileCoordinates.y);
+        if (!bottomLeftTile) {
+          this.currentTile = null;
+          return;
+        }
 
-            this.overlaped = alreadyExists;
-            this.currentTile = tile;
-        };
+        this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row, this.diamondShape.pos);
+        var clonedDiamonShape = this.diamondShape.clone();
+        me.game.viewport.worldToLocal(
+          this.diamondShape.pos.x,
+          this.diamondShape.pos.y,
+          this.diamondShape.pos
+        );
+        var diamon2dShape = new me.Rect(tile.col, tile.row, nbCols, nbRows);
+        var alreadyExists = false;
+        existingFurnitures.forEach(function(furniture) {
+          if (furniture.get2dShape().overlaps(diamon2dShape)) {
+            alreadyExists = true;
+          }
+        });
+
+        this.overlaped = alreadyExists;
+        this.currentTile = tile;
       },
 
-      pointerDown: function(evt) {
+      pointerDown: function(evt) { // Add the furniture.
         if (!this.currentTile) { return; }
         if (this.overlaped) { return; }
         if (evt.which !== 1) { return; }
@@ -56,20 +60,20 @@ var FurnitureSelector = me.Renderable.extend({
         var region = game.furnitures.getRegion(regionName);
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
         if (!tile) { return; }
-        var container = new game.EditableSpriteContainer(tile, regionName, game.furnitures);
+        var container = new game.EditableSpriteContainer(tile, regionName, game.furnitures, ShopStore.getOrientation());
         me.game.world.addChild(container, 10);
         ShopStore.addFurniture(container);
       },
 
-      setFurniture: function() {
-        var region = game.furnitures.getRegion(ShopStore.getSelectedFurniture());
-        if (!region) {
+      updateFurniture: function() { // Update the selected furniture.
+        var size = this.getFurnitureSize();
+        if (!size) {
           return;
         }
 
-        var width = Math.ceil(region.width / (this.refLayer.tilewidth)) * (this.refLayer.tilewidth / 2);
-        var height = Math.ceil(region.height / this.refLayer.tileheight) * this.refLayer.tileheight;
-        this.diamondShape = new me.Rect(0, 0, width, height).toPolygon().toIso();
+        var positionX = this.diamondShape ? this.diamondShape.pos.x : 0;
+        var positionY = this.diamondShape ? this.diamondShape.pos.y : 0;
+        this.diamondShape = new me.Rect(positionX, positionY, size.w, size.h).toPolygon().toIso();
         this.isFurnitureSelected = true;
       },
 
@@ -95,5 +99,27 @@ var FurnitureSelector = me.Renderable.extend({
 
         renderer.drawShape(this.diamondShape);
         renderer.restore();
+      },
+
+      getFurnitureSize: function() { // Returns the size of a furniture.
+        var region = game.furnitures.getRegion(ShopStore.getSelectedFurniture());
+        var orientation = ShopStore.getOrientation();
+        if (!region) {
+          return null;
+        }
+
+        var tmpWidth = Math.ceil(region.width / (this.refLayer.tilewidth)) * (this.refLayer.tilewidth / 2);
+        var tmpHeight = Math.ceil(region.height / this.refLayer.tileheight) * this.refLayer.tileheight;
+        var width = tmpWidth;
+        var height = tmpHeight;
+        if (orientation === 'column') {
+          width = tmpHeight;
+          height = tmpWidth;
+        }
+
+        return {
+          w: width,
+          h: height
+        };
       }
 });

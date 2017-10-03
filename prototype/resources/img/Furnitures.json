@@ -1,12 +1,29 @@
 {"frames": [
-
 {
 	"filename": "table",
-	"frame": {"x":0,"y":0,"w":128,"h":70},
+	"frame": {"x":18,"y":1,"w":93,"h":63},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":70},
-	"sourceSize": {"w":128,"h":70},
+	"spriteSourceSize": {"x":18,"y":1,"w":93,"h":63},
+	"sourceSize": {"w":93,"h":63},
+	"pivot": {"x":0.5,"y":0.5}
+}, 
+{
+	"filename": "sofatable",
+	"frame": {"x":154,"y":1,"w":108,"h":73},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":154,"y":1,"w":108,"h":73},
+	"sourceSize": {"w":108,"h":73},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "chair",
+	"frame": {"x":327,"y":1,"w":36,"h":72},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":327,"y":1,"w":36,"h":72},
+	"sourceSize": {"w":36,"h":72},
 	"pivot": {"x":0.5,"y":0.5}
 }],
 "meta": {
