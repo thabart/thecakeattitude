@@ -6,9 +6,6 @@ game.EditableSpriteContainer = me.Container.extend({
 		var h = Math.ceil(region.height / this.refLayer.tileheight) * this.refLayer.tileheight;
         var nbCols = w / (this.refLayer.tilewidth / 2);
         var nbRows = h / this.refLayer.tileheight;
-        console.log(this.refLayer.tileheight);
-        console.log(h);
-        console.log(nbCols);
         var position = this.refLayer.getRenderer().tileToPixelCoords(tile.col + nbCols - 1, tile.row + nbRows - 1);
         var redFramePosition = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
         this._super(me.Container, "init", [ 0, 0 ]);

@@ -9,6 +9,8 @@ game.MovableContainer = me.Container.extend({
       	this.handlePointerUp = me.input.registerPointerEvent('pointerup', me.game.viewport, this.onMouseUp.bind(this));
 	},
 	onMouseDown: function(e) {
+		if (e.which !== 3) { return; }
+		e.preventDefault();
 		this.isDragging = true;
       	this.dragInitStartingX = e.gameScreenX;
      	this.dragInitStartingY = e.gameScreenY;

@@ -51,6 +51,7 @@ var FurnitureSelector = me.Renderable.extend({
       pointerDown: function(evt) {
         if (!this.currentTile) { return; }
         if (this.overlaped) { return; }
+        if (evt.which !== 1) { return; }
         var regionName = ShopStore.getSelectedFurniture();
         var region = game.furnitures.getRegion(regionName);
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
