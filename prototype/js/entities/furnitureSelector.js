@@ -20,8 +20,8 @@ var FurnitureSelector = me.Renderable.extend({
 
         var self = this;
         var diamond2d = this.diamondShape.clone().to2d();
-        var nbCols = diamond2d.getBounds().width / (this.refLayer.tilewidth / 2);
-        var nbRows = diamond2d.getBounds().height / this.refLayer.tileheight;
+        var nbCols = Math.round(diamond2d.getBounds().width / (this.refLayer.tilewidth / 2));
+        var nbRows = Math.round(diamond2d.getBounds().height / this.refLayer.tileheight);
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
         var existingFurnitures = ShopStore.getFurnitures();
         if (tile && tile !== this.currentTile) {
@@ -50,6 +50,7 @@ var FurnitureSelector = me.Renderable.extend({
 
       pointerDown: function(evt) {
         if (!this.currentTile) { return; }
+        if (this.overlaped) { return; }
         var regionName = ShopStore.getSelectedFurniture();
         var region = game.furnitures.getRegion(regionName);
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
