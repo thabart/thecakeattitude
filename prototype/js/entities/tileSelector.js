@@ -1,11 +1,10 @@
 var TileSelector = me.Renderable.extend({
       init: function() {
-        this.refLayer = me.game.world.getChildByName("Ground")[0];
+        this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground)[0];
         this._super(me.Renderable, 'init', [ 0, 0,
           this.refLayer.tilewidth / 2,
           this.refLayer.tileheight
         ]);
-
         this.floating = true;
         this.diamondShape = this.clone().toPolygon().toIso();
         this.currentTile = null;
