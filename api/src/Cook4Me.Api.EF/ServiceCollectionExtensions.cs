@@ -95,6 +95,7 @@ namespace Cook4Me.Api.EF
             serviceCollection.AddTransient<IMessageRepository, MessageRepository>();
             serviceCollection.AddTransient<IOrderRepository, OrderRepository>();
             serviceCollection.AddTransient<IUpsServiceRepository, UpsServiceRepository>();
+            serviceCollection.AddTransient<IDiscountRepository, DiscountRepository>();
         }
     }
 }

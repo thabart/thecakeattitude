@@ -14,20 +14,9 @@
 // limitations under the License.
 #endregion
 
-using System;
-
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Repositories
 {
-    public class ProductPromotion
+    public interface IDiscountRepository
     {
-        public string Id { get; set; }
-        public string ProductId { get; set; }
-        public double Discount { get; set; }
-        public int Type { get; set; }
-        public string Code { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public DateTime ExpirationDateTime { get; set; }
-        public virtual Product Product { get; set; }
     }
 }

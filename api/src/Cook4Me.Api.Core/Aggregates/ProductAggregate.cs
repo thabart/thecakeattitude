@@ -40,7 +40,6 @@ namespace Cook4Me.Api.Core.Aggregates
         public IEnumerable<string> Tags { get; set; }
         public IEnumerable<string> PartialImagesUrl { get; set; }
         public IEnumerable<ProductAggregateFilter> Filters { get; set; }
-        public IEnumerable<ProductAggregatePromotion> Promotions { get; set; }
         public ICollection<ProductComment> Comments { get; set; }
 
         public void AddComment(ProductComment comment)

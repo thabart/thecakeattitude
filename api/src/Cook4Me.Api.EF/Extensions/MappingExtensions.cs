@@ -25,6 +25,56 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static DiscountAggregate ToAggregate(this Discount discount)
+        {
+            if (discount == null)
+            {
+                throw new ArgumentNullException(nameof(discount));
+            }
+
+
+            IEnumerable<string> productIds = new string[0];
+            if (discount.Products != null && discount.Products.Any())
+            {
+                productIds = discount.Products.Select(p => p.Id);
+            }
+
+            return new DiscountAggregate
+            {
+                Code = discount.Code,
+                Counter = discount.Counter,
+                CreateDateTime = discount.CreateDateTime,
+                EndDateTime = discount.EndDateTime,
+                Id = discount.Id,
+                PromotionType = (DiscountAggregatePromotions)discount.PromotionType,
+                StartDateTime = discount.StartDateTime,
+                UpdateDateTime = discount.UpdateDateTime,
+                Validity = (DiscountAggregateValidities)discount.Validity,
+                ProductIds = productIds
+            };
+        }
+
+        public static Discount ToModel(this DiscountAggregate aggregate)
+        {
+            if (aggregate == null)
+            {
+                throw new ArgumentNullException(nameof(aggregate));
+            }
+
+            return new Discount
+            {
+                Code = aggregate.Code,
+                Counter = aggregate.Counter,
+                CreateDateTime = aggregate.CreateDateTime,
+                EndDateTime = aggregate.EndDateTime,
+                Id = aggregate.Id,
+                PromotionType = (int)aggregate.PromotionType,
+                StartDateTime = aggregate.StartDateTime,
+                UpdateDateTime = aggregate.UpdateDateTime,
+                Validity = (int)aggregate.Validity
+            };
+        }
+
         public static UpsServiceAggregate ToAggregate(this UpsService upsService)
         {
             if (upsService == null)
@@ -922,12 +972,6 @@ namespace Cook4Me.Api.EF.Extensions
                 filterValues = product.Filters.Select(f => f.ToAggregate()).Where(f => f != null);
             }
 
-            IEnumerable<ProductAggregatePromotion> promotions = new List<ProductAggregatePromotion>();
-            if (product.Promotions != null)
-            {
-                promotions = product.Promotions.Where(p => string.IsNullOrWhiteSpace(p.Code)).Select(p => p.ToAggregate());
-            }
-
             ICollection<ProductComment> comments = new List<ProductComment>();
             if (product.Comments != null)
             {
@@ -950,7 +994,6 @@ namespace Cook4Me.Api.EF.Extensions
                 PartialImagesUrl = images,
                 Tags = tags,
                 Filters = filterValues,
-                Promotions = promotions,
                 AverageScore = product.AverageScore,
                 TotalScore = product.TotalScore,
                 Comments = comments,
@@ -1016,26 +1059,6 @@ namespace Cook4Me.Api.EF.Extensions
                 Description = productCategory.Description,
                 Name = productCategory.Name,
                 ShopSectionName = productCategory.ShopSectionName
-            };
-        }
-
-        public static ProductAggregatePromotion ToAggregate(this ProductPromotion productPromotion)
-        {
-            if (productPromotion == null)
-            {
-                throw new ArgumentNullException(nameof(productPromotion));
-            }
-
-            return new ProductAggregatePromotion
-            {
-                Id = productPromotion.Id,
-                Code = productPromotion.Code,
-                Discount = productPromotion.Discount,
-                ProductId = productPromotion.ProductId,
-                Type = (PromotionTypes)productPromotion.Type,
-                CreateDateTime = productPromotion.CreateDateTime,
-                ExpirationDateTime = productPromotion.ExpirationDateTime,
-                UpdateDateTime = productPromotion.UpdateDateTime
             };
         }
 

@@ -104,7 +104,6 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetClientServiceRemovedEvent(ClientServiceRemovedEvent evt);
         JObject GetProductAddedEvent(ProductAddedEvent evt);
         JObject GetProduct(ProductAggregate product);
-        JObject GetPromotion(ProductAggregatePromotion promotion);
         JObject GetService(ServiceAggregate service);
         JObject GetServiceOccurrence(ServiceResultLine service);
         JObject GetClientService(ClientServiceAggregate announcement);
@@ -1649,17 +1648,6 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.Product.Filters, arr);
             }
 
-            if (product.Promotions != null && product.Promotions.Any())
-            {
-                JArray arr = new JArray();
-                foreach(var promotion in product.Promotions)
-                {
-                    arr.Add(GetPromotion(promotion));
-                }
-
-                jObj.Add(Constants.DtoNames.Product.Promotions, arr);
-            }
-
             return jObj;
         }
 
@@ -1678,30 +1666,7 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.ProductFilter.Content, productFilter.FilterValueContent);
             return jObj;
         }
-
-        public JObject GetPromotion(ProductAggregatePromotion promotion)
-        {
-            if (promotion == null)
-            {
-                throw new ArgumentNullException(nameof(promotion));
-            }
-
-            var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.Promotion.Id, promotion.Id);
-            jObj.Add(Constants.DtoNames.Promotion.ProductId, promotion.ProductId);
-            jObj.Add(Constants.DtoNames.Promotion.Discount, promotion.Discount);
-            var type = promotion.Type == PromotionTypes.Percentage ? "percentage" : "reduction";
-            jObj.Add(Constants.DtoNames.Promotion.Type, type);
-            if (!string.IsNullOrWhiteSpace(promotion.Code))
-            {
-                jObj.Add(Constants.DtoNames.Promotion.Code, promotion.Code);
-            }
-
-            jObj.Add(Constants.DtoNames.Promotion.CreateDateTime, promotion.CreateDateTime);
-            jObj.Add(Constants.DtoNames.Promotion.UpdateDateTime, promotion.UpdateDateTime);
-            jObj.Add(Constants.DtoNames.Promotion.ExpirationDateTime, promotion.ExpirationDateTime);
-            return jObj;
-        }
+        
 
         public JObject GetService(ServiceAggregate service)
         {

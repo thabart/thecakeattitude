@@ -14,25 +14,14 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.EF.Models;
-using Microsoft.EntityFrameworkCore;
-using System;
-
-namespace Cook4Me.Api.EF.Mappings
+namespace Cook4Me.Api.EF.Models
 {
-    internal static class ProductPromotionMapping
+    public class ProductDiscount
     {
-        public static ModelBuilder AddProductPromotion(this ModelBuilder modelBuilder)
-        {
-            if (modelBuilder == null)
-            {
-                throw new ArgumentNullException(nameof(modelBuilder));
-            }
-
-            modelBuilder.Entity<ProductPromotion>()
-                .ToTable("productPromotions")
-                .HasKey(p => p.Id);
-            return modelBuilder;
-        }
+        public string Id { get; set; }
+        public string ProductId { get; set; }
+        public string DiscountId { get; set; }
+        public virtual Discount Discount { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

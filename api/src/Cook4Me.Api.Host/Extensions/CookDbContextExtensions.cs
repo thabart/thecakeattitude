@@ -1040,29 +1040,7 @@ namespace Cook4Me.Api.Host.Extensions
 
         private static void InsertPromotions(CookDbContext context)
         {
-            context.Promotions.AddRange(new[]
-            {
-                new ProductPromotion
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ProductId = _blueJeanProductId,
-                    Type = (int)Core.Aggregates.PromotionTypes.Percentage,
-                    Discount = 20,
-                    CreateDateTime = DateTime.UtcNow,
-                    UpdateDateTime = DateTime.UtcNow,
-                    ExpirationDateTime = DateTime.UtcNow.AddDays(2)                  
-                },
-                new ProductPromotion
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ProductId = _smallShoesId,
-                    Type = (int)Core.Aggregates.PromotionTypes.Percentage,
-                    Discount = 60,
-                    CreateDateTime = DateTime.UtcNow,
-                    UpdateDateTime = DateTime.UtcNow,
-                    ExpirationDateTime = DateTime.UtcNow.AddDays(2)
-                }
-            });
+
         }
 
         private static void InsertDays(CookDbContext context)

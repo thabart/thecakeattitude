@@ -446,9 +446,9 @@ namespace Cook4Me.Api.EF.Repositories
                 shops = shops.Where(s => parameter.ShopIds.Contains(s.Id));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameter.TagName))
+            if (parameter.Tags != null && parameter.Tags.Any())
             {
-                shops = shops.Where(s => s.ShopTags.Count() > 0 && s.ShopTags.Any(t => t.TagName.ToLowerInvariant().Contains(parameter.TagName.ToLowerInvariant())));
+                shops = shops.Where(s => s.ShopTags.Count() > 0 && s.ShopTags.Any(t => parameter.Tags.Contains(t.TagName)));
             }
 
             if (!string.IsNullOrWhiteSpace(parameter.Name))

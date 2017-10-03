@@ -14,25 +14,25 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 
-namespace Cook4Me.Api.Core.Aggregates
+namespace Cook4Me.Api.EF.Mappings
 {
-    public enum PromotionTypes
+    internal static class DiscountMapping
     {
-        Percentage,
-        Reduction
-    }
-
-    public class ProductAggregatePromotion
-    {
-        public string Id { get; set; }
-        public string ProductId { get; set; }
-        public double Discount { get; set; }
-        public PromotionTypes Type { get; set; }
-        public string Code { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public DateTime ExpirationDateTime { get; set; }
+        public static ModelBuilder AddDiscounts(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+            
+            modelBuilder.Entity<Discount>()
+                .ToTable("discounts")
+                .HasKey(s => s.Id);
+            return modelBuilder;
+        }
     }
 }

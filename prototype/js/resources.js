@@ -10,5 +10,9 @@ var g_ressources = [
     { name: "buildingBlock",        type: "image", src: "resources/img/buildingBlock.png" }, 
     { name: "table",        type: "image", src: "resources/table.png" }, 
     { name: "tiles",      type: "image",  src: "resources/tiles.png" },
-    { name: "map",      type: "tmx",    src: "resources/map.tmx" }
+    { name: "wall_right", type: "image", src: "resources/wall_right.png" },
+    { name: "wall_left", type: "image", src: "resources/wall_left.png" },
+    { name: "floor", type: "image", src: "resources/floor.png" },
+    { name: "sofatable", type: "image", src: "resources/sofatable.png" },
+    { name: "map",      type: "tmx",    src: "resources/habbo.tmx" }
 ];

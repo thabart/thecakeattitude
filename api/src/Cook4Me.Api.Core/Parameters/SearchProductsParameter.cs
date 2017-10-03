@@ -51,10 +51,10 @@ namespace Cook4Me.Api.Core.Parameters
         public IEnumerable<string> ShopIds { get; set; }
         public IEnumerable<string> CategoryIds { get; set; }
         public IEnumerable<string> ShopCategoryIds { get; set; }
+        public IEnumerable<string> Tags { get; set; }
         public IEnumerable<Filter> Filters { get; set; }
         public FilterPrice FilterPrice { get; set; }
         public string ProductName { get; set; }
-        public string TagName { get; set; }
         public bool? ContainsActivePromotion { get; set; }
         public int StartIndex { get; set; }
         public int Count { get; set; }

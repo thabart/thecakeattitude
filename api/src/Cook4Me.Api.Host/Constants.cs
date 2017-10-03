@@ -600,7 +600,7 @@ namespace Cook4Me.Api.Host
                 public const string NorthEast = "ne";
                 public const string SouthWest = "sw";
                 public const string Orders = "orders";
-                public const string Tag = "tag";
+                public const string Tags = "tags";
                 public const string ShopCategoryIds = "shop_category_ids";
             }
 
@@ -757,7 +757,7 @@ namespace Cook4Me.Api.Host
                 public const string NorthEast = "ne";
                 public const string SouthWest = "sw";
                 public const string Orders = "orders";
-                public const string Tag = "tag";
+                public const string Tags = "tags";
                 public const string ShopIds = "shop_ids";
             }
 

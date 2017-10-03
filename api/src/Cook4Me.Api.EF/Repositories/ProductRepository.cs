@@ -49,8 +49,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Tags).ThenInclude(t => t.Tag)
                 .Include(p => p.Shop)
                 .Include(p => p.Comments)
-                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter)
-                .Include(p => p.Promotions);
+                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter);
             if (parameter.ShopIds != null && parameter.ShopIds.Any())
             {
                 products = products.Where(p => parameter.ShopIds.Contains(p.ShopId));
@@ -61,13 +60,14 @@ namespace Cook4Me.Api.EF.Repositories
                 products = products.Where(p => parameter.ProductIds.Contains(p.Id));
             }
 
-            if (!string.IsNullOrWhiteSpace(parameter.TagName))
+            if (parameter.Tags != null && parameter.Tags.Any())
             {
-                products = products.Where(s => s.Tags.Count() > 0 && s.Tags.Any(t => t.TagName.ToLowerInvariant().Contains(parameter.TagName.ToLowerInvariant())));
+                products = products.Where(s => s.Tags.Count() > 0 && s.Tags.Any(t => parameter.Tags.Contains(t.TagName)));
             }
 
             if (parameter.ContainsActivePromotion != null)
             {
+                /*
                 var currentDate = DateTime.UtcNow;
                 if (parameter.ContainsActivePromotion.Value)
                 {
@@ -76,7 +76,8 @@ namespace Cook4Me.Api.EF.Repositories
                 else
                 {
                     products = products.Where(p => !p.Promotions.Any(pm => pm.Code == null && pm.ExpirationDateTime > currentDate));
-                }                
+                }
+                */                
             }
 
             if (parameter.NorthEast != null && parameter.SouthWest != null)
@@ -150,8 +151,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Tags)
                 .Include(p => p.Shop)
                 .Include(p => p.Comments)
-                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter)
-                .Include(p => p.Promotions);
+                .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter);
             var result = await products.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
             if (result == null)
             {

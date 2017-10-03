@@ -40,9 +40,9 @@ namespace Cook4Me.Api.EF.Models
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<ProductTag> Tags { get; set; }
         public virtual ICollection<ProductFilter> Filters { get; set; }
-        public virtual ICollection<ProductPromotion> Promotions { get; set; }
         public virtual ICollection<Message> Messages { get; set; }
-        public virtual Shop Shop { get; set; }
         public virtual ICollection<OrderLine> OrderLines { get; set; }
+        public virtual ICollection<ProductDiscount> Discounts { get; set; }
+        public virtual Shop Shop { get; set; }
     }
 }
