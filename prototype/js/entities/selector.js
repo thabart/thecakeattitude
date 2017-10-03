@@ -1,7 +1,7 @@
 var Selector = me.Renderable.extend({
       init: function(x, y, w, h) {
-        this._super(me.Renderable, 'init', [ x, y, w, h ]);
-        this.diamondShape = this.clone().toPolygon().toIso();
+        this._super(me.Renderable, 'init', [ 0, 0, me.game.world.width, me.game.world.height ]);
+        this.diamondShape = new me.Rect(x, y, w, h).toPolygon().toIso();
       },
 
       update : function(dt) {
@@ -9,7 +9,7 @@ var Selector = me.Renderable.extend({
       },
 
       getShape: function() {
-        return this.diamondShape;
+        return this.diamondShape.clone();
       },
 
       draw: function(renderer) {

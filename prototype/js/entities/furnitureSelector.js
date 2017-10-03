@@ -19,35 +19,26 @@ var FurnitureSelector = me.Renderable.extend({
         }
 
         var self = this;
+        var diamond2d = this.diamondShape.clone().to2d();
+        var nbCols = diamond2d.getBounds().width / (this.refLayer.tilewidth / 2);
+        var nbRows = diamond2d.getBounds().height / this.refLayer.tileheight;
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
         var existingFurnitures = ShopStore.getFurnitures();
         if (tile && tile !== this.currentTile) {
-            var nbRows = Math.ceil(this.width / (this.refLayer.tilewidth));
-            var nbCols = Math.ceil(this.height / this.refLayer.tileheight) - 1;
-            this.refLayer.getRenderer().tileToPixelCoords(tile.col - nbRows, tile.row - nbCols, this.diamondShape.pos);
+            var bottomLeftTileCoordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col + nbCols - 1, tile.row + nbRows - 1);
+            var bottomLeftTile = this.refLayer.getTile(bottomLeftTileCoordinates.x, bottomLeftTileCoordinates.y);
+            if (!bottomLeftTile) return;
+            this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row, this.diamondShape.pos);
             var clonedDiamonShape = this.diamondShape.clone();
             me.game.viewport.worldToLocal(
               this.diamondShape.pos.x,
               this.diamondShape.pos.y,
               this.diamondShape.pos
             );
+            var diamon2dShape = new me.Rect(tile.col, tile.row, nbCols, nbRows);
             var alreadyExists = false;
-            var minX = clonedDiamonShape.pos.x;
-            var maxX = clonedDiamonShape.pos.x + this.width;
-            var minY = clonedDiamonShape.pos.y;
-            var maxY = clonedDiamonShape.pos.y + (this.height / 2);
             existingFurnitures.forEach(function(furniture) {
-              var newMaxX = furniture.getSelector().pos.x + self.width;
-              var newMaxY = furniture.getSelector().pos.y + (self.height / 2);
-              console.log("old y " + minY);
-              console.log("old max y " + maxY);
-              console.log("new y " + furniture.getSelector().pos.y);
-              console.log("new max y " + newMaxY);
-              console.log("old x " + minX);
-              console.log("old max x " + maxX);
-              console.log("new x " + furniture.getSelector().pos.x);
-              console.log("new max x " + newMaxX);
-              if ((minX < newMaxX && maxX > furniture.getSelector().pos.x) && (minY < newMaxY && maxY > furniture.getSelector().pos.y)) {
+              if (furniture.get2dShape().overlaps(diamon2dShape)) {
                 alreadyExists = true;
               }
             });
@@ -63,8 +54,7 @@ var FurnitureSelector = me.Renderable.extend({
         var region = game.furnitures.getRegion(regionName);
         var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
         if (!tile) { return; }
-        var position = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
-        var container = new game.EditableSpriteContainer(position, regionName, game.furnitures);
+        var container = new game.EditableSpriteContainer(tile, regionName, game.furnitures);
         me.game.world.addChild(container, 10);
         ShopStore.addFurniture(container);
       },
@@ -75,10 +65,10 @@ var FurnitureSelector = me.Renderable.extend({
           return;
         }
 
-        this.width = Math.ceil(region.width / (this.refLayer.tilewidth)) * (this.refLayer.tilewidth / 2);
-        this.height = Math.ceil(region.height / this.refLayer.tileheight) * this.refLayer.tileheight;
+        var width = Math.ceil(region.width / (this.refLayer.tilewidth)) * (this.refLayer.tilewidth / 2);
+        var height = Math.ceil(region.height / this.refLayer.tileheight) * this.refLayer.tileheight;
+        this.diamondShape = new me.Rect(0, 0, width, height).toPolygon().toIso();
         this.isFurnitureSelected = true;
-        this.diamondShape = this.clone().toPolygon().toIso();
       },
 
       viewportMove : function (pos) {
