@@ -1,7 +1,16 @@
 var ShopStoreCl = function() {
-	var _selectedFurniture = null;
+	var _activeFurniture = null;
 	var _furnitures = [];
-	var _orientation = 'row';
+	var _selectedFurniture = null;
+
+	this.getActiveFurniture = function() {
+		return _activeFurniture;
+	};
+
+	this.setActiveFurniture = function(f) {
+		_activeFurniture = f;
+		$(this).trigger('activeFurnitureChanged');
+	};
 
 	this.getSelectedFurniture = function() {
 		return _selectedFurniture;
@@ -20,21 +29,12 @@ var ShopStoreCl = function() {
 		_furnitures.push(f);
 	};
 
-	this.getOrientation = function() {
-		return _orientation;
-	};
-
-	this.setOrientation = function(o) {
-		_orientation = o;
-		$(this).trigger('orientationChanged');
+	this.listenActiveFurnitureChanged = function(callback) {
+		$(this).on('activeFurnitureChanged', callback);
 	};
 
 	this.listenSelectedFurnitureChanged = function(callback) {
 		$(this).on('selectedFurnitureChanged', callback);
-	};
-
-	this.listenOrientationChanged = function(callback) {
-		$(this).on('orientationChanged', callback);
 	};
 };
 

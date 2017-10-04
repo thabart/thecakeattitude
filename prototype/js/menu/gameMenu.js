@@ -1,19 +1,24 @@
 game.GameMenu = me.Object.extend({
   init: function() {
-    var menu = $("<ul class='no-style'>"+
+    this.addMenu();
+    this.addInventoryBox();
+    this.addInformationBox();
+    this.addInformationBox();
+    ShopStore.listenActiveFurnitureChanged(this.updateActiveFurniture.bind(this));
+    ShopStore.listenSelectedFurnitureChanged(this.updateSelectedFurniture.bind(this));
+  },
+  addMenu: function() {
+    this.menu = $("<ul class='no-style'>"+
       "<li class='inventory'></li>"+
     "</ul>");
-    $("#footer").append(menu);
-    this.inventory = null;
+    $("#footer").append(this.menu);
     var self = this;
-    $(menu).find('.inventory').click(function() {
+    $(this.menu).find('.inventory').click(function() {
       self.displayInventoryBox();
     });
-    ShopStore.listenSelectedFurnitureChanged(this.updateFurniture.bind(this));
   },
-  displayInventoryBox: function() {
-    if (this.inventory) { return; }
-    var inventory = $("<div class='inventory-box'>"+
+  addInventoryBox: function() { // Add the inventory box.
+    this.inventory = $("<div class='inventory-box'>"+
       "<div class='top'>"+
         "Inventory"+
       "</div>"+
@@ -29,23 +34,57 @@ game.GameMenu = me.Object.extend({
         "</div>"+
       "</div>"+
       "<div class='bottom'>"+
-
       "</div>"+
     "</div>");
-    $(document.body).append(inventory);
-    $(inventory).draggable({ "handle": ".top" });
-    $(inventory).find('.items > li').click(function() {
+    $(document.body).append(this.inventory);
+    $(this.inventory).hide();
+    $(this.inventory).draggable({ "handle": ".top" });
+    $(this.inventory).find('.items > li').click(function() {
       var furniture = $(this).data('furniture');
-      ShopStore.setSelectedFurniture(furniture);
+      ShopStore.setActiveFurniture(furniture);
       $(this).addClass('active');
     });
-
-    this.inventory = inventory;
   },
-  updateFurniture: function() {
-    var regionName = ShopStore.getSelectedFurniture();
+  addInformationBox: function() { // Add the information box.
+    this.information = $("<div class='information-box'>"+
+      "<div class='top'></div>"+
+      "<div class='body'></div>"+
+      "<div class='bottom'></div>"+
+    "</div>");
+    $("#bottom-right-container").append(this.information);
+    $(this.information).hide();
+  },
+  addActionsBox: function() { // Add the actions box.
+    this.actions = $("<div class='actions-box'>"+
+      "<button class='button button-blue move'>Déplacer</button>"+
+    "</div>");
+    $("#bottom-right-container").append(this.actions);
+    $(this.actions).find('.move').click(function() {
+      
+    });
+    $(this.actions).hide();
+  },
+  displayInventoryBox: function() { // Display inventory box.
+    if ($(this.inventory).is(':visible')) { return; }
+    $(this.inventory).show();
+  },
+  updateActiveFurniture: function() {
+    var regionName = ShopStore.getActiveFurniture();
     if (regionName) { return; }
     if (!this.inventory) { return; }
     $(this.inventory).find('.items > li').removeClass('active');
+  },
+  updateSelectedFurniture: function() {
+    var selectedFurniture = ShopStore.getSelectedFurniture();
+    if (!selectedFurniture) {
+      $(this.information).hide();
+      $(this.actions).hide();
+      return;
+    }
+
+    var img = selectedFurniture.sprite.image;
+    $(this.information).find('.body').append(img); // TODO : Find the correct image ...
+    $(this.information).show();
+    $(this.actions).show();
   }
 });

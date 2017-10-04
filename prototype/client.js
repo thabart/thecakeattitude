@@ -7,6 +7,7 @@ app.use('/js', express.static(__dirname + '/js'));
 app.use('/css', express.static(__dirname + '/css'));
 app.use('/img', express.static(__dirname + '/img'));
 app.use('/lib', express.static(__dirname + '/lib'));
+app.use('/fonts', express.static(__dirname + '/fonts'));
 app.use('/resources', express.static(__dirname + '/resources'));
 app.get('/', function(req, res) {
 	res.sendFile(path.join(__dirname+'/index.html'));

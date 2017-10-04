@@ -5,8 +5,7 @@ game.FurnitureSelector = me.Object.extend({
 		this.zIndex = zIndex;
     me.event.subscribe("pointermove", this.pointerMove.bind(this));
     me.event.subscribe('pointerdown', this.pointerDown.bind(this));
-		ShopStore.listenSelectedFurnitureChanged(this.updateFurniture.bind(this));
-		// ShopStore.listenOrientationChanged(this.updateFurniture.bind(this));
+		ShopStore.listenActiveFurnitureChanged(this.updateActiveFurniture.bind(this));
 	},
   pointerMove : function (evt) { // Move the furniture.
 		if (this.sprite) {
@@ -26,7 +25,7 @@ game.FurnitureSelector = me.Object.extend({
 	moveFurniture: function(evt) { // Move the selected furniture.
 		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
 		if (!tile) { return; }
-		var regionName = ShopStore.getSelectedFurniture();
+		var regionName = ShopStore.getActiveFurniture();
 		var region = game.furnitures.getRegion(regionName);
 		var nbRows = Math.ceil(region.width / (this.refLayer.tilewidth / 2));
 		var nbCols = Math.ceil(region.height / this.refLayer.tileheight);
@@ -70,11 +69,11 @@ game.FurnitureSelector = me.Object.extend({
 			}
 		});
 
-
+		ShopStore.setSelectedFurniture(selectedFurniture);
 	},
 	addFurniture: function(evt) {
-		var regionName = ShopStore.getSelectedFurniture();
-		var rect = new me.Rect(this.sprite.tile.row, this.sprite.tile.col, this.sprite.nbRows, this.sprite.nbCols);
+		var regionName = ShopStore.getActiveFurniture();
+		var rect = new me.Rect(this.sprite.tile.row - this.sprite.nbRows, this.sprite.tile.col - this.sprite.nbCols, this.sprite.nbRows, this.sprite.nbCols);
 		var spr = new me.Sprite(this.sprite.pos.x, this.sprite.pos.y , {
 			region: regionName,
 			image: game.furnitures
@@ -84,10 +83,10 @@ game.FurnitureSelector = me.Object.extend({
 		me.game.world.addChild(spr, this.zIndex);
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
-		ShopStore.setSelectedFurniture(null);
+		ShopStore.setActiveFurniture(null);
 	},
-	updateFurniture: function() { // Update the selected furniture.
-		var regionName = ShopStore.getSelectedFurniture();
+	updateActiveFurniture: function() { // Update the selected furniture.
+		var regionName = ShopStore.getActiveFurniture();
 		if(!regionName) { return; }
 		if (this.sprite) {
 			me.game.world.removeChild(this.sprite);

@@ -26,8 +26,8 @@
 .inventory-box {
 	width: 490px;
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 50%;
+  top: 50%;
 }
 
 .inventory-box .top
@@ -120,4 +120,35 @@
     background: url('../img/icons/item_box_hover.png');
     height: 42px;
     width: 42px;
+}
+
+.information-box-container {
+  position: fixed;
+  bottom: 70px;
+  right: 10px;
+}
+
+.information-box {
+  background-color: rgb(61,61,61);
+  border-radius: 10px;
+  min-width: 200px;
+  padding: 10px;
+}
+
+.information-box .top {
+  border-bottom: 1px solid rgb(51, 51, 51);
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  padding-bottom: 5px;
+}
+
+.information-box .body {
+  border-bottom: 1px solid rgb(51, 51, 51);
+  min-height: 100px;
+  padding-bottom: 5px;
+}
+
+.information-box .bottom {
+
 }
