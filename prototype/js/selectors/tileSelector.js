@@ -1,11 +1,10 @@
-game.TileSelectorContainer = me.Container.extend({
-	init: function() {
-		this._super(me.Container, "init", [ 0, 0, me.game.world.width, me.game.world.height ]);
+game.TileSelector = me.Object.extend({
+	init: function(zIndex) {
     this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground)[0];
     this.sprite = new me.Sprite(0, 0 , {
       image: "tile_hover"
     });
-    this.addChild(this.sprite, 1);
+    me.game.world.addChild(this.sprite, zIndex);
     this.pointerEvent = me.event.subscribe("pointermove", this.pointerMove.bind(this));
 	},
   pointerMove : function (evt) { // Move the cursor when the mouse move.
@@ -14,6 +13,7 @@ game.TileSelectorContainer = me.Container.extend({
       var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
       this.sprite.pos.x = coordinates.x + 5; // TODO : Replace the coordinates if needed.
       this.sprite.pos.y = coordinates.y + 8;
+      me.game.repaint();
     };
   }
 });

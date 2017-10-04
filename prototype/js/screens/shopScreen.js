@@ -3,13 +3,12 @@ game.ShopScreen = me.ScreenObject.extend({
       me.levelDirector.loadLevel("map");
       this.refLayer = me.game.world.getChildByName("Ground")[0];
       var movableContainer = new game.MovableContainer();
-      var tileSelectorContainer = new game.TileSelectorContainer();
+      var tileSelector = new game.TileSelector(2);
+      var furnitureSelector = new game.FurnitureSelector(5);
       this._buildingLayer = me.game.world.getChildByName('Building', {
         "container": movableContainer
       });
       me.game.world.addChild(movableContainer);
-      me.game.world.addChild(new FurnitureSelector());
-      me.game.world.addChild(tileSelectorContainer);
       this.addFloatingMenu();
       me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
         me.event.publish("pointermove", [ event ]);
@@ -17,7 +16,6 @@ game.ShopScreen = me.ScreenObject.extend({
       me.input.registerPointerEvent("pointerdown", me.game.viewport, function (event) {
         me.event.publish("pointerdown", [ event ]);
       }, false);
-      me.game.repaint();
     },
 
     onDestroyEvent: function() {
