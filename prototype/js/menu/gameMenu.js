@@ -3,7 +3,7 @@ game.GameMenu = me.Object.extend({
     this.addMenu();
     this.addInventoryBox();
     this.addInformationBox();
-    this.addInformationBox();
+    this.addActionsBox();
     ShopStore.listenActiveFurnitureChanged(this.updateActiveFurniture.bind(this));
     ShopStore.listenSelectedFurnitureChanged(this.updateSelectedFurniture.bind(this));
   },
@@ -24,12 +24,13 @@ game.GameMenu = me.Object.extend({
       "</div>"+
       "<div class='body'>"+
         "<ul class='tabs'>"+
-          "<li class='active'>Mobilier</li>"+
+          "<li class='active'>Mobilié</li>"+
           "<li>Personnages</li>"+
         "</ul>"+
         "<div>"+
           "<ul class='items no-style'>"+
             "<li data-furniture='table'>Table</li>"+
+            "<li data-furniture='chair'>Chaise</li>"+
           "</ul>"+
         "</div>"+
       "</div>"+
@@ -57,10 +58,25 @@ game.GameMenu = me.Object.extend({
   addActionsBox: function() { // Add the actions box.
     this.actions = $("<div class='actions-box'>"+
       "<button class='button button-blue move'>Déplacer</button>"+
+      "<button class='button button-blue remove'>Supprimer</button>"+
     "</div>");
     $("#bottom-right-container").append(this.actions);
+    var self = this;
     $(this.actions).find('.move').click(function() {
-      
+      var selectedFurniture = ShopStore.getSelectedFurniture();
+      ShopStore.setActiveFurniture(selectedFurniture.metadata.imageName);
+      me.game.world.removeChild(selectedFurniture.sprite);
+      ShopStore.removeFurniture(selectedFurniture);
+      $(self.actions).hide();
+      $(self.information).hide();
+    });
+    $(this.actions).find('.remove').click(function() {
+      var selectedFurniture = ShopStore.getSelectedFurniture();
+      me.game.world.removeChild(selectedFurniture.sprite);
+      ShopStore.removeFurniture(selectedFurniture);
+      me.game.repaint();
+      $(self.actions).hide();
+      $(self.information).hide();
     });
     $(this.actions).hide();
   },
@@ -83,7 +99,8 @@ game.GameMenu = me.Object.extend({
     }
 
     var img = selectedFurniture.sprite.image;
-    $(this.information).find('.body').append(img); // TODO : Find the correct image ...
+    $(this.information).find('.body').empty();
+    $(this.information).find('.body').append(img);
     $(this.information).show();
     $(this.actions).show();
   }

@@ -29,6 +29,12 @@ var ShopStoreCl = function() {
 		_furnitures.push(f);
 	};
 
+	this.removeFurniture = function(f) {
+		var index = _furnitures.indexOf(f);
+		if (index === -1) { return; }
+		_furnitures.splice(index, 1);
+	};
+
 	this.listenActiveFurnitureChanged = function(callback) {
 		$(this).on('activeFurnitureChanged', callback);
 	};

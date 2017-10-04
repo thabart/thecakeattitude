@@ -1,6 +1,9 @@
 game.FurnitureEntity = me.Object.extend({
-  init: function (sprite, rect) {
+  init: function (sprite, rect, imageName) {
     this.sprite = sprite;
     this.rect = rect;
+    this.metadata = {
+      imageName: imageName
+    };
   }
 });

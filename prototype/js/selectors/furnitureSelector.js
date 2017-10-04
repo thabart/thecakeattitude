@@ -25,8 +25,8 @@ game.FurnitureSelector = me.Object.extend({
 	moveFurniture: function(evt) { // Move the selected furniture.
 		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
 		if (!tile) { return; }
-		var regionName = ShopStore.getActiveFurniture();
-		var region = game.furnitures.getRegion(regionName);
+		var imageName = ShopStore.getActiveFurniture();
+		var region = me.loader.getImage(imageName);
 		var nbRows = Math.ceil(region.width / (this.refLayer.tilewidth / 2));
 		var nbCols = Math.ceil(region.height / this.refLayer.tileheight);
 		var topRightCornerCoordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col - nbCols + 1, tile.row - nbRows + 1);
@@ -72,13 +72,12 @@ game.FurnitureSelector = me.Object.extend({
 		ShopStore.setSelectedFurniture(selectedFurniture);
 	},
 	addFurniture: function(evt) {
-		var regionName = ShopStore.getActiveFurniture();
+		var imageName = ShopStore.getActiveFurniture();
 		var rect = new me.Rect(this.sprite.tile.row - this.sprite.nbRows, this.sprite.tile.col - this.sprite.nbCols, this.sprite.nbRows, this.sprite.nbCols);
 		var spr = new me.Sprite(this.sprite.pos.x, this.sprite.pos.y , {
-			region: regionName,
-			image: game.furnitures
+			image: imageName
 		});
-		var entity = new game.FurnitureEntity(spr, rect);
+		var entity = new game.FurnitureEntity(spr, rect, imageName);
 		ShopStore.addFurniture(entity);
 		me.game.world.addChild(spr, this.zIndex);
 		me.game.world.removeChild(this.sprite);
@@ -86,17 +85,16 @@ game.FurnitureSelector = me.Object.extend({
 		ShopStore.setActiveFurniture(null);
 	},
 	updateActiveFurniture: function() { // Update the selected furniture.
-		var regionName = ShopStore.getActiveFurniture();
-		if(!regionName) { return; }
+		var imageName = ShopStore.getActiveFurniture();
+		if(!imageName) { return; }
 		if (this.sprite) {
 			me.game.world.removeChild(this.sprite);
 		}
 
 		this.sprite = new me.Sprite(0, 0 , {
-			region: regionName,
-			image: game.furnitures
+			image: imageName
 		});
-		this.sprite.alpha = 0.5;
+		this.sprite.alpha = 0;
 		me.game.world.addChild(this.sprite, this.zIndex);
 	}
 });
