@@ -104,6 +104,42 @@
     width: 42px;
 }
 
+/* FURNITURE BOX */
+.furniture-box {
+	width: 490px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.furniture-box .top
+{
+    background: url('../img/window/inventory/i_top.png') no-repeat;
+    width: 490px;
+    height: 19px;
+    color: #fff;
+    font-weight: bold;
+    padding: 7px;
+    text-align: center;
+}
+
+.furniture-box .body
+{
+    background: url('../img/window/inventory/i_body.png') repeat-y;
+    min-height: 250px;
+    width: 490px;
+    height: auto;
+    padding: 5px 8px;
+}
+
+.furniture-box .bottom
+{
+    background: url('../img/window/inventory/i_bottom.png') no-repeat;
+    width: 490px;
+    height: 9px;
+}
+
+/* INFORMATION BOX */
 .information-box-container {
   position: fixed;
   bottom: 70px;

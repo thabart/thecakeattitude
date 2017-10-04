@@ -12,5 +12,7 @@ var g_ressources = [
     { name: "floor", type: "image", src: "resources/floor.png" },
     { name: "table", type: "image", src: "resources/furnitures/sofatable.png" }, // Load the furnitures.
     { name: "chair", type: "image", src: "resources/furnitures/chair.png" },
+    { name: "bar", type: "image", src: "resources/furnitures/executive/exe_bar.gif" },
+    { name: "corner", type: "image", src: "resources/furnitures/executive/exe_corner.gif" },
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" } // Load the selector.
 ];
