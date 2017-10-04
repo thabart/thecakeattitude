@@ -18,9 +18,10 @@ game.GameMenu = me.Object.extend({
     });
   },
   addInventoryBox: function() { // Add the inventory box.
+    var self = this;
     this.inventory = $("<div class='inventory-box'>"+
       "<div class='top'>"+
-        "Inventory"+
+        "Inventaire <div class='close'></div>"+
       "</div>"+
       "<div class='body'>"+
         "<ul class='tabs'>"+
@@ -29,8 +30,8 @@ game.GameMenu = me.Object.extend({
         "</ul>"+
         "<div>"+
           "<ul class='items no-style'>"+
-            "<li data-furniture='table'>Table</li>"+
-            "<li data-furniture='chair'>Chaise</li>"+
+            "<li data-furniture='table'><img src='resources/furnitures/sofatable.png' /></li>"+
+            "<li data-furniture='chair'><img src='resources/furnitures/chair.png' /></li>"+
           "</ul>"+
         "</div>"+
       "</div>"+
@@ -45,14 +46,22 @@ game.GameMenu = me.Object.extend({
       ShopStore.setActiveFurniture(furniture);
       $(this).addClass('active');
     });
+    $(this.inventory).find('.close').click(function() {
+      $(self.inventory).hide();
+    });
   },
   addInformationBox: function() { // Add the information box.
+    var self = this;
     this.information = $("<div class='information-box'>"+
-      "<div class='top'></div>"+
+      "<div class='top'><div class='close'></div></div>"+
       "<div class='body'></div>"+
       "<div class='bottom'></div>"+
     "</div>");
     $("#bottom-right-container").append(this.information);
+    $(this.information).find('.close').click(function() {
+      $(self.information).hide();
+      $(self.actions).hide();
+    });
     $(this.information).hide();
   },
   addActionsBox: function() { // Add the actions box.

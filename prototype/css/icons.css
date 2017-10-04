@@ -1,0 +1,46 @@
+/* ICONS */
+.inventory
+{
+    height: 41px;
+    width: 44px;
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 6px;
+    margin-right: 10px;
+}
+
+.inventory {
+	 background: url('../img/icons/inventory.png') 0 0 no-repeat;
+}
+
+.inventory:hover {
+  background: url('../img/icons/inventory.png') 0 -41px no-repeat;
+}
+
+.inventory:active {
+  background: url('../img/icons/inventory.png') 0 -84px no-repeat;
+}
+
+.close
+{
+    background: url("../img/icons/close.png");
+    width: 19px;
+    height: 20px;
+    display: inline-block;
+    float: right;
+    position: absolute;
+    right: 30px;
+    top: 7px;
+    cursor: pointer;
+}
+
+.close:hover
+{
+    background: url("../img/icons/close.png") 0 -20px;
+}
+
+.close:active
+{
+    background: url("../img/icons/close.png") 0 -40px;
+    height: 19px;
+}
