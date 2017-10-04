@@ -3,8 +3,8 @@
  */
 
 var g_ressources = [
-    { name: "UI_Assets",    type: "image",  src: "resources/img/UI_Assets.png" }, // UI texture pack.
-    { name: "UI_Assets",    type: "json",  src: "resources/img/UI_Assets.json" },
+    { name: "UI_Assets",    type: "image",  src: "resources/UI_Assets.png" }, // UI texture pack.
+    { name: "UI_Assets",    type: "json",  src: "resources/UI_Assets.json" },
     { name: "map",      type: "tmx",    src: "resources/habbo.tmx" }, // Load the shop map.
     { name: "wall_right", type: "image", src: "resources/wall_right.png" },
     { name: "wall_left", type: "image", src: "resources/wall_left.png" },
@@ -14,5 +14,6 @@ var g_ressources = [
     { name: "chair", type: "image", src: "resources/furnitures/chair.png" },
     { name: "bar", type: "image", src: "resources/furnitures/executive/exe_bar.gif" },
     { name: "corner", type: "image", src: "resources/furnitures/executive/exe_corner.gif" },
-    { name: "tile_hover", type: "image", src: "resources/tile_hover.png" } // Load the selector.
+    { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
+    { name: "player", type: "image", src: "resources/players/0_0.png" }
 ];
