@@ -74,10 +74,11 @@ game.FurnitureSelector = me.Object.extend({
 	addFurniture: function(evt) {
 		var imageName = ShopStore.getActiveFurniture();
 		var rect = new me.Rect(this.sprite.tile.row - this.sprite.nbRows, this.sprite.tile.col - this.sprite.nbCols, this.sprite.nbRows, this.sprite.nbCols);
-		var spr = new me.Sprite(this.sprite.pos.x, this.sprite.pos.y , {
-			image: imageName
+		var spr = new game.FurnitureEntity(this.sprite.pos.x - (this.sprite.width / 2), this.sprite.pos.y - (this.sprite.height / 2), imageName, {
+			width: this.sprite.width,
+			height: this.sprite.height
 		});
-		var entity = new game.FurnitureEntity(spr, rect, imageName);
+		var entity = new game.Furniture(spr, rect, imageName);
 		ShopStore.addFurniture(entity);
 		me.game.world.addChild(spr, this.zIndex);
 		me.game.world.removeChild(this.sprite);

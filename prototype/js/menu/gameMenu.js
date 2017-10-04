@@ -68,6 +68,7 @@ game.GameMenu = me.Object.extend({
     this.actions = $("<div class='actions-box'>"+
       "<button class='button button-blue move'>Déplacer</button>"+
       "<button class='button button-blue remove'>Supprimer</button>"+
+      "<button class='button button-blue turn'>Tourner</button>"+
     "</div>");
     $("#bottom-right-container").append(this.actions);
     var self = this;
@@ -86,6 +87,11 @@ game.GameMenu = me.Object.extend({
       me.game.repaint();
       $(self.actions).hide();
       $(self.information).hide();
+    });
+    $(this.actions).find('.turn').click(function() {
+      var selectedFurniture = ShopStore.getSelectedFurniture();
+      selectedFurniture.sprite.flip();
+      me.game.repaint();
     });
     $(this.actions).hide();
   },

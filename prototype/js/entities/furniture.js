@@ -1,4 +1,4 @@
-game.FurnitureEntity = me.Object.extend({
+game.Furniture = me.Object.extend({
   init: function (sprite, rect, imageName) {
     this.sprite = sprite;
     this.rect = rect;
