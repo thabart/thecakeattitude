@@ -42,5 +42,5 @@ var game = {
 //bootstrap :)
 window.onReady(function() {
     game.onload();
-    document.oncontextmenu = document.body.oncontextmenu = function() { return false; }
+    // document.oncontextmenu = document.body.oncontextmenu = function() { return false; }
 });

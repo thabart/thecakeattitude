@@ -3,13 +3,13 @@ game.ShopScreen = me.ScreenObject.extend({
       me.levelDirector.loadLevel("map");
       this.refLayer = me.game.world.getChildByName("Ground")[0];
       var movableContainer = new game.MovableContainer();
+      var gameMenu = new game.GameMenu();
       var tileSelector = new game.TileSelector(2);
       var furnitureSelector = new game.FurnitureSelector(5);
       this._buildingLayer = me.game.world.getChildByName('Building', {
         "container": movableContainer
       });
       me.game.world.addChild(movableContainer);
-      this.addFloatingMenu();
       me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
         me.event.publish("pointermove", [ event ]);
       }, false);
@@ -23,6 +23,7 @@ game.ShopScreen = me.ScreenObject.extend({
     },
 
     addFloatingMenu: function() {
+      /*
       var self = this;
       var menu = $("<div><ul class='list'>"+
           "<li data-furniture='table'>Table</li>"+
@@ -46,5 +47,6 @@ game.ShopScreen = me.ScreenObject.extend({
           ShopStore.setOrientation('row');
         }
       });
+      */
     }
 });

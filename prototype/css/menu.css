@@ -1,17 +1,123 @@
-.floating-menu {
-	position: absolute;
-	right: 10px;
-	top: 10px;	
-	background-color: white;
-	padding: 20px;
+
+/* ICONS */
+.inventory
+{
+    height: 41px;
+    width: 44px;
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 6px;
+    margin-right: 10px;
 }
 
-.floating-menu ul.list {	
-	list-style-type: none;
-	padding: 0;
-	margin: 0;
+.inventory {
+	 background: url('../img/icons/inventory.png') 0 0 no-repeat;
 }
 
-.floating-menu ul.list li.active {
-	border: 1px solid red;
+.inventory:hover {
+  background: url('../img/icons/inventory.png') 0 -41px no-repeat;
+}
+
+.inventory:active {
+  background: url('../img/icons/inventory.png') 0 -84px no-repeat;
+}
+
+/* INVENTORY BOX */
+.inventory-box {
+	width: 490px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.inventory-box .top
+{
+    background: url('../img/window/inventory/i_top.png') no-repeat;
+    width: 490px;
+    height: 19px;
+    color: #fff;
+    font-weight: bold;
+    padding: 7px;
+    text-align: center;
+}
+
+.inventory-box .body
+{
+    background: url('../img/window/inventory/i_body.png') repeat-y;
+    min-height: 250px;
+    width: 490px;
+    height: auto;
+    padding: 5px 8px;
+}
+
+.inventory-box .bottom
+{
+    background: url('../img/window/inventory/i_bottom.png') no-repeat;
+    width: 490px;
+    height: 9px;
+}
+
+.inventory-box ul.tabs
+{
+    border-bottom: solid 1px #000;
+    height: 32px;
+    width: calc(100% - 24px);
+    padding-left: 10px;
+    margin-bottom: 5px;
+}
+
+.inventory-box ul.tabs li
+{
+    display: inline-block;
+    border-top: solid 1px #4D4C49;
+    border-left: solid 1px #4D4C49;
+    border-right: solid 1px #4D4C49;
+    border-bottom: solid 1px #4D4C49;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+    background: #C3C2B8;
+    padding: 6px 10px;
+    margin-right: -3px;
+}
+
+.inventory-box ul.tabs li:hover
+{
+    background: #f6f5f0;
+    border-bottom: solid 1px #f6f5f0;
+    cursor: pointer;
+    box-shadow: inset 2px 2px 1px #fff;
+}
+
+.inventory-box ul.tabs li.active
+{
+    background: #ECEAE0;
+    border-top: solid 2px #000;
+    border-left: solid 2px #000;
+    border-right: solid 2px #000;
+    border-bottom: solid 1px #ECEAE0;
+    box-shadow: inset 2px 2px 1px #fff;
+}
+
+.inventory-box ul.items
+{
+    width: 280px;
+    float: left;
+}
+
+.inventory-box ul.items li
+{
+    display: inline-block;
+    margin: 0 2px 2px 0;
+    background: url('../img/icons/item_box.png') no-repeat;
+    width: 42px;
+    height: 42px;
+    vertical-align: top;
+    cursor: pointer;
+}
+
+.inventory-box ul.items li.active
+{
+    background: url('../img/icons/item_box_hover.png');
+    height: 42px;
+    width: 42px;
 }

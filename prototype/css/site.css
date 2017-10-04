@@ -1,3 +1,18 @@
+body {
+	background-color: black;
+}
+
+#footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	height: 60px;
+	width: 100%;
+	background-color: rgb(28,28,26);
+	border-top: 2px solid rgb(65,64,61);
+	border-bottom: 1px solid rgb(65,64,61);
+}
+
 .game-container {
 	display: inline-block;
 	position: relative;
