@@ -32,6 +32,12 @@ namespace Cook4Me.Api.Core.Aggregates
         Percentage
     }
 
+    public class DiscountProductAggregate
+    {
+        public double MoneySaved { get; set; }
+        public string ProductId { get; set; }
+    }
+
     public class DiscountAggregate
     {
         public string Id { get; set; }
@@ -47,6 +53,6 @@ namespace Cook4Me.Api.Core.Aggregates
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public string Subject { get; set; }
-        public IEnumerable<string> ProductIds { get; set; }
+        public IEnumerable<DiscountProductAggregate> Products { get; set; }
     }
 }

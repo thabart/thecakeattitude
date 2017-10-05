@@ -22,7 +22,6 @@ using Cook4Me.Api.EF.Extensions;
 using Cook4Me.Api.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -65,13 +64,14 @@ namespace Cook4Me.Api.EF.Repositories
             try
             {
                 var record = discountAggregate.ToModel();
-                if (discountAggregate.ProductIds != null)
+                if (discountAggregate.Products != null)
                 {
-                    var productDiscounts = discountAggregate.ProductIds.Select(p => new ProductDiscount
+                    var productDiscounts = discountAggregate.Products.Select(p => new ProductDiscount
                     {
                         Id = Guid.NewGuid().ToString(),
                         DiscountId = record.Id,
-                        ProductId = p
+                        ProductId = p.ProductId,
+                        MoneySaved = p.MoneySaved
                     }).ToList();
                     record.Products = productDiscounts;
                 }

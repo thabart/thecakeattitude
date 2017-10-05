@@ -21,17 +21,24 @@ using Cook4Me.Api.Core.Commands.Discount;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Events.Discount;
+using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Helpers;
+using System.Linq;
 
 namespace Cook4Me.Api.Handlers
 {
     public class DiscountCommandsHandler : Handles<AddDiscountCommand>
     {
         private readonly IDiscountRepository _discountRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IDiscountPriceCalculatorHelper _priceCalculator;
         private readonly IEventPublisher _eventPublisher;
 
-        public DiscountCommandsHandler(IDiscountRepository discountRepository, IEventPublisher eventPublisher)
+        public DiscountCommandsHandler(IDiscountRepository discountRepository, IEventPublisher eventPublisher, IProductRepository productRepository, IDiscountPriceCalculatorHelper priceCalculator)
         {
             _discountRepository = discountRepository;
+            _productRepository = productRepository;
+            _priceCalculator = priceCalculator;
             _eventPublisher = eventPublisher;
         }
 
@@ -42,6 +49,11 @@ namespace Cook4Me.Api.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
 
+
+            var products = await _productRepository.Search(new SearchProductsParameter
+            {
+                ProductIds = message.ProductIds
+            });
             var record = new DiscountAggregate
             {
                 Code = Guid.NewGuid().ToString(),
@@ -50,7 +62,6 @@ namespace Cook4Me.Api.Handlers
                 CreateDateTime = message.CreateDateTime,
                 EndDateTime = message.EndDateTime,
                 Id = Guid.NewGuid().ToString(),
-                ProductIds = message.ProductIds,
                 PromotionType = message.PromotionType,
                 StartDateTime = message.StartDateTime,
                 UpdateDateTime = message.UpdateDateTime,
@@ -59,6 +70,11 @@ namespace Cook4Me.Api.Handlers
                 IsActive = true,
                 IsPrivate = message.IsPrivate
             };
+            record.Products = products.Content.Select(p => new DiscountProductAggregate
+            {
+                MoneySaved = _priceCalculator.CalculatePrice(p, record),
+                ProductId = p.Id
+            });
             await _discountRepository.Insert(record);
             _eventPublisher.Publish(new DiscountAddedEvent
             {

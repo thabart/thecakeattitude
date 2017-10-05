@@ -128,17 +128,17 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var kvpType = CommonBuilder.MappingDiscountPromotions.FirstOrDefault(d => d.Key == discount.PromotionType);
-            if (!kvpType.Equals(default(KeyValuePair<DiscountAggregateValidities, string>)))
+            if (!kvpType.Equals(default(KeyValuePair<DiscountAggregatePromotions, string>)))
             {
                 obj.Add(Constants.DtoNames.DiscountNames.Type, kvpType.Value);
             }
 
             var productIds = new JArray();
-            if (discount.ProductIds != null)
+            if (discount.Products != null)
             {
-                foreach (var productId in discount.ProductIds)
+                foreach (var product in discount.Products)
                 {
-                    productIds.Add(productId);
+                    productIds.Add(product.ProductId);
                 }
             }
 
@@ -1686,6 +1686,27 @@ namespace Cook4Me.Api.Host.Builders
                 }
 
                 jObj.Add(Constants.DtoNames.Product.Filters, arr);
+            }
+
+            if (product.ActiveDiscounts != null && product.ActiveDiscounts.Any())
+            {
+                JArray arr = new JArray();
+                foreach (var activeDiscount in product.ActiveDiscounts)
+                {
+                    var obj = new JObject();
+                    obj.Add(Constants.DtoNames.DiscountNames.Code, activeDiscount.Code);
+                    obj.Add(Constants.DtoNames.DiscountNames.MoneySaved, activeDiscount.MoneySaved);
+                    obj.Add(Constants.DtoNames.DiscountNames.Value, activeDiscount.Value);
+                    var kvpType = CommonBuilder.MappingDiscountPromotions.FirstOrDefault(d => d.Key == activeDiscount.PromotionType);
+                    if (!kvpType.Equals(default(KeyValuePair<DiscountAggregatePromotions, string>)))
+                    {
+                        obj.Add(Constants.DtoNames.DiscountNames.Type, kvpType.Value);
+                    }
+
+                    arr.Add(obj);
+                }
+
+                jObj.Add(Constants.DtoNames.Product.Discounts, arr);
             }
 
             return jObj;

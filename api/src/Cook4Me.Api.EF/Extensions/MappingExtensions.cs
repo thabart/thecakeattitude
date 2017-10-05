@@ -33,10 +33,10 @@ namespace Cook4Me.Api.EF.Extensions
             }
 
 
-            IEnumerable<string> productIds = new string[0];
+            IEnumerable<DiscountProductAggregate> products = new List<DiscountProductAggregate>();
             if (discount.Products != null && discount.Products.Any())
             {
-                productIds = discount.Products.Select(p => p.Id);
+                products = discount.Products.Select(p => new DiscountProductAggregate { ProductId = p.Id });
             }
 
             return new DiscountAggregate
@@ -50,7 +50,7 @@ namespace Cook4Me.Api.EF.Extensions
                 StartDateTime = discount.StartDateTime,
                 UpdateDateTime = discount.UpdateDateTime,
                 Validity = (DiscountAggregateValidities)discount.Validity,
-                ProductIds = productIds,
+                Products = products,
                 Value = discount.Value,
                 Subject = discount.Subject,
                 IsPrivate = discount.IsPrivate,
@@ -982,6 +982,23 @@ namespace Cook4Me.Api.EF.Extensions
                 comments = product.Comments.Select(c => c.ToAggregateProduct()).ToList();
             }
 
+            IEnumerable<PublicProductDiscountActiveAggregate> discounts = new List<PublicProductDiscountActiveAggregate>();
+            if (product.Discounts != null)
+            {
+                var currentDate = DateTime.UtcNow;
+                discounts = product.Discounts.Where(pd => pd.Discount != null && pd.Discount.IsActive == true && pd.Discount.IsPrivate == false
+                    && ((pd.Discount.Validity == 0 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate) ||
+                       (pd.Discount.Validity == 1 && pd.Discount.Counter > 0) ||
+                       (pd.Discount.Validity == 2 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate && pd.Discount.Counter > 0)))
+                       .Select(d => new PublicProductDiscountActiveAggregate
+                       {
+                           Code = d.Discount.Code,
+                           MoneySaved = d.MoneySaved,
+                           PromotionType = (DiscountAggregatePromotions)d.Discount.PromotionType,
+                           Value = d.Discount.Value
+                       });
+            }
+
             return new ProductAggregate
             {
                 Id = product.Id,
@@ -1000,7 +1017,8 @@ namespace Cook4Me.Api.EF.Extensions
                 AverageScore = product.AverageScore,
                 TotalScore = product.TotalScore,
                 Comments = comments,
-                AvailableInStock = product.AvailableInStock
+                AvailableInStock = product.AvailableInStock,
+                ActiveDiscounts = discounts
             };
         }
 

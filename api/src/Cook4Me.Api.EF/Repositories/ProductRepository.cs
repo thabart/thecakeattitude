@@ -49,6 +49,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Tags).ThenInclude(t => t.Tag)
                 .Include(p => p.Shop)
                 .Include(p => p.Comments)
+                .Include(p => p.Discounts).ThenInclude(p => p.Discount)
                 .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter);
             if (parameter.ShopIds != null && parameter.ShopIds.Any())
             {
@@ -67,17 +68,21 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (parameter.ContainsActivePromotion != null)
             {
-                /*
                 var currentDate = DateTime.UtcNow;
                 if (parameter.ContainsActivePromotion.Value)
                 {
-                    products = products.Where(p => p.Promotions.Any(pm => pm.Code == null && pm.ExpirationDateTime > currentDate));
+                    products = products.Where(p => p.Discounts.Count() > 0 && p.Discounts.Any(pd => pd.Discount != null && pd.Discount.IsActive == true && pd.Discount.IsPrivate == false 
+                    && ((pd.Discount.Validity == 0 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate) ||
+                       (pd.Discount.Validity == 1 && pd.Discount.Counter > 0) ||
+                       (pd.Discount.Validity == 2 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate && pd.Discount.Counter > 0))));
                 }
                 else
                 {
-                    products = products.Where(p => !p.Promotions.Any(pm => pm.Code == null && pm.ExpirationDateTime > currentDate));
-                }
-                */                
+                    products = products.Where(p => p.Discounts.Count() == 0 || !p.Discounts.Any(pd => pd.Discount != null && pd.Discount.IsActive == true && pd.Discount.IsPrivate == false
+                    && ((pd.Discount.Validity == 0 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate) ||
+                       (pd.Discount.Validity == 1 && pd.Discount.Counter > 0) ||
+                       (pd.Discount.Validity == 2 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate && pd.Discount.Counter > 0))));
+                }        
             }
 
             if (parameter.NorthEast != null && parameter.SouthWest != null)
@@ -127,6 +132,22 @@ namespace Cook4Me.Api.EF.Repositories
                     products = Order(order, "update_datetime", s => s.UpdateDateTime, products);
                     products = Order(order, "create_datetime", s => s.CreateDateTime, products);
                     products = Order(order, "price", s => s.Price, products);
+                    if (order.Target == "best_deals")
+                    {
+                        var currentDate = DateTime.UtcNow;
+                        var grouped = _context.ProductDiscounts.Where(pd => pd.Discount != null && pd.Discount.IsActive == true && pd.Discount.IsPrivate == false
+                    && ((pd.Discount.Validity == 0 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate) ||
+                       (pd.Discount.Validity == 1 && pd.Discount.Counter > 0) ||
+                       (pd.Discount.Validity == 2 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate && pd.Discount.Counter > 0))).GroupBy(s => s.ProductId).Select(s => new { Id = s.Key, MaxValue = s.Max(d => d.MoneySaved) });
+                        if (order.Method == OrderByMethods.Ascending)
+                        {
+                            products = products.Join(grouped, g => g.Id, p => p.Id, (p, g) => new { Product = p, Max = g.MaxValue }).OrderBy(p => p.Max).Select(p => p.Product);
+                        }
+                        else
+                        {
+                            products = products.Join(grouped, g => g.Id, p => p.Id, (p, g) => new { Product = p, Max = g.MaxValue }).OrderByDescending(p => p.Max).Select(p => p.Product);
+                        }
+                    }
                 }
             }
 

@@ -63,7 +63,7 @@ namespace Cook4Me.Api.Handlers
             var orderCommandsHandler = new OrderCommandsHandler(provider.GetService<IOrderRepository>(), provider.GetService<IProductRepository>(), bus, provider.GetService<IOrderPriceCalculatorHelper>());
             var notificationEventsHandler = new NotificationEventsHandler(provider.GetService<INotificationRepository>(), provider.GetService<IShopRepository>(), bus);
             var upsCommandsHandler = new UpsCommandsHandler(provider.GetService<IEventPublisher>(), provider.GetService<IUpsClient>());
-            var discountCommandsHandler = new DiscountCommandsHandler(provider.GetService<IDiscountRepository>(), provider.GetService<IEventPublisher>());
+            var discountCommandsHandler = new DiscountCommandsHandler(provider.GetService<IDiscountRepository>(), provider.GetService<IEventPublisher>(), provider.GetService<IProductRepository>(), provider.GetService<IDiscountPriceCalculatorHelper>());
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddShopCommentCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<RemoveShopCommentCommand>(shopCommandHandler.Handle);

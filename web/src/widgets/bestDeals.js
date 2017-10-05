@@ -46,7 +46,7 @@ class BestDeals extends Component {
     refresh(json) { // Refresh
         var request = $.extend({}, json, {
             orders: [
-                {target: "update_datetime", method: "desc"}
+                {target: "best_deals", method: "desc"}
             ],
             count: 5,
             contains_valid_promotions: true
@@ -111,7 +111,7 @@ class BestDeals extends Component {
         if (this.state.products && this.state.products.length > 0) {
             this.state.products.forEach(function (product) {
                 var productImage = product['images'];
-                var firstPromotion = product['promotions'][0];
+                // var firstPromotion = product['promotions'][0];
                 if (!productImage || productImage.length === 0) {
                     productImage = "/images/default-product.jpg";
                 } else {
@@ -133,10 +133,10 @@ class BestDeals extends Component {
                                <h5 className="inline">
                                    <Badge color="success">
                                      <strike style={{color: "white"}}>€ {product.price}</strike>
-                                     <i style={{color: "white"}} className="ml-1">-{firstPromotion.discount}%</i>
+                                     {/* <i style={{color: "white"}} className="ml-1">-{firstPromotion.discount}%</i>*/}
                                    </Badge>
                                </h5>
-                               <h5 className="inline ml-1">€ {product.new_price}</h5>
+                               {/* <h5 className="inline ml-1">€ {product.new_price}</h5>*/}
                            </div>
                        </div>
                        <div className="last-column">

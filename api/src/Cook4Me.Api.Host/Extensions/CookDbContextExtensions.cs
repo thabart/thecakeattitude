@@ -1149,7 +1149,8 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductDiscount
                         {
                             Id = Guid.NewGuid().ToString(),
-                            ProductId = _firstShirtId
+                            ProductId = _firstShirtId,
+                            MoneySaved = 1
                         }
                     },
                     PromotionType = 0,
@@ -1157,7 +1158,8 @@ namespace Cook4Me.Api.Host.Extensions
                     UpdateDateTime = DateTime.UtcNow,
                     Validity = 1,
                     Value = 50,
-                    IsPrivate = false
+                    IsPrivate = false,
+                    IsActive = true
                 },
                 new Discount
                 {
@@ -1169,12 +1171,14 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductDiscount
                         {
                             Id = Guid.NewGuid().ToString(),
-                            ProductId = _firstShirtId
+                            ProductId = _firstShirtId,
+                            MoneySaved = 2
                         },
                         new ProductDiscount
                         {
                             Id = Guid.NewGuid().ToString(),
-                            ProductId = _secondShirtId
+                            ProductId = _secondShirtId,
+                            MoneySaved = 3
                         }
                     },
                     PromotionType = 1,
@@ -1182,7 +1186,10 @@ namespace Cook4Me.Api.Host.Extensions
                     UpdateDateTime = DateTime.UtcNow,
                     Validity = 0,
                     Value = 50,
-                    IsPrivate = false
+                    StartDateTime = DateTime.UtcNow.AddDays(-10),
+                    EndDateTime = DateTime.UtcNow.AddDays(10),
+                    IsPrivate = false,
+                    IsActive = true
                 }
             });
         }

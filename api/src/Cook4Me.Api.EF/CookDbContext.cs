@@ -48,6 +48,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<OrderLine> OrderLines { get; set; }
         public virtual DbSet<UpsService> UpsServices { get; set; }
         public virtual DbSet<Discount> Discounts { get; set; }
+        public virtual DbSet<ProductDiscount> ProductDiscounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

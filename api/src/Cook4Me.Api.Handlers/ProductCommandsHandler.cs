@@ -166,5 +166,7 @@ namespace Cook4Me.Api.Handlers
                 UpdateDateTime = product.UpdateDateTime
             });
         }
+
+        // TODO : Update the DISCOUNT PRICE when the product is updated....
     }
 }

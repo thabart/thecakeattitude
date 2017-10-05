@@ -30,6 +30,7 @@ namespace Cook4Me.Api.Core
             }
 
             serviceCollection.AddTransient<IOrderPriceCalculatorHelper, OrderPriceCalculatorHelper>();
+            serviceCollection.AddTransient<IDiscountPriceCalculatorHelper, DiscountPriceCalculatorHelper>();
             return serviceCollection;
         }
     }

@@ -507,7 +507,7 @@ namespace Cook4Me.Api.Host
                 public const string Tags = "tags";
                 public const string Images = "images";
                 public const string Filters = "filters";
-                public const string Promotions = "promotions";
+                public const string Discounts = "discounts";
                 public const string AverageScore = "average_score";
                 public const string TotalScore = "total_score";
                 public const string Comments = "comments";
@@ -706,6 +706,7 @@ namespace Cook4Me.Api.Host
                 public const string Validity = "validity";
                 public const string IsPrivate = "is_private";
                 public const string IsActive = "is_active";
+                public const string MoneySaved = "money_saved";
             }
 
             public static class Seller
