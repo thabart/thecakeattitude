@@ -26,11 +26,14 @@ namespace Cook4Me.Api.EF.Models
         public int PromotionType { get; set; } // FixedAmount & Percentage
         public int Validity { get; set; } // Timer & counter & both
         public int Counter { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsPrivate { get; set; }
         public double Value { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
+        public string Subject { get; set; }
         public virtual ICollection<ProductDiscount> Products { get; set; }
     }
 }

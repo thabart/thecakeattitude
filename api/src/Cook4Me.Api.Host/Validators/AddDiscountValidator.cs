@@ -107,6 +107,12 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddDiscountValidationResult(ErrorDescriptions.SomeProductsDontExist);
             }
 
+            if ((command.Validity == DiscountAggregateValidities.Counter || command.Validity == DiscountAggregateValidities.Both) 
+                && command.PromotionType == DiscountAggregatePromotions.FixedAmount && products.Content.Any(p => p.Price <= command.Value))
+            {
+                return new AddDiscountValidationResult(ErrorDescriptions.TheProductPriceCannotBeInferiorToTheDiscount);
+            }
+
             var shopIds = products.Content.Select(p => p.ShopId).Distinct();
             if (shopIds.Count() != 1)
             {

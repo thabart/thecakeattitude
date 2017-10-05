@@ -15,16 +15,14 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Parameters;
-using Cook4Me.Api.Core.Results;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Results
 {
-    public interface IDiscountRepository
+    public class SearchDiscountsResult
     {
-        Task<bool> Insert(DiscountAggregate discountAggregate);
-        Task<DiscountAggregate> Get(string id);
-        Task<SearchDiscountsResult> Search(SearchDiscountsParameter parameter);
+        public IEnumerable<DiscountAggregate> Content { get; set; }
+        public int TotalResults { get; set; }
+        public int StartIndex { get; set; }
     }
 }

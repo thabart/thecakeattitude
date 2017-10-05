@@ -54,13 +54,16 @@ namespace Cook4Me.Api.Handlers
                 PromotionType = message.PromotionType,
                 StartDateTime = message.StartDateTime,
                 UpdateDateTime = message.UpdateDateTime,
-                Validity = message.Validity
+                Validity = message.Validity,
+                Subject = message.Subject,
+                IsActive = true,
+                IsPrivate = message.IsPrivate
             };
             await _discountRepository.Insert(record);
             _eventPublisher.Publish(new DiscountAddedEvent
             {
                 Id = record.Id,
-                Seller = message.Seller,
+                Seller = message.Subject,
                 CommonId = message.CommonId
             });
         }

@@ -110,7 +110,7 @@ namespace Cook4Me.Api.EF.Repositories
                 {
                     services = Order(order, "total_score", s => s.TotalScore, services);
                     services = Order(order, "average_score", s => s.AverageScore, services);
-                    services = Order(order, "price", s => s.NewPrice, services);
+                    services = Order(order, "price", s => s.Price, services);
                     services = Order(order, "update_datetime", s => s.UpdateDateTime, services);
                     services = Order(order, "create_datetime", s => s.CreateDateTime, services);
                 }
@@ -300,7 +300,6 @@ namespace Cook4Me.Api.EF.Repositories
                     record.AverageScore = serviceAggregate.AverageScore;
                     record.Description = serviceAggregate.Description;
                     record.Name = serviceAggregate.Name;
-                    record.NewPrice = serviceAggregate.NewPrice;
                     record.Price = serviceAggregate.Price;
                     record.ShopId = serviceAggregate.ShopId;
                     record.TotalScore = serviceAggregate.TotalScore;

@@ -14,11 +14,17 @@
 // limitations under the License.
 #endregion
 
-using System;
-using System.Threading.Tasks;
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -31,6 +37,24 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
+        public async Task<DiscountAggregate> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            try
+            {
+                var discount = await _context.Discounts.Include(d => d.Products).FirstOrDefaultAsync(d => d.Id == id).ConfigureAwait(false);
+                return discount == null ? null : discount.ToAggregate();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public async Task<bool> Insert(DiscountAggregate discountAggregate)
         {
             if (discountAggregate == null)
@@ -41,6 +65,17 @@ namespace Cook4Me.Api.EF.Repositories
             try
             {
                 var record = discountAggregate.ToModel();
+                if (discountAggregate.ProductIds != null)
+                {
+                    var productDiscounts = discountAggregate.ProductIds.Select(p => new ProductDiscount
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        DiscountId = record.Id,
+                        ProductId = p
+                    }).ToList();
+                    record.Products = productDiscounts;
+                }
+
                 _context.Discounts.Add(record);
                 await _context.SaveChangesAsync().ConfigureAwait(false);
                 return true;
@@ -49,6 +84,34 @@ namespace Cook4Me.Api.EF.Repositories
             {
                 return false;
             }
+        }
+
+        public async Task<SearchDiscountsResult> Search(SearchDiscountsParameter parameter)
+        {
+            if (parameter == null)
+            {
+                throw new ArgumentNullException(nameof(parameter));
+            }
+
+            IQueryable<Models.Discount> discounts = _context.Discounts.Include(c => c.Products);
+            if (!string.IsNullOrWhiteSpace(parameter.Subject))
+            {
+                discounts.Where(d => d.Subject == parameter.Subject);
+            }
+
+            var result = new SearchDiscountsResult
+            {
+                TotalResults = await discounts.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            if (parameter.IsPagingEnabled)
+            {
+                discounts = discounts.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await discounts.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
         }
     }
 }

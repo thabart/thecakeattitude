@@ -39,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        SearchDiscountsParameter GetSearchDiscountsParameter(JObject jObj);
         AddDiscountCommand GetAddDiscountCommand(JObject jObj);
         ConfirmOrderLabelPurchaseCommand GetConfirmOrderLabelPurchase(JObject jObj);
         ParcelSize GetParcelSize(JObject jObj);
@@ -89,6 +90,26 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {        
+        public SearchDiscountsParameter GetSearchDiscountsParameter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+            
+            var result = new SearchDiscountsParameter
+            {
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+            };
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
         public AddDiscountCommand GetAddDiscountCommand(JObject jObj)
         {
             if (jObj == null)
@@ -102,6 +123,7 @@ namespace Cook4Me.Api.Host.Builders
             result.ProductIds = jObj.TryGetStringArray(Constants.DtoNames.DiscountNames.ProductIds);
             result.StartDateTime = jObj.TryGetDateTime(Constants.DtoNames.DiscountNames.StartDateTime);
             result.Value = jObj.TryGetDouble(Constants.DtoNames.DiscountNames.Value);
+            result.IsPrivate = jObj.TryGetBoolean(Constants.DtoNames.DiscountNames.IsPrivate);
             var kvpPromotion = CommonBuilder.MappingDiscountPromotions.FirstOrDefault(kvp => kvp.Value == jObj.TryGetString(Constants.DtoNames.DiscountNames.Type));
             if (!kvpPromotion.Equals(default(KeyValuePair<DiscountAggregatePromotions, string>)) && !string.IsNullOrWhiteSpace(kvpPromotion.Value))
             {
@@ -1317,7 +1339,6 @@ namespace Cook4Me.Api.Host.Builders
                 Name = jObj.TryGetString(Constants.DtoNames.Product.Name),
                 Description = jObj.TryGetString(Constants.DtoNames.Product.Description),
                 Price = jObj.TryGetDouble(Constants.DtoNames.Product.Price),
-                NewPrice = jObj.TryGetDouble(Constants.DtoNames.Product.NewPrice),
                 UnitOfMeasure = jObj.TryGetString(Constants.DtoNames.Product.UnitOfMeasure),
                 Tags = jObj.TryGetStringArray(Constants.DtoNames.Product.Tags),
                 Quantity = jObj.TryGetDouble(Constants.DtoNames.Product.Quantity),

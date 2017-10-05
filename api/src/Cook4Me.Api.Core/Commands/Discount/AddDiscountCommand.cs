@@ -32,6 +32,7 @@ namespace Cook4Me.Api.Core.Commands.Discount
         public DateTime UpdateDateTime { get; set; }
         public double Value { get; set; }
         public IEnumerable<string> ProductIds { get; set; }
-        public string Seller { get; set; }
+        public string Subject { get; set; }
+        public bool IsPrivate { get; set; } 
     }
 }

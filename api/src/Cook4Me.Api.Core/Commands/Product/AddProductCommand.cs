@@ -34,7 +34,6 @@ namespace Cook4Me.Api.Core.Commands.Product
         public string CategoryId { get; set; }
         public string UnitOfMeasure { get; set; }
         public double Price { get; set; }
-        public double NewPrice { get; set; }
         public double Quantity { get; set; }
         public double? AvailableInStock { get; set; }
         public string ShopId { get; set; }

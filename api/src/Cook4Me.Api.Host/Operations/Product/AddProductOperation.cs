@@ -113,7 +113,6 @@ namespace Cook4Me.Api.Host.Operations.Product
             command.Id = Guid.NewGuid().ToString();
             command.CreateDateTime = DateTime.UtcNow;
             command.UpdateDateTime = DateTime.UtcNow;
-            command.NewPrice = command.Price;
             command.CommonId = commonId;
             command.PartialImagesUrl = images;
             var res = new { id = command.Id };

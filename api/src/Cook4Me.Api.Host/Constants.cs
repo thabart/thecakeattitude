@@ -499,7 +499,6 @@ namespace Cook4Me.Api.Host
                 public const string CategoryId = "category_id";
                 public const string ShopCategoryIds = "shop_category_ids";
                 public const string Price = "price";
-                public const string NewPrice = "new_price";
                 public const string UnitOfMeasure = "unit_of_measure";
                 public const string Quantity = "quantity";
                 public const string ShopId = "shop_id";
@@ -523,7 +522,6 @@ namespace Cook4Me.Api.Host
                 public const string Name = "name";
                 public const string Description = "description";
                 public const string Price = "price";
-                public const string NewPrice = "new_price";
                 public const string Images = "images";
                 public const string Tags = "tags";
                 public const string Occurrence = "occurrence";
@@ -696,13 +694,18 @@ namespace Cook4Me.Api.Host
 
             public static class DiscountNames
             {
+                public const string Id = "id";
+                public const string Code = "code";
                 public const string ProductIds = "product_ids";
                 public const string Value = "value";
                 public const string Counter = "counter";
                 public const string StartDateTime = "start_datetime";
                 public const string EndDateTime = "end_datetime";
                 public const string Type = "type";
+                public const string Subject = "subject";
                 public const string Validity = "validity";
+                public const string IsPrivate = "is_private";
+                public const string IsActive = "is_active";
             }
 
             public static class Seller

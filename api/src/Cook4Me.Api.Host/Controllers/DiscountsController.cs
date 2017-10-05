@@ -28,10 +28,15 @@ namespace Cook4Me.Api.Host.Controllers
     public class DiscountsController : BaseController
     {
         private readonly IAddDiscountOperation _addDiscountOperation;
+        private readonly IGetDiscountOperation _getDiscountOperation;
+        private readonly ISearchDiscountOperation _searchDiscountOperation;
 
-        public DiscountsController(IAddDiscountOperation addDiscountOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+        public DiscountsController(IAddDiscountOperation addDiscountOperation, IGetDiscountOperation getDiscountOperation, 
+            ISearchDiscountOperation searchDiscountOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _addDiscountOperation = addDiscountOperation;
+            _getDiscountOperation = getDiscountOperation;
+            _searchDiscountOperation = searchDiscountOperation;
         }
         
         [HttpPost]
@@ -39,6 +44,20 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Add(JObject jObj)
         {
             return await _addDiscountOperation.Execute(jObj, User.GetSubject(), this.GetCommonId());
+        }
+
+        [HttpGet("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Get(string id)
+        {
+            return await _getDiscountOperation.Execute(id, User.GetSubject());
+        }
+        
+        [HttpPost(Constants.RouteNames.Search)]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Search([FromBody] JObject jObj)
+        {
+            return await _searchDiscountOperation.Execute(jObj, User.GetSubject());
         }
     }
 }

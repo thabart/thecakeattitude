@@ -38,7 +38,6 @@ namespace Cook4Me.Api.Core.Commands.Service
         public double Price { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public double NewPrice { get; set; }
         public AddServiceOccurrence Occurrence { get; set; }
         public IEnumerable<string> Images { get; set; }
         public IEnumerable<string> Tags { get; set; }

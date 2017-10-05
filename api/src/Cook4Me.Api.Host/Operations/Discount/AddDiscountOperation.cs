@@ -81,6 +81,8 @@ namespace Cook4Me.Api.Host.Operations.Discount
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
+            command.CommonId = commonId;
+            command.Subject = subject;
             _commandSender.Send(command);
             return new OkResult();
         }

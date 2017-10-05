@@ -210,7 +210,7 @@ namespace Cook4Me.Api.Handlers
                     orderLine = new OrderAggregateLine
                     {
                         Id = message.Id,
-                        Price = product.NewPrice * message.Quantity,
+                        Price = product.Price * message.Quantity,
                         ProductId = message.ProductId,
                         Quantity = message.Quantity
                     };
@@ -219,7 +219,7 @@ namespace Cook4Me.Api.Handlers
                 else
                 {
                     orderLine.Quantity += message.Quantity;
-                    orderLine.Price = orderLine.Quantity * product.NewPrice;
+                    orderLine.Price = orderLine.Quantity * product.Price;
                 }
 
                 order.OrderLines = orderLines;
@@ -237,13 +237,13 @@ namespace Cook4Me.Api.Handlers
                     Subject = message.Subject,
                     Status = OrderAggregateStatus.Created,
                     UpdateDateTime = DateTime.UtcNow,
-                    TotalPrice = product.NewPrice * message.Quantity,
+                    TotalPrice = product.Price * message.Quantity,
                     OrderLines = new[]
                     {
                     new OrderAggregateLine
                     {
                         Id = message.Id,
-                        Price = product.NewPrice * message.Quantity,
+                        Price = product.Price * message.Quantity,
                         ProductId = product.Id,
                         Quantity = message.Quantity
                     }

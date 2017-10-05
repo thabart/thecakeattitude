@@ -29,6 +29,8 @@ namespace Cook4Me.Api.Host.Extensions
         private static string _firstShopId = Guid.NewGuid().ToString();
         private static string _secondShopId = Guid.NewGuid().ToString();
         private static string _thirdShopId = Guid.NewGuid().ToString();
+        private static string _firstShirtId = Guid.NewGuid().ToString();
+        private static string _secondShirtId = Guid.NewGuid().ToString();
         private static string _ecoTagName = "eco";
         private static string _secondHandTagName = "second hand";
         private static string _womenProductCategory = Guid.NewGuid().ToString();
@@ -758,7 +760,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Jean",
                     CategoryId = _womenProductCategory,
                     Price = 200,
-                    NewPrice = 200,
                     UnitOfMeasure = "piece",
                     Quantity = 1,
                     CreateDateTime = DateTime.UtcNow,
@@ -840,7 +841,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Jean",
                     CategoryId = _womenProductCategory,
                     Price = 200,
-                    NewPrice = 160,
                     UnitOfMeasure = "piece",
                     Quantity = 1,
                     CreateDateTime = DateTime.UtcNow,
@@ -912,7 +912,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Small shoes",
                     CategoryId = _womenProductCategory,
                     Price = 250,
-                    NewPrice = 100,
                     UnitOfMeasure = "piece",
                     Quantity = 1,
                     CreateDateTime = DateTime.UtcNow,
@@ -975,7 +974,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Mixt shoes",
                     CategoryId = _manProductCategory,
                     Price = 250,
-                    NewPrice = 250,
                     UnitOfMeasure = "piece",
                     Quantity = 1,
                     CreateDateTime = DateTime.UtcNow,
@@ -1034,13 +1032,159 @@ namespace Cook4Me.Api.Host.Extensions
                             Subject = "administrator"
                         }
                     }
+                },
+                new Product
+                {
+                    Id = _firstShirtId,
+                    Name = "First shirt",
+                    ShopId = _secondShopId,
+                    Description = "First shirt",
+                    CategoryId = _manProductCategory,
+                    Price = 250,
+                    UnitOfMeasure = "piece",
+                    Quantity = 1,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    AvailableInStock = 3000,
+                    TotalScore = 1,
+                    AverageScore = 1,
+                    Images = new []
+                    {
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
+                        }
+                    },
+                    Tags = new []
+                    {
+                        new ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "first-comment-product",
+                            Score = 1,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
+                        }
+                    }
+                },
+                new Product
+                {
+                    Id = _secondShirtId,
+                    Name = "Second shirt",
+                    ShopId = _secondShopId,
+                    Description = "Second shirt",
+                    CategoryId = _manProductCategory,
+                    Price = 250,
+                    UnitOfMeasure = "piece",
+                    Quantity = 1,
+                    CreateDateTime = DateTime.UtcNow,
+                    UpdateDateTime = DateTime.UtcNow,
+                    AvailableInStock = 3000,
+                    TotalScore = 1,
+                    AverageScore = 1,
+                    Images = new []
+                    {
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
+                        },
+                        new ProductImage
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            PartialPath = "http://localhost:5000/products/jean.jpg"
+                        }
+                    },
+                    Tags = new []
+                    {
+                        new ProductTag
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            TagName = _ecoTagName
+                        }
+                    },
+                    Comments = new []
+                    {
+                        new Comment
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            Content = "first-comment-product",
+                            Score = 1,
+                            CreateDateTime = DateTime.UtcNow,
+                            UpdateDateTime = DateTime.UtcNow,
+                            Subject = "administrator"
+                        }
+                    }
                 }
             });
         }
 
         private static void InsertPromotions(CookDbContext context)
         {
-
+            context.Discounts.AddRange(new[]
+            {
+                new Discount
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Code = Guid.NewGuid().ToString(),
+                    Counter = 10,
+                    CreateDateTime =  DateTime.UtcNow,
+                    Products = new []
+                    {
+                        new ProductDiscount
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            ProductId = _firstShirtId
+                        }
+                    },
+                    PromotionType = 0,
+                    Subject = "administrator",
+                    UpdateDateTime = DateTime.UtcNow,
+                    Validity = 1,
+                    Value = 50,
+                    IsPrivate = false
+                },
+                new Discount
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Code = Guid.NewGuid().ToString(),
+                    CreateDateTime =  DateTime.UtcNow,
+                    Products = new []
+                    {
+                        new ProductDiscount
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            ProductId = _firstShirtId
+                        },
+                        new ProductDiscount
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            ProductId = _secondShirtId
+                        }
+                    },
+                    PromotionType = 1,
+                    Subject = "administrator",
+                    UpdateDateTime = DateTime.UtcNow,
+                    Validity = 0,
+                    Value = 50,
+                    IsPrivate = false
+                }
+            });
         }
 
         private static void InsertDays(CookDbContext context)
@@ -1077,7 +1221,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Price = 200,
                     AverageScore = 2.5,
                     TotalScore = 5,
-                    NewPrice = 200,
                     Occurrence = new ServiceOccurrence
                     {
                         Id = Guid.NewGuid().ToString(),
@@ -1153,7 +1296,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Price = 300,
                     AverageScore = 5,
                     TotalScore = 5,
-                    NewPrice = 300,
                     Occurrence = new ServiceOccurrence
                     {
                         Id = Guid.NewGuid().ToString(),

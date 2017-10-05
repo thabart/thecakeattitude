@@ -109,5 +109,8 @@ namespace Cook4Me.Api.Host
         public const string SomeProductsDontExist = "some products don't exist";
         public const string TheProductsShouldBelongsToTheSameShop = "products should belong to the same shop";
         public const string TheDiscountCannotBeAddedByYou = "the discount cannot be added by you";
+        public const string TheDiscountCannotBeAccessedByYou = "the discount cannot be accessed by you";
+        public const string TheDiscountDoesntExist = "the discount doesn't exist";
+        public const string TheProductPriceCannotBeInferiorToTheDiscount = "the product price cannot be inferior to the discount";
     }
 }

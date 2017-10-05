@@ -51,7 +51,10 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = discount.UpdateDateTime,
                 Validity = (DiscountAggregateValidities)discount.Validity,
                 ProductIds = productIds,
-                Value = discount.Value
+                Value = discount.Value,
+                Subject = discount.Subject,
+                IsPrivate = discount.IsPrivate,
+                IsActive = discount.IsActive
             };
         }
 
@@ -72,7 +75,8 @@ namespace Cook4Me.Api.EF.Extensions
                 PromotionType = (int)aggregate.PromotionType,
                 StartDateTime = aggregate.StartDateTime,
                 UpdateDateTime = aggregate.UpdateDateTime,
-                Validity = (int)aggregate.Validity
+                Validity = (int)aggregate.Validity,
+                Subject = aggregate.Subject
             };
         }
 
@@ -545,7 +549,6 @@ namespace Cook4Me.Api.EF.Extensions
                 Id = aggregate.Id,
                 Name = aggregate.Name,
                 Description = aggregate.Description,
-                NewPrice = aggregate.NewPrice,
                 Price = aggregate.Price,
                 ShopId = aggregate.ShopId,
                 UpdateDateTime = aggregate.UpdateDateTime,
@@ -988,7 +991,6 @@ namespace Cook4Me.Api.EF.Extensions
                 UpdateDateTime = product.UpdateDateTime,
                 Quantity = product.Quantity,
                 Price = product.Price,
-                NewPrice = product.NewPrice,
                 ShopId = product.ShopId,
                 UnitOfMeasure = product.UnitOfMeasure,
                 Name = product.Name,
@@ -1021,7 +1023,6 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopId = product.ShopId,
                 UnitOfMeasure = product.UnitOfMeasure,
                 Name = product.Name,
-                NewPrice = product.NewPrice,
                 AvailableInStock = product.AvailableInStock
             };
         }
@@ -1098,7 +1099,6 @@ namespace Cook4Me.Api.EF.Extensions
                 Tags = tags,
                 AverageScore = service.AverageScore,
                 TotalScore = service.TotalScore,
-                NewPrice = service.NewPrice,
                 StartDateTime = dateTime.Add(serviceOccurrence.StartTime),
                 EndDateTime = dateTime.Add(serviceOccurrence.EndTime)
             };
@@ -1147,7 +1147,6 @@ namespace Cook4Me.Api.EF.Extensions
                 Tags = tags,
                 AverageScore = service.AverageScore,
                 TotalScore = service.TotalScore,
-                NewPrice = service.NewPrice,
                 Comments = comments,
                 CreateDateTime = service.CreateDateTime,
                 UpdateDateTime = service.UpdateDateTime

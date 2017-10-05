@@ -41,6 +41,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetDiscount(DiscountAggregate discount);
         JObject GetUpsTrack(TrackResponse track);
         JObject GetUpsTrackActivity(TrackShipmentPackageActivityResponse activity);
         JObject GetPaypalPayment(CreatePaymentResponse response);
@@ -111,6 +112,48 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetDiscount(DiscountAggregate discount)
+        {
+            if (discount == null)
+            {
+                throw new ArgumentNullException(nameof(discount));
+            }
+
+            var obj = new JObject();
+
+            var kvpValidity = CommonBuilder.MappingDiscountValidities.FirstOrDefault(d => d.Key == discount.Validity);
+            if (!kvpValidity.Equals(default(KeyValuePair<DiscountAggregateValidities, string>)))
+            {
+                obj.Add(Constants.DtoNames.DiscountNames.Validity, kvpValidity.Value);
+            }
+
+            var kvpType = CommonBuilder.MappingDiscountPromotions.FirstOrDefault(d => d.Key == discount.PromotionType);
+            if (!kvpType.Equals(default(KeyValuePair<DiscountAggregateValidities, string>)))
+            {
+                obj.Add(Constants.DtoNames.DiscountNames.Type, kvpType.Value);
+            }
+
+            var productIds = new JArray();
+            if (discount.ProductIds != null)
+            {
+                foreach (var productId in discount.ProductIds)
+                {
+                    productIds.Add(productId);
+                }
+            }
+
+            obj.Add(Constants.DtoNames.DiscountNames.Id, discount.Id);
+            obj.Add(Constants.DtoNames.DiscountNames.Code, discount.Code);
+            obj.Add(Constants.DtoNames.DiscountNames.Counter, discount.Counter);
+            obj.Add(Constants.DtoNames.DiscountNames.EndDateTime, discount.EndDateTime);
+            obj.Add(Constants.DtoNames.DiscountNames.StartDateTime, discount.StartDateTime);
+            obj.Add(Constants.DtoNames.DiscountNames.Value, discount.Value);
+            obj.Add(Constants.DtoNames.DiscountNames.Subject, discount.Subject);
+            obj.Add(Constants.DtoNames.DiscountNames.IsActive, discount.IsActive);
+            obj.Add(Constants.DtoNames.DiscountNames.IsPrivate, discount.IsPrivate);
+            obj.Add(Constants.DtoNames.DiscountNames.ProductIds, productIds);
+            return obj;
+        }
         public JObject GetUpsTrack(TrackResponse track)
         {
             if (track == null)
@@ -1500,7 +1543,6 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Service.Description, evt.Description);
             jObj.Add(Constants.DtoNames.Service.ShopId, evt.ShopId);
             jObj.Add(Constants.DtoNames.Service.Price, evt.Price);
-            jObj.Add(Constants.DtoNames.Service.NewPrice, evt.NewPrice);
             jObj.Add(Constants.DtoNames.Service.CreateDatetime, evt.CreateDateTime);
             jObj.Add(Constants.DtoNames.Service.UpdateDatetime, evt.UpdateDateTime);
             jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
@@ -1558,7 +1600,6 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Product.Description, evt.Description);
             jObj.Add(Constants.DtoNames.Product.CategoryId, evt.CategoryId);
             jObj.Add(Constants.DtoNames.Product.Price, evt.Price);
-            jObj.Add(Constants.DtoNames.Product.NewPrice, evt.NewPrice);
             jObj.Add(Constants.DtoNames.Product.UnitOfMeasure, evt.UnitOfMeasure);
             jObj.Add(Constants.DtoNames.Product.Quantity, evt.Quantity);
             jObj.Add(Constants.DtoNames.Product.ShopId, evt.ShopId);
@@ -1605,7 +1646,6 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Product.Description, product.Description);
             jObj.Add(Constants.DtoNames.Product.CategoryId, product.CategoryId);
             jObj.Add(Constants.DtoNames.Product.Price, product.Price);
-            jObj.Add(Constants.DtoNames.Product.NewPrice, product.NewPrice);
             jObj.Add(Constants.DtoNames.Product.UnitOfMeasure, product.UnitOfMeasure);
             jObj.Add(Constants.DtoNames.Product.Quantity, product.Quantity);
             jObj.Add(Constants.DtoNames.Product.ShopId, product.ShopId);
@@ -1687,7 +1727,6 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Service.ShopId, service.ShopId);
             jObj.Add(Constants.DtoNames.Service.Description, service.Description);
             jObj.Add(Constants.DtoNames.Service.Price, service.Price);
-            jObj.Add(Constants.DtoNames.Service.NewPrice, service.NewPrice);
             jObj.Add(Constants.DtoNames.Service.AverageScore, service.AverageScore);
             jObj.Add(Constants.DtoNames.Service.TotalScore, service.TotalScore);
             jObj.Add(Constants.DtoNames.Service.NbComments, nbComments);
@@ -1736,7 +1775,6 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Service.Price, service.Price);
             jObj.Add(Constants.DtoNames.Service.AverageScore, service.AverageScore);
             jObj.Add(Constants.DtoNames.Service.TotalScore, service.TotalScore);
-            jObj.Add(Constants.DtoNames.Service.NewPrice, service.NewPrice);
             jObj.Add(Constants.DtoNames.ServiceOccurrence.StartDateTime, service.StartDateTime);
             jObj.Add(Constants.DtoNames.ServiceOccurrence.EndDateTime, service.EndDateTime);
             if (service.PartialImagesUrl != null)

@@ -96,7 +96,6 @@ namespace Cook4Me.Api.Host.Operations.Services
             command.CreateDateTime = DateTime.UtcNow;
             command.UpdateDateTime = DateTime.UtcNow;
             command.CommonId = commonId;
-            command.NewPrice = command.Price;
             command.Images = images;
 
             _commandSender.Send(command);

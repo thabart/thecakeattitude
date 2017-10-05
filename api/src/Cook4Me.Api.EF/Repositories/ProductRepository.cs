@@ -111,7 +111,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             if (parameter.FilterPrice != null)
             {
-                products = products.Where(p => p.NewPrice >= parameter.FilterPrice.Min && p.NewPrice <= parameter.FilterPrice.Max);
+                products = products.Where(p => p.Price >= parameter.FilterPrice.Min && p.Price <= parameter.FilterPrice.Max);
             }
 
             var result = new SearchProductsResult
@@ -126,7 +126,7 @@ namespace Cook4Me.Api.EF.Repositories
                 {
                     products = Order(order, "update_datetime", s => s.UpdateDateTime, products);
                     products = Order(order, "create_datetime", s => s.CreateDateTime, products);
-                    products = Order(order, "price", s => s.NewPrice, products);
+                    products = Order(order, "price", s => s.Price, products);
                 }
             }
 
@@ -218,7 +218,6 @@ namespace Cook4Me.Api.EF.Repositories
                     record.CategoryId = productAggregate.CategoryId;
                     record.Description = productAggregate.Description;
                     record.Name = productAggregate.Name;
-                    record.NewPrice = productAggregate.NewPrice;
                     record.Price = productAggregate.Price;
                     record.Quantity = productAggregate.Quantity;
                     record.ShopId = productAggregate.ShopId;
