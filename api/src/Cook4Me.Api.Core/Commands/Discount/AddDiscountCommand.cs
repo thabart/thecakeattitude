@@ -14,23 +14,24 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Bus;
 using System;
 using System.Collections.Generic;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Commands.Discount
 {
-    public class Discount
+    public class AddDiscountCommand : Command
     {
-        public string Id { get; set; }
-        public string Code { get; set; }
-        public int PromotionType { get; set; } // FixedAmount & Percentage
-        public int Validity { get; set; } // Timer & counter & both
         public int Counter { get; set; }
-        public double Value { get; set; }
+        public DiscountAggregatePromotions PromotionType { get; set; } // FixedAmount & Percentage
+        public DiscountAggregateValidities Validity { get; set; } // Timer & counter & both
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public virtual ICollection<ProductDiscount> Products { get; set; }
+        public double Value { get; set; }
+        public IEnumerable<string> ProductIds { get; set; }
+        public string Seller { get; set; }
     }
 }

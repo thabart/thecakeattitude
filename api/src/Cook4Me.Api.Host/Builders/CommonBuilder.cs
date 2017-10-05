@@ -46,6 +46,19 @@ namespace Cook4Me.Api.Host.Builders
             { OrderPayments.Paypal, "paypal" }
         };
 
+        public static Dictionary<DiscountAggregatePromotions, string> MappingDiscountPromotions = new Dictionary<DiscountAggregatePromotions, string>
+        {
+            { DiscountAggregatePromotions.FixedAmount, "amount" },
+            { DiscountAggregatePromotions.Percentage, "percentage" }
+        };
+
+        public static Dictionary<DiscountAggregateValidities, string> MappingDiscountValidities = new Dictionary<DiscountAggregateValidities, string>
+        {
+            { DiscountAggregateValidities.Both, "both" },
+            { DiscountAggregateValidities.Counter, "counter" },
+            { DiscountAggregateValidities.Timer, "timer" }
+        };
+
         public static Dictionary<OrderPaymentStatus, string> MappingOrderPaymentStatus = new Dictionary<OrderPaymentStatus, string>
         {
             { OrderPaymentStatus.Approved, "approved" },

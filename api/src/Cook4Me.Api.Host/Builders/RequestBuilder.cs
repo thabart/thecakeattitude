@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Commands.ClientService;
+using Cook4Me.Api.Core.Commands.Discount;
 using Cook4Me.Api.Core.Commands.Messages;
 using Cook4Me.Api.Core.Commands.Notifications;
 using Cook4Me.Api.Core.Commands.Orders;
@@ -38,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        AddDiscountCommand GetAddDiscountCommand(JObject jObj);
         ConfirmOrderLabelPurchaseCommand GetConfirmOrderLabelPurchase(JObject jObj);
         ParcelSize GetParcelSize(JObject jObj);
         PurchaseOrderLabelCommand GetPurchaseOrderLabelCommand(JObject jObj);
@@ -87,6 +89,34 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {        
+        public AddDiscountCommand GetAddDiscountCommand(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new AddDiscountCommand();
+            result.Counter = jObj.TryGetInt(Constants.DtoNames.DiscountNames.Counter);
+            result.EndDateTime = jObj.TryGetDateTime(Constants.DtoNames.DiscountNames.EndDateTime);
+            result.ProductIds = jObj.TryGetStringArray(Constants.DtoNames.DiscountNames.ProductIds);
+            result.StartDateTime = jObj.TryGetDateTime(Constants.DtoNames.DiscountNames.StartDateTime);
+            result.Value = jObj.TryGetDouble(Constants.DtoNames.DiscountNames.Value);
+            var kvpPromotion = CommonBuilder.MappingDiscountPromotions.FirstOrDefault(kvp => kvp.Value == jObj.TryGetString(Constants.DtoNames.DiscountNames.Type));
+            if (!kvpPromotion.Equals(default(KeyValuePair<DiscountAggregatePromotions, string>)) && !string.IsNullOrWhiteSpace(kvpPromotion.Value))
+            {
+                result.PromotionType = kvpPromotion.Key;
+            }
+
+            var kvpValidity = CommonBuilder.MappingDiscountValidities.FirstOrDefault(kvp => kvp.Value == jObj.TryGetString(Constants.DtoNames.DiscountNames.Validity));
+            if (!kvpValidity.Equals(default(KeyValuePair<DiscountAggregateValidities, string>)) && !string.IsNullOrWhiteSpace(kvpValidity.Value))
+            {
+                result.Validity = kvpValidity.Key;
+            }
+
+            return result;
+
+        }
         public ConfirmOrderLabelPurchaseCommand GetConfirmOrderLabelPurchase(JObject jObj)
         {
             if (jObj == null)

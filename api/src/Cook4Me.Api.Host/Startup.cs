@@ -26,6 +26,7 @@ using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Hubs;
 using Cook4Me.Api.Host.Operations.Announcement;
 using Cook4Me.Api.Host.Operations.Dhl;
+using Cook4Me.Api.Host.Operations.Discount;
 using Cook4Me.Api.Host.Operations.Messages;
 using Cook4Me.Api.Host.Operations.Notifications;
 using Cook4Me.Api.Host.Operations.Orders;
@@ -188,6 +189,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IRemoveOrderValidator, RemoveOrderValidator>();
             services.AddTransient<IAddOrderLineValidator, AddOrderLineValidator>();
             services.AddTransient<ICancelOrderOperation, CancelOrderOperation>();
+            services.AddTransient<IAddDiscountValidator, AddDiscountValidator>();
             services.AddTransient<IAcceptOrderTransactionValidator, AcceptOrderTransactionValidator>();
             services.AddTransient<IPurchaseOrderLabelValidator, PurchaseOrderLabelValidator>();
             services.AddTransient<IConfirmOrderLabelPurchaseValidator, ConfirmOrderLabelPurchaseValidator>();
@@ -236,6 +238,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IDeleteShopOperation, DeleteShopOperation>();
             services.AddTransient<IAddServiceOperation, AddServiceOperation>();
             services.AddTransient<IGetRatingsOperation, GetRatingsOperation>();
+            services.AddTransient<IAddDiscountOperation, AddDiscountOperation>();
             services.AddTransient<IGetOrderLabelOperation, GetOrderLabelOperation>();
             services.AddTransient<IGetUpsServicesOperation, GetUpsServicesOperation>();
             services.AddTransient<IGetOrderStatusOperation, GetOrderStatusOperation>();

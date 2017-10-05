@@ -105,5 +105,9 @@ namespace Cook4Me.Api.Host
         public const string TheOrderReceptionCanBeConfirmedOnlyByTheBuyer = "the order reception can be confirmed only by the buyer";
         public const string TheOrderLabelHasNotBeenPurchased = "the order label has not been purchased";
         public const string TheOrderParcelHasNotBeenDelivered = "the order parcel has not been delivered";
+        public const string TheStartDateMustBeInferiorToEndDate = "the start date must be < end date";
+        public const string SomeProductsDontExist = "some products don't exist";
+        public const string TheProductsShouldBelongsToTheSameShop = "products should belong to the same shop";
+        public const string TheDiscountCannotBeAddedByYou = "the discount cannot be added by you";
     }
 }

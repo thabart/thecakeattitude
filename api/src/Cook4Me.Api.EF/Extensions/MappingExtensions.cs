@@ -50,7 +50,8 @@ namespace Cook4Me.Api.EF.Extensions
                 StartDateTime = discount.StartDateTime,
                 UpdateDateTime = discount.UpdateDateTime,
                 Validity = (DiscountAggregateValidities)discount.Validity,
-                ProductIds = productIds
+                ProductIds = productIds,
+                Value = discount.Value
             };
         }
 

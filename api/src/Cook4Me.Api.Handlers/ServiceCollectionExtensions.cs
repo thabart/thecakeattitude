@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.ClientService;
+using Cook4Me.Api.Core.Commands.Discount;
 using Cook4Me.Api.Core.Commands.Messages;
 using Cook4Me.Api.Core.Commands.Notifications;
 using Cook4Me.Api.Core.Commands.Orders;
@@ -62,6 +63,7 @@ namespace Cook4Me.Api.Handlers
             var orderCommandsHandler = new OrderCommandsHandler(provider.GetService<IOrderRepository>(), provider.GetService<IProductRepository>(), bus, provider.GetService<IOrderPriceCalculatorHelper>());
             var notificationEventsHandler = new NotificationEventsHandler(provider.GetService<INotificationRepository>(), provider.GetService<IShopRepository>(), bus);
             var upsCommandsHandler = new UpsCommandsHandler(provider.GetService<IEventPublisher>(), provider.GetService<IUpsClient>());
+            var discountCommandsHandler = new DiscountCommandsHandler(provider.GetService<IDiscountRepository>(), provider.GetService<IEventPublisher>());
             bus.RegisterHandler<AddShopCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<AddShopCommentCommand>(shopCommandHandler.Handle);
             bus.RegisterHandler<RemoveShopCommentCommand>(shopCommandHandler.Handle);
@@ -85,6 +87,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<AcceptOrderTransactionCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<ReceiveOrderCommand>(orderCommandsHandler.Handle);
             bus.RegisterHandler<BuyUpsLabelCommand>(upsCommandsHandler.Handle);
+            bus.RegisterHandler<AddDiscountCommand>(discountCommandsHandler.Handle);
             bus.RegisterHandler<ShopAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ProductCommentAddedEvent>(notificationEventsHandler.Handle);
             bus.RegisterHandler<ShopCommentAddedEvent>(notificationEventsHandler.Handle);

@@ -14,7 +14,11 @@
 // limitations under the License.
 #endregion
 
+using System;
+using System.Threading.Tasks;
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.EF.Extensions;
 
 namespace Cook4Me.Api.EF.Repositories
 {
@@ -25,6 +29,26 @@ namespace Cook4Me.Api.EF.Repositories
         public DiscountRepository(CookDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<bool> Insert(DiscountAggregate discountAggregate)
+        {
+            if (discountAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(discountAggregate));
+            }
+            
+            try
+            {
+                var record = discountAggregate.ToModel();
+                _context.Discounts.Add(record);
+                await _context.SaveChangesAsync().ConfigureAwait(false);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

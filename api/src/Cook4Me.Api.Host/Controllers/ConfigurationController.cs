@@ -36,6 +36,7 @@ namespace Cook4Me.Api.Host.Controllers
             jObj.Add("shopcategories_endpoint", issuer + "/" + Constants.RouteNames.ShopCategories);
             jObj.Add("notifications_endpoint", issuer + "/" + Constants.RouteNames.Notifications);
             jObj.Add("messages_endpoint", issuer + "/" + Constants.RouteNames.Messages);
+            jObj.Add("discounts_endpoint", issuer + "/" + Constants.RouteNames.Discounts);
             jObj.Add("orders_endpoint", issuer + "/" + Constants.RouteNames.Orders);
             jObj.Add("ups_endpoint", issuer + "/" + Constants.RouteNames.Ups);
             jObj.Add("dhl_endpoint", issuer + "/" + Constants.RouteNames.Dhl);

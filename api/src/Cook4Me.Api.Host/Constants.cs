@@ -43,6 +43,7 @@ namespace Cook4Me.Api.Host
 
         public static class RouteNames
         {
+            public const string Discounts = "discounts";
             public const string Notifications = "notifications";
             public const string ClientServices = "clientservices";
             public const string Services = "services";
@@ -693,16 +694,15 @@ namespace Cook4Me.Api.Host
                 public const string Content = "content";
             }
 
-            public static class Promotion
+            public static class DiscountNames
             {
-                public const string Id = "id";
-                public const string ProductId = "product_id";
-                public const string Discount = "discount";
+                public const string ProductIds = "product_ids";
+                public const string Value = "value";
+                public const string Counter = "counter";
+                public const string StartDateTime = "start_datetime";
+                public const string EndDateTime = "end_datetime";
                 public const string Type = "type";
-                public const string Code = "code";
-                public const string UpdateDateTime = "update_datetime";
-                public const string CreateDateTime = "create_datetime";
-                public const string ExpirationDateTime = "expiration_datetime";
+                public const string Validity = "validity";
             }
 
             public static class Seller

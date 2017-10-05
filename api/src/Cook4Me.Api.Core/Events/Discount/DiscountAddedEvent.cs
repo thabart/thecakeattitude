@@ -14,13 +14,13 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using System.Threading.Tasks;
+using Cook4Me.Api.Core.Bus;
 
-namespace Cook4Me.Api.Core.Repositories
+namespace Cook4Me.Api.Core.Events.Discount
 {
-    public interface IDiscountRepository
+    public class DiscountAddedEvent : Event
     {
-        Task<bool> Insert(DiscountAggregate discountAggregate);
+        public string Id { get; set; }
+        public string Seller { get; set; }
     }
 }

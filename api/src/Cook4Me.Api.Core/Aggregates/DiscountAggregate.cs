@@ -39,6 +39,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public DiscountAggregatePromotions PromotionType { get; set; } // FixedAmount & Percentage
         public DiscountAggregateValidities Validity { get; set; } // Timer & counter & both
         public int Counter { get; set; }
+        public double Value { get; set; }
         public DateTime StartDateTime { get; set; }
         public DateTime EndDateTime { get; set; }
         public DateTime CreateDateTime { get; set; }
