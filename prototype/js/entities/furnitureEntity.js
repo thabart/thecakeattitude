@@ -44,8 +44,16 @@ game.FurnitureEntity = me.Entity.extend({
     this.pos.y = this.initY + y;
     this.translateY = y;
   },
-  getSize: function() { // Get the size : number of rows + number of cols + position.
-
+  getCoordinates: function() { // Get the size : number of rows + number of cols + position.
+    var tile = this.refLayer.getTile(this.pos.x, this.pos.y);
+    var nbRows = this.body.getBounds().width / (this.refLayer.tilewidth / 2);
+    var nbCols = this.body.getBounds().height / this.refLayer.tileheight;
+    return {
+      row: tile.row,
+      col: tile.col,
+      nbRows: nbRows,
+      nbCols: nbCols
+    };
   },
   getName: function() { // Get the furniture name.
     return this.furnitureName;

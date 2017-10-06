@@ -22,6 +22,8 @@ var game = {
             me.loader.getImage("UI_Assets")
         );
 
+        me.game.world.sortOn = "x";
+        me.game.sortOn = "x";
         me.state.set(me.state.PLAY, new game.ShopScreen());
         me.state.transition("fade","#FFFFFF", 250);
         me.state.change(me.state.PLAY);

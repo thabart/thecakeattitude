@@ -32,7 +32,7 @@ var ShopStoreCl = function() {
 	this.removeFurniture = function(f) {
 		var index = _furnitures.indexOf(f);
 		if (index === -1) { return; }
-		game.furnitureContainer.removeChild(f);
+		me.game.world.removeChild(f);
 		_furnitures.splice(index, 1);
 		me.game.repaint();
 	};

@@ -147,6 +147,7 @@ game.PlayerEntity = me.Entity.extend({
 
       this.pos.x = posX;
       this.pos.y = posY;
+      me.game.world.sort();
       return true;
     }
 });

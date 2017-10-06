@@ -67,8 +67,19 @@ game.FurnitureSelector = me.Object.extend({
 		var col = this.sprite.tile.col - this.sprite.nbCols;
 		var spr = new game.FurnitureEntity(this.sprite.pos.x, this.sprite.pos.y, furnitureName);
 		ShopStore.addFurniture(spr);
-		// Update the collision layer.
-		game.furnitureContainer.addChild(spr, row + col);
+
+		var sprCoordinates = spr.getCoordinates(); // Update the collision layer.
+		var collisionCoordinate = {
+			col: sprCoordinates.col - Constants.Layers.Ground.Position.Col,
+			row: sprCoordinates.row - Constants.Layers.Ground.Position.Row
+		};
+		for (var col = collisionCoordinate.col; col > collisionCoordinate.col - sprCoordinates.nbCols; col--) {
+			for (var row = collisionCoordinate.row; row > collisionCoordinate.row - sprCoordinates.nbRows; row--) {
+				game.collisionLayer.setWalkableAt(row, col, false);
+			}
+		}
+
+		me.game.world.addChild(spr);
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
 		ShopStore.setActiveFurniture(null);

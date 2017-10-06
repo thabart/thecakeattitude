@@ -6,15 +6,13 @@ game.ShopScreen = me.ScreenObject.extend({
       var movableContainer = new game.MovableContainer();
       var gameMenu = new game.GameMenu();
       var player = new game.PlayerEntity(5, 5);
-      game.furnitureContainer = new game.FurnitureContainer();
       var tileSelector = new game.TileSelector(2);
       var furnitureSelector = new game.FurnitureSelector(5);
       this._buildingLayer = me.game.world.getChildByName('Building', {
         "container": movableContainer
       });
       me.game.world.addChild(movableContainer);
-      me.game.world.addChild(player, 5);
-      me.game.world.addChild(game.furnitureContainer, 6);
+      me.game.world.addChild(player);
       this.handlePointerMove = me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
         me.event.publish("pointermove", [ event ]);
       }, false);
