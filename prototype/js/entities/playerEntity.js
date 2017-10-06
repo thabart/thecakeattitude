@@ -2,24 +2,23 @@ game.PlayerEntity = me.Entity.extend({
     init: function(col, row) {
         this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(col, row);
-        this.playerWidth = 41;
-        this.playerHeight = 83;
+        var image = me.loader.getImage("player");
         this.speed = 2;
         this._super(me.Entity, "init", [coordinates.x, coordinates.y, {
-          width: this.playerWidth,
-          height: this.playerHeight
+          width: image.width,
+          height: image.height
         }]);
         this.body.gravity = 0;
         this.body.setFriction(0.4,0.4);
         var texture =  new me.video.renderer.Texture(
-            { framewidth: this.playerWidth, frameheight: this.playerHeight },
-            me.loader.getImage("player")
+            { framewidth: image.width, frameheight: image.height },
+            image
         );
-        var collisionShape = new me.Rect(0, 0, 33, 33); // TODO : Manage collision shape
+        var collisionShape = CollisionHelper.getShape("player_collision");
         this.body.removeShapeAt(0);
         this.body.addShape(collisionShape);
-        this.body.pos.x = -(33 / 2);
-        this.body.pos.y = -(33 / 2) - (this.refLayer.tileheight / 2);
+        this.body.pos.x = -(collisionShape.width / 2);
+        this.body.pos.y = -(collisionShape.height / 2) - (this.refLayer.tileheight / 2);
         this.currentTile = { // Movement.
           row: row,
           col: col

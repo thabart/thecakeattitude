@@ -31,8 +31,8 @@ game.FurnitureSelector = me.Object.extend({
 		var nbRows = Math.ceil(region.width / (this.refLayer.tilewidth / 2));
 		var nbCols = Math.ceil(region.height / this.refLayer.tileheight);
 		var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
-		var intersects = me.collision.check(this.sprite);
-		if (intersects) {
+		this.intersects = me.collision.check(this.sprite);
+		if (this.intersects) {
 			this.sprite.opacity(0.1);
 		} else {
 			this.sprite.opacity(0.5);
@@ -41,8 +41,8 @@ game.FurnitureSelector = me.Object.extend({
 		this.sprite.tile = tile;
 		this.sprite.nbRows = nbRows;
 		this.sprite.nbCols = nbCols;
-		this.sprite.pos.x = coordinates.x - (this.sprite.width / 2);//  + ((0.5 * region.width) / nbRows);
-		this.sprite.pos.y = coordinates.y - (this.sprite.height / 2);//- ((0.5 * region.height) / nbCols);
+		this.sprite.pos.x = coordinates.x;
+		this.sprite.pos.y = coordinates.y;
 	},
 	selectFurniture: function(evt) {
 		var furnitures = ShopStore.getFurnitures();
@@ -60,16 +60,14 @@ game.FurnitureSelector = me.Object.extend({
 		ShopStore.setSelectedFurniture(selectedFurniture);
 	},
 	addFurniture: function(evt) { // Add a furniture into the container.
-		var imageName = ShopStore.getActiveFurniture();
+		if (this.intersects) { return; }
+		var furnitureName = ShopStore.getActiveFurniture();
 		var row = this.sprite.tile.row - this.sprite.nbRows;
 		var col = this.sprite.tile.col - this.sprite.nbCols;
-		var rect = new me.Rect(row, col, this.sprite.nbRows, this.sprite.nbCols);
-		var spr = new game.FurnitureEntity(this.sprite.pos.x, this.sprite.pos.y, imageName, {
-			width: this.sprite.width,
-			height: this.sprite.height
-		});
-		var entity = new game.Furniture(spr, null, imageName);
-		ShopStore.addFurniture(entity);
+		var spr = new game.FurnitureEntity(this.sprite.pos.x, this.sprite.pos.y, furnitureName);
+		var entity = new game.Furniture(spr, null, furnitureName);
+		ShopStore.addFurniture(entity);		
+		// Update the collision layer.
 		game.furnitureContainer.addChild(spr, row + col);
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
@@ -89,17 +87,13 @@ game.FurnitureSelector = me.Object.extend({
 		me.game.repaint();
 	},
 	updateActiveFurniture: function() { // Update the active furniture.
-		var imageName = ShopStore.getActiveFurniture();
-		if(!imageName) { return; }
+		var furnitureName = ShopStore.getActiveFurniture();
+		if(!furnitureName) { return; }
 		if (this.sprite) {
 			me.game.world.removeChild(this.sprite);
 		}
 
-		var image = me.loader.getImage(imageName);
-		this.sprite = new game.FurnitureEntity(0, 0 , imageName, {
-			width: image.width,
-			height: image.height
-		});
+		this.sprite = new game.FurnitureEntity(0,0, furnitureName);
 		this.sprite.opacity(0);
 		me.game.world.addChild(this.sprite);
 	}
