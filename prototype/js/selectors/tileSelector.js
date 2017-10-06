@@ -1,6 +1,6 @@
 game.TileSelector = me.Object.extend({
 	init: function(zIndex) {
-    this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground)[0];
+    this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
     this.sprite = new me.Sprite(0, 0 , {
       image: "tile_hover"
     });
@@ -13,8 +13,8 @@ game.TileSelector = me.Object.extend({
     if (tile) {
 			this.sprite.alpha = 1;
       var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
-      this.sprite.pos.x = coordinates.x + 5; // TODO : Replace the coordinates if needed.
-      this.sprite.pos.y = coordinates.y + 8;
+      this.sprite.pos.x = coordinates.x;
+      this.sprite.pos.y = coordinates.y + this.sprite.height / 2;
       me.game.repaint();
     };
   }

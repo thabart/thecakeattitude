@@ -1,6 +1,6 @@
 game.FurnitureSelector = me.Object.extend({
 	init: function(zIndex) {
-    this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground)[0];
+    this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
 		this.sprite = null;
 		this.zIndex = zIndex;
     me.event.subscribe("pointermove", this.pointerMove.bind(this));
