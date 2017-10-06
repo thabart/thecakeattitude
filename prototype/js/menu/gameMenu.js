@@ -79,7 +79,8 @@ game.GameMenu = me.Object.extend({
     var self = this;
     $(this.actions).find('.move').click(function() {
       var selectedFurniture = ShopStore.getSelectedFurniture();
-      ShopStore.setActiveFurniture(selectedFurniture.metadata.imageName);
+      var name = selectedFurniture.getName();
+      ShopStore.setActiveFurniture(name);
       ShopStore.removeFurniture(selectedFurniture);
       $(self.actions).hide();
       $(self.information).hide();
@@ -92,7 +93,7 @@ game.GameMenu = me.Object.extend({
     });
     $(this.actions).find('.turn').click(function() {
       var selectedFurniture = ShopStore.getSelectedFurniture();
-      selectedFurniture.sprite.flip();
+      selectedFurniture.flip();
       me.game.repaint();
     });
     $(this.actions).find('.translate').click(function() {
@@ -160,7 +161,7 @@ game.GameMenu = me.Object.extend({
       return;
     }
 
-    var img = selectedFurniture.sprite.getImage();
+    var img = selectedFurniture.getImage();
     $(this.information).find('.body').empty();
     $(this.information).find('.body').append(img);
     $(this.information).show();

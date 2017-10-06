@@ -13,8 +13,8 @@ game.ShopScreen = me.ScreenObject.extend({
         "container": movableContainer
       });
       me.game.world.addChild(movableContainer);
-      me.game.world.addChild(player, 4);
-      me.game.world.addChild(game.furnitureContainer, 5);
+      me.game.world.addChild(player, 5);
+      me.game.world.addChild(game.furnitureContainer, 6);
       this.handlePointerMove = me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
         me.event.publish("pointermove", [ event ]);
       }, false);

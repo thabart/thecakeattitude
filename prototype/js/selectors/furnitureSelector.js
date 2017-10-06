@@ -51,22 +51,22 @@ game.FurnitureSelector = me.Object.extend({
 		if (!tile) { return; }
 		var selectedFurniture = null;
 		furnitures.forEach(function(furniture) {
-			if (furniture.sprite.getBounds().containsPoint(evt.gameWorldX, evt.gameWorldY) && !selectedFurniture) {
+			if (furniture.getBounds().containsPoint(evt.gameWorldX, evt.gameWorldY) && !selectedFurniture) {
 				selectedFurniture = furniture;
-			} else {
-				furniture.sprite.opacity(1);
 			}
 		});
+
+		if (selectedFurniture) { evt.handled = true; }
 		ShopStore.setSelectedFurniture(selectedFurniture);
 	},
 	addFurniture: function(evt) { // Add a furniture into the container.
 		if (this.intersects) { return; }
+		evt.handled = true;
 		var furnitureName = ShopStore.getActiveFurniture();
 		var row = this.sprite.tile.row - this.sprite.nbRows;
 		var col = this.sprite.tile.col - this.sprite.nbCols;
 		var spr = new game.FurnitureEntity(this.sprite.pos.x, this.sprite.pos.y, furnitureName);
-		var entity = new game.Furniture(spr, null, furnitureName);
-		ShopStore.addFurniture(entity);		
+		ShopStore.addFurniture(spr);
 		// Update the collision layer.
 		game.furnitureContainer.addChild(spr, row + col);
 		me.game.world.removeChild(this.sprite);
@@ -75,12 +75,12 @@ game.FurnitureSelector = me.Object.extend({
 	},
 	updateSelectedFurniture: function() { // Update the selected furniture.
 		var selectedFurniture = ShopStore.getSelectedFurniture();
-			var furnitures = ShopStore.getFurnitures();
+		var furnitures = ShopStore.getFurnitures();
 		furnitures.forEach(function(furniture) {
 			if (furniture === selectedFurniture) {
-				furniture.sprite.opacity(0.5);
+				furniture.opacity(0.5);
 			} else {
-				furniture.sprite.opacity(1);
+				furniture.opacity(1);
 			}
 		});
 

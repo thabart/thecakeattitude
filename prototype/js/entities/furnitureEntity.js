@@ -6,6 +6,7 @@ game.FurnitureEntity = me.Entity.extend({
     this.translateY = 0;
     this.initX = x;
     this.initY = y;
+    this.furnitureName = furnitureName;
     var image = me.loader.getImage(furnitureName);
     this._super(me.Entity, "init", [x, y , {
       width: image.width,
@@ -44,6 +45,9 @@ game.FurnitureEntity = me.Entity.extend({
     this.translateY = y;
   },
   getSize: function() { // Get the size : number of rows + number of cols + position.
-    
+
+  },
+  getName: function() { // Get the furniture name.
+    return this.furnitureName;
   }
 });

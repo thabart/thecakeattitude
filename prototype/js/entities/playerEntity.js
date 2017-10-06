@@ -32,6 +32,7 @@ game.PlayerEntity = me.Entity.extend({
     },
     pointerDown: function(evt) { // Calculate the movements.
       if (evt.which !== 1) { return; }
+      if (evt.handled) { return; }
       if (this.movements.length > 0 && this.currentMvt < this.movements.length) { return; }
   		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
       if (!tile) { return; }
