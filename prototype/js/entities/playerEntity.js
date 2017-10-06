@@ -4,6 +4,7 @@ game.PlayerEntity = me.Renderable.extend({
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(col, row);
         this.playerWidth = 41;
         this.playerHeight = 83;
+        this.speed = 2;
         /*
         this._super(me.Entity, "init", [coordinates.x, coordinates.y, {
           width: this.playerWidth,
@@ -47,6 +48,7 @@ game.PlayerEntity = me.Renderable.extend({
     },
     pointerDown: function(evt) { // Calculate the movements.
       if (evt.which !== 1) { return; }
+      if (this.movements.length > 0 && this.currentMvt < this.movements.length) { return; }
   		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
       if (!tile) { return; }
       var self = this;
@@ -87,101 +89,86 @@ game.PlayerEntity = me.Renderable.extend({
     update: function(dt) {
       if (this.currentMvt >= this.movements.length) { return false; }
       var mvt = this.movements[this.currentMvt];
+      var posY = this.diamondShape.pos.y;
+      var posX = this.diamondShape.pos.x;
       if (mvt === 'down') {
-        this.diamondShape.pos.y += 1;
+        posY += this.speed;
         // this.body.vel.y += this.body.accel.y * me.timer.tick;
       } else if (mvt === 'top') {
-        this.diamondShape.pos.y -= 1;
+        posY -= this.speed;
       }
       else if (mvt === 'left') {
-        this.diamondShape.pos.x -= 1;
+        posX -= this.speed;
         // this.body.vel.x -= this.body.accel.x * me.timer.tick;
       }
       else if (mvt === 'right') {
-        this.diamondShape.pos.x += 1;
+        posX += this.speed;
       }
       else if (mvt === 'downleft') {
-        this.diamondShape.pos.x -= 1;
-        this.diamondShape.pos.y += 0.5;
+        posX -= this.speed;
+        posY += this.speed / 2;
       }
       else if (mvt === 'downright') {
-        this.diamondShape.pos.x += 1;
-        this.diamondShape.pos.y += 0.5;
+        posX += this.speed;
+        posY += this.speed / 2;
       }
       else if (mvt === 'topright') {
-        this.diamondShape.pos.x += 1;
-        this.diamondShape.pos.y -= 0.5;
+        posX += this.speed;
+        posY -= this.speed / 2;
       } else if (mvt === 'topleft') {
-        this.diamondShape.pos.x -= 1;
-        this.diamondShape.pos.y -= 0.5;
+        posX -= this.speed;
+        posY -= this.speed / 2;
       }
 
-      // this.body.update(dt);
-      var tile = this.refLayer.getTile(this.diamondShape.pos.x, this.diamondShape.pos.y);
+      var tile = this.refLayer.getTile(posX, posY);
       if (mvt === 'top') {
-        tile = this.refLayer.getTile(this.diamondShape.pos.x, this.diamondShape.pos.y + this.diamondShape.getBounds().height);
+        tile = this.refLayer.getTile(posX, posY + this.diamondShape.getBounds().height);
       } else if (mvt === 'topright') {
-        tile = this.refLayer.getTile(this.diamondShape.pos.x - this.diamondShape.getBounds().width / 2, this.diamondShape.pos.y + this.diamondShape.getBounds().height / 2);
+        tile = this.refLayer.getTile(posX - this.diamondShape.getBounds().width / 2, posY + this.diamondShape.getBounds().height / 2);
+      } else if (mvt === 'topleft') {
+        tile = this.refLayer.getTile(posX + this.diamondShape.getBounds().width / 2, posY + this.diamondShape.getBounds().height / 2);
+      } else if (mvt === 'downleft') {
+        // tile = this.refLayer.getTile(posX + this.diamondShape.getBounds().width / 2, posY - this.diamondShape.getBounds().height / 2);
       }
 
-      if (!tile) { return false; }
-      if (mvt === 'down' && tile.row === this.currentTile.row + 1 && tile.col === this.currentTile.col + 1) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
-      }
-      else if (mvt === 'left' && tile.row === this.currentTile.row + 1 && tile.col === this.currentTile.col - 1) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
-      }
-      else if (mvt === 'right' && tile.row === this.currentTile.row - 1 && tile.col === this.currentTile.col + 1) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
-      }
-      else if (mvt === 'top' && tile.row === this.currentTile.row - 1 && tile.col === this.currentTile.col - 1) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
-      }
-      else if (mvt === 'downleft' && tile.row === this.currentTile.row + 1 && tile.col === this.currentTile.col) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
-      }
-      else if (mvt === 'downright' && tile.row === this.currentTile.row && tile.col === this.currentTile.col + 1) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
-      }
-      else if (mvt === 'topright' && tile.row === this.currentTile.row - 1 && tile.col === this.currentTile.col) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
-      }
-      else if (mvt === 'topleft' && tile.row === this.currentTile.row && tile.col === this.currentTile.col - 1) {
-        this.currentTile = {
-          row: tile.row,
-          col: tile.col
-        };
-        this.currentMvt++;
+      if (!tile) {
+        tile = {};
+        if (this.currentTile.col === Constants.Layers.Ground.Position.col) {
+          tile.col = Constants.Layers.Ground.Position.col;
+        }
+
+        if (this.currentTile.row === Constants.Layers.Ground.Position.row) {
+          tile.row = Constants.Layers.Ground.Position.row;
+        }
       }
 
+      if ((mvt === 'down' && tile.row === this.currentTile.row + 1 && tile.col === this.currentTile.col + 1) ||
+        (mvt === 'left' && tile.row === this.currentTile.row + 1 && tile.col === this.currentTile.col - 1) ||
+        (mvt === 'right' && tile.row === this.currentTile.row - 1 && tile.col === this.currentTile.col + 1) ||
+        (mvt === 'top' && tile.row === this.currentTile.row - 1 && tile.col === this.currentTile.col - 1) ||
+        (mvt === 'downleft' && tile.row === this.currentTile.row + 1 && tile.col === this.currentTile.col) ||
+        (mvt === 'downright' && tile.row === this.currentTile.row && tile.col === this.currentTile.col + 1) ||
+        (mvt === 'topright' && tile.row === this.currentTile.row - 1 && tile.col === this.currentTile.col) ||
+        (mvt === 'topleft' && tile.row === this.currentTile.row && tile.col === this.currentTile.col - 1)) {
+        this.currentTile = {
+          row: tile.row,
+          col: tile.col
+        };
+        this.currentMvt++;
+        var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
+        posX = coordinates.x;
+        posY = coordinates.y;
+      }
+
+      this.diamondShape.pos.x = posX;
+      this.diamondShape.pos.y = posY;
+      /*
+      me.game.viewport.worldToLocal(
+        this.diamondShape.pos.x,
+        this.diamondShape.pos.y,
+        this.diamondShape.pos
+      );
+      */
       return true;
       /*
       if (this.body.vel.x !== 0 || this.body.vel.y !== 0) {

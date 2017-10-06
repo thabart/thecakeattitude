@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="isometric" renderorder="right-down" width="23" height="23" tilewidth="66" tileheight="33" backgroundcolor="#000000" nextobjectid="1">
+<map version="1.0" orientation="isometric" renderorder="right-down" width="23" height="23" tilewidth="66" tileheight="33" backgroundcolor="#000000" nextobjectid="10">
  <tileset firstgid="1" name="wall_right" tilewidth="42" tileheight="149" tilecount="1" columns="1">
   <tileoffset x="-2" y="0"/>
   <image source="wall_right.png" width="42" height="149"/>
@@ -123,4 +123,12 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup name="collision">
+  <object id="1" x="134" y="131.5" width="32.5" height="627"/>
+  <object id="4" x="168" y="132.5" width="590.5" height="35.5"/>
+  <object id="5" x="276" y="176"/>
+  <object id="6" x="251" y="143"/>
+  <object id="7" x="244.5" y="131.5"/>
+  <object id="8" x="266" y="164"/>
+ </objectgroup>
 </map>
