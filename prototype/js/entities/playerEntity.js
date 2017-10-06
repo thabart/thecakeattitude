@@ -15,8 +15,11 @@ game.PlayerEntity = me.Entity.extend({
             { framewidth: this.playerWidth, frameheight: this.playerHeight },
             me.loader.getImage("player")
         );
-        this.body.pos.x = -(this.playerWidth / 2);
-        this.body.pos.y = -(this.playerHeight / 2) - (this.refLayer.tileheight / 2);
+        var collisionShape = new me.Rect(0, 0, 33, 33); // TODO : Manage collision shape
+        this.body.removeShapeAt(0);
+        this.body.addShape(collisionShape);
+        this.body.pos.x = -(33 / 2);
+        this.body.pos.y = -(33 / 2) - (this.refLayer.tileheight / 2);
         this.currentTile = { // Movement.
           row: row,
           col: col

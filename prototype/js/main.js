@@ -4,6 +4,13 @@ var game = {
             alert("Your browser does not support HTML5 canvas.");
             return;
         }
+
+        if (me.game.HASH.debug === true) {
+          window.onReady(function () {
+            me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
+          });
+        }
+
         me.loader.onload = this.loaded.bind(this);
         me.loader.preload(g_ressources);
         me.state.change(me.state.LOADING);

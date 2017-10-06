@@ -11,6 +11,10 @@ game.FurnitureEntity = me.Entity.extend({
       me.loader.getImage(imageName)
     );
 
+    var collisionShape = new me.Rect(0, 0, 33, 33); // TODO : Manage collision shape.
+    this.body.removeShapeAt(0);
+    this.body.addShape(collisionShape);
+
     this.renderable = texture.createAnimationFromName([0]);
     this.renderable.addAnimation("stay", [0]);
     this.renderable.setCurrentAnimation("stay");
