@@ -80,6 +80,7 @@ game.FurnitureSelector = me.Object.extend({
 		}
 
 		me.game.world.addChild(spr);
+		spr.pos.z = 5;
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
 		ShopStore.setActiveFurniture(null);

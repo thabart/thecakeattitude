@@ -12139,7 +12139,7 @@ THE SOFTWARE.
                 return (a.pos ? -Infinity : Infinity);
             }
             var result = b.pos.z - a.pos.z;
-            return (result ? result : (b.pos.y - a.pos.y));
+            return (result && result !== 0 ? result : (b.pos.y - a.pos.y));
         },
 
         /**

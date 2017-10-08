@@ -78,13 +78,11 @@ game.PlayerEntity = me.Entity.extend({
       var posX = this.pos.x;
       if (mvt === 'down') {
         posY += this.speed;
-        // this.body.vel.y += this.body.accel.y * me.timer.tick;
       } else if (mvt === 'top') {
         posY -= this.speed;
       }
       else if (mvt === 'left') {
         posX -= this.speed;
-        // this.body.vel.x -= this.body.accel.x * me.timer.tick;
       }
       else if (mvt === 'right') {
         posX += this.speed;
@@ -147,6 +145,7 @@ game.PlayerEntity = me.Entity.extend({
 
       this.pos.x = posX;
       this.pos.y = posY;
+      this.pos.z = 5;
       me.game.world.sort();
       return true;
     }
