@@ -4,14 +4,17 @@ game.PlayerEntity = me.Entity.extend({
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(col, row);
         var image = me.loader.getImage("player");
         this.speed = 2;
+        var playerWidth = 41;
+        var playerHeight = 83;
         this._super(me.Entity, "init", [coordinates.x, coordinates.y, {
-          width: image.width,
-          height: image.height
+          width: playerWidth,
+          height: playerHeight
         }]);
         this.body.gravity = 0;
+        this.body.setVelocity(2.5, 2.5);
         this.body.setFriction(0.4,0.4);
         var texture =  new me.video.renderer.Texture(
-            { framewidth: image.width, frameheight: image.height },
+            { framewidth: playerWidth, frameheight: playerHeight },
             image
         );
         var collisionShape = CollisionHelper.getShape("player_collision");
@@ -23,9 +26,25 @@ game.PlayerEntity = me.Entity.extend({
           row: row,
           col: col
         };
-        this.renderable = texture.createAnimationFromName([0]);
-        this.renderable.addAnimation("stay", [0]);
-        this.renderable.setCurrentAnimation("stay");
+        this.renderable = texture.createAnimationFromName([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
+        this.renderable.addAnimation("standing_down", [0]);
+        this.renderable.addAnimation("down", [0, 1, 2, 3]);
+        this.renderable.addAnimation("standing_downleft", [4]);
+        this.renderable.addAnimation("downleft", [4, 5, 6, 7]);
+        this.renderable.addAnimation("standing_left", [11]);
+        this.renderable.addAnimation("left", [11, 10, 9, 8]);
+        this.renderable.addAnimation("standing_topleft", [15]);
+        this.renderable.addAnimation("topleft", [15, 14, 13, 12]);
+        this.renderable.addAnimation("standing_top", [16]);
+        this.renderable.addAnimation("top", [16, 17, 18, 19]);
+        this.renderable.addAnimation("standing_downright", [23]);
+        this.renderable.addAnimation("downright", [23, 22, 21, 20]);
+        this.renderable.addAnimation("standing_right", [24]);
+        this.renderable.addAnimation("right", [24, 25, 26, 27]);
+        this.renderable.addAnimation("standing_topright", [28]);
+        this.renderable.addAnimation("topright", [28, 29, 30, 31]);
+        this.renderable.setCurrentAnimation("standing_down");
         this.currentMvt = 0;
         this.movements = [];
         me.event.subscribe('pointerdown', this.pointerDown.bind(this));
@@ -90,6 +109,7 @@ game.PlayerEntity = me.Entity.extend({
       else if (mvt === 'downleft') {
         posX -= this.speed;
         posY += this.speed / 2;
+
       }
       else if (mvt === 'downright') {
         posX += this.speed;
@@ -101,6 +121,10 @@ game.PlayerEntity = me.Entity.extend({
       } else if (mvt === 'topleft') {
         posX -= this.speed;
         posY -= this.speed / 2;
+      }
+
+      if (!this.renderable.isCurrentAnimation(mvt)) {
+        this.renderable.setCurrentAnimation(mvt);
       }
 
       var tile = this.refLayer.getTile(posX, posY);
@@ -141,11 +165,15 @@ game.PlayerEntity = me.Entity.extend({
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
         posX = coordinates.x;
         posY = coordinates.y;
+        if (this.currentMvt >= this.movements.length) {
+          this.renderable.setCurrentAnimation("standing_" + mvt);
+        }
       }
 
       this.pos.x = posX;
       this.pos.y = posY;
       this.pos.z = 5;
+      this._super(me.Entity, "update", [dt]);
       me.game.world.sort();
       return true;
     }

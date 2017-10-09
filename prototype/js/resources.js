@@ -15,7 +15,7 @@ var g_ressources = [
     { name: "bar", type: "image", src: "resources/furnitures/executive/exe_bar.gif" },
     { name: "corner", type: "image", src: "resources/furnitures/executive/exe_corner.gif" },
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
-    { name: "player", type: "image", src: "resources/players/0_0.png" },
+    { name: "player", type: "image", src: "resources/players/player.png" },
     { name: "table_collision", type: "json", src: "resources/collisions/sofatable.json" },
     { name: "chair_collision", type: "json", src: "resources/collisions/chair.json" },
     { name: "player_collision", type: "json", src: "resources/collisions/player.json" },
