@@ -2,7 +2,8 @@ game.ShopScreen = me.ScreenObject.extend({
     onResetEvent: function() {
       me.levelDirector.loadLevel("map");
       this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
-      game.collisionLayer = new PF.Grid(this.refLayer.rows - Constants.Layers.Ground.Position.Row, this.refLayer.cols - Constants.Layers.Ground.Position.Col); // Construct the collision layer.
+      var collisionLayer = new PF.Grid(this.refLayer.rows - Constants.Layers.Ground.Position.Row, this.refLayer.cols - Constants.Layers.Ground.Position.Col); // Construct the collision layer.
+      ShopStore.setCollisionLayer(collisionLayer);
       var movableContainer = new game.MovableContainer();
       var gameMenu = new game.GameMenu();
       var player = new game.PlayerEntity(5, 5);

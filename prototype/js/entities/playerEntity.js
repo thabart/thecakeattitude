@@ -61,7 +61,8 @@ game.PlayerEntity = me.Entity.extend({
       });
       var currentTile = CoordinateCalculator.getRelativePlayerPosition(this.currentTile);
       tile = CoordinateCalculator.getRelativePlayerPosition(tile);
-      var path = finder.findPath(currentTile.row, currentTile.col, tile.row, tile.col, game.collisionLayer.clone());
+      var collisionLayer = ShopStore.getCollisionLayer();
+      var path = finder.findPath(currentTile.row, currentTile.col, tile.row, tile.col, collisionLayer.clone());
       var mvts = [];
       for (var i = 1; i <= path.length; i++) {
         if (i > 1) {
