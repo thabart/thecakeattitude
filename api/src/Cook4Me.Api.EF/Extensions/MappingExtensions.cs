@@ -36,7 +36,7 @@ namespace Cook4Me.Api.EF.Extensions
             IEnumerable<DiscountProductAggregate> products = new List<DiscountProductAggregate>();
             if (discount.Products != null && discount.Products.Any())
             {
-                products = discount.Products.Select(p => new DiscountProductAggregate { ProductId = p.Id });
+                products = discount.Products.Select(p => new DiscountProductAggregate { ProductId = p.ProductId });
             }
 
             return new DiscountAggregate

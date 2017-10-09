@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Commands.Orders;
 using System.Threading.Tasks;
 using System;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Core.Aggregates;
 
 namespace Cook4Me.Api.Host.Validators
 {
@@ -28,8 +29,9 @@ namespace Cook4Me.Api.Host.Validators
 
     public class AddOrderLineValidationResult
     {
-        public AddOrderLineValidationResult()
+        public AddOrderLineValidationResult(ProductAggregate product)
         {
+            Product = product;
             IsValid = true;
         }
 
@@ -39,6 +41,7 @@ namespace Cook4Me.Api.Host.Validators
             Message = message;
         }
 
+        public ProductAggregate Product { get; private set; }
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
     }
@@ -94,7 +97,7 @@ namespace Cook4Me.Api.Host.Validators
             }
 
 
-            return new AddOrderLineValidationResult();
+            return new AddOrderLineValidationResult(product);
         }
     }
 }

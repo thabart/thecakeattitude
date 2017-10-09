@@ -1149,6 +1149,29 @@ namespace Cook4Me.Api.Host.Extensions
                         new ProductDiscount
                         {
                             Id = Guid.NewGuid().ToString(),
+                            ProductId = _jeanProductId,
+                            MoneySaved = 1
+                        }
+                    },
+                    PromotionType = 0,
+                    Subject = "administrator",
+                    UpdateDateTime = DateTime.UtcNow,
+                    Validity = 1,
+                    Value = 50,
+                    IsPrivate = false,
+                    IsActive = true                    
+                },
+                new Discount
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Code = Guid.NewGuid().ToString(),
+                    Counter = 10,
+                    CreateDateTime =  DateTime.UtcNow,
+                    Products = new []
+                    {
+                        new ProductDiscount
+                        {
+                            Id = Guid.NewGuid().ToString(),
                             ProductId = _firstShirtId,
                             MoneySaved = 1
                         }
