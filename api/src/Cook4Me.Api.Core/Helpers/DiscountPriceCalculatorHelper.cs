@@ -22,6 +22,7 @@ namespace Cook4Me.Api.Core.Helpers
     public interface IDiscountPriceCalculatorHelper
     {
         double CalculatePrice(ProductAggregate product, DiscountAggregate discount);
+        double CalculateMoneySaved(ProductAggregate product, OrderAggregateLineDiscount discount);
     }
 
     internal class DiscountPriceCalculatorHelper : IDiscountPriceCalculatorHelper
@@ -50,6 +51,29 @@ namespace Cook4Me.Api.Core.Helpers
             }
 
             return result;
+        }
+
+        public double CalculateMoneySaved(ProductAggregate product, OrderAggregateLineDiscount discount)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            if (discount == null)
+            {
+                throw new ArgumentNullException(nameof(discount));
+            }
+
+            switch (discount.PromotionType)
+            {
+                case DiscountAggregatePromotions.FixedAmount:
+                    return discount.Value;
+                case DiscountAggregatePromotions.Percentage:
+                    return ((product.Price * discount.Value) / 100);
+            }
+
+            return 0;
         }
     }
 }

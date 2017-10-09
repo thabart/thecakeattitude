@@ -15,26 +15,37 @@
 #endregion
 
 using Cook4Me.Api.Core.Aggregates;
+using Cook4Me.Api.Core.Helpers;
+using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Enrichers
 {
     public interface IOrderEnricher
     {
-        void Enrich(IHalResponseBuilder halResponseBuilder, OrderAggregate order);
+        Task Enrich(IHalResponseBuilder halResponseBuilder, OrderAggregate order);
     }
 
     internal class OrderEnricher : IOrderEnricher
     {
         private readonly IResponseBuilder _responseBuilder;
+        private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
+        private readonly IDiscountPriceCalculatorHelper _discountPriceCalculatorHelper;
+        private readonly IProductRepository _productRepository;
 
-        public OrderEnricher(IResponseBuilder responseBuilder)
+        public OrderEnricher(IResponseBuilder responseBuilder, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper, IProductRepository productRepository)
         {
             _responseBuilder = responseBuilder;
+            _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
+            _discountPriceCalculatorHelper = discountPriceCalculatorHelper;
+            _productRepository = productRepository;
         }
 
-        public void Enrich(IHalResponseBuilder halResponseBuilder, OrderAggregate order)
+        public async Task Enrich(IHalResponseBuilder halResponseBuilder, OrderAggregate order)
         {
             if (halResponseBuilder == null)
             {
@@ -44,6 +55,29 @@ namespace Cook4Me.Api.Host.Enrichers
             if (order == null)
             {
                 throw new ArgumentNullException(nameof(order));
+            }
+
+            if (order.Status == OrderAggregateStatus.Created)
+            {
+                await _orderPriceCalculatorHelper.Update(order);
+                if (order.OrderLines != null)
+                {
+                    var productIds = order.OrderLines.Select(ol => ol.ProductId);
+                    var products = await _productRepository.Search(new SearchProductsParameter
+                    {
+                        ProductIds = productIds
+                    });
+                    foreach (var orderLine in order.OrderLines)
+                    {
+                        if (orderLine.OrderLineDiscount == null)
+                        {
+                            continue;
+                        }
+
+                        var product = products.Content.First(p => p.Id == orderLine.ProductId);
+                        orderLine.OrderLineDiscount.MoneySaved = _discountPriceCalculatorHelper.CalculateMoneySaved(product, orderLine.OrderLineDiscount);
+                    }
+                }
             }
 
             halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetOrder(order),

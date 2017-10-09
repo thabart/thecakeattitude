@@ -23,7 +23,9 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Cook4Me.Api.Core.Parameters;
 
 namespace Cook4Me.Api.Host.Operations.Orders
 {
@@ -38,16 +40,14 @@ namespace Cook4Me.Api.Host.Operations.Orders
         private readonly IRequestBuilder _requestBuilder;
         private readonly IHalResponseBuilder _halResponseBuilder;
         private readonly IOrderEnricher _orderEnricher;
-        private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
 
         public SearchOrdersOperation(IOrderRepository repository, IRequestBuilder requestBuilder,
-            IHalResponseBuilder halResponseBuilder, IOrderEnricher orderEnricher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper)
+            IHalResponseBuilder halResponseBuilder, IOrderEnricher orderEnricher)
         {
             _repository = repository;
             _requestBuilder = requestBuilder;
             _halResponseBuilder = halResponseBuilder;
             _orderEnricher = orderEnricher;
-            _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
         }
 
         public async Task<IActionResult> Execute(JObject jObj, string subject)
@@ -69,12 +69,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                     continue;
                 }
 
-                if (order.Status == OrderAggregateStatus.Created)
-                {
-                    await _orderPriceCalculatorHelper.Update(order);
-                }
-
-                _orderEnricher.Enrich(_halResponseBuilder, order);
+                await _orderEnricher.Enrich(_halResponseBuilder, order);
             }
 
             double r = (double)searchResult.TotalResults / (double)request.Count;

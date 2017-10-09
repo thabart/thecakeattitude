@@ -16,12 +16,14 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Helpers;
+using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
 using Cook4Me.Api.Host.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Orders
@@ -38,19 +40,15 @@ namespace Cook4Me.Api.Host.Operations.Orders
         private readonly IOrderEnricher _orderEnricher;
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
-        private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
-        private readonly IDiscountPriceCalculatorHelper _discountPriceCalculatorHelper;
 
         public GetOrderOperation(IOrderRepository orderRepository, IHalResponseBuilder halResponseBuilder, IOrderEnricher orderEnricher,
-            IResponseBuilder responseBuilder, IControllerHelper controllerHelper, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper)
+            IResponseBuilder responseBuilder, IControllerHelper controllerHelper)
         {
             _orderRepository = orderRepository;
             _halResponseBuilder = halResponseBuilder;
             _orderEnricher = orderEnricher;
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
-            _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
-            _discountPriceCalculatorHelper = discountPriceCalculatorHelper;
         }
 
         public async Task<IActionResult> Execute(string orderId, string subject)
@@ -78,21 +76,8 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 return _controllerHelper.BuildResponse(System.Net.HttpStatusCode.BadRequest, error);
             }
 
-            if (order.OrderLines != null)
-            {
-                foreach(var orderLine in order.OrderLines)
-                {
-
-                }
-            }
-
             _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Orders + "/" + orderId));
-            if (order.Status == OrderAggregateStatus.Created)
-            {
-                await _orderPriceCalculatorHelper.Update(order);
-            }
-
-            _orderEnricher.Enrich(_halResponseBuilder, order);
+            await _orderEnricher.Enrich(_halResponseBuilder, order);
             return new OkObjectResult(_halResponseBuilder.Build());
         }
     }

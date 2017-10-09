@@ -1138,7 +1138,7 @@ namespace Cook4Me.Api.Host.Extensions
         {
             context.Discounts.AddRange(new[]
             {
-                new Discount
+                new Discount // Minus 50 euros.
                 {
                     Id = Guid.NewGuid().ToString(),
                     Code = Guid.NewGuid().ToString(),
@@ -1150,7 +1150,7 @@ namespace Cook4Me.Api.Host.Extensions
                         {
                             Id = Guid.NewGuid().ToString(),
                             ProductId = _jeanProductId,
-                            MoneySaved = 1
+                            MoneySaved = 50
                         }
                     },
                     PromotionType = 0,
@@ -1161,54 +1161,25 @@ namespace Cook4Me.Api.Host.Extensions
                     IsPrivate = false,
                     IsActive = true                    
                 },
-                new Discount
+                new Discount // Minus 10%
                 {
                     Id = Guid.NewGuid().ToString(),
                     Code = Guid.NewGuid().ToString(),
-                    Counter = 10,
                     CreateDateTime =  DateTime.UtcNow,
                     Products = new []
                     {
                         new ProductDiscount
                         {
                             Id = Guid.NewGuid().ToString(),
-                            ProductId = _firstShirtId,
-                            MoneySaved = 1
+                            ProductId = _jeanProductId,
+                            MoneySaved = 20
                         }
                     },
-                    PromotionType = 0,
                     Subject = "administrator",
                     UpdateDateTime = DateTime.UtcNow,
-                    Validity = 1,
-                    Value = 50,
-                    IsPrivate = false,
-                    IsActive = true
-                },
-                new Discount
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Code = Guid.NewGuid().ToString(),
-                    CreateDateTime =  DateTime.UtcNow,
-                    Products = new []
-                    {
-                        new ProductDiscount
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            ProductId = _firstShirtId,
-                            MoneySaved = 2
-                        },
-                        new ProductDiscount
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            ProductId = _secondShirtId,
-                            MoneySaved = 3
-                        }
-                    },
                     PromotionType = 1,
-                    Subject = "administrator",
-                    UpdateDateTime = DateTime.UtcNow,
                     Validity = 0,
-                    Value = 50,
+                    Value = 10,
                     StartDateTime = DateTime.UtcNow.AddDays(-10),
                     EndDateTime = DateTime.UtcNow.AddDays(10),
                     IsPrivate = false,

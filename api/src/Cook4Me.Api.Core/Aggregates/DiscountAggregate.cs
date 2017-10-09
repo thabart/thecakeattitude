@@ -45,7 +45,7 @@ namespace Cook4Me.Api.Core.Aggregates
             if (!IsActive) { return false; }
             var currentDateTime = DateTime.UtcNow;
             var isCounterValid = Counter > 0;
-            var isTimeValid = StartDateTime >= currentDateTime && currentDateTime <= EndDateTime;
+            var isTimeValid = StartDateTime <= currentDateTime && currentDateTime <= EndDateTime;
             switch(Validity)
             {
                 case DiscountAggregateValidities.Both:

@@ -93,7 +93,6 @@ class Products extends Component {
         order: order
       });
     }).catch(function(e) {
-      console.log(e);
       self.setState({
         isLoading: false,
         products: [],
@@ -129,13 +128,14 @@ class Products extends Component {
     });
   }
 
-  getTotalPrice(order, products) { // Calculate the total price.
+  getTotalPrice(order, products) { // Calculate the total price & set the discount code.
     if (order.lines && order.lines.length > 0) { // Set the best valid public discount by default.
       var totalPrice = 0;
       order.lines.forEach(function(orderLine) {
         var orderDiscount = orderLine['discount'];
+        var product = products.filter(function(p) { return p.id === orderLine.product_id })[0];
+        totalPrice += product.price * orderLine.quantity;
         if (!orderDiscount) {
-          var product = products.filter(function(p) { return p.id === orderLine.product_id })[0];
           var productDiscounts = product['discounts'];
           if (productDiscounts && productDiscounts.length > 0) {
             var bestDiscount = null;
@@ -145,16 +145,17 @@ class Products extends Component {
               }
             });
 
-            totalPrice += product.price * orderLine.quantity;
             if (bestDiscount && bestDiscount !== null) {
               orderLine.discount_code = bestDiscount.code;
               orderDiscount = bestDiscount;
             }
           }
+        } else {
+          orderLine.discount_code = orderDiscount.code;
         }
 
         if (orderDiscount) {
-          totalPrice -= bestDiscount.money_saved * orderLine.quantity;
+          totalPrice -= orderDiscount.money_saved * orderLine.quantity;
         }
       });
 
@@ -170,6 +171,10 @@ class Products extends Component {
       var orderLines = order.lines;
       var orderLine = orderLines.filter(function(line) { return line.id === orderLineId; })[0];
       orderLine.discount_code = value;
+      this.setState({
+        order: order,
+        hasChanged: true
+      });
   }
 
   removeOrderLine(e, orderLineId) { // Remove the order line.
@@ -249,15 +254,17 @@ class Products extends Component {
         }
 
         var discounts = product['discounts'];
-        var bestDiscount = null;
-        if (discounts && discounts.length > 0) {
-          discounts.forEach(function(discount) {
-            if (!bestDiscount || bestDiscount === null || bestDiscount.money_saved < discount.money_saved) {
-                bestDiscount = discount;
-            }
-          });
+        var bestDiscount = orderLine.discount;
+        if (!bestDiscount) {
+          if (discounts && discounts.length > 0) {
+            discounts.forEach(function(discount) {
+              if (!bestDiscount || bestDiscount === null || bestDiscount.money_saved < discount.money_saved) {
+                  bestDiscount = discount;
+              }
+            });
+          }
         }
-        
+
         products.push((<li className="list-group-item">
           <div className="col-md-2"><img src={productImage} width="40" /></div>
           <div className="col-md-3">

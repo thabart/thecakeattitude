@@ -153,7 +153,7 @@ namespace Cook4Me.Api.Host.Validators
                 }
 
                 prods = products.Content;
-                var discountCodes = order.OrderLines.Select(o => o.DiscountCode);
+                var discountCodes = order.OrderLines.Select(o => o.DiscountCode).Where(dc => !string.IsNullOrEmpty(dc));
                 if (discountCodes.Any()) // Check discounts.
                 {
                     var discounts = await _discountRepository.Search(new SearchDiscountsParameter
@@ -161,6 +161,11 @@ namespace Cook4Me.Api.Host.Validators
                         IsPagingEnabled = false,
                         DiscountCodes = discountCodes
                     });
+                    if (discounts.Content == null || !discounts.Content.Any() || discounts.Content.Count() != discountCodes.Count())
+                    {
+                        return new UpdateOrderValidationResult(ErrorDescriptions.TheDiscountCodesAreNotValid);
+                    }
+
                     foreach(var orderLine in order.OrderLines)
                     {
                         if (string.IsNullOrWhiteSpace(orderLine.DiscountCode))
