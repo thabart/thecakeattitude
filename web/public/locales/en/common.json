@@ -474,5 +474,9 @@
   "workflow": "Workflow",
   "trackOrderError": "An error occured while trying to track the parcel, please contact the administrator",
   "trackParcel": "Track the parcel",
-  "confirmingOrderReception": "Confirming order reception ..."
+  "confirmingOrderReception": "Confirming order reception ...",
+  "discounts": "Discounts",
+  "code": "Code",
+  "noDiscount": "No discount",
+  "newPrice": "New price"
 }

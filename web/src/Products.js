@@ -3,7 +3,7 @@ import { Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, B
 import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ProductsService, ShopsService, OrdersService } from "./services/index";
-import { DescriptionTab, ProductComment } from "./productabs";
+import { DescriptionTab, ProductComment, ProductDiscount } from "./productabs";
 import { ApplicationStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
@@ -23,6 +23,7 @@ class Products extends Component {
         this.refreshScore = this.refreshScore.bind(this);
         this.navigateGeneral = this.navigateGeneral.bind(this);
         this.navigateComments = this.navigateComments.bind(this);
+        this.navigateDiscounts = this.navigateDiscounts.bind(this);
         this.addToCart = this.addToCart.bind(this);
         this.state = {
             isLoading: false,
@@ -119,6 +120,10 @@ class Products extends Component {
         this.props.history.push('/products/' + this.state.product.id + '/comments');
     }
 
+    navigateDiscounts(e) { // Navigate to the discounts tab.
+        this.props.history.push('/products/' + this.state.product.id + '/discounts');
+    }
+
     render() { // Display the view.
         const {t} = this.props;
         if (this.state.isLoading) {
@@ -137,21 +142,25 @@ class Products extends Component {
           </MainLayout>);
         }
 
-        var newPrice = null,
-            promotion = null,
-            tags = [],
+        var tags = [],
             images = [],
             currentImageSrc = null,
             self = this,
             action = this.props.match.params.action,
             content = null;
-        if (this.state.product.promotions && this.state.product.promotions.length > 0) {
-            promotion = this.state.product.promotions[0];
-            newPrice = this.state.product.new_price;
+        var bestDiscount = null;
+        if (this.state.product.discounts && this.state.product.discounts.length > 0) {
+            this.state.product.discounts.forEach(function(discount) {
+                if (!bestDiscount || bestDiscount === null || bestDiscount.money_saved < discount.money_saved) {
+                    bestDiscount = discount;
+                }
+            });
         }
 
         if (action === "comments") {
             content = (<ProductComment product={self.state.product} />);
+        } else if (action === 'discounts') {
+            content = (<ProductDiscount product={self.state.product} />);
         } else {
             content = (<DescriptionTab product={self.state.product} shop={self.state.shop}/>);
             action = "general";
@@ -229,19 +238,18 @@ class Products extends Component {
                         </div>
                         { /* Right side */ }
                         <div className="col-md-4">
-                            {newPrice == null ? (
-                                <h4 className="price">€ {this.state.product.price}</h4>) : (
+                            {bestDiscount == null ? (<h4 className="price">€ {this.state.product.price}</h4>) : (
                                 <div>
-                                    <h4 className="inline">
-                                        <Badge color="success">
-                                          <strike style={{color: "white"}}>€ {this.state.product.price}</strike>
-                                          <i style={{color: "white"}} className="ml-1">-{promotion.discount}%</i>
-                                        </Badge>
-                                    </h4>
-                                    <h4 className="inline ml-1">€ {newPrice}</h4>
+                                   <h5 className="inline">
+                                       <Badge color="success">
+                                         <strike style={{color: "white"}}>€ {this.state.product.price}</strike>
+                                         <i style={{color: "white"}} className="ml-1">- € {bestDiscount.money_saved}</i>
+                                       </Badge>
+                                   </h5>
+                                   <h5 className="inline ml-1">€ {(this.state.product.price - bestDiscount.money_saved)}</h5>
                                 </div>
                             )}
-                              { user && user.sub !== this.state.shop.subject && (<a href="#" className="btn btn-default" onClick={this.addToCart}>{t('addToCart')}</a>) }
+                            { user && user.sub !== this.state.shop.subject && (<a href="#" className="btn btn-default" onClick={this.addToCart}>{t('addToCart')}</a>) }
                             { user && user.sub !== this.state.shop.subject && (<a href="#" style={{marginLeft: "5px"}} onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/products/' + self.state.product.id); }} className="btn btn-default">{t('contactTheShop')}</a>) }
                         </div>
                     </div>
@@ -266,6 +274,16 @@ class Products extends Component {
                                       }}
                                   >
                                       {t('comments')}
+                                  </NavLink>
+                              </NavItem>
+                              <NavItem>
+                                  <NavLink
+                                      className={classnames({active: action === 'discounts'})}
+                                      onClick={() => {
+                                        this.navigateDiscounts();
+                                      }}
+                                  >
+                                    {t('discounts')}
                                   </NavLink>
                               </NavItem>
                       </Nav>

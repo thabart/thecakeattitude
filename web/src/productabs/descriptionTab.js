@@ -37,16 +37,16 @@ class DescriptionTab extends Component {
         }
 
         return (
-            <div className="row">
-                <h5 className="col-md-12">{t('description')}</h5>
-                <p className="col-md-12">
+            <div>
+                <h5>{t('description')}</h5>
+                <p>
                     {this.props.product.description}
                 </p>
-                <h5 className="col-md-12">{t('category')}</h5>
-                <p className="col-md-12">
+                <h5>{t('category')}</h5>
+                <p>
                   {productCategory}
                 </p>
-                <h5 className="col-md-12">{t('characteritics')}</h5>
+                <h5>{t('characteritics')}</h5>
                 {characteristics.length === 0 ? (<span><i>{t('noCharacteristic')}</i></span>) : (
                     <table className="table table-striped">
                         <tbody>

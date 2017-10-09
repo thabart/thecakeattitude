@@ -111,7 +111,13 @@ class BestDeals extends Component {
         if (this.state.products && this.state.products.length > 0) {
             this.state.products.forEach(function (product) {
                 var productImage = product['images'];
-                // var firstPromotion = product['promotions'][0];
+                var maxDiscount = null;
+                product['discounts'].forEach(function(discount) {
+                    if (!maxDiscount || maxDiscount === null || maxDiscount.money_saved < discount.money_saved) {
+                        maxDiscount = discount;
+                    }
+                });
+
                 if (!productImage || productImage.length === 0) {
                     productImage = "/images/default-product.jpg";
                 } else {
@@ -133,10 +139,10 @@ class BestDeals extends Component {
                                <h5 className="inline">
                                    <Badge color="success">
                                      <strike style={{color: "white"}}>€ {product.price}</strike>
-                                     {/* <i style={{color: "white"}} className="ml-1">-{firstPromotion.discount}%</i>*/}
+                                     <i style={{color: "white"}} className="ml-1">- € {maxDiscount.money_saved}</i>
                                    </Badge>
                                </h5>
-                               {/* <h5 className="inline ml-1">€ {product.new_price}</h5>*/}
+                               <h5 className="inline ml-1">€ {(product.price - maxDiscount.money_saved)}</h5>
                            </div>
                        </div>
                        <div className="last-column">

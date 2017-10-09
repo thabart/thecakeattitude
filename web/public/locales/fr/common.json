@@ -473,5 +473,9 @@
   "workflow": "Processus",
   "trackOrderError": "Une erreur est survenue durant le suivi du colis, veuillez prendre contact avec l'administrateur",
   "trackParcel": "Suivi du colis",
-  "confirmingOrderReception": "Confirmation de la réception de la commande ..."
+  "confirmingOrderReception": "Confirmation de la réception de la commande ...",
+  "discounts": "Promotions",
+  "code": "Code",
+  "noDiscount": "Aucune promotion",
+  "newPrice": "Nouveau prix"
 }

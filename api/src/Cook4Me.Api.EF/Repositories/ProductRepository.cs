@@ -172,6 +172,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(p => p.Tags)
                 .Include(p => p.Shop)
                 .Include(p => p.Comments)
+                .Include(p => p.Discounts).ThenInclude(d => d.Discount)
                 .Include(p => p.Filters).ThenInclude(p => p.FilterValue).ThenInclude(p => p.Filter);
             var result = await products.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
             if (result == null)

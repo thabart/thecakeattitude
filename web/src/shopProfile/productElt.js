@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { translate } from 'react-i18next';
 import { SessionService, OrdersService } from '../services/index';
 import { ApplicationStore } from '../stores/index';
+import { Badge } from 'reactstrap';
 import Rater from "react-rater";
 import "../styles/productElt.css";
 
@@ -58,11 +59,13 @@ class ProductElt extends Component {
             }
         }
 
-        var newPrice = null,
-            promotion = null;
-        if (product.promotions && product.promotions.length > 0) {
-            promotion = product.promotions[0];
-            newPrice = product.new_price;
+        var bestDiscount = null;
+        if (product.discounts && product.discounts.length > 0) {
+            product.discounts.forEach(function(discount) {
+                if (!bestDiscount || bestDiscount === null || bestDiscount.money_saved < discount.money_saved) {
+                    bestDiscount = discount;
+                }
+            });
         }
 
         var description = product.description.length > 70 ? product.description.substring(0, 67) + "..." : product.description;
@@ -70,7 +73,7 @@ class ProductElt extends Component {
         return (
             <div className={this.props.className + " product-item"}>
               <div className="content">
-                {newPrice !== null ? (<div className="best-deals"><img src="/images/hot_deals.png" width="60"/></div>) : ''}
+                {bestDiscount !== null ? (<div className="best-deals"><img src="/images/hot_deals.png" width="60"/></div>) : ''}
                 <NavLink className="no-decoration row" to={'/products/' + product.id}>
                     <div className="col-md-3">
                         <img src={imageUrl} className="rounded" width="140" height="140"/>
@@ -85,17 +88,15 @@ class ProductElt extends Component {
                         </p>
                     </div>
                     <div className="col-md-5">
-                        {newPrice == null ? (<h4 className="price">€ {product.price}</h4>) : (
+                        {bestDiscount == null ? (<h4 className="price">€ {product.price}</h4>) : (
                             <div>
-                                <h4 className="price inline">
-                                  <span className="badge badge-success">
-                                    <strike style={{color: "white"}}>€ {product.price}</strike>
-                                    <i className="ml-1" style={{color: "white"}}>
-                                      -{promotion.discount}%
-                                    </i>
-                                  </span>
-                                </h4>
-                                <h4 className="inline ml-1">€ {newPrice}</h4>
+                               <h5 className="inline">
+                                   <Badge color="success">
+                                     <strike style={{color: "white"}}>€ {product.price}</strike>
+                                     <i style={{color: "white"}} className="ml-1">- € {bestDiscount.money_saved}</i>
+                                   </Badge>
+                               </h5>
+                               <h5 className="inline ml-1">€ {(product.price - bestDiscount.money_saved)}</h5>
                             </div>
                         )}
                         <ul>
