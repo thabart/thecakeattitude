@@ -478,5 +478,6 @@
   "discounts": "Discounts",
   "code": "Code",
   "noDiscount": "No discount",
-  "newPrice": "New price"
+  "newPrice": "New price",
+  "discountCode": "Discount code"
 }

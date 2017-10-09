@@ -112,5 +112,7 @@ namespace Cook4Me.Api.Host
         public const string TheDiscountCannotBeAccessedByYou = "the discount cannot be accessed by you";
         public const string TheDiscountDoesntExist = "the discount doesn't exist";
         public const string TheProductPriceCannotBeInferiorToTheDiscount = "the product price cannot be inferior to the discount";
+        public const string TheProductDiscountIsInvalid = "the product discount {0} is invalid";
+        public const string TheDiscountCannotBeUsedForThisProduct = "the discount cannot be used for the product {0}";
     }
 }

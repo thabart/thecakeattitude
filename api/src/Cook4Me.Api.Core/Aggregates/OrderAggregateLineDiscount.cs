@@ -14,17 +14,15 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public class ProductDiscount
+    public class OrderAggregateLineDiscount
     {
         public string Id { get; set; }
-        public string ProductId { get; set; }
-        public string DiscountId { get; set; }
+        public string Code { get; set; }
+        public DiscountAggregatePromotions PromotionType { get; set; } // FixedAmount & Percentage
+        public DiscountAggregateValidities Validity { get; set; } // Timer & counter & both
+        public double Value { get; set; }
         public double MoneySaved { get; set; }
-        public virtual Discount Discount { get; set; }
-        public virtual Product Product { get; set; }
     }
 }

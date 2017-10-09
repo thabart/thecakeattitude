@@ -14,17 +14,17 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
 namespace Cook4Me.Api.EF.Models
 {
     public class OrderLine
     {
         public string Id { get; set; }
         public string ProductId { get; set; }
+        public string DiscountId { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
         public string OrderId { get; set; }
+        public virtual Discount Discount { get; set; }
         public virtual Product Product { get; set; }
         public virtual Order Order { get; set; }
     }

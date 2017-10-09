@@ -40,6 +40,25 @@ namespace Cook4Me.Api.Core.Aggregates
 
     public class DiscountAggregate
     {
+        public bool IsValid()
+        {
+            if (!IsActive) { return false; }
+            var currentDateTime = DateTime.UtcNow;
+            var isCounterValid = Counter > 0;
+            var isTimeValid = StartDateTime >= currentDateTime && currentDateTime <= EndDateTime;
+            switch(Validity)
+            {
+                case DiscountAggregateValidities.Both:
+                    return isCounterValid && isTimeValid;
+                case DiscountAggregateValidities.Counter:
+                    return isCounterValid;
+                case DiscountAggregateValidities.Timer:
+                    return isTimeValid;
+            }
+
+            return false;
+        }
+
         public string Id { get; set; }
         public string Code { get; set; }
         public DiscountAggregatePromotions PromotionType { get; set; } // FixedAmount & Percentage

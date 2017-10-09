@@ -605,7 +605,8 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Id = jObj.TryGetString(Constants.DtoNames.OrderLineNames.Id),
                 ProductId = jObj.TryGetString(Constants.DtoNames.OrderLineNames.ProductId),
-                Quantity = jObj.Value<int>(Constants.DtoNames.OrderLineNames.Quantity)
+                Quantity = jObj.Value<int>(Constants.DtoNames.OrderLineNames.Quantity),
+                DiscountCode = jObj.TryGetString(Constants.DtoNames.OrderLineNames.DiscountCode)
             };
         }
 

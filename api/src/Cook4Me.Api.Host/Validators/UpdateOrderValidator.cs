@@ -69,15 +69,17 @@ namespace Cook4Me.Api.Host.Validators
         private readonly IOpenidClient _openidClient;
         private readonly ISettingsProvider _settingsProvider;
         private readonly IUpsClient _upsClient;
+        private readonly IDiscountRepository _discountRepository;
 
         public UpdateOrderValidator(IOrderRepository orderRepository, IProductRepository productRepository, 
-            IOpenidClient openidClient, ISettingsProvider settingsProvider, IUpsClient upsClient)
+            IOpenidClient openidClient, ISettingsProvider settingsProvider, IUpsClient upsClient, IDiscountRepository discountRepository)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _openidClient = openidClient;
             _settingsProvider = settingsProvider;
             _upsClient = upsClient;
+            _discountRepository = discountRepository;
         }
 
         public async Task<UpdateOrderValidationResult> Validate(UpdateOrderCommand order, string subject)
@@ -151,6 +153,35 @@ namespace Cook4Me.Api.Host.Validators
                 }
 
                 prods = products.Content;
+                var discountCodes = order.OrderLines.Select(o => o.DiscountCode);
+                if (discountCodes.Any()) // Check discounts.
+                {
+                    var discounts = await _discountRepository.Search(new SearchDiscountsParameter
+                    {
+                        IsPagingEnabled = false,
+                        DiscountCodes = discountCodes
+                    });
+                    foreach(var orderLine in order.OrderLines)
+                    {
+                        if (string.IsNullOrWhiteSpace(orderLine.DiscountCode))
+                        {
+                            continue;
+                        }
+
+                        var discount = discounts.Content.First(c => c.Code == orderLine.DiscountCode);
+                        if (discount.Products == null || !discount.Products.Any(p => p.ProductId == orderLine.ProductId)) // Check discount is valid for the product.
+                        {
+                            return new UpdateOrderValidationResult(string.Format(ErrorDescriptions.TheDiscountCannotBeUsedForThisProduct, orderLine.ProductId));
+                        }
+
+                        if (!discount.IsValid()) // Check discount is valid.
+                        {
+                            return new UpdateOrderValidationResult(string.Format(ErrorDescriptions.TheProductDiscountIsInvalid, orderLine.DiscountCode));
+                        }
+
+                        orderLine.DiscountId = discount.Id;
+                    }
+                }
             }
 
             double shippingPrice = 0;

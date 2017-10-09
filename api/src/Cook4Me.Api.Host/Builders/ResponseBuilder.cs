@@ -742,6 +742,28 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.OrderLineNames.Price, orderLine.Price);
             result.Add(Constants.DtoNames.OrderLineNames.ProductId, orderLine.ProductId);
             result.Add(Constants.DtoNames.OrderLineNames.Quantity, orderLine.Quantity);
+            if (orderLine.OrderLineDiscount != null)
+            {
+                var discount = new JObject();
+                discount.Add(Constants.DtoNames.DiscountNames.Id, orderLine.OrderLineDiscount.Id);
+                discount.Add(Constants.DtoNames.DiscountNames.Code, orderLine.OrderLineDiscount.Code);
+                discount.Add(Constants.DtoNames.DiscountNames.Value, orderLine.OrderLineDiscount.Value);
+                discount.Add(Constants.DtoNames.DiscountNames.MoneySaved, orderLine.OrderLineDiscount.MoneySaved);
+                var kvpValidity = CommonBuilder.MappingDiscountValidities.FirstOrDefault(d => d.Key == orderLine.OrderLineDiscount.Validity);
+                if (!kvpValidity.Equals(default(KeyValuePair<DiscountAggregateValidities, string>)))
+                {
+                    discount.Add(Constants.DtoNames.DiscountNames.Validity, kvpValidity.Value);
+                }
+
+                var kvpType = CommonBuilder.MappingDiscountPromotions.FirstOrDefault(d => d.Key == orderLine.OrderLineDiscount.PromotionType);
+                if (!kvpType.Equals(default(KeyValuePair<DiscountAggregatePromotions, string>)))
+                {
+                    discount.Add(Constants.DtoNames.DiscountNames.Type, kvpType.Value);
+                }
+
+                result.Add(Constants.DtoNames.OrderLineNames.Discount, discount);
+            }
+
             return result;
         }
 

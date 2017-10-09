@@ -47,7 +47,7 @@ namespace Cook4Me.Api.EF.Repositories
 
             IQueryable<Order> orders = _context.Orders
                 .Include(c => c.OrderParcel)
-                .Include(p => p.OrderLines)
+                .Include(p => p.OrderLines).ThenInclude(o => o.Discount)
                 .Include(p => p.Shop)
                 .Include(c => c.OrderPayment);
             var result = await orders.FirstOrDefaultAsync(p => p.Id == id).ConfigureAwait(false);
@@ -199,6 +199,10 @@ namespace Cook4Me.Api.EF.Repositories
                         orderLineToUpdate.Price = orderLine.Price;
                         orderLineToUpdate.ProductId = orderLine.ProductId;
                         orderLineToUpdate.Quantity = orderLine.Quantity;
+                        if (orderLine.OrderLineDiscount != null)
+                        {
+                            orderLineToUpdate.DiscountId = orderLine.OrderLineDiscount.Id;
+                        }
                     }
 
                     foreach (var orderLineToRemove in orderLinesToRemove)
@@ -238,7 +242,10 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(parameter));
             }
 
-            IQueryable<Models.Order> orders = _context.Orders.Include(c => c.OrderParcel).Include(c => c.OrderLines).Include(c => c.Shop).Include(c => c.OrderPayment);
+            IQueryable<Models.Order> orders = _context.Orders.Include(c => c.OrderParcel)
+                .Include(c => c.OrderLines).ThenInclude(c => c.Discount)
+                .Include(c => c.Shop)
+                .Include(c => c.OrderPayment);
             if (parameter.Clients != null && parameter.Clients.Any())
             {
                 orders = orders.Where(s => parameter.Clients.Contains(s.Subject));

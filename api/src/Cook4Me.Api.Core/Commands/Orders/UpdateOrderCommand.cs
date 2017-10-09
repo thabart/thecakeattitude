@@ -25,6 +25,8 @@ namespace Cook4Me.Api.Core.Commands.Orders
         public string Id { get; set; }
         public string ProductId { get; set; }
         public int Quantity { get; set; }
+        public string DiscountCode { get; set; }
+        public string DiscountId { get; set; }
     }
 
     public class UpdateOrderCommand : Command

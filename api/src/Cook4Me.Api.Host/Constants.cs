@@ -340,6 +340,8 @@ namespace Cook4Me.Api.Host
                 public const string Price = "price";
                 public const string Quantity = "quantity";
                 public const string ProductId = "product_id";
+                public const string DiscountCode = "discount_code";
+                public const string Discount = "discount";
             }
 
             public static class LocationDistanceResponse

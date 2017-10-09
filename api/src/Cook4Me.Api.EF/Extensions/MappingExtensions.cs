@@ -294,12 +294,25 @@ namespace Cook4Me.Api.EF.Extensions
                 throw new ArgumentNullException(nameof(orderLine));
             }
 
+            OrderAggregateLineDiscount discount = null;
+            if (orderLine.Discount != null)
+            {
+                discount = new OrderAggregateLineDiscount
+                {
+                    Id = orderLine.Discount.Id,
+                    Code = orderLine.Discount.Code,
+                    PromotionType = (DiscountAggregatePromotions)orderLine.Discount.PromotionType,
+                    Validity = (DiscountAggregateValidities)orderLine.Discount.Validity,
+                    Value = orderLine.Discount.Value
+                };
+            }
             return new OrderAggregateLine
             {
                 Id = orderLine.Id,
                 Price = orderLine.Price,
                 ProductId = orderLine.ProductId,
-                Quantity = orderLine.Quantity
+                Quantity = orderLine.Quantity,
+                OrderLineDiscount = discount
             };
         }
 

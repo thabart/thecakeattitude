@@ -39,9 +39,10 @@ namespace Cook4Me.Api.Host.Operations.Orders
         private readonly IResponseBuilder _responseBuilder;
         private readonly IControllerHelper _controllerHelper;
         private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
+        private readonly IDiscountPriceCalculatorHelper _discountPriceCalculatorHelper;
 
         public GetOrderOperation(IOrderRepository orderRepository, IHalResponseBuilder halResponseBuilder, IOrderEnricher orderEnricher,
-            IResponseBuilder responseBuilder, IControllerHelper controllerHelper, IOrderPriceCalculatorHelper orderPriceCalculatorHelper)
+            IResponseBuilder responseBuilder, IControllerHelper controllerHelper, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper)
         {
             _orderRepository = orderRepository;
             _halResponseBuilder = halResponseBuilder;
@@ -49,6 +50,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
             _responseBuilder = responseBuilder;
             _controllerHelper = controllerHelper;
             _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
+            _discountPriceCalculatorHelper = discountPriceCalculatorHelper;
         }
 
         public async Task<IActionResult> Execute(string orderId, string subject)
@@ -74,6 +76,14 @@ namespace Cook4Me.Api.Host.Operations.Orders
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheOrderCannotBeAccessedByYou);
                 return _controllerHelper.BuildResponse(System.Net.HttpStatusCode.BadRequest, error);
+            }
+
+            if (order.OrderLines != null)
+            {
+                foreach(var orderLine in order.OrderLines)
+                {
+
+                }
             }
 
             _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Orders + "/" + orderId));

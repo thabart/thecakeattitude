@@ -96,7 +96,12 @@ namespace Cook4Me.Api.EF.Repositories
             IQueryable<Models.Discount> discounts = _context.Discounts.Include(c => c.Products);
             if (!string.IsNullOrWhiteSpace(parameter.Subject))
             {
-                discounts.Where(d => d.Subject == parameter.Subject);
+                discounts = discounts.Where(d => d.Subject == parameter.Subject);
+            }
+
+            if (parameter.DiscountCodes != null)
+            {
+                discounts = discounts.Where(d => parameter.DiscountCodes.Contains(d.Code));
             }
 
             var result = new SearchDiscountsResult

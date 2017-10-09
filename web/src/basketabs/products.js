@@ -211,11 +211,12 @@ class Products extends Component {
               {t('availableInStock').replace('{0}', product.available_in_stock)}
             </p>
           </div>
-          <div className="col-md-3">
+          <div className="col-md-2">
             <h4>€ {orderLine.price}</h4>
           </div>
           <div className="col-md-2"><input type="number" className="form-control" value={orderLine.quantity} max={product.available_in_stock} min="0" onChange={(e) => self.changeOrderLineQuantity(e, orderLine.id)} /></div>
-          <div className="col-md-2"><a href="#" className="btn-light red" onClick={(e) => { self.removeOrderLine(e, orderLine.id) }}><i className="fa fa-trash"></i></a></div>
+          <div className="col-md-2"><input type="text" className="form-control" /></div>" +
+          <div className="col-md-1"><a href="#" className="btn-light red" onClick={(e) => { self.removeOrderLine(e, orderLine.id) }}><i className="fa fa-trash"></i></a></div>
         </li>));
       });
     }
@@ -231,8 +232,9 @@ class Products extends Component {
               { products.length === 0 ? (<span>{t('noProducts')}</span>) : (
                 <div className="list-group-default">
                   <li className="list-group-item">
-                    <div className="col-md-3 offset-md-5">{t('price')}</div>
+                    <div className="col-md-2 offset-md-5">{t('price')}</div>
                     <div className="col-md-2">{t('productQuantity')}</div>
+                    <div className="col-md-2">{t('discountCode')}</div>
                   </li>
                   {products}
                 </div>

@@ -22,5 +22,6 @@ namespace Cook4Me.Api.Core.Aggregates
         public string ProductId { get; set; }
         public int Quantity { get; set; }
         public double Price { get; set; }
+        public OrderAggregateLineDiscount OrderLineDiscount { get; set; }
     }
 }

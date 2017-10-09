@@ -137,12 +137,23 @@ namespace Cook4Me.Api.Handlers
             }
 
             order.OrderLines = message.OrderLines == null ? new List<OrderAggregateLine>() : message.OrderLines.Select(o =>
-                new OrderAggregateLine
+            {
+                var result = new OrderAggregateLine
                 {
                     Id = o.Id,
                     ProductId = o.ProductId,
                     Quantity = o.Quantity
+                };
+                if (!string.IsNullOrWhiteSpace(o.DiscountId))
+                {
+                    result.OrderLineDiscount = new OrderAggregateLineDiscount
+                    {
+                        Id = o.DiscountId
+                    };
                 }
+
+                return result;
+            }
             ).ToList();
             await _orderRepository.Update(order);
             _eventPublisher.Publish(new OrderUpdatedEvent

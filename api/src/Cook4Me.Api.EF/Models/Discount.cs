@@ -35,5 +35,6 @@ namespace Cook4Me.Api.EF.Models
         public DateTime UpdateDateTime { get; set; }
         public string Subject { get; set; }
         public virtual ICollection<ProductDiscount> Products { get; set; }
+        public virtual ICollection<OrderLine> OrderLines { get; set; }
     }
 }

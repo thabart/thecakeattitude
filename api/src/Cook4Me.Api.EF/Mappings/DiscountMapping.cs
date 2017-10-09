@@ -32,6 +32,10 @@ namespace Cook4Me.Api.EF.Mappings
             modelBuilder.Entity<Discount>()
                 .ToTable("discounts")
                 .HasKey(s => s.Id);
+            modelBuilder.Entity<Discount>()
+                .HasMany(s => s.OrderLines)
+                .WithOne(s => s.Discount)
+                .HasForeignKey(s => s.DiscountId);
             return modelBuilder;
         }
     }
