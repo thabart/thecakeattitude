@@ -6,11 +6,15 @@ game.PlayerEntity = me.Entity.extend({
         this.speed = 2;
         var playerWidth = 41;
         var playerHeight = 83;
+        this.pseudo = 'thabart';
+        this.messageBubble = null; // Display the messages.
+        this.messageTimeout = null;
         this._super(me.Entity, "init", [coordinates.x, coordinates.y, {
           width: playerWidth,
           height: playerHeight
         }]);
         this.body.gravity = 0;
+        this.body.collisionType = me.collision.types.PLAYER_OBJECT;
         this.body.setVelocity(2.5, 2.5);
         this.body.setFriction(0.4,0.4);
         var texture =  new me.video.renderer.Texture(
@@ -47,7 +51,15 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.setCurrentAnimation("standing_down");
         this.currentMvt = 0;
         this.movements = [];
+        me.event.subscribe('pointermove', this.pointerMove.bind(this));
         me.event.subscribe('pointerdown', this.pointerDown.bind(this));
+        me.event.subscribe(me.event.VIEWPORT_ONCHANGE, this.updateMessagePosition.bind(this));
+        ShopStore.listenMessageArrived(this.onMessageArrived.bind(this));
+    },
+    pointerMove: function(evt) {
+      /*var overlaps = tile.overlaps(this);
+      var collision = me.collision.shouldCollide(tile, this.getBounds());
+      console.log(overlaps);*/
     },
     pointerDown: function(evt) { // Calculate the movements.
       if (evt.which !== 1) { return; }
@@ -90,6 +102,31 @@ game.PlayerEntity = me.Entity.extend({
 
       this.movements = mvts;
       this.currentMvt = 0;
+    },
+    onMessageArrived: function(e, msg) { // This method is called when a message arrived.
+      if (this.messageBubble) { // Remove the message bubble.
+        $(this.messageBubble).remove();
+        clearTimeout(this.messageTimeout);
+      }
+
+      var self = this;
+      this.messageBubble = $("<div class='chat-bubble '><b>"+this.pseudo+" : </b>"+msg+"</div>");
+      $(document.body).append(this.messageBubble);
+      this.updateMessagePosition();
+      this.messageTimeout = setTimeout(function() {
+        $(self.messageBubble).remove();
+        clearTimeout(self.messageTimeout);
+      }, 5000);
+    },
+    updateMessagePosition: function() { // Update the message position.
+      if (!this.messageBubble || this.messageBubble === null) { return; }
+      var coordinates = me.game.viewport.worldToLocal(
+                        this.pos.x,
+                        this.pos.y
+                    );
+      var gamePosition = $("#screen").position();
+      $(this.messageBubble).css('left', coordinates.x + gamePosition.left - $(this.messageBubble).outerWidth() / 2);
+      $(this.messageBubble).css('top', coordinates.y + gamePosition.top - $(this.messageBubble).outerHeight() - this.height);
     },
     update: function(dt) {
       if (this.currentMvt >= this.movements.length) { return false; }
@@ -174,6 +211,7 @@ game.PlayerEntity = me.Entity.extend({
       this.pos.x = posX;
       this.pos.y = posY;
       this.pos.z = 5;
+      this.updateMessagePosition();
       this._super(me.Entity, "update", [dt]);
       me.game.world.sort();
       return true;

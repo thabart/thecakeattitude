@@ -21,6 +21,13 @@
   background: url('../img/icons/inventory.png') 0 -84px no-repeat;
 }
 
+.chatbubbles {
+	background: url('../img/chatInput/chatbubbles.png');
+	width: 17px;
+	height: 19px;
+	display: inline-block;
+}
+
 .close
 {
     background: url("../img/icons/close.png");

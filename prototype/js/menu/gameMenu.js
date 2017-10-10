@@ -5,10 +5,11 @@ game.GameMenu = me.Object.extend({
     this.addInformationBox();
     this.addActionsBox();
     this.addManageFurnitureBox();
+    this.addChatForm();
     ShopStore.listenActiveFurnitureChanged(this.updateActiveFurniture.bind(this));
     ShopStore.listenSelectedFurnitureChanged(this.updateSelectedFurniture.bind(this));
   },
-  addMenu: function() {
+  addMenu: function() { // Add the menu.
     this.menu = $("<ul class='no-style'>"+
       "<li class='inventory'></li>"+
     "</ul>");
@@ -140,6 +141,22 @@ game.GameMenu = me.Object.extend({
     });
     $(this.mgfurniture).find('.close').click(function() {
       $(self.mgfurniture).hide();
+    });
+  },
+  addChatForm: function() { // Add the chat form.
+    var self = this;
+    self.chatForm = $("<form id='chat-input-form'>"+
+      "<div id='chat-input-form-left'>"+
+        "<i class='icon chatbubbles'></i>"+
+      "</div>"+
+      "<input id='chat-input' placeholder='Type here to chat...' >"+
+    "</form>");
+    $(document.body).append(self.chatForm);
+    $(self.chatForm).submit(function(e) {
+      e.preventDefault();
+      var message = $(self.chatForm).find('input').val();
+      ShopStore.displayMessage(message);
+      $(self.chatForm).find('input').val('');
     });
   },
   displayInventoryBox: function() { // Display inventory box.

@@ -7,6 +7,7 @@
         <link rel="stylesheet" type="text/css" href="css/icons.css">
         <link rel="stylesheet" type="text/css" href="css/common.css">
         <link rel="stylesheet" type="text/css" href="css/button.css">
+        <link rel="stylesheet" type="text/css" href="css/chat.css">
         <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="mobile-web-app-capable" content="yes">
@@ -18,11 +19,14 @@
         <link rel="manifest" href="manifest.json">
     </head>
     <body>
+        <!-- Game container -->
         <div style="margin: 0 auto; width: 1200px;">
             <div id="screen" class="game-container"></div>
         </div>
+        <!-- Display information (furnitures) -->
         <div id="bottom-right-container">
         </div>
+        <!-- Display action bar -->
         <div id="footer">
         </div>
         <script type="text/javascript"  src="lib/pathfinding.js"></script>
@@ -41,13 +45,13 @@
         <script type="text/javascript" src="js/containers/furnitureContainer.js"></script>
         <!-- Loader selectors -->
         <script type="text/javascript" src="js/selectors/furnitureSelector.js"></script>
-        <script type="text/javascript" src="js/selectors/tileSelector.js"></script>
         <!-- Load entities -->
         <script type="text/javascript" src="js/entities/playerEntity.js"></script>
         <script type="text/javascript" src="js/entities/button.js"></script>
         <script type="text/javascript" src="js/entities/checkBox.js"></script>
         <script type="text/javascript" src="js/entities/furniture.js"></script>
         <script type="text/javascript" src="js/entities/furnitureEntity.js"></script>
+        <script type="text/javascript" src="js/entities/tileSelector.js"></script>
         <!-- Load menu -->
         <script type="text/javascript" src="js/menu/gameMenu.js"></script>
         <!-- Load stores -->

@@ -69,12 +69,20 @@ var ShopStoreCl = function() {
 		me.game.repaint();
 	};
 
+	this.displayMessage = function(message) {
+		$(this).trigger('messageArrived', [ message ]);
+	};
+
 	this.listenActiveFurnitureChanged = function(callback) {
 		$(this).on('activeFurnitureChanged', callback);
 	};
 
 	this.listenSelectedFurnitureChanged = function(callback) {
 		$(this).on('selectedFurnitureChanged', callback);
+	};
+
+	this.listenMessageArrived = function(callback) {
+		$(this).on('messageArrived', callback);
 	};
 };
 

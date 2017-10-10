@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="isometric" renderorder="right-down" width="23" height="23" tilewidth="66" tileheight="33" backgroundcolor="#000000" nextobjectid="10">
  <tileset firstgid="1" name="wall_right" tilewidth="42" tileheight="149" tilecount="1" columns="1">
-  <tileoffset x="-2" y="0"/>
+  <tileoffset x="-2" y="7"/>
   <image source="wall_right.png" width="42" height="149"/>
  </tileset>
  <tileset firstgid="2" name="wall_left" tilewidth="42" tileheight="149" tilecount="1" columns="1">
-  <tileoffset x="22" y="0"/>
+  <tileoffset x="22" y="7"/>
   <image source="wall_left.png" width="42" height="149"/>
  </tileset>
  <tileset firstgid="3" name="floor" tilewidth="66" tileheight="40" tilecount="1" columns="1">
