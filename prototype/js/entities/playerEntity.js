@@ -6,12 +6,13 @@ game.PlayerEntity = me.Entity.extend({
         this.speed = 2;
         var playerWidth = 41;
         var playerHeight = 83;
-        this.pseudo = 'thabart';
+        this.metadata = {
+          name: 'thabart',
+          image: '/resources/players/1_0.png'
+        };
         this.messageBubble = null; // Display the messages.
         this.messageTimeout = null;
-        this.informationBox = $("<div class='player-information-box-container'><div class='player-information-box'>"+this.pseudo+"</div></div>"); // Display the information box.
-        $(document.body).append(this.informationBox);
-        $(this.informationBox).hide();
+        this.informationBox = null; // Display the information box.
         this._super(me.Entity, "init", [coordinates.x, coordinates.y, {
           width: playerWidth,
           height: playerHeight
@@ -61,21 +62,30 @@ game.PlayerEntity = me.Entity.extend({
           self.updatePlayerInformationPosition.bind(self);
         });
         ShopStore.listenMessageArrived(this.onMessageArrived.bind(this));
-        ShopStore.listenDisplayPlayerInformationArrived(this.displayPlayerInformation.bind(this));
-        ShopStore.listenHidePlayerInformationArrived(this.hidePlayerInformation.bind(this));
+        ShopStore.listenDisplayPlayerPseudoArrived(this.displayPseudo.bind(this));
+        ShopStore.listenHidePlayerPseudoArrived(this.hidePseudo.bind(this));
     },
-    displayPlayerInformation: function() { // Display the player information.
+    displayPseudo: function() { // Display the pseudo.
       $('html,body').css( 'cursor', 'pointer' );
-      $(this.informationBox).show();
+      if (this.informationBox && this.informationBox !== null) { return; }
+      this.informationBox = $("<div class='player-information-box-container'><div class='player-information-box'>"+this.metadata.name+"</div></div>")
+      $(document.body).append(this.informationBox);
       this.updatePlayerInformationPosition();
     },
-    hidePlayerInformation: function() { // Hide the player information.
+    hidePseudo: function() { // Hide the pseudo.
       $('html,body').css( 'cursor', 'default');
+      if (!this.informationBox || this.informationBox === null) { return; }
       $(this.informationBox).hide();
+      this.informationBox = null;
     },
-    pointerDown: function(evt) { // Calculate the movements.
+    pointerDown: function(evt) { // Calculate the movements OR display the player informations.
       if (evt.which !== 1) { return; }
       if (evt.handled) { return; }
+      if (this.informationBox && this.informationBox !== null) {
+        ShopStore.displayInformation(this.metadata);
+        return;
+      }
+      
       if (this.movements.length > 0 && this.currentMvt < this.movements.length) { return; }
   		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
       if (!tile) { return; }
@@ -122,7 +132,7 @@ game.PlayerEntity = me.Entity.extend({
       }
 
       var self = this;
-      this.messageBubble = $("<div class='chat-bubble '><b>"+this.pseudo+" : </b>"+msg+"</div>");
+      this.messageBubble = $("<div class='chat-bubble '><b>"+this.metadata.name+" : </b>"+msg+"</div>");
       $(document.body).append(this.messageBubble);
       this.updateMessagePosition();
       this.messageTimeout = setTimeout(function() {
@@ -131,7 +141,7 @@ game.PlayerEntity = me.Entity.extend({
       }, 5000);
     },
     updatePlayerInformationPosition: function() { // Update the player information position.
-      if (!$(this.informationBox).is(':visible')) { return; }
+      if (!this.informationBox || this.informationBox === null) { return; }
       var coordinates = me.game.viewport.worldToLocal(
                         this.pos.x,
                         this.pos.y

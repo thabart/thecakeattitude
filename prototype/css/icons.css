@@ -41,6 +41,14 @@
     cursor: pointer;
 }
 
+.black-close {
+  background: url('../img/icons/black-close.png');
+  width: 13px;
+  height: 13px;
+  float: right;
+  cursor: pointer;
+}
+
 .close:hover
 {
     background: url("../img/icons/close.png") 0 -20px;

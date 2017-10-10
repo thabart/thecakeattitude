@@ -56,7 +56,15 @@ game.FurnitureSelector = me.Object.extend({
 			}
 		});
 
-		if (selectedFurniture) { evt.handled = true; }
+		if (selectedFurniture) {
+			evt.handled = true;
+			ShopStore.displayInformation(selectedFurniture.metadata);
+			ShopStore.displayActions();
+		} else {
+			ShopStore.hideInformation();
+			ShopStore.hideActions();
+		}
+
 		ShopStore.setSelectedFurniture(selectedFurniture);
 	},
 	addFurniture: function(evt) { // Add a furniture into the container.

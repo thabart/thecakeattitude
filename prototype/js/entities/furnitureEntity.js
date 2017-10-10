@@ -6,8 +6,11 @@ game.FurnitureEntity = me.Entity.extend({
     this.translateY = 0;
     this.initX = x;
     this.initY = y;
-    this.furnitureName = furnitureName;
     var image = me.loader.getImage(furnitureName);
+    this.metadata = {
+      name: furnitureName,
+      image: image.src
+    };
     this._super(me.Entity, "init", [x, y , {
       width: image.width,
       height: image.height
@@ -33,9 +36,6 @@ game.FurnitureEntity = me.Entity.extend({
   opacity: function(val) { // Set the opacity.
     this.renderable.alpha = val;
   },
-  getImage: function() { // Get the image.
-    return this.renderable.image;
-  },
   translateX: function(x) { // Translate on X.
     this.pos.x = this.initX + x;
     this.translateX = x;
@@ -56,6 +56,9 @@ game.FurnitureEntity = me.Entity.extend({
     };
   },
   getName: function() { // Get the furniture name.
-    return this.furnitureName;
+    return this.metadata.name;
+  },
+  getImage: function() { // Get the image.
+    return this.metadata.image;
   }
 });

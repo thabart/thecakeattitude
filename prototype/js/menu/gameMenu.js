@@ -7,7 +7,10 @@ game.GameMenu = me.Object.extend({
     this.addManageFurnitureBox();
     this.addChatForm();
     ShopStore.listenActiveFurnitureChanged(this.updateActiveFurniture.bind(this));
-    ShopStore.listenSelectedFurnitureChanged(this.updateSelectedFurniture.bind(this));
+    ShopStore.listenDisplayInformationArrived(this.updateInformationBox.bind(this)); // Display information box.
+    ShopStore.listenHideInformationArrived(this.hideInformationBox.bind(this));
+    ShopStore.listenDisplayActionsArrived(this.displayActions.bind(this)); // Display furniture actions.
+    ShopStore.hideDisplayActionsArrived(this.hideActions.bind(this));
   },
   addMenu: function() { // Add the menu.
     this.menu = $("<ul class='no-style'>"+
@@ -57,12 +60,12 @@ game.GameMenu = me.Object.extend({
   addInformationBox: function() { // Add the information box.
     var self = this;
     this.information = $("<div class='information-box'>"+
-      "<div class='top'><div class='close'></div></div>"+
+      "<div class='top'><span class='title'></span><div class='black-close'></div></div>"+
       "<div class='body'></div>"+
       "<div class='bottom'></div>"+
     "</div>");
     $("#bottom-right-container").append(this.information);
-    $(this.information).find('.close').click(function() {
+    $(this.information).find('.black-close').click(function() {
       $(self.information).hide();
       $(self.actions).hide();
       ShopStore.setSelectedFurniture(null);
@@ -169,6 +172,23 @@ game.GameMenu = me.Object.extend({
     if (!this.inventory) { return; }
     $(this.inventory).find('.items > li').removeClass('active');
   },
+  updateInformationBox: function(e, metadata) {
+    $(this.information).find('.body').empty();
+    $(this.information).find('.top .title').html(metadata.name);
+    $(this.information).find('.body').append("<img src='"+metadata.image+"' />'");
+    $(this.information).show();
+    // $(this.actions).show();
+  },
+  hideInformationBox: function() {
+    $(this.information).hide();
+  },
+  displayActions: function() {
+    $(this.actions).show();
+  },
+  hideActions: function() {
+    $(this.actions).hide();
+  }
+  /*
   updateSelectedFurniture: function() {
     var selectedFurniture = ShopStore.getSelectedFurniture();
     if (!selectedFurniture) {
@@ -178,10 +198,11 @@ game.GameMenu = me.Object.extend({
       return;
     }
 
-    var img = selectedFurniture.getImage();
-    $(this.information).find('.body').empty();
-    $(this.information).find('.body').append(img);
+  },
+  displayPlayerInformationBox: function(e, metadata) {
     $(this.information).show();
-    $(this.actions).show();
+    $(this.information).find('.top .title').html(metadata.pseudo);
+    $(this.information).find('.body').empty();
   }
+  */
 });

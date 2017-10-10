@@ -25,42 +25,30 @@ var ShopStoreCl = function() {
 		});
 	};
 
-	this.getActiveFurniture = function() {
+	this.getActiveFurniture = function() { // Get the active furniture (with opacity 0.5)
 		return _activeFurniture;
 	};
 
-	this.setActiveFurniture = function(f) {
+	this.setActiveFurniture = function(f) { // Set the active furniture (with opacity 0.5)
 		_activeFurniture = f;
 		$(this).trigger('activeFurnitureChanged');
 	};
 
-	this.getCollisionLayer = function() {
-		return _collisionLayer;
-	};
-
-	this.setCollisionLayer = function(c) {
-		_collisionLayer = c;
-	};
-
-	this.getSelectedFurniture = function() {
+	this.getSelectedFurniture = function() { // Get selected furniture (with opacity 1.0)
 		return _selectedFurniture;
 	};
 
-	this.setSelectedFurniture = function(f) {
+	this.setSelectedFurniture = function(f) { // Set selected furniture (with opacity 1.0)
 		_selectedFurniture = f;
 		$(this).trigger('selectedFurnitureChanged');
 	};
 
-	this.getFurnitures = function() {
-		return _furnitures;
-	};
-
-	this.addFurniture = function(f) {
+	this.addFurniture = function(f) { // Add a furniture and update the collisions.
 		_furnitures.push(f);
 		updateCollisions();
 	};
 
-	this.removeFurniture = function(f) {
+	this.removeFurniture = function(f) { // Remove a furniture and update the collisions.
 		var index = _furnitures.indexOf(f);
 		if (index === -1) { return; }
 		me.game.world.removeChild(f);
@@ -69,36 +57,81 @@ var ShopStoreCl = function() {
 		me.game.repaint();
 	};
 
-	this.displayPlayerInformation = function() {
-		$(this).trigger('displayPlayerInformationArrived');
+	this.getFurnitures = function() { // Get all the furnitures.
+		return _furnitures;
 	};
 
-	this.hidePlayerInformation = function() {
-		$(this).trigger('hidePlayerInformationArrived');
+	this.getCollisionLayer = function() { // Get collision layer.
+		return _collisionLayer;
 	};
 
-	this.displayMessage = function(message) {
+	this.setCollisionLayer = function(c) { // Set collision layer.
+		_collisionLayer = c;
+	};
+
+	this.displayPlayerPseudo = function() { // Display the player pseudo.
+		$(this).trigger('displayPlayerPseudoArrived');
+	};
+
+	this.hidePlayerPseudo = function() { // Hide the player pseudo.
+		$(this).trigger('hidePlayerPseudoArrived');
+	};
+
+	this.displayInformation = function(metadata) { // Update the content of the information box.
+		$(this).trigger('displayInformationArrived', [ metadata ]);
+	};
+
+	this.hideInformation = function() { // Hide information.
+		$(this).trigger('hideInformationArrived');
+	};
+
+	this.displayActions = function() { // Display the furniture actions.
+		$(this).trigger('displayActionsArrived');
+	};
+
+	this.hideActions = function() { // Hide the furniture actions.
+		$(this).trigger('hideActionsArrived');
+	};
+
+	this.displayMessage = function(message) { // Display the player message.
 		$(this).trigger('messageArrived', [ message ]);
 	};
 
+	/* LISTEN THE EVENTS */
 	this.listenActiveFurnitureChanged = function(callback) {
 		$(this).on('activeFurnitureChanged', callback);
 	};
 
-	this.listenSelectedFurnitureChanged = function(callback) {
-		$(this).on('selectedFurnitureChanged', callback);
+	this.listenDisplayInformationArrived = function(callback) {
+		$(this).on('displayInformationArrived', callback);
+	};
+
+	this.listenHideInformationArrived = function(callback) {
+		$(this).on('hideInformationArrived', callback);
+	};
+
+	this.listenDisplayActionsArrived = function(callback) {
+		$(this).on('displayActionsArrived', callback);
+	};
+
+	this.hideDisplayActionsArrived = function(callback) {
+		$(this).on('hideActionsArrived', callback);
 	};
 
 	this.listenMessageArrived = function(callback) {
 		$(this).on('messageArrived', callback);
 	};
 
-	this.listenDisplayPlayerInformationArrived = function(callback) {
-		$(this).on('displayPlayerInformationArrived', callback);
+	this.listenDisplayPlayerPseudoArrived = function(callback) {
+		$(this).on('displayPlayerPseudoArrived', callback);
 	};
 
-	this.listenHidePlayerInformationArrived = function(callback) {
-		$(this).on('hidePlayerInformationArrived', callback);
+	this.listenHidePlayerPseudoArrived = function(callback) {
+		$(this).on('hidePlayerPseudoArrived', callback);
+	};
+
+	this.listenSelectedFurnitureChanged = function(callback) {
+		$(this).on('selectedFurnitureChanged', callback);
 	};
 };
 
