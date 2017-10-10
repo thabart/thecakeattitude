@@ -32,11 +32,14 @@ game.TileSelectorEntity = me.Entity.extend({
       this.pos.y = coordinates.y;
     },
     update: function(dt) {
-      me.collision.check(this);
+      var isCollide = me.collision.check(this);
+      if (isCollide) {
+        ShopStore.displayPlayerInformation();
+      } else {
+        ShopStore.hidePlayerInformation();
+      }
+      
       this._super(me.Entity, "update", [dt]);
       return true;
-    },
-    onCollision: function() {
-      console.log('collide');
     }
 });

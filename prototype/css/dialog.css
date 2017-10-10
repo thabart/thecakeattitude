@@ -172,3 +172,30 @@
 .information-box .bottom {
 
 }
+
+/* PLAYER INFORMATION */
+.player-information-box-container {
+  position: fixed;
+	top: 10;
+	left: 10;
+}
+
+.player-information-box {
+  background-color: rgb(44, 43, 42);
+  border-radius: 5px;
+  min-width: 100px;
+  padding: 10px;
+	color: white;
+}
+
+.player-information-box:after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  border-width: 10px 10px 0;
+  border-style: solid;
+  border-color: rgb(44, 43, 42) transparent;
+  display: block;
+  width: 0;
+}

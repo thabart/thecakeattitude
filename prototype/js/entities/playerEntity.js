@@ -9,6 +9,9 @@ game.PlayerEntity = me.Entity.extend({
         this.pseudo = 'thabart';
         this.messageBubble = null; // Display the messages.
         this.messageTimeout = null;
+        this.informationBox = $("<div class='player-information-box-container'><div class='player-information-box'>"+this.pseudo+"</div></div>"); // Display the information box.
+        $(document.body).append(this.informationBox);
+        $(this.informationBox).hide();
         this._super(me.Entity, "init", [coordinates.x, coordinates.y, {
           width: playerWidth,
           height: playerHeight
@@ -51,15 +54,24 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.setCurrentAnimation("standing_down");
         this.currentMvt = 0;
         this.movements = [];
-        me.event.subscribe('pointermove', this.pointerMove.bind(this));
+        var self = this;
         me.event.subscribe('pointerdown', this.pointerDown.bind(this));
-        me.event.subscribe(me.event.VIEWPORT_ONCHANGE, this.updateMessagePosition.bind(this));
+        me.event.subscribe(me.event.VIEWPORT_ONCHANGE, function() {
+          self.updateMessagePosition.bind(self);
+          self.updatePlayerInformationPosition.bind(self);
+        });
         ShopStore.listenMessageArrived(this.onMessageArrived.bind(this));
+        ShopStore.listenDisplayPlayerInformationArrived(this.displayPlayerInformation.bind(this));
+        ShopStore.listenHidePlayerInformationArrived(this.hidePlayerInformation.bind(this));
     },
-    pointerMove: function(evt) {
-      /*var overlaps = tile.overlaps(this);
-      var collision = me.collision.shouldCollide(tile, this.getBounds());
-      console.log(overlaps);*/
+    displayPlayerInformation: function() { // Display the player information.
+      $('html,body').css( 'cursor', 'pointer' );
+      $(this.informationBox).show();
+      this.updatePlayerInformationPosition();
+    },
+    hidePlayerInformation: function() { // Hide the player information.
+      $('html,body').css( 'cursor', 'default');
+      $(this.informationBox).hide();
     },
     pointerDown: function(evt) { // Calculate the movements.
       if (evt.which !== 1) { return; }
@@ -117,6 +129,16 @@ game.PlayerEntity = me.Entity.extend({
         $(self.messageBubble).remove();
         clearTimeout(self.messageTimeout);
       }, 5000);
+    },
+    updatePlayerInformationPosition: function() { // Update the player information position.
+      if (!$(this.informationBox).is(':visible')) { return; }
+      var coordinates = me.game.viewport.worldToLocal(
+                        this.pos.x,
+                        this.pos.y
+                    );
+      var gamePosition = $("#screen").position();
+      $(this.informationBox).css('left', coordinates.x + gamePosition.left - $(this.informationBox).outerWidth() / 2);
+      $(this.informationBox).css('top', coordinates.y + gamePosition.top - $(this.informationBox).outerHeight() - this.height);
     },
     updateMessagePosition: function() { // Update the message position.
       if (!this.messageBubble || this.messageBubble === null) { return; }
@@ -212,6 +234,7 @@ game.PlayerEntity = me.Entity.extend({
       this.pos.y = posY;
       this.pos.z = 5;
       this.updateMessagePosition();
+      this.updatePlayerInformationPosition();
       this._super(me.Entity, "update", [dt]);
       me.game.world.sort();
       return true;

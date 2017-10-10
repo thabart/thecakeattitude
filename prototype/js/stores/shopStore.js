@@ -69,6 +69,14 @@ var ShopStoreCl = function() {
 		me.game.repaint();
 	};
 
+	this.displayPlayerInformation = function() {
+		$(this).trigger('displayPlayerInformationArrived');
+	};
+
+	this.hidePlayerInformation = function() {
+		$(this).trigger('hidePlayerInformationArrived');
+	};
+
 	this.displayMessage = function(message) {
 		$(this).trigger('messageArrived', [ message ]);
 	};
@@ -83,6 +91,14 @@ var ShopStoreCl = function() {
 
 	this.listenMessageArrived = function(callback) {
 		$(this).on('messageArrived', callback);
+	};
+
+	this.listenDisplayPlayerInformationArrived = function(callback) {
+		$(this).on('displayPlayerInformationArrived', callback);
+	};
+
+	this.listenHidePlayerInformationArrived = function(callback) {
+		$(this).on('hidePlayerInformationArrived', callback);
 	};
 };
 
