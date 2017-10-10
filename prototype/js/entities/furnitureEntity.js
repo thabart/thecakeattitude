@@ -20,11 +20,25 @@ game.FurnitureEntity = me.Entity.extend({
       me.loader.getImage(furnitureName)
     );
 
-    var collisionShape = CollisionHelper.getShape(furnitureName + "_collision");
     this.body.removeShapeAt(0);
-    this.body.addShape(collisionShape);
-    this.body.pos.x = -(collisionShape.width / 2);
-    this.body.pos.y = -(collisionShape.height / 2);
+    var collisionShape = $.extend(true, {}, me.loader.getJSON(furnitureName + "_collision"));
+    this.shapeDef = me.loader.getJSON(furnitureName + "_shape");
+    collisionShape.rigidBodies[0].polygons.forEach(function(polygon) {
+      polygon.forEach(function(coordinate) {
+        coordinate.x = image.width * coordinate.x;
+        coordinate.y = image.height * coordinate.y;
+      });
+    });
+    collisionShape.rigidBodies[0].shapes.forEach(function(shape) {
+      shape.vertices.forEach(function(coordinate) {
+        coordinate.x = image.width * coordinate.x;
+        coordinate.y = image.height * coordinate.y;
+      });
+    });
+
+    this.body.addShapesFromJSON(collisionShape, "Name");
+    this.body.pos.x = this.shapeDef.relativePosX;
+    this.body.pos.y = this.shapeDef.relativePosY;
     this.renderable = texture.createAnimationFromName([0]);
     this.renderable.addAnimation("stay", [0]);
     this.renderable.setCurrentAnimation("stay");
@@ -46,8 +60,8 @@ game.FurnitureEntity = me.Entity.extend({
   },
   getCoordinates: function() { // Get the size : number of rows + number of cols + position.
     var tile = this.refLayer.getTile(this.pos.x, this.pos.y);
-    var nbRows = this.body.getBounds().width / (this.refLayer.tilewidth / 2);
-    var nbCols = this.body.getBounds().height / this.refLayer.tileheight;
+    var nbRows = this.shapeDef.nbRows;
+    var nbCols = this.shapeDef.nbCols;
     return {
       row: tile.row,
       col: tile.col,

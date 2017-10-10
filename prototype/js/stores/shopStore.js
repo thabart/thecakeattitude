@@ -13,6 +13,7 @@ var ShopStoreCl = function() {
 
 		_furnitures.forEach(function(spr) { // Update the collision layer.
 				var sprCoordinates = spr.getCoordinates();
+				console.log(sprCoordinates);
 				var collisionCoordinate = {
 					col: sprCoordinates.col - Constants.Layers.Ground.Position.Col,
 					row: sprCoordinates.row - Constants.Layers.Ground.Position.Row

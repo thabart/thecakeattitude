@@ -8120,7 +8120,6 @@ THE SOFTWARE.
 
             // update the body bounds to take in account the added shapes
             this.updateBounds();
-
             // return the length of the shape list
             return this.shapes.length;
         },
@@ -12127,7 +12126,7 @@ THE SOFTWARE.
                 return (a.pos ? -Infinity : Infinity);
             }
             var result = b.pos.z - a.pos.z;
-            return (result ? result : (b.pos.x - a.pos.x));
+            return (result && result !== 0 ? result : (b.pos.x - a.pos.x));
         },
 
         /**

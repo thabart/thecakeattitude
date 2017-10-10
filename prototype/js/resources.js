@@ -12,13 +12,14 @@ var g_ressources = [
     { name: "floor", type: "image", src: "resources/floor.png" },
     { name: "table", type: "image", src: "resources/furnitures/sofatable.png" }, // Load the furnitures.
     { name: "chair", type: "image", src: "resources/furnitures/chair.png" },
-    { name: "bar", type: "image", src: "resources/furnitures/executive/exe_bar.gif" },
-    { name: "corner", type: "image", src: "resources/furnitures/executive/exe_corner.gif" },
+    { name: "bar", type: "image", src: "resources/furnitures/executive/bar.png" },
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
     { name: "player", type: "image", src: "resources/players/player.png" },
     { name: "table_collision", type: "json", src: "resources/collisions/sofatable.json" },
     { name: "chair_collision", type: "json", src: "resources/collisions/chair.json" },
     { name: "player_collision", type: "json", src: "resources/collisions/player.json" },
     { name: "bar_collision", type: "json", src: "resources/collisions/bar.json" },
-    { name: "corner_collision", type: "json", src: "resources/collisions/corner.json" },
+    { name: "bar_shape", type: "json", src: "resources/shapes/bar.json" }, // Load the shapes.
+    { name: "chair_shape", type: "json", src: "resources/shapes/chair.json" },
+    { name: "table_shape", type: "json", src: "resources/shapes/sofatable.json" },
 ];

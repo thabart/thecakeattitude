@@ -37,8 +37,8 @@ game.GameMenu = me.Object.extend({
           "<ul class='items no-style'>"+
             "<li data-furniture='table'><img src='resources/furnitures/sofatable.png' /></li>"+
             "<li data-furniture='chair'><img src='resources/furnitures/chair.png' /></li>"+
-            "<li data-furniture='bar'><img src='resources/furnitures/executive/exe_bar.gif' /></li>"+
-            "<li data-furniture='corner'><img src='resources/furnitures/executive/exe_corner.gif' /></li>"+
+            "<li data-furniture='bar'><img src='resources/furnitures/executive/bar.png' /></li>"+
+            // "<li data-furniture='corner'><img src='resources/furnitures/executive/exe_corner.gif' /></li>"+
           "</ul>"+
         "</div>"+
       "</div>"+
@@ -177,7 +177,6 @@ game.GameMenu = me.Object.extend({
     $(this.information).find('.top .title').html(metadata.name);
     $(this.information).find('.body').append("<img src='"+metadata.image+"' />'");
     $(this.information).show();
-    // $(this.actions).show();
   },
   hideInformationBox: function() {
     $(this.information).hide();
@@ -188,21 +187,4 @@ game.GameMenu = me.Object.extend({
   hideActions: function() {
     $(this.actions).hide();
   }
-  /*
-  updateSelectedFurniture: function() {
-    var selectedFurniture = ShopStore.getSelectedFurniture();
-    if (!selectedFurniture) {
-      $(this.information).hide();
-      $(this.actions).hide();
-      $(this.mgfurniture).hide();
-      return;
-    }
-
-  },
-  displayPlayerInformationBox: function(e, metadata) {
-    $(this.information).show();
-    $(this.information).find('.top .title').html(metadata.pseudo);
-    $(this.information).find('.body').empty();
-  }
-  */
 });

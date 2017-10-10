@@ -85,7 +85,7 @@ game.PlayerEntity = me.Entity.extend({
         ShopStore.displayInformation(this.metadata);
         return;
       }
-      
+
       if (this.movements.length > 0 && this.currentMvt < this.movements.length) { return; }
   		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
       if (!tile) { return; }
