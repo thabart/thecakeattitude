@@ -1005,6 +1005,7 @@ namespace Cook4Me.Api.EF.Extensions
                        (pd.Discount.Validity == 2 && pd.Discount.StartDateTime <= currentDate && pd.Discount.EndDateTime >= currentDate && pd.Discount.Counter > 0)))
                        .Select(d => new PublicProductDiscountActiveAggregate
                        {
+                           Id = d.Discount.Id,
                            Code = d.Discount.Code,
                            MoneySaved = d.MoneySaved,
                            PromotionType = (DiscountAggregatePromotions)d.Discount.PromotionType,

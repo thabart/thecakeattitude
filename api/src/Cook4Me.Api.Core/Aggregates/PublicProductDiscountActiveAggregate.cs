@@ -18,6 +18,7 @@ namespace Cook4Me.Api.Core.Aggregates
 {
     public class PublicProductDiscountActiveAggregate
     {
+        public string Id { get; set; }
         public string Code { get; set; }
         public DiscountAggregatePromotions PromotionType { get; set; }
         public double Value { get; set; }

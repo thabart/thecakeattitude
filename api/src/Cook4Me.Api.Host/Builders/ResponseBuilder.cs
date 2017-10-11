@@ -1716,6 +1716,7 @@ namespace Cook4Me.Api.Host.Builders
                 foreach (var activeDiscount in product.ActiveDiscounts)
                 {
                     var obj = new JObject();
+                    obj.Add(Constants.DtoNames.DiscountNames.Id, activeDiscount.Id);
                     obj.Add(Constants.DtoNames.DiscountNames.Code, activeDiscount.Code);
                     obj.Add(Constants.DtoNames.DiscountNames.MoneySaved, activeDiscount.MoneySaved);
                     obj.Add(Constants.DtoNames.DiscountNames.Value, activeDiscount.Value);

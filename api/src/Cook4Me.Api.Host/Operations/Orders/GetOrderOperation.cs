@@ -14,16 +14,12 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.Core.Helpers;
-using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Enrichers;
 using Cook4Me.Api.Host.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Orders
@@ -69,7 +65,7 @@ namespace Cook4Me.Api.Host.Operations.Orders
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheOrderDoesntExist);
                 return _controllerHelper.BuildResponse(System.Net.HttpStatusCode.NotFound, error);
             }
-
+            
             if (order.Subject != subject && order.SellerId != subject)
             {
                 var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheOrderCannotBeAccessedByYou);

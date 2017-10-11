@@ -34,14 +34,12 @@ namespace Cook4Me.Api.Host.Enrichers
     {
         private readonly IResponseBuilder _responseBuilder;
         private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
-        private readonly IDiscountPriceCalculatorHelper _discountPriceCalculatorHelper;
         private readonly IProductRepository _productRepository;
 
-        public OrderEnricher(IResponseBuilder responseBuilder, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper, IProductRepository productRepository)
+        public OrderEnricher(IResponseBuilder responseBuilder, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IProductRepository productRepository)
         {
             _responseBuilder = responseBuilder;
             _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
-            _discountPriceCalculatorHelper = discountPriceCalculatorHelper;
             _productRepository = productRepository;
         }
 
@@ -60,24 +58,6 @@ namespace Cook4Me.Api.Host.Enrichers
             if (order.Status == OrderAggregateStatus.Created)
             {
                 await _orderPriceCalculatorHelper.Update(order);
-                if (order.OrderLines != null)
-                {
-                    var productIds = order.OrderLines.Select(ol => ol.ProductId);
-                    var products = await _productRepository.Search(new SearchProductsParameter
-                    {
-                        ProductIds = productIds
-                    });
-                    foreach (var orderLine in order.OrderLines)
-                    {
-                        if (orderLine.OrderLineDiscount == null)
-                        {
-                            continue;
-                        }
-
-                        var product = products.Content.First(p => p.Id == orderLine.ProductId);
-                        orderLine.OrderLineDiscount.MoneySaved = _discountPriceCalculatorHelper.CalculateMoneySaved(product, orderLine.OrderLineDiscount);
-                    }
-                }
             }
 
             halResponseBuilder.AddEmbedded(e => e.AddObject(_responseBuilder.GetOrder(order),

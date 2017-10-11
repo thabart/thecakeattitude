@@ -21,12 +21,37 @@ namespace Cook4Me.Api.Core.Helpers
 {
     public interface IDiscountPriceCalculatorHelper
     {
+        void UpdatePrice(ProductAggregate product, OrderAggregateLine orderLine);
         double CalculatePrice(ProductAggregate product, DiscountAggregate discount);
+        double CalculatePrice(ProductAggregate product, OrderAggregateLineDiscount discount);
         double CalculateMoneySaved(ProductAggregate product, OrderAggregateLineDiscount discount);
+        double CalculateMoneySaved(ProductAggregate product, PublicProductDiscountActiveAggregate discount);
     }
 
     internal class DiscountPriceCalculatorHelper : IDiscountPriceCalculatorHelper
     {
+        public void UpdatePrice(ProductAggregate product, OrderAggregateLine orderLine)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            if (orderLine == null)
+            {
+                throw new ArgumentNullException(nameof(orderLine));
+            }
+
+            if (orderLine.OrderLineDiscount == null) // Return normal price without discount.
+            {
+                orderLine.Price = product.Price * orderLine.Quantity;
+                return;
+            }
+
+            orderLine.OrderLineDiscount.MoneySaved = CalculateMoneySaved(product, orderLine.OrderLineDiscount); // Calculate the discount & update the price.
+            orderLine.Price = CalculatePrice(product, orderLine.OrderLineDiscount) * orderLine.Quantity;
+        }
+
         public double CalculatePrice(ProductAggregate product, DiscountAggregate discount)
         {
             if (product == null)
@@ -53,7 +78,56 @@ namespace Cook4Me.Api.Core.Helpers
             return result;
         }
 
+        public double CalculatePrice(ProductAggregate product, OrderAggregateLineDiscount discount)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            if (discount == null)
+            {
+                throw new ArgumentNullException(nameof(discount));
+            }
+
+            double result = product.Price;
+            switch (discount.PromotionType)
+            {
+                case DiscountAggregatePromotions.FixedAmount:
+                    result -= discount.Value;
+                    break;
+                case DiscountAggregatePromotions.Percentage:
+                    result = result - ((result * discount.Value) / 100);
+                    break;
+            }
+
+            return result;
+        }
+
         public double CalculateMoneySaved(ProductAggregate product, OrderAggregateLineDiscount discount)
+        {
+            if (product == null)
+            {
+                throw new ArgumentNullException(nameof(product));
+            }
+
+            if (discount == null)
+            {
+                throw new ArgumentNullException(nameof(discount));
+            }
+
+            switch (discount.PromotionType)
+            {
+                case DiscountAggregatePromotions.FixedAmount:
+                    return discount.Value;
+                case DiscountAggregatePromotions.Percentage:
+                    return ((product.Price * discount.Value) / 100);
+            }
+
+            return 0;
+        }
+
+        public double CalculateMoneySaved(ProductAggregate product, PublicProductDiscountActiveAggregate discount)
         {
             if (product == null)
             {

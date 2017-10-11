@@ -305,13 +305,18 @@ class TransportMethods extends Component {
         estimatedPrice: r.total_price,
         isNextBtnEnabled: true
       });
-    }).catch(function() {
+    }).catch(function(e) {
+      var errorMsg = t('retrieveRatingError');
+      if (e.responseJSON && e.responseJSON.error_description) {
+        errorMsg = e.responseJSON.error_description;
+      }
+
       self.setState({
         isUpsLoading: false,
         estimatedPrice: 0
       });
       ApplicationStore.sendMessage({
-          message: t('retrieveRatingError'),
+          message: errorMsg,
           level: 'error',
           position: 'tr'
       });
@@ -332,14 +337,19 @@ class TransportMethods extends Component {
         dhlRatings: r['ratings'],
         dhlRating: null
       });
-    }).catch(function() {
+    }).catch(function(e) {
+      var errorMsg = t('retrieveRatingError');
+      if (e.responseJSON && e.responseJSON.error_description) {
+        errorMsg = e.responseJSON.error_description;
+      }
+      
       self.setState({
         isDhlRatingsLoading: false,
         dhlRatings: [],
         dhlRating: null
       });
       ApplicationStore.sendMessage({
-          message: t('retrieveRatingError'),
+          message: errorMsg,
           level: 'error',
           position: 'tr'
       });
@@ -372,8 +382,13 @@ class TransportMethods extends Component {
         upsServices: services
       });
     }).catch(function(e) {
+      var errorMsg = t('retrieveUpsServicesError');
+      if (e.responseJSON && e.responseJSON.error_description) {
+        errorMsg = e.responseJSON.error_description;
+      }
+      
       ApplicationStore.sendMessage({
-          message: t('retrieveUpsServicesError'),
+          message: errorMsg,
           level: 'error',
           position: 'tr'
       });

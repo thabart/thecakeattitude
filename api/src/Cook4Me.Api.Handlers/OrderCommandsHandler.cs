@@ -36,14 +36,16 @@ namespace Cook4Me.Api.Handlers
         private readonly IProductRepository _productRepository;
         private readonly IEventPublisher _eventPublisher;
         private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
+        private readonly IDiscountPriceCalculatorHelper _discountPriceCalculatorHelper;
 
         public OrderCommandsHandler(IOrderRepository orderRepository, IProductRepository productRepository, 
-            IEventPublisher eventPublisher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper)
+            IEventPublisher eventPublisher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _eventPublisher = eventPublisher;
             _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
+            _discountPriceCalculatorHelper = discountPriceCalculatorHelper;
         }
 
         public async Task Handle(UpdateOrderCommand message)
@@ -211,6 +213,13 @@ namespace Cook4Me.Api.Handlers
                 return;
             }
 
+
+            var bestDiscountId = string.Empty; // Fetch the best discount.
+            if (product.ActiveDiscounts != null && product.ActiveDiscounts.Any())
+            {
+                bestDiscountId = product.ActiveDiscounts.First(ad => ad.MoneySaved == product.ActiveDiscounts.Max(d => _discountPriceCalculatorHelper.CalculateMoneySaved(product, d))).Id;
+            }
+
             if (orders.Content.Count() == 1) // Update existing order.
             {
                 var order = orders.Content.First();
@@ -221,7 +230,6 @@ namespace Cook4Me.Api.Handlers
                     orderLine = new OrderAggregateLine
                     {
                         Id = message.Id,
-                        Price = product.Price * message.Quantity,
                         ProductId = message.ProductId,
                         Quantity = message.Quantity
                     };
@@ -230,11 +238,10 @@ namespace Cook4Me.Api.Handlers
                 else
                 {
                     orderLine.Quantity += message.Quantity;
-                    orderLine.Price = orderLine.Quantity * product.Price;
                 }
 
                 order.OrderLines = orderLines;
-                order.TotalPrice = orderLines.Sum(line => line.Price);
+                await _orderPriceCalculatorHelper.Update(order);
                 await _orderRepository.Update(order);
                 id = order.Id;
             }
@@ -248,19 +255,22 @@ namespace Cook4Me.Api.Handlers
                     Subject = message.Subject,
                     Status = OrderAggregateStatus.Created,
                     UpdateDateTime = DateTime.UtcNow,
-                    TotalPrice = product.Price * message.Quantity,
                     OrderLines = new[]
                     {
-                    new OrderAggregateLine
-                    {
-                        Id = message.Id,
-                        Price = product.Price * message.Quantity,
-                        ProductId = product.Id,
-                        Quantity = message.Quantity
+                        new OrderAggregateLine
+                        {
+                            Id = message.Id,
+                            ProductId = product.Id,
+                            Quantity = message.Quantity,
+                            OrderLineDiscount = string.IsNullOrWhiteSpace(bestDiscountId) ? null : new OrderAggregateLineDiscount
+                            {
+                                Id = bestDiscountId
+                            }
+                        }
                     }
-                }
                 };
 
+                await _orderPriceCalculatorHelper.Update(newOrder);
                 await _orderRepository.Insert(newOrder);
                 id = newOrder.Id;
             }

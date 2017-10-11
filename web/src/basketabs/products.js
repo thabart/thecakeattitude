@@ -70,6 +70,15 @@ class Products extends Component {
       return;
     }
 
+    if (order.lines && order.lines.length > 0) { // Set the discount codes.
+        order.lines.forEach(function(orderLine) {          
+            var orderDiscount = orderLine['discount'];  
+            if (orderDiscount) {
+                orderLine.discount_code = orderDiscount.code;              
+            }
+        });
+    }
+
     order = $.extend(true, {}, order);
     self._order = $.extend(true, {}, order);
     self.setState({
@@ -119,7 +128,14 @@ class Products extends Component {
       return;
     }
 
-    orderLine.quantity = value;
+    var orderDiscount = orderLine['discount']; // Update the price.
+    if (orderDiscount) {
+        orderLine.price = (product.price - orderDiscount.money_saved) * value;
+    } else {
+      orderLine.price = product.price * value;
+    }
+
+    orderLine.quantity = value; // Update quantity.
     var order = this.state.order;
     order.total_price = this.getTotalPrice(order, this.state.products);
     this.setState({
@@ -129,31 +145,12 @@ class Products extends Component {
   }
 
   getTotalPrice(order, products) { // Calculate the total price & set the discount code.
-    if (order.lines && order.lines.length > 0) { // Set the best valid public discount by default.
+    if (order.lines && order.lines.length > 0) {
       var totalPrice = 0;
       order.lines.forEach(function(orderLine) {
         var orderDiscount = orderLine['discount'];
         var product = products.filter(function(p) { return p.id === orderLine.product_id })[0];
         totalPrice += product.price * orderLine.quantity;
-        if (!orderDiscount) {
-          var productDiscounts = product['discounts'];
-          if (productDiscounts && productDiscounts.length > 0) {
-            var bestDiscount = null;
-            productDiscounts.forEach(function(discount) {
-              if (!bestDiscount || bestDiscount === null || bestDiscount.money_saved < discount.money_saved) {
-                bestDiscount = discount;
-              }
-            });
-
-            if (bestDiscount && bestDiscount !== null) {
-              orderLine.discount_code = bestDiscount.code;
-              orderDiscount = bestDiscount;
-            }
-          }
-        } else {
-          orderLine.discount_code = orderDiscount.code;
-        }
-
         if (orderDiscount) {
           totalPrice -= orderDiscount.money_saved * orderLine.quantity;
         }
@@ -253,18 +250,7 @@ class Products extends Component {
             productImage = productImage[0];
         }
 
-        var discounts = product['discounts'];
-        var bestDiscount = orderLine.discount;
-        if (!bestDiscount) {
-          if (discounts && discounts.length > 0) {
-            discounts.forEach(function(discount) {
-              if (!bestDiscount || bestDiscount === null || bestDiscount.money_saved < discount.money_saved) {
-                  bestDiscount = discount;
-              }
-            });
-          }
-        }
-
+        var discount = orderLine['discount'];
         products.push((<li className="list-group-item">
           <div className="col-md-2"><img src={productImage} width="40" /></div>
           <div className="col-md-3">
@@ -276,15 +262,15 @@ class Products extends Component {
             </p>
           </div>
           <div className="col-md-2">
-            {!bestDiscount || bestDiscount === null ? (<h4>€ {orderLine.price}</h4>) : (
+            {!discount || discount === null ? (<h4>€ {orderLine.price}</h4>) : (
               <div>
                   <h5 className="inline">
                       <Badge color="success">
                         <strike style={{color: "white"}}>€ {product.price}</strike>
-                        <i style={{color: "white"}} className="ml-1">- € {bestDiscount.money_saved}</i>
+                        <i style={{color: "white"}} className="ml-1">- € {discount.money_saved}</i>
                       </Badge>
                   </h5>
-                  <h5 className="inline ml-1">€ {(product.price - bestDiscount.money_saved)}</h5>
+                  <h5 className="inline ml-1">€ {orderLine.price}</h5>
               </div>
             )}
           </div>

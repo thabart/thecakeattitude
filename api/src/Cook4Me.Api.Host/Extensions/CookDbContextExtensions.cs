@@ -24,6 +24,8 @@ namespace Cook4Me.Api.Host.Extensions
 {
     internal static class CookDbContextExtensions
     {
+        private static string _firstDiscount = Guid.NewGuid().ToString();
+        private static string _secondDiscount = Guid.NewGuid().ToString();
         private static string _shoesCategoryId = "a20ab67b-f046-40c5-b5cd-566b3fca2749"; //Guid.NewGuid().ToString();
         private static string _bakeryCategoryId = Guid.NewGuid().ToString();
         private static string _firstShopId = Guid.NewGuid().ToString();
@@ -117,7 +119,8 @@ namespace Cook4Me.Api.Host.Extensions
                                 Id = Guid.NewGuid().ToString(),
                                 Price = 1000,
                                 ProductId = _jeanProductId,
-                                Quantity = 2
+                                Quantity = 2,
+                                DiscountId = _firstDiscount
                             }
                         }
                     },
@@ -1140,7 +1143,7 @@ namespace Cook4Me.Api.Host.Extensions
             {
                 new Discount // Minus 50 euros.
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = _firstDiscount,
                     Code = Guid.NewGuid().ToString(),
                     Counter = 10,
                     CreateDateTime =  DateTime.UtcNow,
@@ -1163,7 +1166,7 @@ namespace Cook4Me.Api.Host.Extensions
                 },
                 new Discount // Minus 10%
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id =_secondDiscount,
                     Code = Guid.NewGuid().ToString(),
                     CreateDateTime =  DateTime.UtcNow,
                     Products = new []

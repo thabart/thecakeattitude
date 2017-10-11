@@ -18,6 +18,7 @@ using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,15 +27,18 @@ namespace Cook4Me.Api.Core.Helpers
     public interface IOrderPriceCalculatorHelper
     {
         Task Update(OrderAggregate order);
+        void Update(OrderAggregate order, IEnumerable<ProductAggregate> products);
     }
 
     internal class OrderPriceCalculatorHelper : IOrderPriceCalculatorHelper
     {
         private readonly IProductRepository _productRepository;
+        private readonly IDiscountPriceCalculatorHelper _discountPriceCalculatorHelper;
 
-        public OrderPriceCalculatorHelper(IProductRepository productRepository)
+        public OrderPriceCalculatorHelper(IProductRepository productRepository, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper)
         {
             _productRepository = productRepository;
+            _discountPriceCalculatorHelper = discountPriceCalculatorHelper;
         }
 
         public async Task Update(OrderAggregate order)
@@ -50,17 +54,31 @@ namespace Cook4Me.Api.Core.Helpers
                 return;
             }
 
-            var orderLines = order.OrderLines.ToList();
-            var productIds = orderLines.Select(o => o.ProductId);
+            var productIds = order.OrderLines.Select(o => o.ProductId);
             var products = await _productRepository.Search(new SearchProductsParameter
             {
                 ProductIds = productIds
             });
+            Update(order, products.Content);
+        }
 
-            foreach(var orderLine in orderLines)
+        public void Update(OrderAggregate order, IEnumerable<ProductAggregate> products)
+        {
+            if (order == null)
             {
-                var product = products.Content.FirstOrDefault(c => c.Id == orderLine.ProductId);
-                orderLine.Price = product.Price * orderLine.Quantity;
+                throw new ArgumentNullException(nameof(order));
+            }
+
+            if (products == null)
+            {
+                throw new ArgumentNullException(nameof(products));
+            }
+
+            var orderLines = order.OrderLines.ToList();
+            foreach (var orderLine in orderLines)
+            {
+                var product = products.FirstOrDefault(c => c.Id == orderLine.ProductId);
+                _discountPriceCalculatorHelper.UpdatePrice(product, orderLine);
             }
 
             order.OrderLines = orderLines;
