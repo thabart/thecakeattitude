@@ -3,7 +3,7 @@ import { translate } from 'react-i18next';
 import { BasketStore } from '../stores/index';
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { ProductsService } from '../services/index';
-import { Button } from 'reactstrap';
+import { Button, UncontrolledTooltip, Badge } from 'reactstrap';
 import { ParcelSize } from '../components/index';
 import { NavLink } from "react-router-dom";
 import Constants from '../../Constants';
@@ -132,15 +132,34 @@ class Summary extends Component {
             productImage = productImage[0];
         }
 
+        var discount = orderLine['discount'];
         products.push((<li className="list-group-item">
           <div className="col-md-2"><img src={productImage} width="40" /></div>
           <div className="col-md-4">
             <NavLink to={"/products/" + product.id} className="no-decoration red" href="#"><h4>{product.name}</h4></NavLink>
             <p>
-              {t('oneUnitEqualTo').replace('{0}', product.quantity + ' ' + t(product.unit_of_measure))} <br />
-              {t('pricePerUnit').replace('{0}', '€ ' + product.new_price)} <br />
+              {t('oneUnitEqualTo').replace('{0}', product.quantity + ' ' + t(product.unit_of_measure))}
+            </p>
+            {!discount || discount === null && (
+              <p>
+                {t('pricePerUnit').replace('{0}', '€ ' + product.price)}
+              </p>
+            )}
+            {discount && (
+              <p dangerouslySetInnerHTML={{__html: t('pricePerUnitWithDiscount').replace('{0}', '€ ' + product.price).replace('{1}', '€ ' + (product.price - discount.money_saved))}}></p>
+            )}
+            <p>
               {t('availableInStock').replace('{0}', product.available_in_stock)}
             </p>
+            {discount && (
+              <p>{t('discount')} : <h5 className="inline">
+                      <Badge color="success">
+                        { discount.type === 'amount' && (<i style={{color: "white"}} className="ml-1">- € {discount.value}</i>) }     
+                        { discount.type === 'percentage' && (<i style={{color: "white"}} className="ml-1">- % {discount.value}</i>) }                   
+                      </Badge>
+                  </h5>
+              </p>
+            )}
           </div>
           <div className="col-md-3">
             <h4>€ {orderLine.price}</h4>
@@ -189,12 +208,15 @@ class Summary extends Component {
                   </section>
                 ) }
                 { /* Display parcel type */ }
+                { this.state.order.transport_mode === 'packet' && (
                 <div>
                   <h5>
-                    {t('parcelSize')}
+                    {t('parcelSize')} <i className="fa fa-info-circle txt-info" id="parcelSizeTooltip"/>
+                    <UncontrolledTooltip placement="right" target="parcelSizeTooltip" className="red-tooltip-inner">{t('parcelSizeTooltipInformation')}</UncontrolledTooltip>
                   </h5>
                   <ParcelSize isEditable={false} height={Constants.maxPackageSize.height} length={Constants.maxPackageSize.length} width={Constants.maxPackageSize.width} />
                 </div>
+                )}
                 { /* Display parcel shop */ }
                 { this.state.order.transport_mode === 'packet' && this.state.order.package.parcel_shop && (
                   <div>

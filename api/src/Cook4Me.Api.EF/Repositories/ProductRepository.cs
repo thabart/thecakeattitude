@@ -37,6 +37,170 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
+        public async Task<bool> Update(ProductAggregate productAggregate)
+        {
+            if (productAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(productAggregate));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Products.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == productAggregate.Id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+
+                    record.AverageScore = productAggregate.AverageScore;
+                    record.CategoryId = productAggregate.CategoryId;
+                    record.Description = productAggregate.Description;
+                    record.Name = productAggregate.Name;
+                    record.Price = productAggregate.Price;
+                    record.Quantity = productAggregate.Quantity;
+                    record.ShopId = productAggregate.ShopId;
+                    record.TotalScore = productAggregate.TotalScore;
+                    record.UnitOfMeasure = productAggregate.UnitOfMeasure;
+                    record.UpdateDateTime = productAggregate.UpdateDateTime;
+                    record.AvailableInStock = productAggregate.AvailableInStock;
+                    var comments = productAggregate.Comments == null ? new List<ProductComment>() : productAggregate.Comments;
+                    var commentIds = comments.Select(c => c.Id);
+                    // Update the comments
+                    if (record.Comments != null)
+                    {
+                        var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
+                        var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
+                        var existingCommentIds = record.Comments.Select(c => c.Id);
+                        var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
+                        foreach (var commentToUpdate in commentsToUpdate)
+                        {
+                            var comment = comments.First(c => c.Id == commentToUpdate.Id);
+                            commentToUpdate.Score = comment.Score;
+                            commentToUpdate.Subject = comment.Subject;
+                            commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
+                            commentToUpdate.Content = comment.Content;
+                        }
+
+                        foreach (var commentToRemove in commentsToRemove)
+                        {
+                            _context.Comments.Remove(commentToRemove);
+                        }
+
+                        foreach (var commentToAdd in commentsToAdd)
+                        {
+                            var rec = new Models.Comment
+                            {
+                                Id = commentToAdd.Id,
+                                Content = commentToAdd.Content,
+                                Score = commentToAdd.Score,
+                                CreateDateTime = commentToAdd.CreateDateTime,
+                                ProductId = productAggregate.Id,
+                                UpdateDateTime = commentToAdd.UpdateDateTime,
+                                Subject = commentToAdd.Subject
+                            };
+                            _context.Comments.Add(rec);
+                        }
+                    }
+
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+
+        public async Task<bool> Insert(ProductAggregate productAggregate)
+        {
+            if (productAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(productAggregate));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = productAggregate.ToModel();
+                    var tags = new List<Models.ProductTag>();
+                    if (productAggregate.Tags != null && productAggregate.Tags.Any()) // Add tags
+                    {
+                        var tagNames = productAggregate.Tags;
+                        var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                        foreach (var connectedTag in connectedTags)
+                        {
+                            tags.Add(new Models.ProductTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = connectedTag.Name,
+                                ProductId = productAggregate.Id
+                            });
+                        }
+
+                        var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                        foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
+                        {
+                            var newTag = new Models.Tag
+                            {
+                                Name = notExistingTagName,
+                                Description = notExistingTagName
+                            };
+                            _context.Tags.Add(newTag);
+                            tags.Add(new Models.ProductTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = notExistingTagName,
+                                ProductId = productAggregate.Id,
+                                Tag = newTag
+                            });
+                        }
+                    }
+
+                    if (productAggregate.Filters != null && productAggregate.Filters.Any()) // Add filters
+                    {
+                        var ids = productAggregate.Filters.Select(f => f.FilterValueId);
+                        var filters = await _context.FilterValues.Where(f => ids.Contains(f.Id)).Select(f =>
+                            new Models.ProductFilter
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                FilterValueId = f.Id,
+                                ProductId = productAggregate.Id
+                            }).ToListAsync().ConfigureAwait(false);
+                        record.Filters = filters;
+                    }
+
+                    if (productAggregate.PartialImagesUrl != null && productAggregate.PartialImagesUrl.Any()) // Add images
+                    {
+                        record.Images = productAggregate.PartialImagesUrl.Select(i =>
+                            new Models.ProductImage
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                PartialPath = i
+                            }
+                        ).ToList();
+                    }
+
+                    record.Tags = tags;
+                    _context.Products.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+
         public async Task<SearchProductsResult> Search(SearchProductsParameter parameter)
         {
             if (parameter == null)
@@ -217,164 +381,6 @@ namespace Cook4Me.Api.EF.Repositories
 
             result.Content = await comments.Select(c => c.ToProductCommentAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
-        }
-
-        public async Task<bool> Update(ProductAggregate productAggregate)
-        {
-            if (productAggregate == null)
-            {
-                throw new ArgumentNullException(nameof(productAggregate));
-            }
-            
-            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
-            {
-                try
-                {
-                    var record = await _context.Products.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == productAggregate.Id).ConfigureAwait(false);
-                    if (record == null)
-                    {
-                        return false;
-                    }
-
-                    record.AverageScore = productAggregate.AverageScore;
-                    record.CategoryId = productAggregate.CategoryId;
-                    record.Description = productAggregate.Description;
-                    record.Name = productAggregate.Name;
-                    record.Price = productAggregate.Price;
-                    record.Quantity = productAggregate.Quantity;
-                    record.ShopId = productAggregate.ShopId;
-                    record.TotalScore = productAggregate.TotalScore;
-                    record.UnitOfMeasure = productAggregate.UnitOfMeasure;
-                    record.UpdateDateTime = productAggregate.UpdateDateTime;
-                    record.AvailableInStock = productAggregate.AvailableInStock;
-                    var comments = productAggregate.Comments == null ? new List<ProductComment>() : productAggregate.Comments;
-                    var commentIds = comments.Select(c => c.Id);
-                    // Update the comments
-                    if (record.Comments != null)
-                    {
-                        var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
-                        var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
-                        var existingCommentIds = record.Comments.Select(c => c.Id);
-                        var commentsToAdd = comments.Where(c => !existingCommentIds.Contains(c.Id));
-                        foreach (var commentToUpdate in commentsToUpdate)
-                        {
-                            var comment = comments.First(c => c.Id == commentToUpdate.Id);
-                            commentToUpdate.Score = comment.Score;
-                            commentToUpdate.Subject = comment.Subject;
-                            commentToUpdate.UpdateDateTime = comment.UpdateDateTime;
-                            commentToUpdate.Content = comment.Content;
-                        }
-
-                        foreach (var commentToRemove in commentsToRemove)
-                        {
-                            _context.Comments.Remove(commentToRemove);
-                        }
-
-                        foreach (var commentToAdd in commentsToAdd)
-                        {
-                            var rec = new Models.Comment
-                            {
-                                Id = commentToAdd.Id,
-                                Content = commentToAdd.Content,
-                                Score = commentToAdd.Score,
-                                CreateDateTime = commentToAdd.CreateDateTime,
-                                ProductId = productAggregate.Id,
-                                UpdateDateTime = commentToAdd.UpdateDateTime,
-                                Subject = commentToAdd.Subject
-                            };
-                            _context.Comments.Add(rec);
-                        }
-                    }
-
-                    await _context.SaveChangesAsync().ConfigureAwait(false);
-                    transaction.Commit();
-                    return true;
-                }
-                catch
-                {
-                    transaction.Rollback();
-                    return false;
-                }
-            }
-        }
-
-        public async Task<bool> Insert(ProductAggregate productAggregate)
-        {
-            if (productAggregate == null)
-            {
-                throw new ArgumentNullException(nameof(productAggregate));
-            }
-
-            try
-            {
-                var record = productAggregate.ToModel();
-                var tags = new List<Models.ProductTag>();
-                if (productAggregate.Tags != null && productAggregate.Tags.Any()) // Add tags
-                {
-                    var tagNames = productAggregate.Tags;
-                    var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
-                    foreach (var connectedTag in connectedTags)
-                    {
-                        tags.Add(new Models.ProductTag
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            TagName = connectedTag.Name,
-                            ProductId = productAggregate.Id
-                        });
-                    }
-
-                    var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
-                    foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
-                    {
-                        var newTag = new Models.Tag
-                        {
-                            Name = notExistingTagName,
-                            Description = notExistingTagName
-                        };
-                        _context.Tags.Add(newTag);
-                        tags.Add(new Models.ProductTag
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            TagName = notExistingTagName,
-                            ProductId = productAggregate.Id,
-                            Tag = newTag
-                        });
-                    }
-                }
-
-                if (productAggregate.Filters != null && productAggregate.Filters.Any()) // Add filters
-                {
-                    var ids = productAggregate.Filters.Select(f => f.FilterValueId);
-                    var filters = await _context.FilterValues.Where(f => ids.Contains(f.Id)).Select(f => 
-                        new Models.ProductFilter
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            FilterValueId = f.Id,
-                            ProductId = productAggregate.Id
-                        }).ToListAsync().ConfigureAwait(false);
-                    record.Filters = filters;
-                }
-
-                if (productAggregate.PartialImagesUrl != null && productAggregate.PartialImagesUrl.Any()) // Add images
-                {
-                    record.Images = productAggregate.PartialImagesUrl.Select(i =>
-                        new Models.ProductImage
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            PartialPath = i
-                        }
-                    ).ToList();
-                }
-
-                record.Tags = tags;
-                _context.Products.Add(record);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         private static IQueryable<Models.Product> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Product, TKey>> keySelector, IQueryable<Models.Product> products)

@@ -24,6 +24,11 @@ namespace Cook4Me.Api.EF
     {
         public CookDbContext(DbContextOptions dbContextOptions):base(dbContextOptions)
         {
+            try
+            {
+                Database.ExecuteSqlCommand("SET TRANSACTION ISOLATION LEVEL READ COMITTED;");
+            }
+            catch { }
         }
 
         public virtual DbSet<Shop> Shops { get; set; }

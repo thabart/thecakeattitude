@@ -165,6 +165,7 @@ namespace Cook4Me.Api.EF.Repositories
                     var record = await _context.Notifications.FirstOrDefaultAsync(n => n.Id == notification.Id).ConfigureAwait(false);
                     if (record == null)
                     {
+                        transaction.Rollback();
                         return false;
                     }
 

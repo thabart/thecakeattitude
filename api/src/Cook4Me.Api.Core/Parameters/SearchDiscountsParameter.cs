@@ -32,5 +32,6 @@ namespace Cook4Me.Api.Core.Parameters
         public int Count { get; set; }
         public bool IsPagingEnabled { get; set; }
         public IEnumerable<string> DiscountCodes { get; set; }
+        public IEnumerable<string> DiscountIds { get; set; }
     }
 }

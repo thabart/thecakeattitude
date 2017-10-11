@@ -43,21 +43,27 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(id));
             }
 
-            var record = await _context.ClientServices.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
-            if (record == null)
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                return false;
-            }
+                try
+                {
+                    var record = await _context.ClientServices.FirstOrDefaultAsync(a => a.Id == id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
 
-            try
-            {
-                _context.ClientServices.Remove(record);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
+                    _context.ClientServices.Remove(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
             }
         }
 
@@ -68,16 +74,21 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(aggregate));
             }
 
-            var record = aggregate.ToModel();
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                _context.ClientServices.Add(record);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
+                try
+                {
+                    var record = aggregate.ToModel();
+                    _context.ClientServices.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
             }
         }
 
@@ -159,23 +170,36 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(aggregate));
             }
 
-
-            var record = await _context.ClientServices.FirstOrDefaultAsync(a => a.Id == aggregate.Id);
-            if (record == null)
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                return false;
-            }
+                try
+                {
+                    var record = await _context.ClientServices.FirstOrDefaultAsync(a => a.Id == aggregate.Id);
+                    if (record == null)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
 
-            record.CategoryId = aggregate.CategoryId;
-            record.Description = aggregate.Description;
-            record.Latitude = aggregate.Latitude;
-            record.Longitude = aggregate.Longitude;
-            record.Name = aggregate.Name;
-            record.Description = aggregate.Description;
-            record.Price = aggregate.Price;
-            record.Subject = aggregate.Subject;
-            record.UpdateDateTime = aggregate.UpdateDateTime;
-            return false;
+                    record.CategoryId = aggregate.CategoryId;
+                    record.Description = aggregate.Description;
+                    record.Latitude = aggregate.Latitude;
+                    record.Longitude = aggregate.Longitude;
+                    record.Name = aggregate.Name;
+                    record.Description = aggregate.Description;
+                    record.Price = aggregate.Price;
+                    record.Subject = aggregate.Subject;
+                    record.UpdateDateTime = aggregate.UpdateDateTime;
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
         private static IQueryable<Models.ClientService> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.ClientService, TKey>> keySelector, IQueryable<Models.ClientService> shops)

@@ -479,5 +479,8 @@
   "code": "Code",
   "noDiscount": "No discount",
   "newPrice": "New price",
-  "discountCode": "Discount code"
+  "discountCode": "Discount code",
+  "parcelSizeTooltipInformation": "Max allowable parcel size",
+  "pricePerUnitWithDiscount": "Price per unit : <strike>{0}</strike> <b>{1}</b>",
+  "discount": "Discount"
 }

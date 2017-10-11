@@ -24,6 +24,7 @@ namespace Cook4Me.Api.EF.Models
         public int Quantity { get; set; }
         public double Price { get; set; }
         public string OrderId { get; set; }
+        public double MoneySavedPerProduct { get; set; }
         public virtual Discount Discount { get; set; }
         public virtual Product Product { get; set; }
         public virtual Order Order { get; set; }

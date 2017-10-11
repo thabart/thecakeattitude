@@ -66,21 +66,27 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(orderAggregate));
             }
 
-            var record = await _context.Orders.FirstOrDefaultAsync(s => s.Id == orderAggregate.Id);
-            if (record == null)
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                return false;
-            }
+                var record = await _context.Orders.FirstOrDefaultAsync(s => s.Id == orderAggregate.Id);
+                if (record == null)
+                {
+                    transaction.Rollback();
+                    return false;
+                }
 
-            try
-            {
-                _context.Orders.Remove(record);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
+                try
+                {
+                    _context.Orders.Remove(record);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
             }
         }
 
@@ -91,16 +97,21 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(orderAggregate));
             }
 
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                var record = orderAggregate.ToModel();
-                _context.Orders.Add(record);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
+                try
+                {
+                    var record = orderAggregate.ToModel();
+                    _context.Orders.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
             }
         }
 
@@ -118,6 +129,7 @@ namespace Cook4Me.Api.EF.Repositories
                     var record = await _context.Orders.Include(s => s.OrderLines).FirstOrDefaultAsync(s => s.Id == orderAggregate.Id).ConfigureAwait(false);
                     if (record == null)
                     {
+                        transaction.Rollback();
                         return false;
                     }
 
@@ -202,6 +214,7 @@ namespace Cook4Me.Api.EF.Repositories
                         if (orderLine.OrderLineDiscount != null)
                         {
                             orderLineToUpdate.DiscountId = orderLine.OrderLineDiscount.Id;
+                            orderLineToUpdate.MoneySavedPerProduct = orderLine.OrderLineDiscount.MoneySavedPerProduct;
                         }
                     }
 

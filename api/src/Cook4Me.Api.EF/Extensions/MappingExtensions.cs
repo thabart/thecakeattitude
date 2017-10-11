@@ -303,7 +303,8 @@ namespace Cook4Me.Api.EF.Extensions
                     Code = orderLine.Discount.Code,
                     PromotionType = (DiscountAggregatePromotions)orderLine.Discount.PromotionType,
                     Validity = (DiscountAggregateValidities)orderLine.Discount.Validity,
-                    Value = orderLine.Discount.Value
+                    Value = orderLine.Discount.Value,
+                    MoneySavedPerProduct = orderLine.MoneySavedPerProduct
                 };
             }
             return new OrderAggregateLine
@@ -1007,9 +1008,9 @@ namespace Cook4Me.Api.EF.Extensions
                        {
                            Id = d.Discount.Id,
                            Code = d.Discount.Code,
-                           MoneySaved = d.MoneySaved,
                            PromotionType = (DiscountAggregatePromotions)d.Discount.PromotionType,
-                           Value = d.Discount.Value
+                           Value = d.Discount.Value,
+                           MoneySaved = d.MoneySaved
                        });
             }
 

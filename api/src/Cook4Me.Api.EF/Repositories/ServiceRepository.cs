@@ -294,6 +294,7 @@ namespace Cook4Me.Api.EF.Repositories
                     var record = await _context.Services.Include(s => s.Comments).FirstOrDefaultAsync(s => s.Id == serviceAggregate.Id).ConfigureAwait(false);
                     if (record == null)
                     {
+                        transaction.Rollback();
                         return false;
                     }
 
@@ -362,84 +363,89 @@ namespace Cook4Me.Api.EF.Repositories
                 throw new ArgumentNullException(nameof(serviceAggregate));
             }
 
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                var record = serviceAggregate.ToModel();
-                var tags = new List<Models.ServiceTag>();
-                if (serviceAggregate.Tags != null && serviceAggregate.Tags.Any()) // Add tags
+                try
                 {
-                    var tagNames = serviceAggregate.Tags;
-                    var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
-                    foreach (var connectedTag in connectedTags)
+                    var record = serviceAggregate.ToModel();
+                    var tags = new List<Models.ServiceTag>();
+                    if (serviceAggregate.Tags != null && serviceAggregate.Tags.Any()) // Add tags
                     {
-                        tags.Add(new Models.ServiceTag
+                        var tagNames = serviceAggregate.Tags;
+                        var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                        foreach (var connectedTag in connectedTags)
                         {
-                            Id = Guid.NewGuid().ToString(),
-                            TagName = connectedTag.Name,
-                            ServiceId = serviceAggregate.Id
-                        });
-                    }
-
-                    var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
-                    foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
-                    {
-                        var newTag = new Models.Tag
-                        {
-                            Name = notExistingTagName,
-                            Description = notExistingTagName
-                        };
-                        _context.Tags.Add(newTag);
-                        tags.Add(new Models.ServiceTag
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            TagName = notExistingTagName,
-                            ServiceId = serviceAggregate.Id,
-                            Tag = newTag
-                        });
-                    }
-                }
-
-                if (serviceAggregate.PartialImagesUrl != null && serviceAggregate.PartialImagesUrl.Any()) // Add images
-                {
-                    record.Images = serviceAggregate.PartialImagesUrl.Select(i =>
-                        new Models.ServiceImage
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            PartialPath = i
+                            tags.Add(new Models.ServiceTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = connectedTag.Name,
+                                ServiceId = serviceAggregate.Id
+                            });
                         }
-                    ).ToList();
-                }
 
-                if (serviceAggregate.Occurrence != null) // Add occurrence.
-                {
-                    var days = new List<Models.ServiceOccurrenceDay>();
-                    if (serviceAggregate.Occurrence.Days != null)
-                    {
-                        days = serviceAggregate.Occurrence.Days.Select(d => new Models.ServiceOccurrenceDay
+                        var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                        foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
                         {
-                            Id = Guid.NewGuid().ToString(),
-                            DayId = ((int)d).ToString()
-                        }).ToList();
+                            var newTag = new Models.Tag
+                            {
+                                Name = notExistingTagName,
+                                Description = notExistingTagName
+                            };
+                            _context.Tags.Add(newTag);
+                            tags.Add(new Models.ServiceTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = notExistingTagName,
+                                ServiceId = serviceAggregate.Id,
+                                Tag = newTag
+                            });
+                        }
                     }
-                    record.Occurrence = new Models.ServiceOccurrence
-                    {
-                        Id = serviceAggregate.Occurrence.Id,
-                        StartDate = serviceAggregate.Occurrence.StartDate,
-                        EndDate = serviceAggregate.Occurrence.EndDate,
-                        StartTime = serviceAggregate.Occurrence.StartTime,
-                        EndTime = serviceAggregate.Occurrence.EndTime,
-                        Days = days
-                    };
-                }
 
-                record.Tags = tags;
-                _context.Services.Add(record);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
+                    if (serviceAggregate.PartialImagesUrl != null && serviceAggregate.PartialImagesUrl.Any()) // Add images
+                    {
+                        record.Images = serviceAggregate.PartialImagesUrl.Select(i =>
+                            new Models.ServiceImage
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                PartialPath = i
+                            }
+                        ).ToList();
+                    }
+
+                    if (serviceAggregate.Occurrence != null) // Add occurrence.
+                    {
+                        var days = new List<Models.ServiceOccurrenceDay>();
+                        if (serviceAggregate.Occurrence.Days != null)
+                        {
+                            days = serviceAggregate.Occurrence.Days.Select(d => new Models.ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = ((int)d).ToString()
+                            }).ToList();
+                        }
+                        record.Occurrence = new Models.ServiceOccurrence
+                        {
+                            Id = serviceAggregate.Occurrence.Id,
+                            StartDate = serviceAggregate.Occurrence.StartDate,
+                            EndDate = serviceAggregate.Occurrence.EndDate,
+                            StartTime = serviceAggregate.Occurrence.StartTime,
+                            EndTime = serviceAggregate.Occurrence.EndTime,
+                            Days = days
+                        };
+                    }
+
+                    record.Tags = tags;
+                    _context.Services.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
             }
         }
 

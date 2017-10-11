@@ -256,23 +256,31 @@ class Products extends Component {
           <div className="col-md-3">
             <NavLink to={"/products/" + product.id} className="no-decoration red" href="#"><h4>{product.name}</h4></NavLink>
             <p>
-              {t('oneUnitEqualTo').replace('{0}', product.quantity + ' ' + t(product.unit_of_measure))} <br />
-              {t('pricePerUnit').replace('{0}', '€ ' + product.price)} <br />
+              {t('oneUnitEqualTo').replace('{0}', product.quantity + ' ' + t(product.unit_of_measure))}
+            </p>
+            {!discount || discount === null && (
+              <p>
+                {t('pricePerUnit').replace('{0}', '€ ' + product.price)}
+              </p>
+            )}
+            {discount && (
+              <p dangerouslySetInnerHTML={{__html: t('pricePerUnitWithDiscount').replace('{0}', '€ ' + product.price).replace('{1}', '€ ' + (product.price - discount.money_saved))}}></p>
+            )}
+            <p>
               {t('availableInStock').replace('{0}', product.available_in_stock)}
             </p>
-          </div>
-          <div className="col-md-2">
-            {!discount || discount === null ? (<h4>€ {orderLine.price}</h4>) : (
-              <div>
-                  <h5 className="inline">
+            {discount && (
+              <p>{t('discount')} : <h5 className="inline">
                       <Badge color="success">
-                        <strike style={{color: "white"}}>€ {product.price}</strike>
-                        <i style={{color: "white"}} className="ml-1">- € {discount.money_saved}</i>
+                        { discount.type === 'amount' && (<i style={{color: "white"}} className="ml-1">- € {discount.value}</i>) }     
+                        { discount.type === 'percentage' && (<i style={{color: "white"}} className="ml-1">- % {discount.value}</i>) }                   
                       </Badge>
                   </h5>
-                  <h5 className="inline ml-1">€ {orderLine.price}</h5>
-              </div>
+              </p>
             )}
+          </div>
+          <div className="col-md-2">
+            <h4>€ {orderLine.price}</h4>
           </div>
           <div className="col-md-2"><input type="number" className="form-control" value={orderLine.quantity} max={product.available_in_stock} min="0" onChange={(e) => self.changeOrderLineQuantity(e, orderLine.id)} /></div>
           <div className="col-md-2"><input type="text" className="form-control" value={orderLine.discount_code} onChange={(e) => self.changeDiscountCode(e, orderLine.id)} /></div>

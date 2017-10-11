@@ -478,5 +478,8 @@
   "code": "Code",
   "noDiscount": "Aucune promotion",
   "newPrice": "Nouveau prix",
-  "discountCode": "Code de la promotion"
+  "discountCode": "Code de la promotion",
+  "parcelSizeTooltipInformation": "Taille maximum autorisée pour le colis",
+  "pricePerUnitWithDiscount": "Prix par unité : <strike>{0}</strike> <b>{1}</b>",
+  "discount": "Promotion"
 }

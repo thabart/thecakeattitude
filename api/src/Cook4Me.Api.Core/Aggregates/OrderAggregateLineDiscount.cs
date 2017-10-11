@@ -23,6 +23,6 @@ namespace Cook4Me.Api.Core.Aggregates
         public DiscountAggregatePromotions PromotionType { get; set; } // FixedAmount & Percentage
         public DiscountAggregateValidities Validity { get; set; } // Timer & counter & both
         public double Value { get; set; }
-        public double MoneySaved { get; set; }
+        public double MoneySavedPerProduct { get; set; }
     }
 }

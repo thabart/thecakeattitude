@@ -39,92 +39,97 @@ namespace Cook4Me.Api.EF.Repositories
 
         public async Task<bool> Add(ShopAggregate shop)
         {
-            try
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
             {
-                var record = shop.ToModel();
-                var tags = new List<Models.ShopTag>();
-                var filters = new List<Models.Filter>();
-                var productCategories = new List<Models.ProductCategory>();
-                if (shop.TagNames != null && shop.TagNames.Any()) // Add tags
+                try
                 {
-                    var tagNames = shop.TagNames;
-                    var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
-                    foreach(var connectedTag in connectedTags)
+                    var record = shop.ToModel();
+                    var tags = new List<Models.ShopTag>();
+                    var filters = new List<Models.Filter>();
+                    var productCategories = new List<Models.ProductCategory>();
+                    if (shop.TagNames != null && shop.TagNames.Any()) // Add tags
                     {
-                        tags.Add(new Models.ShopTag
+                        var tagNames = shop.TagNames;
+                        var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                        foreach (var connectedTag in connectedTags)
                         {
-                            Id = Guid.NewGuid().ToString(),
-                            TagName = connectedTag.Name,
-                            ShopId = shop.Id
-                        });
-                    }
-
-                    var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
-                    foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
-                    {
-                        var newTag = new Models.Tag
-                        {
-                            Name = notExistingTagName,
-                            Description = notExistingTagName
-                        };
-                        _context.Tags.Add(newTag);
-                        tags.Add(new Models.ShopTag
-                        {
-                            Id = Guid.NewGuid().ToString(),
-                            TagName = notExistingTagName,
-                            ShopId = shop.Id,
-                            Tag = newTag
-                        });
-                    }
-                }
-
-                if (shop.ShopFilters != null)
-                {
-                    foreach(var shopFilter in shop.ShopFilters)
-                    {
-                        filters.Add(new Models.Filter
-                        {
-                            Id = shopFilter.Id,
-                            Name = shopFilter.Name,
-                            ShopId = shop.Id,
-                            Values = shopFilter.Values == null ? new List<Models.FilterValue>() : shopFilter.Values.Select(v => new Models.FilterValue
+                            tags.Add(new Models.ShopTag
                             {
-                                Id = v.Id,
-                                Content = v.Content,
-                                CreateDateTime = v.CreateDateTime,
-                                UpdateDateTime = v.UpdateDateTime,
-                                FilterId = shopFilter.Id
-                            }).ToList()
-                        });
-                    }
-                }
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = connectedTag.Name,
+                                ShopId = shop.Id
+                            });
+                        }
 
-                if (shop.ProductCategories != null)
-                {
-                    foreach(var productCategory in shop.ProductCategories)
-                    {
-                        productCategories.Add(new Models.ProductCategory
+                        var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                        foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
                         {
-                            Id = productCategory.Id,
-                            Description = productCategory.Description,
-                            Name = productCategory.Name,
-                            ShopId = shop.Id,
-                            CreateDateTime = productCategory.CreateDateTime,
-                            UpdateDateTime = productCategory.UpdateDateTime
-                        });
+                            var newTag = new Models.Tag
+                            {
+                                Name = notExistingTagName,
+                                Description = notExistingTagName
+                            };
+                            _context.Tags.Add(newTag);
+                            tags.Add(new Models.ShopTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = notExistingTagName,
+                                ShopId = shop.Id,
+                                Tag = newTag
+                            });
+                        }
                     }
-                }
 
-                record.ProductCategories = productCategories;
-                record.Filters = filters;
-                record.ShopTags = tags;
-                _context.Shops.Add(record);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
+                    if (shop.ShopFilters != null)
+                    {
+                        foreach (var shopFilter in shop.ShopFilters)
+                        {
+                            filters.Add(new Models.Filter
+                            {
+                                Id = shopFilter.Id,
+                                Name = shopFilter.Name,
+                                ShopId = shop.Id,
+                                Values = shopFilter.Values == null ? new List<Models.FilterValue>() : shopFilter.Values.Select(v => new Models.FilterValue
+                                {
+                                    Id = v.Id,
+                                    Content = v.Content,
+                                    CreateDateTime = v.CreateDateTime,
+                                    UpdateDateTime = v.UpdateDateTime,
+                                    FilterId = shopFilter.Id
+                                }).ToList()
+                            });
+                        }
+                    }
+
+                    if (shop.ProductCategories != null)
+                    {
+                        foreach (var productCategory in shop.ProductCategories)
+                        {
+                            productCategories.Add(new Models.ProductCategory
+                            {
+                                Id = productCategory.Id,
+                                Description = productCategory.Description,
+                                Name = productCategory.Name,
+                                ShopId = shop.Id,
+                                CreateDateTime = productCategory.CreateDateTime,
+                                UpdateDateTime = productCategory.UpdateDateTime
+                            });
+                        }
+                    }
+
+                    record.ProductCategories = productCategories;
+                    record.Filters = filters;
+                    record.ShopTags = tags;
+                    _context.Shops.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
             }
         }
 
@@ -187,6 +192,7 @@ namespace Cook4Me.Api.EF.Repositories
                         .FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
                     if (record == null)
                     {
+                        transaction.Rollback();
                         return false;
                     }
 

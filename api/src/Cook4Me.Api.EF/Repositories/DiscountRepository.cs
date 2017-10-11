@@ -22,6 +22,7 @@ using Cook4Me.Api.EF.Extensions;
 using Cook4Me.Api.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -34,6 +35,83 @@ namespace Cook4Me.Api.EF.Repositories
         public DiscountRepository(CookDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<bool> Update(DiscountAggregate discountAggregate)
+        {
+            if (discountAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(discountAggregate));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var discount = await _context.Discounts.FirstOrDefaultAsync(d => d.Id == discountAggregate.Id);
+                    if (discount == null)
+                    {
+                        transaction.Rollback();
+                        return false;
+                    }
+
+                    discount.Counter = discountAggregate.Counter;
+                    discount.EndDateTime = discountAggregate.EndDateTime;
+                    discount.IsActive = discountAggregate.IsActive;
+                    discount.IsPrivate = discountAggregate.IsPrivate;
+                    discount.PromotionType = (int)discountAggregate.PromotionType;
+                    discount.StartDateTime = discountAggregate.StartDateTime;
+                    discount.Subject = discountAggregate.Subject;
+                    discount.UpdateDateTime = discountAggregate.UpdateDateTime;
+                    discount.Validity = (int)discountAggregate.Validity;
+                    discount.Value = discountAggregate.Value;
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+
+        public async Task<bool> Insert(DiscountAggregate discountAggregate)
+        {
+            if (discountAggregate == null)
+            {
+                throw new ArgumentNullException(nameof(discountAggregate));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = discountAggregate.ToModel();
+                    if (discountAggregate.Products != null)
+                    {
+                        var productDiscounts = discountAggregate.Products.Select(p => new ProductDiscount
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            DiscountId = record.Id,
+                            ProductId = p.ProductId,
+                            MoneySaved = p.MoneySaved
+                        }).ToList();
+                        record.Products = productDiscounts;
+                    }
+
+                    _context.Discounts.Add(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
         public async Task<DiscountAggregate> Get(string id)
@@ -54,38 +132,6 @@ namespace Cook4Me.Api.EF.Repositories
             }
         }
 
-        public async Task<bool> Insert(DiscountAggregate discountAggregate)
-        {
-            if (discountAggregate == null)
-            {
-                throw new ArgumentNullException(nameof(discountAggregate));
-            }
-            
-            try
-            {
-                var record = discountAggregate.ToModel();
-                if (discountAggregate.Products != null)
-                {
-                    var productDiscounts = discountAggregate.Products.Select(p => new ProductDiscount
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        DiscountId = record.Id,
-                        ProductId = p.ProductId,
-                        MoneySaved = p.MoneySaved
-                    }).ToList();
-                    record.Products = productDiscounts;
-                }
-
-                _context.Discounts.Add(record);
-                await _context.SaveChangesAsync().ConfigureAwait(false);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public async Task<SearchDiscountsResult> Search(SearchDiscountsParameter parameter)
         {
             if (parameter == null)
@@ -102,6 +148,11 @@ namespace Cook4Me.Api.EF.Repositories
             if (parameter.DiscountCodes != null)
             {
                 discounts = discounts.Where(d => parameter.DiscountCodes.Contains(d.Code));
+            }
+
+            if (parameter.DiscountIds != null)
+            {
+                discounts = discounts.Where(d => parameter.DiscountIds.Contains(d.Id));
             }
 
             var result = new SearchDiscountsResult

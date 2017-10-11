@@ -14,8 +14,6 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
-
 namespace Cook4Me.Api.EF.Models
 {
     public class ProductDiscount

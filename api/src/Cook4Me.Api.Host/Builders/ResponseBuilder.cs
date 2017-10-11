@@ -748,7 +748,7 @@ namespace Cook4Me.Api.Host.Builders
                 discount.Add(Constants.DtoNames.DiscountNames.Id, orderLine.OrderLineDiscount.Id);
                 discount.Add(Constants.DtoNames.DiscountNames.Code, orderLine.OrderLineDiscount.Code);
                 discount.Add(Constants.DtoNames.DiscountNames.Value, orderLine.OrderLineDiscount.Value);
-                discount.Add(Constants.DtoNames.DiscountNames.MoneySaved, orderLine.OrderLineDiscount.MoneySaved);
+                discount.Add(Constants.DtoNames.DiscountNames.MoneySaved, orderLine.OrderLineDiscount.MoneySavedPerProduct);
                 var kvpValidity = CommonBuilder.MappingDiscountValidities.FirstOrDefault(d => d.Key == orderLine.OrderLineDiscount.Validity);
                 if (!kvpValidity.Equals(default(KeyValuePair<DiscountAggregateValidities, string>)))
                 {

@@ -23,6 +23,7 @@ namespace Cook4Me.Api.Core.Repositories
 {
     public interface IDiscountRepository
     {
+        Task<bool> Update(DiscountAggregate discountAggregate);
         Task<bool> Insert(DiscountAggregate discountAggregate);
         Task<DiscountAggregate> Get(string id);
         Task<SearchDiscountsResult> Search(SearchDiscountsParameter parameter);

@@ -48,7 +48,7 @@ namespace Cook4Me.Api.Core.Helpers
                 return;
             }
 
-            orderLine.OrderLineDiscount.MoneySaved = CalculateMoneySaved(product, orderLine.OrderLineDiscount); // Calculate the discount & update the price.
+            orderLine.OrderLineDiscount.MoneySavedPerProduct = CalculateMoneySaved(product, orderLine.OrderLineDiscount); // Calculate the discount & update the price.
             orderLine.Price = CalculatePrice(product, orderLine.OrderLineDiscount) * orderLine.Quantity;
         }
 

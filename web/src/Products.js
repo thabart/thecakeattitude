@@ -157,6 +157,8 @@ class Products extends Component {
             });
         }
 
+        console.log(bestDiscount);
+
         if (action === "comments") {
             content = (<ProductComment product={self.state.product} />);
         } else if (action === 'discounts') {

@@ -37,15 +37,18 @@ namespace Cook4Me.Api.Handlers
         private readonly IEventPublisher _eventPublisher;
         private readonly IOrderPriceCalculatorHelper _orderPriceCalculatorHelper;
         private readonly IDiscountPriceCalculatorHelper _discountPriceCalculatorHelper;
+        private readonly IDiscountRepository _discountRepository;
 
         public OrderCommandsHandler(IOrderRepository orderRepository, IProductRepository productRepository, 
-            IEventPublisher eventPublisher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper)
+            IEventPublisher eventPublisher, IOrderPriceCalculatorHelper orderPriceCalculatorHelper, IDiscountPriceCalculatorHelper discountPriceCalculatorHelper,
+            IDiscountRepository discountRepository)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _eventPublisher = eventPublisher;
             _orderPriceCalculatorHelper = orderPriceCalculatorHelper;
             _discountPriceCalculatorHelper = discountPriceCalculatorHelper;
+            _discountRepository = discountRepository;
         }
 
         public async Task Handle(UpdateOrderCommand message)
@@ -125,6 +128,7 @@ namespace Cook4Me.Api.Handlers
                 await _orderRepository.Update(order);
                 if (order.OrderLines != null)
                 {
+                    await UpdateDiscount(order, false);
                     await UpdateProductStock(order, false);
                 }
 
@@ -181,6 +185,7 @@ namespace Cook4Me.Api.Handlers
 
             if (record.Status == OrderAggregateStatus.Confirmed)
             {
+                await UpdateDiscount(record, true);
                 await UpdateProductStock(record, true);
             }
 
@@ -399,6 +404,7 @@ namespace Cook4Me.Api.Handlers
                 ProductIds = order.OrderLines.Select(o => o.ProductId),
                 IsPagingEnabled = false
             });
+            var tasks = new List<Task>();
             if (products.Content != null)
             {
                 foreach (var orderLine in order.OrderLines)
@@ -420,10 +426,54 @@ namespace Cook4Me.Api.Handlers
                             product.AvailableInStock = product.AvailableInStock - orderLine.Quantity;
                         }
 
-                        await _productRepository.Update(product);
+                        tasks.Add(_productRepository.Update(product));
                     }
                 }
             }
+
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task UpdateDiscount(OrderAggregate order, bool addQuantity)
+        {
+            if (order.OrderLines == null || !order.OrderLines.Any())
+            {
+                return;
+            }
+
+            var orderLines = order.OrderLines.Where(ol => ol.OrderLineDiscount != null);
+            if (!orderLines.Any())
+            {
+                return;
+            }
+
+            var discountIds = orderLines.Select(ol => ol.OrderLineDiscount.Id);
+            var discounts = await _discountRepository.Search(new SearchDiscountsParameter
+            {
+                DiscountIds = discountIds
+            });
+            var tasks = new List<Task>();
+            foreach(var orderLine in orderLines)
+            {
+                var discount = discounts.Content.FirstOrDefault(d => d.Id == orderLine.OrderLineDiscount.Id);
+                if (discount == null || discount.Validity == DiscountAggregateValidities.Timer)
+                {
+                    continue;
+                }
+
+                if (addQuantity)
+                {
+                    discount.Counter += 1;
+                }
+                else
+                {
+                    discount.Counter -= 1;
+                }
+
+                tasks.Add(_discountRepository.Update(discount));
+            }
+
+            await Task.WhenAll(tasks);
         }
     }
 }
