@@ -14,69 +14,90 @@ class Workflow extends Component {
       activeTab: '1',
       isParcelHistoryDisplayed: false,
       isParcelHistoryLoading: false,
-      parcelHistory: {}
+      parcelHistory: {},
+      transportMode: null
     };
   }
 
   refresh(order) { // Refresh the products.
     var self = this;
     var activeTab;
-    if (order.status === 'created') {
-      activeTab = '1';
-    }
+    if (order.transport_mode === 'packet') { // Packet reception.
+      if (order.status === 'created') {
+        activeTab = '1';
+      }
 
-    if (order.status === 'confirmed' && order.payment && order.payment.status === 'created') {
-      activeTab = '2';
-    }
+      if (order.status === 'confirmed' && order.payment && order.payment.status === 'created') {
+        activeTab = '2';
+      }
 
-    if (order.status === 'confirmed' && order.payment && order.payment.status === 'approved' && order.is_label_purchased === false) {
-      activeTab = '3';
-    }
+      if (order.status === 'confirmed' && order.payment && order.payment.status === 'approved' && order.is_label_purchased === false) {
+        activeTab = '3';
+      }
 
-    if (order.status === 'confirmed' && order.payment && order.payment.status === 'approved' && order.is_label_purchased === true) {
-      activeTab = '4';
-    }
+      if (order.status === 'confirmed' && order.payment && order.payment.status === 'approved' && order.is_label_purchased === true) {
+        activeTab = '4';
+      }
 
-    if (order.status === 'received') {
-      activeTab = '5';
-    }
+      if (order.status === 'received') {
+        activeTab = '5';
+      }
 
-    const {t} = self.props;
-    if (order.is_label_purchased === true) {
-      self.setState({
-        isParcelHistoryLoading: true,
-        isParcelHistoryDisplayed: true
-      });
-      OrdersService.track(order.id).then(function(activities) {
+      const {t} = self.props;
+      if (order.is_label_purchased === true) {
         self.setState({
-          isParcelHistoryLoading: false,
-          parcelHistory: activities
+          isParcelHistoryLoading: true,
+          isParcelHistoryDisplayed: true
         });
-      }).catch(function(e) {
-        var errorMsg = t('trackOrderError');
-        if (e.responseJSON && e.responseJSON.error_description) {
-          errorMsg = e.responseJSON.error_description;
-        }
+        OrdersService.track(order.id).then(function(activities) {
+          self.setState({
+            isParcelHistoryLoading: false,
+            parcelHistory: activities
+          });
+        }).catch(function(e) {
+          var errorMsg = t('trackOrderError');
+          if (e.responseJSON && e.responseJSON.error_description) {
+            errorMsg = e.responseJSON.error_description;
+          }
 
-        self.setState({
-          isParcelHistoryLoading: false
+          self.setState({
+            isParcelHistoryLoading: false
+          });
+          ApplicationStore.sendMessage({
+            message: errorMsg,
+            level: 'error',
+            position: 'tr'
+          });
         });
-        ApplicationStore.sendMessage({
-          message: errorMsg,
-          level: 'error',
-          position: 'tr'
-        });
-      });
+
+      }
+    } else { // Manual.
+      if (order.status === 'created')  {
+        activeTab = '1';
+      }
+
+      if (order.status === 'confirmed') {
+        activeTab = '2';
+      }
+
+      if (order.status === 'received') {
+        activeTab = '3';
+      }
     }
 
     self.setState({
-      activeTab : activeTab
+      activeTab : activeTab,
+      transportMode: order.transport_mode
     });
   }
 
   render() { // Display the products.
     var self = this;
     const {t} = self.props;
+    if (!this.state.transportMode) {
+      return (<span></span>);
+    }
+
     var parcelHistories = [];
     if (self.state.parcelHistory && self.state.parcelHistory.activities) {
       self.state.parcelHistory.activities.forEach(function(activity) {
@@ -91,24 +112,34 @@ class Workflow extends Component {
       });
     }
 
-    return (<div>
-        <ul className="progressbartriangle" style={{width: "100%"}}>
-          <li className="active"><a href="#">{t('status_created')}</a></li>
-          <li className={self.state.activeTab > '1' && 'active'}><a href="#" className="no-decoration red">{t('status_confirmed')}</a></li>
-          <li className={self.state.activeTab > '2' && 'active'}><a href="#" className="no-decoration red">{t('payment_status_approved')}</a></li>
-          <li className={self.state.activeTab > '3' && 'active'}><a href="#" className="no-decoration red">{t('purchased')}</a></li>
-          <li className={self.state.activeTab > '4' && 'active'}><a href="#" className="no-decoration red">{t('received')}</a></li>
-        </ul>
-        { self.state.isParcelHistoryDisplayed && self.state.isParcelHistoryLoading && (<i className='fa fa-spinner fa-spin'></i>) }
-        { self.state.isParcelHistoryDisplayed && !self.state.isParcelHistoryLoading && (
-          <section>
-            <h5>{t('trackParcel')}</h5>
-            <div className="list-group-default">
-              {parcelHistories}
-            </div>
-          </section>
-        )}
-    </div>);
+    if (this.state.transportMode === 'packet') {
+      return (<div>
+          <ul className="progressbartriangle" style={{width: "100%"}}>
+            <li className="active"><a href="#">{t('status_created')}</a></li>
+            <li className={self.state.activeTab > '1' && 'active'}><a href="#" className="no-decoration red">{t('status_confirmed')}</a></li>
+            <li className={self.state.activeTab > '2' && 'active'}><a href="#" className="no-decoration red">{t('payment_status_approved')}</a></li>
+            <li className={self.state.activeTab > '3' && 'active'}><a href="#" className="no-decoration red">{t('purchased')}</a></li>
+            <li className={self.state.activeTab > '4' && 'active'}><a href="#" className="no-decoration red">{t('received')}</a></li>
+          </ul>
+          { self.state.isParcelHistoryDisplayed && self.state.isParcelHistoryLoading && (<i className='fa fa-spinner fa-spin'></i>) }
+          { self.state.isParcelHistoryDisplayed && !self.state.isParcelHistoryLoading && (
+            <section>
+              <h5>{t('trackParcel')}</h5>
+              <div className="list-group-default">
+                {parcelHistories}
+              </div>
+            </section>
+          )}
+      </div>);      
+    } else {
+      return (<div>
+          <ul className="progressbartriangle" style={{width: "100%"}}>
+            <li className="active"><a href="#">{t('status_created')}</a></li>
+            <li className={self.state.activeTab > '1' && 'active'}><a href="#" className="no-decoration red">{t('status_confirmed')}</a></li>
+            <li className={self.state.activeTab > '2' && 'active'}><a href="#" className="no-decoration red">{t('received')}</a></li>
+          </ul>
+      </div>);   
+    }
   }
 }
 

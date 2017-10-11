@@ -85,7 +85,6 @@ class Products extends Component {
         }
 
         var discount = orderLine['discount'];
-        console.log(discount);
         products.push((<li className="list-group-item">
           <div className="col-md-2"><img src={productImage} width="40" /></div>
           <div className="col-md-4">

@@ -45,7 +45,6 @@ class Order extends Component {
 
       OrdersService.get(orderId).then(function(r) {
         var order = r['_embedded'];
-        console.log(order);
         self.setState({
           order: order,
           isLoading: false
