@@ -23,6 +23,7 @@ namespace Cook4Me.Api.Core.Repositories
 {
     public interface ITagRepository
     {
+        Task<TagAggregate> Get(string id);
         Task<IEnumerable<TagAggregate>> GetAll();
         Task<IEnumerable<TagAggregate>> Search(SearchTagsParameter parameter);
     }

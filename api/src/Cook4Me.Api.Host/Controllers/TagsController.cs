@@ -27,11 +27,19 @@ namespace Cook4Me.Api.Host.Controllers
     {
         private readonly ISearchTagsOperation _searchTagsOperation;
         private readonly IGetAllTagsOperation _getAllTagsOperation;
+        private readonly IGetTagOperation _getTagOperation;
 
-        public TagsController(ISearchTagsOperation searchTagsOperation, IGetAllTagsOperation getAllTagsOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+        public TagsController(ISearchTagsOperation searchTagsOperation, IGetAllTagsOperation getAllTagsOperation, IGetTagOperation getTagOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchTagsOperation = searchTagsOperation;
             _getAllTagsOperation = getAllTagsOperation;
+            _getTagOperation = getTagOperation;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            return await _getTagOperation.Execute(id);
         }
 
         [HttpGet]

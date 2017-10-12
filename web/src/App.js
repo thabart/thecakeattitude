@@ -324,7 +324,7 @@ class App extends Component {
                 <Route path="/products/:id/:action?" component={Products}/>
                 <Route path="/services/:id/:action?" component={Services}/>
                 <Route path="/clientservices/:id" component={ClientServices} />
-                <Route path="/tags/:tag" component={Tags} />
+                <Route path="/tags/:tag/:action?" component={Tags} />
                 <Route path="/users/:id" component={Users} />
                 <Route path="/messages/:action?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Messages />))}/>
                 <Route path="/message/:id" render={(p) => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Message id={p.match.params.id} />))}/>

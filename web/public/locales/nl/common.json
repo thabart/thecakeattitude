@@ -482,5 +482,7 @@
   "discountCode": "Discount code",
   "parcelSizeTooltipInformation": "Max allowable parcel size",
   "pricePerUnitWithDiscount": "Price per unit : <strike>{0}</strike> <b>{1}</b>",
-  "discount": "Discount"
+  "discount": "Discount",
+  "errorGetTag": "The tag doesn't exist",
+  "tagTitle": "Tag : {0}"
 }

@@ -35,6 +35,22 @@ namespace Cook4Me.Api.EF.Repositories
             _context = context;
         }
 
+        public async Task<TagAggregate> Get(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            var tag = await _context.Tags.FirstOrDefaultAsync(t => t.Name == id).ConfigureAwait(false);
+            if (tag == null)
+            {
+                return null;
+            }
+
+            return tag.ToAggregate();
+        }
+
         public async Task<IEnumerable<TagAggregate>> GetAll()
         {
             return await _context.Tags.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);

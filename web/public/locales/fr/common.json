@@ -481,5 +481,7 @@
   "discountCode": "Code de la promotion",
   "parcelSizeTooltipInformation": "Taille maximum autorisée pour le colis",
   "pricePerUnitWithDiscount": "Prix par unité : <strike>{0}</strike> <b>{1}</b>",
-  "discount": "Promotion"
+  "discount": "Promotion",
+  "errorGetTag": "Le tag n'existe pas",
+  "tagTitle": "Tag : {0}"
 }
