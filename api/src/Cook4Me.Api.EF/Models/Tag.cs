@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using System;
 using System.Collections.Generic;
 
 namespace Cook4Me.Api.EF.Models
@@ -22,7 +23,10 @@ namespace Cook4Me.Api.EF.Models
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public DateTime UpdateDateTime { get; set; }
         public virtual ICollection<ShopTag> ShopTags { get; set; }
         public virtual ICollection<ServiceTag> ServiceTags { get; set; }
+        public virtual ICollection<ProductTag> ProductTags { get; set; }
     }
 }

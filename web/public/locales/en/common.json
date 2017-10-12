@@ -485,5 +485,6 @@
   "discount": "Discount",
   "errorGetTag": "The tag doesn't exist",
   "tagTitle": "Tag : {0}",
-  "bestRatings": "Best ratings"
+  "bestRatings": "Best ratings",
+  "popularTags": "Popular tags"
 }

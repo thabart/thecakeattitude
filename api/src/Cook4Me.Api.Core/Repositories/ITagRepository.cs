@@ -16,6 +16,7 @@
 
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
+using Cook4Me.Api.Core.Results;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -25,6 +26,6 @@ namespace Cook4Me.Api.Core.Repositories
     {
         Task<TagAggregate> Get(string id);
         Task<IEnumerable<TagAggregate>> GetAll();
-        Task<IEnumerable<TagAggregate>> Search(SearchTagsParameter parameter);
+        Task<SearchTagsResult> Search(SearchTagsParameter parameter);
     }
 }

@@ -1187,10 +1187,33 @@ namespace Cook4Me.Api.Host.Builders
                 throw new ArgumentNullException(nameof(jObj));
             }
 
+            var orderBy = new List<OrderBy>();
+            var ordersObj = jObj.GetValue(Constants.DtoNames.SearchShop.Orders);
+            if (ordersObj != null)
+            {
+                var orders = ordersObj as JArray;
+                if (orders != null)
+                {
+                    foreach (var order in orders)
+                    {
+                        orderBy.Add(GetOrderBy(order as JObject));
+                    }
+                }
+            }
+
             var result = new SearchTagsParameter
             {
-                Name = jObj.Value<string>(Constants.DtoNames.Tag.Name)
+                Names = new[] { jObj.Value<string>(Constants.DtoNames.Tag.Name) },
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex),
+                Orders = orderBy
             };
+
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
             return result;
         }
 

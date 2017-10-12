@@ -484,5 +484,6 @@
   "discount": "Promotion",
   "errorGetTag": "Le tag n'existe pas",
   "tagTitle": "Tag : {0}",
-  "bestRatings": "Meilleurs notes"
+  "bestRatings": "Meilleurs notes",
+  "popularTags": "Tags populaires"
 }

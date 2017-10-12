@@ -35,6 +35,8 @@ class ProductElt extends Component {
     render() { // Returns the view.
         var imageUrl = "#",
             product = this.props.product,
+            isTagsDisplayed = this.props.tagsDisplayed || false,
+            tags = [],
             self = this;
         const {t} = this.props;
         if (product.images && product.images.length > 0) {
@@ -68,6 +70,10 @@ class ProductElt extends Component {
             });
         }
 
+        if (isTagsDisplayed) {
+          tags = product.tags.map(function(tag) { return (<li>{tag}</li>); });
+        }
+
         var description = product.description.length > 70 ? product.description.substring(0, 67) + "..." : product.description;
         var isLoggedIn = SessionService.isLoggedIn();
         return (
@@ -83,6 +89,11 @@ class ProductElt extends Component {
                         <Rater total={5} rating={product.average_score}
                                interactive={false}/>{product.comments && product.comments.length > 0 && (
                         <label>{t('comments')} : {product.nb_comments}</label>)}
+                        {tags.length > 0 && (
+                          <ul className="tags no-padding gray">
+                            {tags}
+                          </ul>
+                        )}
                         <p style={{wordBreak: "break-all"}}>
                             {description}
                         </p>

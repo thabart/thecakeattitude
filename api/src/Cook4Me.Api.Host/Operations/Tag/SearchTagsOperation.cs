@@ -20,7 +20,6 @@ using Cook4Me.Api.Host.Enrichers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Operations.Tag
@@ -52,20 +51,33 @@ namespace Cook4Me.Api.Host.Operations.Tag
                 throw new ArgumentNullException(nameof(jObj));
             }
 
-            var request = _requestBuilder.GetSearchTags(jObj);
-            var tags = await _repository.Search(request);
-            if (!tags.Any())
-            {
-                return new NotFoundResult();
-            }
-
+            var parameter = _requestBuilder.GetSearchTags(jObj);
+            var searchResult = await _repository.Search(parameter);
             _halResponseBuilder.AddLinks(l => l.AddSelf("/" + Constants.RouteNames.Tags + "/" + Constants.RouteNames.Search));
-            foreach (var tag in tags)
+            if (searchResult != null && searchResult.Content != null)
             {
-                _tagEnricher.Enrich(_halResponseBuilder, tag);
+                var tags = searchResult.Content;
+                foreach (var tag in tags)
+                {
+                    _tagEnricher.Enrich(_halResponseBuilder, tag);
+                }
+
+                double r = (double)searchResult.TotalResults / (double)parameter.Count;
+                var nbPages = Math.Ceiling(r);
+                nbPages = nbPages == 0 ? 1 : nbPages;
+                for (var page = 1; page <= nbPages; page++)
+                {
+                    _halResponseBuilder.AddLinks(l => l.AddOtherItem("navigation", new Dtos.Link(GetTagLink(), page.ToString())));
+                }
+
             }
 
             return new OkObjectResult(_halResponseBuilder.Build());
+        }
+        
+        private static string GetTagLink()
+        {
+            return "/" + Constants.RouteNames.Tags + "/" + Constants.RouteNames.Search;
         }
     }
 }

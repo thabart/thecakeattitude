@@ -14,31 +14,15 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using System.Collections.Generic;
 
-namespace Cook4Me.Api.Core.Parameters
+namespace Cook4Me.Api.Core.Results
 {
-    public class SearchTagsParameter
+    public class SearchTagsResult
     {
-        public SearchTagsParameter()
-        {
-            StartIndex = 0;
-            Count = 100;
-            IsPagingEnabled = true;
-            Orders = new List<OrderBy>
-            {
-                new OrderBy
-                {
-                    Method = OrderByMethods.Descending,
-                    Target = "create_datetime"
-                }
-            };
-        }
-
+        public IEnumerable<TagAggregate> Content { get; set; }
+        public int TotalResults { get; set; }
         public int StartIndex { get; set; }
-        public int Count { get; set; }
-        public bool IsPagingEnabled { get; set; }
-        public IEnumerable<string> Names { get; set; }
-        public IEnumerable<OrderBy> Orders { get; set; }
     }
 }

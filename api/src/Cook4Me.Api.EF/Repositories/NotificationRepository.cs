@@ -23,7 +23,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Cook4Me.Api.EF.Extensions;
 using Cook4Me.Api.Core.Aggregates;
-using Cook4Me.Api.EF.Models;
 
 namespace Cook4Me.Api.EF.Repositories
 {

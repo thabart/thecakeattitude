@@ -17,11 +17,13 @@
 using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
+using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cook4Me.Api.EF.Repositories
@@ -56,15 +58,97 @@ namespace Cook4Me.Api.EF.Repositories
             return await _context.Tags.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
-        public async Task<IEnumerable<TagAggregate>> Search(SearchTagsParameter parameter)
+        public async Task<SearchTagsResult> Search(SearchTagsParameter parameter)
         {
             if (parameter == null)
             {
                 throw new ArgumentNullException(nameof(parameter));
             }
-            
-            var tags = _context.Tags.Where(c => c.Name.ToLower().Contains(parameter.Name.ToLower()));
-            return await tags.Select(c => c.ToAggregate()).ToListAsync().ConfigureAwait(false);
+
+            IQueryable<Models.Tag> tags = _context.Tags.Include(t => t.ProductTags)
+                .Include(t => t.ServiceTags)
+                .Include(t => t.ShopTags);
+            if(parameter.Names != null)
+            {
+                var names = parameter.Names.Where(n => !string.IsNullOrWhiteSpace(n)).Select(n => n.ToLower());
+                if (names.Any())
+                {
+                    tags = _context.Tags.Where(c => names.Any(n => c.Name.ToLower().Contains(n)));
+                }
+            }
+
+            var result = new SearchTagsResult
+            {
+                TotalResults = await tags.CountAsync().ConfigureAwait(false),
+                StartIndex = parameter.StartIndex
+            };
+
+            if (parameter.Orders != null)
+            {
+                foreach (var order in parameter.Orders)
+                {
+                    tags = Order(order, "update_datetime", s => s.UpdateDateTime, tags);
+                    tags = Order(order, "create_datetime", s => s.CreateDateTime, tags);
+                    if (order.Target == "product_occurrence")
+                    {
+                        if (order.Method == OrderByMethods.Ascending)
+                        {
+                            tags = tags.OrderBy(t => t.ProductTags.Count());
+                        }
+                        else
+                        {
+                            tags = tags.OrderByDescending(t => t.ProductTags.Count());
+                        }
+                    }
+
+                    if (order.Target == "shop_occurrence")
+                    {
+                        if (order.Method == OrderByMethods.Ascending)
+                        {
+                            tags = tags.OrderBy(t => t.ShopTags.Count());
+                        }
+                        else
+                        {
+                            tags = tags.OrderByDescending(t => t.ShopTags.Count());
+                        }
+                    }
+
+                    if (order.Target == "service_occurrence")
+                    {
+                        if (order.Method == OrderByMethods.Ascending)
+                        {
+                            tags = tags.OrderBy(t => t.ServiceTags.Count());
+                        }
+                        else
+                        {
+                            tags = tags.OrderByDescending(t => t.ServiceTags.Count());
+                        }
+                    }
+                }
+            }
+
+            if (parameter.IsPagingEnabled)
+            {
+                tags = tags.Skip(parameter.StartIndex).Take(parameter.Count);
+            }
+
+            result.Content = await tags.Select(p => p.ToAggregate()).ToListAsync().ConfigureAwait(false);
+            return result;
+        }
+
+        private static IQueryable<Models.Tag> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Tag, TKey>> keySelector, IQueryable<Models.Tag> tags)
+        {
+            if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))
+            {
+                if (orderBy.Method == OrderByMethods.Ascending)
+                {
+                    return tags.OrderBy(keySelector);
+                }
+
+                return tags.OrderByDescending(keySelector);
+            }
+
+            return tags;
         }
     }
 }
