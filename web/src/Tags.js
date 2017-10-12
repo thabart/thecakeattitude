@@ -1,18 +1,23 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
-import { TagService, ShopsService } from './services/index';
+import { TagService, ShopsService, ProductsService } from './services/index';
 import { withRouter } from "react-router";
 import { Alert } from 'reactstrap';
 import { ApplicationStore } from './stores/index';
+import ProductElt from "./shopProfile/productElt";
 import MainLayout from './MainLayout';
 import Rater from "react-rater";
 import $ from 'jquery';
 
+const defaultCount = 2;
+
 class Tags extends Component {
 	constructor(props) {
 		super(props);
-    	this._request = {count: 10, start_index: 0};
+    	this._request = {count: defaultCount, start_index: 0};
+        this._page = '1';
     	this.getAction = this.getAction.bind(this);
+    	this.resetFilter = this.resetFilter.bind(this);
     	this.navigate = this.navigate.bind(this);
 		this.toggle = this.toggle.bind(this);
 		this.display = this.display.bind(this);
@@ -27,8 +32,10 @@ class Tags extends Component {
 			isLoading: true,
 			errorMessage: null,
 			tag: null,
-      		navigation: [],
-      		shops: []
+      		pagination: [],
+      		shops: [],
+      		products: [],
+      		isContentLoading: false
 		};
 	}
 
@@ -42,11 +49,11 @@ class Tags extends Component {
       	return action;
 	}
 
-	navigate(e, name) { // Navigate through the shops or products.
+	navigate(e, page) { // Navigate through the shops or products.
 	    e.preventDefault();
-	    var startIndex = name - 1;
+        this._page = page;
 	    this._request = $.extend({}, this._request, {
-	        start_index: startIndex
+	        start_index: (page - 1) * defaultCount
 	    });
 	    this.refresh();
 	}
@@ -66,11 +73,10 @@ class Tags extends Component {
 	    });
 	    TagService.get(tag).then(function(content) {
 	    	self.setState({
-	    		tag: content['_embedded']
+	    		tag: content['_embedded'],
+	    		isLoading: false
 	    	});
-	    	self._request.orders = [
-	    		{ target: 'create_datetime', method:  'desc' }
-	    	];
+    		self.resetFilter();
 	    	self.refresh();
 	    }).catch(function() {
 	    	self.setState({
@@ -94,28 +100,22 @@ class Tags extends Component {
 	refreshProducts() { // Display the products.
 		var self = this;
 		self.setState({
-			isLoading: true
-		});
-	}
-
-	refreshShops() { // Display the shops.
-		var self = this;
-		self.setState({
-			isLoading: true
+			isContentLoading: true
 		});
 		var request = $.extend({}, self._request);
 	    var tag = self.props.match.params.tag;
 		request['tags'] = [tag];
-		ShopsService.search(request).then(function(shopsResult) {
-            var shopsEmbedded = shopsResult['_embedded'];
-            if (!(shopsEmbedded instanceof Array)) {
-                shopsEmbedded = [shopsEmbedded];
+		ProductsService.search(request).then(function(productsResult) {
+            var productsEmbedded = productsResult['_embedded'];
+            var pagination = productsResult['_links'].navigation;
+            if (!(productsEmbedded instanceof Array)) {
+                productsEmbedded = [productsEmbedded];
             }
 
-            console.log(shopsEmbedded);
 	        self.setState({
-	        	isLoading: false,
-	        	shops: shopsEmbedded
+	        	isContentLoading: false,
+	        	products: productsEmbedded,
+                pagination: pagination
 	        });
 		}).catch(function(e) {
 	        var errorMsg = '';
@@ -129,19 +129,77 @@ class Tags extends Component {
 	          position: 'tr'
 	        });
 	        self.setState({
-	        	isLoading: false
+	        	isContentLoading: false,
+	        	products: [],
+	        	pagination: []
+	        });
+		});
+	}
+
+	refreshShops() { // Display the shops.
+		var self = this;
+		self.setState({
+			isContentLoading: true
+		});
+		var request = $.extend({}, self._request);
+	    var tag = self.props.match.params.tag;
+		request['tags'] = [tag];
+		ShopsService.search(request).then(function(shopsResult) {
+            var shopsEmbedded = shopsResult['_embedded'];
+            var pagination = shopsResult['_links'].navigation;
+            if (!(shopsEmbedded instanceof Array)) {
+                shopsEmbedded = [shopsEmbedded];
+            }
+
+	        self.setState({
+	        	isContentLoading: false,
+	        	shops: shopsEmbedded,
+                pagination: pagination
+	        });
+		}).catch(function(e) {
+	        var errorMsg = '';
+	        if (e.responseJSON && e.responseJSON.error_description) {
+	          errorMsg = e.responseJSON.error_description;
+	        }
+
+	        ApplicationStore.sendMessage({
+	          message: errorMsg,
+	          level: 'error',
+	          position: 'tr'
+	        });
+	        self.setState({
+	        	isContentLoading: false,
+	        	shops: [],
+	        	pagination: []
 	        });
 		});
 	}
 
 	displayShops() { // Display the shops.
-	    var tag = this.props.match.params.tag;
+		if (this.getAction() === 'shops') { return; }
+	    var tag = this.props.match.params.tag;  
+    	this._request.orders = [
+	    	{ target: 'create_datetime', method:  'desc' }
+	    ];
     	this.props.history.push('/tags/'+tag+'/shops');
+    	this.resetFilter();
+    	this.refreshShops();
 	}
 
 	displayProducts() { // Display the products.
-	    var tag = this.props.match.params.tag;
+		if (this.getAction() === 'products') { return; }
+	    var tag = this.props.match.params.tag;    
     	this.props.history.push('/tags/'+tag+'/products');
+    	this.resetFilter();
+    	this.refreshProducts();
+	}
+
+	resetFilter() {
+		this._request = {count: 2, start_index: 0};
+    	this._request.orders = [
+	    	{ target: 'create_datetime', method:  'desc' }
+	    ];
+	    this._page = '1';
 	}
 
 	changeOrder(e) { // Change the order.
@@ -168,12 +226,12 @@ class Tags extends Component {
       	var action = self.getAction(),
       		navigations = [],
       		shops = [],
-      		options = [];
+      		products = [];
 
-	    if (this.state.navigation && this.state.navigation.length > 1) {
-	      this.state.navigation.forEach(function (nav) {
+	    if (this.state.pagination && this.state.pagination.length > 1) {
+	      this.state.pagination.forEach(function (nav) {
 	        navigations.push((
-	          <li className="page-item"><a href="#" className="page-link" onClick={(e) => {
+	          <li className="page-item"><a href="#" className={self._page === nav.name ? "page-link active" : "page-link"} onClick={(e) => {
 	            self.navigate(e, nav.name);
 	          }}>{nav.name}</a></li>
 	        ));
@@ -181,7 +239,6 @@ class Tags extends Component {
 	    }
 
 	    if (action === 'shops' && this.state.shops.length > 0) {
-	    	options = [(<option data-target="create_datetime" data-method="desc">{t('latest')}</option>), (<option data-target="average_score" data-method="desc">{t('bestRatings')}</option>)];
 	    	this.state.shops.forEach(function(shop) {
                 var profileImage = shop.profile_image;
                 if (!profileImage) {
@@ -210,6 +267,12 @@ class Tags extends Component {
 	    	});
 	    }
 
+	    if (action === 'products' && this.state.products.length > 0) {
+	    	this.state.products.forEach(function(product) {
+	    		products.push((<ProductElt product={product} />));
+	    	});
+	    }
+
 	    return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={false}>
 	    	<div className={ !self.state.isLoading ? "hidden" : "container" }><i className="fa fa-spinner fa-spin"></i></div>
 	    	<div className={ self.state.isLoading ? "hidden" : "row" }>
@@ -231,25 +294,41 @@ class Tags extends Component {
 			    {/* Display shops & products linked to the tag*/ }
 			    { this.state.tag !== null && (
 			      	<section className="col-md-10 offset-md-2">
-			      		<div className="section">
-			        		<h2>{t('tagTitle').replace('{0}', self.state.tag.name)}</h2>
-			        		<ul className="nav nav-pills red">
-			        			<li className="nav-item"><a href="#" className={action === "shops" ? "nav-link active" : "nav-link"} onClick={self.displayShops}>{t('shops')}</a></li>
-			        			<li className="nav-item"><a href="#" className={action === "products" ? "nav-link active" : "nav-link"} onClick={self.displayProducts}>{t('products')}</a></li>
-			        		</ul>
-			        		<div className="col-md-4 offset-md-8">
-			        			<label>{t('filterBy')}</label>
-			        			<select className="form-control" onChange={(e) => { this.changeOrder(e); }}>
-			        				{options}
-			        			</select>
-			        		</div>
-			        		{ shops.length > 0 && ( <div>{shops}</div> ) }
-			        		{/* Display the navigation */}			        		
-					        {navigations.length > 0 && (
-					          <ul className="pagination">
-					            {navigations}
-					          </ul>
-					        )}
+			      		<div className="container">
+				      		<div className="section" style={{padding: "20px"}}>
+				        		<h2>{t('tagTitle').replace('{0}', self.state.tag.name)}</h2>
+				        		<ul className="nav nav-pills red">
+				        			<li className="nav-item"><a href="#" className={action === "shops" ? "nav-link active" : "nav-link"} onClick={self.displayShops}>{t('shops')}</a></li>
+				        			<li className="nav-item"><a href="#" className={action === "products" ? "nav-link active" : "nav-link"} onClick={self.displayProducts}>{t('products')}</a></li>
+				        		</ul>
+				        		{/* Display filtering */}
+						        <div className="col-md-4 offset-md-8">
+						        	<label>{t('filterBy')}</label>
+						        	<select className={action === 'shops' ? 'form-control': 'hidden'} onChange={(e) => { this.changeOrder(e); }}>
+						        		<option data-target="create_datetime" data-method="desc">{t('latest')}</option>
+						        		<option data-target="average_score" data-method="desc">{t('bestRatings')}</option>
+						        	</select>
+						        	<select className={action === 'products' ? 'form-control' : 'hidden'} onChange={(e) => { this.changeOrder(e); }}>
+						        		<option data-target="create_datetime" data-method="desc">{t('latest')}</option>
+						        		<option data-target="average_score" data-method="desc">{t('bestRatings')}</option>
+						        		<option data-target="best_deals" data-method="desc">{t('bestDeals')}</option>
+						        		<option data-target="price" data-method="asc">{t('priceAsc')}</option>
+						        		<option data-target="price" data-method="desc">{t('priceDesc')}</option>
+						        	</select>
+						        </div>
+				        		{this.state.isContentLoading ? (<i className="fa fa-spinner fa-spin"></i>) : (
+				        			<div>
+						        		{ shops.length > 0 && ( <div>{shops}</div> ) }
+						        		{ products.length > 0 && (<div>{products}</div>) }
+						        		{/* Display the navigation */}			        		
+								        {navigations.length > 0 && (
+								          <ul className="pagination">
+								            {navigations}
+								          </ul>
+								        )}
+				        			</div>
+				        		)}
+				      		</div>
 			      		</div>
 			      	</section>
 			    ) }
