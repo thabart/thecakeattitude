@@ -509,7 +509,7 @@ namespace Cook4Me.Api.Host.Extensions
                         Longitude = 6.623000000000047F,
                         Latitude = 51.12947F,
                         TotalScore = 16,
-                        AverageScore = 3.2,
+                        AverageScore = 1,
                         PaymentMethods = new List<PaymentMethod>
                         {
                             new PaymentMethod
@@ -555,7 +555,7 @@ namespace Cook4Me.Api.Host.Extensions
                         Longitude = 6.623000000000047F,
                         Latitude = 51.12947F,
                         TotalScore = 16,
-                        AverageScore = 3.2,
+                        AverageScore = 4,
                         PaymentMethods = new List<PaymentMethod>
                         {
                             new PaymentMethod
@@ -720,6 +720,18 @@ namespace Cook4Me.Api.Host.Extensions
                     Id = Guid.NewGuid().ToString(),
                     ShopId = _firstShopId,
                     TagName = _secondHandTagName
+                },
+                new ShopTag
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _secondShopId,
+                    TagName = _ecoTagName
+                },
+                new ShopTag
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    ShopId = _thirdShopId,
+                    TagName = _ecoTagName
                 }
             });
         }

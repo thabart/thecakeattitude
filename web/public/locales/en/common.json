@@ -484,5 +484,6 @@
   "pricePerUnitWithDiscount": "Price per unit : <strike>{0}</strike> <b>{1}</b>",
   "discount": "Discount",
   "errorGetTag": "The tag doesn't exist",
-  "tagTitle": "Tag : {0}"
+  "tagTitle": "Tag : {0}",
+  "bestRatings": "Best ratings"
 }
