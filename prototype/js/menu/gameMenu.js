@@ -41,19 +41,19 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Verre",
                 furnitures: [
-
+                  { name: 'glass_table', url: 'resources/furnitures/glass/table.gif' }
                 ]
               },
               {
                 name: "Grenier",
                 furnitures: [
-
+                  { name: 'grunge_table', url: 'resources/furnitures/grunge/table.gif' }
                 ]
               },
               {
                 name: "Mode",
                 furnitures: [
-
+                  { name: 'mode_table', url: 'resources/furnitures/mode/table.gif' }
                 ]
               }
             ]

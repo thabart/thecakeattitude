@@ -13,6 +13,27 @@
 			"nbRows": 3,
 			"relativePosX": -45,
 			"relativePosY": -67
+		},
+		{
+			"name": "glass_table",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": -37,
+			"relativePosY": -11
+		},
+		{
+			"name": "grunge_table",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": -35,
+			"relativePosY": -40
+		},
+		{
+			"name": "mode_table",
+			"nbCols": 1,
+			"nbRows": 2,
+			"relativePosX": -37,
+			"relativePosY": -25
 		}
 	]
 }
