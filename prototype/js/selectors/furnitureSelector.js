@@ -26,8 +26,8 @@ game.FurnitureSelector = me.Object.extend({
 	moveFurniture: function(evt) { // Move the selected furniture.
 		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
 		if (!tile) { return; }
-		var imageName = ShopStore.getActiveFurniture();
-		var region = me.loader.getImage(imageName);
+		var activeFurniture = ShopStore.getActiveFurniture();
+		var region = me.loader.getImage(activeFurniture.name);
 		var nbRows = Math.ceil(region.width / (this.refLayer.tilewidth / 2));
 		var nbCols = Math.ceil(region.height / this.refLayer.tileheight);
 		var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
@@ -70,12 +70,16 @@ game.FurnitureSelector = me.Object.extend({
 	addFurniture: function(evt) { // Add a furniture into the container.
 		if (this.intersects) { return; }
 		evt.handled = true;
-		var furnitureName = ShopStore.getActiveFurniture();
+		var activeFurniture = ShopStore.getActiveFurniture();
 		var row = this.sprite.tile.row - this.sprite.nbRows;
 		var col = this.sprite.tile.col - this.sprite.nbCols;
-		var spr = new game.FurnitureEntity(this.sprite.pos.x, this.sprite.pos.y, furnitureName);
+		var spr = new game.FurnitureEntity(this.sprite.pos.x, this.sprite.pos.y, activeFurniture.name);
 		ShopStore.addFurniture(spr);
 		me.game.world.addChild(spr);
+		if (activeFurniture.isFlipped) {
+			spr.flip();
+		}
+
 		spr.pos.z = 5;
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
@@ -95,14 +99,18 @@ game.FurnitureSelector = me.Object.extend({
 		me.game.repaint();
 	},
 	updateActiveFurniture: function() { // Update the active furniture.
-		var furnitureName = ShopStore.getActiveFurniture();
-		if(!furnitureName) { return; }
+		var activeFurniture = ShopStore.getActiveFurniture();
+		if(!activeFurniture) { return; }
 		if (this.sprite) {
 			me.game.world.removeChild(this.sprite);
 		}
 
-		this.sprite = new game.FurnitureEntity(0,0, furnitureName);
+		this.sprite = new game.FurnitureEntity(0,0, activeFurniture.name);
 		this.sprite.opacity(0);
+		if (activeFurniture.isFlipped) {
+			this.sprite.flip();
+		}
+
 		me.game.world.addChild(this.sprite);
 	}
 });

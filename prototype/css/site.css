@@ -21,6 +21,13 @@ body {
   color: #333;
 }
 
+select {
+  font-family: Ubuntu sans-serif;
+  min-width: 100px;
+  border-radius: 5px;
+  border: 1px solid rgb(80,80,80);
+}
+
 #bottom-right-container {
   position: fixed;
   bottom: 70px;

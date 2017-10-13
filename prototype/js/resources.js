@@ -10,17 +10,12 @@ var g_ressources = [
     { name: "wall_left", type: "image", src: "resources/wall_left.png" },
     { name: "gallery_n10", type: "image", src: "resources/gallery_n10.gif" },
     { name: "floor", type: "image", src: "resources/floor.png" },
-    { name: "table", type: "image", src: "resources/furnitures/sofatable.png" }, // Load the furnitures.
-    { name: "chair", type: "image", src: "resources/furnitures/chair.png" },
-    { name: "bar", type: "image", src: "resources/furnitures/executive/bar.png" },
+    { name: "executive_table", type: "image", src: "resources/furnitures/executive/table.gif" }, // Load the furnitures.
+    { name: "executive_desk", type: "image", src: "resources/furnitures/executive/desk.gif" },
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
     { name: "player", type: "image", src: "resources/players/player.png" },
-    { name: "table_collision", type: "json", src: "resources/collisions/sofatable.json" },
-    { name: "chair_collision", type: "json", src: "resources/collisions/chair.json" },
+    { name: "furnitures_collision", type: "json", src: "resources/collisions/furnitures.json" }, // Load the collisions.
     { name: "player_collision", type: "json", src: "resources/collisions/player.json" },
-    { name: "bar_collision", type: "json", src: "resources/collisions/bar.json" },
-    { name: "bar_shape", type: "json", src: "resources/shapes/bar.json" }, // Load the shapes.
-    { name: "chair_shape", type: "json", src: "resources/shapes/chair.json" },
-    { name: "table_shape", type: "json", src: "resources/shapes/sofatable.json" },
+    { name: "furnitures_shapes", type: "json", src: "resources/shapes/furnitures.json" }, // Load the shapes.
     { name: "player_shape", type: "json", src: "resources/shapes/player.json" }
 ];

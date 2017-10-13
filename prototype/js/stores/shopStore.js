@@ -13,7 +13,6 @@ var ShopStoreCl = function() {
 
 		_furnitures.forEach(function(spr) { // Update the collision layer.
 				var sprCoordinates = spr.getCoordinates();
-				console.log(sprCoordinates);
 				var collisionCoordinate = {
 					col: sprCoordinates.col - Constants.Layers.Ground.Position.Col,
 					row: sprCoordinates.row - Constants.Layers.Ground.Position.Row
@@ -30,8 +29,16 @@ var ShopStoreCl = function() {
 		return _activeFurniture;
 	};
 
-	this.setActiveFurniture = function(f) { // Set the active furniture (with opacity 0.5)
-		_activeFurniture = f;
+	this.setActiveFurniture = function(name, isFlipped) { // Set the active furniture (with opacity 0.5)
+		if (!name || name === null) {
+			_activeFurniture = null;
+		} else {
+			_activeFurniture = {
+				name: name,
+				isFlipped: isFlipped
+			};
+		}
+
 		$(this).trigger('activeFurnitureChanged');
 	};
 

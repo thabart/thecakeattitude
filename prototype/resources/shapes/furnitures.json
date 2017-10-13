@@ -1,0 +1,18 @@
+{
+	"furnitures": [
+		{
+			"name": "executive_table",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": -46,
+			"relativePosY": -20
+		},
+		{
+			"name": "executive_desk",
+			"nbCols": 2,
+			"nbRows": 3,
+			"relativePosX": -45,
+			"relativePosY": -67
+		}
+	]
+}

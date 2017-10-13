@@ -21,22 +21,25 @@ game.FurnitureEntity = me.Entity.extend({
     );
 
     this.body.removeShapeAt(0);
-    var collisionShape = $.extend(true, {}, me.loader.getJSON(furnitureName + "_collision"));
-    this.shapeDef = me.loader.getJSON(furnitureName + "_shape");
-    collisionShape.rigidBodies[0].polygons.forEach(function(polygon) {
-      polygon.forEach(function(coordinate) {
-        coordinate.x = image.width * coordinate.x;
-        coordinate.y = image.height * coordinate.y;
+    var collisionShape = $.extend(true, {}, me.loader.getJSON("furnitures_collision"));
+    var shapes = me.loader.getJSON("furnitures_shapes");
+    this.shapeDef = shapes.furnitures.filter(function(shape) { return shape.name === furnitureName; })[0];
+    collisionShape.rigidBodies.forEach(function(rigidBody) {
+      rigidBody.polygons.forEach(function(polygon) {
+        polygon.forEach(function(coordinate) {
+          coordinate.x = image.width * coordinate.x;
+          coordinate.y = image.height * coordinate.y;
+        });
+      });
+      rigidBody.shapes.forEach(function(shape) {
+        shape.vertices.forEach(function(coordinate) {
+          coordinate.x = image.width * coordinate.x;
+          coordinate.y = image.height * coordinate.y;
+        });
       });
     });
-    collisionShape.rigidBodies[0].shapes.forEach(function(shape) {
-      shape.vertices.forEach(function(coordinate) {
-        coordinate.x = image.width * coordinate.x;
-        coordinate.y = image.height * coordinate.y;
-      });
-    });
-
-    this.body.addShapesFromJSON(collisionShape, "Name");
+    
+    this.body.addShapesFromJSON(collisionShape, furnitureName);
     this.body.pos.x = this.shapeDef.relativePosX;
     this.body.pos.y = this.shapeDef.relativePosY;
     this.renderable = texture.createAnimationFromName([0]);
@@ -53,10 +56,12 @@ game.FurnitureEntity = me.Entity.extend({
   translateX: function(x) { // Translate on X.
     this.pos.x = this.initX + x;
     this.translateX = x;
+    console.log(x);
   },
   translateY: function(y) { // Translate on Y.
     this.pos.y = this.initY + y;
     this.translateY = y;
+    console.log(y);
   },
   getCoordinates: function() { // Get the size : number of rows + number of cols + position.
     var tile = this.refLayer.getTile(this.pos.x, this.pos.y);

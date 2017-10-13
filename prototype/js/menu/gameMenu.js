@@ -24,21 +24,82 @@ game.GameMenu = me.Object.extend({
   },
   addInventoryBox: function() { // Add the inventory box.
     var self = this;
+    var categories = [
+      {
+        name: "Mobilié",
+        types: [
+          {
+            name: "table",
+            themes: [
+              {
+                name: "Affaire",
+                furnitures: [
+                  { name: 'executive_table', url: 'resources/furnitures/executive/table.gif' },
+                  { name: 'executive_desk', url: 'resources/furnitures/executive/desk.gif' }
+                ]
+              },
+              {
+                name: "Verre",
+                furnitures: [
+
+                ]
+              },
+              {
+                name: "Grenier",
+                furnitures: [
+
+                ]
+              },
+              {
+                name: "Mode",
+                furnitures: [
+
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: "Posters"
+      },
+      {
+        name: "Décorations"
+      },
+      {
+        name: "Sol"
+      },
+      {
+        name: "Personnages"
+      }
+    ];
+    var indice = 0;
+    var tabs = categories.map(function(category) {
+      if (indice === 0) {
+        indice++;
+        return "<li class='active' data-name='"+category.name+"'>"+category.name+"</li>";
+      }
+
+      return "<li>"+category.name+"</li>";
+    }).join('');
     this.inventory = $("<div class='inventory-box'>"+
       "<div class='top'>"+
         "Inventaire <div class='close'></div>"+
       "</div>"+
       "<div class='body'>"+
         "<ul class='tabs'>"+
-          "<li class='active'>Mobilié</li>"+
-          "<li>Personnages</li>"+
+          tabs +
         "</ul>"+
-        "<div>"+
-          "<ul class='items no-style'>"+
-            "<li data-furniture='table'><img src='resources/furnitures/sofatable.png' /></li>"+
-            "<li data-furniture='chair'><img src='resources/furnitures/chair.png' /></li>"+
-            "<li data-furniture='bar'><img src='resources/furnitures/executive/bar.png' /></li>"+
-            // "<li data-furniture='corner'><img src='resources/furnitures/executive/exe_corner.gif' /></li>"+
+        "<div class='content'>"+
+          "<div>"+
+            "<label>Type</label>"+
+            "<select class='type-selector'>"+
+            "</select>"+
+            "<label>Thème</label>"+
+            "<select class='theme-selector'>"+
+            "</select>"+
+          "</div>"+
+          "<ul class='items no-style furnitures'>"+
           "</ul>"+
         "</div>"+
       "</div>"+
@@ -46,16 +107,69 @@ game.GameMenu = me.Object.extend({
       "</div>"+
     "</div>");
     $(document.body).append(this.inventory);
-    $(this.inventory).hide();
-    $(this.inventory).draggable({ "handle": ".top" });
-    $(this.inventory).find('.items > li').click(function() {
-      var furniture = $(this).data('furniture');
-      ShopStore.setActiveFurniture(furniture);
-      $(this).addClass('active');
+    var updateListeners = function() {
+      $(self.inventory).find('.items > li').click(function() {
+        var furniture = $(this).data('furniture');
+        ShopStore.setActiveFurniture(furniture, false);
+        $(this).addClass('active');
+      });
+    };
+    $(this.inventory).find('.theme-selector').change(function() {
+      var categoryName = $(self.inventory).find('.tabs li.active').data('name');
+      var typeName = $(self.inventory).find('.type-selector option:selected').data('name');
+      var themeName = $(this).find('option:selected').data('name');
+      var category = categories.filter(function(category) { return category.name === categoryName; })[0];
+      if (!category) { return; }
+      var type = category.types.filter(function(type) { return type.name === typeName; })[0];
+      if (!type) { return; }
+      var theme = type.themes.filter(function(t) { return t.name === themeName; })[0];
+      if (!theme) { return; }
+      $(self.inventory).find('.furnitures').empty();
+      theme.furnitures.forEach(function(furniture) {
+        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"'><img src='"+furniture.url+"'</li>")
+      });
+
+      updateListeners();
     });
+    $(this.inventory).find('.type-selector').change(function() {
+      var categoryName = $(self.inventory).find('.tabs li.active').data('name');
+      var typeName = $(this).find('option:selected').data('name');
+      var category = categories.filter(function(category) { return category.name === categoryName; })[0];
+      if (!category) { return; }
+      var type = category.types.find(function(type) { return type.name === typeName; });
+      if (!type) { return; }
+      var themeSelector = $(self.inventory).find('.theme-selector');
+      $(themeSelector).empty();
+      type.themes.forEach(function(theme) {
+        $(themeSelector).append("<option data-name='"+theme.name+"'>"+theme.name+"</option>");
+      });
+      $(themeSelector).change();
+    });
+    $(this.inventory).find(".tabs li").click(function() {
+      var name = $(this).data('name');
+      $(self.inventory).find('.tabs li').removeClass('active');
+      $(this).addClass('active');
+      var typeSelector = $(self.inventory).find('.type-selector');
+      var themeSelector = $(self.inventory).find('.theme-selector');
+      $(typeSelector).empty();
+      $(themeSelector).empty();
+      var category = categories.filter(function(cat) { return cat.name === name; })[0];
+      if (!category) { return; }
+      if (category.types && category.types.length > 0) {
+        category.types.forEach(function(type) {
+          $(typeSelector).append("<option data-name='"+type.name+"'>"+type.name+"</option>");
+        });
+
+        $(typeSelector).change();
+      }
+    });
+    $(this.inventory).find('.tabs li:first-child').click();
     $(this.inventory).find('.close').click(function() {
       $(self.inventory).hide();
     });
+    $(this.inventory).hide();
+    $(this.inventory).draggable({ "handle": ".top" });
+    updateListeners();
   },
   addInformationBox: function() { // Add the information box.
     var self = this;
@@ -84,7 +198,8 @@ game.GameMenu = me.Object.extend({
     $(this.actions).find('.move').click(function() {
       var selectedFurniture = ShopStore.getSelectedFurniture();
       var name = selectedFurniture.getName();
-      ShopStore.setActiveFurniture(name);
+      var flipped = selectedFurniture.flipped;
+      ShopStore.setActiveFurniture(name, flipped);
       ShopStore.removeFurniture(selectedFurniture);
       $(self.actions).hide();
       $(self.information).hide();
@@ -129,7 +244,7 @@ game.GameMenu = me.Object.extend({
       }
 
       var val = $(this).val();
-      selectedFurniture.sprite.translateX(parseInt(val));
+      selectedFurniture.translateX(parseInt(val));
       me.game.repaint();
     });
     $(this.mgfurniture).find('.ord').on('input', function(e) {
@@ -139,7 +254,7 @@ game.GameMenu = me.Object.extend({
       }
 
       var val = $(this).val();
-      selectedFurniture.sprite.translateY(parseInt(val));
+      selectedFurniture.translateY(parseInt(val));
       me.game.repaint();
     });
     $(this.mgfurniture).find('.close').click(function() {

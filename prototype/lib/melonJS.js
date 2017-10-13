@@ -12155,17 +12155,19 @@ THE SOFTWARE.
                 xmin: tile.col - nbCols + 1,
                 xmax: tile.col,
                 ymin: tile.row - nbRows + 1,
-                ymax: tile.row
+                ymax: tile.row,
+                posx: shape.pos.x,
+                posy: shape.pos.y
               };
             };
 
             var isBoxInFront = function(shape1, shape2) {
-              if (shape1.xmin > shape2.xmax) { return false; }
+              if (shape1.xmin > shape2.xmax) { return false; } // Compare according to tile coordinates.
               else if (shape2.xmin > shape1.xmax) { return true; }
               if (shape1.ymin > shape2.ymax) { return false; }
               else if (shape2.ymin > shape1.ymax) { return true; }
-              if (shape2.xmax === shape1.xmax && shape2.ymax === shape1.ymax) {
-                if (shape2.ymin < shape1.ymin) { return false; }
+              if (shape2.xmax === shape1.xmax && shape2.ymax === shape1.ymax) { // Compare according to the point position.
+                if (shape2.posy < shape1.posy) { return false; }
                 else { return true; }
               }
             };
