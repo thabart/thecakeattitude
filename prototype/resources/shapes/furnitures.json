@@ -48,6 +48,13 @@
 			"nbRows": 2,
 			"relativePosX": -31,
 			"relativePosY": -31
+		},
+		{
+			"name": "gallery_1",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
 		}
 	]
 }

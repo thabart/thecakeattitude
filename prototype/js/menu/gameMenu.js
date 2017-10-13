@@ -73,7 +73,21 @@ game.GameMenu = me.Object.extend({
         ]
       },
       {
-        name: "Posters"
+        name: "Posters",
+        isOnWall: true,
+        types: [
+          {
+            name: "Posters",
+            themes: [
+              {
+                name: "Défault",
+                furnitures: [
+                  { name: 'gallery_1', url: 'resources/posters/gallery_1.gif' }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
         name: "Décorations"
@@ -92,7 +106,7 @@ game.GameMenu = me.Object.extend({
         return "<li class='active' data-name='"+category.name+"'>"+category.name+"</li>";
       }
 
-      return "<li>"+category.name+"</li>";
+      return "<li data-name='"+category.name+"'>"+category.name+"</li>";
     }).join('');
     this.inventory = $("<div class='inventory-box'>"+
       "<div class='top'>"+
@@ -122,7 +136,14 @@ game.GameMenu = me.Object.extend({
     var updateListeners = function() {
       $(self.inventory).find('.items > li').click(function() {
         var furniture = $(this).data('furniture');
-        ShopStore.setActiveFurniture(furniture, false);
+        var isOnWall = $(this).data('isonwall');
+        if (isOnWall && isOnWall === true) {
+        console.log(isOnWall);
+          ShopStore.setActivePoster(furniture, true);
+        } else {
+          ShopStore.setActiveFurniture(furniture, false);
+        }
+
         $(this).addClass('active');
       });
     };
@@ -138,7 +159,7 @@ game.GameMenu = me.Object.extend({
       if (!theme) { return; }
       $(self.inventory).find('.furnitures').empty();
       theme.furnitures.forEach(function(furniture) {
-        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"'><img src='"+furniture.url+"'</li>")
+        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"' data-isonwall='"+category.isOnWall+"'><img src='"+furniture.url+"'</li>")
       });
 
       updateListeners();
@@ -163,6 +184,7 @@ game.GameMenu = me.Object.extend({
       $(this).addClass('active');
       var typeSelector = $(self.inventory).find('.type-selector');
       var themeSelector = $(self.inventory).find('.theme-selector');
+      $(self.inventory).find('.furnitures').empty();
       $(typeSelector).empty();
       $(themeSelector).empty();
       var category = categories.filter(function(cat) { return cat.name === name; })[0];

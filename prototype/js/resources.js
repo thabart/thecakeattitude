@@ -17,6 +17,7 @@ var g_ressources = [
     { name: "mode_table", type: "image", src: "resources/furnitures/mode/table.gif" },
     { name: "executive_sofa", type: "image", src: "resources/furnitures/executive/sofa.gif" },
     { name: "executive_chair", type: "image", src: "resources/furnitures/executive/chair.gif" },
+    { name: "gallery_1", type: "image", src: "resources/posters/gallery_1.gif" }, // Load the posters.
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
     { name: "player", type: "image", src: "resources/players/player.png" },
     { name: "furnitures_collision", type: "json", src: "resources/collisions/furnitures.json" }, // Load the collisions.

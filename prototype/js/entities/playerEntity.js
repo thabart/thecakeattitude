@@ -243,7 +243,7 @@ game.PlayerEntity = me.Entity.extend({
 
       this.pos.x = posX;
       this.pos.y = posY;
-      this.pos.z = 5;
+      this.pos.z = Constants.playerZIndex;
       this.updateMessagePosition();
       this.updatePlayerInformationPosition();
       this._super(me.Entity, "update", [dt]);

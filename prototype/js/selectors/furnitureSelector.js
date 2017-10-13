@@ -80,7 +80,7 @@ game.FurnitureSelector = me.Object.extend({
 			spr.flip();
 		}
 
-		spr.pos.z = 5;
+		spr.pos.z = Constants.playerZIndex;
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
 		ShopStore.setActiveFurniture(null);

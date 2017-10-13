@@ -1,6 +1,8 @@
 var ShopStoreCl = function() {
 	var _activeFurniture = null;
+	var _activePoster = null;
 	var _furnitures = [];
+	var _posters = [];
 	var _selectedFurniture = null;
 	var _collisionLayer = null;
 
@@ -42,6 +44,23 @@ var ShopStoreCl = function() {
 		$(this).trigger('activeFurnitureChanged');
 	};
 
+	this.getActivePoster = function() { // Get the active poster (with opacity 0.5)
+		return _activePoster;
+	};
+
+	this.setActivePoster = function(name, isFlipped) { // Set the active furniture (with opacity 0.5)
+		if (!name || name === null) {
+			_activePoster = null;
+		} else {
+			_activePoster = {
+				name: name,
+				isFlipped: isFlipped
+			};
+		}
+
+		$(this).trigger('activePosterChanged');
+	};
+
 	this.getSelectedFurniture = function() { // Get selected furniture (with opacity 1.0)
 		return _selectedFurniture;
 	};
@@ -56,6 +75,14 @@ var ShopStoreCl = function() {
 		updateCollisions();
 	};
 
+	this.addPoster = function(f) { // Add a poster.
+		_posters.push(f);
+	};
+
+	this.getFurnitures = function() { // Get all the posters.
+		return _furnitures;
+	};
+
 	this.removeFurniture = function(f) { // Remove a furniture and update the collisions.
 		var index = _furnitures.indexOf(f);
 		if (index === -1) { return; }
@@ -65,8 +92,8 @@ var ShopStoreCl = function() {
 		me.game.repaint();
 	};
 
-	this.getFurnitures = function() { // Get all the furnitures.
-		return _furnitures;
+	this.getPosters = function() { // Get all the posters.
+		return _posters;
 	};
 
 	this.getCollisionLayer = function() { // Get collision layer.
@@ -108,6 +135,10 @@ var ShopStoreCl = function() {
 	/* LISTEN THE EVENTS */
 	this.listenActiveFurnitureChanged = function(callback) {
 		$(this).on('activeFurnitureChanged', callback);
+	};
+
+	this.listenActivePosterChanged = function(callback) {
+		$(this).on('activePosterChanged', callback);
 	};
 
 	this.listenDisplayInformationArrived = function(callback) {

@@ -12143,7 +12143,7 @@ THE SOFTWARE.
               return result;
             }
 
-            if (!b.refLayer || !a.refLayer) {
+            if (!b.shapeDef || !a.shapeDef) {
               return (b.pos.y - a.pos.y);
             }
 
