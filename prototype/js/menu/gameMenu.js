@@ -57,6 +57,18 @@ game.GameMenu = me.Object.extend({
                 ]
               }
             ]
+          },
+          {
+            name: "chaise",
+            themes: [
+              {
+                name: "Affaire",
+                furnitures: [
+                  { name: 'executive_sofa', url: 'resources/furnitures/executive/sofa.gif' },
+                  { name: 'executive_chair', url: 'resources/furnitures/executive/chair.gif' }
+                ]
+              }
+            ]
           }
         ]
       },

@@ -34,6 +34,20 @@
 			"nbRows": 2,
 			"relativePosX": -37,
 			"relativePosY": -25
+		},
+		{
+			"name": "executive_sofa",
+			"nbCols": 2,
+			"nbRows": 3,
+			"relativePosX": -32,
+			"relativePosY": -45
+		},
+		{
+			"name": "executive_chair",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": -31,
+			"relativePosY": -31
 		}
 	]
 }
