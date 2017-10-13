@@ -22,4 +22,5 @@ var g_ressources = [
     { name: "bar_shape", type: "json", src: "resources/shapes/bar.json" }, // Load the shapes.
     { name: "chair_shape", type: "json", src: "resources/shapes/chair.json" },
     { name: "table_shape", type: "json", src: "resources/shapes/sofatable.json" },
+    { name: "player_shape", type: "json", src: "resources/shapes/player.json" }
 ];

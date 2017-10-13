@@ -12137,8 +12137,51 @@ THE SOFTWARE.
             if (!b.pos || !a.pos) {
                 return (a.pos ? -Infinity : Infinity);
             }
+
             var result = b.pos.z - a.pos.z;
-            return (result && result !== 0 ? result : (b.pos.y - a.pos.y));
+            if (result && result !== 0) {
+              return result;
+            }
+
+            if (!b.refLayer || !a.refLayer) {
+              return (b.pos.y - a.pos.y);
+            }
+
+            var getCoordinates = function(shape) {
+              var tile = shape.refLayer.getTile(shape.pos.x, shape.pos.y);
+              var nbRows = shape.shapeDef.nbRows;
+              var nbCols = shape.shapeDef.nbCols;
+              return {
+                xmin: tile.col - nbCols + 1,
+                xmax: tile.col,
+                ymin: tile.row - nbRows + 1,
+                ymax: tile.row
+              };
+            };
+
+            var isBoxInFront = function(shape1, shape2) {
+              if (shape1.xmin > shape2.xmax) { return false; }
+              else if (shape2.xmin > shape1.xmax) { return true; }
+              if (shape1.ymin > shape2.ymax) { return false; }
+              else if (shape2.ymin > shape1.ymax) { return true; }
+              if (shape2.xmax === shape1.xmax && shape2.ymax === shape1.ymax) {
+                if (shape2.ymin < shape1.ymin) { return false; }
+                else { return true; }
+              }
+            };
+
+            var result = b.pos.z - a.pos.z;
+            if (result && result !== 0) {
+              return result;
+            }
+
+            var shape1 = getCoordinates(a);
+            var shape2 = getCoordinates(b);
+            if (isBoxInFront(shape1, shape2)) {
+              return 1;
+            } else {
+              return -1;
+            }
         },
 
         /**

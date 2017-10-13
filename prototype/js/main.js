@@ -23,7 +23,7 @@ var game = {
         );
 
         me.game.world.autoSort = true;
-        me.game.world.sortOn = 'x';
+        me.game.world.sortOn = 'y';
         me.state.set(me.state.PLAY, new game.ShopScreen());
         me.state.transition("fade","#FFFFFF", 250);
         me.state.change(me.state.PLAY);

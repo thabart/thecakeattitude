@@ -25,6 +25,7 @@ game.PlayerEntity = me.Entity.extend({
             { framewidth: playerWidth, frameheight: playerHeight },
             image
         );
+        this.shapeDef = me.loader.getJSON("player_shape");
         var collisionShape = CollisionHelper.getShape("player_collision");
         this.body.removeShapeAt(0);
         this.body.addShape(collisionShape);
