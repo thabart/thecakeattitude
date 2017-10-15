@@ -82,7 +82,22 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Défault",
                 furnitures: [
-                  { name: 'gallery_1', url: 'resources/posters/gallery_1.gif' }
+                  { name: 'gallery_1', url: 'resources/posters/gallery_1.gif' },
+                  { name: 'gallery_2', url: 'resources/posters/gallery_2.gif' },
+                  { name: 'gallery_n1', url: 'resources/posters/gallery_n1.gif' },
+                  { name: 'gallery_n2', url: 'resources/posters/gallery_n2.gif' },
+                  { name: 'gallery_n3', url: 'resources/posters/gallery_n3.gif' },
+                  { name: 'gallery_n4', url: 'resources/posters/gallery_n4.gif' },
+                  { name: 'gallery_n5', url: 'resources/posters/gallery_n5.gif' },
+                  { name: 'gallery_n6', url: 'resources/posters/gallery_n6.gif' },
+                  { name: 'gallery_n7', url: 'resources/posters/gallery_n7.gif' },
+                  { name: 'gallery_n8', url: 'resources/posters/gallery_n8.gif' },
+                  { name: 'gallery_n9', url: 'resources/posters/gallery_n9.gif' },
+                  { name: 'gallery_n10', url: 'resources/posters/gallery_n10.gif' },
+                  { name: 'gallery_n11', url: 'resources/posters/gallery_n11.gif' },
+                  { name: 'gallery_n12', url: 'resources/posters/gallery_n12.gif' },
+                  { name: 'gallery_n13', url: 'resources/posters/gallery_n13.gif' },
+                  { name: 'gallery_n14', url: 'resources/posters/gallery_n14.gif' }
                 ]
               }
             ]

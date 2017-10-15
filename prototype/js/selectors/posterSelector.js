@@ -26,6 +26,10 @@ game.PosterSelector = me.Object.extend({
 		var activePoster = ShopStore.getActivePoster();
 		var spr = new game.PosterEntity(this.sprite.pos.x, this.sprite.pos.y, activePoster.name);
 		ShopStore.addPoster(spr);
+		if (this.sprite.flipped) {
+			spr.flip();
+		}
+
 		me.game.world.addChild(spr);
 		spr.pos.z = Constants.playerZIndex - 1;
 		me.game.world.removeChild(this.sprite);
@@ -35,7 +39,12 @@ game.PosterSelector = me.Object.extend({
   movePoster(evt) { // Move the selected poster.
 		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
 		if (!tile) { return; }
-		var activePoster = ShopStore.getActivePoster();
+    var isLeftWall = tile.row > Constants.Layers.Wall.Position.Row;
+    if ((!this.sprite.flipped && isLeftWall) || (this.sprite.flipped && !isLeftWall)) {
+      this.sprite.flip();
+    }
+
+    var activePoster = ShopStore.getActivePoster();
 		var region = me.loader.getImage(activePoster.name);
 		var nbRows = Math.ceil(region.width / (this.refLayer.tilewidth / 2));
 		var nbCols = Math.ceil(region.height / this.refLayer.tileheight);

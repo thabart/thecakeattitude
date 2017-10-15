@@ -8,7 +8,11 @@ var Constants = {
       }
     },
     Wall: {
-      Name: "Walls"
+      Name: "Walls",
+      Position: {
+        Row: 4,
+        Col: 4
+      }
     }
   },
   playerZIndex: 6
