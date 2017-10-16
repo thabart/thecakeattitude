@@ -1,9 +1,10 @@
 import React, {Component} from "react";
-import { Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem, Button } from "reactstrap";
 import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ProductsService, ShopsService, OrdersService } from "./services/index";
 import { DescriptionTab, ProductComment, ProductDiscount } from "./productabs";
+import { EditableText } from './components';
 import { ApplicationStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
@@ -25,12 +26,16 @@ class Products extends Component {
         this.navigateComments = this.navigateComments.bind(this);
         this.navigateDiscounts = this.navigateDiscounts.bind(this);
         this.addToCart = this.addToCart.bind(this);
+        this.editProduct = this.editProduct.bind(this);
+        this.updateProductName = this.updateProductName.bind(this);
         this.state = {
             isLoading: false,
             errorMessage: null,
             currentImageIndice: 0,
             product: null,
-            shop: null
+            shop: null,
+            isEditable: false,
+            canBeEdited: false
         };
     }
 
@@ -53,6 +58,15 @@ class Products extends Component {
       });
     }
 
+    editProduct() { // Edit the product.
+      var id = this.props.match.params.id;
+      this.props.history.push('/products/'+ id + '/edit');
+    }
+
+    updateProductName() { // Update product name.
+
+    }
+
     refreshScore(data) { // Refresht the score.
         var product = this.state.product;
         product['average_score'] = data['average_score'];
@@ -66,29 +80,38 @@ class Products extends Component {
     }
 
     refresh() { // Refresh the product.
-        var self = this;
+        var self = this,
+            action = self.props.match.params.action,
+            isEditable = action && action === 'edit';
         self.setState({
             isLoading: true
         });
         const {t} = this.props;
         ProductsService.get(this.props.match.params.id).then(function (r) {
             var product = r['_embedded'];
+            var localUser = ApplicationStore.getUser();
             ShopsService.get(product.shop_id).then(function(sr) {
+              var shop = sr['_embedded'];
+              isEditable = isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
               self.setState({
                   isLoading: false,
                   product: product,
-                  shop: sr['_embedded']
+                  shop: shop,
+                  isEditable: isEditable,
+                  canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
               });
             }).catch(function() {
                 self.setState({
                     errorMessage: t('retrieveProductError'),
-                    isLoading: false
+                    isLoading: false,
+                    isEditable: false
                 });
             });
         }).catch(function () {
             self.setState({
                 errorMessage: t('retrieveProductError'),
-                isLoading: false
+                isLoading: false,
+                isEditable: false
             });
         });
     }
@@ -204,7 +227,12 @@ class Products extends Component {
                                 {this.state.shop.name}
                             </a>
                         </BreadcrumbItem>
-                        <BreadcrumbItem active>{this.state.product.name}</BreadcrumbItem>
+                        <BreadcrumbItem active>
+                          { this.state.product.name }
+                          {self.state.canBeEdited && (<Button outline color="secondary" id="edit-product" size="sm" className="edit-profile-icon btn-icon with-border" onClick={self.editProduct}>
+                            <i className="fa fa-pencil"></i>
+                          </Button>)}
+                        </BreadcrumbItem>
                     </Breadcrumb>
                     <div className="row">
                         { /* Left side */ }
@@ -212,7 +240,10 @@ class Products extends Component {
                           <div style={{paddingLeft: "10px"}}>
                             { /* Header */ }
                             <div>
-                              <h2>{this.state.product.name}</h2>
+                              { self.state.isEditable ? (
+                                <EditableText className="header1" value={self.state.product.name} validate={this.updateTitle} maxLength={15} minLength={1}/>) : 
+                                (<h2>{self.state.product.name}</h2>)
+                              }                              
                               <div>
                                 <Rater total={5} ref="score" rating={this.state.product.average_score} interactive={false}/>
                                 <b> {this.state.product.average_score} </b>
