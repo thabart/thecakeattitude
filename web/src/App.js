@@ -20,6 +20,7 @@ import Users from './Users';
 import Messages from './Messages';
 import Message from './Message';
 import NewMessage from './NewMessage';
+import ShopCategories from './shopCategories';
 import Basket from './Basket';
 import Payment from './Payment';
 import { SessionService, UserService } from "./services/index";
@@ -330,6 +331,7 @@ class App extends Component {
                 <Route path="/message/:id" render={(p) => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Message id={p.match.params.id} />))}/>
                 <Route path="/newmessage/:action?/:id?" render={(p) => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<NewMessage />))}/>
                 <Route path="/notifications/:pageId?" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<Notifications />))}/>
+                <Route path="/shopcategories/:id" component={ShopCategories} />
                 <Route path="/addproduct/:id" render={() => (!self.isLoggedIn() ? (<Redirect to="/" />) : (<AddProduct />))}/>
                 <Route path="/addshop" render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<AddShop />))}/>
                 <Route path='/printlabel/:id' render={() => (!self.isLoggedIn() ? (<Redirect to="/"/>) : (<PrintOrderLabel />))}/>

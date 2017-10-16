@@ -485,5 +485,6 @@
   "errorGetTag": "Le tag n'existe pas",
   "tagTitle": "Tag : {0}",
   "bestRatings": "Meilleurs notes",
-  "popularTags": "Tags populaires"
+  "popularTags": "Tags populaires",
+  "shopCategoryTitle": "Catégorie de magasin {0}"
 }
