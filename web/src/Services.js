@@ -132,7 +132,11 @@ class Services extends Component {
 
         if (self.state.service.tags && self.state.service.tags.length > 0) {
             self.state.service.tags.forEach(function (tag) {
-                tags.push((<li key={tag}>{tag}</li>));
+                tags.push((<li key={tag}>
+                    <NavLink onClick={() => { self.props.history.push("/tags/"+tag+"/shopservices"); }} className="no-decoration red"  style={{"padding": "0", "textTransform" : "none", "fontWeight" : "100"}}>
+                        {tag}
+                    </NavLink>
+                </li>));
             });
         }
 
@@ -205,7 +209,7 @@ class Services extends Component {
                         </div>
                         { /* Right side */ }
                         <div className="col-md-4">
-                            <h4>€ {self.state.service.new_price}</h4>
+                            <h4>€ {self.state.service.price}</h4>
                             { user && user.sub !== this.state.shop.subject && (<a href="#" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/services/' + self.state.service.id); }} className="btn btn-default">{t('contactTheShop')}</a>) }
                         </div>
                     </div>

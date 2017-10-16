@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { translate } from 'react-i18next';
-import { TagService, ShopsService, ProductsService } from './services/index';
+import { TagService, ShopsService, ProductsService, ShopServices } from './services/index';
 import { withRouter } from "react-router";
 import { Alert } from 'reactstrap';
 import { NavLink } from "react-router-dom";
@@ -9,9 +9,20 @@ import ProductElt from "./shopProfile/productElt";
 import MainLayout from './MainLayout';
 import Rater from "react-rater";
 import $ from 'jquery';
+import moment from "moment";
 
-const defaultCount = 2;
-const defaultTagCount = 2;
+const defaultCount = 5;
+const defaultTagCount = 10;
+
+var daysMapping = {
+    "0": "sunday",
+    "1": "monday",
+    "2": "tuesday",
+    "3": "wednesday",
+    "4": "thursday",
+    "5": "friday",
+    "6": "saturday"
+};
 
 class Tags extends Component {
 	constructor(props) {
@@ -19,6 +30,7 @@ class Tags extends Component {
     	this._request = {count: defaultCount, start_index: 0};
     	this._tagRequest = { count: defaultTagCount, start_index: 0 };
         this._page = '1';
+        this._tagPage = '1';
     	this.getAction = this.getAction.bind(this);
     	this.resetFilter = this.resetFilter.bind(this);
     	this.navigate = this.navigate.bind(this);
@@ -27,8 +39,10 @@ class Tags extends Component {
 		this.refresh = this.refresh.bind(this);
 		this.refreshProducts = this.refreshProducts.bind(this);
 		this.refreshShops = this.refreshShops.bind(this);
+		this.refreshShopServices = this.refreshShopServices.bind(this);
 		this.displayShops = this.displayShops.bind(this);
 		this.displayProducts = this.displayProducts.bind(this);
+		this.displayShopServices = this.displayShopServices.bind(this);
 		this.displayTag = this.displayTag.bind(this);
 		this.refreshTopTags = this.refreshTopTags.bind(this);
 		this.changeOrder = this.changeOrder.bind(this);
@@ -43,14 +57,15 @@ class Tags extends Component {
       		isTagsLoading: false,
       		topTags: [],
       		tagPagination: [],
-      		isContentLoading: false
+      		isContentLoading: false,
+      		shopServices: []
 		};
 	}
 
 	getAction() { // Get the action.
 		var self = this;
       	var action = self.props.match.params.action;
-      	if (!action && action !== 'shops' && action !== 'products') {
+      	if (!action && action !== 'shops' && action !== 'products' && action !== 'shopservices') {
       		action = 'shops';
       	}
 
@@ -64,6 +79,16 @@ class Tags extends Component {
 	        start_index: (page - 1) * defaultCount
 	    });
 	    this.refresh();
+	}
+
+	navigateTags(e, page) { // Navigate through the tags.
+	    e.preventDefault();
+        this._tagPage = page;
+	    this._tagRequest = $.extend({}, this._tagRequest, {
+	        start_index: (page - 1) * defaultTagCount
+	    });
+      	var action = this.getAction();
+      	this.refreshTopTags(action);
 	}
 
 	toggle(name) { // Toggle property.
@@ -100,8 +125,10 @@ class Tags extends Component {
       	self.refreshTopTags(action);
       	if (action === 'shops') {
       		self.refreshShops();
-      	} else {
+      	} else if (action === 'products') {
       		self.refreshProducts();
+      	} else {
+      		self.refreshShopServices();
       	}
 	}
 
@@ -126,7 +153,7 @@ class Tags extends Component {
                 pagination: pagination
 	        });
 		}).catch(function(e) {
-	        var errorMsg = '';
+	        var errorMsg = ''; // TODO : Put the message.
 	        if (e.responseJSON && e.responseJSON.error_description) {
 	          errorMsg = e.responseJSON.error_description;
 	        }
@@ -165,7 +192,7 @@ class Tags extends Component {
                 pagination: pagination
 	        });
 		}).catch(function(e) {
-	        var errorMsg = '';
+	        var errorMsg = ''; // TODO : Put the message.
 	        if (e.responseJSON && e.responseJSON.error_description) {
 	          errorMsg = e.responseJSON.error_description;
 	        }
@@ -183,15 +210,59 @@ class Tags extends Component {
 		});
 	}
 
+	refreshShopServices() { // Display shop services.
+		var self = this;
+		self.setState({
+			isContentLoading: true
+		});
+		var request = $.extend({}, self._request);
+	    var tag = self.props.match.params.tag;
+		request['tags'] = [tag];
+		ShopServices.search(request).then(function(shopServicesResult) {
+            var shopServicesEmbedded = shopServicesResult['_embedded'];
+            var pagination = shopServicesResult['_links'].navigation;
+            if (!(shopServicesEmbedded instanceof Array)) {
+                shopServicesEmbedded = [shopServicesEmbedded];
+            }
+
+            console.log(shopServicesEmbedded);
+	        self.setState({
+	        	isContentLoading: false,
+	        	shopServices: shopServicesEmbedded,
+                pagination: pagination
+	        });
+		}).catch(function(e) {
+	        var errorMsg = ''; // TODO : Put a message.
+	        if (e.responseJSON && e.responseJSON.error_description) {
+	          errorMsg = e.responseJSON.error_description;
+	        }
+
+	        ApplicationStore.sendMessage({
+	          message: errorMsg,
+	          level: 'error',
+	          position: 'tr'
+	        });
+	        self.setState({
+	        	isContentLoading: false,
+	        	shops: [],
+	        	pagination: []
+	        });
+		});		
+	}
+
 	refreshTopTags(act) { // Refresh top tags.
 		var self = this;
 		if (act === 'shops') {
 			this._tagRequest.orders = [
 				{ target: "shop_occurrence", method: "desc" }
 			];
-		} else {
+		} else if (act === 'products') {
 			this._tagRequest.orders = [
 				{ target: "product_occurrence", method: "desc" }
+			];
+		} else if (act === 'shopservices') {			
+			this._tagRequest.orders = [
+				{ target: "service_occurrence", method: "desc" }
 			];
 		}
 
@@ -251,6 +322,15 @@ class Tags extends Component {
     	this.refreshTopTags('products');
 	}
 
+	displayShopServices() { // Display the shop services.
+		if (this.getAction() === 'shopservices') { return; }
+	    var tag = this.props.match.params.tag;    
+    	this.props.history.push('/tags/'+tag+'/shopservices');
+    	this.resetFilter();
+    	this.refreshShopServices();
+    	this.refreshTopTags('shopservices');
+	}
+
 	displayTag(e, tagName) { // Change the tag.
 		e.preventDefault();
 		var self = this;
@@ -292,15 +372,28 @@ class Tags extends Component {
 
       	var action = self.getAction(),
       		navigations = [],
+      		tagNavigations = [],
       		shops = [],
       		products = [],
-      		topTags = [];
+      		topTags = [],
+      		shopServices = [],
+      		user = ApplicationStore.getUser();
 
 	    if (this.state.pagination && this.state.pagination.length > 1) {
 	      this.state.pagination.forEach(function (nav) {
 	        navigations.push((
 	          <li className="page-item"><a href="#" className={self._page === nav.name ? "page-link active" : "page-link"} onClick={(e) => {
 	            self.navigate(e, nav.name);
+	          }}>{nav.name}</a></li>
+	        ));
+	      });
+	    }
+
+	    if (this.state.tagPagination && this.state.tagPagination.length > 1) {
+	      this.state.tagPagination.forEach(function (nav) {
+	        tagNavigations.push((
+	          <li className="page-item"><a href="#" className={self._tagPage === nav.name ? "page-link active" : "page-link"} onClick={(e) => {
+	            self.navigateTags(e, nav.name);
 	          }}>{nav.name}</a></li>
 	        ));
 	      });
@@ -341,6 +434,55 @@ class Tags extends Component {
 	    	});
 	    }
 
+	    if (action === 'shopservices' && this.state.shopServices.length > 0) {
+	    	this.state.shopServices.forEach(function(shopService) {
+                var image = "/images/default-shop-service.png";
+                if (shopService.images && shopService.images.length > 0) {
+                    image = shopService.images[0];
+                }
+
+                var days = null;
+                if (shopService.occurrence.days && shopService.occurrence.days.length > 0) {
+                    var list = $.map(shopService.occurrence.days, function (val) {
+                        return (<li>{t(daysMapping[val])}</li>);
+                    });
+                    days = (<ul className="no-padding tags gray inline">{list}</ul>);
+                }
+
+
+                var tags = shopService.tags.map(function(tag) { return (<li>{tag}</li>); });
+	    		shopServices.push((
+			        <div className="product-item">
+			        	<div className="content">
+			        		<NavLink className="no-decoration row" to={"/services/" + shopService.id}>
+			        			<div className="col-md-3">
+			        				<img src={image} className="rounded" width="140" height="140" />
+			        			</div>
+			        			<div className="col-md-4">
+			        				<h3>{shopService.name}</h3>
+			        				<Rater total={5} rating={shopService.average_score} interactive={false}/><i>{t('comments')}: {shopService.nb_comments}</i>
+									{days === null ? (<div><i>{t('noOccurrence')}</i></div>) : (
+			                            <div>
+			                              <p>
+			                                {t('days')} {days}<br />
+			                                <span className="badge badge-default">{t('fromToHours').replace('{0}', moment(shopService.occurrence.start_time, 'HH:mm:ss').format('LT')).replace('{1}', moment(shopService.occurrence.end_time, 'HH:mm:ss').format('LT'))}</span>
+			                              </p>
+			                            </div>
+			                        )}
+
+			        				<ul className="tags no-padding gray">
+			        					{tags}
+			        				</ul>
+			        			</div>
+			        			<div className="col-md-5">
+			        				<h4 className="price">€ {shopService.price}</h4>
+			        			</div>
+	        				</NavLink>
+	        			</div>
+	        		</div>));
+	    	});
+	    }
+
 	    if (this.state.topTags.length > 0) {
 	    	this.state.topTags.forEach(function(topTag) {
 	    		topTags.push(
@@ -365,6 +507,12 @@ class Tags extends Component {
 				        			{topTags}
 				        		</ul>
 			        		)}
+			        		{/* Display the navigation */}			        		
+							{tagNavigations.length > 0 && (
+							    <ul className="pagination">
+							        {tagNavigations}
+							    </ul>
+							)}
 			        	</div>	
 			        ) : (
 			        	<div className="content">
@@ -381,6 +529,7 @@ class Tags extends Component {
 				        		<ul className="nav nav-pills red">
 				        			<li className="nav-item"><a href="#" className={action === "shops" ? "nav-link active" : "nav-link"} onClick={self.displayShops}>{t('shops')}</a></li>
 				        			<li className="nav-item"><a href="#" className={action === "products" ? "nav-link active" : "nav-link"} onClick={self.displayProducts}>{t('products')}</a></li>
+				        			<li className="nav-item"><a href="#" className={action === "shopservices" ? "nav-link active" : "nav-link"} onClick={self.displayShopServices}>{t('shopServices')}</a></li>
 				        		</ul>
 				        		{/* Display filtering */}
 						        <div className="col-md-4 offset-md-8">
@@ -396,11 +545,18 @@ class Tags extends Component {
 						        		<option data-target="price" data-method="asc">{t('priceAsc')}</option>
 						        		<option data-target="price" data-method="desc">{t('priceDesc')}</option>
 						        	</select>
+						        	<select className={action === 'shopservices' ? 'form-control' : 'hidden'} onChange={(e) => { this.changeOrder(e); }}>
+						        		<option data-target="create_datetime" data-method="desc">{t('latest')}</option>
+						        		<option data-target="average_score" data-method="desc">{t('bestRatings')}</option>
+						        		<option data-target="price" data-method="asc">{t('priceAsc')}</option>
+						        		<option data-target="price" data-method="desc">{t('priceDesc')}</option>
+						        	</select>
 						        </div>
 				        		{this.state.isContentLoading ? (<i className="fa fa-spinner fa-spin"></i>) : (
 				        			<div>
 						        		{ shops.length > 0 && ( <div>{shops}</div> ) }
 						        		{ products.length > 0 && (<div>{products}</div>) }
+						        		{ shopServices.length > 0 && (<div>{shopServices}</div>) }
 						        		{/* Display the navigation */}			        		
 								        {navigations.length > 0 && (
 								          <ul className="pagination">

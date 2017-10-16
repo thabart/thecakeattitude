@@ -157,8 +157,6 @@ class Products extends Component {
             });
         }
 
-        console.log(bestDiscount);
-
         if (action === "comments") {
             content = (<ProductComment product={self.state.product} />);
         } else if (action === 'discounts') {
@@ -170,7 +168,11 @@ class Products extends Component {
 
         if (this.state.product.tags && this.state.product.tags.length > 0) {
             this.state.product.tags.forEach(function (tag) {
-                tags.push((<li key={tag}>{tag}</li>));
+                tags.push((<li key={tag}>
+                  <NavLink onClick={() => { self.props.history.push("/tags/"+tag+"/products"); }} className="no-decoration red"  style={{"padding": "0", "textTransform" : "none", "fontWeight" : "100"}}>
+                    {tag}
+                  </NavLink>
+                </li>));
             });
         }
 
