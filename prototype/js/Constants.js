@@ -15,5 +15,5 @@ var Constants = {
       }
     }
   },
-  playerZIndex: 6
+  playerZIndex: 7
 };

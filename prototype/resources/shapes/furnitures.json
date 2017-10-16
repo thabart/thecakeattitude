@@ -55,6 +55,76 @@
 			"nbRows": 2,
 			"relativePosX": 0,
 			"relativePosY": 0
+		},
+		{
+			"name": "plant_1",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_2",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_3",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_4",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_5",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_6",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_7",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_8",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_9",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+		},
+		{
+			"name": "plant_10",
+			"nbCols": 2,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
 		}
 	]
 }

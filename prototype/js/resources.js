@@ -33,6 +33,29 @@ var g_ressources = [
     { name: "gallery_n12", type: "image", src: "resources/posters/gallery_n12.gif" },
     { name: "gallery_n13", type: "image", src: "resources/posters/gallery_n13.gif" },
     { name: "gallery_n14", type: "image", src: "resources/posters/gallery_n14.gif" },
+    { name: "plant_1", type: "image", src: "resources/decorations/plants/plant_1.gif" }, // Load the plants.
+    { name: "plant_2", type: "image", src: "resources/decorations/plants/plant_2.gif" },
+    { name: "plant_3", type: "image", src: "resources/decorations/plants/plant_3.gif" },
+    { name: "plant_4", type: "image", src: "resources/decorations/plants/plant_4.gif" },
+    { name: "plant_5", type: "image", src: "resources/decorations/plants/plant_5.gif" },
+    { name: "plant_6", type: "image", src: "resources/decorations/plants/plant_6.gif" },
+    { name: "plant_7", type: "image", src: "resources/decorations/plants/plant_7.gif" },
+    { name: "plant_8", type: "image", src: "resources/decorations/plants/plant_8.gif" },
+    { name: "plant_9", type: "image", src: "resources/decorations/plants/plant_9.gif" },
+    { name: "plant_10", type: "image", src: "resources/decorations/plants/plant_10.gif" },
+    { name: "flag_1", type: "image", src: "resources/flags/flag_1.gif" }, // Load the flags.
+    { name: "flag_2", type: "image", src: "resources/flags/flag_2.gif" },
+    { name: "flag_3", type: "image", src: "resources/flags/flag_3.gif" },
+    { name: "flag_4", type: "image", src: "resources/flags/flag_4.gif" },
+    { name: "flag_5", type: "image", src: "resources/flags/flag_5.gif" },
+    { name: "exe_floor", type: "image", src: "resources/grounds/floors/executive/exe_floor.gif" }, // Load the floors.
+    { name: "hw_tile_1", type: "image", src: "resources/grounds/floors/star/hw_tile_1.gif" },
+    { name: "hw_tile_2", type: "image", src: "resources/grounds/floors/star/hw_tile_2.gif" },
+    { name: "hw_tile_3", type: "image", src: "resources/grounds/floors/star/hw_tile_3.gif" },
+    { name: "jp_tatami_large", type: "image", src: "resources/grounds/rugs/japanese/jp_tatami_large.gif" },
+    { name: "jp_tatami_small", type: "image", src: "resources/grounds/rugs/japanese/jp_tatami_small.gif" },
+    { name: "bear_rug_blue", type: "image", src: "resources/grounds/rugs/others/bear_rug_blue.gif" },
+    { name: "bear_rug_mint", type: "image", src: "resources/grounds/rugs/others/bear_rug_mint.gif" },
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
     { name: "player", type: "image", src: "resources/players/player.png" },
     { name: "furnitures_collision", type: "json", src: "resources/collisions/furnitures.json" }, // Load the collisions.

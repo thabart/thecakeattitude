@@ -1,8 +1,7 @@
 game.FurnitureSelector = me.Object.extend({
-	init: function(zIndex) {
+	init: function() {
     this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
 		this.sprite = null;
-		this.zIndex = zIndex;
     me.event.subscribe("pointermove", this.pointerMove.bind(this));
     me.event.subscribe('pointerdown', this.pointerDown.bind(this));
 		ShopStore.listenActiveFurnitureChanged(this.updateActiveFurniture.bind(this));

@@ -1,8 +1,7 @@
 game.PosterSelector = me.Object.extend({
-  init: function(zIndex) {
+  init: function() {
     this.refLayer = me.game.world.getChildByName(Constants.Layers.Wall.Name)[0];
 		this.sprite = null;
-		this.zIndex = zIndex;
     me.event.subscribe("pointermove", this.pointerMove.bind(this));
     me.event.subscribe("pointerdown", this.pointerDown.bind(this));
 		ShopStore.listenActivePosterChanged(this.updateActivePoster.bind(this));
@@ -72,6 +71,6 @@ game.PosterSelector = me.Object.extend({
 		this.sprite = new game.PosterEntity(0,0, activePoster.name);
 		this.sprite.opacity(0);
 		me.game.world.addChild(this.sprite);
-		this.sprite.pos.z = Constants.playerZIndex - 1;
+		this.sprite.pos.z = Constants.playerZIndex - 2;
 	}
 });

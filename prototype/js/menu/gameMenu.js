@@ -26,7 +26,7 @@ game.GameMenu = me.Object.extend({
     var self = this;
     var categories = [
       {
-        name: "Mobilié",
+        name: "Mobiliés",
         types: [
           {
             name: "table",
@@ -73,7 +73,7 @@ game.GameMenu = me.Object.extend({
         ]
       },
       {
-        name: "Posters",
+        name: "Mur",
         isOnWall: true,
         types: [
           {
@@ -101,14 +101,93 @@ game.GameMenu = me.Object.extend({
                 ]
               }
             ]
+          },
+          {
+            name: "Drapeaux",
+            themes: [
+              {
+                name: "Défault",
+                furnitures: [
+                  { name: 'flag_1', url: 'resources/flags/flag_1.gif' },
+                  { name: 'flag_2', url: 'resources/flags/flag_2.gif' },
+                  { name: 'flag_3', url: 'resources/flags/flag_3.gif' },
+                  { name: 'flag_4', url: 'resources/flags/flag_4.gif' },
+                  { name: 'flag_5', url: 'resources/flags/flag_5.gif' }
+                ]
+              }
+            ]
           }
         ]
       },
       {
-        name: "Décorations"
+        name: "Intérieur",
+        types: [
+          {
+            name: "Plantes",
+            themes: [
+              {
+                name: "Défault",
+                furnitures: [
+                  { name: 'plant_1', url: 'resources/decorations/plants/plant_1.gif' },
+                  { name: 'plant_2', url: 'resources/decorations/plants/plant_2.gif' },
+                  { name: 'plant_3', url: 'resources/decorations/plants/plant_3.gif' },
+                  { name: 'plant_4', url: 'resources/decorations/plants/plant_4.gif' },
+                  { name: 'plant_5', url: 'resources/decorations/plants/plant_5.gif' },
+                  { name: 'plant_6', url: 'resources/decorations/plants/plant_6.gif' },
+                  { name: 'plant_7', url: 'resources/decorations/plants/plant_7.gif' },
+                  { name: 'plant_8', url: 'resources/decorations/plants/plant_8.gif' },
+                  { name: 'plant_9', url: 'resources/decorations/plants/plant_9.gif' },
+                  { name: 'plant_10', url: 'resources/decorations/plants/plant_10.gif' }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
-        name: "Sol"
+        name: "Sol",
+        isOnWall: false,
+        isOnGround: true,
+        types: [
+          {
+            name: "Terrain",
+            themes: [
+              {
+                name: "Affaire",
+                furnitures: [
+                  { name: 'exe_floor', url: 'resources/grounds/floors/executive/exe_floor.gif' },
+                ]
+              },
+              {
+                name: "Star",
+                furnitures: [
+                  { name: 'hw_tile_1', url: 'resources/grounds/floors/star/hw_tile_1.gif' },
+                  { name: 'hw_tile_2', url: 'resources/grounds/floors/star/hw_tile_2.gif' },
+                  { name: 'hw_tile_3', url: 'resources/grounds/floors/star/hw_tile_3.gif' },
+                ]
+              }
+            ]
+          },
+          {
+            name: "Tapis",
+            themes: [
+              {
+                name: "Japonais",
+                furnitures: [
+                  { name: 'jp_tatami_large', url: 'resources/grounds/rugs/japanese/jp_tatami_large.gif' },
+                  { name: 'jp_tatami_small', url: 'resources/grounds/rugs/japanese/jp_tatami_small.gif' },
+                ]
+              },
+              {
+                name: "Défault",
+                furnitures: [
+                  { name: 'bear_rug_blue', url: 'resources/grounds/rugs/others/bear_rug_blue.gif' },
+                  { name: 'bear_rug_mint', url: 'resources/grounds/rugs/others/bear_rug_mint.gif' },
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
         name: "Personnages"
@@ -152,9 +231,11 @@ game.GameMenu = me.Object.extend({
       $(self.inventory).find('.items > li').click(function() {
         var furniture = $(this).data('furniture');
         var isOnWall = $(this).data('isonwall');
+        var isOnGround = $(this).data('isonground');
         if (isOnWall && isOnWall === true) {
-        console.log(isOnWall);
           ShopStore.setActivePoster(furniture, true);
+        } else if (isOnGround && isOnGround === true) {
+          ShopStore.setActiveFloor(furniture);
         } else {
           ShopStore.setActiveFurniture(furniture, false);
         }
@@ -174,7 +255,7 @@ game.GameMenu = me.Object.extend({
       if (!theme) { return; }
       $(self.inventory).find('.furnitures').empty();
       theme.furnitures.forEach(function(furniture) {
-        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"' data-isonwall='"+category.isOnWall+"'><img src='"+furniture.url+"'</li>")
+        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"' data-isonwall='"+category.isOnWall+"' data-isonground='"+category.isOnGround+"'><img src='"+furniture.url+"'</li>")
       });
 
       updateListeners();

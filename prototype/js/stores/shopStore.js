@@ -1,8 +1,10 @@
 var ShopStoreCl = function() {
 	var _activeFurniture = null;
 	var _activePoster = null;
+	var _activeFloor = null;
 	var _furnitures = [];
 	var _posters = [];
+	var _floors = [];
 	var _selectedFurniture = null;
 	var _collisionLayer = null;
 
@@ -60,6 +62,26 @@ var ShopStoreCl = function() {
 
 		$(this).trigger('activePosterChanged');
 	};
+
+	this.getActiveFloor = function() { // Get the active floor (with opacity 0.5)
+		return _activeFloor;
+	}
+
+	this.setActiveFloor = function(name) { // Set the active floor (with opacity 0.5)
+		if (!name || name === null) {
+			_activeFloor = null;
+		} else {			
+			_activeFloor = {
+				name: name
+			};
+		}
+
+		$(this).trigger('activeFloorChanged');
+	}
+
+	this.addFloor = function(f) { // Add a floor into the collection.
+		_floors.push(f);
+	}
 
 	this.getSelectedFurniture = function() { // Get selected furniture (with opacity 1.0)
 		return _selectedFurniture;
@@ -140,6 +162,10 @@ var ShopStoreCl = function() {
 	this.listenActivePosterChanged = function(callback) {
 		$(this).on('activePosterChanged', callback);
 	};
+
+	this.listenActiveFloorChanged = function(callback) {
+		$(this).on('activeFloorChanged', callback);
+	}
 
 	this.listenDisplayInformationArrived = function(callback) {
 		$(this).on('displayInformationArrived', callback);
