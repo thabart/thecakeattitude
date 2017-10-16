@@ -43,6 +43,11 @@
   padding-left: 5px;
 }
 
+.vertical-menu .sub-menu-item.active {
+  background-color: #ee676b;
+  color: white;
+}
+
 .vertical-menu .content,
 .vertical-menu .header {
   padding: 5px;

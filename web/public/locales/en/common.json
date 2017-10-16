@@ -487,5 +487,8 @@
   "tagTitle": "Tag : {0}",
   "bestRatings": "Best ratings",
   "popularTags": "Popular tags",
-  "shopCategoryTitle": "Shop category {0}"
+  "shopCategoryTitle": "Shop category {0}",
+  "retrieveShopCategoryError": "An error occured while trying to retrieve the shop category, please contact the administrator",
+  "retrieveShopCategoriesError": "An error occured while trying to retrieve the shop categories, please contact the administrator",
+  "retrieveShopsError": "An error occured while trying to retrieve the shops, please contact the administrator"
 }

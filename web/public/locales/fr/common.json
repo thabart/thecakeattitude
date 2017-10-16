@@ -486,5 +486,8 @@
   "tagTitle": "Tag : {0}",
   "bestRatings": "Meilleurs notes",
   "popularTags": "Tags populaires",
-  "shopCategoryTitle": "Catégorie de magasin {0}"
+  "shopCategoryTitle": "Catégorie de magasin {0}",
+  "retrieveShopCategoryError": "Une erreur est survenue durant la récupération de la catégorie de magasin, veuillez prendre contact avec l'administrateur",
+  "retrieveShopCategoriesError": "Une erreur est survenue durant la récupération des catégories de magasin, veuillez prendre contact avec l'administrateur",
+  "retrieveShopsError": "Une erreur est survenue durant la récupération des magasins, veuillez prendre contact avec l'administrateur"
 }

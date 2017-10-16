@@ -10,8 +10,7 @@ import MainLayout from './MainLayout';
 import Rater from "react-rater";
 import $ from 'jquery';
 
-const defaultCount = 2;
-const defaultTagCount = 2;
+const defaultCount = 5;
 
 class ShopCategories extends Component {
 	constructor(props) {
@@ -26,6 +25,7 @@ class ShopCategories extends Component {
         this.toggleCategory = this.toggleCategory.bind(this);
         this.getShopCategory = this.getShopCategory.bind(this);
         this.getElement = this.getElement.bind(this);
+        this.navigateToShopCategory = this.navigateToShopCategory.bind(this);
 		this.state = {
 			isVerticalMenuDisplayed: true,
 			errorMessage: null,
@@ -55,8 +55,7 @@ class ShopCategories extends Component {
 
 	refreshShops() { // Refresh the list of shops.
 		var self = this;
-		var id = self.props.match.params.id;
-		self._request['category_id'] = id;
+		const {t} = self.props;
 		ShopsService.search(self._request).then(function(shopsResult) {
 			var shops = shopsResult['_embedded'];
            	var pagination = shopsResult['_links'].navigation;
@@ -70,17 +69,6 @@ class ShopCategories extends Component {
                	pagination: pagination
 			});
 		}).catch(function(e) {
-	        var errorMsg = ''; // TODO: Put a message.
-	        if (e.responseJSON && e.responseJSON.error_description) {
-	          errorMsg = e.responseJSON.error_description;
-	        }
-
-	        ApplicationStore.sendMessage({
-	          message: errorMsg,
-	          level: 'error',
-	          position: 'tr'
-	        });
-
 			self.setState({
 				isShopsLoading: false,
 				shops: [],
@@ -91,10 +79,11 @@ class ShopCategories extends Component {
 
 	refresh()  { // Refresh the shops linked to the category.
 		var self = this;
-		var id = self.props.match.params.id;
+		var id = self._request['category_id'];
 		self.setState({
 			isShopsLoading: true
 		});
+		const {t} = self.props;
 		CategoryService.get(id).then(function(categoryResult) {
 			self.setState({
 				shopCategory: categoryResult['_embedded']
@@ -106,22 +95,27 @@ class ShopCategories extends Component {
 				shops: [],
 				shopCategory: {},
 				pagination: [],
-				errorMessage: '' // TODO: Put a message.
+				errorMessage: t('retrieveShopCategoryError')
 			});
 		});
 	}
 
 	display() { // Display the shops.
 		var self = this;
+		var id = self._request['category_id'];
 		self.setState({
 			isVerticalBarLoading: true
 		});
+		const {t} = self.props;
 		CategoryService.getParents().then(function(result) {
           var categories = result['_embedded'];
           categories.forEach(function(category) {
-            if (category.children && category.children.length > 0) {
-              category.isDeployed = false;
-            }
+          	if (!category.children || category.children.length === 0) { return; }
+          	var children = category.children.filter(function(child) { return child.id === id; });
+          	category.isDeployed = children.length === 1;
+          	if (children.length === 1) {
+          		children[0].isSelected = true;
+          	}
           });
 
           self.setState({
@@ -131,7 +125,7 @@ class ShopCategories extends Component {
 		}).catch(function(e) {
 	    	self.setState({
 	    		isVerticalBarLoading: false,
-	    		errorMessage: '', // TODO: Put error message.
+	    		errorMessage: t('retrieveShopCategoriesError'),
 	    		shopCategories: []
 	    	});			
 		});
@@ -184,6 +178,16 @@ class ShopCategories extends Component {
       return filtered[0];
     }
 
+    navigateToShopCategory(e, categoryId) { // Navigate to the shop category.
+    	e.preventDefault();
+    	var id = this.props.match.params.id;
+    	if (id === categoryId) { return; }
+		this._request['category_id'] = categoryId;
+		this.props.history.push('/shopcategories/' + categoryId);
+		this.display();
+		this.refresh();
+    }
+
 	render() { // Display the view.
 		var self = this;
 		const {t} = self.props;
@@ -201,9 +205,10 @@ class ShopCategories extends Component {
         self.state.shopCategories.forEach(function(shopCategory) {
           var subShopCategoriesElts = [];
           shopCategory.children.forEach(function(subShopCategory) {
-            subShopCategoriesElts.push((<li className="sub-menu-item">
+            subShopCategoriesElts.push((
+            <a href="#" onClick={(e) => self.navigateToShopCategory(e, subShopCategory.id)} className={subShopCategory.isSelected ? "sub-menu-item active" : "sub-menu-item no-decoration" } style={{display: "block"}}>
               {subShopCategory.name}
-            </li>));
+            </a>));
           });
 
           var arrowCl = shopCategory.isDeployed ? "fa fa-arrow-down action": "fa fa-arrow-left action";
@@ -286,6 +291,7 @@ class ShopCategories extends Component {
 						<div className="section" style={{padding: "20px"}}>
 							<h2>{t('shopCategoryTitle').replace('{0}', self.state.shopCategory.name)}</h2>
 							{ shops.length > 0 && ( <div>{shops}</div> ) }
+							{ shops.length === 0 && (<p>{t('noShops')}</p>) }
 						    {/* Display the navigation */}			        		
 							{navigations.length > 0 && (
 								<ul className="pagination">
@@ -300,6 +306,8 @@ class ShopCategories extends Component {
 	}
 
 	componentWillMount() { // Execute after the render.
+		var id = this.props.match.params.id;
+		this._request['category_id'] = id;
 		this.display();
 		this.refresh();
 	}
