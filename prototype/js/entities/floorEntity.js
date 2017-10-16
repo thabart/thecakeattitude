@@ -20,6 +20,10 @@ game.FloorEntity = me.Entity.extend({
       me.loader.getImage(furnitureName)
     );
 
+    this.body.collisionType = me.collision.types.WORLD_SHAPE;
+    this.body.setCollisionMask(
+        me.collision.types.WORLD_SHAPE
+    );
     this.renderable = texture.createAnimationFromName([0]);
     this.renderable.addAnimation("stay", [0]);
     this.renderable.setCurrentAnimation("stay");

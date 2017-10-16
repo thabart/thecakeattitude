@@ -21,6 +21,12 @@ game.FurnitureEntity = me.Entity.extend({
     );
 
     this.body.removeShapeAt(0);
+    this.body.collisionType = me.collision.types.ACTION_OBJECT;
+    this.body.setCollisionMask(
+        me.collision.types.ACTION_OBJECT |
+        me.collision.types.PLAYER_OBJECT
+    );
+
     var collisionShape = $.extend(true, {}, me.loader.getJSON("furnitures_collision"));
     var shapes = me.loader.getJSON("furnitures_shapes");
     this.shapeDef = shapes.furnitures.filter(function(shape) { return shape.name === furnitureName; })[0];
@@ -38,7 +44,7 @@ game.FurnitureEntity = me.Entity.extend({
         });
       });
     });
-    
+
     this.body.addShapesFromJSON(collisionShape, furnitureName);
     this.body.pos.x = this.shapeDef.relativePosX;
     this.body.pos.y = this.shapeDef.relativePosY;
