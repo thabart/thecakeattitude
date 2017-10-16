@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Alert,Tooltip } from "reactstrap";
 import { withGoogleMap, GoogleMap, Marker } from "react-google-maps";
 import { Address, EditableTextArea, PaymentMethodsSelector } from '../components';
-import { NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { translate } from 'react-i18next';
 import AppDispatcher from '../appDispatcher';
 import Constants from '../../Constants';
@@ -213,7 +213,7 @@ class ShopProfile extends Component {
               { /* Category */ }
               <div className="col-md-12" style={{paddingTop: "20px"}}>
                 <h5>{t('category')}</h5>
-                <p>{categoryName}</p>
+                <p><NavLink to={"/shopcategories/" + this.state.shop.category_id} className="no-decoration red">{categoryName}</NavLink></p>
               </div>
               <div className="section-separation"></div>
               { /* Payment methods */ }

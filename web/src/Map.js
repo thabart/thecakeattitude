@@ -641,12 +641,12 @@ class Map extends Component {
           var subShopCategoriesElts = [];
           shopCategory.children.forEach(function(subShopCategory) {
             var eyeCl = subShopCategory.isEyeOpened ? "fa fa-eye action" : "fa fa-eye-slash action";
-            subShopCategoriesElts.push((<li className="sub-menu-item">
-              {subShopCategory.name}
+            subShopCategoriesElts.push((<NavLink to={"/shopcategories/" + subShopCategory.id} className="sub-menu-item no-decoration">
+              {subShopCategory.name}  
               <div className="actions">
                 <i className={eyeCl} onClick={() => { self.toggleEye(subShopCategory); }}></i>
               </div>
-            </li>));
+            </NavLink>));
           });
 
           var arrowCl = shopCategory.isDeployed ? "fa fa-arrow-down action": "fa fa-arrow-left action";

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import TagsInput from "react-tagsinput";
-import {TagService} from '../services/index';
+import { TagService } from '../services/index';
 import $ from 'jquery';
 
 class TagsSelector extends Component {

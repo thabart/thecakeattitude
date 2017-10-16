@@ -319,9 +319,10 @@ class Shop extends Component {
 
         if (self.state.shop.tags && self.state.shop.tags.length > 0) {
             self.state.shop.tags.forEach(function (tag) {
-                tags.push((<li>{tag}</li>));
+                tags.push((<li><NavLink to={"/tags/" + tag+"/shops"} style={{color: "white"}}>{tag}</NavLink></li>));
             });
         }
+
 
         return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
@@ -357,7 +358,7 @@ class Shop extends Component {
                       { this.state.nbComments > 0 ? (
                           <div>
                               <span id="rating">
-                                <Rater total={5} ref="rater" interactive={false}/>
+                                <Rater total={5} ref="rater" interactive={false} rating={self.state.shop.average_score} />
                                 {this.state.nbComments} {t('comments')}
                               </span>
                               <Tooltip placement='bottom' className="rating-popup white-tooltip-inner" isOpen={this.state.isRatingOpened} target="rating" toggle={() => this.toggle('isRatingOpened')}>
