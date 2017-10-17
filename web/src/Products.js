@@ -5,7 +5,7 @@ import { translate } from 'react-i18next';
 import { ProductsService, ShopsService, OrdersService } from "./services/index";
 import { DescriptionTab, ProductComment, ProductDiscount } from "./productabs";
 import { EditableText } from './components';
-import { ApplicationStore } from './stores/index';
+import { ApplicationStore, EditProductStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
 import Constants from "../Constants";
@@ -27,6 +27,7 @@ class Products extends Component {
         this.navigateDiscounts = this.navigateDiscounts.bind(this);
         this.addToCart = this.addToCart.bind(this);
         this.editProduct = this.editProduct.bind(this);
+        this.viewProduct = this.viewProduct.bind(this);
         this.updateProductName = this.updateProductName.bind(this);
         this.state = {
             isLoading: false,
@@ -61,6 +62,25 @@ class Products extends Component {
     editProduct() { // Edit the product.
       var id = this.props.match.params.id;
       this.props.history.push('/products/'+ id + '/edit');
+      this.setState({
+        isEditable: true,
+        canBeEdited: false
+      });
+      AppDispatcher.dispatch({
+          actionName: Constants.events.EDIT_PRODUCT_ACT
+      });
+    }
+
+    viewProduct() { // View the product.
+      var id = this.props.match.params.id;
+      this.props.history.push('/products/'+ id);
+      this.setState({
+        isEditable: false,
+        canBeEdited: true
+      });
+      AppDispatcher.dispatch({
+          actionName: Constants.events.VIEW_PRODUCT_ACT
+      });
     }
 
     updateProductName() { // Update product name.
@@ -183,9 +203,9 @@ class Products extends Component {
         if (action === "comments") {
             content = (<ProductComment product={self.state.product} />);
         } else if (action === 'discounts') {
-            content = (<ProductDiscount product={self.state.product} />);
+            content = (<ProductDiscount product={self.state.product} isEditable={self.state.isEditable} />);
         } else {
-            content = (<DescriptionTab product={self.state.product} shop={self.state.shop}/>);
+            content = (<DescriptionTab product={self.state.product} shop={self.state.shop} isEditable={self.state.isEditable} />);
             action = "general";
         }
 
@@ -229,8 +249,11 @@ class Products extends Component {
                         </BreadcrumbItem>
                         <BreadcrumbItem active>
                           { this.state.product.name }
-                          {self.state.canBeEdited && (<Button outline color="secondary" id="edit-product" size="sm" className="edit-profile-icon btn-icon with-border" onClick={self.editProduct}>
+                          {self.state.canBeEdited && (<Button outline color="secondary" id="edit-product" size="sm" className="btn-icon with-border" onClick={self.editProduct}>
                             <i className="fa fa-pencil"></i>
+                          </Button>)}
+                          {self.state.isEditable && (<Button outline color="secondary" id="view-product" size="sm" className="btn-icon with-border" onClick={self.viewProduct}>
+                              <i className="fa fa-eye"></i>
                           </Button>)}
                         </BreadcrumbItem>
                     </Breadcrumb>
