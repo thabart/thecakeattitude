@@ -493,5 +493,6 @@
   "shopServices": "Services des magasins",
   "saveProductTooltip": "Mettre à jour le produit (CTRL + S)",
   "editProductTooltip": "Editer le produit",
-  "viewProductTooltip": "Visualiser le produit"
+  "viewProductTooltip": "Visualiser le produit",
+  "uploadImage": "Télécharger une image"
 }

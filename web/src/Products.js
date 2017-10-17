@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ProductsService, ShopsService, OrdersService } from "./services/index";
 import { DescriptionTab, ProductComment, ProductDiscount } from "./productabs";
-import { EditableText, EditableTag } from './components';
+import { EditableText, EditableTag, ImagesUploader } from './components';
 import { ApplicationStore, EditProductStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
@@ -33,6 +33,7 @@ class Products extends Component {
         this.saveProduct = this.saveProduct.bind(this);
         this.updateProductName = this.updateProductName.bind(this);
         this.updateTags = this.updateTags.bind(this);
+        this.updateImages = this.updateImages.bind(this);
         this.updateProduct = this.updateProduct.bind(this);
         this.state = {
             isLoading: false,
@@ -113,6 +114,13 @@ class Products extends Component {
       AppDispatcher.dispatch({
           actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
           data: { tags: tags }
+      });
+    }
+
+    updateImages(images) { // Update the product images.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+          data: { images: images }
       });
     }
 
@@ -343,8 +351,15 @@ class Products extends Component {
                                 )}    
                                 { !this.state.isEditable && tags.length === 0 && (<span><i>{t('noTags')}</i></span>) }   
                             </div>
+                            { /* Update an image */ }
+                            { self.state.isEditable && (
+                              <div>
+                                <label>{t('images')}</label>
+                                <ImagesUploader ref="imagesUploader" images={this.state.product.images} onChange={this.updateImages}/>
+                              </div>
+                            )}
                             { /* Images */ }
-                            {images.length > 0 && (
+                            {images.length > 0 && !self.state.isEditable && (
                                 <div className="row" style={{paddingTop: "10px"}}>
                                     <ul className="col-md-3 no-style no-margin image-selector">
                                         {images}
@@ -433,7 +448,7 @@ class Products extends Component {
         EditProductStore.addProductChangeListener(this.updateProduct);
         Mousetrap.bind('ctrl+s', function(e) { // Save the product (ctrl+s)
           if (self.state.isEditable) {
-            
+
           }
         });
     }

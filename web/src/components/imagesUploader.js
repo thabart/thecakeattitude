@@ -19,6 +19,10 @@ class ImagesUploader extends Component {
       self.setState({
         images: images
       });
+
+      if (self.props.onChange) {
+        self.props.onChange(images);
+      }
     };
     reader.readAsDataURL(file);
   }
@@ -42,6 +46,9 @@ class ImagesUploader extends Component {
               self.setState({
                 images: imgs
               });
+              if (self.props.onChange) {
+                self.props.onChange(imgs);
+              }
             }}><i className="fa fa-times"></i></div>
             <img src={image} width="50" height="50" />
         </div>));
@@ -53,6 +60,13 @@ class ImagesUploader extends Component {
         {images}
       </div>
     </div>)
+  }
+
+  componentDidMount() {
+    var images = this.props.images || [];
+    this.setState({
+      images: images
+    });
   }
 }
 
