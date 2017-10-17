@@ -115,5 +115,6 @@ namespace Cook4Me.Api.Host
         public const string TheProductDiscountIsInvalid = "the product discount {0} is invalid";
         public const string TheDiscountCannotBeUsedForThisProduct = "the discount cannot be used for the product {0}";
         public const string TheDiscountCodesAreNotValid = "the discount codes are not valid";
+        public const string TheProductCannotBeUpdatedByYou = "the product cannot be updated by you";
     }
 }

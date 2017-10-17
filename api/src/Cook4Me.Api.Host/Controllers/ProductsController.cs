@@ -35,12 +35,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IAddProductCommentOperation _addProductCommentOperation;
         private readonly IRemoveProductCommentOperation _removeProductCommentOperation;
         private readonly IAddProductOperation _addProductOperation;
+        private readonly IUpdateProductOperation _updateProductOperation;
 
         public ProductsController(
             ISearchProductsOperation searchProductsOperation, IGetProductOperation getProductOperation,
             ISearchProductCommentsOperation searchProductCommentsOperation, IAddProductCommentOperation addProductCommentOperation,
             IRemoveProductCommentOperation removeProductCommentOperation, IAddProductOperation addProductOperation,
-            IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IUpdateProductOperation updateProductOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
         {
             _searchProductsOperation = searchProductsOperation;
             _getProductOperation = getProductOperation;
@@ -48,6 +49,7 @@ namespace Cook4Me.Api.Host.Controllers
             _addProductCommentOperation = addProductCommentOperation;
             _removeProductCommentOperation = removeProductCommentOperation;
             _addProductOperation = addProductOperation;
+            _updateProductOperation = updateProductOperation;
         }
 
         [HttpPost(Constants.RouteNames.Search)]
@@ -67,6 +69,13 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> Add([FromBody] JObject jObj)
         {
             return await _addProductOperation.Execute(jObj, User.GetSubject(), this.GetCommonId(), this.Request);
+        }
+
+        [HttpPut]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Update([FromBody] JObject jObj)
+        {
+            return await _updateProductOperation.Execute(jObj, User.GetSubject(), this.GetCommonId(), this.Request);
         }
 
         [HttpPost(Constants.RouteNames.Comments)]

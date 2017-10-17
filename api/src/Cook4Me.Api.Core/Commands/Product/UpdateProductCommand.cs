@@ -15,10 +15,29 @@
 #endregion
 
 using Cook4Me.Api.Core.Bus;
+using System.Collections.Generic;
 
 namespace Cook4Me.Api.Core.Commands.Product
 {
+    public class UpdateProductFilter
+    {
+        public string FilterId { get; set; }
+        public string ValueId { get; set; }
+    }
+
     public class UpdateProductCommand : Command
     {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string CategoryId { get; set; }
+        public string UnitOfMeasure { get; set; }
+        public double Price { get; set; }
+        public double Quantity { get; set; }
+        public double? AvailableInStock { get; set; }
+        public string ShopId { get; set; }
+        public IEnumerable<string> Tags { get; set; }
+        public IEnumerable<string> PartialImagesUrl { get; set; }
+        public IEnumerable<UpdateProductFilter> Filters { get; set; }
     }
 }

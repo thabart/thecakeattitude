@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem, Button } from "reactstrap";
+import { Alert, TabContent, TabPane, Nav, NavItem, NavLink, Badge, Breadcrumb, BreadcrumbItem, Button, UncontrolledTooltip } from "reactstrap";
 import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ProductsService, ShopsService, OrdersService } from "./services/index";
@@ -13,11 +13,13 @@ import Rater from "react-rater";
 import Magnify from "react-magnify";
 import $ from "jquery";
 import classnames from "classnames";
+import Mousetrap from 'mousetrap';
 
 class Products extends Component {
     constructor(props) {
         super(props);
         this._waitForToken = null;
+        this.toggle = this.toggle.bind(this);
         this.toggleError = this.toggleError.bind(this);
         this.changeImage = this.changeImage.bind(this);
         this.refresh = this.refresh.bind(this);
@@ -28,7 +30,10 @@ class Products extends Component {
         this.addToCart = this.addToCart.bind(this);
         this.editProduct = this.editProduct.bind(this);
         this.viewProduct = this.viewProduct.bind(this);
+        this.saveProduct = this.saveProduct.bind(this);
         this.updateProductName = this.updateProductName.bind(this);
+        this.updateTags = this.updateTags.bind(this);
+        this.updateProduct = this.updateProduct.bind(this);
         this.state = {
             isLoading: false,
             errorMessage: null,
@@ -36,8 +41,18 @@ class Products extends Component {
             product: null,
             shop: null,
             isEditable: false,
-            canBeEdited: false
+            canBeEdited: false,
+            isEditProductTooltipOpened: false,
+            isViewProductTooltipOpened: false,
+            isSaveProductTooltipOpened: false
         };
+    }
+
+    toggle(name) {   // Toggle the tooltip.
+        var value = !this.state[name];
+        this.setState({
+            [name]: value
+        });
     }
 
     addToCart(e) { // Add the product into your cart.
@@ -83,8 +98,29 @@ class Products extends Component {
       });
     }
 
-    updateProductName() { // Update product name.
+    saveProduct() { // Save the product.
 
+    }
+
+    updateProductName(name) { // Update product name.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+          data: { name: name }
+      });
+    }
+
+    updateTags(tags) { // Update the tags.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+          data: { tags: tags }
+      });
+    }
+
+    updateProduct() { // Update the product.
+      var product = EditProductStore.getProduct();
+      this.setState({
+          product: product
+      });
     }
 
     refreshScore(data) { // Refresht the score.
@@ -119,6 +155,10 @@ class Products extends Component {
                   shop: shop,
                   isEditable: isEditable,
                   canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
+              });
+              AppDispatcher.dispatch({
+                  actionName: Constants.events.EDIT_PRODUCT_LOADED,
+                  data: product
               });
             }).catch(function() {
                 self.setState({
@@ -249,13 +289,33 @@ class Products extends Component {
                         </BreadcrumbItem>
                         <BreadcrumbItem active>
                           { this.state.product.name }
+                        </BreadcrumbItem>
+                        <li style={{"float": "right"}}>
                           {self.state.canBeEdited && (<Button outline color="secondary" id="edit-product" size="sm" className="btn-icon with-border" onClick={self.editProduct}>
                             <i className="fa fa-pencil"></i>
                           </Button>)}
+                          {self.state.canBeEdited && (
+                            <UncontrolledTooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isEditProductTooltipOpened} target="edit-product" toggle={() => this.toggle('isEditProductTooltipOpened')}>
+                                {t('editProductTooltip')}
+                            </UncontrolledTooltip>
+                          )}
                           {self.state.isEditable && (<Button outline color="secondary" id="view-product" size="sm" className="btn-icon with-border" onClick={self.viewProduct}>
                               <i className="fa fa-eye"></i>
                           </Button>)}
-                        </BreadcrumbItem>
+                          {self.state.isEditable && (
+                            <UncontrolledTooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isViewProductTooltipOpened} target="view-product" toggle={() => this.toggle('isViewProductTooltipOpened')}>
+                                {t('viewProductTooltip')}
+                            </UncontrolledTooltip>
+                          )}
+                          {self.state.isEditable && (<Button outline color="secondary" id="save-product" size="sm" className="btn-icon with-border" onClick={self.saveProduct}>
+                              <i className="fa fa-save"></i>
+                          </Button>)}
+                          {self.state.isEditable && (
+                            <UncontrolledTooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isSaveProductTooltipOpened} target="save-product" toggle={() => this.toggle('isSaveProductTooltipOpened')}>
+                                {t('saveProductTooltip')}
+                            </UncontrolledTooltip>
+                          )}
+                        </li>
                     </Breadcrumb>
                     <div className="row">
                         { /* Left side */ }
@@ -264,7 +324,7 @@ class Products extends Component {
                             { /* Header */ }
                             <div>
                               { self.state.isEditable ? (
-                                <EditableText className="header1" value={self.state.product.name} validate={this.updateTitle} maxLength={15} minLength={1}/>) : 
+                                <EditableText className="header1" value={self.state.product.name} validate={this.updateProductName} minLength={1} maxLength={15} />) : 
                                 (<h2>{self.state.product.name}</h2>)
                               }                              
                               <div>
@@ -370,10 +430,17 @@ class Products extends Component {
                 break;
             }
         });
+        EditProductStore.addProductChangeListener(this.updateProduct);
+        Mousetrap.bind('ctrl+s', function(e) { // Save the product (ctrl+s)
+          if (self.state.isEditable) {
+            
+          }
+        });
     }
 
     componentWillUnmount() { // Remove listener.
         AppDispatcher.unregister(this._waitForToken);
+        EditProductStore.removeProductChangeListener(this.updateProduct);
     }
 }
 

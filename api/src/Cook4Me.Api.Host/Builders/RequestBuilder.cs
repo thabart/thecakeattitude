@@ -39,6 +39,8 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        UpdateProductFilter GetUpdateProductFilter(JObject jObj);
+        UpdateProductCommand GetUpdateProduct(JObject jObj);
         SearchDiscountsParameter GetSearchDiscountsParameter(JObject jObj);
         AddDiscountCommand GetAddDiscountCommand(JObject jObj);
         ConfirmOrderLabelPurchaseCommand GetConfirmOrderLabelPurchase(JObject jObj);
@@ -1350,6 +1352,42 @@ namespace Cook4Me.Api.Host.Builders
             };
         }
 
+        public UpdateProductCommand GetUpdateProduct(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new UpdateProductCommand
+            {
+                CategoryId = jObj.TryGetString(Constants.DtoNames.Product.CategoryId),
+                Name = jObj.TryGetString(Constants.DtoNames.Product.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.Product.Description),
+                Price = jObj.TryGetDouble(Constants.DtoNames.Product.Price),
+                UnitOfMeasure = jObj.TryGetString(Constants.DtoNames.Product.UnitOfMeasure),
+                Tags = jObj.TryGetStringArray(Constants.DtoNames.Product.Tags),
+                Quantity = jObj.TryGetDouble(Constants.DtoNames.Product.Quantity),
+                ShopId = jObj.TryGetString(Constants.DtoNames.Product.ShopId),
+                AvailableInStock = jObj.TryGetNullableDouble(Constants.DtoNames.Product.AvailableInStock),
+                PartialImagesUrl = jObj.TryGetStringArray(Constants.DtoNames.Product.Images)
+            };
+
+            var filters = new List<UpdateProductFilter>();
+            var obj = jObj.GetValue(Constants.DtoNames.Product.Filters);
+            var arr = obj as JArray;
+            if (arr != null)
+            {
+                foreach (var rec in arr)
+                {
+                    filters.Add(GetUpdateProductFilter(rec as JObject));
+                }
+            }
+
+            result.Filters = filters;
+            return result;
+        }
+
         public AddProductCommand GetAddProduct(JObject jObj)
         {
             if (jObj == null)
@@ -1394,6 +1432,20 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             return new AddProductFilter
+            {
+                FilterId = jObj.TryGetString(Constants.DtoNames.ProductFilter.FilterId),
+                ValueId = jObj.TryGetString(Constants.DtoNames.ProductFilter.ValueId)
+            };
+        }
+
+        public UpdateProductFilter GetUpdateProductFilter(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            return new UpdateProductFilter
             {
                 FilterId = jObj.TryGetString(Constants.DtoNames.ProductFilter.FilterId),
                 ValueId = jObj.TryGetString(Constants.DtoNames.ProductFilter.ValueId)

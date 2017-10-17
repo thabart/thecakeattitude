@@ -10,6 +10,10 @@ function loadProduct(product) {
   _product = product;
 }
 
+function updateProduct(json) {
+  _product = $.extend({}, _product, json);
+}
+
 var EditProductStore = $.extend({} , EventEmitter.prototype, {
   getProduct() {
     return _product;
@@ -46,6 +50,13 @@ AppDispatcher.register(function(payload) {
     case Constants.events.EDIT_PRODUCT_ACT:
       _mode = 'edit';
       EditProductStore.emitModeChange();
+    break;
+    case Constants.events.UPDATE_PRODUCT_INFORMATION_ACT:
+      updateProduct(payload.data);
+      EditProductStore.emitProductChange();
+    break;
+    case Constants.events.EDIT_PRODUCT_LOADED:
+      loadProduct(payload.data);
     break;
     default:
       return true;

@@ -114,8 +114,9 @@ class FilterSelector extends Component {
   }
 
   updatePopupPosition() { // Update popup position.
-    var self = this,
-      container = self.elt.div,
+    var self = this;
+    if (!self.elt || !self.elt.div) { return; }
+    var container = self.elt.div,
       parent = $(container).parent();
     $(self.popup).width($(container).width() + 5);
     $(self.popup).css('left', $(container).offset().left);
@@ -162,6 +163,9 @@ class FilterSelector extends Component {
       filters: filters,
       tags: []
     });
+    if (this.props.onChange) {
+      this.props.onChange(this.getFilters());
+    }
   }
 
   removeFilter(r) { // Remove filter.
@@ -180,6 +184,9 @@ class FilterSelector extends Component {
       filters: filters,
       tags: []
     });
+    if (this.props.onChange) {
+      this.props.onChange(this.getFilters());
+    }
   }
 
   initSelectedFilter() {
@@ -203,7 +210,9 @@ class FilterSelector extends Component {
       filterValues.forEach(function(filterValue) {
         arr.push({
           value_id: filterValue.id,
-          filter_id: productFilter.filter.id
+          filter_id: productFilter.filter.id,
+          name: productFilter.filter.name,
+          content: filterValue.content
         });
       });
     });
@@ -255,16 +264,43 @@ class FilterSelector extends Component {
 
   componentWillMount() { // Execute before after the render.
     var shopId = this.props.shopId,
-      self = this;
+      filters = this.props.filters,
+      self = this,
+      productFilters = [],
+      groupedFilters = [];
+    if (filters && filters !== null) {
+      filters.forEach(function(filter) {
+          var record = groupedFilters[filter.filter_id];
+          if (!record) {
+            var record = { filter : { name: filter.name, id: filter.filter_id, values: [] }, tags: [filter.content] };
+            productFilters.push(record);
+            groupedFilters[filter.filter_id] = record;
+          } else {
+            record.tags.push(filter.content);
+          }
+      });
+    }
+
     self.setState({
       isLoading: true
     });
     ShopsService.get(shopId).then(function(shop) {
       var filters = shop['_embedded'].filters;
+      if (productFilters.length > 0) {
+        var filterIds = productFilters.map(function(f) { return f.filter.id; });
+        productFilters.forEach(function(pf) {
+            var filter = filters.filter(function(f) { return f.id === pf.filter.id; })[0];
+            if (!filter) { return; }
+            pf.filter.values = filter.values;
+        });
+        filters = filters.filter(function(f) { return  !filterIds.includes(f.id); });
+      }
+
       self._selectedFilter = filters[0];
       self.setState({
         isLoading: false,
-        filters: filters
+        filters: filters,
+        productFilters: productFilters
       });
     }).catch(function() {
       self.setState({

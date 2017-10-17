@@ -1,13 +1,17 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { FormGroup, Label, UncontrolledTooltip } from 'reactstrap';
-import { EditableText, FilterSelector } from '../components';
+import { EditableTextArea, FilterSelector } from '../components';
 import { EditProductStore } from '../stores/index';
+import AppDispatcher from "../appDispatcher";
+import Constants from "../../Constants";
 
 class DescriptionTab extends Component {
     constructor(props) {
         super(props);
-        this.validateDescription = this.validateDescription.bind(this);
+        this.updateDescription = this.updateDescription.bind(this);
+        this.updateFilters = this.updateFilters.bind(this);
+        this.updateCategory = this.updateCategory.bind(this);
         this.toggleTooltip = this.toggleTooltip.bind(this);
         this.changeMode = this.changeMode.bind(this);
         this.state = {
@@ -20,8 +24,41 @@ class DescriptionTab extends Component {
         };
     }
 
-    validateDescription() { // Validate the description.
+    updateDescription(description) { // Update the description.
+        var product = this.state.product;
+        product.description = description;
+        this.setState({
+            product: product
+        });
+        AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+            data: { description: description }
+        });
+    }
 
+    updateFilters(filters) { // Update the filters.
+        var product = this.state.product;
+        product.filters = filters;
+        this.setState({
+            product: product
+        });
+        AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+            data: { filters: product.filters }
+        });
+    }
+
+    updateCategory(e) { // Update the category.
+        var val = e.target.value;
+        var product = this.state.product;
+        product.category_id = val;
+        this.setState({
+            product: product
+        });
+        AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+            data: { category_id: val }
+        });
     }
 
     toggleTooltip(name) { // Toggle the tooltip.
@@ -35,7 +72,7 @@ class DescriptionTab extends Component {
     changeMode() { // Change the mode.
         var mode = EditProductStore.getMode();
         this.setState({
-                isEditable   : mode !== 'view'
+            isEditable   : mode !== 'view'
         });
     }
 
@@ -48,13 +85,17 @@ class DescriptionTab extends Component {
             var productCategories = [];
             if (this.state.shop.product_categories && this.state.shop.product_categories.length > 0) {
                 this.state.shop.product_categories.forEach(function(productCategory) {
-                    productCategories.push((<option value={productCategory.id}>{productCategory.name}</option>));
+                    if (productCategory.id === self.state.product.category_id) {
+                        productCategories.push((<option value={productCategory.id} selected>{productCategory.name}</option>));
+                    } else {                        
+                        productCategories.push((<option value={productCategory.id}>{productCategory.name}</option>));
+                    }
                 });
             }
 
             productCategory  = (
                 <FormGroup>
-                  <select name="productCategory" className="form-control">{productCategories}</select>
+                  <select name="productCategory" className="form-control" onChange={self.updateCategory}>{productCategories}</select>
                 </FormGroup>
             );
         } else {
@@ -94,13 +135,13 @@ class DescriptionTab extends Component {
             );
         }
         if (this.state.isEditable) {
-            filterSelector = (<FilterSelector ref="filterSelector" shopId={this.state.shop.id} />);
+            filterSelector = (<FilterSelector ref="filterSelector" shopId={this.state.shop.id} filters={this.state.product.filters} onChange={this.updateFilters} />);
         }
 
         return (
             <div>
                 <h5>{t('description')}</h5>
-                {this.state.isEditable ? (<EditableText value={this.state.product.description} validate={this.state.validateDescription} />) : (<p>{this.state.product.description}</p>)}
+                {this.state.isEditable ? (<EditableTextArea value={this.state.product.description} validate={this.updateDescription} minLength={1} maxLength={255} />) : (<p>{this.state.product.description}</p>)}
                 <h5>{t('category')}</h5>
                 {productCategory}
                 <h5>{t('characteritics')}</h5>
