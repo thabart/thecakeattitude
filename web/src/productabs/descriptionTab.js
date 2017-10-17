@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { FormGroup, Label, UncontrolledTooltip } from 'reactstrap';
-import { EditableText } from '../components';
+import { EditableText, FilterSelector } from '../components';
 import { EditProductStore } from '../stores/index';
 
 class DescriptionTab extends Component {
@@ -42,26 +42,6 @@ class DescriptionTab extends Component {
     render() { // Display the component.
         const {t} = this.props;
         var self = this;
-        var characteristics = [];
-        if (this.state.product.filters) {
-            var groupedFilters = {};
-            this.state.product.filters.forEach(function (filter) {
-                var record = groupedFilters[filter.filter_id];
-                if (!record) {
-                    groupedFilters[filter.filter_id] = {label: filter.name, content: [filter.content]};
-                } else {
-                    record.content.push(filter.content);
-                }
-            });
-
-            for (var groupedFilter in groupedFilters) {
-                var o = groupedFilters[groupedFilter];
-                characteristics.push((<tr>
-                    <td>{o.label}</td>
-                    <td>{o.content.join(',')}</td>
-                </tr>));
-            }
-        }
 
         var productCategory = (<p>{t('unknown')}</p>);
         if (this.state.isEditable) {
@@ -74,10 +54,6 @@ class DescriptionTab extends Component {
 
             productCategory  = (
                 <FormGroup>
-                  <Label className="col-form-label">{t('chooseProductCategory')}  <i className="fa fa-info-circle txt-info" id="productCategory"></i></Label>
-                  <UncontrolledTooltip placement="right" target="productCategory" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleProductCategory} toggle={() => { this.toggleTooltip('toggleProductCategory'); }}>
-                    {t('chooseProductCategoryTooltip')}
-                  </UncontrolledTooltip>
                   <select name="productCategory" className="form-control">{productCategories}</select>
                 </FormGroup>
             );
@@ -88,6 +64,39 @@ class DescriptionTab extends Component {
             }            
         }
 
+        var filterSelector = (<span><i>{t('noCharacteristic')}</i></span>);
+        if (this.state.product.filters && !this.state.isEditable) {
+            var groupedFilters = {};
+            this.state.product.filters.forEach(function (filter) {
+                var record = groupedFilters[filter.filter_id];
+                if (!record) {
+                    groupedFilters[filter.filter_id] = {label: filter.name, content: [filter.content]};
+                } else {
+                    record.content.push(filter.content);
+                }
+            });
+
+            var characteristics = [];
+            for (var groupedFilter in groupedFilters) {
+                var o = groupedFilters[groupedFilter];
+                characteristics.push((<tr>
+                    <td>{o.label}</td>
+                    <td>{o.content.join(',')}</td>
+                </tr>));
+            }
+
+            filterSelector = (
+                <table className="table table-striped">
+                    <tbody>
+                        {characteristics}
+                    </tbody>
+                </table>
+            );
+        }
+        if (this.state.isEditable) {
+            filterSelector = (<FilterSelector ref="filterSelector" shopId={this.state.shop.id} />);
+        }
+
         return (
             <div>
                 <h5>{t('description')}</h5>
@@ -95,13 +104,7 @@ class DescriptionTab extends Component {
                 <h5>{t('category')}</h5>
                 {productCategory}
                 <h5>{t('characteritics')}</h5>
-                {characteristics.length === 0 ? (<span><i>{t('noCharacteristic')}</i></span>) : (
-                    <table className="table table-striped">
-                        <tbody>
-                          {characteristics}
-                        </tbody>
-                    </table>
-                )}
+                {filterSelector}
             </div>
         );
     }

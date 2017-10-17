@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ProductsService, ShopsService, OrdersService } from "./services/index";
 import { DescriptionTab, ProductComment, ProductDiscount } from "./productabs";
-import { EditableText } from './components';
+import { EditableText, EditableTag } from './components';
 import { ApplicationStore, EditProductStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
@@ -275,11 +275,13 @@ class Products extends Component {
                             </div>
                             { /* Tags */ }
                             <div>
-                                {tags.length > 0 ? (
-                                    <ul className="col-md-12 tags gray" style={{padding: "0"}}>
-                                        {tags}
-                                    </ul>)
-                                 : (<span><i>{t('noTags')}</i></span>)}
+                                { this.state.isEditable && (<EditableTag tags={self.state.shop.tags} validate={this.updateTags}/>) }
+                                { !this.state.isEditable && tags.length > 0 && (
+                                   <ul className="col-md-12 tags gray" style={{padding: "0"}}>
+                                    {tags}
+                                   </ul>
+                                )}    
+                                { !this.state.isEditable && tags.length === 0 && (<span><i>{t('noTags')}</i></span>) }   
                             </div>
                             { /* Images */ }
                             {images.length > 0 && (
