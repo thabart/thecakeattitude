@@ -8,9 +8,9 @@ game.ShopScreen = me.ScreenObject.extend({
       var gameMenu = new game.GameMenu();
       var player = new game.PlayerEntity(5, 5);
       var tileSelector = new game.TileSelectorEntity(0, 0);
-      var floorSelector = new game.FloorSelector();
-      var posterSelector =  new game.PosterSelector();
-      var furnitureSelector = new game.FurnitureSelector();
+      var floorSelector = new game.FloorEntitySelector();
+      var wallSelector =  new game.WallEntitySelector();
+      var furnitureSelector = new game.FurnitureEntitySelector();
       this._buildingLayer = me.game.world.getChildByName('Building', {
         "container": movableContainer
       });

@@ -15,5 +15,10 @@ var Constants = {
       }
     }
   },
+  Selectors: {
+    Furniture : "furniture",
+    Wall: "wall",
+    Floor: "floor"
+  },
   playerZIndex: 7
 };

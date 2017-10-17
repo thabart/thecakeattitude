@@ -1,5 +1,15 @@
-game.PosterEntity = me.Entity.extend({
-  init: function (x, y, furnitureName) {
+game.PosterEntity = game.SelectableEntity.extend({
+  init: function (x, y, posterName) {
+    this._super(game.SelectableEntity, "init", [
+      {
+        x: x,
+        y: y,
+        name: posterName,
+        refLayerName: Constants.Layers.Wall.Name
+      }
+    ]);
+    this.addCollision("posters_collision");
+    /*
     this.refLayer = me.game.world.getChildByName(Constants.Layers.Wall.Name)[0];
     this.flipped = false; // Right wall.
     this.translateX = 0;
@@ -43,26 +53,6 @@ game.PosterEntity = me.Entity.extend({
     this.renderable = texture.createAnimationFromName([0]);
     this.renderable.addAnimation("stay", [0]);
     this.renderable.setCurrentAnimation("stay");
-  },
-  flip: function() {
-    this.flipped = !this.flipped; // Flip the poster.
-    this.renderable.flipX(this.flipped);
-  },
-  opacity: function(val) { // Set the opacity.
-    this.renderable.alpha = val;
-  },
-  translateX: function(x) { // Translate on X.
-    this.pos.x = this.initX + x;
-    this.translateX = x;
-  },
-  translateY: function(y) { // Translate on Y.
-    this.pos.y = this.initY + y;
-    this.translateY = y;
-  },
-  getName: function() { // Get the furniture name.
-    return this.metadata.name;
-  },
-  getImage: function() { // Get the image.
-    return this.metadata.image;
+    */
   }
 });

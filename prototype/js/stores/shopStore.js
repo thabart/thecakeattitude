@@ -1,11 +1,7 @@
 var ShopStoreCl = function() {
-	var _activeFurniture = null;
-	var _activePoster = null;
-	var _activeFloor = null;
-	var _furnitures = [];
-	var _posters = [];
-	var _floors = [];
-	var _selectedFurniture = null;
+	var _activeEntity = null;
+	var _entities = [];
+	var _selectedEntity = null;
 	var _collisionLayer = null;
 
 	var updateCollisions = function() {
@@ -15,6 +11,7 @@ var ShopStoreCl = function() {
 			}
 		}
 
+		/*
 		_furnitures.forEach(function(spr) { // Update the collision layer.
 				var sprCoordinates = spr.getCoordinates();
 				var collisionCoordinate = {
@@ -27,95 +24,52 @@ var ShopStoreCl = function() {
 					}
 				}
 		});
+		*/
 	};
 
-	this.getActiveFurniture = function() { // Get the active furniture (with opacity 0.5)
-		return _activeFurniture;
+	this.getActiveEntity = function() { // Get the active entity (with opacity 0.5)
+		return _activeEntity;
 	};
 
-	this.setActiveFurniture = function(name, isFlipped) { // Set the active furniture (with opacity 0.5)
+	this.setActiveEntity = function(name, selector, isFlipped) { // Set the active entity (with opacity 0.5)
 		if (!name || name === null) {
-			_activeFurniture = null;
+			_activeEntity = null;
 		} else {
-			_activeFurniture = {
+			_activeEntity = {
 				name: name,
-				isFlipped: isFlipped
+				isFlipped: isFlipped,
+				selector: selector
 			};
 		}
 
-		$(this).trigger('activeFurnitureChanged');
+		$(this).trigger('activeEntityChanged');
 	};
 
-	this.getActivePoster = function() { // Get the active poster (with opacity 0.5)
-		return _activePoster;
+	this.getSelectedEntity = function() { // Get selected entity (with opacity 1.0)
+		return _selectedEntity;
 	};
 
-	this.setActivePoster = function(name, isFlipped) { // Set the active furniture (with opacity 0.5)
-		if (!name || name === null) {
-			_activePoster = null;
-		} else {
-			_activePoster = {
-				name: name,
-				isFlipped: isFlipped
-			};
-		}
-
-		$(this).trigger('activePosterChanged');
+	this.setSelectedEntity = function(f) { // Set selected entity (with opacity 1.0)
+		_selectedEntity = f;
+		$(this).trigger('selectedEntityChanged');
 	};
 
-	this.getActiveFloor = function() { // Get the active floor (with opacity 0.5)
-		return _activeFloor;
-	}
-
-	this.setActiveFloor = function(name) { // Set the active floor (with opacity 0.5)
-		if (!name || name === null) {
-			_activeFloor = null;
-		} else {			
-			_activeFloor = {
-				name: name
-			};
-		}
-
-		$(this).trigger('activeFloorChanged');
-	}
-
-	this.addFloor = function(f) { // Add a floor into the collection.
-		_floors.push(f);
-	}
-
-	this.getSelectedFurniture = function() { // Get selected furniture (with opacity 1.0)
-		return _selectedFurniture;
-	};
-
-	this.setSelectedFurniture = function(f) { // Set selected furniture (with opacity 1.0)
-		_selectedFurniture = f;
-		$(this).trigger('selectedFurnitureChanged');
-	};
-
-	this.addFurniture = function(f) { // Add a furniture and update the collisions.
-		_furnitures.push(f);
+	this.addEntity = function(f) { // Add an entity and update the collisions.
+		_entities.push(f);
 		updateCollisions();
 	};
 
-	this.addPoster = function(f) { // Add a poster.
-		_posters.push(f);
+	this.getEntities = function() { // Get all the entities.
+		return _entities;
 	};
 
-	this.getFurnitures = function() { // Get all the posters.
-		return _furnitures;
-	};
-
-	this.removeFurniture = function(f) { // Remove a furniture and update the collisions.
-		var index = _furnitures.indexOf(f);
+	this.removeEntity = function(f) { // Remove an entity and update the collisions.
+		var index = _entities.indexOf(f);
 		if (index === -1) { return; }
 		me.game.world.removeChild(f);
-		_furnitures.splice(index, 1);
+		_entities.splice(index, 1);
 		updateCollisions();
 		me.game.repaint();
-	};
-
-	this.getPosters = function() { // Get all the posters.
-		return _posters;
 	};
 
 	this.getCollisionLayer = function() { // Get collision layer.
@@ -142,11 +96,11 @@ var ShopStoreCl = function() {
 		$(this).trigger('hideInformationArrived');
 	};
 
-	this.displayActions = function() { // Display the furniture actions.
+	this.displayActions = function() { // Display the entity actions.
 		$(this).trigger('displayActionsArrived');
 	};
 
-	this.hideActions = function() { // Hide the furniture actions.
+	this.hideActions = function() { // Hide the entity actions.
 		$(this).trigger('hideActionsArrived');
 	};
 
@@ -155,17 +109,13 @@ var ShopStoreCl = function() {
 	};
 
 	/* LISTEN THE EVENTS */
-	this.listenActiveFurnitureChanged = function(callback) {
-		$(this).on('activeFurnitureChanged', callback);
+	this.listenActiveEntityChanged = function(callback) {
+		$(this).on('activeEntityChanged', callback);
 	};
 
-	this.listenActivePosterChanged = function(callback) {
-		$(this).on('activePosterChanged', callback);
+	this.listenSelectedEntityChanged = function(callback) {
+		$(this).on('selectedEntityChanged', callback);
 	};
-
-	this.listenActiveFloorChanged = function(callback) {
-		$(this).on('activeFloorChanged', callback);
-	}
 
 	this.listenDisplayInformationArrived = function(callback) {
 		$(this).on('displayInformationArrived', callback);
@@ -193,10 +143,6 @@ var ShopStoreCl = function() {
 
 	this.listenHidePlayerPseudoArrived = function(callback) {
 		$(this).on('hidePlayerPseudoArrived', callback);
-	};
-
-	this.listenSelectedFurnitureChanged = function(callback) {
-		$(this).on('selectedFurnitureChanged', callback);
 	};
 };
 

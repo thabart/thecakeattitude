@@ -29,7 +29,7 @@ game.FloorSelector = me.Object.extend({
 		var spr = new game.FloorEntity(this.sprite.pos.x, this.sprite.pos.y, activeFloor.name);
 		ShopStore.addFloor(spr);
 		me.game.world.addChild(spr);
-		spr.pos.z = Constants.playerZIndex - 2;
+		spr.pos.z = this.getZIndex();
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
 		ShopStore.setActiveFloor(null);
