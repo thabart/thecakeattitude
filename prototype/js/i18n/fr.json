@@ -13,5 +13,9 @@
     "fr": "Français",
     "en": "Anglais",
     "nl": "Néerlandais",
-    "help": "Aide"
+    "help": "Aide",
+    "field_tab": "Sol",
+    "type_field": "Sol",
+    "executive_floor_description": "Sol d'affaire",
+    "entityInStock": "En stock"
 }

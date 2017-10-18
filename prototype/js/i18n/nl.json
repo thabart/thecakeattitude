@@ -13,5 +13,9 @@
   "fr": "French",
   "en": "English",
   "nl": "Dutch",
-  "help": "Help"
+  "help": "Help",
+  "field_tab": "Field",
+  "type_field": "Field",
+  "executive_floor_description": "Executive floor",
+  "entityInStock": "In stock"
 }

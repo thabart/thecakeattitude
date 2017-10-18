@@ -81,7 +81,7 @@ game.PlayerEntity = me.Entity.extend({
     },
     pointerDown: function(evt) { // Calculate the movements OR display the player informations.
       if (evt.which !== 1) { return; }
-      if (evt.handled) { return; }
+      // if (evt.handled) { return; }
       if (this.informationBox && this.informationBox !== null) {
         ShopStore.displayInformation(this.metadata);
         return;

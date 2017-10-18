@@ -100,11 +100,13 @@ game.SelectableEntitySelector = me.Object.extend({
 		var selectedEntity = ShopStore.getSelectedEntity();
 		var entities = ShopStore.getEntities();
 		entities.forEach(function(entity) {
+			/*
 			if (entity === selectedEntity) {
 				entity.opacity(0.5);
 			} else {
 				entity.opacity(1);
 			}
+			*/
 		});
 
 		me.game.repaint();

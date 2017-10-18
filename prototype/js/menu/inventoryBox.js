@@ -12,8 +12,8 @@ game.InventoryBox = me.Object.extend({
                 {
                   name: "theme_executive",
                   furnitures: [
-                    { name: 'executive_table', url: 'resources/entities/furnitures/executive/table.gif', 'description': 'executive_table_description', icon: 'resources/entities_small/furnitures/executive/table.gif' },
-                    { name: 'executive_desk', url: 'resources/entities/furnitures/executive/desk.gif', 'description': 'executive_desk_description', icon: 'resources/entities_small/furnitures/executive/desk.gif' }
+                    { name: 'executive_table', url: 'resources/entities/furnitures/executive/table.gif', 'description': 'executive_table_description', icon: 'resources/entities_small/furnitures/executive/table.gif', in_stock: '1' },
+                    { name: 'executive_desk', url: 'resources/entities/furnitures/executive/desk.gif', 'description': 'executive_desk_description', icon: 'resources/entities_small/furnitures/executive/desk.gif', in_stock: '1' }
                   ]
                 },
                 {
@@ -135,16 +135,16 @@ game.InventoryBox = me.Object.extend({
           ]
         },
         {
-          name: "Sol",
+          name: "field_tab",
           selector: Constants.Selectors.Floor,
           types: [
             {
-              name: "Terrain",
+              name: "type_field",
               themes: [
                 {
-                  name: "Affaire",
+                  name: "theme_executive",
                   furnitures: [
-                    { name: 'exe_floor', url: 'resources/entities/grounds/floors/executive/exe_floor.gif' },
+                    { name: 'exe_floor', url: 'resources/entities/grounds/floors/executive/exe_floor.gif', 'description': 'executive_floor_description', icon: 'resources/entities_small/grounds/floors/executive/exe_floor.gif', in_stock: '4' },
                   ]
                 },
                 {
@@ -189,7 +189,7 @@ game.InventoryBox = me.Object.extend({
           return "<li class='active' data-name='"+category.name+"' data-i18n='"+category.name+"'></li>";
         }
 
-        return "<li data-name='"+category.name+"'>"+category.name+"</li>";
+        return "<li data-name='"+category.name+"' data-i18n='"+category.name+"'></li>";
       }).join('');
       this.inventory = $("<div class='inventory-box'>"+
         "<div class='top'>"+
@@ -250,6 +250,7 @@ game.InventoryBox = me.Object.extend({
       "</div>"+
       "<div class='action'>"+
         "<b data-i18n='"+$(elt).data('description')+"'></b>"+
+        "<p><span data-i18n='entityInStock'></span> "+$(elt).data('instock')+"</p>"+
         "<button class='button button-gray' data-i18n='add_into_shop'></button>"+
       "</div>"+
     "</div>");
@@ -273,7 +274,10 @@ game.InventoryBox = me.Object.extend({
       if (!theme) { return; }
       $(self.inventory).find('.furnitures').empty();
       theme.furnitures.forEach(function(furniture) {
-        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"' data-selector='"+category.selector+"' data-img='"+furniture.url+"' data-description='"+furniture.description+"'><img src='"+furniture.icon+"'</li>")
+        $(self.inventory).find('.furnitures').append(
+          "<li data-furniture='"+furniture.name+"' data-selector='"+category.selector+"' data-img='"+furniture.url+"' data-description='"+furniture.description+"' data-instock='"+furniture.in_stock+"'>"+
+            "<img src='"+furniture.icon+"' />"+
+          "</li>");
       });
 
       self.updateListeners();

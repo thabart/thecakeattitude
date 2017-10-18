@@ -8,6 +8,7 @@ game.ChatForm = me.Object.extend({
         "<input id='chat-input' placeholder='Type here to chat...' >"+
       "</form>");
       $(document.body).append(self.chatForm);
+      this.addListeners();
   },
   addListeners: function() {
     var self = this;
