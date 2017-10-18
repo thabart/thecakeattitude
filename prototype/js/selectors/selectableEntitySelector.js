@@ -91,7 +91,7 @@ game.SelectableEntitySelector = me.Object.extend({
 		}
 
 		ShopStore.addEntity(spr);
-		spr.pos.z = Constants.playerZIndex;
+		spr.pos.z = this.getZIndex();
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
 		ShopStore.setActiveEntity(null);

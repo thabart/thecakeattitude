@@ -1,0 +1,34 @@
+{
+	"furnitures": [
+		{
+      "name": "exe_floor",
+      "horizontal": {
+  			"nbCols": 3,
+  			"nbRows": 3,
+  			"relativePosX": -24,
+  			"relativePosY": -10
+      },
+      "vertical": {
+  			"nbCols": 3,
+  			"nbRows": 3,
+  			"relativePosX": -24,
+  			"relativePosY": -10
+      }
+    },
+		{
+			"name": "hw_tile_1",
+      "horizontal": {
+  			"nbCols": 1,
+  			"nbRows": 1,
+  			"relativePosX": -29,
+  			"relativePosY": 6
+      },
+      "vertical": {
+  			"nbCols": 3,
+  			"nbRows": 3,
+  			"relativePosX": -29,
+  			"relativePosY": 6
+      }
+		}
+  ]
+}

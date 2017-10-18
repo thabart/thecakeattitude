@@ -13,6 +13,7 @@ var g_ressources = [
     { name: "executive_table", type: "image", src: "resources/entities/furnitures/executive/table.gif" }, // Load the furnitures.
     { name: "executive_desk", type: "image", src: "resources/entities/furnitures/executive/desk.gif" },
     { name: "glass_table", type: "image", src: "resources/entities/furnitures/glass/table.gif" },
+    { name: "glass_shelves", type: "image", src: "resources/entities/furnitures/glass/shelves.gif" },
     { name: "grunge_table", type: "image", src: "resources/entities/furnitures/grunge/table.gif" },
     { name: "mode_table", type: "image", src: "resources/entities/furnitures/mode/table.gif" },
     { name: "executive_sofa", type: "image", src: "resources/entities/furnitures/executive/sofa.gif" },
@@ -61,7 +62,9 @@ var g_ressources = [
     { name: "furnitures_collision", type: "json", src: "resources/collisions/furnitures.json" }, // Load the collisions.
     { name: "posters_collision", type: "json", src: "resources/collisions/posters.json" },
     { name: "player_collision", type: "json", src: "resources/collisions/player.json" },
+    { name: "walls_collision", type: "json", src: "resources/collisions/walls.json" },
     { name: "furnitures_shapes", type: "json", src: "resources/shapes/furnitures.json" }, // Load the shapes.
     { name: "walls_shapes", type: "json", src: "resources/shapes/walls.json" },
-    { name: "player_shape", type: "json", src: "resources/shapes/player.json" }
+    { name: "player_shape", type: "json", src: "resources/shapes/player.json" },
+    { name: "grounds_shapes", type: "json", src: "resources/shapes/grounds.json" }
 ];

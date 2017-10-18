@@ -44,3 +44,18 @@
     background: linear-gradient(to bottom, #328ebc 50%, #287aa3 50%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#328ebc', endColorstr='#287aa3', GradientType=0);
 }
+
+.button-gray
+{
+    background: -moz-linear-gradient(top, rgb(243,243,243) 50%, rgb(217,217,217) 50%);
+    background: -webkit-linear-gradient(top, rgb(243,243,243) 50%, rgb(217,217,217) 50%);
+    background: linear-gradient(to bottom, rgb(243,243,243) 50%, rgb(217,217,217) 50%);
+    color: black;
+}
+
+.button-gray:hover
+{
+    background: -moz-linear-gradient(top, rgb(255,255,255) 50%, rgb(238,238,238) 50%);
+    background: -webkit-linear-gradient(top, rgb(255,255,255) 50%, rgb(238,238,238) 50%);
+    background: linear-gradient(to bottom, rgb(255,255,255) 50%, rgb(238,238,238) 50%);
+}

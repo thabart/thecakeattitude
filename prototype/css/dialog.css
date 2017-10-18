@@ -1,6 +1,5 @@
 /* INVENTORY BOX */
 .inventory-box {
-	width: 490px;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -10,7 +9,6 @@
 .inventory-box .top
 {
     background: url('../img/window/inventory/i_top.png') no-repeat;
-    width: 490px;
     height: 19px;
     color: #fff;
     font-weight: bold;
@@ -22,9 +20,22 @@
 {
     background: url('../img/window/inventory/i_body.png') repeat-y;
     min-height: 250px;
-    width: 490px;
     height: auto;
     padding: 5px 8px;
+}
+
+.inventory-box .body .content {
+	padding: 5px;
+}
+
+.inventory-box .body .content .filter {
+	background-color: rgb(201,201,201);
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.inventory-box .body .content .entities {
+	padding-top: 5px;
 }
 
 .inventory-box .bottom
@@ -77,8 +88,31 @@
 
 .inventory-box ul.items
 {
-    width: 280px;
-    float: left;
+    width: 250px;
+		display: inline-block;
+		vertical-align: top;
+}
+
+.inventory-box .entity-information
+{
+	display: inline-block;
+	width: 214px;
+}
+
+.inventory-box .entity-information .picture {
+	background: url("../img/bgs/entity_bg.png") no-repeat;
+	width: 169px;
+	height: 113px;
+	text-align: center;
+}
+
+.inventory-box .entity-information .picture img {
+	max-width: 150px;
+	padding-top: 20px;
+}
+
+.inventory-box .entity-information .action {
+  padding-top: 30px;
 }
 
 .inventory-box ul.items li
@@ -93,9 +127,7 @@
 }
 
 .inventory-box ul.items li img {
-	width: 35px;
-	height: 28px;
-	padding: 8px 0px 0px 2px;
+	padding: 5px 0px 0px 2px;
 }
 
 .inventory-box ul.items li.active

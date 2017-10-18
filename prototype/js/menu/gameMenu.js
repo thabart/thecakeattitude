@@ -35,8 +35,8 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Affaire",
                 furnitures: [
-                  { name: 'executive_table', url: 'resources/entities/furnitures/executive/table.gif' },
-                  { name: 'executive_desk', url: 'resources/entities/furnitures/executive/desk.gif' }
+                  { name: 'executive_table', url: 'resources/entities/furnitures/executive/table.gif', 'description': 'Table d\' affaire', icon: 'resources/entities_small/furnitures/executive/table.gif' },
+                  { name: 'executive_desk', url: 'resources/entities/furnitures/executive/desk.gif', 'description': 'Bureau d\' affaire', icon: 'resources/entities_small/furnitures/executive/desk.gif' }
                 ]
               },
               {
@@ -67,6 +67,17 @@ game.GameMenu = me.Object.extend({
                 furnitures: [
                   { name: 'executive_sofa', url: 'resources/entities/furnitures/executive/sofa.gif' },
                   { name: 'executive_chair', url: 'resources/entities/furnitures/executive/chair.gif' }
+                ]
+              }
+            ]
+          },
+          {
+            name: "rayon",
+            themes: [
+              {
+                name: "Verre",
+                furnitures: [
+                  { name: 'glass_shelves', url: 'resources/entities/furnitures/glass/shelves.gif' }
                 ]
               }
             ]
@@ -212,7 +223,7 @@ game.GameMenu = me.Object.extend({
           tabs +
         "</ul>"+
         "<div class='content'>"+
-          "<div>"+
+          "<div class='filter'>"+
             "<label>Type</label>"+
             "<select class='type-selector'>"+
             "</select>"+
@@ -220,23 +231,44 @@ game.GameMenu = me.Object.extend({
             "<select class='theme-selector'>"+
             "</select>"+
           "</div>"+
-          "<ul class='items no-style furnitures'>"+
-          "</ul>"+
+          "<div class='entities'>"+
+            "<ul class='items no-style furnitures'>"+
+            "</ul>"+
+            "<div class='entity-information'>"+
+            "</div>"+
+          "</div>"+
         "</div>"+
       "</div>"+
       "<div class='bottom'>"+
       "</div>"+
     "</div>");
     $(document.body).append(this.inventory);
-    var updateListeners = function() {
-      $(self.inventory).find('.items > li').click(function() {
-        var furniture = $(this).data('furniture');
-        var selector = $(this).data('selector');
-        ShopStore.setActiveEntity(furniture, selector, false);
-        $(this).addClass('active');
+    var displayEntityInformation = function(elt) {
+      var entityInformation = $(self.inventory).find('.entity-information');
+      entityInformation.empty();
+      var n = $("<div>"+
+        "<div class='picture'>"+
+          "<img src='"+$(elt).data('img')+"' />"+
+        "</div>"+
+        "<div class='action'>"+
+          "<b class='title'></b>"+
+          "<button class='button button-gray'>Placer le dans le magasin</button>"+
+        "</div>"+
+      "</div>");
+      $(entityInformation).append(n);
+      $(n).find('.title').html($(elt).data('description'));
+      $(n).find('.button').click(function() {
+        ShopStore.setActiveEntity($(elt).data('furniture'), $(elt).data('selector'), false);
       });
     };
-    $(this.inventory).find('.theme-selector').change(function() {
+    var updateListeners = function() {
+      $(self.inventory).find('.items > li').click(function() {
+        $(self.inventory).find('.items > li').removeClass('active');
+        $(this).addClass('active');
+        displayEntityInformation(this);
+      });
+    };
+    $(this.inventory).find('.theme-selector').change(function() { // When the user clicks on the theme then display all the items.
       var categoryName = $(self.inventory).find('.tabs li.active').data('name');
       var typeName = $(self.inventory).find('.type-selector option:selected').data('name');
       var themeName = $(this).find('option:selected').data('name');
@@ -248,7 +280,7 @@ game.GameMenu = me.Object.extend({
       if (!theme) { return; }
       $(self.inventory).find('.furnitures').empty();
       theme.furnitures.forEach(function(furniture) {
-        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"' data-selector='"+category.selector+"'><img src='"+furniture.url+"'</li>")
+        $(self.inventory).find('.furnitures').append("<li data-furniture='"+furniture.name+"' data-selector='"+category.selector+"' data-img='"+furniture.url+"' data-description='"+furniture.description+"'><img src='"+furniture.icon+"'</li>")
       });
 
       updateListeners();
@@ -267,7 +299,7 @@ game.GameMenu = me.Object.extend({
       });
       $(themeSelector).change();
     });
-    $(this.inventory).find(".tabs li").click(function() {
+    $(this.inventory).find(".tabs li").click(function() { // When the user clicks on an entity then display its description with the different actions.
       var name = $(this).data('name');
       $(self.inventory).find('.tabs li').removeClass('active');
       $(this).addClass('active');

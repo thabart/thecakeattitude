@@ -31,6 +31,21 @@
 			}
 		},
 		{
+			"name": "glass_shelves",
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": 2,
+				"relativePosX": -27,
+				"relativePosY": -85
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 1,
+				"relativePosX": -30,
+				"relativePosY": -103
+			}
+		},
+		{
 			"name": "glass_table",
 			"nbCols": 2,
 			"nbRows": 2,

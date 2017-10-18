@@ -13,5 +13,7 @@ game.FloorEntity = game.SelectableEntity.extend({
     this.body.setCollisionMask(
       me.collision.types.WORLD_SHAPE
     );
+    this.addCollision("walls_collision");
+    this.addShape("grounds_shapes");
   }
 });
