@@ -5,5 +5,13 @@
   "theme_glass": "Glass",
   "executive_table_description": "Executive table",
   "executive_desk_description": "Executive desk",
-  "type_table": "Table"
+  "type_table": "Table",
+  "parameters": "Parameters",
+  "back": "Back",
+  "ok": "Ok",
+  "updateParametersTitle": "Update the parameters",
+  "fr": "French",
+  "en": "English",
+  "nl": "Dutch",
+  "help": "Help"
 }

@@ -322,6 +322,7 @@ game.InventoryBox = me.Object.extend({
     });
   },
   listenClose: function() {
+    var self = this;
     $(this.inventory).find('.close').click(function() {
       $(self.inventory).hide();
     });

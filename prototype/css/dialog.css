@@ -241,21 +241,45 @@
 }
 
 /* UP RIGHT INFORMATION*/
-.up_right_options
-{
-    background: url('../img/icons/up_right_bg.png');
-    height: 71px;
-    width: 192px;
-    position: fixed;
-    right: 3px;
-    z-index: 999998;
-    color: #fff;
-    top: 0;
+.up_right {
+  right: 3px;
+  z-index: 1003;
+  position: fixed;
+  top: 0;
 }
 
-.up_right_options > .quit,
-.up_right_options > .settings,
-.up_right_options > .help
+.up_right .options
+{
+    background: url('../img/icons/up_right_bg.png');
+    color: #fff;
+    height: 71px;
+    width: 192px;
+}
+
+.up_right .sub-options .top
+{
+    background: url('../img/window/up_right/top.png') no-repeat;
+    height: 7px;
+    color: #fff;
+}
+
+.up_right .sub-options .body
+{
+    background: url('../img/window/up_right/body.png') repeat-y;
+    min-height: 60px;
+    height: auto;
+    padding: 5px 8px;
+    color: #fff;
+}
+
+.up_right .sub-options .footer {
+  background: url('../img/window/up_right/bottom.png') no-repeat;
+  height: 9px;
+}
+
+.up_right .options  > .quit,
+.up_right .options > .settings,
+.up_right .options > .help
 {
     width: 61px;
     height: 19px;
@@ -267,20 +291,105 @@
     position: fixed;
 }
 
-.up_right_options > .quit
+.up_right .options > .quit
 {
     right: 11px;
     top: 24px;
 }
 
-.up_right_options > .help
+.up_right .options > .help
 {
     right: 11px;
     top: 3px;
 }
 
-.up_right_options > .settings
+.up_right .options > .settings
 {
     right: 11px;
     top: 45px;
+}
+
+/* Gray modal window */
+.gray-modal {
+  color: #fff;
+  min-width: 200px;
+}
+
+.gray-modal .header,
+.gray-modal .header:before
+{
+  height: 6px;
+}
+
+.gray-modal .header {
+  position: relative;
+  background: url('../img/window/gray_modal/topLeftCorner.png') left top no-repeat,
+    url('../img/window/gray_modal/topRightCorner.png') right top no-repeat;
+}
+
+.gray-modal .header:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 0px;
+  background: url('../img/window/gray_modal/topContent.png') center top repeat-x;
+}
+
+.gray-modal .body {
+  position: relative;
+  background: url('../img/window/gray_modal/bodyStart.png') top left repeat-y,
+    url('../img/window/gray_modal/bodyEnd.png') top right repeat-y;
+  min-height: 100px;
+  background-color: rgb(87,84,77);
+}
+
+.gray-modal .footer,
+.gray-modal .footer:before {
+  height: 8px;
+}
+
+.gray-modal .footer {
+  position: relative;
+  background: url('../img/window/gray_modal/bottomLeftCorner.png') left bottom no-repeat,
+    url('../img/window/gray_modal/bottomRightCorner.png') right bottom no-repeat;
+}
+
+.gray-modal .footer:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 0px;
+  background: url('../img/window/gray_modal/bottomContent.png') center bottom repeat-x;
+}
+
+.gray-modal .body {
+  padding: 5px;
+}
+
+.gray-modal .body .title {
+  text-align: center;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgb(47,47,47);
+}
+
+.gray-modal .body .content {
+  padding-top: 5px;
+}
+
+/* Parameters modal */
+.parameters-modal {
+  right: 200px;
+  z-index: 1003;
+  position: fixed;
+  top: 0;
+}
+
+.parameters-modal .content img {
+  width: 40px;
+}
+
+.parameters-modal .actions {
+  padding-top: 5px;
 }

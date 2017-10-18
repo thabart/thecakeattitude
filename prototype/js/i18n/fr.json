@@ -5,5 +5,13 @@
     "theme_glass": "Verre",
     "executive_table_description": "Table d'affaire",
     "executive_desk_description": "Bureau d'affaire",
-    "type_table": "Table"
+    "type_table": "Table",
+    "parameters": "Paramètres",
+    "back": "Retour",
+    "ok": "Ok",
+    "updateParametersTitle": "Modifier les paramètres",
+    "fr": "Français",
+    "en": "Anglais",
+    "nl": "Néerlandais",
+    "help": "Aide"
 }
