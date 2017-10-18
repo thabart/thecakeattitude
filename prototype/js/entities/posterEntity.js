@@ -5,10 +5,14 @@ game.PosterEntity = game.SelectableEntity.extend({
         x: x,
         y: y,
         name: posterName,
-        refLayerName: Constants.Layers.Wall.Name
+        refLayerName: Constants.Layers.Wall.Name,
+        selector: Constants.Selectors.Wall
       }
     ]);
     this.addCollision("posters_collision");
+    this.body.collisionType = me.collision.types.ACTION_OBJECT;
+    this.body.pos.y = -this.body.getBounds().height;
+    this.body.pos.x = -(this.body.getBounds().width / 2);
     /*
     this.refLayer = me.game.world.getChildByName(Constants.Layers.Wall.Name)[0];
     this.flipped = false; // Right wall.

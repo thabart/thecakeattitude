@@ -1,6 +1,7 @@
 game.SelectableEntity = me.Entity.extend({
   init: function (opts) { // Initialize the entity.
     this.refLayer = me.game.world.getChildByName(opts.refLayerName)[0];
+    this.selector = opts.selector;
     this.flipped = false;
     this.translateX = 0;
     this.translateY = 0;
@@ -48,11 +49,19 @@ game.SelectableEntity = me.Entity.extend({
     var shapes = me.loader.getJSON(name);
     var self = this;
     this.shapeDef = shapes.furnitures.filter(function(shape) { return shape.name === self.metadata.name; })[0];
-    this.body.pos.x = this.shapeDef.relativePosX;
-    this.body.pos.y = this.shapeDef.relativePosY;
+    this.body.pos.x = this.shapeDef.horizontal.relativePosX;
+    this.body.pos.y = this.shapeDef.horizontal.relativePosY;
   },
   flip: function() {
     this.flipped = !this.flipped;
+    if (!this.flipped) {
+      this.body.pos.x = this.shapeDef.horizontal.relativePosX;
+      this.body.pos.y = this.shapeDef.horizontal.relativePosY;
+    } else {
+      this.body.pos.x = this.shapeDef.vertical.relativePosX;
+      this.body.pos.y = this.shapeDef.vertical.relativePosY;
+    }
+
     this.renderable.flipX(this.flipped);
   },
   opacity: function(val) { // Set the opacity.
@@ -68,10 +77,13 @@ game.SelectableEntity = me.Entity.extend({
     this.translateY = y;
     console.log(y);
   },
-  getCoordinates: function() { // Get the size : number of rows + number of cols + position.
-    var tile = this.refLayer.getTile(this.pos.x, this.pos.y);
-    var nbRows = this.shapeDef.nbRows;
-    var nbCols = this.shapeDef.nbCols;
+  getCoordinates: function(tile) { // Get the size : number of rows + number of cols + position.
+    if (!tile) {
+      var tile = this.refLayer.getTile(this.pos.x, this.pos.y);
+    }
+
+    var nbRows = (!this.flipped) ? this.shapeDef.horizontal.nbRows : this.shapeDef.vertical.nbRows;
+    var nbCols = (!this.flipped) ? this.shapeDef.horizontal.nbCols : this.shapeDef.vertical.nbCols;
     return {
       row: tile.row,
       col: tile.col,

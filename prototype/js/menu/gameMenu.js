@@ -35,26 +35,26 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Affaire",
                 furnitures: [
-                  { name: 'executive_table', url: 'resources/furnitures/executive/table.gif' },
-                  { name: 'executive_desk', url: 'resources/furnitures/executive/desk.gif' }
+                  { name: 'executive_table', url: 'resources/entities/furnitures/executive/table.gif' },
+                  { name: 'executive_desk', url: 'resources/entities/furnitures/executive/desk.gif' }
                 ]
               },
               {
                 name: "Verre",
                 furnitures: [
-                  { name: 'glass_table', url: 'resources/furnitures/glass/table.gif' }
+                  { name: 'glass_table', url: 'resources/entities/furnitures/glass/table.gif' }
                 ]
               },
               {
                 name: "Grenier",
                 furnitures: [
-                  { name: 'grunge_table', url: 'resources/furnitures/grunge/table.gif' }
+                  { name: 'grunge_table', url: 'resources/entities/furnitures/grunge/table.gif' }
                 ]
               },
               {
                 name: "Mode",
                 furnitures: [
-                  { name: 'mode_table', url: 'resources/furnitures/mode/table.gif' }
+                  { name: 'mode_table', url: 'resources/entities/furnitures/mode/table.gif' }
                 ]
               }
             ]
@@ -65,8 +65,8 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Affaire",
                 furnitures: [
-                  { name: 'executive_sofa', url: 'resources/furnitures/executive/sofa.gif' },
-                  { name: 'executive_chair', url: 'resources/furnitures/executive/chair.gif' }
+                  { name: 'executive_sofa', url: 'resources/entities/furnitures/executive/sofa.gif' },
+                  { name: 'executive_chair', url: 'resources/entities/furnitures/executive/chair.gif' }
                 ]
               }
             ]
@@ -83,22 +83,22 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Défault",
                 furnitures: [
-                  { name: 'gallery_1', url: 'resources/posters/gallery_1.gif' },
-                  { name: 'gallery_2', url: 'resources/posters/gallery_2.gif' },
-                  { name: 'gallery_n1', url: 'resources/posters/gallery_n1.gif' },
-                  { name: 'gallery_n2', url: 'resources/posters/gallery_n2.gif' },
-                  { name: 'gallery_n3', url: 'resources/posters/gallery_n3.gif' },
-                  { name: 'gallery_n4', url: 'resources/posters/gallery_n4.gif' },
-                  { name: 'gallery_n5', url: 'resources/posters/gallery_n5.gif' },
-                  { name: 'gallery_n6', url: 'resources/posters/gallery_n6.gif' },
-                  { name: 'gallery_n7', url: 'resources/posters/gallery_n7.gif' },
-                  { name: 'gallery_n8', url: 'resources/posters/gallery_n8.gif' },
-                  { name: 'gallery_n9', url: 'resources/posters/gallery_n9.gif' },
-                  { name: 'gallery_n10', url: 'resources/posters/gallery_n10.gif' },
-                  { name: 'gallery_n11', url: 'resources/posters/gallery_n11.gif' },
-                  { name: 'gallery_n12', url: 'resources/posters/gallery_n12.gif' },
-                  { name: 'gallery_n13', url: 'resources/posters/gallery_n13.gif' },
-                  { name: 'gallery_n14', url: 'resources/posters/gallery_n14.gif' }
+                  { name: 'gallery_1', url: 'resources/entities/walls/posters/gallery_1.gif' },
+                  { name: 'gallery_2', url: 'resources/entities/walls/posters/gallery_2.gif' },
+                  { name: 'gallery_n1', url: 'resources/entities/walls/posters/gallery_n1.gif' },
+                  { name: 'gallery_n2', url: 'resources/entities/walls/posters/gallery_n2.gif' },
+                  { name: 'gallery_n3', url: 'resources/entities/walls/posters/gallery_n3.gif' },
+                  { name: 'gallery_n4', url: 'resources/entities/walls/posters/gallery_n4.gif' },
+                  { name: 'gallery_n5', url: 'resources/entities/walls/posters/gallery_n5.gif' },
+                  { name: 'gallery_n6', url: 'resources/entities/walls/posters/gallery_n6.gif' },
+                  { name: 'gallery_n7', url: 'resources/entities/walls/posters/gallery_n7.gif' },
+                  { name: 'gallery_n8', url: 'resources/entities/walls/posters/gallery_n8.gif' },
+                  { name: 'gallery_n9', url: 'resources/entities/walls/posters/gallery_n9.gif' },
+                  { name: 'gallery_n10', url: 'resources/entities/walls/posters/gallery_n10.gif' },
+                  { name: 'gallery_n11', url: 'resources/entities/walls/posters/gallery_n11.gif' },
+                  { name: 'gallery_n12', url: 'resources/entities/walls/posters/gallery_n12.gif' },
+                  { name: 'gallery_n13', url: 'resources/entities/walls/posters/gallery_n13.gif' },
+                  { name: 'gallery_n14', url: 'resources/entities/walls/posters/gallery_n14.gif' }
                 ]
               }
             ]
@@ -109,11 +109,11 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Défault",
                 furnitures: [
-                  { name: 'flag_1', url: 'resources/flags/flag_1.gif' },
-                  { name: 'flag_2', url: 'resources/flags/flag_2.gif' },
-                  { name: 'flag_3', url: 'resources/flags/flag_3.gif' },
-                  { name: 'flag_4', url: 'resources/flags/flag_4.gif' },
-                  { name: 'flag_5', url: 'resources/flags/flag_5.gif' }
+                  { name: 'flag_1', url: 'resources/entities/walls/flags/flag_1.gif' },
+                  { name: 'flag_2', url: 'resources/entities/walls/flags/flag_2.gif' },
+                  { name: 'flag_3', url: 'resources/entities/walls/flags/flag_3.gif' },
+                  { name: 'flag_4', url: 'resources/entities/walls/flags/flag_4.gif' },
+                  { name: 'flag_5', url: 'resources/entities/walls/flags/flag_5.gif' }
                 ]
               }
             ]
@@ -130,16 +130,16 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Défault",
                 furnitures: [
-                  { name: 'plant_1', url: 'resources/decorations/plants/plant_1.gif' },
-                  { name: 'plant_2', url: 'resources/decorations/plants/plant_2.gif' },
-                  { name: 'plant_3', url: 'resources/decorations/plants/plant_3.gif' },
-                  { name: 'plant_4', url: 'resources/decorations/plants/plant_4.gif' },
-                  { name: 'plant_5', url: 'resources/decorations/plants/plant_5.gif' },
-                  { name: 'plant_6', url: 'resources/decorations/plants/plant_6.gif' },
-                  { name: 'plant_7', url: 'resources/decorations/plants/plant_7.gif' },
-                  { name: 'plant_8', url: 'resources/decorations/plants/plant_8.gif' },
-                  { name: 'plant_9', url: 'resources/decorations/plants/plant_9.gif' },
-                  { name: 'plant_10', url: 'resources/decorations/plants/plant_10.gif' }
+                  { name: 'plant_1', url: 'resources/entities/decorations/plants/plant_1.gif' },
+                  { name: 'plant_2', url: 'resources/entities/decorations/plants/plant_2.gif' },
+                  { name: 'plant_3', url: 'resources/entities/decorations/plants/plant_3.gif' },
+                  { name: 'plant_4', url: 'resources/entities/decorations/plants/plant_4.gif' },
+                  { name: 'plant_5', url: 'resources/entities/decorations/plants/plant_5.gif' },
+                  { name: 'plant_6', url: 'resources/entities/decorations/plants/plant_6.gif' },
+                  { name: 'plant_7', url: 'resources/entities/decorations/plants/plant_7.gif' },
+                  { name: 'plant_8', url: 'resources/entities/decorations/plants/plant_8.gif' },
+                  { name: 'plant_9', url: 'resources/entities/decorations/plants/plant_9.gif' },
+                  { name: 'plant_10', url: 'resources/entities/decorations/plants/plant_10.gif' }
                 ]
               }
             ]
@@ -156,15 +156,15 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Affaire",
                 furnitures: [
-                  { name: 'exe_floor', url: 'resources/grounds/floors/executive/exe_floor.gif' },
+                  { name: 'exe_floor', url: 'resources/entities/grounds/floors/executive/exe_floor.gif' },
                 ]
               },
               {
                 name: "Star",
                 furnitures: [
-                  { name: 'hw_tile_1', url: 'resources/grounds/floors/star/hw_tile_1.gif' },
-                  { name: 'hw_tile_2', url: 'resources/grounds/floors/star/hw_tile_2.gif' },
-                  { name: 'hw_tile_3', url: 'resources/grounds/floors/star/hw_tile_3.gif' },
+                  { name: 'hw_tile_1', url: 'resources/entities/grounds/floors/star/hw_tile_1.gif' },
+                  { name: 'hw_tile_2', url: 'resources/entities/grounds/floors/star/hw_tile_2.gif' },
+                  { name: 'hw_tile_3', url: 'resources/entities/grounds/floors/star/hw_tile_3.gif' },
                 ]
               }
             ]
@@ -175,15 +175,15 @@ game.GameMenu = me.Object.extend({
               {
                 name: "Japonais",
                 furnitures: [
-                  { name: 'jp_tatami_large', url: 'resources/grounds/rugs/japanese/jp_tatami_large.gif' },
-                  { name: 'jp_tatami_small', url: 'resources/grounds/rugs/japanese/jp_tatami_small.gif' },
+                  { name: 'jp_tatami_large', url: 'resources/entities/grounds/rugs/japanese/jp_tatami_large.gif' },
+                  { name: 'jp_tatami_small', url: 'resources/entities/grounds/rugs/japanese/jp_tatami_small.gif' },
                 ]
               },
               {
                 name: "Défault",
                 furnitures: [
-                  { name: 'bear_rug_blue', url: 'resources/grounds/rugs/others/bear_rug_blue.gif' },
-                  { name: 'bear_rug_mint', url: 'resources/grounds/rugs/others/bear_rug_mint.gif' },
+                  { name: 'bear_rug_blue', url: 'resources/entities/grounds/rugs/others/bear_rug_blue.gif' },
+                  { name: 'bear_rug_mint', url: 'resources/entities/grounds/rugs/others/bear_rug_mint.gif' },
                 ]
               }
             ]
@@ -292,7 +292,6 @@ game.GameMenu = me.Object.extend({
     });
     $(this.inventory).hide();
     $(this.inventory).draggable({ "handle": ".top" });
-    updateListeners();
   },
   addInformationBox: function() { // Add the information box.
     var self = this;
@@ -322,7 +321,8 @@ game.GameMenu = me.Object.extend({
       var selectedEntity = ShopStore.getSelectedEntity();
       var name = selectedEntity.getName();
       var flipped = selectedEntity.flipped;
-      ShopStore.setActiveEntity(name, flipped);
+      var selector = selectedEntity.selector;
+      ShopStore.setActiveEntity(name, selector, flipped);
       ShopStore.removeEntity(selectedEntity);
       $(self.actions).hide();
       $(self.information).hide();

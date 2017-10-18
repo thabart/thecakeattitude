@@ -1,0 +1,11 @@
+{
+  "furnitures": [
+    {
+      "name": "gallery_1",
+			"nbCols": 1,
+			"nbRows": 2,
+			"relativePosX": 0,
+			"relativePosY": 0
+    }
+  ]
+}

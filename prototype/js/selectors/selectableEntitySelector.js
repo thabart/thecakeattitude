@@ -33,17 +33,27 @@ game.SelectableEntitySelector = me.Object.extend({
 		var nbCols = Math.ceil(region.height / this.refLayer.tileheight);
 		var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
 		this.intersects = me.collision.check(this.sprite);
+		if (!this.intersects) {
+			if (this.isAtLimit) {
+				this.intersects = this.isAtLimit(this.sprite.getCoordinates(tile));
+			}
+		}
+
 		if (this.intersects) {
 			this.sprite.opacity(0.1);
 		} else {
 			this.sprite.opacity(0.5);
 		}
 
+		// Check entity is at the limit of the world.
 		this.sprite.tile = tile;
 		this.sprite.nbRows = nbRows;
 		this.sprite.nbCols = nbCols;
 		this.sprite.pos.x = coordinates.x;
 		this.sprite.pos.y = coordinates.y;
+		if (this.moveCallback) {
+			this.moveCallback();
+		}
 	},
 	selectEntity: function(evt) { // Select the entity.
 		var entities = ShopStore.getEntities();
@@ -102,7 +112,15 @@ game.SelectableEntitySelector = me.Object.extend({
 	updateActiveEntity: function() { // Update the active entity.
 		var activeEntity = ShopStore.getActiveEntity();
 		if(!activeEntity) { return; }
-		if (activeEntity.selector !== this.selectorName) { return; }
+		if (activeEntity.selector !== this.selectorName) {
+			if (this.sprite) {
+				me.game.world.removeChild(this.sprite);
+				this.sprite = null;
+			}
+
+			return;
+		}
+
 		if (this.sprite) {
 			me.game.world.removeChild(this.sprite);
 		}

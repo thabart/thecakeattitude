@@ -2,17 +2,33 @@
 	"furnitures": [
 		{
 			"name": "executive_table",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": -46,
-			"relativePosY": -20
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": -46,
+				"relativePosY": -20
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": -46,
+				"relativePosY": -20
+			}
 		},
 		{
 			"name": "executive_desk",
-			"nbCols": 2,
-			"nbRows": 3,
-			"relativePosX": -45,
-			"relativePosY": -67
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 3,
+				"relativePosX": -45,
+				"relativePosY": -67
+			},
+			"vertical": {
+				"nbCols": 3,
+				"nbRows": 2,
+				"relativePosX": -26,
+				"relativePosY": -31
+			}
 		},
 		{
 			"name": "glass_table",
