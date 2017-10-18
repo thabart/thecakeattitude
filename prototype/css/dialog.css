@@ -239,3 +239,48 @@
   display: block;
   width: 0;
 }
+
+/* UP RIGHT INFORMATION*/
+.up_right_options
+{
+    background: url('../img/icons/up_right_bg.png');
+    height: 71px;
+    width: 192px;
+    position: fixed;
+    right: 3px;
+    z-index: 999998;
+    color: #fff;
+    top: 0;
+}
+
+.up_right_options > .quit,
+.up_right_options > .settings,
+.up_right_options > .help
+{
+    width: 61px;
+    height: 19px;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: top;
+    text-align: center;
+    font-size: 12px;
+    position: fixed;
+}
+
+.up_right_options > .quit
+{
+    right: 11px;
+    top: 24px;
+}
+
+.up_right_options > .help
+{
+    right: 11px;
+    top: 3px;
+}
+
+.up_right_options > .settings
+{
+    right: 11px;
+    top: 45px;
+}

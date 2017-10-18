@@ -21,6 +21,42 @@
   background: url('../img/icons/inventory.png') 0 -84px no-repeat;
 }
 
+.quit {
+  background: url('../img/icons/quit.png');
+}
+
+.quit:hover {
+  background: url('../img/icons/quit.png') 0 -19px;
+}
+
+.quit:active {
+  background: url('../img/icons/quit.png') 0 -38px;
+}
+
+.settings {
+  background: url('../img/icons/settings.png');
+}
+
+.settings:hover {
+  background: url('../img/icons/settings.png') 0 -19px;
+}
+
+.settings:active {
+  background: url('../img/icons/settings.png') 0 -38px;
+}
+
+.help {
+  background: url('../img/icons/help.png');
+}
+
+.help:hover {
+  background: url('../img/icons/help.png') 0 -19px;
+}
+
+.help:active {
+  background: url('../img/icons/help.png') 0 -38px;
+}
+
 .chatbubbles {
 	background: url('../img/chatInput/chatbubbles.png');
 	width: 17px;

@@ -33,6 +33,11 @@ var game = {
 
 //bootstrap :)
 window.onReady(function() {
-    game.onload();
     // document.oncontextmenu = document.body.oncontextmenu = function() { return false; }
+    var i18n = $.i18n(); // Initialize translations.
+    i18n.locale = 'en';
+    i18n.load('/js/i18n/'+ i18n.locale +'.json', i18n.locale).done(function() {
+      game.onload();
+    });
+    $.i18n.debug = true;
 });
