@@ -6,7 +6,8 @@ game.FurnitureEntity = game.SelectableEntity.extend({
         y: y,
         name: furnitureName,
         refLayerName: Constants.Layers.Ground.Name,
-        selector: Constants.Selectors.Furniture
+        selector: Constants.Selectors.Furniture,
+        isCollidable: true
       }
     ]);
     this.addCollision("furnitures_collision");

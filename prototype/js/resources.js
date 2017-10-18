@@ -62,5 +62,6 @@ var g_ressources = [
     { name: "posters_collision", type: "json", src: "resources/collisions/posters.json" },
     { name: "player_collision", type: "json", src: "resources/collisions/player.json" },
     { name: "furnitures_shapes", type: "json", src: "resources/shapes/furnitures.json" }, // Load the shapes.
+    { name: "walls_shapes", type: "json", src: "resources/shapes/walls.json" },
     { name: "player_shape", type: "json", src: "resources/shapes/player.json" }
 ];

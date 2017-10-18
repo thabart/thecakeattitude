@@ -336,6 +336,7 @@ game.GameMenu = me.Object.extend({
     $(this.actions).find('.turn').click(function() {
       var selectedEntity = ShopStore.getSelectedEntity();
       selectedEntity.flip();
+      ShopStore.updateColls();
       me.game.repaint();
     });
     $(this.actions).find('.translate').click(function() {

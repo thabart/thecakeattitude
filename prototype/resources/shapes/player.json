@@ -1,4 +1,10 @@
 {
-  "nbCols": 1,
-  "nbRows": 1
+  "horizontal": {
+    "nbCols": 1,
+    "nbRows": 1
+  },
+  "vertical": {
+    "nbCols": 1,
+    "nbRows": 1
+  }
 }

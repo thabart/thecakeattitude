@@ -12149,11 +12149,11 @@ THE SOFTWARE.
 
             var getCoordinates = function(shape) {
               var tile = shape.refLayer.getTile(shape.pos.x, shape.pos.y);
-              var nbRows = shape.shapeDef.nbRows;
-              var nbCols = shape.shapeDef.nbCols;
+              var nbRows = shape.flipped ? shape.shapeDef.vertical.nbRows : shape.shapeDef.horizontal.nbRows;
+              var nbCols = shape.flipped ? shape.shapeDef.vertical.nbCols : shape.shapeDef.horizontal.nbCols;
               return {
-                xmin: tile.col - nbCols + 1,
-                xmax: tile.col,
+                xmin: shape.flipped ? tile.col : tile.col - nbCols + 1,
+                xmax: shape.flipped ? tile.col + nbCols - 1 : tile.col,
                 ymin: tile.row - nbRows + 1,
                 ymax: tile.row,
                 posx: shape.pos.x,

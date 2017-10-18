@@ -11,20 +11,31 @@ var ShopStoreCl = function() {
 			}
 		}
 
-		/*
-		_furnitures.forEach(function(spr) { // Update the collision layer.
+		_entities.forEach(function(spr) { // Update the collision layer.
+				if (!spr.isCollidable) { return; }
 				var sprCoordinates = spr.getCoordinates();
 				var collisionCoordinate = {
 					col: sprCoordinates.col - Constants.Layers.Ground.Position.Col,
 					row: sprCoordinates.row - Constants.Layers.Ground.Position.Row
 				};
-				for (var col = collisionCoordinate.col; col > collisionCoordinate.col - sprCoordinates.nbCols; col--) {
-					for (var row = collisionCoordinate.row; row > collisionCoordinate.row - sprCoordinates.nbRows; row--) {
-						_collisionLayer.setWalkableAt(row, col, false);
+				if (spr.flipped) { // Vertical.
+					for (var col = collisionCoordinate.col; col < collisionCoordinate.col + sprCoordinates.nbCols; col++) {
+						for (var row = collisionCoordinate.row; row > collisionCoordinate.row - sprCoordinates.nbRows; row--) {
+							_collisionLayer.setWalkableAt(row, col, false);
+						}
+					}
+				} else { // Horizontal.
+					for (var col = collisionCoordinate.col; col > collisionCoordinate.col - sprCoordinates.nbCols; col--) {
+						for (var row = collisionCoordinate.row; row > collisionCoordinate.row - sprCoordinates.nbRows; row--) {
+							_collisionLayer.setWalkableAt(row, col, false);
+						}
 					}
 				}
 		});
-		*/
+	};
+
+	this.updateColls = function() {
+		updateCollisions();
 	};
 
 	this.getActiveEntity = function() { // Get the active entity (with opacity 0.5)

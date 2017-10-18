@@ -35,7 +35,7 @@ game.SelectableEntitySelector = me.Object.extend({
 		this.intersects = me.collision.check(this.sprite);
 		if (!this.intersects) {
 			if (this.isAtLimit) {
-				this.intersects = this.isAtLimit(this.sprite.getCoordinates(tile));
+				this.intersects = this.isAtLimit(this.sprite.getCoordinates(tile), this.sprite.flipped);
 			}
 		}
 
@@ -85,12 +85,12 @@ game.SelectableEntitySelector = me.Object.extend({
 		var row = this.sprite.tile.row - this.sprite.nbRows;
 		var col = this.sprite.tile.col - this.sprite.nbCols;
 		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, activeEntity.name);
-		ShopStore.addEntity(spr);
 		me.game.world.addChild(spr);
 		if (activeEntity.isFlipped) {
 			spr.flip();
 		}
 
+		ShopStore.addEntity(spr);
 		spr.pos.z = Constants.playerZIndex;
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;

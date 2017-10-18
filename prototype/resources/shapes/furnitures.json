@@ -66,18 +66,19 @@
 			"relativePosY": -31
 		},
 		{
-			"name": "gallery_1",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
-		},
-		{
 			"name": "plant_1",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -29,
+				"relativePosY": -46
+			},
+			"vertical": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -29,
+				"relativePosY": -46
+			}
 		},
 		{
 			"name": "plant_2",

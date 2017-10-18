@@ -10,9 +10,12 @@ game.PosterEntity = game.SelectableEntity.extend({
       }
     ]);
     this.addCollision("posters_collision");
+    this.addShape("walls_shapes");
     this.body.collisionType = me.collision.types.ACTION_OBJECT;
+    /*
     this.body.pos.y = -this.body.getBounds().height;
     this.body.pos.x = -(this.body.getBounds().width / 2);
+    */
     /*
     this.refLayer = me.game.world.getChildByName(Constants.Layers.Wall.Name)[0];
     this.flipped = false; // Right wall.

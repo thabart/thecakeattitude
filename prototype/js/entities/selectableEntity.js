@@ -3,6 +3,7 @@ game.SelectableEntity = me.Entity.extend({
     this.refLayer = me.game.world.getChildByName(opts.refLayerName)[0];
     this.selector = opts.selector;
     this.flipped = false;
+    this.isCollidable = opts.isCollidable || false;
     this.translateX = 0;
     this.translateY = 0;
     this.initX = opts.x;
