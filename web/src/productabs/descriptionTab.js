@@ -19,7 +19,9 @@ class DescriptionTab extends Component {
             product: this.props.product || {},
             shop: this.props.shop || {},
             tooltip: {
-                toggleProductCategory: false
+                toggleDescription: false,
+                toggleProductCategory: false,
+                toggleProductCharacteritics: false
             }
         };
     }
@@ -87,7 +89,7 @@ class DescriptionTab extends Component {
                 this.state.shop.product_categories.forEach(function(productCategory) {
                     if (productCategory.id === self.state.product.category_id) {
                         productCategories.push((<option value={productCategory.id} selected>{productCategory.name}</option>));
-                    } else {                        
+                    } else {
                         productCategories.push((<option value={productCategory.id}>{productCategory.name}</option>));
                     }
                 });
@@ -102,7 +104,7 @@ class DescriptionTab extends Component {
             var filteredProductCategories = this.state.shop.product_categories.filter(function(c) { return c.id === self.state.product.category_id });
             if (filteredProductCategories && filteredProductCategories.length === 1) {
               productCategory = (<p>{filteredProductCategories[0].name}</p>);
-            }            
+            }
         }
 
         var filterSelector = (<span><i>{t('noCharacteristic')}</i></span>);
@@ -140,22 +142,70 @@ class DescriptionTab extends Component {
 
         return (
             <div>
-                <h5>{t('description')}</h5>
-                {this.state.isEditable ? (<EditableTextArea value={this.state.product.description} validate={this.updateDescription} minLength={1} maxLength={255} />) : (<p>{this.state.product.description}</p>)}
-                <h5>{t('category')}</h5>
-                {productCategory}
-                <h5>{t('characteritics')}</h5>
-                {filterSelector}
+                {/* Description */}
+                {this.state.isEditable && (
+                  <div>
+                    <h5>
+                      {t('description')} <i className="fa fa-info-circle txt-info" id="descriptionToolTip"></i>
+                      <UncontrolledTooltip placement="right" target="descriptionToolTip" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleDescription} toggle={() => { this.toggleTooltip('toggleDescription'); }}>
+                        {t('productDescriptionTooltip')}
+                      </UncontrolledTooltip>
+                    </h5>
+                    <EditableTextArea value={this.state.product.description} validate={this.updateDescription} minLength={1} maxLength={255} />
+                  </div>
+                )}
+                {!this.state.isEditable && (
+                  <div>
+                    <h5>{t('description')}</h5>
+                    <p>{this.state.product.description}</p>
+                  </div>
+                )}
+                {/* Category */}
+                {this.state.isEditable && (
+                  <div>
+                    <h5>
+                      {t('category')} <i className="fa fa-info-circle txt-info" id="productCategory"></i>
+                      <UncontrolledTooltip placement="right" target="productCategory" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleProductCategory} toggle={() => { this.toggleTooltip('toggleProductCategory'); }}>
+                        {t('chooseProductCategoryTooltip')}
+                      </UncontrolledTooltip>
+                    </h5>
+                    {productCategory}
+                  </div>
+                )}
+                {!this.state.isEditable && (
+                  <div>
+                    <h5>{t('category')}</h5>
+                    {productCategory}
+                  </div>
+                )}
+                {/* Characteritics */}
+                {this.state.isEditable && (
+                  <div>
+                    <h5>
+                      {t('characteritics')} <i className="fa fa-info-circle txt-info" id="productCharacteritics"></i>
+                      <UncontrolledTooltip placement="right" target="productCharacteritics" className="red-tooltip-inner" isOpen={this.state.tooltip.toggleProductCharacteritics} toggle={() => { this.toggleTooltip('toggleProductCharacteritics'); }}>
+                        {t('productCharacteristicTooltip')}
+                      </UncontrolledTooltip>
+                    </h5>
+                    {filterSelector}
+                  </div>
+                )}
+                {!this.state.isEditable && (
+                  <div>
+                      <h5>{t('characteritics')}</h5>
+                      {filterSelector}
+                  </div>
+                )}
             </div>
         );
     }
 
-    componentWillMount() { // Execute before the render. 
+    componentWillMount() { // Execute before the render.
         EditProductStore.addModeChangeListener(this.changeMode);
     }
 
     componentWillUnmount() { // Unregister the events.
-        EditProductStore.removeModeChangeListener(this.changeMode);        
+        EditProductStore.removeModeChangeListener(this.changeMode);
     }
 }
 

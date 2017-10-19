@@ -496,5 +496,6 @@
   "editProductTooltip": "Edit the product",
   "viewProductTooltip": "View the product",
   "uploadImage": "Upload image",
-  "notValidNumber": "Not a valid number and should be comprise between {0} and {1}"
+  "notValidNumber": "Not a valid number and should be comprise between {0} and {1}",
+  "productCharacteristicTooltip": "Add some characteristics to your product"
 }
