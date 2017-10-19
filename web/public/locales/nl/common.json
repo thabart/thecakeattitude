@@ -497,5 +497,7 @@
   "viewProductTooltip": "View the product",
   "uploadImage": "Upload image",
   "notValidNumber": "Not a valid number and should be comprise between {0} and {1}",
-  "productCharacteristicTooltip": "Add some characteristics to your product"
+  "productCharacteristicTooltip": "Add some characteristics to your product",
+  "errorUpdateProduct": "An error occured while trying to update the product, please contact the administrator",
+  "productUpdated": "The product has been updated"
 }

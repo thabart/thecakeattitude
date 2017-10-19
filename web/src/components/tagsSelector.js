@@ -96,9 +96,8 @@ class TagsSelector extends Component {
         if (this._isInitialized) return;
         var self = this;
         self.popup = $("<div class='react-tagsinput-popup' style='position: absolute;display: none;'><ul></ul></div>");
-        self.input = elt.input;
-        self.container = elt.div;
-
+        self.input = elt.input || elt.refs.input;
+        self.container = elt.div || elt.refs.div;
         $(document.body).append(self.popup);
         $(window).resize(self.updatePopupPosition);
         $(self.input).on('input', function() {

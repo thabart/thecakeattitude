@@ -115,8 +115,8 @@ class FilterSelector extends Component {
 
   updatePopupPosition() { // Update popup position.
     var self = this;
-    if (!self.elt || !self.elt.div) { return; }
-    var container = self.elt.div,
+    if (!self.elt || (!self.elt.div && !self.elt.refs.div)) { return; }
+    var container = self.elt.div || self.elt.refs.div,
       parent = $(container).parent();
     $(self.popup).width($(container).width() + 5);
     $(self.popup).css('left', $(container).offset().left);
@@ -126,7 +126,7 @@ class FilterSelector extends Component {
   initialize(elt) { // Called only one time to initialize the popup.
     if (this._isInitialized) return;
     var self = this,
-      input = elt.input,
+      input = elt.input || elt.refs.input,
       paddingLeft = 5,
       paddingTop = 5;
     self.elt = elt;

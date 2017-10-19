@@ -6,6 +6,7 @@ import { ProductsService, ShopsService, OrdersService } from "./services/index";
 import { DescriptionTab, ProductComment, ProductDiscount } from "./productabs";
 import { EditableText, EditableTag, ImagesUploader } from './components';
 import { ApplicationStore, EditProductStore } from './stores/index';
+import { Guid } from './utils';
 import AppDispatcher from "./appDispatcher";
 import MainLayout from './MainLayout';
 import Constants from "../Constants";
@@ -19,6 +20,7 @@ class Products extends Component {
     constructor(props) {
         super(props);
         this._waitForToken = null;
+        this._commonId = null;
         this.toggle = this.toggle.bind(this);
         this.toggleError = this.toggleError.bind(this);
         this.changeImage = this.changeImage.bind(this);
@@ -110,7 +112,27 @@ class Products extends Component {
     }
 
     saveProduct() { // Save the product.
-
+      var self = this;
+      var product = EditProductStore.getProduct();
+      const {t} = this.props;
+      self.setState({
+        isLoading: true
+      });
+      self._commonId = Guid.generate();
+      ProductsService.update(product, self._commonId).catch(function(e) {
+          var json = e.responseJSON;
+          if (json && json.error_description) {
+              self.setState({
+                  updatingErrorMessage: json.error_description,
+                  isLoading: false
+              });
+          } else {
+            self.setState({
+                updatingErrorMessage: t('errorUpdateProduct'),
+                isLoading: false
+            });
+          }
+      });
     }
 
     updateProductName(name) { // Update product name.
@@ -547,7 +569,9 @@ class Products extends Component {
 
     componentWillMount() { // Execute after the render.
         this.refresh();
-        var self = this;
+        var self = this,
+          productId = self.props.match.params.id;
+        const {t} = self.props;
         self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
             case Constants.events.NEW_PRODUCT_COMMENT_ARRIVED:
@@ -556,12 +580,24 @@ class Products extends Component {
                   self.refreshScore(payload.data);
                 }
                 break;
-            }
+            case Constants.events.SHOP_UPDATE_ARRIVED:
+              if (payload.data && payload.data.id === productId) {
+                ApplicationStore.sendMessage({
+                    message: t('productUpdated'),
+                    level: 'success',
+                    position: 'bl'
+                });
+                self.refresh();
+              }
+            break;
+          }
         });
+
         EditProductStore.addProductChangeListener(this.updateProduct);
         Mousetrap.bind('ctrl+s', function(e) { // Save the product (ctrl+s)
           if (self.state.isEditable) {
-
+            e.preventDefault();
+            self.saveProduct();
           }
         });
     }

@@ -97,6 +97,12 @@ class App extends Component {
                 data: message
             });
         });
+        proxy.on('productUpdated', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.UPDATE_PRODUCT_ARRIVED,
+                data: message
+            });
+        });
         proxy.on('shopAdded', function (message) {
             AppDispatcher.dispatch({
                 actionName: Constants.events.NEW_SHOP_ARRIVED,

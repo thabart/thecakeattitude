@@ -121,5 +121,25 @@ module.exports = {
                 });
             });
         });
+    },
+    update: function(content, commonId) { // Update the product.
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.products_endpoint, {
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken,
+                        'CommonId': commonId
+                    },
+                    data: JSON.stringify(content)
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     }
 };

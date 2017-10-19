@@ -206,7 +206,8 @@ namespace Cook4Me.Api.Handlers
             _eventPublisher.Publish(new ProductUpdatedEvent
             {
                 Id = product.Id,
-                ShopId = product.ShopId
+                ShopId = product.ShopId,
+                CommonId = message.CommonId
             });
         }
 
