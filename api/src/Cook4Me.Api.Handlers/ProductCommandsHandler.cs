@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ProductCommandsHandler : Handles<AddProductCommentCommand>, Handles<RemoveProductCommentCommand>, Handles<AddProductCommand>
+    public class ProductCommandsHandler : Handles<AddProductCommentCommand>, Handles<RemoveProductCommentCommand>, Handles<AddProductCommand>, Handles<UpdateProductCommand>
     {
         private readonly IProductRepository _productRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -164,6 +164,49 @@ namespace Cook4Me.Api.Handlers
                 TotalScore = product.TotalScore,
                 UnitOfMeasure = product.UnitOfMeasure,
                 UpdateDateTime = product.UpdateDateTime
+            });
+        }
+
+        public async Task Handle(UpdateProductCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var product = await _productRepository.Get(message.Id);
+            if (product == null)
+            {
+                return;
+            }
+
+            product.Name = message.Name;
+            product.Description = message.Description;
+            product.CategoryId = message.CategoryId;
+            product.UnitOfMeasure = message.UnitOfMeasure;
+            product.Price = message.Price;
+            product.Quantity = message.Quantity;
+            product.AvailableInStock = message.AvailableInStock;
+            product.Tags = message.Tags;
+            product.PartialImagesUrl = message.PartialImagesUrl;
+            var filters = new List<ProductAggregateFilter>();
+            if (message.Filters != null && message.Filters.Any())
+            {
+                foreach (var filter in message.Filters)
+                {
+                    filters.Add(new ProductAggregateFilter
+                    {
+                        FilterId = filter.FilterId,
+                        FilterValueId = filter.ValueId
+                    });
+                }
+            }
+
+            await _productRepository.Update(product);
+            _eventPublisher.Publish(new ProductUpdatedEvent
+            {
+                Id = product.Id,
+                ShopId = product.ShopId
             });
         }
 

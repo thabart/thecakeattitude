@@ -19,6 +19,7 @@ using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
+using Cook4Me.Api.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -68,8 +69,67 @@ namespace Cook4Me.Api.EF.Repositories
                     record.AvailableInStock = productAggregate.AvailableInStock;
                     var comments = productAggregate.Comments == null ? new List<ProductComment>() : productAggregate.Comments;
                     var commentIds = comments.Select(c => c.Id);
-                    // Update the comments
-                    if (record.Comments != null)
+                    var tags = new List<ProductTag>();
+                    var filters = new List<ProductFilter>();
+                    var images = new List<ProductImage>();
+                    if (productAggregate.Tags != null && productAggregate.Tags.Any()) // Update the tags.
+                    {
+                        var tagNames = productAggregate.Tags;
+                        var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                        foreach (var connectedTag in connectedTags)
+                        {
+                            tags.Add(new ProductTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = connectedTag.Name,
+                                ProductId = productAggregate.Id
+                            });
+                        }
+
+                        var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                        foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
+                        {
+                            var newTag = new Tag
+                            {
+                                Name = notExistingTagName,
+                                Description = notExistingTagName
+                            };
+                            _context.Tags.Add(newTag);
+                            tags.Add(new ProductTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = notExistingTagName,
+                                ProductId = productAggregate.Id,
+                                Tag = newTag
+                            });
+                        }
+                    }
+
+                    if (productAggregate.PartialImagesUrl != null && productAggregate.PartialImagesUrl.Any()) // Update the immages.
+                    {
+                        images = productAggregate.PartialImagesUrl.Select(i =>
+                            new ProductImage
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                PartialPath = i
+                            }
+                        ).ToList();
+                    }
+
+                    if (productAggregate.Filters != null) // Update the filters.
+                    {
+                        var ids = productAggregate.Filters.Select(f => f.FilterValueId);
+                        filters = await _context.FilterValues.Where(f => ids.Contains(f.Id)).Select(f =>
+                            new ProductFilter
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                FilterValueId = f.Id,
+                                ProductId = productAggregate.Id
+                            }).ToListAsync().ConfigureAwait(false);
+                        record.Filters = filters;
+                    }
+                                        
+                    if (record.Comments != null) // Update the comments.
                     {
                         var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
                         var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
@@ -105,6 +165,9 @@ namespace Cook4Me.Api.EF.Repositories
                         }
                     }
 
+                    record.Filters = filters;
+                    record.Tags = tags;
+                    record.Images = images;
                     await _context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
                     return true;

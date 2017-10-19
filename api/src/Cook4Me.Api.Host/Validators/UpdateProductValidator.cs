@@ -119,6 +119,30 @@ namespace Cook4Me.Api.Host.Validators
                 return new UpdateProductValidationResult(ErrorDescriptions.TheAvailableInStockCannotBeLessThanZero);
             }
 
+            if (command.PartialImagesUrl != null)
+            {
+                foreach(var image in command.PartialImagesUrl)
+                {
+                    Uri uri;
+                    if (Uri.TryCreate(image, UriKind.RelativeOrAbsolute, out uri))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        var base64Encoded = image;
+                        base64Encoded = base64Encoded.Substring(image.IndexOf(',') + 1);
+                        base64Encoded = base64Encoded.Trim('\0');
+                        Convert.FromBase64String(base64Encoded);
+                    }
+                    catch
+                    {
+                        return new UpdateProductValidationResult(ErrorDescriptions.TheProductImageCanBeUrlOrBase64Encoded);
+                    }
+                }
+            }
+
             var unitOfMeasure = _unitOfMeasures.FirstOrDefault(u => command.UnitOfMeasure.ToLowerInvariant().Equals(u, StringComparison.CurrentCultureIgnoreCase));
             if (string.IsNullOrWhiteSpace(unitOfMeasure))
             {

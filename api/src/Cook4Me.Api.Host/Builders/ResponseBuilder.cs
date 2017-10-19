@@ -103,6 +103,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetServiceAddedEvent(ServiceAddedEvent evt);
         JObject GetClientServiceAddedEvent(ClientServiceAddedEvent evt);
         JObject GetClientServiceRemovedEvent(ClientServiceRemovedEvent evt);
+        JObject GetProductUpdatedEvent(ProductUpdatedEvent evt);
         JObject GetProductAddedEvent(ProductAddedEvent evt);
         JObject GetProduct(ProductAggregate product);
         JObject GetService(ServiceAggregate service);
@@ -1605,6 +1606,18 @@ namespace Cook4Me.Api.Host.Builders
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.ClientService.Id, evt.AnnouncementId);
             jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return jObj;
+        }
+
+        public JObject GetProductUpdatedEvent(ProductUpdatedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Product.Id, evt.Id);
             return jObj;
         }
 

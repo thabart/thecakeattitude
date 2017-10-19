@@ -285,6 +285,7 @@ class Products extends Component {
         }
 
         var user = ApplicationStore.getUser();
+        console.log(this.state.product);
         return (
           <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
@@ -373,7 +374,8 @@ class Products extends Component {
                         </div>
                         { /* Right side */ }
                         <div className="col-md-4">
-                            {bestDiscount == null ? (<h4 className="price">€ {this.state.product.price}</h4>) : (
+                            { !self.state.isEditable && bestDiscount === null && (<h4 className="price">€ {this.state.product.price}</h4>) }
+                            { !self.state.isEditable && bestDiscount !== null && (
                                 <div>
                                    <h5 className="inline">
                                        <Badge color="success">
@@ -384,6 +386,18 @@ class Products extends Component {
                                    <h5 className="inline ml-1">€ {(this.state.product.price - bestDiscount.money_saved)}</h5>
                                 </div>
                             )}
+                            { self.state.isEditable && (<EditableText value={self.state.product.price} />) }
+                            { self.state.isEditable && (<span>TODO</span>) }
+                            { !self.state.isEditable && (<div>
+                              <p>
+                                {t('oneUnitEqualTo').replace('{0}', this.state.product.quantity + ' ' + t(this.state.product.unit_of_measure))}
+                              </p>
+                              <p>
+                                {t('pricePerUnit').replace('{0}', '€ ' + this.state.product.price)}
+                              </p>
+                              { (!this.state.product.available_in_stock || this.state.product.available_in_stock === null) && (<p>{t('unlimitedStock')}</p>) }
+                              { this.state.product.available_in_stock && this.state.product.available_in_stock !== null && (<p>{t('availableInStock').replace('{0}', this.state.product.available_in_stock)}</p>) }
+                            </div>) }
                             { user && user.sub !== this.state.shop.subject && (<a href="#" className="btn btn-default" onClick={this.addToCart}>{t('addToCart')}</a>) }
                             { user && user.sub !== this.state.shop.subject && (<a href="#" style={{marginLeft: "5px"}} onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/products/' + self.state.product.id); }} className="btn btn-default">{t('contactTheShop')}</a>) }
                         </div>

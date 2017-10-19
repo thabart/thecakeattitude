@@ -74,7 +74,7 @@ namespace Cook4Me.Api.Host.Operations.Product
                 throw new ArgumentNullException(nameof(request));
             }
 
-            // 1. Check the request
+            // 1. Check the request.
             UpdateProductCommand command = null;
             try
             {
@@ -92,14 +92,20 @@ namespace Cook4Me.Api.Host.Operations.Product
                 var error = _responseBuilder.GetError(ErrorCodes.Request, validationResult.Message);
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
-
-            /*
+            
             // 2. Add images
             var images = new List<string>();
             if (command.PartialImagesUrl != null)
             {
                 foreach (var image in command.PartialImagesUrl)
                 {
+                    Uri uri = null;
+                    if (Uri.TryCreate(image, UriKind.RelativeOrAbsolute, out uri))
+                    {
+                        images.Add(image);
+                        continue;
+                    }
+
                     string path;
                     if (!AddImage(image, request, out path))
                     {
@@ -109,11 +115,10 @@ namespace Cook4Me.Api.Host.Operations.Product
                     images.Add(path);
                 }
             }
-            */
 
             command.Id = Guid.NewGuid().ToString();
             command.CommonId = commonId;
-            // command.PartialImagesUrl = images;
+            command.PartialImagesUrl = images;
             var res = new { id = command.Id };
             _commandSender.Send(command);
             return new OkObjectResult(res);
