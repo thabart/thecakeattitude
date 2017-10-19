@@ -70,6 +70,16 @@ class EditableText extends Component {
           return;
         }
       break;
+      case 'number': // Validate the number.
+        var min = self.props.min || 0;
+        var max = self.props.max || Number.MAX_VALUE;
+        if (oldValue < min || oldValue > max) {
+          self.setState({
+            isNumberInvalid: true
+          });
+          return;
+        }
+      break;
     }
 
     self.setState({
@@ -82,6 +92,7 @@ class EditableText extends Component {
 
   render() { // Render the view.
     const {t} = this.props;
+    var self = this;
     if (!this.state.isEditMode) {
       var val = this.state.value;
       if (val === null || val === '') {
@@ -89,7 +100,9 @@ class EditableText extends Component {
       }
 
       return (<div onClick={(e) => { this.onClickField(); }} className="editable-input">
-        <span className={this.props.className}>{val}</span>
+        { self.props.label ? (<span className={this.props.className}>{self.props.label} {val}</span>) :
+          (<span className={this.props.className}>{val}</span>)
+        }
       </div>);
     }
 
@@ -104,16 +117,38 @@ class EditableText extends Component {
     } else if (this.state.isPhoneInvalid) {
       errorMessage = t('notValidPhone');
       feedbackName = 'danger';
+    } else if (this.state.isNumberInvalid) {
+      errorMessage = t('notValidNumber').replace('{0}', this.props.min || 0).replace('{1}', this.props.max || Number.MAX_VALUE);
+      feedbackName = 'danger';
     }
 
+    var type = "text";
+    var propType = this.props.type || 'txt';
+    switch(propType) {
+      case "email":
+        type = "email";
+      break;
+      case "phone":
+        type = "tel";
+      break;
+      case "number":
+        type = "number";
+      break;
+    }
     return <form onSubmit={(e) => { e.preventDefault(); this.validate(); }} className="row">
       <div className="editable-input-container col-md-8">
-        <Input type="text" className="form-control" state={feedbackName} value={this.state.oldValue} onChange={this.handleInputChange} minLength={this.props.minLength} maxLength={this.props.maxLength} />
+        <Input type={type} className="form-control" state={feedbackName}
+          value={this.state.oldValue}
+          min={this.props.min}
+          max={this.props.max}
+          onChange={this.handleInputChange}
+          minLength={this.props.minLength}
+          maxLength={this.props.maxLength} />
         <FormFeedback>{errorMessage}</FormFeedback>
       </div>
       <div className="editable-buttons-container col-md-4">
-        <button className="btn btn-default" onClick={(e) => {this.validate(); }}>{t('ok')}</button>
-        <button className="btn btn-default" onClick={(e) => {this.closeEditMode(); }} style={{marginLeft: "5px"}}>{t('cancel')}</button>
+        <button className="btn btn-default" onClick={(e) => {this.validate(); }}  style={{marginRight: "1px"}}>{t('ok')}</button>
+        <button className="btn btn-default" onClick={(e) => {this.closeEditMode(); }}>{t('cancel')}</button>
       </div>
     </form>
   }

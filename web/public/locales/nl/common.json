@@ -495,5 +495,6 @@
   "saveProductTooltip": "Update the product (CTRL + S)",
   "editProductTooltip": "Edit the product",
   "viewProductTooltip": "View the product",
-  "uploadImage": "Upload image"
+  "uploadImage": "Upload image",
+  "notValidNumber": "Not a valid number and should be comprise between {0} and {1}"
 }

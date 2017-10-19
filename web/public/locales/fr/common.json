@@ -494,5 +494,6 @@
   "saveProductTooltip": "Mettre à jour le produit (CTRL + S)",
   "editProductTooltip": "Editer le produit",
   "viewProductTooltip": "Visualiser le produit",
-  "uploadImage": "Télécharger une image"
+  "uploadImage": "Télécharger une image",
+  "notValidNumber": "Pas un nombre valide et sa valeur doit être comprise entre {0} et {1}"
 }

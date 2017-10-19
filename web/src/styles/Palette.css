@@ -11,7 +11,8 @@ body {
 .red-theme .nav-link:hover,
 .red-theme .redColor,
 .red-theme a.red:hover,
-h2 {
+h2,
+.header2 {
   color: #e7272d !important;
 }
 

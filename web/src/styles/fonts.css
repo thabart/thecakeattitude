@@ -25,15 +25,30 @@ h5,
   font-family: 'Poppins', sans-serif !important;
 }
 
+.header1 {
+  font-size: 2.5rem;
+  font-weight: 500;
+}
+
+h2,
+.header2 {
+  font-size: 52px !important;
+}
+
+h2,
+.header2,
+.font-secondary {
+	font-family: 'Cookie', cursive !important;
+	font-weight: 400 !important;
+}
+
 h3 {
 	font-weight: 700 !important;
 	letter-spacing: 1px !important;
 	margin-bottom: 0 !important;
-	font-size: 16px !important;
+	font-size: 22px !important;
 }
 
-h2,
-.font-secondary {
-	font-family: 'Cookie', cursive !important;
-	font-weight: 400 !important;
+.header4 {
+	font-size: 1.5rem;
 }

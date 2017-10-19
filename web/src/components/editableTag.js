@@ -46,9 +46,15 @@ class EditableTag extends Component {
           tags.push((<li>{tag}</li>));
         });
       }
+
+      var classname = "tags no-padding";
+      if (this.props.tagsClassName) {
+        classname += " "+ this.props.tagsClassName;
+      }
+
       return (<div className="editable-input" onClick={(e) => { this.onClickField(); }}>
         {tags.length > 0 ? (
-          <ul className="tags no-padding">
+          <ul className={classname}>
             {tags}
           </ul>
         ) : (

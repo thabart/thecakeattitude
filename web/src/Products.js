@@ -34,6 +34,10 @@ class Products extends Component {
         this.updateProductName = this.updateProductName.bind(this);
         this.updateTags = this.updateTags.bind(this);
         this.updateImages = this.updateImages.bind(this);
+        this.updatePrice = this.updatePrice.bind(this);
+        this.updateAvailableInStock = this.updateAvailableInStock.bind(this);
+        this.updateQuantity = this.updateQuantity.bind(this);
+        this.updateUnitOfMeasure = this.updateUnitOfMeasure.bind(this);
         this.updateProduct = this.updateProduct.bind(this);
         this.state = {
             isLoading: false,
@@ -43,9 +47,15 @@ class Products extends Component {
             shop: null,
             isEditable: false,
             canBeEdited: false,
+            isImageTooltipOpened: false,
             isEditProductTooltipOpened: false,
             isViewProductTooltipOpened: false,
-            isSaveProductTooltipOpened: false
+            isSaveProductTooltipOpened: false,
+            isPricePerUnitTooltipOpened: false,
+            isUnitOfMeasureTooltipOpened: false,
+            isQuantityTooltipOpened: false,
+            isInStockTooltipOpened: false,
+            notUnlimited: false
         };
     }
 
@@ -124,6 +134,36 @@ class Products extends Component {
       });
     }
 
+    updatePrice(price) { // Update the price.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+          data: { price: price }
+      });
+    }
+
+    updateAvailableInStock(stock) { // Update stock
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+          data: { available_in_stock: stock }
+      });
+    }
+
+    updateQuantity(quantity) { // Update the quantity.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+          data: { quantity: quantity }
+      });
+    }
+
+    updateUnitOfMeasure(e) { // Update the unit of measure.
+      const target = e.target;
+      const value = target.value;
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
+          data: { unit_of_measure: value }
+      });
+    }
+
     updateProduct() { // Update the product.
       var product = EditProductStore.getProduct();
       this.setState({
@@ -157,12 +197,14 @@ class Products extends Component {
             ShopsService.get(product.shop_id).then(function(sr) {
               var shop = sr['_embedded'];
               isEditable = isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
+              var notUnlimited = product.available_in_stock && product.available_in_stock !== null;
               self.setState({
                   isLoading: false,
                   product: product,
                   shop: shop,
                   isEditable: isEditable,
-                  canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
+                  canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject,
+                  notUnlimited: notUnlimited
               });
               AppDispatcher.dispatch({
                   actionName: Constants.events.EDIT_PRODUCT_LOADED,
@@ -172,14 +214,16 @@ class Products extends Component {
                 self.setState({
                     errorMessage: t('retrieveProductError'),
                     isLoading: false,
-                    isEditable: false
+                    isEditable: false,
+                    notUnlimited: false
                 });
             });
         }).catch(function () {
             self.setState({
                 errorMessage: t('retrieveProductError'),
                 isLoading: false,
-                isEditable: false
+                isEditable: false,
+                notUnlimited: false
             });
         });
     }
@@ -285,11 +329,11 @@ class Products extends Component {
         }
 
         var user = ApplicationStore.getUser();
-        console.log(this.state.product);
         return (
           <MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
             <div className="container">
                 <section className="section" style={{paddingBottom: "20px"}}>
+                    {/* Navigation bar */}
                     <Breadcrumb>
                         <BreadcrumbItem>
                             <a href="#" className="no-decoration red" onClick={(e) => { self.navigateShop(e, this.state.shop.id);}}>
@@ -332,30 +376,38 @@ class Products extends Component {
                           <div style={{paddingLeft: "10px"}}>
                             { /* Header */ }
                             <div>
+                              {/* Product name */ }
                               { self.state.isEditable ? (
-                                <EditableText className="header1" value={self.state.product.name} validate={this.updateProductName} minLength={1} maxLength={15} />) : 
+                                <EditableText className="header2" value={self.state.product.name} validate={this.updateProductName} minLength={1} maxLength={15} />) :
                                 (<h2>{self.state.product.name}</h2>)
-                              }                              
+                              }
+                              { /* Product Rate */ }
                               <div>
                                 <Rater total={5} ref="score" rating={this.state.product.average_score} interactive={false}/>
                                 <b> {this.state.product.average_score} </b>
                               </div>
+                              { /* Product Nb comments */ }
                               <span>{t('comments')} ({this.state.product.nb_comments})</span>
                             </div>
                             { /* Tags */ }
                             <div>
-                                { this.state.isEditable && (<EditableTag tags={self.state.shop.tags} validate={this.updateTags}/>) }
+                                { this.state.isEditable && (<EditableTag tags={self.state.shop.tags} tagsClassName="gray" validate={this.updateTags}/>) }
                                 { !this.state.isEditable && tags.length > 0 && (
                                    <ul className="col-md-12 tags gray" style={{padding: "0"}}>
                                     {tags}
                                    </ul>
-                                )}    
-                                { !this.state.isEditable && tags.length === 0 && (<span><i>{t('noTags')}</i></span>) }   
+                                )}
+                                { !this.state.isEditable && tags.length === 0 && (<span><i>{t('noTags')}</i></span>) }
                             </div>
                             { /* Update an image */ }
                             { self.state.isEditable && (
-                              <div>
-                                <label>{t('images')}</label>
+                              <div style={{padding: "10px 0px 10px 0px"}}>
+                                <h5>
+                                  {t('uploadImage')} <i className="fa fa-info-circle txt-info" id="imagesTooltip"></i>
+                                  <UncontrolledTooltip placement="right" target="imagesTooltip" className="red-tooltip-inner" isOpen={this.state.isImageTooltipOpened} toggle={() => { this.toggle('isImageTooltipOpened'); }}>
+                                    {t('productImagesTooltip')}
+                                  </UncontrolledTooltip>
+                                </h5>
                                 <ImagesUploader ref="imagesUploader" images={this.state.product.images} onChange={this.updateImages}/>
                               </div>
                             )}
@@ -374,6 +426,55 @@ class Products extends Component {
                         </div>
                         { /* Right side */ }
                         <div className="col-md-4">
+                            {/* Price per unit (edit) */ }
+                            { self.state.isEditable && (<div>
+                              <h5>
+                                {t('price')} <i className="fa fa-info-circle txt-info" id="priceTooltip"></i>
+                                <UncontrolledTooltip placement="right" target="priceTooltip" className="red-tooltip-inner" isOpen={this.state.isPricePerUnitTooltipOpened} toggle={() => { this.toggle('isPricePerUnitTooltipOpened'); }}>
+                                  {t('productPriceTooltip')}
+                                </UncontrolledTooltip>
+                              </h5>
+                              <EditableText value={self.state.product.price} label="€" className="price header4" min={1} validate={this.updatePrice} type="number" />
+                            </div>) }
+                            { /* Unit of measure (edit) */ }
+                            { self.state.isEditable && (<div>
+                              <h5>
+                                {t('productUnitOfMeasure')} <i className="fa fa-info-circle txt-info" id="unitOfMeasureTooltip"></i>
+                                <UncontrolledTooltip placement="right" target="unitOfMeasureTooltip" className="red-tooltip-inner" isOpen={this.state.isUnitOfMeasureTooltipOpened} toggle={() => { this.toggle('isUnitOfMeasureTooltipOpened'); }}>
+                                  {t('productUnitOfMeasureTooltip')}
+                                </UncontrolledTooltip>
+                              </h5>
+                              <select className="form-control" name="unitOfMeasure" onChange={this.updateUnitOfMeasure} value={this.state.product.unit_of_measure}>
+                                <option value="piece">{t('piece')}</option>
+                                <option value="kg">{t('kg')}</option>
+                                <option value="l">{t('l')}</option>
+                              </select>
+                            </div>) }
+                            { /* Quantity per portion (edit) */ }
+                            { self.state.isEditable && (<div>
+                              <h5>
+                                {t('productQuantity')} <i className="fa fa-info-circle txt-info" id="quantity"></i>
+                                <UncontrolledTooltip placement="right" target="quantity" className="red-tooltip-inner" isOpen={this.state.isQuantityTooltipOpened} toggle={() => { this.toggle('isQuantityTooltipOpened'); }}>
+                                  {t('productQuantityTooltip')}
+                                </UncontrolledTooltip>
+                              </h5>
+                              <EditableText value={self.state.product.quantity} validate={this.updateQuantity} min={1} type="number" />
+                            </div>) }
+                            { /* Available in stock */ }
+                            { self.state.isEditable && (<div>
+                              <input type="checkbox" checked={!this.state.notUnlimited} onChange={() => { if (self.state.notUnlimited) { self.updateAvailableInStock(null); } else { self.updateAvailableInStock(1); } self.toggle('notUnlimited'); }} /><label className="control-label">{t('unlimitedStock')}</label>
+                              { self.state.notUnlimited && (
+                                <div>
+                                  <h5>
+                                    {t('productStock')} <i className="fa fa-info-circle txt-info" id="inStock"></i>
+                                    <UncontrolledTooltip placement="right" target="inStock" className="red-tooltip-inner" isOpen={this.state.isInStockTooltipOpened} toggle={() => { this.toggle('isInStockTooltipOpened'); }}>
+                                      {t('productStockTooltip')}
+                                    </UncontrolledTooltip>
+                                  </h5>
+                                  <EditableText value={(self.state.product.available_in_stock || 1)} validate={this.updateAvailableInStock} min={1} type="number" />
+                                </div>
+                              ) }
+                            </div> )}
                             { !self.state.isEditable && bestDiscount === null && (<h4 className="price">€ {this.state.product.price}</h4>) }
                             { !self.state.isEditable && bestDiscount !== null && (
                                 <div>
@@ -386,8 +487,6 @@ class Products extends Component {
                                    <h5 className="inline ml-1">€ {(this.state.product.price - bestDiscount.money_saved)}</h5>
                                 </div>
                             )}
-                            { self.state.isEditable && (<EditableText value={self.state.product.price} />) }
-                            { self.state.isEditable && (<span>TODO</span>) }
                             { !self.state.isEditable && (<div>
                               <p>
                                 {t('oneUnitEqualTo').replace('{0}', this.state.product.quantity + ' ' + t(this.state.product.unit_of_measure))}
