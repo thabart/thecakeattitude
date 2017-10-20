@@ -1,24 +1,25 @@
-.list li {
+/* TREE VIEW */
+.treeview li {
   padding-left: 10px;
   position: relative;
   cursor: pointer;
 }
 
-.list ul {
+.treeview ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.list li > ul {
+.treeview li > ul {
   display: none;
 }
 
-.list li.active > ul {
+.treeview li.active > ul {
   display: block;
 }
 
-.list .node-toggle:before {
+.treeview .node-toggle:before {
   position: absolute;
   content: '';
   right: 0px;
@@ -28,8 +29,29 @@
   background: url('../img/icons/arrowRight.png') right center no-repeat;
 }
 
-.list li.active .node-toggle:before {
+.treeview li.active .node-toggle:before {
   width: 10px;
   height: 5px;
   background: url('../img/icons/arrowDown.png') right center no-repeat;
+}
+
+ul.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* LIST OF ITEMS */
+ul.list li {
+  background-color: rgb(222,222,222);
+  border: 1px solid rgb(149,149,149);
+  border-radius: 2px;
+  padding: 5px;
+}
+
+ul.list li .information {
+  border-radius: 2px;
+  background-color: rgb(149,149,149);
+  color: white;
+  padding: 5px;
 }
