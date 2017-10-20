@@ -122,11 +122,11 @@ module.exports = {
             });
         });
     },
-    update: function(content, commonId) { // Update the product.
+    update: function(id, content, commonId) { // Update the product.
         var accessToken = Session.getSession().access_token;
         return new Promise(function (resolve, reject) {
             ConfigurationService.get().then(function (configuration) {
-                $.ajax(configuration.products_endpoint, {
+                $.ajax(configuration.products_endpoint + '/' + id, {
                     method: 'PUT',
                     contentType: 'application/json',
                     headers: {

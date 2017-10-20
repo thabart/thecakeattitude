@@ -34,7 +34,7 @@ namespace Cook4Me.Api.Host.Operations.Product
 {
     public interface IUpdateProductOperation
     {
-        Task<IActionResult> Execute(JObject jObj, string subject, string commonId, HttpRequest request);
+        Task<IActionResult> Execute(string id, JObject jObj, string subject, string commonId, HttpRequest request);
     }
 
     internal class UpdateProductOperation : IUpdateProductOperation
@@ -57,8 +57,13 @@ namespace Cook4Me.Api.Host.Operations.Product
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<IActionResult> Execute(JObject jObj, string subject, string commonId, HttpRequest request)
+        public async Task<IActionResult> Execute(string id, JObject jObj, string subject, string commonId, HttpRequest request)
         {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
             if (jObj == null)
             {
                 throw new ArgumentNullException(nameof(jObj));
@@ -86,6 +91,7 @@ namespace Cook4Me.Api.Host.Operations.Product
                 return _controllerHelper.BuildResponse(HttpStatusCode.BadRequest, error);
             }
 
+            command.Id = id;
             var validationResult = await _updateProductValidator.Validate(command, subject);
             if (!validationResult.IsValid)
             {
@@ -115,13 +121,11 @@ namespace Cook4Me.Api.Host.Operations.Product
                     images.Add(path);
                 }
             }
-
-            command.Id = Guid.NewGuid().ToString();
+            
             command.CommonId = commonId;
             command.PartialImagesUrl = images;
-            var res = new { id = command.Id };
             _commandSender.Send(command);
-            return new OkObjectResult(res);
+            return new OkResult();
         }
 
         private bool AddImage(string base64Encoded, HttpRequest request, out string path)

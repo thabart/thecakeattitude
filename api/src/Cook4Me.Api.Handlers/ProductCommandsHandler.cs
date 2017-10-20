@@ -202,6 +202,7 @@ namespace Cook4Me.Api.Handlers
                 }
             }
 
+            product.Filters = filters;
             await _productRepository.Update(product);
             _eventPublisher.Publish(new ProductUpdatedEvent
             {

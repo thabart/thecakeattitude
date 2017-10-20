@@ -114,12 +114,13 @@ class Products extends Component {
     saveProduct() { // Save the product.
       var self = this;
       var product = EditProductStore.getProduct();
+      var productId = self.props.match.params.id;
       const {t} = this.props;
       self.setState({
         isLoading: true
       });
       self._commonId = Guid.generate();
-      ProductsService.update(product, self._commonId).catch(function(e) {
+      ProductsService.update(productId, product, self._commonId).catch(function(e) {
           var json = e.responseJSON;
           if (json && json.error_description) {
               self.setState({
@@ -413,7 +414,7 @@ class Products extends Component {
                             </div>
                             { /* Tags */ }
                             <div>
-                                { this.state.isEditable && (<EditableTag tags={self.state.shop.tags} tagsClassName="gray" validate={this.updateTags}/>) }
+                                { this.state.isEditable && (<EditableTag tags={self.state.product.tags} tagsClassName="gray" validate={this.updateTags}/>) }
                                 { !this.state.isEditable && tags.length > 0 && (
                                    <ul className="col-md-12 tags gray" style={{padding: "0"}}>
                                     {tags}
@@ -580,7 +581,7 @@ class Products extends Component {
                   self.refreshScore(payload.data);
                 }
                 break;
-            case Constants.events.SHOP_UPDATE_ARRIVED:
+            case Constants.events.UPDATE_PRODUCT_ARRIVED:
               if (payload.data && payload.data.id === productId) {
                 ApplicationStore.sendMessage({
                     message: t('productUpdated'),

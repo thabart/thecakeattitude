@@ -71,11 +71,11 @@ namespace Cook4Me.Api.Host.Controllers
             return await _addProductOperation.Execute(jObj, User.GetSubject(), this.GetCommonId(), this.Request);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize("Connected")]
-        public async Task<IActionResult> Update([FromBody] JObject jObj)
+        public async Task<IActionResult> Update(string id, [FromBody] JObject jObj)
         {
-            return await _updateProductOperation.Execute(jObj, User.GetSubject(), this.GetCommonId(), this.Request);
+            return await _updateProductOperation.Execute(id, jObj, User.GetSubject(), this.GetCommonId(), this.Request);
         }
 
         [HttpPost(Constants.RouteNames.Comments)]

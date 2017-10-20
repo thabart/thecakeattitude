@@ -46,7 +46,7 @@ class DescriptionTab extends Component {
         });
         AppDispatcher.dispatch({
             actionName: Constants.events.UPDATE_PRODUCT_INFORMATION_ACT,
-            data: { filters: product.filters }
+            data: { filters: filters }
         });
     }
 
