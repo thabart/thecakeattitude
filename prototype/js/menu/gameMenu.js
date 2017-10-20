@@ -6,6 +6,7 @@ game.GameMenu = me.Object.extend({
     new game.ActionsBox();
     new game.ChatForm();
     new game.UpRightOptions();
+    new game.ShelfBox();
     this.addMenu();
     $(document.body).i18n();
   },

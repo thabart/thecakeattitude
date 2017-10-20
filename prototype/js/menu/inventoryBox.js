@@ -50,6 +50,7 @@ game.InventoryBox = me.Object.extend({
             },
             {
               name: "type_shelf",
+              interaction: Constants.Interactions.Shelf,
               themes: [
                 {
                   name: "theme_glass",
@@ -179,7 +180,7 @@ game.InventoryBox = me.Object.extend({
           ]
         },
         {
-          name: "Personnages"
+          name: "npc_tab"
         }
       ];
       var indice = 0;
@@ -191,7 +192,7 @@ game.InventoryBox = me.Object.extend({
 
         return "<li data-name='"+category.name+"' data-i18n='"+category.name+"'></li>";
       }).join('');
-      this.inventory = $("<div class='inventory-box'>"+
+      this.inventory = $("<div class='blue-modal inventory-box'>"+
         "<div class='top'>"+
           "Inventaire <div class='close'></div>"+
         "</div>"+
@@ -204,7 +205,7 @@ game.InventoryBox = me.Object.extend({
               "<label>Type</label>"+
               "<select class='type-selector'>"+
               "</select>"+
-              "<label>Thème</label>"+
+              "<label data-i18n='theme'></label>"+
               "<select class='theme-selector'>"+
               "</select>"+
             "</div>"+
@@ -256,7 +257,7 @@ game.InventoryBox = me.Object.extend({
     "</div>");
     $(entityInformation).append(n);
     $(n).find('.button').click(function() {
-      ShopStore.setActiveEntity($(elt).data('furniture'), $(elt).data('selector'), false);
+      ShopStore.setActiveEntity($(elt).data('furniture'), $(elt).data('selector'), $(elt).data('interaction'), false);
     });
     $(entityInformation).i18n();
   },
@@ -275,7 +276,9 @@ game.InventoryBox = me.Object.extend({
       $(self.inventory).find('.furnitures').empty();
       theme.furnitures.forEach(function(furniture) {
         $(self.inventory).find('.furnitures').append(
-          "<li data-furniture='"+furniture.name+"' data-selector='"+category.selector+"' data-img='"+furniture.url+"' data-description='"+furniture.description+"' data-instock='"+furniture.in_stock+"'>"+
+          "<li data-furniture='"+furniture.name+"'"+
+              "data-selector='"+category.selector+"' data-img='"+furniture.url+"' data-description='"+furniture.description+"'"+
+              "data-instock='"+furniture.in_stock+"' data-interaction='"+(type.interaction || '')+"'>"+
             "<img src='"+furniture.icon+"' />"+
           "</li>");
       });

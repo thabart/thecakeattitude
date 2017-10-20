@@ -1,0 +1,30 @@
+/* Grid system */
+.col-3 {
+  width: 25% !important;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.col-4 {
+  width: 33% !important;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.col-6 {
+  width: 45%;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.col-8 {
+  width: 67% !important;
+  vertical-align: top;
+  display: inline-block;
+}
+
+.col-9 {
+  width: 75% !important;
+  vertical-align: top;
+  display: inline-block;
+}

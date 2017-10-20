@@ -5,8 +5,8 @@ game.FurnitureEntitySelector = game.SelectableEntitySelector.extend({
 			Constants.Selectors.Furniture
     ])
 	},
-	create: function(x, y, name) {
-		return new game.FurnitureEntity(x, y, name);
+	create: function(x, y, name, interaction) {
+		return new game.FurnitureEntity(x, y, name, interaction);
 	},
 	getZIndex: function() {
 		return Constants.playerZIndex;

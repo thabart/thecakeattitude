@@ -1,5 +1,5 @@
 game.FurnitureEntity = game.SelectableEntity.extend({
-  init: function (x, y, furnitureName) {
+  init: function (x, y, furnitureName, interaction) {
     this._super(game.SelectableEntity, "init", [
       {
         x: x,
@@ -7,7 +7,8 @@ game.FurnitureEntity = game.SelectableEntity.extend({
         name: furnitureName,
         refLayerName: Constants.Layers.Ground.Name,
         selector: Constants.Selectors.Furniture,
-        isCollidable: true
+        isCollidable: true,
+        interaction: interaction
       }
     ]);
     this.addCollision("furnitures_collision");

@@ -42,14 +42,15 @@ var ShopStoreCl = function() {
 		return _activeEntity;
 	};
 
-	this.setActiveEntity = function(name, selector, isFlipped) { // Set the active entity (with opacity 0.5)
+	this.setActiveEntity = function(name, selector, interaction, isFlipped) { // Set the active entity (with opacity 0.5)
 		if (!name || name === null) {
 			_activeEntity = null;
 		} else {
 			_activeEntity = {
 				name: name,
 				isFlipped: isFlipped,
-				selector: selector
+				selector: selector,
+				interaction: interaction
 			};
 		}
 
@@ -99,6 +100,14 @@ var ShopStoreCl = function() {
 		$(this).trigger('hidePlayerPseudoArrived');
 	};
 
+	this.displayShelfBox = function() { // Display the shelf box.
+		$(this).trigger('displayShelfBoxArrived');
+	};
+
+	this.hideShelfBox = function() { // Hide the shelf box.
+		$(this).trigger('hideShelfBoxArrived');
+	};
+
 	this.displayInformation = function(metadata) { // Update the content of the information box.
 		$(this).trigger('displayInformationArrived', [ metadata ]);
 	};
@@ -107,8 +116,8 @@ var ShopStoreCl = function() {
 		$(this).trigger('hideInformationArrived');
 	};
 
-	this.displayActions = function() { // Display the entity actions.
-		$(this).trigger('displayActionsArrived');
+	this.displayActions = function(metadata) { // Display the entity actions.
+		$(this).trigger('displayActionsArrived', [ metadata ]);
 	};
 
 	this.hideActions = function() { // Hide the entity actions.
@@ -154,6 +163,14 @@ var ShopStoreCl = function() {
 
 	this.listenHidePlayerPseudoArrived = function(callback) {
 		$(this).on('hidePlayerPseudoArrived', callback);
+	};
+
+	this.listenDisplayShelfBoxArrived = function(callback) {
+		$(this).on('displayShelfBoxArrived', callback);
+	};
+
+	this.listenHideShelfBoxArrived = function(callback) {
+		$(this).on('hideShelfBoxArrived', callback);
 	};
 };
 

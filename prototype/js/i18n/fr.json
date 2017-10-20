@@ -17,5 +17,10 @@
     "field_tab": "Sol",
     "type_field": "Sol",
     "executive_floor_description": "Sol d'affaire",
-    "entityInStock": "En stock"
+    "entityInStock": "En stock",
+    "move": "Déplacer",
+    "turn": "Tourner",
+    "remove": "Supprimer",
+    "translate": "Bouger",
+    "use": "Utiliser"
 }

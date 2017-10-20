@@ -20,5 +20,8 @@ var Constants = {
     Wall: "wall",
     Floor: "floor"
   },
+  Interactions: {
+    Shelf: "Shelf"
+  },
   playerZIndex: 7
 };

@@ -17,5 +17,10 @@
   "field_tab": "Field",
   "type_field": "Field",
   "executive_floor_description": "Executive floor",
-  "entityInStock": "In stock"
+  "entityInStock": "In stock",
+  "move": "Move",
+  "turn": "Turn",
+  "remove": "Remove",
+  "translate": "Translate",
+  "use": "Use"
 }

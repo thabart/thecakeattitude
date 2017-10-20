@@ -1,60 +1,14 @@
-/* INVENTORY BOX */
-.inventory-box {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-	z-index: 11;
-}
-
-.inventory-box .top
-{
-    background: url('../img/window/inventory/i_top.png') no-repeat;
-    height: 19px;
-    color: #fff;
-    font-weight: bold;
-    padding: 7px;
-    text-align: center;
-}
-
-.inventory-box .body
-{
-    background: url('../img/window/inventory/i_body.png') repeat-y;
-    min-height: 250px;
-    height: auto;
-    padding: 5px 8px;
-}
-
-.inventory-box .body .content {
-	padding: 5px;
-}
-
-.inventory-box .body .content .filter {
-	background-color: rgb(201,201,201);
-	border-radius: 5px;
-	padding: 5px;
-}
-
-.inventory-box .body .content .entities {
-	padding-top: 5px;
-}
-
-.inventory-box .bottom
-{
-    background: url('../img/window/inventory/i_bottom.png') no-repeat;
-    width: 490px;
-    height: 9px;
-}
-
-.inventory-box ul.tabs
+/* TABULATIONS */
+ul.tabs
 {
     border-bottom: solid 1px #000;
     height: 32px;
-    width: calc(100% - 24px);
     padding-left: 10px;
     margin-bottom: 5px;
+    margin-top: 0px;
 }
 
-.inventory-box ul.tabs li
+ul.tabs li
 {
     display: inline-block;
     border-top: solid 1px #4D4C49;
@@ -68,7 +22,7 @@
     margin-right: -3px;
 }
 
-.inventory-box ul.tabs li:hover
+ul.tabs li:hover
 {
     background: #f6f5f0;
     border-bottom: solid 1px #f6f5f0;
@@ -76,7 +30,7 @@
     box-shadow: inset 2px 2px 1px #fff;
 }
 
-.inventory-box ul.tabs li.active
+ul.tabs li.active
 {
     background: #ECEAE0;
     border-top: solid 2px #000;
@@ -84,6 +38,89 @@
     border-right: solid 2px #000;
     border-bottom: solid 1px #ECEAE0;
     box-shadow: inset 2px 2px 1px #fff;
+}
+
+/* BLUE BOX */
+.blue-modal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+.blue-modal .top,
+.blue-modal .top:before
+{
+  height: 33px;
+}
+
+.blue-modal .top {
+  position: relative;
+  background: url('../img/window/blue_modal/topLeftCorner.png') left top no-repeat,
+    url('../img/window/blue_modal/topRightCorner.png') right top no-repeat;
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+
+.blue-modal .top:before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  top: 0px;
+  background: url('../img/window/blue_modal/topContent.png') center top repeat-x;
+  z-index: -1;
+}
+
+.blue-modal .body {
+  position: relative;
+  background: url('../img/window/blue_modal/bodyStart.png') top left repeat-y,
+    url('../img/window/blue_modal/bodyEnd.png') top right repeat-y;
+  min-height: 100px;
+  background-color: rgb(236,234,234);
+}
+
+.blue-modal .bottom,
+.blue-modal .bottom:before {
+  height: 9px;
+}
+
+.blue-modal .bottom {
+  position: relative;
+  background: url('../img/window/blue_modal/bottomLeftCorner.png') left bottom no-repeat,
+    url('../img/window/blue_modal/bottomRightCorner.png') right bottom no-repeat;
+}
+
+.blue-modal .bottom:before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  right: 9px;
+  bottom: 0px;
+  background: url('../img/window/blue_modal/bottomContent.png') center bottom repeat-x;
+}
+
+.blue-modal .content {
+  padding: 5px;
+}
+
+/* INVENTORY BOX */
+.inventory-box {
+	z-index: 11;
+}
+
+.inventory-box .body .content {
+  min-height: 300px;
+}
+
+.inventory-box .body .content .filter {
+	background-color: rgb(201,201,201);
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.inventory-box .body .content .entities {
+	padding-top: 5px;
 }
 
 .inventory-box ul.items
@@ -135,6 +172,21 @@
     background: url('../img/icons/item_box_hover.png');
     height: 42px;
     width: 42px;
+}
+
+/* SHELF BOX */
+.shelf-box {
+  z-index: 12;
+}
+
+.shelf-box .body .content {
+  min-height: 200px;
+  min-width: 500px;
+}
+
+/* ACTIONS BOX */
+.actions-box {
+  padding-top: 10px;
 }
 
 /* FURNITURE BOX */

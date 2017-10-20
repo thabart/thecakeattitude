@@ -5,8 +5,8 @@ game.WallEntitySelector = game.SelectableEntitySelector.extend({
 				Constants.Selectors.Wall
 	   ]);
 	},
-	create: function(x, y, name) {
-		return new game.PosterEntity(x, y, name);
+	create: function(x, y, name, interaction) {
+		return new game.PosterEntity(x, y, name, interaction);
 	},
 	getZIndex: function() {
 		return Constants.playerZIndex - 1;

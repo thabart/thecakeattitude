@@ -70,7 +70,7 @@ game.SelectableEntitySelector = me.Object.extend({
 		if (selectedEntity) {
 			evt.handled = true;
 			ShopStore.displayInformation(selectedEntity.metadata);
-			ShopStore.displayActions();
+			ShopStore.displayActions(selectedEntity.metadata);
 		} else {
 			ShopStore.hideInformation();
 			ShopStore.hideActions();
@@ -84,7 +84,7 @@ game.SelectableEntitySelector = me.Object.extend({
 		var activeEntity = ShopStore.getActiveEntity();
 		var row = this.sprite.tile.row - this.sprite.nbRows;
 		var col = this.sprite.tile.col - this.sprite.nbCols;
-		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, activeEntity.name);
+		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, activeEntity.name, activeEntity.interaction);
 		me.game.world.addChild(spr);
 		if (activeEntity.isFlipped) {
 			spr.flip();
