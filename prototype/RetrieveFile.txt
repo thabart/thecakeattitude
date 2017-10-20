@@ -1,0 +1,7 @@
+Retrieve IMAGE :
+
+SPRITE 2 :
+https://www.habbo.com.tr/habbo-imaging/avatarimage?figure=hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61&action=wlk&gesture=std&direction=2&head_direction=2&size=n&frame=1&img_format=png
+
+SPRITE 1:
+https://www.habbo.com.tr/habbo-imaging/avatarimage?figure=hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61&action=wlk&gesture=std&direction=2&head_direction=2&size=n&img_format=png
