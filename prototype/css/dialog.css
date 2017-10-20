@@ -47,13 +47,13 @@ ul.tabs li.active
   top: 50%;
 }
 
-.blue-modal .top,
-.blue-modal .top:before
+.blue-modal > .top,
+.blue-modal > .top:before
 {
   height: 33px;
 }
 
-.blue-modal .top {
+.blue-modal > .top {
   position: relative;
   background: url('../img/window/blue_modal/topLeftCorner.png') left top no-repeat,
     url('../img/window/blue_modal/topRightCorner.png') right top no-repeat;
@@ -62,7 +62,7 @@ ul.tabs li.active
   color: white;
 }
 
-.blue-modal .top:before {
+.blue-modal > .top:before {
   content: '';
   position: absolute;
   left: 9px;
@@ -72,7 +72,7 @@ ul.tabs li.active
   z-index: -1;
 }
 
-.blue-modal .body {
+.blue-modal > .body {
   position: relative;
   background: url('../img/window/blue_modal/bodyStart.png') top left repeat-y,
     url('../img/window/blue_modal/bodyEnd.png') top right repeat-y;
@@ -80,18 +80,18 @@ ul.tabs li.active
   background-color: rgb(236,234,234);
 }
 
-.blue-modal .bottom,
-.blue-modal .bottom:before {
+.blue-modal > .bottom,
+.blue-modal > .bottom:before {
   height: 9px;
 }
 
-.blue-modal .bottom {
+.blue-modal > .bottom {
   position: relative;
   background: url('../img/window/blue_modal/bottomLeftCorner.png') left bottom no-repeat,
     url('../img/window/blue_modal/bottomRightCorner.png') right bottom no-repeat;
 }
 
-.blue-modal .bottom:before {
+.blue-modal > .bottom:before {
   content: '';
   position: absolute;
   left: 9px;
@@ -102,6 +102,57 @@ ul.tabs li.active
 
 .blue-modal .content {
   padding: 5px;
+}
+
+/* GRAY PANEL */
+.gray-panel > .top,
+.gray-panel > .top:before
+{
+  height: 6px;
+}
+
+.gray-panel > .top {
+  position: relative;
+  background: url('../img/panel/gray_panel/topLeftCorner.png') left top no-repeat,
+    url('../img/panel/gray_panel/topRightCorner.png') right top no-repeat;
+}
+
+.gray-panel > .top:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 0px;
+  background: url('../img/panel/gray_panel/topContent.png') center top repeat-x;
+  z-index: 1;
+}
+
+.gray-panel > .body {
+  position: relative;
+  background: url('../img/panel/gray_panel/bodyStart.png') top left repeat-y,
+    url('../img/panel/gray_panel/bodyEnd.png') top right repeat-y;
+  padding: 5px;
+  background-color: rgb(210,209,203);
+}
+
+.gray-panel > .bottom,
+.gray-panel > .bottom:before {
+  height: 8px;
+}
+
+.gray-panel > .bottom {
+  position: relative;
+  background: url('../img/panel/gray_panel/bottomLeftCorner.png') left bottom no-repeat,
+    url('../img/panel/gray_panel/bottomRightCorner.png') right bottom no-repeat;
+}
+
+.gray-panel > .bottom:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 0px;
+  background: url('../img/panel/gray_panel/bottomContent.png') center bottom repeat-x;
 }
 
 /* INVENTORY BOX */
@@ -180,7 +231,7 @@ ul.tabs li.active
 }
 
 .shelf-box .body .content {
-  min-height: 200px;
+  min-height: 500px;
   min-width: 500px;
 }
 

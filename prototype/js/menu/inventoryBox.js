@@ -203,11 +203,23 @@ game.InventoryBox = me.Object.extend({
           "<div class='content'>"+
             "<div class='filter'>"+
               "<label>Type</label>"+
-              "<select class='type-selector'>"+
-              "</select>"+
+              "<div class='input'>"+
+                "<div class='top'></div>"+
+                "<div class='body'>"+
+                  "<select class='type-selector'>"+
+                  "</select>"+
+                "</div>"+
+                "<div class='bottom'></div>"+
+              "</div>"+
               "<label data-i18n='theme'></label>"+
-              "<select class='theme-selector'>"+
-              "</select>"+
+              "<div class='input'>"+
+                "<div class='top'></div>"+
+                "<div class='body'>"+
+                  "<select class='theme-selector'>"+
+                  "</select>"+
+                "</div>"+
+                "<div class='bottom'></div>"+
+              "</div>"+
             "</div>"+
             "<div class='entities'>"+
               "<ul class='items no-style furnitures'>"+

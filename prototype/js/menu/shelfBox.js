@@ -8,7 +8,67 @@ game.ShelfBox = me.Object.extend({
           "<li data-i18n='products'></li>"+
         "</ul>"+
         "<div class='content'>"+
-          "<div class='col-3'>"+
+          "<div class='col-4'>"+
+            // SEARCH BY NAME.
+            "<div class='input edit'>"+
+              "<div class='top'></div>"+
+              "<div class='body'>"+
+                "<input type='text' placeholder='Search product' />"+
+              "</div>"+
+              "<div class='bottom'></div>"+
+            "</div>"+
+            // BEST DEALS + PRICE.
+            "<div class='gray-panel' style='padding-top: 5px'>"+
+              "<div class='top'></div>"+
+              "<div class='body'>"+
+                // BEST DEALS.
+                "<div>"+
+                  "<input type='checkbox' /><label data-i18n='best_deals'></label>"+
+                "</div>"+
+                // MIN PRICE.
+                "<div class='input' style='padding-top:2px;'>"+
+                  "<div class='top'></div>"+
+                  "<div class='body' style='padding:5px;'>"+
+                    "<input type='text' min='1' max='999999' placeholder='Min price' />"+
+                  "</div>"+
+                  "<div class='bottom'></div>"+
+                "</div>"+
+                // MAX PRICE.
+                "<div class='input' style='padding-top:2px;'>"+
+                  "<div class='top'></div>"+
+                  "<div class='body' style='padding:5px;'>"+
+                    "<input type='number' min='1' max='999999' placeholder='Max price' />"+
+                  "</div>"+
+                  "<div class='bottom'></div>"+
+                "</div>"+
+              "</div>"+
+              "<div class='bottom'></div>"+
+            "</div>"+
+            // FILTERS.
+            "<div class='gray-panel' style='padding-top: 5px'>"+
+              "<div class='top'></div>"+
+              "<div class='body'>"+
+                "<div class='list filters'>"+
+                  "<ul>"+
+                    "<li>"+
+                      "<span class='node-toggle'></span>"+
+                      "<span>Color</span>"+
+                      "<ul>"+
+                        "<li class='filter'>Red</li>"+
+                      "</ul>"+
+                    "</li>"+
+                    "<li>"+
+                      "<span class='node-toggle'></span>"+
+                      "<span>Size</span>"+
+                      "<ul>"+
+                        "<li>Medium</li>"+
+                      "</ul>"+
+                    "</li>"+
+                  "</ul>"+
+                "</div>"+
+              "</div>"+
+              "<div class='bottom'></div>"+
+            "</div>"+
           "</div>"+
           "<div class='col-8'>"+
           "</div>"+
@@ -28,6 +88,15 @@ game.ShelfBox = me.Object.extend({
     var self = this;
     $(this.shelf).find('.close').click(function() {
       self.hide();
+    });
+    $(this.shelf).find('.filters .node-toggle').click(function(e) {
+      e.stopPropagation();
+      var li = $(this).closest('li');
+      if(li.hasClass('active')) {
+        li.removeClass('active');
+      } else {
+        li.addClass('active');
+      }
     });
   },
   display: function() {

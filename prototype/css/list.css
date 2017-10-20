@@ -1,0 +1,35 @@
+.list li {
+  padding-left: 10px;
+  position: relative;
+  cursor: pointer;
+}
+
+.list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list li > ul {
+  display: none;
+}
+
+.list li.active > ul {
+  display: block;
+}
+
+.list .node-toggle:before {
+  position: absolute;
+  content: '';
+  right: 0px;
+  top: 0px;
+  width: 5px;
+  height: 10px;
+  background: url('../img/icons/arrowRight.png') right center no-repeat;
+}
+
+.list li.active .node-toggle:before {
+  width: 10px;
+  height: 5px;
+  background: url('../img/icons/arrowDown.png') right center no-repeat;
+}

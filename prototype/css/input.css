@@ -1,0 +1,84 @@
+.input {
+  display: inline-block;
+  min-width: 150px;
+}
+
+.input > .top {
+  position: relative;
+  background: url('../img/input/topLeftCorner.png') left top no-repeat,
+    url('../img/input/topRightCorner.png') right top no-repeat;
+  height: 6px;
+}
+
+.input > .top:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 0px;
+  height: 6px;
+  background: url('../img/input/topContent.png') center top repeat-x;
+}
+
+.input > .body {
+  position: relative;
+  background: url('../img/input/bodyStart.png') top left repeat-y,
+    url('../img/input/bodyEnd.png') top right repeat-y;
+  background-color: white;
+}
+
+.input > .bottom {
+  position: relative;
+  background: url('../img/input/bottomRightCorner.png') right bottom no-repeat,
+    url('../img/input/bottomLeftCorner.png') left bottom no-repeat;
+  height: 6px;
+}
+
+.input > .bottom:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 0px;
+  height: 6px;
+  background: url('../img/input/bottomContent.png') center bottom repeat-x;
+}
+
+.input select,
+.input input {
+  border: none;
+  background-color: transparent;
+  width: 100%;
+}
+
+.input.edit .body {
+  position: relative;
+  background: url('../img/input/bodyStart.png') top left repeat-y,
+    url('../img/input/bodyEnd.png') top right repeat-y;
+  background-color: white;
+  padding-left: 6px;
+  padding-right: 26px;
+}
+
+.input.edit .body:before {
+  background: url('../img/icons/edit.png') right center no-repeat;
+  position: absolute;
+  content: '';
+  width: 17px;
+  height: 18px;
+  right: 6px;
+  top: 0px;
+}
+
+
+input[type=checkbox]:before {
+  background: url('../img/input/checkBox.png') no-repeat;
+  width: 15px;
+  height: 15px;
+  content: "";
+  display: inline-block;
+}
+
+input[type=checkbox]:checked:before {
+  background: url('../img/input/checkBoxChecked.png') no-repeat;
+}
