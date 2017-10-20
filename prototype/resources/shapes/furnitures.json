@@ -47,38 +47,78 @@
 		},
 		{
 			"name": "glass_table",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": -37,
-			"relativePosY": -11
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": -37,
+				"relativePosY": -11
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "grunge_table",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": -35,
-			"relativePosY": -40
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": -35,
+				"relativePosY": -40
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": -35,
+				"relativePosY": -40
+			}
 		},
 		{
 			"name": "mode_table",
-			"nbCols": 1,
-			"nbRows": 2,
-			"relativePosX": -37,
-			"relativePosY": -25
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": 2,
+				"relativePosX": -37,
+				"relativePosY": -25
+			},
+			"vertical": {
+				"nbCols": 1,
+				"nbRows": 2,
+				"relativePosX": -37,
+				"relativePosY": -25
+			}
 		},
 		{
 			"name": "executive_sofa",
-			"nbCols": 2,
-			"nbRows": 3,
-			"relativePosX": -32,
-			"relativePosY": -45
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 3,
+				"relativePosX": -32,
+				"relativePosY": -45
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 3,
+				"relativePosX": -32,
+				"relativePosY": -45
+			}
 		},
 		{
 			"name": "executive_chair",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": -31,
-			"relativePosY": -31
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": -31,
+				"relativePosY": -31
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": -31,
+				"relativePosY": -31
+			}
 		},
 		{
 			"name": "plant_1",
@@ -97,66 +137,138 @@
 		},
 		{
 			"name": "plant_2",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_3",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_4",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_5",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_6",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_7",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_8",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_9",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		},
 		{
 			"name": "plant_10",
-			"nbCols": 2,
-			"nbRows": 2,
-			"relativePosX": 0,
-			"relativePosY": 0
+			"horizontal": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 2,
+				"nbRows": 2,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		}
 	]
 }
