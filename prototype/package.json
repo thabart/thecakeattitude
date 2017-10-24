@@ -10,6 +10,9 @@
   "devDependencies": {
     "body-parser": "^1.16.1",
     "express": "^4.15.2",
+    "promise": "^8.0.1",
+    "request": "^2.83.0",
+    "requestify": "^0.2.5",
     "socket.io": "^1.7.3"
   }
 }
