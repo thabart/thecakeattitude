@@ -58,7 +58,8 @@ var g_ressources = [
     { name: "bear_rug_blue", type: "image", src: "resources/entities/grounds/rugs/others/bear_rug_blue.gif" },
     { name: "bear_rug_mint", type: "image", src: "resources/entities/grounds/rugs/others/bear_rug_mint.gif" },
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
-    { name: "player", type: "image", src: "resources/players/player.png" },
+    // { name: "player", type: "image", src: "resources/players/player.png" },
+    { name: "player", type: "image", src: "resources/players/hd-209-1.ch-215-1427.cc-886-62.lg-3353-1408.sh-3035-62/sprite.png" },
     { name: "furnitures_collision", type: "json", src: "resources/collisions/furnitures.json" }, // Load the collisions.
     { name: "posters_collision", type: "json", src: "resources/collisions/posters.json" },
     { name: "player_collision", type: "json", src: "resources/collisions/player.json" },

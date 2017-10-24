@@ -4,8 +4,8 @@ game.PlayerEntity = me.Entity.extend({
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(col, row);
         var image = me.loader.getImage("player");
         this.speed = 2;
-        var playerWidth = 41;
-        var playerHeight = 83;
+        var playerWidth = 64;
+        var playerHeight = 110;
         this.metadata = {
           name: 'thabart',
           image: '/resources/players/1_0.png'
@@ -36,23 +36,23 @@ game.PlayerEntity = me.Entity.extend({
           col: col
         };
         this.renderable = texture.createAnimationFromName([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]);
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38 ,39 ]);
         this.renderable.addAnimation("standing_down", [0]);
-        this.renderable.addAnimation("down", [0, 1, 2, 3]);
-        this.renderable.addAnimation("standing_downleft", [4]);
-        this.renderable.addAnimation("downleft", [4, 5, 6, 7]);
-        this.renderable.addAnimation("standing_left", [11]);
-        this.renderable.addAnimation("left", [11, 10, 9, 8]);
+        this.renderable.addAnimation("down", [1, 2, 3, 4]);
+        this.renderable.addAnimation("standing_downleft", [5]);
+        this.renderable.addAnimation("downleft", [6, 7, 8, 9]);
+        this.renderable.addAnimation("standing_left", [10]);
+        this.renderable.addAnimation("left", [11, 12, 13, 14]);
         this.renderable.addAnimation("standing_topleft", [15]);
-        this.renderable.addAnimation("topleft", [15, 14, 13, 12]);
-        this.renderable.addAnimation("standing_top", [16]);
-        this.renderable.addAnimation("top", [16, 17, 18, 19]);
-        this.renderable.addAnimation("standing_downright", [23]);
-        this.renderable.addAnimation("downright", [23, 22, 21, 20]);
-        this.renderable.addAnimation("standing_right", [24]);
-        this.renderable.addAnimation("right", [24, 25, 26, 27]);
-        this.renderable.addAnimation("standing_topright", [28]);
-        this.renderable.addAnimation("topright", [28, 29, 30, 31]);
+        this.renderable.addAnimation("topleft", [16, 17, 18, 19]);
+        this.renderable.addAnimation("standing_top", [20]);
+        this.renderable.addAnimation("top", [21, 22, 23, 24]);
+        this.renderable.addAnimation("standing_topright", [25]);
+        this.renderable.addAnimation("topright", [26, 27, 28, 29]);
+        this.renderable.addAnimation("standing_right", [30]);
+        this.renderable.addAnimation("right", [31, 32, 33, 34]);
+        this.renderable.addAnimation("standing_downright", [35]);
+        this.renderable.addAnimation("downright", [36, 37, 38, 39]);
         this.renderable.setCurrentAnimation("standing_down");
         this.currentMvt = 0;
         this.movements = [];
