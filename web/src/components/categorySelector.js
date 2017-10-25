@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {FormGroup, Col, Label, Input} from "reactstrap";
-import {CategoryService} from "../services/index";
-import $ from "jquery";
+import { FormGroup, Col, Label, Input } from "reactstrap";
+import { CategoryService } from "../services/index";
 import { translate } from 'react-i18next';
+import $ from "jquery";
 
 class CategorySelector extends Component {
     constructor(props) {

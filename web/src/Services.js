@@ -13,6 +13,7 @@ import Magnify from "react-magnify";
 import Constants from "../Constants";
 import $ from "jquery";
 import classnames from "classnames";
+import Mousetrap from 'mousetrap';
 
 class Services extends Component {
     constructor(props) {
@@ -136,6 +137,7 @@ class Services extends Component {
               });
             })
             .catch(function(e) {
+                console.log(e);
               self.setState({
                 errorMessage: t('errorRetrieveService'),
                 isLoading: false,
@@ -228,7 +230,7 @@ class Services extends Component {
         if (action === 'comments') {
             content = (<CommentTab service={self.state.service} />);
         } else {
-            content = (<DescriptionTab service={self.state.service}/>);
+            content = (<DescriptionTab service={self.state.service} isEditable={self.state.isEditable} />);
             action = 'general';
         }
 
@@ -419,6 +421,12 @@ class Services extends Component {
             }
         });
         EditServiceStore.addChangeListener(this.updateService);
+        Mousetrap.bind('ctrl+s', function(e) { // Save the service (ctrl+s)
+          if (self.state.isEditable) {
+            e.preventDefault();
+            self.saveService();
+          }
+        });
     }
 
     componentWillUnmount() { // Remove listener.
