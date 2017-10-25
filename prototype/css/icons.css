@@ -9,6 +9,91 @@
     margin-right: 10px;
 }
 
+.sex-mal
+{
+  background: url('../img/icons/male.png') 0 -21px no-repeat;
+  width: 21px;
+  height: 21px;
+}
+
+.sex-mal:hover,
+.sex-mal.active
+{
+  background: url('../img/icons/male.png') 0 0 no-repeat;
+  width: 21px;
+  height: 21px;
+}
+
+.sex-femal
+{
+  background: url('../img/icons/female.png') 0 -27px no-repeat;
+  width: 18px;
+  height: 27px;
+}
+
+.sex-femal:hover,
+.sex-femal.active
+{
+  background: url('../img/icons/female.png') 0 0 no-repeat;
+  width: 18px;
+  height: 27px;
+}
+
+.player-body {
+  background: url('../img/icons/body.png') 0 0 no-repeat;
+  width: 21px;
+  height: 22px;
+}
+
+.player-head {
+  background: url('../img/icons/hat.png') 0 0 no-repeat;
+  width: 32px;
+  height: 22px;
+}
+
+.player-shirt {
+  background: url('../img/icons/shirt.png') 0 0 no-repeat;
+  width: 30px;
+  height: 22px;
+}
+
+.player-jean {
+  background: url('../img/icons/jean.png') 0 0 no-repeat;
+  width: 19px;
+  height: 22px;
+}
+
+.user {
+  height: 41px;
+  width: 44px;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.look {
+  background: url('../img/icons/look.png') 0 0 no-repeat;
+  width: 27px;
+  height: 28px;
+  cursor: pointer;
+  display: block;
+}
+
+.look:hover {
+  background: url('../img/icons/look.png') 0 -28px no-repeat;
+}
+
+.profile {
+  background: url('../img/icons/profile.png') 0 0 no-repeat;
+  width: 32px;
+  height: 30px;
+  cursor: pointer;
+  display: block;
+}
+
+.profile:hover {
+  background: url('../img/icons/profile.png') 0 -30px no-repeat;
+}
+
 .inventory {
 	 background: url('../img/icons/inventory.png') 0 0 no-repeat;
 }

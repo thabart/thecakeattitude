@@ -6,13 +6,13 @@ game.UpRightOptions = me.Object.extend({
           "<span class='quit'></span>"+
           "<span class='settings'></span>"+
         "</div>"+
-        "<div class='sub-options settings-modal' style='display: none;'>"+
+        "<div class='heavygray-panel settings-modal' style='display: none;'>"+
           "<div class='top'>"+
           "</div>"+
           "<div class='body'>"+
             "<span data-i18n='parameters' class='parameters'></span>"+
           "</div>"+
-          "<div class='footer'>"+
+          "<div class='bottom'>"+
           "</div>"+
         "</div>"+
       "</div>");

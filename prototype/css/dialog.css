@@ -1,4 +1,23 @@
 /* TABULATIONS */
+ul.tabs.gray li
+{
+  border-top: solid 1px rgb(39, 46, 49);
+  border-left: solid 1px rgb(39, 46, 49);
+  border-right: solid 1px rgb(39, 46, 49);
+  border-bottom: solid 1px rgb(39, 46, 49);
+  background-color: rgb(126, 140, 138);
+}
+
+ul.tabs.gray li.active,
+ul.tabs.gray li:hover
+{
+  border-top: solid 2px black;
+  border-left: solid 2px black;
+  border-right: solid 2px black;
+  border-bottom: solid 2px black;
+  background-color: rgb(236, 234, 234);
+}
+
 ul.tabs
 {
     border-bottom: solid 1px #000;
@@ -155,6 +174,58 @@ ul.tabs li.active
   background: url('../img/panel/gray_panel/bottomContent.png') center bottom repeat-x;
 }
 
+/* HEAVY GRAY PANEL */
+.heavygray-panel > .top,
+.heavygray-panel > .top:before
+{
+  height: 6px;
+}
+
+.heavygray-panel > .top {
+  position: relative;
+  background: url('../img/panel/heavy_gray_panel/topLeftCorner.png') left top no-repeat,
+    url('../img/panel/heavy_gray_panel/topRightCorner.png') right top no-repeat;
+}
+
+.heavygray-panel > .top:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 0px;
+  background: url('../img/panel/heavy_gray_panel/topContent.png') center top repeat-x;
+  z-index: 1;
+}
+
+.heavygray-panel > .body {
+  position: relative;
+  background: url('../img/panel/heavy_gray_panel/bodyStart.png') top left repeat-y,
+    url('../img/panel/heavy_gray_panel/bodyEnd.png') top right repeat-y;
+  padding: 5px;
+  background-color: rgb(36,35,30);
+  color: white;
+}
+
+.heavygray-panel > .bottom,
+.heavygray-panel > .bottom:before {
+  height: 8px;
+}
+
+.heavygray-panel > .bottom {
+  position: relative;
+  background: url('../img/panel/heavy_gray_panel/bottomLeftCorner.png') left bottom no-repeat,
+    url('../img/panel/heavy_gray_panel/bottomRightCorner.png') right bottom no-repeat;
+}
+
+.heavygray-panel > .bottom:before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 0px;
+  background: url('../img/panel/heavy_gray_panel/bottomContent.png') center bottom repeat-x;
+}
+
 /* INVENTORY BOX */
 .inventory-box {
 	z-index: 11;
@@ -232,6 +303,15 @@ ul.tabs li.active
 
 .shelf-box .body .content {
   min-height: 500px;
+  min-width: 500px;
+}
+
+/* CHANGE LOOK BOX */
+.changelook-box {
+  z-index: 13;
+}
+
+.changelook-box .body .content {
   min-width: 500px;
 }
 
@@ -358,28 +438,6 @@ ul.tabs li.active
     height: 71px;
     width: 192px;
 }
-
-.up_right .sub-options .top
-{
-    background: url('../img/window/up_right/top.png') no-repeat;
-    height: 7px;
-    color: #fff;
-}
-
-.up_right .sub-options .body
-{
-    background: url('../img/window/up_right/body.png') repeat-y;
-    min-height: 60px;
-    height: auto;
-    padding: 5px 8px;
-    color: #fff;
-}
-
-.up_right .sub-options .footer {
-  background: url('../img/window/up_right/bottom.png') no-repeat;
-  height: 9px;
-}
-
 .up_right .options  > .quit,
 .up_right .options > .settings,
 .up_right .options > .help
