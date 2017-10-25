@@ -226,8 +226,7 @@ class Products extends Component {
                   product: product,
                   shop: shop,
                   isEditable: isEditable,
-                  canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject,
-                  notUnlimited: notUnlimited
+                  canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject
               });
               AppDispatcher.dispatch({
                   actionName: Constants.events.EDIT_PRODUCT_LOADED,
@@ -237,16 +236,14 @@ class Products extends Component {
                 self.setState({
                     errorMessage: t('retrieveProductError'),
                     isLoading: false,
-                    isEditable: false,
-                    notUnlimited: false
+                    isEditable: false
                 });
             });
         }).catch(function () {
             self.setState({
                 errorMessage: t('retrieveProductError'),
                 isLoading: false,
-                isEditable: false,
-                notUnlimited: false
+                isEditable: false
             });
         });
     }
@@ -422,7 +419,7 @@ class Products extends Component {
                                 )}
                                 { !this.state.isEditable && tags.length === 0 && (<span><i>{t('noTags')}</i></span>) }
                             </div>
-                            { /* Update an image */ }
+                            { /* Update the images */ }
                             { self.state.isEditable && (
                               <div style={{padding: "10px 0px 10px 0px"}}>
                                 <h5>

@@ -498,5 +498,8 @@
   "notValidNumber": "Pas un nombre valide et sa valeur doit être comprise entre {0} et {1}",
   "productCharacteristicTooltip": "Ajouter quelques caractéristiques à votre produit",
   "errorUpdateProduct": "Une erreur est survenue durant la mise à jour du produit, veuillez prendre contact avec l'administrateur",
-  "productUpdated": "Le produit a été mis à jour"
+  "productUpdated": "Le produit a été mis à jour",
+  "editServiceTooltip": "Editer le service",
+  "viewServiceTooltip": "Voir le service",
+  "saveServiceTooltip": "Sauvegarder le service"
 }

@@ -1,10 +1,11 @@
 import React, {Component} from "react";
 import { CommentTab, DescriptionTab } from "./servicetabs";
 import { ShopServices, ShopsService } from "./services/index";
-import { TabContent, TabPane, Nav, NavItem, NavLink, Alert, Badge, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { TabContent, TabPane, Nav, NavItem, NavLink, Alert, Badge, Breadcrumb, BreadcrumbItem, Button, UncontrolledTooltip } from "reactstrap";
+import { EditableText, EditableTag, ImagesUploader } from './components/index';
 import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
-import { ApplicationStore } from './stores/index';
+import { ApplicationStore, EditServiceStore } from './stores/index';
 import AppDispatcher from "./appDispatcher";
 import Rater from "react-rater";
 import MainLayout from './MainLayout';
@@ -17,18 +18,69 @@ class Services extends Component {
     constructor(props) {
         super(props);
         this._waitForToken = null;
+        this.updateServiceName = this.updateServiceName.bind(this);
+        this.updateTags = this.updateTags.bind(this);
+        this.updateImages = this.updateImages.bind(this);
+        this.updatePrice = this.updatePrice.bind(this);
+        this.toggle = this.toggle.bind(this);
         this.toggleError = this.toggleError.bind(this);
         this.changeImage = this.changeImage.bind(this);
         this.navigateGeneral = this.navigateGeneral.bind(this);
         this.navigateComments = this.navigateComments.bind(this);
         this.refreshScore = this.refreshScore.bind(this);
+        this.editService = this.editService.bind(this);
+        this.saveService = this.saveService.bind(this);
+        this.viewService = this.viewService.bind(this);
+        this.updateService = this.updateService.bind(this);
         this.state = {
             loading: false,
             errorMessage: null,
             currentImageIndice: 0,
             service: null,
-            shop: null
+            shop: null,
+            isEditable: false,
+            canBeEdited: false,
+            isEditServiceTooltipOpened: false,
+            isViewServiceTooltipOpened: false,
+            isSaveServiceTooltipOpened: false,
+            isImageTooltipOpened: false,
+            isPriceTooltipOpened: false
         };
+    }
+
+    updateServiceName(name) { // Update the service name.
+        AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_SERVICE_INFORMATION_ACT,
+            data: { name : name }
+        });
+    }
+
+    updateTags(tags) { // Update the tags.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_SERVICE_INFORMATION_ACT,
+          data: { tags : tags }
+      });
+    }
+
+    updateImages(images) { // Update the images.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_SERVICE_INFORMATION_ACT,
+          data: { images: images }
+      });
+    }
+
+    updatePrice(price) { // Update the price.
+      AppDispatcher.dispatch({
+          actionName: Constants.events.UPDATE_SERVICE_INFORMATION_ACT,
+          data: { price: price }
+      });
+    }
+
+    toggle(name) {   // Toggle the tooltip.
+        var value = !this.state[name];
+        this.setState({
+            [name]: value
+        });
     }
 
     refreshScore(data) { // Refresh the score.
@@ -58,30 +110,45 @@ class Services extends Component {
     }
 
     refresh() { // Refresh the service.
-        var self = this;
+        var self = this,
+            action = self.props.match.params.action,
+            isEditable = action && action === 'edit';
         self.setState({
             isLoading: true
         });
         const {t} = this.props;
         ShopServices.get(this.props.match.params.id).then(function (r) {
             var service = r['_embedded'];
-            ShopsService.get(service.shop_id).then(function(sr) {
+            ShopsService.get(service.shop_id).then(function(sr) {              
+              var shop = sr['_embedded'];
+              var localUser = ApplicationStore.getUser();
+              isEditable = isEditable && localUser && localUser !== null && localUser.sub === shop.subject;
               self.setState({
                   isLoading: false,
+                  shop: shop,
+                  isEditable: isEditable,
                   service: service,
-                  shop: sr['_embedded']
+                  canBeEdited: !isEditable && localUser && localUser !== null && localUser.sub === shop.subject,
+              });
+              AppDispatcher.dispatch({
+                  actionName: Constants.events.EDIT_SERVICE_LOADED,
+                  data: service
               });
             })
-            .catch(function() {
+            .catch(function(e) {
               self.setState({
                 errorMessage: t('errorRetrieveService'),
-                isLoading: false
+                isLoading: false,
+                isEditable: false,
+                notUnlimited: false
               });
             });
         }).catch(function () {
             self.setState({
                 errorMessage: t('errorRetrieveService'),
-                isLoading: false
+                isLoading: false,
+                isEditable: false,
+                notUnlimited: false
             });
         });
     }
@@ -97,6 +164,41 @@ class Services extends Component {
 
     navigateComments(e) { // Display comments tab.
         this.props.history.push('/services/' + this.state.service.id + '/comments');
+    }
+
+    editService() { // Edit the service.
+      var id = this.props.match.params.id;
+      this.props.history.push('/services/'+ id + '/edit');
+      this.setState({
+        isEditable: true,
+        canBeEdited: false
+      });
+      AppDispatcher.dispatch({
+          actionName: Constants.events.EDIT_SERVICE_ACT
+      });
+    }
+
+    viewService() { // View the service.
+      var id = this.props.match.params.id;
+      this.props.history.push('/services/'+ id);
+      this.setState({
+        isEditable: false,
+        canBeEdited: true
+      });
+      AppDispatcher.dispatch({
+          actionName: Constants.events.VIEW_SERVICE_ACT
+      });
+    }
+
+    saveService() { // Save the service informatuion
+
+    }
+
+    updateService() { // Update the service information.
+      var service = EditServiceStore.getService();
+      this.setState({
+          service: service
+      });
     }
 
     render() {
@@ -172,6 +274,32 @@ class Services extends Component {
                             </a>
                         </BreadcrumbItem>
                         <BreadcrumbItem active>{this.state.service.name}</BreadcrumbItem>
+                        <li style={{"float": "right"}}>
+                          {self.state.canBeEdited && (<Button outline color="secondary" id="edit-service" size="sm" className="btn-icon with-border" onClick={self.editService}>
+                            <i className="fa fa-pencil"></i>
+                          </Button>)}
+                          {self.state.canBeEdited && (
+                            <UncontrolledTooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isEditServiceTooltipOpened} target="edit-service" toggle={() => this.toggle('isEditServiceTooltipOpened')}>
+                                {t('editServiceTooltip')}
+                            </UncontrolledTooltip>
+                          )}
+                          {self.state.isEditable && (<Button outline color="secondary" id="view-service" size="sm" className="btn-icon with-border" onClick={self.viewService}>
+                              <i className="fa fa-eye"></i>
+                          </Button>)}
+                          {self.state.isEditable && (
+                            <UncontrolledTooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isViewServiceTooltipOpened} target="view-service" toggle={() => this.toggle('isViewServiceTooltipOpened')}>
+                                {t('viewServiceTooltip')}
+                            </UncontrolledTooltip>
+                          )}
+                          {self.state.isEditable && (<Button outline color="secondary" id="save-service" size="sm" className="btn-icon with-border" onClick={self.saveService}>
+                              <i className="fa fa-save"></i>
+                          </Button>)}
+                          {self.state.isEditable && (
+                            <UncontrolledTooltip className="red-tooltip-inner" placement='bottom' isOpen={this.state.isSaveServiceTooltipOpened} target="save-service" toggle={() => this.toggle('isSaveServiceTooltipOpened')}>
+                                {t('saveServiceTooltip')}
+                            </UncontrolledTooltip>
+                          )}
+                        </li>
                     </Breadcrumb>
                     <div className="row">
                         { /* Left side */ }
@@ -179,23 +307,43 @@ class Services extends Component {
                           <div style={{paddingLeft: "10px"}}>
                             { /* Header */ }
                             <div>
-                                <h3 className="title">{self.state.service.name}</h3>
+                                {/* Service name */ }
+                                { self.state.isEditable ? (
+                                    <EditableText className="header2" value={self.state.service.name} validate={this.updateServiceName} minLength={1} maxLength={50} />) :
+                                    (<h2>{self.state.service.name}</h2>)
+                                }
+                                { /* Service rate */ }
                                 <div>
                                   <Rater total={5} ref="score" rating={self.state.service.average_score} interactive={false}/>
                                   <b> {self.state.service.average_score} </b>
                                 </div>
+                                { /* Service Nb comments */ }
                                 <span>{t('comments')} ({self.state.service.nb_comments})</span>
                             </div>
                             { /* Tags */ }
                             <div>
-                                {tags.length > 0 ? (
-                                    <ul className="col-md-12 tags gray" style={{padding: "0"}}>
-                                        {tags}
-                                    </ul>)
-                                 : (<span><i>{t('noTags')}</i></span>)}
+                                { self.state.isEditable && (<EditableTag tags={self.state.service.tags} tagsClassName="gray" validate={this.updateTags}/>) }
+                                { !self.state.isEditable && tags.length > 0 && (
+                                   <ul className="col-md-12 tags gray" style={{padding: "0"}}>
+                                    {tags}
+                                   </ul>
+                                ) }
+                                { !self.state.isEditable && tags.length === 0 && (<span><i>{t('noTags')}</i></span>) }
                             </div>
+                            { /* Update the images */ }
+                            { self.state.isEditable && (
+                              <div style={{padding: "10px 0px 10px 0px"}}>
+                                <h5>
+                                  {t('uploadImage')} <i className="fa fa-info-circle txt-info" id="imagesTooltip"></i>
+                                  <UncontrolledTooltip placement="right" target="imagesTooltip" className="red-tooltip-inner" isOpen={this.state.isImageTooltipOpened} toggle={() => { this.toggle('isImageTooltipOpened'); }}>
+                                    {t('addShopServiceImagesTooltip')}
+                                  </UncontrolledTooltip>
+                                </h5>
+                                <ImagesUploader ref="imagesUploader" images={this.state.service.images} onChange={this.updateImages}/>
+                              </div>
+                            )}
                             { /* Images */ }
-                            {images.length > 0 && (
+                            { images.length > 0 && !self.state.isEditable && (
                                 <div className="row" style={{paddingTop: "10px"}}>
                                     <ul className="col-md-3 no-style no-margin image-selector">
                                         {images}
@@ -209,7 +357,17 @@ class Services extends Component {
                         </div>
                         { /* Right side */ }
                         <div className="col-md-4">
-                            <h4>€ {self.state.service.price}</h4>
+                            {/* Price */ }
+                            { self.state.isEditable && (<div>
+                              <h5>
+                                {t('price')} <i className="fa fa-info-circle txt-info" id="priceTooltip"></i>
+                                <UncontrolledTooltip placement="right" target="priceTooltip" className="red-tooltip-inner" isOpen={this.state.isPriceTooltipOpened} toggle={() => { this.toggle('isPriceTooltipOpened'); }}>
+                                  {t('addShopServicePriceTooltip')}
+                                </UncontrolledTooltip>
+                              </h5>
+                              <EditableText value={self.state.service.price} label="€" className="price header4" min={1} validate={this.updatePrice} type="number" />
+                            </div>) }
+                            { !self.state.isEditable && (<h4 className="price">€ {this.state.service.price}</h4>) }
                             { user && user.sub !== this.state.shop.subject && (<a href="#" onClick={(e) => { e.preventDefault(); self.props.history.push('/newmessage/services/' + self.state.service.id); }} className="btn btn-default">{t('contactTheShop')}</a>) }
                         </div>
                     </div>
@@ -260,10 +418,12 @@ class Services extends Component {
                 break;
             }
         });
+        EditServiceStore.addChangeListener(this.updateService);
     }
 
     componentWillUnmount() { // Remove listener.
         AppDispatcher.unregister(this._waitForToken);
+        EditServiceStore.removeChangeListener(this.updateService);
     }
 }
 

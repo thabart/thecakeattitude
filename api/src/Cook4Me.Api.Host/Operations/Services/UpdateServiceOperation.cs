@@ -19,7 +19,7 @@ using Cook4Me.Api.Host.Builders;
 using Cook4Me.Api.Host.Extensions;
 using Cook4Me.Api.Host.Helpers;
 using Cook4Me.Api.Host.Validators;
-using Microsoft.AspNet.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;

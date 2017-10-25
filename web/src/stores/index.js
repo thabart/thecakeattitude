@@ -5,6 +5,7 @@ import EditUserStore from './editUserStore';
 import BasketStore from './basketStore';
 import PrintOrderLabelStore from './printOrderLabelStore';
 import EditProductStore from './editProductStore';
+import EditServiceStore from './editServiceStore';
 
 exports.ApplicationStore = ApplicationStore;
 exports.AddProductStore = AddProductStore;
@@ -13,3 +14,4 @@ exports.EditUserStore = EditUserStore;
 exports.BasketStore = BasketStore;
 exports.PrintOrderLabelStore = PrintOrderLabelStore;
 exports.EditProductStore = EditProductStore;
+exports.EditServiceStore = EditServiceStore;

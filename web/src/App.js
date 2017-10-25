@@ -168,6 +168,24 @@ class App extends Component {
                 actionName: Constants.events.SHOP_UPDATE_ARRIVED,
                 data: message
             });
+        });        
+        proxy.on('serviceUpdated', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.SERVICE_UPDATE_ARRIVED,
+                data: message
+            });
+        });
+        proxy.on('serviceRemoved', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.SERVICE_REMOVE_ARRIVED,
+                data: message
+            });
+        });
+        proxy.on('productRemoved', function(message) {
+            AppDispatcher.dispatch({
+                actionName: Constants.events.PRODUCT_REMOVE_ARRIVED,
+                data: message
+            });
         });
         securedProxy.on('messageAdded', function(message) {
             AppDispatcher.dispatch({
