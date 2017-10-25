@@ -24,7 +24,7 @@ using Cook4Me.Api.Host.Hubs;
 
 namespace Cook4Me.Api.Host.Handlers
 {
-    public class ProductEventsHandler : Handles<ProductCommentAddedEvent>, Handles<ProductCommentRemovedEvent>, Handles<ProductAddedEvent>, Handles<ProductUpdatedEvent>
+    public class ProductEventsHandler : Handles<ProductCommentAddedEvent>, Handles<ProductCommentRemovedEvent>, Handles<ProductAddedEvent>, Handles<ProductUpdatedEvent>, Handles<ProductRemovedEvent>
     {
         private readonly IConnectionManager _connectionManager;
         private readonly IResponseBuilder _responseBuilder;
@@ -33,6 +33,18 @@ namespace Cook4Me.Api.Host.Handlers
         {
             _connectionManager = connectionManager;
             _responseBuilder = responseBuilder;
+        }
+
+        public Task Handle(ProductRemovedEvent message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var notifier = _connectionManager.GetHubContext<Notifier>();
+            notifier.Clients.All.productRemoved(_responseBuilder.GetProductRemovedEvent(message));
+            return Task.FromResult(0);
         }
 
         public Task Handle(ProductAddedEvent message)

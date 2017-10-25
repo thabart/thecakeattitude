@@ -515,6 +515,44 @@ namespace Cook4Me.Api.EF.Repositories
                 }
             }
         }
+        
+        public async Task<bool> Delete(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Services
+                        .Include(s => s.Occurrence)
+                        .Include(s => s.Comments)
+                        .Include(s => s.Images)
+                        .Include(s => s.Tags)
+                        .Include(s => s.Messages)
+                        .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        transaction.Rollback();
+                        transaction.Dispose();
+                        return false;
+                    }
+
+                    _context.Services.Remove(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
 
         private static IQueryable<Models.Service> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Service, TKey>> keySelector, IQueryable<Models.Service> products)
         {

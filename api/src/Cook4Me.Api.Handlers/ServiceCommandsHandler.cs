@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>, Handles<AddServiceCommand>, Handles<UpdateServiceCommand>
+    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>, Handles<AddServiceCommand>, Handles<UpdateServiceCommand>, Handles<RemoveServiceCommand>
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -195,6 +195,21 @@ namespace Cook4Me.Api.Handlers
             _eventPublisher.Publish(new ServiceUpdatedEvent
             {
                 Id = message.Id
+            });
+        }
+
+        public async Task Handle(RemoveServiceCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            await _serviceRepository.Delete(message.ServiceId);
+            _eventPublisher.Publish(new ServiceRemovedEvent
+            {
+                ServiceId = message.ServiceId,
+                CommonId = message.CommonId
             });
         }
     }

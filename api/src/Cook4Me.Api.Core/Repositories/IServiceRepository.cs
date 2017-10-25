@@ -25,6 +25,7 @@ namespace Cook4Me.Api.Core.Repositories
     {
         Task<SearchServiceOccurrenceResult> Search(SearchServiceOccurrenceParameter parameter);
         Task<SearchServiceResult> Search(SearchServiceParameter parameter);
+        Task<bool> Delete(string id);
         Task<ServiceAggregate> Get(string id);
         Task<SearchServiceCommentsResult> Search(SearchServiceCommentParameter parameter);
         Task<bool> Update(ServiceAggregate service);

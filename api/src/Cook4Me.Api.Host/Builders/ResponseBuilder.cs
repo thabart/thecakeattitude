@@ -41,6 +41,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetServiceRemovedEvent(ServiceRemovedEvent evt);
         JObject GetDiscount(DiscountAggregate discount);
         JObject GetUpsTrack(TrackResponse track);
         JObject GetUpsTrackActivity(TrackShipmentPackageActivityResponse activity);
@@ -106,6 +107,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetClientServiceRemovedEvent(ClientServiceRemovedEvent evt);
         JObject GetProductUpdatedEvent(ProductUpdatedEvent evt);
         JObject GetProductAddedEvent(ProductAddedEvent evt);
+        JObject GetProductRemovedEvent(ProductRemovedEvent evt);
         JObject GetProduct(ProductAggregate product);
         JObject GetService(ServiceAggregate service);
         JObject GetServiceOccurrence(ServiceResultLine service);
@@ -1658,7 +1660,32 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Product.CreateDateTime, evt.CreateDateTime);
             jObj.Add(Constants.DtoNames.Product.UpdateDateTime, evt.UpdateDateTime);
             return jObj;
+        }
 
+        public JObject GetProductRemovedEvent(ProductRemovedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Product.Id, evt.ProductId);
+            jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return jObj;
+        }
+
+        public JObject GetServiceRemovedEvent(ServiceRemovedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Product.Id, evt.ServiceId);
+            jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
+            return jObj;
         }
 
         public JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment)

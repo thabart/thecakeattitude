@@ -53,6 +53,7 @@ namespace Cook4Me.Api.EF.Repositories
                     if (record == null)
                     {
                         transaction.Rollback();
+                        transaction.Dispose();
                         return false;
                     }
 
@@ -444,6 +445,46 @@ namespace Cook4Me.Api.EF.Repositories
 
             result.Content = await comments.Select(c => c.ToProductCommentAggregate()).ToListAsync().ConfigureAwait(false);
             return result;
+        }
+
+        public async Task<bool> Delete(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
+            using (var transaction = await _context.Database.BeginTransactionAsync().ConfigureAwait(false))
+            {
+                try
+                {
+                    var record = await _context.Products
+                        .Include(s => s.Images)
+                        .Include(s => s.Comments)
+                        .Include(s => s.Tags)
+                        .Include(s => s.Filters)
+                        .Include(s => s.Messages)
+                        .Include(s => s.OrderLines)
+                        .Include(s => s.Discounts)
+                        .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
+                    if (record == null)
+                    {
+                        transaction.Rollback();
+                        transaction.Dispose();
+                        return false;
+                    }
+
+                    _context.Products.Remove(record);
+                    await _context.SaveChangesAsync().ConfigureAwait(false);
+                    transaction.Commit();
+                    return true;
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return false;
+                }
+            }
         }
 
         private static IQueryable<Models.Product> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Product, TKey>> keySelector, IQueryable<Models.Product> products)

@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ProductCommandsHandler : Handles<AddProductCommentCommand>, Handles<RemoveProductCommentCommand>, Handles<AddProductCommand>, Handles<UpdateProductCommand>
+    public class ProductCommandsHandler : Handles<AddProductCommentCommand>, Handles<RemoveProductCommentCommand>, Handles<AddProductCommand>, Handles<UpdateProductCommand>, Handles<RemoveProductCommand>
     {
         private readonly IProductRepository _productRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -208,6 +208,21 @@ namespace Cook4Me.Api.Handlers
             {
                 Id = product.Id,
                 ShopId = product.ShopId,
+                CommonId = message.CommonId
+            });
+        }
+
+        public async Task Handle(RemoveProductCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            await _productRepository.Delete(message.ProductId);
+            _eventPublisher.Publish(new ProductRemovedEvent
+            {
+                ProductId = message.ProductId,
                 CommonId = message.CommonId
             });
         }

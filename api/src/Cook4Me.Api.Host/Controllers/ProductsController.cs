@@ -36,12 +36,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IRemoveProductCommentOperation _removeProductCommentOperation;
         private readonly IAddProductOperation _addProductOperation;
         private readonly IUpdateProductOperation _updateProductOperation;
+        private readonly IDeleteProductOperation _deleteProductOperation;
 
         public ProductsController(
             ISearchProductsOperation searchProductsOperation, IGetProductOperation getProductOperation,
             ISearchProductCommentsOperation searchProductCommentsOperation, IAddProductCommentOperation addProductCommentOperation,
             IRemoveProductCommentOperation removeProductCommentOperation, IAddProductOperation addProductOperation,
-            IUpdateProductOperation updateProductOperation, IHandlersInitiator handlersInitiator) : base(handlersInitiator)
+            IUpdateProductOperation updateProductOperation, IHandlersInitiator handlersInitiator, IDeleteProductOperation deleteProductOperation) : base(handlersInitiator)
         {
             _searchProductsOperation = searchProductsOperation;
             _getProductOperation = getProductOperation;
@@ -50,6 +51,19 @@ namespace Cook4Me.Api.Host.Controllers
             _removeProductCommentOperation = removeProductCommentOperation;
             _addProductOperation = addProductOperation;
             _updateProductOperation = updateProductOperation;
+            _deleteProductOperation = deleteProductOperation;
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            return await _deleteProductOperation.Execute(new RemoveProductCommand
+            {
+                ProductId = id,
+                Subject = User.GetSubject(),
+                CommonId = this.GetCommonId()
+            });
         }
 
         [HttpPost(Constants.RouteNames.Search)]

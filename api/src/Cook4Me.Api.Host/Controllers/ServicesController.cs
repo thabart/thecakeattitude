@@ -35,12 +35,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IAddServiceCommentOperation _addServiceCommentOperation;
         private readonly IAddServiceOperation _addServiceOperation;
         private readonly IUpdateServiceOperation _updateServiceOperation;
+        private readonly IDeleteServiceOperation _deleteServiceOperation;
 
         public ServicesController(
             ISearchServiceOccurrencesOperation searchServiceOccurrencesOperation, ISearchServicesOperation searchServicesOperation,
             IGetServiceOperation getServiceOperation, ISearchServiceCommentsOperation searchServiceCommentsOperation, 
             IRemoveServiceCommentOperation removeServiceCommentOperation, IAddServiceCommentOperation addServiceCommentOperation,
-            IAddServiceOperation addServiceOperation, IUpdateServiceOperation updateServiceOperation)
+            IAddServiceOperation addServiceOperation, IUpdateServiceOperation updateServiceOperation, IDeleteServiceOperation deleteServiceOperation)
         {
             _searchServiceOccurrencesOperation = searchServiceOccurrencesOperation;
             _searchServicesOperation = searchServicesOperation;
@@ -50,6 +51,18 @@ namespace Cook4Me.Api.Host.Controllers
             _addServiceCommentOperation = addServiceCommentOperation;
             _addServiceOperation = addServiceOperation;
             _updateServiceOperation = updateServiceOperation;
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            return await _deleteServiceOperation.Execute(new RemoveServiceCommand
+            {
+                ServiceId = id,
+                Subject = User.GetSubject(),
+                CommonId = this.GetCommonId()
+            });
         }
 
         [HttpGet("{id}")]

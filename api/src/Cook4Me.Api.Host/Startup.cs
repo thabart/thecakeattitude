@@ -189,6 +189,8 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IRemoveOrderValidator, RemoveOrderValidator>();
             services.AddTransient<IAddOrderLineValidator, AddOrderLineValidator>();
             services.AddTransient<IUpdateProductValidator, UpdateProductValidator>();
+            services.AddTransient<IRemoveServiceValidator, RemoveServiceValidator>();
+            services.AddTransient<IRemoveProductValidator, RemoveProductValidator>();
             services.AddTransient<IUpdateServiceValidator, UpdateServiceValidator>();
             services.AddTransient<ICancelOrderOperation, CancelOrderOperation>();
             services.AddTransient<IAddDiscountValidator, AddDiscountValidator>();
@@ -241,7 +243,9 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IUpdateShopOperation, UpdateShopOperation>();
             services.AddTransient<IUpdateProductOperation, UpdateProductOperation>();
             services.AddTransient<IAddProductOperation, AddProductOperation>();
+            services.AddTransient<IDeleteProductOperation, DeleteProductOperation>();
             services.AddTransient<IDeleteShopOperation, DeleteShopOperation>();
+            services.AddTransient<IDeleteServiceOperation, DeleteServiceOperation>();
             services.AddTransient<IAddServiceOperation, AddServiceOperation>();
             services.AddTransient<IGetRatingsOperation, GetRatingsOperation>();
             services.AddTransient<IAddDiscountOperation, AddDiscountOperation>();
