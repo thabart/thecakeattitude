@@ -307,8 +307,7 @@ namespace Cook4Me.Api.EF.Repositories
                     record.UpdateDateTime = serviceAggregate.UpdateDateTime;
                     var comments = serviceAggregate.Comments == null ? new List<ServiceComment>() : serviceAggregate.Comments;
                     var commentIds = comments.Select(c => c.Id);
-                    // Update the comments
-                    if (record.Comments != null)
+                    if (record.Comments != null) // Update the comments.
                     {
                         var commentsToUpdate = record.Comments.Where(c => commentIds.Contains(c.Id));
                         var commentsToRemove = record.Comments.Where(c => !commentIds.Contains(c.Id));
@@ -344,6 +343,74 @@ namespace Cook4Me.Api.EF.Repositories
                         }
                     }
 
+                    var tags = new List<Models.ServiceTag>();
+                    if (serviceAggregate.Tags != null && serviceAggregate.Tags.Any()) // Update the tags.
+                    {
+                        var tagNames = serviceAggregate.Tags;
+                        var connectedTags = _context.Tags.Where(t => tagNames.Any(tn => t.Name == tn));
+                        foreach (var connectedTag in connectedTags)
+                        {
+                            tags.Add(new Models.ServiceTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = connectedTag.Name,
+                                ServiceId = serviceAggregate.Id
+                            });
+                        }
+
+                        var connectedTagNames = (await connectedTags.Select(t => t.Name).ToListAsync().ConfigureAwait(false));
+                        foreach (var notExistingTagName in tagNames.Where(tn => !connectedTagNames.Contains(tn)))
+                        {
+                            var newTag = new Models.Tag
+                            {
+                                Name = notExistingTagName,
+                                Description = notExistingTagName
+                            };
+                            _context.Tags.Add(newTag);
+                            tags.Add(new Models.ServiceTag
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                TagName = notExistingTagName,
+                                ServiceId = serviceAggregate.Id,
+                                Tag = newTag
+                            });
+                        }
+                    }
+
+                    if (serviceAggregate.PartialImagesUrl != null && serviceAggregate.PartialImagesUrl.Any()) // Update the images.
+                    {
+                        record.Images = serviceAggregate.PartialImagesUrl.Select(i =>
+                            new Models.ServiceImage
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                PartialPath = i
+                            }
+                        ).ToList();
+                    }
+
+                    if (serviceAggregate.Occurrence != null) // Update the occurrence.
+                    {
+                        var days = new List<Models.ServiceOccurrenceDay>();
+                        if (serviceAggregate.Occurrence.Days != null)
+                        {
+                            days = serviceAggregate.Occurrence.Days.Select(d => new Models.ServiceOccurrenceDay
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                DayId = ((int)d).ToString()
+                            }).ToList();
+                        }
+                        record.Occurrence = new Models.ServiceOccurrence
+                        {
+                            Id = serviceAggregate.Occurrence.Id,
+                            StartDate = serviceAggregate.Occurrence.StartDate,
+                            EndDate = serviceAggregate.Occurrence.EndDate,
+                            StartTime = serviceAggregate.Occurrence.StartTime,
+                            EndTime = serviceAggregate.Occurrence.EndTime,
+                            Days = days
+                        };
+                    }
+
+                    record.Tags = tags;
                     await _context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
                     return true;

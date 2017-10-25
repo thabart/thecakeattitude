@@ -34,12 +34,13 @@ namespace Cook4Me.Api.Host.Controllers
         private readonly IRemoveServiceCommentOperation _removeServiceCommentOperation;
         private readonly IAddServiceCommentOperation _addServiceCommentOperation;
         private readonly IAddServiceOperation _addServiceOperation;
+        private readonly IUpdateServiceOperation _updateServiceOperation;
 
         public ServicesController(
             ISearchServiceOccurrencesOperation searchServiceOccurrencesOperation, ISearchServicesOperation searchServicesOperation,
             IGetServiceOperation getServiceOperation, ISearchServiceCommentsOperation searchServiceCommentsOperation, 
             IRemoveServiceCommentOperation removeServiceCommentOperation, IAddServiceCommentOperation addServiceCommentOperation,
-            IAddServiceOperation addServiceOperation)
+            IAddServiceOperation addServiceOperation, IUpdateServiceOperation updateServiceOperation)
         {
             _searchServiceOccurrencesOperation = searchServiceOccurrencesOperation;
             _searchServicesOperation = searchServicesOperation;
@@ -48,6 +49,7 @@ namespace Cook4Me.Api.Host.Controllers
             _removeServiceCommentOperation = removeServiceCommentOperation;
             _addServiceCommentOperation = addServiceCommentOperation;
             _addServiceOperation = addServiceOperation;
+            _updateServiceOperation = updateServiceOperation;
         }
 
         [HttpGet("{id}")]
@@ -61,6 +63,13 @@ namespace Cook4Me.Api.Host.Controllers
         public async Task<IActionResult> AddService([FromBody] JObject jObj)
         {
             return await _addServiceOperation.Execute(jObj, User.GetSubject(), this.GetCommonId(), this.Request);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize("Connected")]
+        public async Task<IActionResult> UpdateService(string id, [FromBody] JObject jObj)
+        {
+            return await _updateServiceOperation.Execute(id, jObj, User.GetSubject(), this.GetCommonId(), this.Request);
         }
 
         [HttpPost(Constants.RouteNames.SearchOccurrences)]

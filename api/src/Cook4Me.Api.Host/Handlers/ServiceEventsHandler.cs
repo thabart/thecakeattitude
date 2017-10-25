@@ -24,7 +24,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Host.Handlers
 {
-    public class ServiceEventsHandler : Handles<ServiceCommentAddedEvent>, Handles<ServiceCommentRemovedEvent>, Handles<ServiceAddedEvent>
+    public class ServiceEventsHandler : Handles<ServiceCommentAddedEvent>, Handles<ServiceCommentRemovedEvent>, Handles<ServiceAddedEvent>, Handles<ServiceUpdatedEvent>
     {
         private readonly IConnectionManager _connectionManager;
         private readonly IResponseBuilder _responseBuilder;
@@ -44,6 +44,18 @@ namespace Cook4Me.Api.Host.Handlers
 
             var notifier = _connectionManager.GetHubContext<Notifier>();
             notifier.Clients.All.serviceAdded(_responseBuilder.GetServiceAddedEvent(message));
+            return Task.FromResult(0);
+        }
+
+        public Task Handle(ServiceUpdatedEvent message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var notifier = _connectionManager.GetHubContext<Notifier>();
+            notifier.Clients.All.serviceUpdated(_responseBuilder.GetServiceUpdatedEvent(message));
             return Task.FromResult(0);
         }
 

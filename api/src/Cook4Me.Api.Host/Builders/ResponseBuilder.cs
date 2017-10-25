@@ -100,6 +100,7 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetProductCommentRemovedEvent(ProductCommentRemovedEvent comment);
         JObject GetServiceCommentRemovedEvent(ServiceCommentRemovedEvent comment);
         JObject GetServiceCommentAddedEvent(ServiceCommentAddedEvent comment);
+        JObject GetServiceUpdatedEvent(ServiceUpdatedEvent evt);
         JObject GetServiceAddedEvent(ServiceAddedEvent evt);
         JObject GetClientServiceAddedEvent(ClientServiceAddedEvent evt);
         JObject GetClientServiceRemovedEvent(ClientServiceRemovedEvent evt);
@@ -1550,6 +1551,19 @@ namespace Cook4Me.Api.Host.Builders
             jObj.Add(Constants.DtoNames.Comment.UpdateDatetime, comment.UpdateDateTime);
             jObj.Add(Constants.DtoNames.Comment.NbComments, comment.NbComments);
             jObj.Add(Constants.DtoNames.Comment.AverageScore, comment.AverageScore);
+            return jObj;
+        }
+
+        public JObject GetServiceUpdatedEvent(ServiceUpdatedEvent evt)
+        {
+            if (evt == null)
+            {
+                throw new ArgumentNullException(nameof(evt));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.Service.Id, evt.Id);
+            jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return jObj;
         }
 

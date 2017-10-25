@@ -75,6 +75,7 @@ namespace Cook4Me.Api.Handlers
             bus.RegisterHandler<AddProductCommand>(productCommandHandler.Handle);
             bus.RegisterHandler<AddServiceCommentCommand>(serviceCommandHandler.Handle);
             bus.RegisterHandler<AddServiceCommand>(serviceCommandHandler.Handle);
+            bus.RegisterHandler<UpdateServiceCommand>(serviceCommandHandler.Handle);
             bus.RegisterHandler<RemoveServiceCommentCommand>(serviceCommandHandler.Handle);
             bus.RegisterHandler<AddClientServiceCommand>(clientServiceCommandHandler.Handle);
             bus.RegisterHandler<RemoveClientServiceCommand>(clientServiceCommandHandler.Handle);

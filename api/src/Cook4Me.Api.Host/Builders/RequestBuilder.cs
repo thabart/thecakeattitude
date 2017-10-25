@@ -67,7 +67,9 @@ namespace Cook4Me.Api.Host.Builders
         SearchNotificationsParameter GetSearchNotifications(JObject jObj);
         AddClientServiceCommand GetClientService(JObject jObj);
         AddShopCommand GetAddShop(JObject jObj);
+        UpdateServiceCommand GetUpdateService(JObject jObj);
         AddServiceCommand GetAddService(JObject jObj);
+        UpdateServiceOccurrence GetUpdateServiceOccurrence(JObject jObj);
         AddServiceOccurrence GetAddServiceOccurrence(JObject jObj);
         UpdateShopCommand GetUpdateShop(JObject jObj);
         AddPaymentInformation GetPaymentMethod(JObject jObj);
@@ -921,6 +923,32 @@ namespace Cook4Me.Api.Host.Builders
             return result;
         }
 
+        public UpdateServiceCommand GetUpdateService(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+
+            var occurrenceObj = jObj.GetValue(Constants.DtoNames.Service.Occurrence);
+            UpdateServiceOccurrence occurrence = null;
+            if (occurrenceObj != null)
+            {
+                occurrence = GetUpdateServiceOccurrence(occurrenceObj as JObject);
+            }
+
+            return new UpdateServiceCommand
+            {
+                Name = jObj.TryGetString(Constants.DtoNames.Service.Name),
+                Description = jObj.TryGetString(Constants.DtoNames.Service.Description),
+                Price = jObj.TryGetDouble(Constants.DtoNames.Service.Price),
+                Occurrence = occurrence,
+                Images = jObj.TryGetStringArray(Constants.DtoNames.Service.Images),
+                Tags = jObj.TryGetStringArray(Constants.DtoNames.Service.Tags)
+            };
+        }
+
         public AddServiceCommand GetAddService(JObject jObj)
         {
             if (jObj == null)
@@ -944,6 +972,30 @@ namespace Cook4Me.Api.Host.Builders
                 Occurrence = occurrence,
                 Images = jObj.TryGetStringArray(Constants.DtoNames.Service.Images),
                 Tags = jObj.TryGetStringArray(Constants.DtoNames.Service.Tags)
+            };
+        }
+
+        public UpdateServiceOccurrence GetUpdateServiceOccurrence(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var days = new List<DayOfWeek>();
+            var daysStr = jObj.TryGetStringArray(Constants.DtoNames.Occurrence.Days);
+            if (daysStr != null)
+            {
+                days = daysStr.Select(d => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), d)).ToList();
+            }
+
+            return new UpdateServiceOccurrence
+            {
+                StartDate = jObj.TryGetDateTime(Constants.DtoNames.Occurrence.StartDate),
+                EndDate = jObj.TryGetDateTime(Constants.DtoNames.Occurrence.EndDate),
+                StartTime = jObj.TryGetTime(Constants.DtoNames.Occurrence.StartTime),
+                EndTime = jObj.TryGetTime(Constants.DtoNames.Occurrence.EndTime),
+                Days = days
             };
         }
 

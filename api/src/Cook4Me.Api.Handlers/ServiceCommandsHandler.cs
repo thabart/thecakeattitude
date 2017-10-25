@@ -25,7 +25,7 @@ using System.Threading.Tasks;
 
 namespace Cook4Me.Api.Handlers
 {
-    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>, Handles<AddServiceCommand>
+    public class ServiceCommandsHandler : Handles<AddServiceCommentCommand>, Handles<RemoveServiceCommentCommand>, Handles<AddServiceCommand>, Handles<UpdateServiceCommand>
     {
         private readonly IServiceRepository _serviceRepository;
         private readonly IEventPublisher _eventPublisher;
@@ -157,6 +157,44 @@ namespace Cook4Me.Api.Handlers
                 CreateDateTime = message.CreateDateTime,
                 UpdateDateTime = message.UpdateDateTime,
                 CommonId = message.CommonId
+            });
+        }
+
+        public async Task Handle(UpdateServiceCommand message)
+        {
+            if (message == null)
+            {
+                throw new ArgumentNullException(nameof(message));
+            }
+
+            var service = await _serviceRepository.Get(message.Id);
+            if (service == null)
+            {
+                return;
+            }
+
+            service.Name = message.Name;
+            service.Description = message.Description;
+            service.Price = message.Price;
+            service.Tags = message.Tags;
+            service.UpdateDateTime = message.UpdateDateTime;
+            if (message.Occurrence != null)
+            {
+                service.Occurrence = new ServiceAggregateOccurrence
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Days = message.Occurrence.Days,
+                    StartDate = message.Occurrence.StartDate,
+                    EndDate = message.Occurrence.EndDate,
+                    StartTime = message.Occurrence.StartTime,
+                    EndTime = message.Occurrence.EndTime
+                };
+            }
+
+            await _serviceRepository.Update(service);
+            _eventPublisher.Publish(new ServiceUpdatedEvent
+            {
+                Id = message.Id
             });
         }
     }
