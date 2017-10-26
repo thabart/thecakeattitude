@@ -16,8 +16,8 @@
   height: 21px;
 }
 
-.sex-mal:hover,
-.sex-mal.active
+li:hover .sex-mal,
+li.active .sex-mal
 {
   background: url('../img/icons/male.png') 0 0 no-repeat;
   width: 21px;
@@ -31,8 +31,8 @@
   height: 27px;
 }
 
-.sex-femal:hover,
-.sex-femal.active
+li:hover .sex-femal,
+li.active .sex-femal
 {
   background: url('../img/icons/female.png') 0 0 no-repeat;
   width: 18px;
