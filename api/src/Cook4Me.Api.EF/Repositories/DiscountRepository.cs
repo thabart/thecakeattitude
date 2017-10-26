@@ -22,7 +22,6 @@ using Cook4Me.Api.EF.Extensions;
 using Cook4Me.Api.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 

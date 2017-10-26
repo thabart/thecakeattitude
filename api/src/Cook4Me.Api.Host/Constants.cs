@@ -46,6 +46,7 @@ namespace Cook4Me.Api.Host
             public const string Discounts = "discounts";
             public const string Notifications = "notifications";
             public const string ClientServices = "clientservices";
+            public const string FeedItems = "feeditems";
             public const string Services = "services";
             public const string Products = "products";
             public const string Shops = "shops";
@@ -90,6 +91,15 @@ namespace Cook4Me.Api.Host
 
         public static class DtoNames
         {
+            public static class FeedItemNames
+            {
+                public const string Id = "id";
+                public const string Title = "title";
+                public const string Description = "description";
+                public const string CreateDateTime = "create_datetime";
+                public const string Author = "author";
+            }
+
             public static class StatNames
             {
                 public const string NbShops = "nb_shops";

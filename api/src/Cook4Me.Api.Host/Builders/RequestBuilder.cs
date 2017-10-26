@@ -39,6 +39,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IRequestBuilder
     {
+        SearchFeedItemsParameter GetSearchFeedItems(JObject jObj);
         UpdateProductFilter GetUpdateProductFilter(JObject jObj);
         UpdateProductCommand GetUpdateProduct(JObject jObj);
         SearchDiscountsParameter GetSearchDiscountsParameter(JObject jObj);
@@ -94,6 +95,26 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class RequestBuilder : IRequestBuilder
     {        
+        public SearchFeedItemsParameter GetSearchFeedItems(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var result = new SearchFeedItemsParameter
+            {
+                StartIndex = jObj.Value<int>(Constants.DtoNames.Paginate.StartIndex)
+            };
+            var count = jObj.Value<int>(Constants.DtoNames.Paginate.Count);
+            if (count > 0)
+            {
+                result.Count = count;
+            }
+
+            return result;
+        }
+
         public SearchDiscountsParameter GetSearchDiscountsParameter(JObject jObj)
         {
             if (jObj == null)

@@ -25,6 +25,40 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static FeedItem ToModel(this FeedItemAggregate feedItem)
+        {
+            if (feedItem == null)
+            {
+                throw new ArgumentNullException(nameof(feedItem));
+            }
+
+            return new FeedItem
+            {
+                Id = feedItem.Id,
+                Title = feedItem.Title,
+                Author = feedItem.Author,
+                CreateDateTime = feedItem.CreateDateTime,
+                Description = feedItem.Description
+            };
+        }
+
+        public static FeedItemAggregate ToAggregate(this FeedItem feedItem)
+        {
+            if (feedItem == null)
+            {
+                throw new ArgumentNullException(nameof(feedItem));
+            }
+
+            return new FeedItemAggregate
+            {
+                Id = feedItem.Id,
+                Title = feedItem.Title,
+                Author = feedItem.Author,
+                CreateDateTime = feedItem.CreateDateTime,
+                Description = feedItem.Description
+            };
+        }
+
         public static DiscountAggregate ToAggregate(this Discount discount)
         {
             if (discount == null)

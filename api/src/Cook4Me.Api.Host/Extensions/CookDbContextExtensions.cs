@@ -71,8 +71,51 @@ namespace Cook4Me.Api.Host.Extensions
             InsertNotifications(context);
             InsertMessages(context);
             InsertOrders(context);
+            InsertFeedItems(context);
             InsertUpsServices(context);
             context.SaveChanges();
+        }
+
+        private static void InsertFeedItems(CookDbContext context)
+        {
+            if (!context.FeedItems.Any())
+            {
+                context.FeedItems.AddRange(new[]
+                {
+                    new FeedItem
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Author = "Thierry Habart",
+                        CreateDateTime = DateTime.UtcNow,
+                        Description = "other descr",
+                        Title = "other"
+                    },
+                    new FeedItem
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Author = "Thierry Habart",
+                        CreateDateTime = DateTime.UtcNow,
+                        Description = "first descr",
+                        Title = "first"
+                    },
+                    new FeedItem
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Author = "Thierry Habart",
+                        CreateDateTime = DateTime.UtcNow.AddDays(1),
+                        Description = "second descr",
+                        Title = "second"
+                    },
+                    new FeedItem
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Author = "Laetitia Buyse",
+                        CreateDateTime = DateTime.UtcNow.AddDays(2),
+                        Description = "third descr",
+                        Title = "third"
+                    }
+                });
+            }
         }
 
         private static void InsertUpsServices(CookDbContext context)

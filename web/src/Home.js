@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import { translate } from 'react-i18next';
 import { StatsService } from './services/index';
 import MainLayout from './MainLayout';
+import Constants from '../Constants';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -218,7 +219,7 @@ class Home extends Component {
         <section>
           <div className="container">
             <h2>
-              {t('news')} <a href="#"><img src="/images/rss.png" /></a>
+              {t('news')} <a href={Constants.apiUrl + '/feeditems'} target='_blank'><img src="/images/rss.png" /></a>
             </h2>
             <ul className="list-group">
               <li className="list-group-item row">

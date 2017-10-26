@@ -41,6 +41,7 @@ namespace Cook4Me.Api.Host.Builders
 {
     public interface IResponseBuilder
     {
+        JObject GetFeedItem(FeedItemAggregate feed);
         JObject GetServiceRemovedEvent(ServiceRemovedEvent evt);
         JObject GetDiscount(DiscountAggregate discount);
         JObject GetUpsTrack(TrackResponse track);
@@ -116,6 +117,22 @@ namespace Cook4Me.Api.Host.Builders
 
     internal class ResponseBuilder : IResponseBuilder
     {
+        public JObject GetFeedItem(FeedItemAggregate feed)
+        {
+            if (feed == null)
+            {
+                throw new ArgumentNullException(nameof(feed));
+            }
+
+            var jObj = new JObject();
+            jObj.Add(Constants.DtoNames.FeedItemNames.Author, feed.Author);
+            jObj.Add(Constants.DtoNames.FeedItemNames.CreateDateTime, feed.CreateDateTime);
+            jObj.Add(Constants.DtoNames.FeedItemNames.Description, feed.Description);
+            jObj.Add(Constants.DtoNames.FeedItemNames.Title, feed.Title);
+            jObj.Add(Constants.DtoNames.FeedItemNames.Id, feed.Id);
+            return jObj;
+        }
+
         public JObject GetDiscount(DiscountAggregate discount)
         {
             if (discount == null)
