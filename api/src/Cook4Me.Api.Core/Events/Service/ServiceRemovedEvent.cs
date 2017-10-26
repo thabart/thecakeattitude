@@ -21,5 +21,6 @@ namespace Cook4Me.Api.Core.Events.Service
     public class ServiceRemovedEvent : Event
     {
         public string ServiceId { get; set; }
+        public string ShopId { get; set; }
     }
 }

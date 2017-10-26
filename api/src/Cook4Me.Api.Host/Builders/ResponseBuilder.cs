@@ -1671,6 +1671,7 @@ namespace Cook4Me.Api.Host.Builders
 
             var jObj = new JObject();
             jObj.Add(Constants.DtoNames.Product.Id, evt.ProductId);
+            jObj.Add(Constants.DtoNames.Product.ShopId, evt.ShopId);
             jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return jObj;
         }
@@ -1683,7 +1684,8 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.Product.Id, evt.ServiceId);
+            jObj.Add(Constants.DtoNames.Service.Id, evt.ServiceId);
+            jObj.Add(Constants.DtoNames.Service.ShopId, evt.ShopId);
             jObj.Add(Constants.DtoNames.Message.CommonId, evt.CommonId);
             return jObj;
         }

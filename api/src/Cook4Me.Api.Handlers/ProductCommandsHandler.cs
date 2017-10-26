@@ -219,11 +219,13 @@ namespace Cook4Me.Api.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
 
+            var product = await _productRepository.Get(message.ProductId);
             await _productRepository.Delete(message.ProductId);
             _eventPublisher.Publish(new ProductRemovedEvent
             {
                 ProductId = message.ProductId,
-                CommonId = message.CommonId
+                CommonId = message.CommonId,
+                ShopId = product.ShopId
             });
         }
 

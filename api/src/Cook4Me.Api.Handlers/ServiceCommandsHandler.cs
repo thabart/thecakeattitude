@@ -206,11 +206,13 @@ namespace Cook4Me.Api.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
 
+            var service = await _serviceRepository.Get(message.ServiceId);
             await _serviceRepository.Delete(message.ServiceId);
             _eventPublisher.Publish(new ServiceRemovedEvent
             {
                 ServiceId = message.ServiceId,
-                CommonId = message.CommonId
+                CommonId = message.CommonId,
+                ShopId = service.ShopId
             });
         }
     }

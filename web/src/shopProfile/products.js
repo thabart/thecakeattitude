@@ -4,9 +4,11 @@ import { Alert } from "reactstrap";
 import { ProductsService } from "../services/index";
 import { NavLink } from "react-router-dom";
 import { translate } from 'react-i18next';
+import { ApplicationStore } from '../stores/index';
 import ProductElt from "./productElt";
 import AppDispatcher from "../appDispatcher";
 import $ from "jquery";
+import Constants from '../../Constants';
 
 const minPrice = 1;
 const maxPrice = 30000;
@@ -233,7 +235,7 @@ class ShopProducts extends Component {
             self = this;
         if (this.state.products) {
             this.state.products.forEach(function (product) {
-                products.push((<ProductElt product={product} className="col-md-12"/>));
+                products.push((<ProductElt product={product} shop={self.state.shop} className="col-md-12"/>));
             });
         }
 
@@ -368,23 +370,59 @@ class ShopProducts extends Component {
         var self = this,
             shopId = this.props.shop.id,
             filters = this.props.shop.filters
+        const {t} = self.props;
         self._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'new-product-comment': // When a comment is removed or added => refresh the list.
-                case 'remove-product-comment':
+                case Constants.events.NEW_PRODUCT_COMMENT_ARRIVED:
                     if (payload.data.shop_id === shopId) {
                       self._filterJson = $.extend({}, self._filterJson, {
                         start_index: 0
                       });
                       self.updateProducts();
+                      ApplicationStore.sendMessage({
+                        message: t('commentAdded'),
+                        level: 'success',
+                        position: 'bl'
+                      });
                     }
-                    break;
-                case 'new-product': // When a product is added to the shop => refresh the list.
+                break;                
+                case Constants.events.REMOVE_PRODUCT_COMMENT_ARRIVED:
+                    if (payload.data.shop_id === shopId) {
+                      self._filterJson = $.extend({}, self._filterJson, {
+                        start_index: 0
+                      });
+                      self.updateProducts();
+                      ApplicationStore.sendMessage({
+                        message: t('commentRemoved'),
+                        level: 'success',
+                        position: 'bl'
+                      });
+                    }
+                break;
+                case Constants.events.ADD_PRODUCT_ARRIVED:
                   if (payload.data.shop_id === shopId) {
                     self._filterJson = $.extend({}, self._filterJson, {
                       start_index: 0
                     });
                     self.updateProducts();
+                    ApplicationStore.sendMessage({
+                        message: t('productAdded'),
+                        level: 'success',
+                        position: 'bl'
+                    });
+                  }
+                break;                
+                case Constants.events.PRODUCT_REMOVE_ARRIVED:
+                  if (payload.data.shop_id === shopId) {
+                    self._filterJson = $.extend({}, self._filterJson, {
+                      start_index: 0
+                    });
+                    self.updateProducts();
+                    ApplicationStore.sendMessage({
+                        message: t('productRemoved'),
+                        level: 'success',
+                        position: 'bl'
+                    });
                   }
                 break;
             }

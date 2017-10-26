@@ -141,5 +141,22 @@ module.exports = {
                 });
             });
         });
+    },
+    remove: function(id) { // Remove the product.
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.products_endpoint + '/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     }
 };

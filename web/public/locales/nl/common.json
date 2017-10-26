@@ -504,5 +504,9 @@
   "viewServiceTooltip": "View the service",
   "saveServiceTooltip": "Save the service",
   "errorUpdateShopService": "An error occured while trying to update the service, please contact the administrator",
-  "shopServiceUpdated": "The service has been updated"
+  "shopServiceUpdated": "The service has been updated",
+  "remove": "Remove",  
+  "errorRemoveProduct": "An error occured while trying to remove the product, please contact the administrator",
+  "productAdded": "A product has been added",
+  "productRemoved": "A product has been removed"
 }
