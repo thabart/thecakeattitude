@@ -51,6 +51,7 @@ namespace Cook4Me.Api.Host.Controllers
             _addServiceCommentOperation = addServiceCommentOperation;
             _addServiceOperation = addServiceOperation;
             _updateServiceOperation = updateServiceOperation;
+            _deleteServiceOperation = deleteServiceOperation;
         }
 
         [HttpDelete("{id}")]

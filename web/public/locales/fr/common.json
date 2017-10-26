@@ -507,5 +507,8 @@
   "remove": "Supprimer",
   "errorRemoveProduct": "Une erreur est survenue durant la suppression du produit, veuillez prendre contact avec l'administrateur",
   "productAdded": "Un produit a été ajouté",
-  "productRemoved": "Un produit a été supprimé"
+  "productRemoved": "Un produit a été supprimé",
+  "errorRemoveService": "Une erreur est survenue durant la suppression du service, veuillez prendre contact avec l'administrateur",
+  "shopServiceAdded": "Un service a été ajouté",
+  "shopServiceRemoved": "Un service a été supprimé"
 }

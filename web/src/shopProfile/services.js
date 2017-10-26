@@ -8,7 +8,8 @@ class ShopServices extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isEditable: this.props.isEditable
+      isEditable: this.props.isEditable,
+      shop: this.props.shop || { }
     };
   }
 
@@ -18,9 +19,9 @@ class ShopServices extends Component {
       self = this;
     const {t} = this.props;
     if (action === "calendar") {
-      content = (<Calendar shop={this.props.shop} history={this.props.history} />);
+      content = (<Calendar shop={this.state.shop} history={this.props.history} />);
     } else {
-      content = (<List shop={this.props.shop} history={this.props.history} />);
+      content = (<List shop={this.state.shop} history={this.props.history} />);
       action = "list";
     }
 

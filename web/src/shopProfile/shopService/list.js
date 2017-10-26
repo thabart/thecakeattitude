@@ -5,6 +5,7 @@ import { Alert, Dropdown, DropdownMenu, DropdownItem, DropdownToggle } from "rea
 import { ShopServices } from "../../services/index";
 import { SelectDate } from '../../components/index';
 import { translate } from 'react-i18next';
+import { ApplicationStore } from '../../stores/index';
 import ServiceElt from '../serviceElt';
 import Rater from "react-rater";
 import moment from "moment";
@@ -30,7 +31,8 @@ class List extends Component {
             errorMessage: null,
             services: [],
             pagination: [],
-            serviceName: null
+            serviceName: null,
+            shop: this.props.shop || {}
         };
         this.request = {
             from_datetime: this._currentDate.format(),
@@ -121,7 +123,7 @@ class List extends Component {
         const {t} = this.props;
         if (self.state.services && self.state.services.length > 0) {
             self.state.services.forEach(function (service) {
-              services.push((<ServiceElt service={service} className="col-md-12"/>));
+              services.push((<ServiceElt shop={self.state.shop} service={service} className="col-md-12"/>));
             });
         }
 
@@ -194,17 +196,60 @@ class List extends Component {
         this.request = $.extend({}, this.request, {
             shop_id: shopId
         });
+        const {t} = self.props;
         this.refresh();
         self._waitForToken = AppDispatcher.register(function (payload) {
             switch (payload.actionName) {
-                case 'new-service':
-                case 'new-service-comment':
-                case 'remove-service-comment':
+                case Constants.events.NEW_SHOP_SERVICE_ARRIVED:
                     if (payload.data && payload.data.shop_id === shopId) {
                       self.request = $.extend({}, self.request, {
                           start_index: 0
                       });
                       self.refresh();
+                      ApplicationStore.sendMessage({
+                        message: t('shopServiceAdded'),
+                        level: 'success',
+                        position: 'bl'
+                      });
+                    }                    
+                break;
+                case Constants.events.NEW_SERVICE_COMMENT_ARRIVED:
+                    if (payload.data && payload.data.shop_id === shopId) {
+                      self.request = $.extend({}, self.request, {
+                          start_index: 0
+                      });
+                      self.refresh();
+                      ApplicationStore.sendMessage({
+                        message: t('commentAdded'),
+                        level: 'success',
+                        position: 'bl'
+                      });
+                    }                    
+                break;
+                case Constants.events.REMOVE_SERVICE_COMMENT_ARRIVED:
+                    if (payload.data && payload.data.shop_id === shopId) {
+                      self.request = $.extend({}, self.request, {
+                          start_index: 0
+                      });
+                      self.refresh();
+                      ApplicationStore.sendMessage({
+                        message: t('commentRemoved'),
+                        level: 'success',
+                        position: 'bl'
+                      });
+                    }                    
+                break;
+                case Constants.events.SERVICE_REMOVE_ARRIVED:
+                    if (payload.data && payload.data.shop_id === shopId) {
+                      self.request = $.extend({}, self.request, {
+                          start_index: 0
+                      });
+                      self.refresh();
+                      ApplicationStore.sendMessage({
+                        message: t('shopServiceRemoved'),
+                        level: 'success',
+                        position: 'bl'
+                      });
                     }
                 break;
             }

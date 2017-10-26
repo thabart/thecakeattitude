@@ -157,5 +157,23 @@ module.exports = {
                 });
             });
         });
+    },
+    remove: function(id, commonId) { // Update the shop service.
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.services_endpoint + '/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken,
+                        'CommonId': commonId
+                    }
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     }
 };
