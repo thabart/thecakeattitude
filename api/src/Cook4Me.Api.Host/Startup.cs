@@ -34,6 +34,7 @@ using Cook4Me.Api.Host.Operations.Product;
 using Cook4Me.Api.Host.Operations.Services;
 using Cook4Me.Api.Host.Operations.Shop;
 using Cook4Me.Api.Host.Operations.ShopCategory;
+using Cook4Me.Api.Host.Operations.Stats;
 using Cook4Me.Api.Host.Operations.Tag;
 using Cook4Me.Api.Host.Operations.Ups;
 using Cook4Me.Api.Host.Validators;
@@ -192,6 +193,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IRemoveServiceValidator, RemoveServiceValidator>();
             services.AddTransient<IRemoveProductValidator, RemoveProductValidator>();
             services.AddTransient<IUpdateServiceValidator, UpdateServiceValidator>();
+            services.AddTransient<IGetStatsOperation, GetStatsOperation>();
             services.AddTransient<ICancelOrderOperation, CancelOrderOperation>();
             services.AddTransient<IAddDiscountValidator, AddDiscountValidator>();
             services.AddTransient<IAcceptOrderTransactionValidator, AcceptOrderTransactionValidator>();

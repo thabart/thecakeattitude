@@ -49,6 +49,7 @@ namespace Cook4Me.Api.Host
             public const string Services = "services";
             public const string Products = "products";
             public const string Shops = "shops";
+            public const string Stats = "stats";
             public const string Users = "users";
             public const string ShopCategories = "shopcategories";
             public const string Map = "{id}/maps/{subid}";
@@ -89,6 +90,13 @@ namespace Cook4Me.Api.Host
 
         public static class DtoNames
         {
+            public static class StatNames
+            {
+                public const string NbShops = "nb_shops";
+                public const string NbProducts = "nb_products";
+                public const string NbServices = "nb_services";
+            }
+
             public static class OrderTrackNames
             {
                 public const string Activities = "activities";

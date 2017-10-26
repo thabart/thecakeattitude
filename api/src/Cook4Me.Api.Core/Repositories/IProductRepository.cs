@@ -29,5 +29,6 @@ namespace Cook4Me.Api.Core.Repositories
         Task<bool> Update(ProductAggregate productAggregate);
         Task<bool> Insert(ProductAggregate productAggregate);
         Task<bool> Delete(string id);
+        Task<int> Count();
     }
 }

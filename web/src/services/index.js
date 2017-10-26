@@ -18,6 +18,7 @@ import DhlService from './Dhl';
 import UpsService from './Ups';
 import PaypalService from './Paypal';
 import WebsiteService from './Website';
+import StatsService from './Stats';
 
 exports.CategoryService = CategoryService;
 exports.SessionService = SessionService;
@@ -39,3 +40,4 @@ exports.DhlService = DhlService;
 exports.UpsService = UpsService;
 exports.PaypalService = PaypalService;
 exports.WebsiteService = WebsiteService;
+exports.StatsService = StatsService;

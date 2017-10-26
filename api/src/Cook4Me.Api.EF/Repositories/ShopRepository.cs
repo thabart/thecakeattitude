@@ -569,6 +569,11 @@ namespace Cook4Me.Api.EF.Repositories
             }
         }
 
+        public async Task<int> Count()
+        {
+            return await _context.Shops.CountAsync().ConfigureAwait(false);
+        }
+
         private static IQueryable<Models.Shop> Order<TKey>(OrderBy orderBy, string key, Expression<Func<Models.Shop, TKey>> keySelector, IQueryable<Models.Shop> shops)
         {
             if (string.Equals(orderBy.Target, key, StringComparison.CurrentCultureIgnoreCase))

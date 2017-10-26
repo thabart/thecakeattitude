@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
+import { StatsService } from './services/index';
 import MainLayout from './MainLayout';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -11,22 +12,52 @@ class Home extends Component {
       super(props);
       this.handleChangeUserType = this.handleChangeUserType.bind(this);
       this.toggleTab = this.toggleTab.bind(this);
+      this.refresh = this.refresh.bind(this);
       this.state = {
+        isFiguresLoading: false,
         isSellerExplanationVisible : true,
-        activeTab : '1'
+        activeTab : '1',
+        nbProducts: 0,
+        nbServices: 0,
+        nbShops: 0
       };
     }
+
     handleChangeUserType() {
       this.setState({
         isSellerExplanationVisible: !this.state.isSellerExplanationVisible
       });
     }
+
     toggleTab(e, activeTab) {
       e.preventDefault();
       this.setState({
         activeTab: activeTab
       });
     }
+
+    refresh() { // Refresh all the figures.
+      var self = this;
+      self.setState({
+        isFiguresLoading: true
+      });
+      StatsService.get().then(function(resp) {
+        self.setState({
+          isFiguresLoading: false,
+          nbProducts: resp.nb_products,
+          nbServices: resp.nb_services,
+          nbShops: resp.nb_shops
+        });
+      }).catch(function() {
+        self.setState({
+          isFiguresLoading: false,
+          nbProducts: 0,
+          nbServices: 0,
+          nbShops: 0
+        });
+      }); 
+    }
+
     render() {
       var settings = {
         dot: true,
@@ -160,24 +191,27 @@ class Home extends Component {
         {/* Some figures */}
         <section>
           <div className="container">
-            <h2>Quelques chiffres</h2>
-            <div className="row">
-              <div className="col-md-4 text-center">
-                <img src="/images/shop.png" />
-                <h3 className="uppercase">{t('shops')}</h3>
-                <span className="counter-number">100</span>
+            <h2>{t('someFigures')}</h2>
+            { this.state.isFiguresLoading && (<i className='fa fa-spinner fa-spin'></i>) }
+            { !this.state.isFiguresLoading && (
+              <div className="row">
+                <div className="col-md-4 text-center">
+                  <img src="/images/shop.png" />
+                  <h3 className="uppercase">{t('shops')}</h3>
+                  <span className="counter-number">{this.state.nbShops}</span>
+                </div>
+                <div className="col-md-4 text-center">
+                  <img src="/images/product.png" />
+                  <h3 className="uppercase">{t('products')}</h3>
+                  <span className="counter-number">{this.state.nbProducts}</span>
+                </div>
+                <div className="col-md-4 text-center">
+                  <img src="/images/information.png" />
+                  <h3 className="uppercase">{t('services')}</h3>
+                  <span  className="counter-number">{this.state.nbServices}</span>
+                </div>
               </div>
-              <div className="col-md-4 text-center">
-                <img src="/images/product.png" />
-                <h3 className="uppercase">{t('products')}</h3>
-                <span className="counter-number">200</span>
-              </div>
-              <div className="col-md-4 text-center">
-                <img src="/images/information.png" />
-                <h3 className="uppercase">{t('services')}</h3>
-                <span  className="counter-number">300</span>
-              </div>
-            </div>
+            )}
           </div>
         </section>
         {/* News */}
@@ -214,6 +248,10 @@ class Home extends Component {
           </div>
         </section>
       </MainLayout>);
+    }
+
+    componentDidMount() {
+      this.refresh();
     }
 }
 
