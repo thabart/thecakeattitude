@@ -137,5 +137,25 @@ module.exports = {
                 });
             });
         });
+    },
+    update: function(id, content, commonId) { // Update the shop service.
+        var accessToken = Session.getSession().access_token;
+        return new Promise(function (resolve, reject) {
+            ConfigurationService.get().then(function (configuration) {
+                $.ajax(configuration.services_endpoint + '/' + id, {
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken,
+                        'CommonId': commonId
+                    },
+                    data: JSON.stringify(content)
+                }).then(function (r) {
+                    resolve(r);
+                }).fail(function (e) {
+                    reject(e);
+                });
+            });
+        });
     }
 };

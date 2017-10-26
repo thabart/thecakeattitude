@@ -89,7 +89,7 @@ namespace Cook4Me.Api.Host.Operations.Services
                 foreach (var image in command.Images)
                 {
                     Uri uri = null;
-                    if (Uri.TryCreate(image, UriKind.RelativeOrAbsolute, out uri))
+                    if (Uri.TryCreate(image, UriKind.Absolute, out uri) && (uri.Scheme == "http" || uri.Scheme == "https"))
                     {
                         images.Add(image);
                         continue;

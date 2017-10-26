@@ -14,14 +14,21 @@ class EditableShopServicePlanning extends Component {
 	    this.handleChangeEndDate = this.handleChangeEndDate.bind(this);
 	    this.handleChangeStartTime = this.handleChangeStartTime.bind(this);
 	    this.handleChangeEndTime = this.handleChangeEndTime.bind(this);
+	    this.getJson = this.getJson.bind(this);
     	this.validate = this.validate.bind(this);
+    	var occurrence = this.props.occurrence || {};
+    	var days = [0, 1, 2, 3, 4, 5, 6];
+    	if (occurrence.days) {
+    		days = occurrence.days.map(function(d) { return parseInt(d); });
+    	}
+
 	    this.state = {
 	      valid : true,
-	      days: [0, 1, 2, 3, 4, 5, 6],
-	      startTime: moment('08:00:00', 'HH:mm:ss'),
-	      endTime:  moment('23:00:00', 'HH:mm:ss'),
-	      startDate: moment(),
-	      endDate: moment().add(2, 'months'),
+	      days: days,
+	      startTime: moment(occurrence.start_time, 'HH:mm:ss') || moment('08:00:00', 'HH:mm:ss'),
+	      endTime:  moment(occurrence.end_time, 'HH:mm:ss') || moment('23:00:00', 'HH:mm:ss'),
+	      startDate: moment(occurrence.start_datetime) || moment(),
+	      endDate: moment(occurrence.end_datetime) || moment().add(2, 'months'),
 	      tooltip: {
 	        toggleTimePeriodTooltip: false,
 	        toggleDatePeriodTooltip: false,
@@ -54,32 +61,58 @@ class EditableShopServicePlanning extends Component {
 	      days.push(day);
 	    }
 
-	    this.setState({
+	    var self = this;
+	    self.setState({
 	      days: days
+	    }, () => {
+		    if (self.props.onChanged) {
+		    	self.props.onChanged(self.getJson());
+		    }
 	    });
   	}
 
   	handleChangeStartDate(date) { // Handle change start date.
-      this.setState({
+  	  var self = this;
+      self.setState({
           startDate: date
+      }, () => {
+		  if (self.props.onChanged) {
+		  	self.props.onChanged(self.getJson());
+		  }      	
       });
+
   	}
 
   	handleChangeEndDate(date) { // Handle change end date.
-      this.setState({
+  	  var self = this;
+      self.setState({
           endDate: date
+      }, () => {      	
+	      if (self.props.onChanged) {
+		  	self.props.onChanged(self.getJson());
+		  }
       });
   	}
 
   	handleChangeStartTime(time) { // Handle change start time.
-      this.setState({
+  	  var self = this;
+      self.setState({
         startTime: time
+      }, () => {
+	      if (self.props.onChanged) {
+		  	self.props.onChanged(self.getJson());
+		  }
       });
   	}
 
   	handleChangeEndTime(time) { // Handle change end time.
+  	  var self = this;
       this.setState({
         endTime: time
+      }, () => {
+	      if (self.props.onChanged) {
+		  	self.props.onChanged(self.getJson());
+		  }
       });
   	}
 
@@ -93,6 +126,20 @@ class EditableShopServicePlanning extends Component {
       }
 
       return result;
+  	}
+
+  	getJson() { //  Return the JSON representation.
+  		var self = this;
+  		var startTime = self.state.startTime,
+	      endTime = self.state.endTime;
+	    var json = {
+	      start_time: startTime.format('HH:mm:ss'),
+	      end_time: endTime.format('HH:mm:ss'),
+	      start_date: self.state.startDate.format('YYYY-MM-DD'),
+	      end_date: self.state.endDate.format('YYYY-MM-DD'),
+	      days: self.state.days
+	    };
+	    return json;
   	}
 
   	validate() { // Validate the form.

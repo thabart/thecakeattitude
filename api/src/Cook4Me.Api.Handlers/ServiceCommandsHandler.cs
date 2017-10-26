@@ -178,6 +178,7 @@ namespace Cook4Me.Api.Handlers
             service.Price = message.Price;
             service.Tags = message.Tags;
             service.UpdateDateTime = message.UpdateDateTime;
+            service.PartialImagesUrl = message.Images;
             if (message.Occurrence != null)
             {
                 service.Occurrence = new ServiceAggregateOccurrence

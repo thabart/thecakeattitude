@@ -502,5 +502,7 @@
   "productUpdated": "The product has been updated",
   "editServiceTooltip": "Edit the service",
   "viewServiceTooltip": "View the service",
-  "saveServiceTooltip": "Save the service"
+  "saveServiceTooltip": "Save the service",
+  "errorUpdateShopService": "An error occured while trying to update the service, please contact the administrator",
+  "shopServiceUpdated": "The service has been updated"
 }

@@ -122,17 +122,19 @@ class Products extends Component {
       self._commonId = Guid.generate();
       ProductsService.update(productId, product, self._commonId).catch(function(e) {
           var json = e.responseJSON;
+          var error = t('errorUpdateProduct');
           if (json && json.error_description) {
-              self.setState({
-                  updatingErrorMessage: json.error_description,
-                  isLoading: false
-              });
-          } else {
-            self.setState({
-                updatingErrorMessage: t('errorUpdateProduct'),
-                isLoading: false
-            });
+              error = json.error_description;
           }
+
+          ApplicationStore.sendMessage({
+            message: error,
+            level: 'error',
+            position: 'tr'
+          });
+          self.setState({
+            isLoading: false
+          });
       });
     }
 

@@ -25,6 +25,7 @@ class Description extends Component {
         this.updateDescription = this.updateDescription.bind(this);
         this.changeMode = this.changeMode.bind(this);
         this.toggleTooltip = this.toggleTooltip.bind(this);
+        this.updateOccurrence = this.updateOccurrence.bind(this);
         this.state = {            
             isEditable : this.props.isEditable || false,
             service: this.props.service || {},
@@ -58,6 +59,18 @@ class Description extends Component {
         tooltip[name] = !tooltip[name];
         this.setState({
             tooltip: tooltip
+        });
+    }
+
+    updateOccurrence(occurrence) { // Update the occurrence.
+        var service = this.state.service;
+        service.occurrence = occurrence;
+        this.setState({
+            service: service
+        });
+        AppDispatcher.dispatch({
+            actionName: Constants.events.UPDATE_SERVICE_INFORMATION_ACT,
+            data: { occurrence: occurrence }
         });
     }
 
@@ -101,7 +114,7 @@ class Description extends Component {
                             <h5>
                                 {t('occurrence')}
                             </h5>
-                            <EditableShopServicePlanning ref="shopServicePlanning" />
+                            <EditableShopServicePlanning onChanged={self.updateOccurrence} occurrence={self.state.service.occurrence} ref="shopServicePlanning" />
                         </div>
                     )}
                     { !this.state.isEditable && (

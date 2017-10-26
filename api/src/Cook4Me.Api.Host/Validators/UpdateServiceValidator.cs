@@ -31,7 +31,7 @@ namespace Cook4Me.Api.Host.Validators
     {
         public UpdateServiceValidationResult()
         {
-            IsValid = false;
+            IsValid = true;
         }
 
         public UpdateServiceValidationResult(string message)
@@ -139,7 +139,7 @@ namespace Cook4Me.Api.Host.Validators
                 foreach (var image in command.Images)
                 {
                     Uri uri;
-                    if (Uri.TryCreate(image, UriKind.RelativeOrAbsolute, out uri))
+                    if (Uri.TryCreate(image, UriKind.Absolute, out uri) && (uri.Scheme == "http" || uri.Scheme == "https"))
                     {
                         continue;
                     }

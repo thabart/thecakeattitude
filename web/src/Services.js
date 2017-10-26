@@ -6,6 +6,7 @@ import { EditableText, EditableTag, ImagesUploader } from './components/index';
 import { withRouter } from "react-router";
 import { translate } from 'react-i18next';
 import { ApplicationStore, EditServiceStore } from './stores/index';
+import { Guid } from './utils/index';
 import AppDispatcher from "./appDispatcher";
 import Rater from "react-rater";
 import MainLayout from './MainLayout';
@@ -19,6 +20,7 @@ class Services extends Component {
     constructor(props) {
         super(props);
         this._waitForToken = null;
+        this._commonId = null;
         this.updateServiceName = this.updateServiceName.bind(this);
         this.updateTags = this.updateTags.bind(this);
         this.updateImages = this.updateImages.bind(this);
@@ -34,7 +36,7 @@ class Services extends Component {
         this.viewService = this.viewService.bind(this);
         this.updateService = this.updateService.bind(this);
         this.state = {
-            loading: false,
+            isLoading: false,
             errorMessage: null,
             currentImageIndice: 0,
             service: null,
@@ -192,8 +194,38 @@ class Services extends Component {
       });
     }
 
-    saveService() { // Save the service informatuion
+    saveService() { // Save the service information.      
+      var self = this;
+      var service = EditServiceStore.getService();
+      var serviceId = self.props.match.params.id;
+      const {t} = this.props;
+      self.setState({
+        isLoading: true
+      });
+      self._commonId = Guid.generate();
+      service.occurrence = {
+        days: service.occurrence.days,
+        end_date: service.occurrence.end_date || service.occurrence.end_datetime,
+        start_date: service.occurrence.start_date || service.occurrence.start_datetime,
+        start_time: service.occurrence.start_time,
+        end_time: service.occurrence.end_time
+      };
+      ShopServices.update(serviceId, service, self._commonId).catch(function(e) {
+          var json = e.responseJSON;
+          var error = t('errorUpdateShopService');
+          if (json && json.error_description) {
+              error = json.error_description;
+          }
 
+          ApplicationStore.sendMessage({
+            message: error,
+            level: 'error',
+            position: 'tr'
+          });
+          self.setState({
+            isLoading: false
+          });
+      });
     }
 
     updateService() { // Update the service information.
@@ -410,6 +442,7 @@ class Services extends Component {
     componentWillMount() { // Execute after the render.
         this.refresh();
         var self = this;
+        const {t} = self.props;
         self._waitForToken = AppDispatcher.register(function (payload) {
           switch (payload.actionName) {
             case Constants.events.NEW_SERVICE_COMMENT_ARRIVED:
@@ -418,7 +451,17 @@ class Services extends Component {
                   self.refreshScore(payload.data);
                 }
                 break;
-            }
+            case Constants.events.SERVICE_UPDATE_ARRIVED:
+              if (payload.data && payload.data.id === self.state.service.id) {
+                ApplicationStore.sendMessage({
+                    message: t('shopServiceUpdated'),
+                    level: 'success',
+                    position: 'bl'
+                });
+                self.refresh();
+              }              
+            break;
+          }
         });
         EditServiceStore.addChangeListener(this.updateService);
         Mousetrap.bind('ctrl+s', function(e) { // Save the service (ctrl+s)

@@ -501,5 +501,7 @@
   "productUpdated": "Le produit a été mis à jour",
   "editServiceTooltip": "Editer le service",
   "viewServiceTooltip": "Voir le service",
-  "saveServiceTooltip": "Sauvegarder le service"
+  "saveServiceTooltip": "Sauvegarder le service",
+  "errorUpdateShopService": "Une erreur est survenue durant la mise à jour du service, veuillez prendre contact avec l'administrateur",
+  "shopServiceUpdated": "Le service a été mis à jour"
 }
