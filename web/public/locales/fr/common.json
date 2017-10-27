@@ -535,5 +535,13 @@
   "madeForSellersDescription": "ShopInGame a été conçu pour les vendeurs en offrant les services suivants : <ul style='padding-left: 20px;' className='with-default-style'><li>Créer une vitrine virtuelle et y ajouter des produits.</li><li>Proposer des services aux clients par exemple : <i>Tous les samedis matin je propose de rénover vos chaussures.</i></li><li>Rentrer facilement en contact avec les clients.</li><li>Une gestion end-to-end du processus d achat.</li></ul>",
   "news": "Actualités",
   "someFigures": "Quelques chiffres",
-  "noNews": "Aucune nouveauté"
+  "noNews": "Aucune nouveauté",
+  "whyShopInGame": "Pourquoi ShopInGame ?",
+  "notYetSupported": "Pas encore supporté",
+  "createShop": "Créer un magasin",
+  "createShopHelpDescription": "Ouvrez un magasin en cliquant sur le lien <i>OUVRIR UN MAGASIN</i>. Quelques informations doivent être renseignées telle que : la localisation, l'addresse, les produits. <br/> Une fois créé vous pouvez vous y rendre dans le jeux.",
+  "sellerOrdersDescription": "Les produits peuvent maintenant être commandés par les clients de deux façons : <ul style='padding-left: 30px'><li><b>Hand-To-Hand</b> : Le client et le vendeur se rencontre afin d'échanger le(s) produit(s).</li><li><b>Transporteur</b>: Le vendeur s'occupe d'envoyer le(s) produit(s) par colis (<i>ATTENTION : seulement le transporteur UPS est supporté</i>).</li></ul>",
+  "transporter": "Transporteur",
+  "transporterHelperDescription": "Ici toutes les transactions financières passent par PAYPAL. Un compte PAYPAL doit être lié à votre profil dans quel cas il ne sera pas possible d'effectuer des paiements, pour cela cliquez sur <i>gérer votre profil</i> et cliquez sur <i>lier à un compte paypal</i>. <br/> Afin d'éviter les arnaques en ligne nous avons pris le choix d'effectuer la transaction financière (PAYPAL) qu'une fois le colis reçu. Les frais de transport sont à la charge de l'acheteur et aucun frais supplémentaire n'est retenu par ShopInGame. <br/> Pour information voici les différentes étapes d'une commande : <ul style='padding-left: 30px'><li><b>Créée</b> : Ajouté au panier du client</li><li><b>Confirmée</b> : Commande confirmée par l'acheteur.</li><li><b>Approuvée</b> : La transaction PAYPAL a été approuvée par l'acheteur et est bloquée jusqu'à réception du colis.</li><li><b>Acheté</b> : Le bordereau d'envoi a été acheté par le vendeur</li><li><b>Reçue</b> : Le colis a été reçu et la transaction PAYPAL est exécuté.</li></ul>",
+  "helpModalTitle": "Aide"
 }

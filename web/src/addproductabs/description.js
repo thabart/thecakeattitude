@@ -275,7 +275,7 @@ class DescriptionTab extends Component {
           </div>
       </section>
       <section className="row p-1">
-          <button className="btn btn-default" onClick={this.next}>Next</button>
+          <button className="btn btn-default" onClick={this.next}>{t('next')}</button>
       </section>
     </div>);
   }

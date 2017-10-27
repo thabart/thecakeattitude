@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "reactstrap";
+import { Button, Alert } from "reactstrap";
 import { translate } from 'react-i18next';
 import { BasketStore } from '../stores/index';
 import { Address, DropLocations } from '../components/index';
@@ -201,8 +201,7 @@ class TransportMethods extends Component {
   selectDhlRating(rating) { // Select the rating.
     this.setState({
       dhlRating: rating,
-      estimatedPrice: rating.price_with_tax,
-      isNextBtnEnabled: rating.code === 'DOOR'
+      estimatedPrice: rating.price_with_tax
     });
   }
 
@@ -326,8 +325,7 @@ class TransportMethods extends Component {
   refreshDhlRatings() { // Refresh dhl ratings
     var self = this;
     self.setState({
-      isDhlRatingsLoading: true,
-      isNextBtnEnabled: false
+      isDhlRatingsLoading: true
     });
     var adr = this.refs.address.getWrappedInstance().getAddress();
     const {t} = this.props;
@@ -363,9 +361,6 @@ class TransportMethods extends Component {
 
   onDhlMarkerClick(location) { // Execute when the user clicks on the marker (DHL)
     this._dhlMarker = location;
-    this.setState({
-      isNextBtnEnabled: true
-    });
   }
 
   displayUpsServices() { // Display the UPS services.
@@ -515,7 +510,7 @@ class TransportMethods extends Component {
                     <div className="col-md-3 offset-md-3 text-center" onClick={() => self.selectTransporter('dhl') }>
                       <div className={this.state.transporter === 'dhl' ? 'choice active' : 'choice'}  style={{height: "140px"}}>
                         <div style={{height: "100px"}}><img src="/images/DHL.png" width="100" /></div>
-                        <h3><a href="https://my.dhlparcel.be/#/" style={{color: "inherit"}}>{t('dhl')}</a></h3>
+                        <h3>{t('dhl')}</h3>
                       </div>
                     </div>
                   </div>
@@ -554,6 +549,7 @@ class TransportMethods extends Component {
                   { this.state.transporter === 'dhl' && this.state.isDhlRatingsLoading && (<i className='fa fa-spinner fa-spin'></i>) }
                   { this.state.transporter === 'dhl' && !this.state.isDhlRatingsLoading && (
                     <div>
+                      <Alert color="danger" isOpen={true}>{t('notYetSupported')}</Alert>
                       { /* Display the different transport method */ }
                       <section>
                         { ratings.length === 0 && (<span>{t('noRating')}</span>) }

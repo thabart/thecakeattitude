@@ -32,6 +32,7 @@ class Header extends Component {
         super(props);
         this._waitForToken = null;
         this._commonId = null;
+        this.displayHelpModal = this.displayHelpModal.bind(this);
         this.toggle = this.toggle.bind(this);
         this.authenticate = this.authenticate.bind(this);
         this.externalAuthenticate = this.externalAuthenticate.bind(this);
@@ -46,6 +47,7 @@ class Header extends Component {
         this.refreshOrders = this.refreshOrders.bind(this);
         this.readNotification = this.readNotification.bind(this);
         this.refreshUser = this.refreshUser.bind(this);
+        this.navigateHelpModalTab = this.navigateHelpModalTab.bind(this);
         this.state = {
             user: null,
             activeItem: null,
@@ -65,8 +67,17 @@ class Header extends Component {
             isOrderLoading: false,
             notifications: [],
             orderStatus: {},
-            nbUnread: 0
+            nbUnread: 0,
+            isHelpModalOpened: false,
+            currentHelpModalTab: 0
         };
+    }
+
+    displayHelpModal() { // Display the help modal window.
+      var self = this;
+      self.setState({
+        isHelpModalOpened: true
+      });
     }
 
     toggle(name) {
@@ -313,6 +324,12 @@ class Header extends Component {
       });
     }
 
+    navigateHelpModalTab(currentTab) { // Navigate to the help modal tab.
+      this.setState({
+        currentHelpModalTab: currentTab
+      });
+    }
+
     render() { // Renders the view.
         var self = this;
         const { t } = self.props;
@@ -392,7 +409,7 @@ class Header extends Component {
                       </ul>
                       <ul>
                         { /* Help button */ }
-                        <li><NavLink to="/help" className="nav-link no-style"><i className="fa fa-question-circle"></i></NavLink></li>
+                        <li><a href="#" className="nav-link no-style" onClick={this.displayHelpModal}><i className="fa fa-question-circle"></i></a></li>
                         { /* Messages */ }
                         {
                           (self.state.isLoggedIn ? (
@@ -502,6 +519,78 @@ class Header extends Component {
                       </div>
                     </div>
                     </ModalBody>
+                </Modal>
+                <Modal isOpen={self.state.isHelpModalOpened} size="lg">
+                  <ModalHeader toggle={() => { self.toggle('isHelpModalOpened'); }} className="redColor"><h2>{t('helpModalTitle')}</h2></ModalHeader>
+                  <ModalBody>
+                    <div className={this.state.currentHelpModalTab !== 0 && "hidden"}>
+                      <div style={{height: "500px"}}>
+                        <h5>{t('whoAreYou')}</h5>
+                        <div className="row">
+                          <div className='col-md-5 text-center' onClick={() => self.navigateHelpModalTab(1)}>
+                            <div className='choice' style={{height: "140px"}}>
+                              <div style={{height: "100px"}}>
+                                <img src="/images/seller.png" />
+                              </div>
+                              <h3>{t('aSeller')}</h3>
+                            </div>
+                          </div>
+                          <div className='col-md-5 offset-md-1 text-center' onClick={() => self.navigateHelpModalTab(4)}>
+                            <div className='choice' style={{height: "140px"}}>
+                              <div style={{height: "100px"}}>
+                                <img src="/images/buyer.png" />
+                              </div>
+                              <h3>{t('aBuyer')}</h3>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Create shop description */ }
+                    <div className={this.state.currentHelpModalTab !== 1 && "hidden"}>
+                      <div style={{height: "500px"}}>
+                        <h5>{t('createShop')}</h5>
+                        <p dangerouslySetInnerHTML={{__html: t('createShopHelpDescription')}}></p>
+                      </div>
+                      <button className="btn btn-default" onClick={() => self.navigateHelpModalTab(0)}>
+                        {t('previous')}
+                      </button>
+                      <button className="btn btn-default" style={{marginLeft: "5px"}} onClick={() => self.navigateHelpModalTab(2)}>
+                        {t('next')}
+                      </button>
+                    </div>
+                    { /* Manage order */ }
+                    <div className={this.state.currentHelpModalTab !== 2 && 'hidden'}>
+                      <div style={{height: "500px"}}>
+                        <h5>{t('orders')}</h5>
+                        <p dangerouslySetInnerHTML={{__html: t('sellerOrdersDescription') }}></p>
+                      </div>
+                      <button className="btn btn-default" onClick={() => self.navigateHelpModalTab(1)}>
+                        {t('previous')}
+                      </button>
+                      <button style={{marginLeft: "5px"}} className="btn btn-default" onClick={() => self.navigateHelpModalTab(3)}>
+                        {t('transporter')}
+                      </button>                           
+                    </div>
+                    { /* Manage the orders */ }
+                    <div className={this.state.currentHelpModalTab !== 3 && 'hidden'}>
+                      <div style={{height: "500px"}}>
+                        <h5>{t('transporter')}</h5>
+                        <p dangerouslySetInnerHTML={{__html: t('transporterHelperDescription') }}></p>
+                      </div>                      
+                      <button className="btn btn-default" onClick={() => self.navigateHelpModalTab(2)}>
+                        {t('previous')}
+                      </button>
+                    </div>
+                    <div className={this.state.currentHelpModalTab !== 4 && 'hidden'}>
+                      <div style={{height: "500px"}}>
+
+                      </div>                  
+                      <button className="btn btn-default" onClick={() => self.navigateHelpModalTab(1)}>
+                        {t('previous')}
+                      </button>
+                    </div>
+                  </ModalBody>
                 </Modal>
               </div>
               {/* Seconday menu */}

@@ -512,5 +512,7 @@
   "errorRemoveService": "An error occured while trying to remove the service, please contact the administrator",
   "shopServiceAdded": "A service has been added",
   "shopServiceRemoved": "A service has been removed",
-  "noNews": "No news"
+  "noNews": "No news",
+  "whyShopInGame": "Why ShopInGame ?",
+  "notYetSupported": "Not yet supported"
 }

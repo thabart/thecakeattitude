@@ -231,7 +231,7 @@ class Home extends Component {
         {/* Why ShopInGame ? */ }
         <section>
           <div className="container">
-            <h2>Pourquoi ShopInGame ?</h2>
+            <h2>{t('whyShopInGame')}</h2>
             <div className="row vertical-tabs-container">
               <div className="col-md-3 col-lg-3 col-sm-3 col-xs-3 vertical-tabs-menu">
                 <div className="list-group">

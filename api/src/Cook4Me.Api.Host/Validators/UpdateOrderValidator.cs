@@ -223,6 +223,11 @@ namespace Cook4Me.Api.Host.Validators
                     return new UpdateOrderValidationResult(ErrorDescriptions.TheSellerPaypalAccountNotExist);
                 }
 
+                if (order.OrderParcel.Transporter == Transporters.Dhl)
+                {
+                    return new UpdateOrderValidationResult(ErrorDescriptions.TheTransporterDhlIsNotSupported);
+                }
+
                 if (order.OrderParcel.Transporter == Transporters.Ups)
                 {
                     var buyerName = payer.Claims.First(c => c.Type == SimpleIdentityServer.Core.Jwt.Constants.StandardResourceOwnerClaimNames.Name).Value;

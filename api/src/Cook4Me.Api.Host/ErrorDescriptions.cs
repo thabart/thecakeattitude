@@ -120,5 +120,6 @@ namespace Cook4Me.Api.Host
         public const string TheProductImageCanBeUrlOrBase64Encoded = "the product image must be a URL or a valid base 64 encoded image";
         public const string TheProductCannotBeRemovedByYou = "the product cannot be removed by you";
         public const string TheServiceCannotBeRemovedByYou = "the service cannot be removed by you";
+        public const string TheTransporterDhlIsNotSupported = "the transporter DHL is not yet supported";
     }
 }
