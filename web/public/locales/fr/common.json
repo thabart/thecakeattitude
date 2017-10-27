@@ -534,5 +534,6 @@
   "madeForBuyersDescription": "ShopInGame a été conçu pour les clients en offrant les services suivant : <ul style='padding-left: 20px;' className='with-default-style'><li>Rechercher des magasins selon différents critères de recherche<ul style='padding-left: 20px;' className='with-default-style'><li>Géographique (par exemple : les magasins les plus proches)</li><li>Tags (par exemple : les magasins écologique)</li><li>Produits</li><li>Ou simplement en se baladant et discutant sur le jeux</li></ul></li><li>Soumettre une demande à une communauté de vendeurs par exemple : je veux un gâteau d anniversaire pour mon fils, cette demande sera envoyée aux magasins de pâtisserie.</li></ul>",
   "madeForSellersDescription": "ShopInGame a été conçu pour les vendeurs en offrant les services suivants : <ul style='padding-left: 20px;' className='with-default-style'><li>Créer une vitrine virtuelle et y ajouter des produits.</li><li>Proposer des services aux clients par exemple : <i>Tous les samedis matin je propose de rénover vos chaussures.</i></li><li>Rentrer facilement en contact avec les clients.</li><li>Une gestion end-to-end du processus d achat.</li></ul>",
   "news": "Actualités",
-  "someFigures": "Quelques chiffres"
+  "someFigures": "Quelques chiffres",
+  "noNews": "Aucune nouveauté"
 }

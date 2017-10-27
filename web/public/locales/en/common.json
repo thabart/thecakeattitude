@@ -535,5 +535,6 @@
   "madeForBuyersDescription": "",
   "madeForSellersDescription": "",
   "news": "News",  
-  "someFigures": "Some figures"
+  "someFigures": "Some figures",
+  "noNews": "No news"
 }

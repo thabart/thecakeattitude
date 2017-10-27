@@ -1,27 +1,50 @@
 import React, {Component} from "react";
 import { translate } from 'react-i18next';
-import { StatsService } from './services/index';
+import { StatsService, FeedService } from './services/index';
 import MainLayout from './MainLayout';
 import Constants from '../Constants';
 import Slider from "react-slick";
+import moment from 'moment';
+import $ from 'jquery';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "./styles/home.css";
 
+const defaultCount = 5;
+
 class Home extends Component {
     constructor(props) {
       super(props);
+      this._page = '1';
+      this._request = {
+        count: defaultCount
+      };
+      this.navigate = this.navigate.bind(this);
       this.handleChangeUserType = this.handleChangeUserType.bind(this);
       this.toggleTab = this.toggleTab.bind(this);
-      this.refresh = this.refresh.bind(this);
+      this.refreshFigures = this.refreshFigures.bind(this);
+      this.refreshNews = this.refreshNews.bind(this);
       this.state = {
         isFiguresLoading: false,
+        isNewsLoading: false,
         isSellerExplanationVisible : true,
         activeTab : '1',
         nbProducts: 0,
         nbServices: 0,
-        nbShops: 0
+        nbShops: 0,
+        news: [],
+        navigation: []
       };
+    }
+
+    navigate(e, name) {   // Navigate through the pages
+        e.preventDefault();
+        this._page = name;
+        var startIndex = name - 1;
+        this._request = $.extend({}, this._request, {
+            start_index: startIndex
+        });
+        this.refreshNews();
     }
 
     handleChangeUserType() {
@@ -37,7 +60,7 @@ class Home extends Component {
       });
     }
 
-    refresh() { // Refresh all the figures.
+    refreshFigures() { // Refresh all the figures.
       var self = this;
       self.setState({
         isFiguresLoading: true
@@ -59,7 +82,38 @@ class Home extends Component {
       }); 
     }
 
+    refreshNews() { // Refresh the news.
+      var self = this;
+      self.setState({
+        isNewsLoading: true
+      });
+      FeedService.search(this._request).then(function(feedServiceResult) {
+        var news = feedServiceResult['_embedded'],
+          navigation = feedServiceResult['_links']['navigation'];
+        if (!(news instanceof Array)) {
+          news = [news];
+        }
+
+        if (!(navigation instanceof Array)) {
+          navigation = [navigation];
+        }
+
+        self.setState({
+          isNewsLoading: false,
+          news: news,
+          navigation: navigation
+        });
+      }).catch(function() {
+        self.setState({
+          isNewsLoading: false,
+          news: [],
+          navigation: []
+        });
+      });
+    }
+
     render() {
+      var self = this;
       var settings = {
         dot: true,
         infinite: true,
@@ -68,6 +122,36 @@ class Home extends Component {
         slidesToScroll: 1
       };
       const {t} = this.props;
+      var news = [],
+        navigations = [];
+      if (this.state.navigation && this.state.navigation.length > 1) {
+        this.state.navigation.forEach(function (nav) {
+          navigations.push((
+              <li className="page-item">
+                <a href="#" className={self._page === nav.name ? "page-link active" : "page-link"} onClick={(e) => { self.navigate(e, nav.name); }}>
+                  {nav.name}
+                </a>
+              </li>
+          ));
+        });
+      }
+
+      if (this.state.news) {
+        this.state.news.forEach(function(n) {
+          news.push((
+            <li className="list-group-item row">
+              <div className="col-md-3">
+                <b>{n.author}</b><br/>
+                Date : {moment(n.create_datetime).format('L')}
+              </div>
+              <div className="col-md-9">
+                {n.description}
+              </div>
+            </li>
+          ));
+        });
+      }
+
       return (<MainLayout isHeaderDisplayed={true} isFooterDisplayed={true}>
         {/* Slider */}
         <section className="jumbotron slider">
@@ -221,38 +305,25 @@ class Home extends Component {
             <h2>
               {t('news')} <a href={Constants.apiUrl + '/feeditems'} target='_blank'><img src="/images/rss.png" /></a>
             </h2>
-            <ul className="list-group">
-              <li className="list-group-item row">
-                <div className="col-md-3">
-                  <b>Thierry Habart</b><br/>
-                  Date : 24-07-2017
-                </div>
-                <div className="col-md-9">
-                  Vous pouvez dorénavant vous désabonner de certains feeds.
-                </div>
-              </li>
-              <li className="list-group-item row">
-                <div className="col-md-3">
-                  <b>Laetitia Buyse</b><br/>
-                  Date : 24-07-2017
-                </div>
-                <div className="col-md-9">
-                  Paypal est maintenant supporté.
-                </div>
-              </li>
-            </ul>
-            <ul className="pagination">
-              <li className="page-item"><a className="page-link" href="#">1</a></li>
-              <li className="page-item"><a className="page-link" href="#">2</a></li>
-              <li className="page-item"><a className="page-link" href="#">3</a></li>
-            </ul>
+            { news.length === 0 && (<i>{t('noNews')}</i>) }
+            { news.length > 0 && (
+              <ul className="list-group">
+                {news}
+              </ul>
+            )}
+            {navigations.length > 0 && (
+              <ul className="pagination">
+                {navigations}
+              </ul>
+            )}
           </div>
         </section>
       </MainLayout>);
     }
 
     componentDidMount() {
-      this.refresh();
+      this.refreshFigures();
+      this.refreshNews();
     }
 }
 
