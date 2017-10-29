@@ -1,6 +1,7 @@
 game.ShopScreen = me.ScreenObject.extend({
     onResetEvent: function() {
-      me.levelDirector.loadLevel("map");
+       me.levelDirector.loadLevel("map");
+      // me.levelDirector.loadLevel("coffee_shop_map");
       this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
       var collisionLayer = new PF.Grid(this.refLayer.rows - Constants.Layers.Ground.Position.Row, this.refLayer.cols - Constants.Layers.Ground.Position.Col); // Construct the collision layer.
       ShopStore.setCollisionLayer(collisionLayer);

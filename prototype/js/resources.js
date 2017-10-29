@@ -10,6 +10,13 @@ var g_ressources = [
     { name: "wall_left", type: "image", src: "resources/wall_left.png" },
     { name: "gallery_n10", type: "image", src: "resources/gallery_n10.gif" },
     { name: "floor", type: "image", src: "resources/floor.png" },
+    { name: "coffee_shop_map", type: "tmx", src: "resources/coffee-house/habbo-coffee-house.tmx" }, // Load the COFFEE SHOP MAP.
+    { name: "wood-floor", type: "image", src: "resources/coffee-house/wood-floor.png" },
+    { name: "brick", type: "image", src: "resources/coffee-house/brick.png" },
+    { name: "window", type: "image", src: "resources/coffee-house/window.png" },
+    { name: "coffee-wall-right", type: "image", src: "resources/coffee-house/coffee-wall-right.png" },
+    { name: "coffee-table", type: "image", src: "resources/coffee-house/coffee-table.png" },
+    { name: "plant", type: "image", src: "resources/coffee-house/plant.png" },
     { name: "executive_table", type: "image", src: "resources/entities/furnitures/executive/table.gif" }, // Load the furnitures.
     { name: "executive_desk", type: "image", src: "resources/entities/furnitures/executive/desk.gif" },
     { name: "glass_table", type: "image", src: "resources/entities/furnitures/glass/table.gif" },
