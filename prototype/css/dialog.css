@@ -59,20 +59,39 @@ ul.tabs li.active
     box-shadow: inset 2px 2px 1px #fff;
 }
 
-/* BLUE BOX */
-.blue-modal {
+.modal {
   position: absolute;
-  left: 50%;
-  top: 50%;
+  display: table;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;  
+  background-color: rgba(14, 14, 14, 0.33);
+  z-index: 10000;
 }
 
-.blue-modal > .top,
-.blue-modal > .top:before
+.modal.center > .container {
+  display: table-cell;
+  vertical-align: middle
+}
+
+.modal.lg .content {  
+  width: 650px;
+}
+
+.modal.center .content {
+  margin: 0 auto;
+} 
+
+
+/* BLUE BOX */
+.modal.blue .content > .top,
+.modal.blue .content > .top:before
 {
   height: 33px;
 }
 
-.blue-modal > .top {
+.modal.blue .content > .top {
   position: relative;
   background: url('../img/window/blue_modal/topLeftCorner.png') left top no-repeat,
     url('../img/window/blue_modal/topRightCorner.png') right top no-repeat;
@@ -81,7 +100,7 @@ ul.tabs li.active
   color: white;
 }
 
-.blue-modal > .top:before {
+.modal.blue .content > .top:before {
   content: '';
   position: absolute;
   left: 9px;
@@ -91,7 +110,7 @@ ul.tabs li.active
   z-index: -1;
 }
 
-.blue-modal > .body {
+.modal.blue .content > .body {
   position: relative;
   background: url('../img/window/blue_modal/bodyStart.png') top left repeat-y,
     url('../img/window/blue_modal/bodyEnd.png') top right repeat-y;
@@ -99,28 +118,24 @@ ul.tabs li.active
   background-color: rgb(236,234,234);
 }
 
-.blue-modal > .bottom,
-.blue-modal > .bottom:before {
+.modal.blue .content > .bottom,
+.modal.blue .content > .bottom:before {
   height: 9px;
 }
 
-.blue-modal > .bottom {
+.modal.blue .content > .bottom {
   position: relative;
   background: url('../img/window/blue_modal/bottomLeftCorner.png') left bottom no-repeat,
     url('../img/window/blue_modal/bottomRightCorner.png') right bottom no-repeat;
 }
 
-.blue-modal > .bottom:before {
+.modal.blue .content > .bottom:before {
   content: '';
   position: absolute;
   left: 9px;
   right: 9px;
   bottom: 0px;
   background: url('../img/window/blue_modal/bottomContent.png') center bottom repeat-x;
-}
-
-.blue-modal .content {
-  padding: 5px;
 }
 
 /* GRAY PANEL */
@@ -632,3 +647,5 @@ ul.tabs li.active
 .parameters-modal .actions {
   padding-top: 5px;
 }
+
+/* MENU SCREEN BOX */

@@ -63,4 +63,5 @@ select {
 .game-container {
 	display: inline-block;
 	position: relative;
+  height: 600px;
 }
