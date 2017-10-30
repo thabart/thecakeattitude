@@ -65,8 +65,7 @@ ul.tabs li.active
   width: 100%;
   height: 100%;
   left: 0;
-  top: 0;  
-  background-color: rgba(14, 14, 14, 0.33);
+  top: 0;
   z-index: 10000;
 }
 
@@ -322,12 +321,7 @@ ul.tabs li.active
 }
 
 /* CHANGE LOOK BOX */
-.changelook-box {
-  z-index: 13;
-}
-
 .changelook-box .body {
-  width: 500px;
   padding: 0px 1px 0px 1px;
 }
 

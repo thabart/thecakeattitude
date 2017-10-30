@@ -1,14 +1,13 @@
 game.PlayerEntity = me.Entity.extend({
-    init: function(col, row) {
+    init: function(col, row, opts) {
         this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(col, row);
-        var image = me.loader.getImage("player");
+        var image = me.loader.getImage(opts.pseudo);
         this.speed = 2;
         var playerWidth = 64;
         var playerHeight = 110;
         this.metadata = {
-          name: 'thabart',
-          image: '/resources/players/1_0.png'
+          name:  opts.pseudo
         };
         this.messageBubble = null; // Display the messages.
         this.messageTimeout = null;
@@ -78,6 +77,35 @@ game.PlayerEntity = me.Entity.extend({
       if (!this.informationBox || this.informationBox === null) { return; }
       $(this.informationBox).hide();
       this.informationBox = null;
+    },
+    updateSprite: function(opts) { // Update the sprite.
+      var image = me.loader.getImage(opts.pseudo);
+      var playerWidth = 64;
+      var playerHeight = 110;
+      console.log(image);
+      var texture =  new me.video.renderer.Texture(
+            { framewidth: playerWidth, frameheight: playerHeight },
+            image
+        );
+      this.renderable = texture.createAnimationFromName([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38 ,39 ]);
+      this.renderable.addAnimation("standing_down", [0]);
+      this.renderable.addAnimation("down", [1, 2, 3, 4]);
+      this.renderable.addAnimation("standing_downleft", [5]);
+      this.renderable.addAnimation("downleft", [6, 7, 8, 9]);
+      this.renderable.addAnimation("standing_left", [10]);
+      this.renderable.addAnimation("left", [11, 12, 13, 14]);
+      this.renderable.addAnimation("standing_topleft", [15]);
+      this.renderable.addAnimation("topleft", [16, 17, 18, 19]);
+      this.renderable.addAnimation("standing_top", [20]);
+      this.renderable.addAnimation("top", [21, 22, 23, 24]);
+      this.renderable.addAnimation("standing_topright", [25]);
+      this.renderable.addAnimation("topright", [26, 27, 28, 29]);
+      this.renderable.addAnimation("standing_right", [30]);
+      this.renderable.addAnimation("right", [31, 32, 33, 34]);
+      this.renderable.addAnimation("standing_downright", [35]);
+      this.renderable.addAnimation("downright", [36, 37, 38, 39]);
+      this.renderable.setCurrentAnimation("standing_down");
     },
     pointerDown: function(evt) { // Calculate the movements OR display the player informations.
       if (evt.which !== 1) { return; }

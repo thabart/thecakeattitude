@@ -24,10 +24,10 @@ var game = {
 
         me.game.world.autoSort = true;
         me.game.world.sortOn = 'y';
-        me.state.set(me.state.PLAY, new game.ShopScreen());
+        me.state.set(me.state.PLAY, new game.Screens.GameScreen());
         me.state.set(me.state.MENU, new game.MenuScreen());
         me.state.transition("fade","#FFFFFF", 250);
-        me.state.change(me.state.MENU);
+        me.state.change(me.state.MENU, "reception");
     }
 };
 
