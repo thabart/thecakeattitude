@@ -3,7 +3,6 @@ var GameStoreCl = function() {
 	var _entities = [];
 	var _selectedEntity = null;
 	var _collisionLayer = null;
-	var _currentPlayer = null;
 
 	var updateCollisions = function() {
 		for(var x = 0; x < _collisionLayer.width; x++) { // Reset the collision layer.
@@ -33,19 +32,6 @@ var GameStoreCl = function() {
 					}
 				}
 		});
-	};
-
-	this.setCurrentPlayer = function(currentPlayer) {
-		_currentPlayer = currentPlayer;
-	};
-
-	this.getCurrentPlayer = function() {
-		return _currentPlayer;
-	};
-
-	this.updateCurrentPlayer = function(player) {
-		this._currentPlayer = $.extend(this._currentPlayer, player);
-		$(this).trigger('currentPlayerUpdated');
 	};
 
 	this.updateColls = function() {
@@ -185,10 +171,6 @@ var GameStoreCl = function() {
 
 	this.listenHideShelfBoxArrived = function(callback) {
 		$(this).on('hideShelfBoxArrived', callback);
-	};
-
-	this.listenCurrentPlayerUpdated = function(callback) {
-		$(this).on('currentPlayerUpdated', callback);
 	};
 };
 

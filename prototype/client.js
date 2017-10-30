@@ -118,9 +118,9 @@ app.post('/player', function(req, res) { // Add player sprite.
 app.post('/login', function(req, res) { // Authenticate the user.
 	var body = req.body;
 	services.OpenidService.passwordAuthentication(body.login, body.password).then(function(r) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(r));
-	}).catch(function() {
+    	res.setHeader('Content-Type', 'application/json');
+    	res.send(JSON.stringify(r));
+	}).catch(function(e) {
 		res.sendStatus(401);
 	});
 });

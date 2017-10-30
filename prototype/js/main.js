@@ -27,7 +27,7 @@ var game = {
         me.state.set(me.state.PLAY, new game.Screens.GameScreen());
         me.state.set(me.state.MENU, new game.MenuScreen());
         me.state.transition("fade","#FFFFFF", 250);
-        me.state.change(me.state.MENU, "reception");
+        me.state.change(me.state.MENU);
     }
 };
 

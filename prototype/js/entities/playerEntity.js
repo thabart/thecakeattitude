@@ -2,12 +2,12 @@ game.PlayerEntity = me.Entity.extend({
     init: function(col, row, opts) {
         this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(col, row);
-        var image = me.loader.getImage(opts.pseudo);
+        var image = me.loader.getImage(opts.name);
         this.speed = 2;
         var playerWidth = 64;
         var playerHeight = 110;
         this.metadata = {
-          name:  opts.pseudo
+          name:  opts.name
         };
         this.messageBubble = null; // Display the messages.
         this.messageTimeout = null;
@@ -79,10 +79,9 @@ game.PlayerEntity = me.Entity.extend({
       this.informationBox = null;
     },
     updateSprite: function(opts) { // Update the sprite.
-      var image = me.loader.getImage(opts.pseudo);
+      var image = me.loader.getImage(opts.name);
       var playerWidth = 64;
       var playerHeight = 110;
-      console.log(image);
       var texture =  new me.video.renderer.Texture(
             { framewidth: playerWidth, frameheight: playerHeight },
             image

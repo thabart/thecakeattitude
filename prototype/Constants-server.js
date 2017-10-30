@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	ClientId: 'website',
-    ClientSecret: 'website',
-    OpenIdWellKnownConfiguration: 'http://localhost:5000/.well-known/configuration'
+	ClientId: 'game',
+    ClientSecret: 'game',
+    OpenIdWellKnownConfiguration: 'http://localhost:5001/.well-known/openid-configuration'
 };

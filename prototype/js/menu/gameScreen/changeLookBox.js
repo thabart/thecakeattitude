@@ -192,10 +192,10 @@ game.Menu.ChangeLookBox = me.Object.extend({
     $(self.changeLookBox).find('.change-look').click(function() {
       var figure = self.getUserFigure();
       $(self.changeLookBox).find('.change-look').prop('disabled', true);
-      var currentPlayer = game.Stores.GameStore.getCurrentPlayer();
+      var currentPlayer = game.Stores.UserStore.getCurrentUser();
       game.Services.PlayerService.addSprite(figure).then(function(r) {
         me.loader.load({ name: currentPlayer.pseudo, src: r.sprite, type: 'image' }, function() {
-          game.Stores.GameStore.updateCurrentPlayer({ tile: figure });
+          game.Stores.UserStore.updateCurrentUser({ figure: figure });
           $(self.changeLookBox).find('.change-look').prop('disabled', false);
         });
       }).catch(function() {

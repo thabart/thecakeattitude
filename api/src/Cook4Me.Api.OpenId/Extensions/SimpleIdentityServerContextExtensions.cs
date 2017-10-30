@@ -66,7 +66,8 @@ namespace Cook4Me.Api.OpenId.Extensions
                     new Claim { Code = Constants.Claims.HomePhoneNumber },
                     new Claim { Code = Constants.Claims.GooglePlaceId },
                     new Claim { Code = Constants.Claims.BannerImage },
-                    new Claim { Code = Constants.Claims.PaypalEmail }
+                    new Claim { Code = Constants.Claims.PaypalEmail },
+                    new Claim { Code = Constants.Claims.Figure }
                 });
             }
         }
@@ -84,6 +85,19 @@ namespace Cook4Me.Api.OpenId.Extensions
                         IsDisplayedInConsent = true,
                         Description = "access to the openid scope",
                         Type = ScopeType.ProtectedApi
+                    },
+                    new Scope
+                    {
+                        Name = "game",
+                        IsExposed = true,
+                        IsOpenIdScope = true,
+                        Description = "Access to the game profile",
+                        ScopeClaims = new List<ScopeClaim>
+                        {
+                            new ScopeClaim { ClaimCode = Constants.Claims.Figure }
+                        },
+                        Type = ScopeType.ResourceOwner,
+                        IsDisplayedInConsent = true
                     },
                     new Scope
                     {
@@ -469,6 +483,12 @@ namespace Cook4Me.Api.OpenId.Extensions
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = Constants.Claims.PaypalEmail,
                                 Value = "habarthierry@buyer.com"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = Constants.Claims.Figure,
+                                Value = "hd-209-1.ch-215-1427.cc-886-62.lg-3353-1408.sh-3035-62"
                             }
                         },
                         Password = ComputeHash("password"),
@@ -526,6 +546,12 @@ namespace Cook4Me.Api.OpenId.Extensions
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = Constants.Claims.PaypalEmail,
                                 Value = "habarthierry@first-receiver.fr"
+                            },
+                            new ResourceOwnerClaim
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                ClaimCode = Constants.Claims.Figure,
+                                Value = "hd-180-5.hr-100-40.ch-255-66.lg-280-110.sh-305-62"
                             }
                         },
                         Password = ComputeHash("password"),
@@ -629,7 +655,7 @@ namespace Cook4Me.Api.OpenId.Extensions
                         ResponseTypes = "0,1,2",
                         IdTokenSignedResponseAlg = "RS256",
                         ApplicationType = ApplicationTypes.web,
-                        RedirectionUrls = "http://localhost:3000/callback"
+                        RedirectionUrls = "http://localhost:3002/callback"
                     },
                     // Game application.
                     new Client

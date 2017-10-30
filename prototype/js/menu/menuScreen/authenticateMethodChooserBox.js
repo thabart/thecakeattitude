@@ -29,12 +29,13 @@ game.Menu.AuthenticateMethodChooserBox = me.Object.extend({
 		var self = this;
 		$(self.authenticateMethodChooserBox).find('.anonymous_auth').submit(function(e) {
 			e.preventDefault();
+			var pseudo = $(self.authenticateMethodChooserBox).find('input[name="pseudo"]').val();
 			var player = {
-				pseudo : 'thabart',
-				tile: 'hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61'
+				name : pseudo,
+				figure: 'hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61'
 			};
-			me.loader.load({ name: player.pseudo, src: 'resources/players/'+player.tile+'/sprite.png', type: 'image' }, function() {
-				game.Stores.GameStore.setCurrentPlayer(player);
+			me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
+				game.Stores.UserStore.setCurrentUser(player);
 				game.Stores.MenuStore.displayMenu();
 			});
 		});

@@ -30,5 +30,8 @@ game.Menu.UpRightOptions = me.Object.extend({
     $(this.options).find('.parameters').click(function() {
       self.parametersModal.toggle();
     });
+    $(this.options).find('.quit').click(function() {
+        me.state.change(me.state.MENU);
+    });
   }
 });

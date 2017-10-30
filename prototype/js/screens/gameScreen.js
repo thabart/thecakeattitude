@@ -6,7 +6,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         { name: "reception",  level: "coffee_shop_map", isEditable: false },
         { name: "shop",  level: "shop_map", isEditable: false }
       ];
-      var currentPlayer = game.Stores.GameStore.getCurrentPlayer();
+      var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var map = mappingLevelToMap.filter(function(m) { return m.name === key; })[0];
        me.levelDirector.loadLevel(map.level);
       self.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
@@ -14,7 +14,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       ShopStore.setCollisionLayer(collisionLayer);
       var movableContainer = new game.MovableContainer();
       var gameMenu = new game.Menu.GameMenu();
-      self.currentPlayer = new game.PlayerEntity(5, 5, currentPlayer);
+      self.currentPlayer = new game.PlayerEntity(1, 1, currentPlayer);
       var tileSelector = new game.TileSelectorEntity(0, 0);
       var floorSelector = new game.FloorEntitySelector();
       var wallSelector =  new game.WallEntitySelector();
@@ -31,8 +31,8 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       self.handlePointerDown = me.input.registerPointerEvent("pointerdown", me.game.viewport, function (event) {
         me.event.publish("pointerdown", [ event ]);
       }, false);
-      game.Stores.GameStore.listenCurrentPlayerUpdated(function() {
-        var currentPlayer = game.Stores.GameStore.getCurrentPlayer();
+      game.Stores.UserStore.listenCurrentUserChanged(function() {
+        var currentPlayer = game.Stores.UserStore.getCurrentUser();
         self.currentPlayer.updateSprite(currentPlayer);
       });
     },

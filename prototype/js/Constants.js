@@ -3,15 +3,15 @@ var Constants = {
     Ground : {
       Name: "Ground",
       Position: {
-        Row: 5,
-        Col: 5
+        Row: 1,
+        Col: 1
       }
     },
     Wall: {
       Name: "Walls",
       Position: {
-        Row: 4,
-        Col: 4
+        Row: 0,
+        Col: 0
       }
     }
   },
@@ -23,5 +23,10 @@ var Constants = {
   Interactions: {
     Shelf: "Shelf"
   },
-  playerZIndex: 7
+  playerZIndex: 7,
+  sessionName: "shopingame-game",
+  openIdUrl: "http://localhost:5001",
+  userClaims : 'http://localhost:5001/users/claims',
+  callbackUrl: "http://localhost:3002/callback",
+  clientId : "game"
 };

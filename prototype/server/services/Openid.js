@@ -1,4 +1,5 @@
-var ConstantsServer = require('../../Constants-server');var Promise = require('bluebird');
+var ConstantsServer = require('../../Constants-server');
+var Promise = require('bluebird');
 var http = require('http');
 var Client = require('./Client');
 

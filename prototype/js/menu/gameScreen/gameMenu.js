@@ -1,18 +1,24 @@
 game.Menu = game.Menu || {};
 game.Menu.GameMenu = me.Object.extend({
   init: function() {
-    this.inventoryBox = new game.Menu.InventoryBox();
+    var self = this;
+    self.inventoryBox = new game.Menu.InventoryBox();
     new game.Menu.ManageEntityBox();
     new game.Menu.InformationBox();
     new game.Menu.ActionsBox();
     new game.Menu.ChatForm();
     new game.Menu.UpRightOptions();
     new game.Menu.ShelfBox();
-    this.changeLook = new game.Menu.ChangeLookBox();
-    this.footer = $("<div id='footer'></div>");
-    $(document.body).append(this.footer);
-    this.addUserSubMenu();
-    this.addMenu();
+    self.changeLook = new game.Menu.ChangeLookBox();
+    self.footer = $("<div id='footer'></div>");
+    game.Stores.UserStore.listenCurrentUserChanged(function() {
+      var currentPlayer = game.Stores.UserStore.getCurrentUser();
+      var image = me.loader.getImage(currentPlayer.name);
+      $(self.footer).find('.user').css('background', 'url('+image.src+') -5px -790px no-repeat');
+    });
+    $(document.body).append(self.footer);
+    self.addUserSubMenu();
+    self.addMenu();
     $(this.footer).i18n();
   },
   addUserSubMenu: function() { // Add sub menu.
