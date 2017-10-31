@@ -55,10 +55,7 @@ game.Menu.AuthenticateMethodChooserBox = me.Object.extend({
 				name : pseudo,
 				figure: 'hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61'
 			};
-			me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
-				game.Stores.UserStore.setCurrentUser(player);
-				me.state.change(me.state.PLAY, "reception");
-			});
+			game.Stores.UserStore.setCurrentUser(player);
 		});
 		$(self.authenticateMethodChooserBox).find('.authenticate').click(function() {
 			game.Stores.MenuStore.displayAuthentication();

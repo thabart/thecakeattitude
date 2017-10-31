@@ -75,7 +75,7 @@ game.PlayerEntity = me.Entity.extend({
     hidePseudo: function() { // Hide the pseudo.
       $('html,body').css( 'cursor', 'default');
       if (!this.informationBox || this.informationBox === null) { return; }
-      $(this.informationBox).hide();
+      $(this.informationBox).remove();
       this.informationBox = null;
     },
     updateSprite: function(opts) { // Update the sprite.
@@ -236,6 +236,7 @@ game.PlayerEntity = me.Entity.extend({
         // tile = this.refLayer.getTile(posX + this.diamondShape.getBounds().width / 2, posY - this.diamondShape.getBounds().height / 2);
       }
 
+      /*
       if (!tile) {
         tile = {};
         if (this.currentTile.col === Constants.Layers.Ground.Position.col) {
@@ -245,6 +246,13 @@ game.PlayerEntity = me.Entity.extend({
         if (this.currentTile.row === Constants.Layers.Ground.Position.row) {
           tile.row = Constants.Layers.Ground.Position.row;
         }
+      }
+      */
+
+      if (!tile) {
+        this.currentMvt = this.movements.length;
+        this.renderable.setCurrentAnimation("standing_" + mvt);
+        return;
       }
 
       if ((mvt === 'down' && tile.row === this.currentTile.row + 1 && tile.col === this.currentTile.col + 1) ||
