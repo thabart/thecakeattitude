@@ -15,7 +15,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       var movableContainer = new game.MovableContainer();
       var gameMenu = new game.Menu.GameMenu();
       self.currentPlayer = new game.PlayerEntity(1, 1, currentPlayer);
-      var tileSelector = new game.TileSelectorEntity(0, 0);
+      self.tileSelector = new game.TileSelectorEntity(0, 0);
       var floorSelector = new game.FloorEntitySelector();
       var wallSelector =  new game.WallEntitySelector();
       var furnitureSelector = new game.FurnitureEntitySelector();
@@ -23,7 +23,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         "container": movableContainer
       });
       me.game.world.addChild(movableContainer);
-      me.game.world.addChild(tileSelector, Constants.playerZIndex - 1);
+      me.game.world.addChild(self.tileSelector, Constants.playerZIndex - 1);
       me.game.world.addChild(self.currentPlayer);
       self.handlePointerMove = me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
         me.event.publish("pointermove", [ event ]);
@@ -39,7 +39,11 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
     onDestroyEvent: function() {
       var self = this;
+      self.tileSelector.destroy();
+      /*
+      var self = this;
       me.event.unsubscribe(self.handlePointerMove);
       me.event.unsubscribe(self.handlePointerDown);
+      */
     }
 });

@@ -17,7 +17,7 @@ game.TileSelectorEntity = me.Entity.extend({
         this.body.setCollisionMask(
             me.collision.types.PLAYER_OBJECT
         );
-        me.event.subscribe('pointermove', this.pointerMove.bind(this));
+        this.pointerMoveSub = me.event.subscribe('pointermove', this.pointerMove.bind(this));
         this.renderable = texture.createAnimationFromName([0]);
         this.renderable.addAnimation("stay", [0]);
         this.renderable.setCurrentAnimation("stay");
@@ -41,5 +41,8 @@ game.TileSelectorEntity = me.Entity.extend({
 
       this._super(me.Entity, "update", [dt]);
       return true;
+    },
+    destroy: function() {
+      me.event.unsubscribe(this.pointerMoveSub);
     }
 });

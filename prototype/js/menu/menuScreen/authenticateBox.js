@@ -7,15 +7,54 @@ game.Menu.AuthenticateBox = me.Object.extend({
 					"<div class='top'>"+
 						"<span data-i18n='authenticate_box_title'></span>"+
 					"</div>"+
-					"<div class='body'>"+
+					"<div class='body' style='padding: 5px;'>"+
 						"<form class='local-login'>"+
-							"<label data-i18n='login'></label>"+
-							"<input type='text' name='login' />"+
-							"<label data-i18n='password'></label>"+
-							"<input type='password' name='password' />"+
-							"<button class='button button-blue' data-i18n='login'></button>"+
-						"</form>"+
-						"<button class='button button-blue external-login' data-i18n='use_external_idproviders'></button>"+
+							"<div class='gray-panel col-6'>"+
+								"<div class='top'></div>"+
+								"<div class='body'>"+
+									"<table>"+
+										"<tbody>"+
+											"<tr>"+
+												"<td><label data-i18n='login'></label></td>"+
+												"<td>"+
+													"<div class='input edit'>"+
+														"<div class='top'></div>"+
+														"<div class='body'>"+
+															"<input type='text' name='login' />"+
+														"</div>"+
+														"<div class='bottom'></div>"+
+													"</div>"+
+												"</td>"+
+											"</tr>"+
+											"<tr>"+
+												"<td><label data-i18n='password'></label></td>"+
+												"<td>"+
+													"<div class='input edit'>"+
+														"<div class='top'></div>"+
+														"<div class='body'>"+
+															"<input type='password' name='password' />"+
+														"</div>"+
+														"<div class='bottom'></div>"+
+													"</div>"+
+												"</td>"+
+											"</tr>"+
+										"</tbody>"+
+									"</table>"+
+									"<button class='button button-blue' data-i18n='login'></button>"+
+								"</div>"+
+								"<div class='bottom'></div>"+
+							"</div>"+
+							"<div class='gray-panel col-4 offset-2'>"+
+								"<div class='top'></div>"+
+								"<div class='body'>"+
+									"<button class='button button-blue external-login' data-i18n='use_external_idproviders'></button>"+
+								"</div>"+
+								"<div class='bottom'></div>"+
+							"</div>"+
+							"<div style='padding-top: 5px;'>"+
+								"<button class='button button-blue back' data-i18n='back'></button>"+
+							"</div>"+
+						"</form>"+						
 					"</div>"+
 					"<div class='body loader' style='display: none;'>"+
 						"<span data-i18n='loading'></span>"+
@@ -91,6 +130,9 @@ game.Menu.AuthenticateBox = me.Object.extend({
 					setAuthenticatedUser(accessToken);
 				}
 			}, 1000);
+		});
+		$(self.authenticateBox).find('.back').click(function() { // User clicks on the back button.
+			game.Stores.MenuStore.displayAuthenticateMethodChooserBox();
 		});
 	},
 	destroy: function() {

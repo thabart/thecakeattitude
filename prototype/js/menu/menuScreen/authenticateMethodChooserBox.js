@@ -7,14 +7,35 @@ game.Menu.AuthenticateMethodChooserBox = me.Object.extend({
 					"<div class='top'>"+
 						"<span data-i18n='authenticate_box_title'></span>"+
 					"</div>"+
-					"<div class='body'>"+
-						"<form class='anonymous_auth'>"+
-							"<label data-i18n='anonymous'></label>"+
-							"<label data-i18n='pseudo'></label>"+
-							"<input type='text' name='pseudo' />"+
-							"<button class='button button-blue' data-i18n='enter'></button>"+
-						"</form>"+
-						"<button class='button button-blue authenticate' data-i18n='authenticate'></button>"+
+					"<div class='body' style='padding: 5px;'>"+
+						"<div class='col-6'>"+
+							"<div class='gray-panel'>"+
+								"<div class='top'></div>"+
+								"<div class='body'>"+
+									"<form class='anonymous_auth'>"+
+										"<label data-i18n='pseudo'></label>"+
+										"<div class='input edit'>"+
+               								"<div class='top'></div>"+
+               								"<div class='body'>"+
+												"<input type='text' name='pseudo' />"+
+											"</div>"+
+											"<div class='bottom'></div>"+
+										"</div>"+
+										"<button class='button button-blue' data-i18n='enter'></button>"+
+									"</form>"+
+								"</div>"+
+								"<div class='bottom'></div>"+
+							"</div>"+
+						"</div>"+
+						"<div class='col-4 offset-2'>"+
+							"<div class='gray-panel'>"+
+								"<div class='top'></div>"+
+								"<div class='body'>"+
+									"<button class='button button-blue authenticate' data-i18n='authenticate'></button>"+
+								"</div>"+
+								"<div class='bottom'></div>"+
+							"</div>"+
+						"</div>"+
 					"</div>"+
 					"<div class='bottom'>"+
 					"</div>"+
@@ -36,7 +57,7 @@ game.Menu.AuthenticateMethodChooserBox = me.Object.extend({
 			};
 			me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
 				game.Stores.UserStore.setCurrentUser(player);
-				game.Stores.MenuStore.displayMenu();
+				me.state.change(me.state.PLAY, "reception");
 			});
 		});
 		$(self.authenticateMethodChooserBox).find('.authenticate').click(function() {

@@ -27,7 +27,14 @@ var game = {
         me.state.set(me.state.PLAY, new game.Screens.GameScreen());
         me.state.set(me.state.MENU, new game.MenuScreen());
         me.state.transition("fade","#FFFFFF", 250);
-        me.state.change(me.state.MENU);
+        var accessToken = sessionStorage.getItem(Constants.sessionName);
+        game.Services.UserService.getClaims(accessToken).then(function(claims) {
+            game.Stores.UserStore.setCurrentUser(claims);
+            me.state.change(me.state.PLAY, "reception");
+        }).catch(function() {
+            sessionStorage.removeItem(Constants.sessionName);
+            me.state.change(me.state.MENU);
+        });
     }
 };
 
