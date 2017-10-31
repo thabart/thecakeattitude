@@ -41,5 +41,8 @@ game.Menu.ParametersModal = me.Object.extend({
         $(document.body).i18n();
       });
     });
+  },
+  destroy: function() {
+    if (this.parametersModal) $(this.parametersModal).remove();
   }
 });

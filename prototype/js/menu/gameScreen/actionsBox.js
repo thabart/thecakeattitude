@@ -12,31 +12,31 @@ game.Menu.ActionsBox = me.Object.extend({
       this.launcher = new game.InteractionLauncher();
       this.addListeners();
       $(this.actions).hide();
-      ShopStore.listenDisplayActionsArrived(this.display.bind(this)); // Display entity actions.
-      ShopStore.hideDisplayActionsArrived(this.hide.bind(this));
+      game.Stores.GameStore.listenDisplayActionsArrived(this.display.bind(this)); // Display entity actions.
+      game.Stores.GameStore.hideDisplayActionsArrived(this.hide.bind(this));
   },
   addListeners: function() {
     var self = this;
     $(this.actions).find('.move').click(function() {
-      var selectedEntity = ShopStore.getSelectedEntity();
+      var selectedEntity = game.Stores.GameStore.getSelectedEntity();
       var name = selectedEntity.getName();
       var flipped = selectedEntity.flipped;
       var selector = selectedEntity.selector;
-      ShopStore.setActiveEntity(name, selector, flipped);
-      ShopStore.removeEntity(selectedEntity);
+      game.Stores.GameStore.setActiveEntity(name, selector, flipped);
+      game.Stores.GameStore.removeEntity(selectedEntity);
       $(self.actions).hide();
-      ShopStore.hideInformation();
+      game.Stores.GameStore.hideInformation();
     });
     $(this.actions).find('.remove').click(function() {
-      var selectedEntity = ShopStore.getSelectedEntity();
-      ShopStore.removeEntity(selectedEntity);
+      var selectedEntity = game.Stores.GameStore.getSelectedEntity();
+      game.Stores.GameStore.removeEntity(selectedEntity);
       $(self.actions).hide();
-      ShopStore.hideInformation();
+      game.Stores.GameStore.hideInformation();
     });
     $(this.actions).find('.turn').click(function() {
-      var selectedEntity = ShopStore.getSelectedEntity();
+      var selectedEntity = game.Stores.GameStore.getSelectedEntity();
       selectedEntity.flip();
-      ShopStore.updateColls();
+      game.Stores.GameStore.updateColls();
       me.game.repaint();
     });
     $(this.actions).find('.translate').click(function() {
@@ -44,7 +44,7 @@ game.Menu.ActionsBox = me.Object.extend({
       $(self.mgfurniture).show();
     });
     $(this.actions).find('.use').click(function() {
-      var selectedEntity = ShopStore.getSelectedEntity();
+      var selectedEntity = game.Stores.GameStore.getSelectedEntity();
       var interaction = selectedEntity.metadata.interaction;
       self.launcher.launch(interaction);
     });
@@ -60,5 +60,10 @@ game.Menu.ActionsBox = me.Object.extend({
   },
   hide: function() {
     $(this.actions).hide();
+  },
+  destroy: function() {
+    if (this.actions) $(this.actions).remove();
+    if (this.display) game.Stores.GameStore.unsubscribeDisplayActionsArrived(this.display.bind(this));
+    if (this.hide) game.Stores.GameStore.unsubscribeHideDisplayActionsArrived(this.hide.bind(this));
   }
 });

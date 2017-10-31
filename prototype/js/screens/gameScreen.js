@@ -12,17 +12,17 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       self.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
       var collisionLayer = new PF.Grid(self.refLayer.rows - Constants.Layers.Ground.Position.Row, self.refLayer.cols - Constants.Layers.Ground.Position.Col); // Construct the collision layer.
       ShopStore.setCollisionLayer(collisionLayer);
-      var movableContainer = new game.MovableContainer();
-      var gameMenu = new game.Menu.GameMenu();
+      self.movableContainer = new game.MovableContainer();
+      self.gameMenu = new game.Menu.GameMenu();
       self.currentPlayer = new game.PlayerEntity(1, 1, currentPlayer);
       self.tileSelector = new game.TileSelectorEntity(0, 0);
-      var floorSelector = new game.FloorEntitySelector();
-      var wallSelector =  new game.WallEntitySelector();
-      var furnitureSelector = new game.FurnitureEntitySelector();
+      self.floorSelector = new game.FloorEntitySelector();
+      self.wallSelector =  new game.WallEntitySelector();
+      self.furnitureSelector = new game.FurnitureEntitySelector();
       me.game.world.getChildByName('Building', {
-        "container": movableContainer
+        "container": self.movableContainer
       });
-      me.game.world.addChild(movableContainer);
+      me.game.world.addChild(self.movableContainer);
       me.game.world.addChild(self.tileSelector, Constants.playerZIndex - 1);
       me.game.world.addChild(self.currentPlayer);
       self.handlePointerMove = me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
@@ -39,11 +39,12 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
     onDestroyEvent: function() {
       var self = this;
+      self.movableContainer.destroy();
       self.tileSelector.destroy();
-      /*
-      var self = this;
-      me.event.unsubscribe(self.handlePointerMove);
-      me.event.unsubscribe(self.handlePointerDown);
-      */
+      self.floorSelector.destroy();
+      self.wallSelector.destroy();
+      self.furnitureSelector.destroy();
+      self.gameMenu.destroy();
+      self.currentPlayer.destroy();
     }
 });

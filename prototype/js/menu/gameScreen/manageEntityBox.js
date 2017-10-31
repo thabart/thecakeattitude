@@ -19,7 +19,7 @@ game.Menu.ManageEntityBox = me.Object.extend({
   },
   addListeners: function() {
     $(this.mgfurniture).find('.abs').on('input', function(e) {
-      var selectedEntity = ShopStore.getSelectedEntity();
+      var selectedEntity = game.Stores.GameStore.getSelectedEntity();
       if (!selectedEntity) {
         return;
       }
@@ -29,7 +29,7 @@ game.Menu.ManageEntityBox = me.Object.extend({
       me.game.repaint();
     });
     $(this.mgfurniture).find('.ord').on('input', function(e) {
-      var selectedEntity = ShopStore.getSelectedEntity();
+      var selectedEntity = game.Stores.GameStore.getSelectedEntity();
       if (!selectedEntity) {
         return;
       }
@@ -41,5 +41,8 @@ game.Menu.ManageEntityBox = me.Object.extend({
     $(this.mgfurniture).find('.close').click(function() {
       $(self.mgfurniture).hide();
     });
+  },
+  destroy: function() {
+    if (this.mgfurniture) $(this.mgfurniture).remove();
   }
 });

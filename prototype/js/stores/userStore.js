@@ -5,6 +5,7 @@ var UserStoreCl = function() {
 
 	this.setCurrentUser = function(currentUser) {
 		this._currentUser = currentUser;
+		$(this).trigger('currentUserChanged');
 	};
 
 	this.getCurrentUser = function() {

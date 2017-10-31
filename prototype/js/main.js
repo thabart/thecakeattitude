@@ -28,9 +28,11 @@ var game = {
         me.state.set(me.state.MENU, new game.MenuScreen());
         me.state.transition("fade","#FFFFFF", 250);
         var accessToken = sessionStorage.getItem(Constants.sessionName);
-        game.Services.UserService.getClaims(accessToken).then(function(claims) {
-            game.Stores.UserStore.setCurrentUser(claims);
-            me.state.change(me.state.PLAY, "reception");
+        game.Services.UserService.getClaims(accessToken).then(function(player) {
+            game.Stores.UserStore.setCurrentUser(player);            
+            me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
+                me.state.change(me.state.PLAY, "reception");
+            });
         }).catch(function() {
             sessionStorage.removeItem(Constants.sessionName);
             me.state.change(me.state.MENU);
@@ -39,7 +41,6 @@ var game = {
 };
 
 
-//bootstrap :)
 window.onReady(function() {
     // document.oncontextmenu = document.body.oncontextmenu = function() { return false; }
     var i18n = $.i18n(); // Initialize translations.

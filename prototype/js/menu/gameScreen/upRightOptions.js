@@ -31,7 +31,11 @@ game.Menu.UpRightOptions = me.Object.extend({
       self.parametersModal.toggle();
     });
     $(this.options).find('.quit').click(function() {
+        sessionStorage.removeItem(Constants.sessionName);
         me.state.change(me.state.MENU);
     });
+  },
+  destroy: function() {
+      if (this.options) $(this.options).remove();
   }
 });

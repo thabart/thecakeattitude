@@ -16,8 +16,11 @@ game.Menu.ChatForm = me.Object.extend({
     $(self.chatForm).submit(function(e) {
       e.preventDefault();
       var message = $(self.chatForm).find('input').val();
-      ShopStore.displayMessage(message);
+      game.Stores.GameStore.displayMessage(message);
       $(self.chatForm).find('input').val('');
     });
+  },
+  destroy: function() {
+    if (this.chatForm) $(this.chatForm).remove();
   }
 });

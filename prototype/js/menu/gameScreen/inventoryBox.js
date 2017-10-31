@@ -238,7 +238,7 @@ game.Menu.InventoryBox = me.Object.extend({
       $(this.inventory).find('.tabs li:first-child').click();
       $(this.inventory).hide();
       $(this.inventory).draggable({ "handle": ".top" });
-      ShopStore.listenActiveEntityChanged(this.updateActiveEntity.bind(this));
+      game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntity.bind(this));
   },
   addListeners: function() {
     this.listenTheme();
@@ -270,7 +270,7 @@ game.Menu.InventoryBox = me.Object.extend({
     "</div>");
     $(entityInformation).append(n);
     $(n).find('.button').click(function() {
-      ShopStore.setActiveEntity($(elt).data('furniture'), $(elt).data('selector'), $(elt).data('interaction'), false);
+      game.Stores.GameStore.setActiveEntity($(elt).data('furniture'), $(elt).data('selector'), $(elt).data('interaction'), false);
     });
     $(entityInformation).i18n();
   },
@@ -352,9 +352,13 @@ game.Menu.InventoryBox = me.Object.extend({
     $(this.inventory).show();
   },
   updateActiveEntity: function() {
-    var regionName = ShopStore.getActiveEntity();
+    var regionName = game.Stores.GameStore.getActiveEntity();
     if (regionName) { return; }
     if (!this.inventory) { return; }
     $(this.inventory).find('.items > li').removeClass('active');
+  },
+  destroy: function() {
+    if (this.inventory) $(this.inventory).remove();
+    if (this.update) game.Stores.GameStore.unsubscribeActiveEntityChanged(this.update.bind(this));   
   }
 });

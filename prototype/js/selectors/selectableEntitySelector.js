@@ -1,19 +1,19 @@
 game.SelectableEntitySelector = me.Object.extend({
 	init: function(refLayerName, selectorName) {
 		this.selectorName = selectorName;
-    this.refLayer = me.game.world.getChildByName(refLayerName)[0];
+    	this.refLayer = me.game.world.getChildByName(refLayerName)[0];
 		this.sprite = null;
-    me.event.subscribe("pointermove", this.pointerMove.bind(this));
-    me.event.subscribe('pointerdown', this.pointerDown.bind(this));
-		ShopStore.listenActiveEntityChanged(this.updateActiveEntity.bind(this));
-		ShopStore.listenSelectedEntityChanged(this.updateSelectedEntity.bind(this));
+	    this.pointerMoveSub = me.event.subscribe("pointermove", this.pointerMove.bind(this));
+	    this.pointerDownSub = me.event.subscribe('pointerdown', this.pointerDown.bind(this));
+		game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntity.bind(this));
+		game.Stores.GameStore.listenSelectedEntityChanged(this.updateSelectedEntity.bind(this));
 	},
-  pointerMove : function (evt) { // Move the entity.
+	pointerMove : function (evt) { // Move the entity.
 		if (this.sprite) {
 			this.moveEntity(evt);
 			return;
 		}
-  },
+	},
 	pointerDown: function(evt) { // Add the entity.
 		if (evt.which !== 1) { return; }
 		if (evt.handled) { return; }
@@ -134,5 +134,11 @@ game.SelectableEntitySelector = me.Object.extend({
 		}
 
 		me.game.world.addChild(this.sprite);
+	},
+	destroy: function() { // Unsubscribe the events.
+      	me.event.unsubscribe(this.pointerMoveSub);
+      	me.event.unsubscribe(this.pointerDownSub);
+      	game.Stores.GameStore.unsubscribeActiveEntityChanged(this.updateActiveEntity.bind(this));
+		game.Stores.GameStore.unsubscribeSelectedEntityChanged(this.updateSelectedEntity.bind(this));
 	}
 });

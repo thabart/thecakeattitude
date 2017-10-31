@@ -224,5 +224,8 @@ game.Menu.ChangeLookBox = me.Object.extend({
   },
   toggle: function() { // Toggle the box.
     $(this.changeLookBox).toggle();
+  },
+  destroy: function() {
+    if (this.changeLookBox) $(this.changeLookBox).remove();
   }
 });

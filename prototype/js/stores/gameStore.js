@@ -133,44 +133,88 @@ var GameStoreCl = function() {
 		$(this).on('activeEntityChanged', callback);
 	};
 
+	this.unsubscribeActiveEntityChanged   = function(callback) {
+		$(this).off('activeEntityChanged', callback);
+	};
+
 	this.listenSelectedEntityChanged = function(callback) {
 		$(this).on('selectedEntityChanged', callback);
+	};
+
+	this.unsubscribeSelectedEntityChanged  = function(callback) {
+		$(this).off('selectedEntityChanged', callback);
 	};
 
 	this.listenDisplayInformationArrived = function(callback) {
 		$(this).on('displayInformationArrived', callback);
 	};
 
+	this.unsubscribeDisplayInformationArrived  = function(callback) {
+		$(this).off('displayInformationArrived', callback);
+	};
+
 	this.listenHideInformationArrived = function(callback) {
 		$(this).on('hideInformationArrived', callback);
+	};
+
+	this.unsubscribeHideInformationArrived  = function(callback) {
+		$(this).off('hideInformationArrived', callback);
 	};
 
 	this.listenDisplayActionsArrived = function(callback) {
 		$(this).on('displayActionsArrived', callback);
 	};
 
+	this.unsubscribeDisplayActionsArrived  = function(callback) {
+		$(this).off('displayActionsArrived', callback);
+	};
+
 	this.hideDisplayActionsArrived = function(callback) {
 		$(this).on('hideActionsArrived', callback);
+	};
+
+	this.unsubscribeHideDisplayActionsArrived = function(callback) {
+		$(this).off('hideActionsArrived', callback);
 	};
 
 	this.listenMessageArrived = function(callback) {
 		$(this).on('messageArrived', callback);
 	};
 
+	this.unsubscribeMessageArrived = function(callback) {
+		$(this).off('messageArrived', callback);
+	};
+
 	this.listenDisplayPlayerPseudoArrived = function(callback) {
 		$(this).on('displayPlayerPseudoArrived', callback);
+	};
+
+	this.unsubscribeDisplayPlayerPseudoArrived = function(callback) {
+		$(this).off('displayPlayerPseudoArrived', callback);
 	};
 
 	this.listenHidePlayerPseudoArrived = function(callback) {
 		$(this).on('hidePlayerPseudoArrived', callback);
 	};
 
+	this.unsubscribeHidePlayerPseudoArrived = function(callback) {
+		$(this).off('hidePlayerPseudoArrived', callback);
+	};
+
 	this.listenDisplayShelfBoxArrived = function(callback) {
 		$(this).on('displayShelfBoxArrived', callback);
 	};
 
+	this.unsubscribeDisplayShelfBoxArrived = function(callback) {
+		$(this).off('displayShelfBoxArrived', callback);
+	};
+
 	this.listenHideShelfBoxArrived = function(callback) {
-		$(this).on('hideShelfBoxArrived', callback);
+		$(this).on('listenHideShelfBoxArrived	', callback);
+	};
+
+	this.unsubscribeHideShelfBoxArrived = function(callback) {
+		$(this).off('hideShelfBoxArrived', callback);
 	};
 };
 

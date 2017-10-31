@@ -429,6 +429,7 @@ namespace Cook4Me.Api.OpenId.Controllers
             claims.Add(Constants.Claims.MobilePhoneNumber, TryGetValue(resourceOwner.Claims, Constants.Claims.MobilePhoneNumber));
             claims.Add(Constants.Claims.BannerImage, TryGetValue(resourceOwner.Claims, Constants.Claims.BannerImage));
             claims.Add(Constants.Claims.PaypalEmail, TryGetValue(resourceOwner.Claims, Constants.Claims.PaypalEmail));
+            claims.Add(Constants.Claims.Figure, TryGetValue(resourceOwner.Claims, Constants.Claims.Figure));
             jObj.Add(Constants.Dtos.ResourceOwner.Claims, claims);
             jObj.Add(Constants.Dtos.ResourceOwner.IsLocalAccount, resourceOwner.IsLocalAccount);
             return jObj;

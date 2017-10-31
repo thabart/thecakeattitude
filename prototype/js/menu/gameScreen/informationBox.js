@@ -10,12 +10,12 @@ game.Menu.InformationBox = me.Object.extend({
     $("#bottom-right-container").append(this.information);
     $(this.information).find('.black-close').click(function() {
       $(self.information).hide();
-      ShopStore.hideActions();
-      ShopStore.setSelectedEntity(null);
+      game.Stores.GameStore.hideActions();
+      game.Stores.GameStore.setSelectedEntity(null);
     });
     $(this.information).hide();
-    ShopStore.listenDisplayInformationArrived(this.update.bind(this)); // Display information box.
-    ShopStore.listenHideInformationArrived(this.hide.bind(this));
+    game.Stores.GameStore.listenDisplayInformationArrived(this.update.bind(this)); // Display information box.
+    game.Stores.GameStore.listenHideInformationArrived(this.hide.bind(this));
   },
   update: function(e, metadata) {
     $(this.information).find('.body').empty();
@@ -25,5 +25,10 @@ game.Menu.InformationBox = me.Object.extend({
   },
   hide: function() {
     $(this.information).hide();
+  },
+  destroy: function() {
+    if (this.information) $(this.information).remove();
+    if (this.update) game.Stores.GameStore.unsubscribeDisplayInformationArrived(this.update.bind(this)); // Display information box.
+    if (this.hide) game.Stores.GameStore.unsubscribeHideInformationArrived(this.hide.bind(this));    
   }
 });

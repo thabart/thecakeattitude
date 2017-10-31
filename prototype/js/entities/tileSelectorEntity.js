@@ -43,6 +43,6 @@ game.TileSelectorEntity = me.Entity.extend({
       return true;
     },
     destroy: function() {
-      me.event.unsubscribe(this.pointerMoveSub);
+      if (this.pointerMoveSub) me.event.unsubscribe(this.pointerMoveSub);
     }
 });

@@ -3,12 +3,12 @@ game.Menu.GameMenu = me.Object.extend({
   init: function() {
     var self = this;
     self.inventoryBox = new game.Menu.InventoryBox();
-    new game.Menu.ManageEntityBox();
-    new game.Menu.InformationBox();
-    new game.Menu.ActionsBox();
-    new game.Menu.ChatForm();
-    new game.Menu.UpRightOptions();
-    new game.Menu.ShelfBox();
+    self.manageEntityBox = new game.Menu.ManageEntityBox();
+    self.informationBox = new game.Menu.InformationBox();
+    self.actionsBox = new game.Menu.ActionsBox();
+    self.chatForm = new game.Menu.ChatForm();
+    self.upRightOptions = new game.Menu.UpRightOptions();
+    self.shelfBox = new game.Menu.ShelfBox();
     self.changeLook = new game.Menu.ChangeLookBox();
     self.footer = $("<div id='footer'></div>");
     game.Stores.UserStore.listenCurrentUserChanged(function() {
@@ -60,5 +60,18 @@ game.Menu.GameMenu = me.Object.extend({
     $(this.menu).find('.user').click(function() {
       self.userSubMenu.toggle();
     });
+  },
+  destroy: function() { // Destroy the menu.
+    this.inventoryBox.destroy();
+    this.manageEntityBox.destroy();
+    this.informationBox.destroy();
+    this.actionsBox.destroy();
+    this.chatForm.destroy();
+    this.upRightOptions.destroy();
+    this.shelfBox.destroy();
+    this.changeLook.destroy();
+    if (this.footer) $(this.footer).remove();
+    if (this.menu) $(this.menu).remove();
+    if (this.userSubMenu) $(this.userSubMenu).remove();
   }
 });

@@ -276,5 +276,8 @@ game.PlayerEntity = me.Entity.extend({
       this._super(me.Entity, "update", [dt]);
       me.game.world.sort();
       return true;
+    },
+    destroy: function() {
+      if (this.informationBox) $(this.informationBox).remove();
     }
 });

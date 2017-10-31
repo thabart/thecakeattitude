@@ -4,9 +4,9 @@ game.MovableContainer = me.Container.extend({
 		this.isDragging = false;
 		this.dragInitStartingX = 0;
 		this.dragInitStartingY = 0;
-    this.handlePointerDown = me.input.registerPointerEvent('pointerdown', me.game.viewport, this.onMouseDown.bind(this)); // Drag through the map.
-    this.handlePointerMove = me.input.registerPointerEvent('pointermove', me.game.viewport, this.onMouseMove.bind(this));
-    this.handlePointerUp = me.input.registerPointerEvent('pointerup', me.game.viewport, this.onMouseUp.bind(this));
+    	this.handlePointerDown = me.input.registerPointerEvent('pointerdown', me.game.viewport, this.onMouseDown.bind(this)); // Drag through the map.
+    	this.handlePointerMove = me.input.registerPointerEvent('pointermove', me.game.viewport, this.onMouseMove.bind(this));
+    	this.handlePointerUp = me.input.registerPointerEvent('pointerup', me.game.viewport, this.onMouseUp.bind(this));
 	},
 	onMouseDown: function(e) {
 		if (e.which !== 3) { return; }
@@ -29,5 +29,10 @@ game.MovableContainer = me.Container.extend({
 	},
 	onMouseUp: function() {
 		this.isDragging = false;
+	},
+	destroy: function() {		
+		if (this.handlePointerDown) me.event.unsubscribe(this.handlePointerDown);
+      	if (this.handlePointerMove) me.event.unsubscribe(this.handlePointerMove);
+      	if (this.handePointerUp) me.event.unsubscribe(this.handlePointerUp);
 	}
 });
