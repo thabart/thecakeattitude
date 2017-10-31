@@ -30,6 +30,7 @@ var game = {
         var accessToken = sessionStorage.getItem(Constants.sessionName);
         game.Services.UserService.getClaims(accessToken).then(function(player) {
             game.Stores.UserStore.setCurrentUser(player);            
+            player.is_visitor = false;
             me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
                 me.state.change(me.state.PLAY, "reception");
             });

@@ -193,44 +193,48 @@ game.Menu.InventoryBox = me.Object.extend({
 
         return "<li data-name='"+category.name+"' data-i18n='"+category.name+"'></li>";
       }).join('');
-      this.inventory = $("<div class='blue-modal inventory-box'>"+
-        "<div class='top'>"+
-          "Inventaire <div class='close'></div>"+
-        "</div>"+
-        "<div class='body'>"+
-          "<ul class='tabs'>"+
-            tabs +
-          "</ul>"+
+      this.inventory = $("<div class='modal blue lg inventory-box'>"+
+        "<div class='container'>"+
           "<div class='content'>"+
-            "<div class='filter'>"+
-              "<label>Type</label>"+
-              "<div class='input'>"+
-                "<div class='top'></div>"+
-                "<div class='body'>"+
-                  "<select class='type-selector'>"+
-                  "</select>"+
+            "<div class='top'>"+
+              "<span data-i18n='inventory_title'></span> <div class='close'></div>"+
+            "</div>"+
+            "<div class='body'>"+
+              "<ul class='tabs'>"+
+                tabs +
+              "</ul>"+
+              "<div class='content'>"+
+                "<div class='filter'>"+
+                  "<label>Type</label>"+
+                  "<div class='input'>"+
+                    "<div class='top'></div>"+
+                    "<div class='body'>"+
+                      "<select class='type-selector'>"+
+                      "</select>"+
+                    "</div>"+
+                    "<div class='bottom'></div>"+
+                  "</div>"+
+                  "<label data-i18n='theme'></label>"+
+                  "<div class='input'>"+
+                    "<div class='top'></div>"+
+                    "<div class='body'>"+
+                      "<select class='theme-selector'>"+
+                      "</select>"+
+                    "</div>"+
+                    "<div class='bottom'></div>"+
+                  "</div>"+
                 "</div>"+
-                "<div class='bottom'></div>"+
-              "</div>"+
-              "<label data-i18n='theme'></label>"+
-              "<div class='input'>"+
-                "<div class='top'></div>"+
-                "<div class='body'>"+
-                  "<select class='theme-selector'>"+
-                  "</select>"+
+                "<div class='entities'>"+
+                  "<ul class='items no-style furnitures'>"+
+                  "</ul>"+
+                  "<div class='entity-information'>"+
+                  "</div>"+
                 "</div>"+
-                "<div class='bottom'></div>"+
               "</div>"+
             "</div>"+
-            "<div class='entities'>"+
-              "<ul class='items no-style furnitures'>"+
-              "</ul>"+
-              "<div class='entity-information'>"+
-              "</div>"+
+            "<div class='bottom'>"+
             "</div>"+
           "</div>"+
-        "</div>"+
-        "<div class='bottom'>"+
         "</div>"+
       "</div>");
       $(document.body).append(this.inventory);
@@ -238,6 +242,7 @@ game.Menu.InventoryBox = me.Object.extend({
       $(this.inventory).find('.tabs li:first-child').click();
       $(this.inventory).hide();
       $(this.inventory).draggable({ "handle": ".top" });
+      $(this.inventory).i18n();
       game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntity.bind(this));
   },
   addListeners: function() {

@@ -3,12 +3,14 @@ game.Screens.GameScreen = me.ScreenObject.extend({
     onResetEvent: function(key) {
       var self = this;
       var mappingLevelToMap = [
-        { name: "reception",  level: "coffee_shop_map", isEditable: false },
-        { name: "shop",  level: "shop_map", isEditable: false }
+        { name: "reception",  level: "coffee_shop_map" },
+        { name: "shop",  level: "shop_map", sub: 'thabart' }
       ];
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var map = mappingLevelToMap.filter(function(m) { return m.name === key; })[0];
-       me.levelDirector.loadLevel(map.level);
+      currentPlayer.is_owner = map.sub === map.name;
+      game.Stores.UserStore.updateCurrentUser(currentPlayer);
+      me.levelDirector.loadLevel(map.level);
       self.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
       var collisionLayer = new PF.Grid(self.refLayer.rows, self.refLayer.cols); // Construct the collision layer.
       for (var col = 0; col < self.refLayer.cols; col++) {
@@ -18,7 +20,6 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         }
       }
 
-      console.log(collisionLayer);
       ShopStore.setCollisionLayer(collisionLayer);
       self.movableContainer = new game.MovableContainer();
       self.gameMenu = new game.Menu.GameMenu();

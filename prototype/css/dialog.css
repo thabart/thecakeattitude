@@ -253,13 +253,12 @@ ul.tabs li.active
 }
 
 .inventory-box .body .content .filter {
-	background-color: rgb(201,201,201);
-	border-radius: 5px;
 	padding: 5px;
 }
 
 .inventory-box .body .content .entities {
 	padding-top: 5px;
+  padding-left: 5px;
 }
 
 .inventory-box ul.items

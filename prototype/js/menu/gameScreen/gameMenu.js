@@ -2,14 +2,21 @@ game.Menu = game.Menu || {};
 game.Menu.GameMenu = me.Object.extend({
   init: function() {
     var self = this;
-    self.inventoryBox = new game.Menu.InventoryBox();
-    self.manageEntityBox = new game.Menu.ManageEntityBox();
+    var user = game.Stores.UserStore.getCurrentUser();
+    if (user.is_owner) {
+      self.inventoryBox = new game.Menu.InventoryBox();
+      self.manageEntityBox = new game.Menu.ManageEntityBox();
+    }
+
+    if (!user.is_visitor) {      
+      self.changeLook = new game.Menu.ChangeLookBox();
+    }
+
     self.informationBox = new game.Menu.InformationBox();
     self.actionsBox = new game.Menu.ActionsBox();
     self.chatForm = new game.Menu.ChatForm();
     self.upRightOptions = new game.Menu.UpRightOptions();
     self.shelfBox = new game.Menu.ShelfBox();
-    self.changeLook = new game.Menu.ChangeLookBox();
     self.footer = $("<div id='footer'></div>");
     game.Stores.UserStore.listenCurrentUserChanged(function() {
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
@@ -46,10 +53,11 @@ game.Menu.GameMenu = me.Object.extend({
     $(this.userSubMenu).i18n();
   },
   addMenu: function() { // Add the menu.
+    var user = game.Stores.UserStore.getCurrentUser();
     this.menu = $("<div id='footer'>"+
         "<ul class='no-style'>"+
-          "<li class='inventory'></li>"+
-          "<li class='user' style='background: url(/resources/players/hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61/sprite.png) -5px  -790px no-repeat;'></li>"+
+          (user.is_owner ? ("<li class='inventory'></li>") : "") +
+          (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
         "</ul>"+
       "</div>");
     $(this.footer).append(this.menu);
@@ -62,14 +70,14 @@ game.Menu.GameMenu = me.Object.extend({
     });
   },
   destroy: function() { // Destroy the menu.
-    this.inventoryBox.destroy();
-    this.manageEntityBox.destroy();
-    this.informationBox.destroy();
-    this.actionsBox.destroy();
-    this.chatForm.destroy();
-    this.upRightOptions.destroy();
-    this.shelfBox.destroy();
-    this.changeLook.destroy();
+    if (this.inventoryBox) this.inventoryBox.destroy();
+    if (this.manageEntityBox) this.manageEntityBox.destroy();
+    if (this.informationBox) this.informationBox.destroy();
+    if (this.actionsBox) this.actionsBox.destroy();
+    if (this.chatForm) this.chatForm.destroy();
+    if (this.upRightOptions) this.upRightOptions.destroy();
+    if (this.shelfBox) this.shelfBox.destroy();
+    if (this.changeLook) this.changeLook.destroy();
     if (this.footer) $(this.footer).remove();
     if (this.menu) $(this.menu).remove();
     if (this.userSubMenu) $(this.userSubMenu).remove();
