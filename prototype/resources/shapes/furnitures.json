@@ -284,6 +284,21 @@
 				"relativePosX": -47,
 				"relativePosY": -35
 			}
+		},
+		{
+			"name": "coffee-bar",
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": 0,
+				"relativePosY": 0
+			},
+			"vertical": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": 0,
+				"relativePosY": 0
+			}
 		}
 	]
 }
