@@ -24,12 +24,15 @@ var game = {
 
         me.game.world.autoSort = true;
         me.game.world.sortOn = 'y';
+
+        me.pool.register("EntryEntity", game.Entities.EntryEntity);
+
         me.state.set(me.state.PLAY, new game.Screens.GameScreen());
         me.state.set(me.state.MENU, new game.MenuScreen());
         me.state.transition("fade","#FFFFFF", 250);
         var accessToken = sessionStorage.getItem(Constants.sessionName);
         game.Services.UserService.getClaims(accessToken).then(function(player) {
-            game.Stores.UserStore.setCurrentUser(player);            
+            game.Stores.UserStore.setCurrentUser(player);
             player.is_visitor = false;
             me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
                 me.state.change(me.state.PLAY, "reception");

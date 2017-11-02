@@ -13,6 +13,9 @@ var Constants = {
         Row: 0,
         Col: 0
       }
+    },
+    Entry: {
+      Name: "EntryEntity"
     }
   },
   Selectors: {

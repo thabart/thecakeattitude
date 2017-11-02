@@ -17,6 +17,7 @@ var g_ressources = [
     { name: "coffee-wall-right", type: "image", src: "resources/coffee-house/coffee-wall-right.png" },
     { name: "coffee-table", type: "image", src: "resources/coffee-house/coffee-table.png" },
     { name: "plant", type: "image", src: "resources/coffee-house/plant.png" },
+    { name: "entry", type: "image", src: "resources/entry.png" }, // Load the entry
     { name: "executive_table", type: "image", src: "resources/entities/furnitures/executive/table.gif" }, // Load the furnitures.
     { name: "executive_desk", type: "image", src: "resources/entities/furnitures/executive/desk.gif" },
     { name: "glass_table", type: "image", src: "resources/entities/furnitures/glass/table.gif" },

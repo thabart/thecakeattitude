@@ -11,7 +11,9 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       currentPlayer.is_owner = map.sub === map.name;
       game.Stores.UserStore.updateCurrentUser(currentPlayer);
       me.levelDirector.loadLevel(map.level);
+      var entry = me.game.world.getChildByName(Constants.Layers.Entry.Name)[0];
       self.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
+      var playerCoordinates = self.refLayer.getTile(entry.pos.x, entry.pos.y);
       var collisionLayer = new PF.Grid(self.refLayer.rows, self.refLayer.cols); // Construct the collision layer.
       for (var col = 0; col < self.refLayer.cols; col++) {
         for(var row = 0; row < self.refLayer.rows; row++) {
@@ -23,7 +25,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       game.Stores.GameStore.setCollisionLayer(collisionLayer);
       self.movableContainer = new game.MovableContainer();
       self.gameMenu = new game.Menu.GameMenu();
-      self.currentPlayer = new game.PlayerEntity(5, 5, currentPlayer);
+      self.currentPlayer = new game.PlayerEntity(playerCoordinates.col, playerCoordinates.row, currentPlayer);
       self.tileSelector = new game.TileSelectorEntity(0, 0);
       self.floorSelector = new game.FloorEntitySelector();
       self.wallSelector =  new game.WallEntitySelector();
@@ -45,6 +47,8 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         self.currentPlayer.updateSprite(currentPlayer);
       };
       game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUser);
+      me.game.viewport.moveTo(self.currentPlayer.pos.x - (me.game.viewport.width / 2), self.currentPlayer.pos.y - (me.game.viewport.height / 2));
+      // me.game.viewport.focusOn(self.currentPlayer);
     },
 
     onDestroyEvent: function() {
