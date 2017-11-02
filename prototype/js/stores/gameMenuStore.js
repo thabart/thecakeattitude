@@ -13,6 +13,12 @@ var GameMenuStoreCl = function() {
 	this.listenAuthenticateMethodChooserBoxDisplayed = function(callback) {
 		$(this).on('authenticateMethodChooserBoxDisplayed', callback);
 	};
+	this.unsubscribeDisplayAuthentication = function(callback) {
+		$(this).off('authenticationDisplayed', callback);
+	};
+	this.unsubscribeAuthenticateMethodChooserBoxDisplayed = function(callback) {
+		$(this).off('authenticateMethodChooserBoxDisplayed', callback);
+	};
 };
 
 

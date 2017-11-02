@@ -34,9 +34,9 @@ game.TileSelectorEntity = me.Entity.extend({
     update: function(dt) {
       var isCollide = me.collision.check(this);
       if (isCollide) {
-        ShopStore.displayPlayerPseudo();
+        game.Stores.GameStore.displayPlayerPseudo();
       } else {
-        ShopStore.hidePlayerPseudo();
+        game.Stores.GameStore.hidePlayerPseudo();
       }
 
       this._super(me.Entity, "update", [dt]);

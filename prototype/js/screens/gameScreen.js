@@ -20,7 +20,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         }
       }
 
-      ShopStore.setCollisionLayer(collisionLayer);
+      game.Stores.GameStore.setCollisionLayer(collisionLayer);
       self.movableContainer = new game.MovableContainer();
       self.gameMenu = new game.Menu.GameMenu();
       self.currentPlayer = new game.PlayerEntity(5, 5, currentPlayer);
@@ -40,10 +40,11 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       self.handlePointerDown = me.input.registerPointerEvent("pointerdown", me.game.viewport, function (event) {
         me.event.publish("pointerdown", [ event ]);
       }, false);
-      game.Stores.UserStore.listenCurrentUserChanged(function() {
+      self.updateCurrentUser = function() {
         var currentPlayer = game.Stores.UserStore.getCurrentUser();
         self.currentPlayer.updateSprite(currentPlayer);
-      });
+      };
+      game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUser);
     },
 
     onDestroyEvent: function() {
@@ -55,5 +56,6 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       self.furnitureSelector.destroy();
       self.gameMenu.destroy();
       self.currentPlayer.destroy();
+      game.Stores.UserStore.unsubscribeCurrentUserChanged(self.updateCurrentUser);
     }
 });

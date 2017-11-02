@@ -218,5 +218,4 @@ var GameStoreCl = function() {
 	};
 };
 
-var ShopStore = new GameStoreCl();
 game.Stores.GameStore = new GameStoreCl();

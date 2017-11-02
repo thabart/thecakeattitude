@@ -3,10 +3,12 @@ game.SelectableEntitySelector = me.Object.extend({
 		this.selectorName = selectorName;
     	this.refLayer = me.game.world.getChildByName(refLayerName)[0];
 		this.sprite = null;
-	    this.pointerMoveSub = me.event.subscribe("pointermove", this.pointerMove.bind(this));
-	    this.pointerDownSub = me.event.subscribe('pointerdown', this.pointerDown.bind(this));
-		game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntity.bind(this));
-		game.Stores.GameStore.listenSelectedEntityChanged(this.updateSelectedEntity.bind(this));
+	  this.pointerMoveSub = me.event.subscribe("pointermove", this.pointerMove.bind(this));
+	  this.pointerDownSub = me.event.subscribe('pointerdown', this.pointerDown.bind(this));
+		this.updateActiveEntityB = this.updateActiveEntity.bind(this);
+		this.updateSelectedEntityB = this.updateSelectedEntity.bind(this);
+		game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntityB);
+		game.Stores.GameStore.listenSelectedEntityChanged(this.updateSelectedEntityB);
 	},
 	pointerMove : function (evt) { // Move the entity.
 		if (this.sprite) {
@@ -27,7 +29,7 @@ game.SelectableEntitySelector = me.Object.extend({
 	moveEntity: function(evt) { // Move the selected entity.
 		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
 		if (!tile) { return; }
-		var activeEntity = ShopStore.getActiveEntity();
+		var activeEntity = game.Stores.GameStore.getActiveEntity();
 		var region = me.loader.getImage(activeEntity.name);
 		var nbRows = Math.ceil(region.width / (this.refLayer.tilewidth / 2));
 		var nbCols = Math.ceil(region.height / this.refLayer.tileheight);
@@ -56,7 +58,7 @@ game.SelectableEntitySelector = me.Object.extend({
 		}
 	},
 	selectEntity: function(evt) { // Select the entity.
-		var entities = ShopStore.getEntities();
+		var entities = game.Stores.GameStore.getEntities();
 		if (!entities || entities.length === 0) { return; }
 		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
 		if (!tile) { return; }
@@ -69,19 +71,19 @@ game.SelectableEntitySelector = me.Object.extend({
 
 		if (selectedEntity) {
 			evt.handled = true;
-			ShopStore.displayInformation(selectedEntity.metadata);
-			ShopStore.displayActions(selectedEntity.metadata);
+			game.Stores.GameStore.displayInformation(selectedEntity.metadata);
+			game.Stores.GameStore.displayActions(selectedEntity.metadata);
 		} else {
-			ShopStore.hideInformation();
-			ShopStore.hideActions();
+			game.Stores.GameStore.hideInformation();
+			game.Stores.GameStore.hideActions();
 		}
 
-		ShopStore.setSelectedEntity(selectedEntity);
+		game.Stores.GameStore.setSelectedEntity(selectedEntity);
 	},
 	addEntity: function(evt) { // Add an entity into the container.
 		if (this.intersects) { return; }
 		evt.handled = true;
-		var activeEntity = ShopStore.getActiveEntity();
+		var activeEntity = game.Stores.GameStore.getActiveEntity();
 		var row = this.sprite.tile.row - this.sprite.nbRows;
 		var col = this.sprite.tile.col - this.sprite.nbCols;
 		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, activeEntity.name, activeEntity.interaction);
@@ -90,15 +92,15 @@ game.SelectableEntitySelector = me.Object.extend({
 			spr.flip();
 		}
 
-		ShopStore.addEntity(spr);
+		game.Stores.GameStore.addEntity(spr);
 		spr.pos.z = this.getZIndex();
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
-		ShopStore.setActiveEntity(null);
+		game.Stores.GameStore.setActiveEntity(null);
 	},
 	updateSelectedEntity: function() { // Update the selected entity.
-		var selectedEntity = ShopStore.getSelectedEntity();
-		var entities = ShopStore.getEntities();
+		var selectedEntity = game.Stores.GameStore.getSelectedEntity();
+		var entities = game.Stores.GameStore.getEntities();
 		entities.forEach(function(entity) {
 			/*
 			if (entity === selectedEntity) {
@@ -112,7 +114,7 @@ game.SelectableEntitySelector = me.Object.extend({
 		me.game.repaint();
 	},
 	updateActiveEntity: function() { // Update the active entity.
-		var activeEntity = ShopStore.getActiveEntity();
+		var activeEntity = game.Stores.GameStore.getActiveEntity();
 		if(!activeEntity) { return; }
 		if (activeEntity.selector !== this.selectorName) {
 			if (this.sprite) {
@@ -136,9 +138,9 @@ game.SelectableEntitySelector = me.Object.extend({
 		me.game.world.addChild(this.sprite);
 	},
 	destroy: function() { // Unsubscribe the events.
-      	me.event.unsubscribe(this.pointerMoveSub);
-      	me.event.unsubscribe(this.pointerDownSub);
-      	game.Stores.GameStore.unsubscribeActiveEntityChanged(this.updateActiveEntity.bind(this));
-		game.Stores.GameStore.unsubscribeSelectedEntityChanged(this.updateSelectedEntity.bind(this));
+    me.event.unsubscribe(this.pointerMoveSub);
+    me.event.unsubscribe(this.pointerDownSub);
+    game.Stores.GameStore.unsubscribeActiveEntityChanged(this.updateActiveEntityB);
+		game.Stores.GameStore.unsubscribeSelectedEntityChanged(this.updateSelectedEntityB);
 	}
 });

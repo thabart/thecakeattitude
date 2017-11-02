@@ -8,7 +8,7 @@ game.Menu.GameMenu = me.Object.extend({
       self.manageEntityBox = new game.Menu.ManageEntityBox();
     }
 
-    if (!user.is_visitor) {      
+    if (!user.is_visitor) {
       self.changeLook = new game.Menu.ChangeLookBox();
     }
 
@@ -18,11 +18,12 @@ game.Menu.GameMenu = me.Object.extend({
     self.upRightOptions = new game.Menu.UpRightOptions();
     self.shelfBox = new game.Menu.ShelfBox();
     self.footer = $("<div id='footer'></div>");
-    game.Stores.UserStore.listenCurrentUserChanged(function() {
+    self.updateCurrentUser = function() {
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var image = me.loader.getImage(currentPlayer.name);
       $(self.footer).find('.user').css('background', 'url('+image.src+') -5px -790px no-repeat');
-    });
+    };
+    game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUser);
     $(document.body).append(self.footer);
     self.addUserSubMenu();
     self.addMenu();
@@ -81,5 +82,6 @@ game.Menu.GameMenu = me.Object.extend({
     if (this.footer) $(this.footer).remove();
     if (this.menu) $(this.menu).remove();
     if (this.userSubMenu) $(this.userSubMenu).remove();
+    game.Stores.UserStore.unsubscribeCurrentUserChanged(this.updateCurrentUser);
   }
 });

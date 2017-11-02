@@ -7,7 +7,7 @@ game.Menu.AuthenticateBox = me.Object.extend({
 					"<div class='top'>"+
 						"<span data-i18n='authenticate_box_title'></span>"+
 					"</div>"+
-					"<div class='body' style='padding: 5px;'>"+						
+					"<div class='body' style='padding: 5px;'>"+
 						"<div class='gray-panel col-6'>"+
 							"<div class='top'></div>"+
 							"<div class='body'>"+
@@ -54,7 +54,7 @@ game.Menu.AuthenticateBox = me.Object.extend({
 						"</div>"+
 						"<div style='padding-top: 5px;'>"+
 							"<button class='button button-blue back' data-i18n='back'></button>"+
-						"</div>"+			
+						"</div>"+
 					"</div>"+
 					"<div class='body loader' style='display: none;'>"+
 						"<span data-i18n='loading'></span>"+
@@ -72,8 +72,8 @@ game.Menu.AuthenticateBox = me.Object.extend({
 		var self = this;
 		if (b) {
 			$(self.authenticateBox).find('.body').hide();
-			$(self.authenticateBox).find('.loader').show();			
-		} else {			
+			$(self.authenticateBox).find('.loader').show();
+		} else {
 			$(self.authenticateBox).find('.body').show();
 			$(self.authenticateBox).find('.loader').hide();
 		}
@@ -114,7 +114,6 @@ game.Menu.AuthenticateBox = me.Object.extend({
 			var href = Constants.openIdUrl + "/authorization?scope=openid%20profile%20email&state=75BCNvRlEGHpQRCT" +
 				"&redirect_uri="+Constants.callbackUrl+"&response_type=id_token%20token&client_id="+Constants.clientId + "&nonce=nonce&response_mode=query";
 			var w = window.open(href, 'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=400');
-			console.log(href);
 			var interval = setInterval(function() {
 				if (w.closed) {
 					self.isLoading(false);

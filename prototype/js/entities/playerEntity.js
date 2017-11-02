@@ -61,14 +61,20 @@ game.PlayerEntity = me.Entity.extend({
           self.updateMessagePosition.bind(self);
           self.updatePlayerInformationPosition.bind(self);
         });
-        ShopStore.listenMessageArrived(this.onMessageArrived.bind(this));
-        ShopStore.listenDisplayPlayerPseudoArrived(this.displayPseudo.bind(this));
-        ShopStore.listenHidePlayerPseudoArrived(this.hidePseudo.bind(this));
+        this.onMessageArrivedB = this.onMessageArrived.bind(this);
+        this.displayPseudoB = this.displayPseudo.bind(this);
+        this.hidePseudoB = this.hidePseudo.bind(this);
+        game.Stores.GameStore.listenMessageArrived(this.onMessageArrivedB);
+        game.Stores.GameStore.listenDisplayPlayerPseudoArrived(this.displayPseudoB);
+        game.Stores.GameStore.listenHidePlayerPseudoArrived(this.hidePseudoB);
     },
     displayPseudo: function() { // Display the pseudo.
       $('html,body').css( 'cursor', 'pointer' );
-      if (this.informationBox && this.informationBox !== null) { return; }
-      this.informationBox = $("<div class='player-information-box-container'><div class='player-information-box'>"+this.metadata.name+"</div></div>")
+      if (this.informationBox && this.informationBox !== null) {
+         return;
+      }
+
+      this.informationBox = $("<div class='player-information-box-container'><div class='player-information-box'>"+this.metadata.name+"</div></div>");
       $(document.body).append(this.informationBox);
       this.updatePlayerInformationPosition();
     },
@@ -110,7 +116,7 @@ game.PlayerEntity = me.Entity.extend({
       if (evt.which !== 1) { return; }
       // if (evt.handled) { return; }
       if (this.informationBox && this.informationBox !== null) {
-        ShopStore.displayInformation(this.metadata);
+        game.Stores.GameStore.displayInformation(this.metadata);
         return;
       }
 
@@ -123,7 +129,7 @@ game.PlayerEntity = me.Entity.extend({
       });
       var currentTile = CoordinateCalculator.getRelativePlayerPosition(this.currentTile);
       tile = CoordinateCalculator.getRelativePlayerPosition(tile);
-      var collisionLayer = ShopStore.getCollisionLayer();
+      var collisionLayer = game.Stores.GameStore.getCollisionLayer();
       var path = finder.findPath(currentTile.row, currentTile.col, tile.row, tile.col, collisionLayer.clone());
       var mvts = [];
       for (var i = 1; i <= path.length; i++) {
@@ -287,5 +293,8 @@ game.PlayerEntity = me.Entity.extend({
     },
     destroy: function() {
       if (this.informationBox) $(this.informationBox).remove();
+      game.Stores.GameStore.unsubscribeMessageArrived(this.onMessageArrivedB);
+      game.Stores.GameStore.unsubscribeDisplayPlayerPseudoArrived(this.displayPseudoB);
+      game.Stores.GameStore.unsubscribeHidePlayerPseudoArrived(this.hidePseudoB);
     }
 });

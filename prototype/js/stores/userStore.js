@@ -13,12 +13,16 @@ var UserStoreCl = function() {
 	};
 
 	this.updateCurrentUser = function(user) {
-		this._currentUser = $.extend(this._currentUser, user);		
+		this._currentUser = $.extend(this._currentUser, user);
 		$(this).trigger('currentUserChanged');
 	};
 
 	this.listenCurrentUserChanged = function(callback) {
 		$(this).on('currentUserChanged', callback);
+	};
+
+	this.unsubscribeCurrentUserChanged = function(callback) {
+		$(this).off('currentUserChanged',  callback);
 	};
 };
 
