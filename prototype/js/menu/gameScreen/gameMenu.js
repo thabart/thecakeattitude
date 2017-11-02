@@ -58,7 +58,7 @@ game.Menu.GameMenu = me.Object.extend({
     this.menu = $("<div id='footer'>"+
         "<ul class='no-style'>"+
           (user.is_owner ? ("<li class='inventory'></li>") : "") +
-          (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
+          (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/"+user.figure+"/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
         "</ul>"+
       "</div>");
     $(this.footer).append(this.menu);

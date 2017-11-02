@@ -269,6 +269,21 @@
 				"relativePosX": 0,
 				"relativePosY": 0
 			}
+		},
+		{
+			"name": "coffee-table",
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -47,
+				"relativePosY": -35
+			},
+			"vertical": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -47,
+				"relativePosY": -35
+			}
 		}
 	]
 }

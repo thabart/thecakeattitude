@@ -7,7 +7,8 @@ game.PlayerEntity = me.Entity.extend({
         var playerWidth = 64;
         var playerHeight = 110;
         this.metadata = {
-          name:  opts.name
+          name:  opts.name,
+          image: "<div style='background: url("+image.src+") -5px  -790px no-repeat; width: 64px; height: 110px;' class='img'></div>"
         };
         this.messageBubble = null; // Display the messages.
         this.messageTimeout = null;
@@ -245,6 +246,14 @@ game.PlayerEntity = me.Entity.extend({
       /*
       if (!tile) {
         tile = {};
+        if (mvt === 'top') {
+          tile.col = this.currentTile.col - 1;
+          tile.row = this.currentTile.row - 1;
+        }
+        var t = this.refLayer.layerData[tile.col][tile.row];
+        console.log(t);
+        // console.log(t);
+        /*
         if (this.currentTile.col === Constants.Layers.Ground.Position.col) {
           tile.col = Constants.Layers.Ground.Position.col;
         }

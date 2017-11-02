@@ -11,7 +11,7 @@ game.SelectableEntity = me.Entity.extend({
     var image = me.loader.getImage(opts.name);
     this.metadata = {
       name: opts.name,
-      image: image.src,
+      image: "<img src='"+image.src+"' />'",
       interaction: opts.interaction
     };
     this._super(me.Entity, "init", [opts.x, opts.y , {

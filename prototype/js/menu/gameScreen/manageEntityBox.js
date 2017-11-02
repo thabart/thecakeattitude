@@ -16,6 +16,7 @@ game.Menu.ManageEntityBox = me.Object.extend({
       $(document.body).append(this.mgfurniture);
       $(this.mgfurniture).hide();
       $(this.mgfurniture).draggable({ "handle": ".top" });
+      this.addListeners();
   },
   addListeners: function() {
     $(this.mgfurniture).find('.abs').on('input', function(e) {
@@ -41,6 +42,9 @@ game.Menu.ManageEntityBox = me.Object.extend({
     $(this.mgfurniture).find('.close').click(function() {
       $(self.mgfurniture).hide();
     });
+  },
+  toggle: function() {
+    $(this.mgfurniture).toggle();
   },
   destroy: function() {
     if (this.mgfurniture) $(this.mgfurniture).remove();

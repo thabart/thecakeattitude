@@ -18,7 +18,9 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       for (var col = 0; col < self.refLayer.cols; col++) {
         for(var row = 0; row < self.refLayer.rows; row++) {
           var tile = self.refLayer.layerData[col][row];
-          collisionLayer.setWalkableAt(row, col, tile && tile !== null);
+          if (tile === null) {
+            collisionLayer.setWalkableAt(row, col, false);
+          }
         }
       }
 
@@ -48,7 +50,12 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       };
       game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUser);
       me.game.viewport.moveTo(self.currentPlayer.pos.x - (me.game.viewport.width / 2), self.currentPlayer.pos.y - (me.game.viewport.height / 2));
-      // me.game.viewport.focusOn(self.currentPlayer);
+      me.game.world.children.forEach(function(child) {
+        if (child instanceof game.SelectableEntity) {
+          child.pos.z = Constants.playerZIndex;
+          game.Stores.GameStore.addEntity(child);
+        }
+      });
     },
 
     onDestroyEvent: function() {

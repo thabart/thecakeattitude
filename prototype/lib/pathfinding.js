@@ -1051,7 +1051,6 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
         weight = this.weight,
         abs = Math.abs, SQRT2 = Math.SQRT2,
         node, neighbors, neighbor, i, l, x, y, ng;
-
     // set the `g` and `f` value of the start node to be 0
     startNode.g = 0;
     startNode.f = 0;

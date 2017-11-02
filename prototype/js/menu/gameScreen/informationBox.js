@@ -20,7 +20,7 @@ game.Menu.InformationBox = me.Object.extend({
   update: function(e, metadata) {
     $(this.information).find('.body').empty();
     $(this.information).find('.top .title').html(metadata.name);
-    $(this.information).find('.body').append("<img src='"+metadata.image+"' />'");
+    $(this.information).find('.body').append(metadata.image);
     $(this.information).show();
   },
   hide: function() {
@@ -29,6 +29,6 @@ game.Menu.InformationBox = me.Object.extend({
   destroy: function() {
     if (this.information) $(this.information).remove();
     if (this.update) game.Stores.GameStore.unsubscribeDisplayInformationArrived(this.update.bind(this)); // Display information box.
-    if (this.hide) game.Stores.GameStore.unsubscribeHideInformationArrived(this.hide.bind(this));    
+    if (this.hide) game.Stores.GameStore.unsubscribeHideInformationArrived(this.hide.bind(this));
   }
 });

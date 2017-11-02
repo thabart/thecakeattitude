@@ -77,13 +77,13 @@ ul.tabs li.active
   vertical-align: middle
 }
 
-.modal.lg .content {  
+.modal.lg .content {
   width: 650px;
 }
 
 .modal.center .content {
   margin: 0 auto;
-} 
+}
 
 
 /* BLUE BOX */

@@ -26,6 +26,7 @@ var game = {
         me.game.world.sortOn = 'y';
 
         me.pool.register("EntryEntity", game.Entities.EntryEntity);
+        me.pool.register("FurnitureEntity", game.Entities.FurnitureEntity);
 
         me.state.set(me.state.PLAY, new game.Screens.GameScreen());
         me.state.set(me.state.MENU, new game.MenuScreen());
@@ -40,6 +41,9 @@ var game = {
         }).catch(function() {
             sessionStorage.removeItem(Constants.sessionName);
             me.state.change(me.state.MENU);
+        });
+        $(window).resize(function() {
+          me.video.updateDisplaySize(me.sys.scale.x, me.sys.scale.y);
         });
     }
 };

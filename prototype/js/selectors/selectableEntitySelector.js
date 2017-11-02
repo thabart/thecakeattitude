@@ -1,7 +1,7 @@
 game.SelectableEntitySelector = me.Object.extend({
 	init: function(refLayerName, selectorName) {
 		this.selectorName = selectorName;
-    	this.refLayer = me.game.world.getChildByName(refLayerName)[0];
+    this.refLayer = me.game.world.getChildByName(refLayerName)[0];
 		this.sprite = null;
 	  this.pointerMoveSub = me.event.subscribe("pointermove", this.pointerMove.bind(this));
 	  this.pointerDownSub = me.event.subscribe('pointerdown', this.pointerDown.bind(this));

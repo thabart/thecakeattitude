@@ -5,9 +5,15 @@ var GameStoreCl = function() {
 	var _collisionLayer = null;
 
 	var updateCollisions = function() {
-		for(var x = 0; x < _collisionLayer.width; x++) { // Reset the collision layer.
-			for(var y = 0; y < _collisionLayer.height; y++) {
-				_collisionLayer.setWalkableAt(x, y, true);
+		var refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
+		for (var col = 0; col < refLayer.cols; col++) {
+			for(var row = 0; row < refLayer.rows; row++) {
+				var tile = refLayer.layerData[col][row];
+				if (tile === null) {
+					_collisionLayer.setWalkableAt(row, col, false);
+				} else {
+					_collisionLayer.setWalkableAt(row, col, true);
+				}
 			}
 		}
 
@@ -15,8 +21,8 @@ var GameStoreCl = function() {
 				if (!spr.isCollidable) { return; }
 				var sprCoordinates = spr.getCoordinates();
 				var collisionCoordinate = {
-					col: sprCoordinates.col - Constants.Layers.Ground.Position.Col,
-					row: sprCoordinates.row - Constants.Layers.Ground.Position.Row
+					col: sprCoordinates.col,
+					row: sprCoordinates.row
 				};
 				if (spr.flipped) { // Vertical.
 					for (var col = collisionCoordinate.col; col < collisionCoordinate.col + sprCoordinates.nbCols; col++) {

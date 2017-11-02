@@ -10,10 +10,12 @@ game.Menu.ActionsBox = me.Object.extend({
       "</div>");
       $("#bottom-right-container").append(this.actions);
       this.launcher = new game.InteractionLauncher();
+      this.mgfurniture = new game.Menu.ManageEntityBox();
       this.addListeners();
       $(this.actions).hide();
       game.Stores.GameStore.listenDisplayActionsArrived(this.display.bind(this)); // Display entity actions.
       game.Stores.GameStore.hideDisplayActionsArrived(this.hide.bind(this));
+      $(this.actions).i18n();
   },
   addListeners: function() {
     var self = this;
@@ -40,8 +42,7 @@ game.Menu.ActionsBox = me.Object.extend({
       me.game.repaint();
     });
     $(this.actions).find('.translate').click(function() {
-      if ($(self.mgfurniture).is(':visible')) { return; }
-      $(self.mgfurniture).show();
+      self.mgfurniture.toggle();
     });
     $(this.actions).find('.use').click(function() {
       var selectedEntity = game.Stores.GameStore.getSelectedEntity();
