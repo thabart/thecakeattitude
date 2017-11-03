@@ -288,29 +288,44 @@
 		{
 			"name": "coffee-bar",
 			"horizontal": {
-				"nbCols": 7,
-				"nbRows": 3,
-				"relativePosX": -158,
+				"nbCols": -6,
+				"nbRows": 1,
+				"relativePosX": -111,
 				"relativePosY": -138
 			},
 			"vertical": {
-				"nbCols": 7,
-				"nbRows": 3,
-				"relativePosX": -158,
+				"nbCols": -6,
+				"nbRows": 1,
+				"relativePosX": -111,
 				"relativePosY": -138
+			}
+		},
+		{
+			"name": "coffee-bar-corner",
+			"horizontal": {
+				"nbCols": 0,
+				"nbRows": 0,
+				"relativePosX": -61,
+				"relativePosY": -65
+			},
+			"vertical": {
+				"nbCols": 0,
+				"nbRows": 0,
+				"relativePosX": -61,
+				"relativePosY": -65
 			}
 		},
 		{
 			"name": "coffee-library",
 			"horizontal": {
-				"nbCols": 1,
-				"nbRows": 2,
+				"nbCols": -2,
+				"nbRows": -2,
 				"relativePosX": -41,
 				"relativePosY": -111
 			},
 			"vertical": {
-				"nbCols": 1,
-				"nbRows": 2,
+				"nbCols": -2,
+				"nbRows": -2,
 				"relativePosX": -41,
 				"relativePosY": -111
 			}
