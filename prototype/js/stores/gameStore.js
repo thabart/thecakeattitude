@@ -24,9 +24,18 @@ var GameStoreCl = function() {
 					col: sprCoordinates.col,
 					row: sprCoordinates.row
 				};
+
+				for (var col = collisionCoordinate.col; sprCoordinates.nbCols > 0 ? (col < collisionCoordinate.col + sprCoordinates.nbCols) : (col > collisionCoordinate.col + sprCoordinates.nbCols); sprCoordinates.nbCols > 0 ? col++ : col--) {
+					for (var row = collisionCoordinate.row; sprCoordinates.nbRows > 0 ? (row < collisionCoordinate.row + sprCoordinates.nbRows) : (row > collisionCoordinate.row + sprCoordinates.nbRows); sprCoordinates.nbRows > 0 ? row++ : row--) {
+						_collisionLayer.setWalkableAt(row, col, false);
+					}
+				}
+
+				/*
 				if (spr.flipped) { // Vertical.
 					for (var col = collisionCoordinate.col; col < collisionCoordinate.col + sprCoordinates.nbCols; col++) {
 						for (var row = collisionCoordinate.row; row > collisionCoordinate.row - sprCoordinates.nbRows; row--) {
+							console.log(collisionCoordinate.col+" "+ col+" "+row);
 							_collisionLayer.setWalkableAt(row, col, false);
 						}
 					}
@@ -37,6 +46,7 @@ var GameStoreCl = function() {
 						}
 					}
 				}
+				*/
 		});
 	};
 

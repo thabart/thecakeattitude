@@ -16,7 +16,6 @@ var g_ressources = [
     { name: "window", type: "image", src: "resources/coffee-house/window.png" },
     { name: "coffee-wall-right", type: "image", src: "resources/coffee-house/coffee-wall-right.png" },
     { name: "coffee-table", type: "image", src: "resources/coffee-house/coffee-table.png" },
-    { name: "plant", type: "image", src: "resources/coffee-house/plant.png" },
     { name: "entry", type: "image", src: "resources/entry.png" }, // Load the entry
     { name: "executive_table", type: "image", src: "resources/entities/furnitures/executive/table.gif" }, // Load the furnitures.
     { name: "executive_desk", type: "image", src: "resources/entities/furnitures/executive/desk.gif" },
@@ -27,6 +26,9 @@ var g_ressources = [
     { name: "executive_sofa", type: "image", src: "resources/entities/furnitures/executive/sofa.gif" },
     { name: "executive_chair", type: "image", src: "resources/entities/furnitures/executive/chair.gif" },
     { name: "coffee-bar", type: "image", src: "resources/entities/furnitures/coffee/bar.png"},
+    { name: "coffee-sofa", type: "image", src: "resources/entities/furnitures/coffee/sofa.png"},
+    { name: "coffee-library", type: "image", src: "resources/entities/furnitures/coffee/library.png"},
+    { name: "coffee-low-table", type: "image", src: "resources/entities/furnitures/coffee/low-table.png"},
     { name: "gallery_1", type: "image", src: "resources/entities/walls/posters/gallery_1.gif" }, // Load the posters.
     { name: "gallery_2", type: "image", src: "resources/entities/walls/posters/gallery_2.gif" },
     { name: "gallery_n1", type: "image", src: "resources/entities/walls/posters/gallery_n1.gif" },
@@ -43,6 +45,10 @@ var g_ressources = [
     { name: "gallery_n12", type: "image", src: "resources/entities/walls/posters/gallery_n12.gif" },
     { name: "gallery_n13", type: "image", src: "resources/entities/walls/posters/gallery_n13.gif" },
     { name: "gallery_n14", type: "image", src: "resources/entities/walls/posters/gallery_n14.gif" },
+    { name: "gallery_n21", type: "image", src: "resources/entities/walls/posters/gallery_n21.png" },
+    { name: "gallery_n22", type: "image", src: "resources/entities/walls/posters/gallery_n22.png" },
+    { name: "gallery_n23", type: "image", src: "resources/entities/walls/posters/gallery_n23.png" },
+    { name: "gallery_n24", type: "image", src: "resources/entities/walls/posters/gallery_n24.png" },
     { name: "plant_1", type: "image", src: "resources/entities/decorations/plants/plant_1.gif" }, // Load the plants.
     { name: "plant_2", type: "image", src: "resources/entities/decorations/plants/plant_2.gif" },
     { name: "plant_3", type: "image", src: "resources/entities/decorations/plants/plant_3.gif" },
@@ -53,6 +59,9 @@ var g_ressources = [
     { name: "plant_8", type: "image", src: "resources/entities/decorations/plants/plant_8.gif" },
     { name: "plant_9", type: "image", src: "resources/entities/decorations/plants/plant_9.gif" },
     { name: "plant_10", type: "image", src: "resources/entities/decorations/plants/plant_10.gif" },
+    { name: "plant_11", type: "image", src: "resources/entities/decorations/plants/plant_11.png" },
+    { name: "plant_12", type: "image", src: "resources/entities/decorations/plants/plant_12.gif" },
+    { name: "plant_13", type: "image", src: "resources/entities/decorations/plants/plant_13.png" },
     { name: "flag_1", type: "image", src: "resources/entities/walls/flags/flag_1.gif" }, // Load the flags.
     { name: "flag_2", type: "image", src: "resources/entities/walls/flags/flag_2.gif" },
     { name: "flag_3", type: "image", src: "resources/entities/walls/flags/flag_3.gif" },
@@ -66,10 +75,8 @@ var g_ressources = [
     { name: "jp_tatami_small", type: "image", src: "resources/entities/grounds/rugs/japanese/jp_tatami_small.gif" },
     { name: "bear_rug_blue", type: "image", src: "resources/entities/grounds/rugs/others/bear_rug_blue.gif" },
     { name: "bear_rug_mint", type: "image", src: "resources/entities/grounds/rugs/others/bear_rug_mint.gif" },
+    { name: "coffee-carpet", type: "image", src: "resources/entities/grounds/rugs/coffee/coffee-rug.png" },
     { name: "tile_hover", type: "image", src: "resources/tile_hover.png" }, // Load the selector.
-    // { name: "player", type: "image", src: "resources/players/player.png" },
-    // { name: "player", type: "image", src: "resources/players/hd-209-1.ch-215-1427.cc-886-62.lg-3353-1408.sh-3035-62/sprite.png" },
-    // { name: "player", type: "image", src: "resources/players/hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61/sprite.png" },
     { name: "furnitures_collision", type: "json", src: "resources/collisions/furnitures.json" }, // Load the collisions.
     { name: "posters_collision", type: "json", src: "resources/collisions/posters.json" },
     { name: "player_collision", type: "json", src: "resources/collisions/player.json" },

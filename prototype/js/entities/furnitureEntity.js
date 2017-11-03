@@ -10,7 +10,8 @@ game.FurnitureEntity = game.SelectableEntity.extend({
         refLayerName: Constants.Layers.Ground.Name,
         selector: Constants.Selectors.Furniture,
         isCollidable: true,
-        interaction: null
+        interaction: null,
+        flipped: settings.flipped || false
       }
     ]);
     this.addCollision("furnitures_collision");

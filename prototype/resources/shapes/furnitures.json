@@ -288,16 +288,91 @@
 		{
 			"name": "coffee-bar",
 			"horizontal": {
+				"nbCols": 7,
+				"nbRows": 3,
+				"relativePosX": -158,
+				"relativePosY": -138
+			},
+			"vertical": {
+				"nbCols": 7,
+				"nbRows": 3,
+				"relativePosX": -158,
+				"relativePosY": -138
+			}
+		},
+		{
+			"name": "coffee-library",
+			"horizontal": {
 				"nbCols": 1,
+				"nbRows": 2,
+				"relativePosX": -41,
+				"relativePosY": -111
+			},
+			"vertical": {
+				"nbCols": 1,
+				"nbRows": 2,
+				"relativePosX": -41,
+				"relativePosY": -111
+			}
+		},
+		{
+			"name": "coffee-low-table",
+			"horizontal": {
+				"nbCols": 3,
 				"nbRows": 1,
+				"relativePosX": -44,
+				"relativePosY": -45
+			},
+			"vertical": {
+				"nbCols": 3,
+				"nbRows": 1,
+				"relativePosX": -44,
+				"relativePosY": -45
+			}
+		},
+		{
+			"name": "coffee-sofa",
+			"horizontal": {
+				"nbCols": 3,
+				"nbRows": 2,
+				"relativePosX": -51,
+				"relativePosY": -63
+			},
+			"vertical": {
+				"nbCols": 3,
+				"nbRows": 2,
 				"relativePosX": 0,
 				"relativePosY": 0
+			}
+		},
+		{
+			"name": "plant_11",
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -14,
+				"relativePosY": -94
 			},
 			"vertical": {
 				"nbCols": 1,
 				"nbRows": 1,
-				"relativePosX": 0,
-				"relativePosY": 0
+				"relativePosX": -14,
+				"relativePosY": -94
+			}
+		},
+		{
+			"name": "plant_13",
+			"horizontal": {
+				"nbCols": -3,
+				"nbRows": 1,
+				"relativePosX": -88,
+				"relativePosY": -63
+			},
+			"vertical": {
+				"nbCols": -3,
+				"nbRows": 1,
+				"relativePosX": -88,
+				"relativePosY": -63
 			}
 		}
 	]

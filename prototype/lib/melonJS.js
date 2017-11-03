@@ -12151,11 +12151,21 @@ THE SOFTWARE.
               var tile = shape.refLayer.getTile(shape.pos.x, shape.pos.y);
               var nbRows = shape.flipped ? shape.shapeDef.vertical.nbRows : shape.shapeDef.horizontal.nbRows;
               var nbCols = shape.flipped ? shape.shapeDef.vertical.nbCols : shape.shapeDef.horizontal.nbCols;
+              var ncol = tile.col + nbCols + (nbCols < 0 ? (1) : (-1));
+              var nrow = tile.row + nbRows + (nbRows < 0 ? (1) : (-1));
+              if (nbRows === 1) {
+                nrow = tile.row;
+              }
+
+              if (nbCols === 1) {
+                ncol = tile.col;
+              }
+
               return {
-                xmin: shape.flipped ? tile.col : tile.col - nbCols + 1,
-                xmax: shape.flipped ? tile.col + nbCols - 1 : tile.col,
-                ymin: tile.row - nbRows + 1,
-                ymax: tile.row,
+                xmin: (tile.col < ncol) ? tile.col : ncol,
+                xmax: (tile.col < ncol) ? ncol : tile.col,
+                ymin: (tile.row < nrow) ? tile.row : nrow,
+                ymax: (tile.row < nrow) ? nrow : tile.row,
                 posx: shape.pos.x,
                 posy: shape.pos.y
               };

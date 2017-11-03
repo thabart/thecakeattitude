@@ -30,6 +30,7 @@ game.TileSelectorEntity = me.Entity.extend({
       var coordinates = this.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
       this.pos.x = coordinates.x;
       this.pos.y = coordinates.y;
+      console.log('row '+ tile.row+" col "+ tile.col+" x " + this.pos.x+" y "+this.pos.y);
     },
     update: function(dt) {
       var isCollide = me.collision.check(this);
