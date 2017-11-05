@@ -27,6 +27,7 @@ var game = {
 
         me.pool.register("EntryEntity", game.Entities.EntryEntity);
         me.pool.register("FurnitureEntity", game.Entities.FurnitureEntity);
+        me.pool.register("FloorEntity", game.Entities.FloorEntity);
 
         me.state.set(me.state.PLAY, new game.Screens.GameScreen());
         me.state.set(me.state.MENU, new game.MenuScreen());

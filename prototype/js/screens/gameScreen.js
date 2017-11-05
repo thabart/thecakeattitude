@@ -52,7 +52,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       me.game.viewport.moveTo(self.currentPlayer.pos.x - (me.game.viewport.width / 2), self.currentPlayer.pos.y - (me.game.viewport.height / 2));
       me.game.world.children.forEach(function(child) {
         if (child instanceof game.SelectableEntity) {
-          child.pos.z = Constants.playerZIndex;
+          child.pos.z = child.getZIndex();
           game.Stores.GameStore.addEntity(child);
         }
       });

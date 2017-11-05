@@ -29,6 +29,21 @@
   			"relativePosX": -29,
   			"relativePosY": 6
       }
+		},
+		{
+			"name": "coffee-carpet",
+      "horizontal": {
+  			"nbCols": 6,
+  			"nbRows": -5,
+  			"relativePosX": -160,
+  			"relativePosY": -125
+      },
+      "vertical": {
+  			"nbCols": 6,
+  			"nbRows": -5,
+  			"relativePosX": -160,
+  			"relativePosY": -125
+      }
 		}
   ]
 }

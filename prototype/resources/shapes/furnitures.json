@@ -288,46 +288,46 @@
 		{
 			"name": "coffee-bar",
 			"horizontal": {
-				"nbCols": -6,
+				"nbCols": 6,
 				"nbRows": 1,
-				"relativePosX": -111,
-				"relativePosY": -138
+				"relativePosX": -25,
+				"relativePosY": -23
 			},
 			"vertical": {
-				"nbCols": -6,
+				"nbCols": 6,
 				"nbRows": 1,
-				"relativePosX": -111,
-				"relativePosY": -138
+				"relativePosX": -25,
+				"relativePosY": -23
 			}
 		},
 		{
 			"name": "coffee-bar-corner",
 			"horizontal": {
-				"nbCols": 0,
-				"nbRows": 0,
-				"relativePosX": -61,
-				"relativePosY": -65
+				"nbCols": 1,
+				"nbRows": -3,
+				"relativePosX": -26,
+				"relativePosY": -30
 			},
 			"vertical": {
-				"nbCols": 0,
-				"nbRows": 0,
-				"relativePosX": -61,
-				"relativePosY": -65
+				"nbCols": 1,
+				"nbRows": -3,
+				"relativePosX": -26,
+				"relativePosY": -30
 			}
 		},
 		{
 			"name": "coffee-library",
 			"horizontal": {
-				"nbCols": -2,
+				"nbCols": 1,
 				"nbRows": -2,
-				"relativePosX": -41,
-				"relativePosY": -111
+				"relativePosX": -26,
+				"relativePosY": -76
 			},
 			"vertical": {
-				"nbCols": -2,
+				"nbCols": 1,
 				"nbRows": -2,
-				"relativePosX": -41,
-				"relativePosY": -111
+				"relativePosX": -26,
+				"relativePosY": -76
 			}
 		},
 		{
@@ -335,29 +335,29 @@
 			"horizontal": {
 				"nbCols": 3,
 				"nbRows": 1,
-				"relativePosX": -44,
-				"relativePosY": -45
+				"relativePosX": -30,
+				"relativePosY": 9
 			},
 			"vertical": {
 				"nbCols": 3,
 				"nbRows": 1,
-				"relativePosX": -44,
-				"relativePosY": -45
+				"relativePosX": -30,
+				"relativePosY": 9
 			}
 		},
 		{
 			"name": "coffee-sofa",
 			"horizontal": {
-				"nbCols": 3,
-				"nbRows": 2,
-				"relativePosX": -51,
-				"relativePosY": -63
+				"nbCols": 1,
+				"nbRows": -2,
+				"relativePosX": -18,
+				"relativePosY": -11
 			},
 			"vertical": {
-				"nbCols": 3,
-				"nbRows": 2,
-				"relativePosX": 0,
-				"relativePosY": 0
+				"nbCols": 1,
+				"nbRows": -2,
+				"relativePosX": -18,
+				"relativePosY": -11
 			}
 		},
 		{

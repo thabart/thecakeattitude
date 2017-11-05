@@ -1,7 +1,13 @@
 game.Entities = game.Entities || {};
 game.FurnitureEntity = game.SelectableEntity.extend({
   init: function (x, y, settings) {
-    // console.log(settings);
+    if (settings.col && settings.row) {
+      var refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
+      var coordinates = refLayer.getRenderer().tileToPixelCoords(settings.col, settings.row);
+      x = coordinates.x;
+      y = coordinates.y;
+    }
+
     this._super(game.SelectableEntity, "init", [
       {
         x: x,
@@ -21,6 +27,9 @@ game.FurnitureEntity = game.SelectableEntity.extend({
         me.collision.types.ACTION_OBJECT |
         me.collision.types.PLAYER_OBJECT
     );
+  },
+  getZIndex: function() {
+    return Constants.playerZIndex;
   }
   /*
   init: function (x, y, furnitureName, interaction) {

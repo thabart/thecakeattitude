@@ -274,10 +274,15 @@
 </data>
  </layer>
  <objectgroup name="Carpets">
-  <object id="17" gid="26" x="1115.25" y="632.75" width="336" height="170"/>
+  <object id="17" name="FloorEntity" gid="26" x="1114" y="624" width="336" height="170">
+   <properties>
+    <property name="col" type="int" value="29"/>
+    <property name="row" type="int" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Plants">
-  <object id="21" name="FurnitureEntity" gid="25" x="957.25" y="478.75" width="65" height="129"/>
+  <object id="21" name="FurnitureEntity" gid="25" x="952.125" y="476.875" width="65" height="129"/>
   <object id="22" name="FurnitureEntity" gid="25" x="988.5" y="664.5" width="65" height="129"/>
   <object id="23" name="FurnitureEntity" gid="25" x="535.5" y="474.5" width="65" height="129"/>
  </objectgroup>
@@ -291,12 +296,42 @@
   <object id="10" name="FurnitureEntity" gid="20" x="541.333" y="804" width="48" height="53"/>
   <object id="11" name="FurnitureEntity" gid="20" x="891.667" y="864.333" width="48" height="53"/>
   <object id="12" name="FurnitureEntity" gid="20" x="895" y="705" width="48" height="53"/>
-  <object id="14" name="FurnitureEntity" gid="22" x="934.667" y="533.667" width="88" height="145"/>
-  <object id="18" name="FurnitureEntity" gid="24" x="1053.25" y="558.75" width="117" height="79"/>
-  <object id="19" name="FurnitureEntity" gid="23" x="1033.5" y="497.5" width="98" height="91"/>
-  <object id="20" name="FurnitureEntity" gid="23" x="1120.5" y="500" width="98" height="91"/>
-  <object id="30" name="FurnitureEntity" gid="31" x="734" y="584" width="224" height="178"/>
-  <object id="31" name="FurnitureEntity" gid="32" x="821.535" y="528.497" width="128" height="95"/>
+  <object id="14" name="FurnitureEntity" gid="22" x="934.667" y="533.667" width="88" height="145">
+   <properties>
+    <property name="col" type="int" value="28"/>
+    <property name="row" type="int" value="16"/>
+   </properties>
+  </object>
+  <object id="18" name="FurnitureEntity" gid="24" x="1053.25" y="558.75" width="117" height="79">
+   <properties>
+    <property name="col" type="int" value="30"/>
+    <property name="row" type="int" value="16"/>
+   </properties>
+  </object>
+  <object id="19" name="FurnitureEntity" gid="23" x="1018.25" y="486.75" width="98" height="91">
+   <properties>
+    <property name="col" type="int" value="30"/>
+    <property name="row" type="int" value="14"/>
+   </properties>
+  </object>
+  <object id="20" name="FurnitureEntity" gid="23" x="1113.63" y="486.875" width="98" height="91">
+   <properties>
+    <property name="col" type="int" value="33"/>
+    <property name="row" type="int" value="14"/>
+   </properties>
+  </object>
+  <object id="30" name="FurnitureEntity" gid="31" x="734" y="584" width="224" height="178">
+   <properties>
+    <property name="col" type="int" value="18"/>
+    <property name="row" type="int" value="16"/>
+   </properties>
+  </object>
+  <object id="31" name="FurnitureEntity" gid="32" x="821.535" y="528.497" width="128" height="95">
+   <properties>
+    <property name="col" type="int" value="24"/>
+    <property name="row" type="int" value="16"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Posters">
   <object id="24" gid="27" x="940.167" y="380.5" width="66" height="78"/>
