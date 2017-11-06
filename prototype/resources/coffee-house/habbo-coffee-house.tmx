@@ -277,58 +277,93 @@
   <object id="17" name="FloorEntity" gid="26" x="1114" y="624" width="336" height="170">
    <properties>
     <property name="col" type="int" value="29"/>
+    <property name="resource" value="coffee-carpet"/>
     <property name="row" type="int" value="0"/>
    </properties>
   </object>
  </objectgroup>
  <objectgroup name="Plants">
-  <object id="21" name="FurnitureEntity" gid="25" x="952.125" y="476.875" width="65" height="129"/>
-  <object id="22" name="FurnitureEntity" gid="25" x="988.5" y="664.5" width="65" height="129"/>
-  <object id="23" name="FurnitureEntity" gid="25" x="535.5" y="474.5" width="65" height="129"/>
+  <object id="21" name="FurnitureEntity" gid="25" x="952.125" y="476.875" width="65" height="129">
+   <properties>
+    <property name="resource" value="plant_11"/>
+   </properties>
+  </object>
+  <object id="22" name="FurnitureEntity" gid="25" x="988.5" y="664.5" width="65" height="129">
+   <properties>
+    <property name="resource" value="plant_11"/>
+   </properties>
+  </object>
+  <object id="23" name="FurnitureEntity" gid="25" x="535.5" y="474.5" width="65" height="129">
+   <properties>
+    <property name="resource" value="plant_11"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Furnitures">
   <object id="5" name="FurnitureEntity" type="table" gid="20" x="734" y="838.167" width="48" height="53">
    <properties>
-    <property name="display_name" value="coffee_table"/>
+    <property name="resource" value="coffee-table"/>
    </properties>
   </object>
-  <object id="9" name="FurnitureEntity" gid="20" x="509.667" y="642.333" width="48" height="53"/>
-  <object id="10" name="FurnitureEntity" gid="20" x="541.333" y="804" width="48" height="53"/>
-  <object id="11" name="FurnitureEntity" gid="20" x="891.667" y="864.333" width="48" height="53"/>
-  <object id="12" name="FurnitureEntity" gid="20" x="895" y="705" width="48" height="53"/>
+  <object id="9" name="FurnitureEntity" gid="20" x="509.667" y="642.333" width="48" height="53">
+   <properties>
+    <property name="resource" value="coffee-table"/>
+   </properties>
+  </object>
+  <object id="10" name="FurnitureEntity" type="table" gid="20" x="541.333" y="804" width="48" height="53">
+   <properties>
+    <property name="resource" value="coffee-table"/>
+   </properties>
+  </object>
+  <object id="11" name="FurnitureEntity" type="table" gid="20" x="891.667" y="864.333" width="48" height="53">
+   <properties>
+    <property name="resource" value="coffee-table"/>
+   </properties>
+  </object>
+  <object id="12" name="FurnitureEntity" gid="20" x="895" y="705" width="48" height="53">
+   <properties>
+    <property name="resource" value="coffee-table"/>
+   </properties>
+  </object>
   <object id="14" name="FurnitureEntity" gid="22" x="934.667" y="533.667" width="88" height="145">
    <properties>
     <property name="col" type="int" value="28"/>
+    <property name="resource" value="coffee-library"/>
     <property name="row" type="int" value="16"/>
    </properties>
   </object>
   <object id="18" name="FurnitureEntity" gid="24" x="1053.25" y="558.75" width="117" height="79">
    <properties>
     <property name="col" type="int" value="30"/>
+    <property name="resource" value="coffee-low-table"/>
     <property name="row" type="int" value="16"/>
    </properties>
   </object>
   <object id="19" name="FurnitureEntity" gid="23" x="1018.25" y="486.75" width="98" height="91">
    <properties>
     <property name="col" type="int" value="30"/>
+    <property name="resource" value="coffee-sofa"/>
     <property name="row" type="int" value="14"/>
    </properties>
   </object>
   <object id="20" name="FurnitureEntity" gid="23" x="1113.63" y="486.875" width="98" height="91">
    <properties>
     <property name="col" type="int" value="33"/>
+    <property name="resource" value="coffee-sofa"/>
     <property name="row" type="int" value="14"/>
    </properties>
   </object>
   <object id="30" name="FurnitureEntity" gid="31" x="734" y="584" width="224" height="178">
    <properties>
     <property name="col" type="int" value="18"/>
+    <property name="resource" value="coffee-bar"/>
     <property name="row" type="int" value="16"/>
    </properties>
   </object>
   <object id="31" name="FurnitureEntity" gid="32" x="821.535" y="528.497" width="128" height="95">
    <properties>
     <property name="col" type="int" value="24"/>
+    <property name="resource" value="coffee-bar-corner"/>
     <property name="row" type="int" value="16"/>
    </properties>
   </object>
@@ -341,11 +376,13 @@
   <object id="28" name="FurnitureEntity" gid="21" x="746.333" y="663.667" width="101" height="77">
    <properties>
     <property name="flipped" type="bool" value="true"/>
+    <property name="resource" value="plant_13"/>
    </properties>
   </object>
   <object id="29" name="FurnitureEntity" gid="21" x="844.424" y="664.303" width="101" height="77">
    <properties>
     <property name="flipped" type="bool" value="true"/>
+    <property name="resource" value="plant_13"/>
    </properties>
   </object>
  </objectgroup>

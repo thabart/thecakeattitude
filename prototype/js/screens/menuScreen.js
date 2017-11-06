@@ -26,6 +26,7 @@ game.MenuScreen = me.ScreenObject.extend({
 				var shop = shops['_embedded'][0];
 				var shopId = shop.id;
 				me.state.change(me.state.PLAY, "shop", shopId);
+				// me.state.change(me.state.PLAY, "reception");
 			});
 		});
 	},

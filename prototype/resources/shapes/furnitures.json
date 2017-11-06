@@ -19,13 +19,13 @@
 			"name": "executive_desk",
 			"horizontal": {
 				"nbCols": 2,
-				"nbRows": 3,
-				"relativePosX": -45,
-				"relativePosY": -67
+				"nbRows": -3,
+				"relativePosX": -27,
+				"relativePosY": -53
 			},
 			"vertical": {
 				"nbCols": 3,
-				"nbRows": 2,
+				"nbRows": -2,
 				"relativePosX": -26,
 				"relativePosY": -31
 			}
@@ -33,14 +33,14 @@
 		{
 			"name": "glass_shelves",
 			"horizontal": {
-				"nbCols": 1,
-				"nbRows": 2,
+				"nbCols": 2,
+				"nbRows": 1,
 				"relativePosX": -27,
 				"relativePosY": -85
 			},
 			"vertical": {
-				"nbCols": 2,
-				"nbRows": 1,
+				"nbCols": 1,
+				"nbRows": -2,
 				"relativePosX": -30,
 				"relativePosY": -103
 			}
@@ -48,30 +48,30 @@
 		{
 			"name": "glass_table",
 			"horizontal": {
-				"nbCols": 2,
-				"nbRows": 2,
+				"nbCols": 1,
+				"nbRows": 1,
 				"relativePosX": -37,
 				"relativePosY": -11
 			},
 			"vertical": {
-				"nbCols": 2,
-				"nbRows": 2,
-				"relativePosX": 0,
-				"relativePosY": 0
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -37,
+				"relativePosY": -11
 			}
 		},
 		{
 			"name": "grunge_table",
 			"horizontal": {
-				"nbCols": 2,
-				"nbRows": 2,
-				"relativePosX": -35,
+				"nbCols": -2,
+				"nbRows": -2,
+				"relativePosX": -31,
 				"relativePosY": -40
 			},
 			"vertical": {
-				"nbCols": 2,
-				"nbRows": 2,
-				"relativePosX": -35,
+				"nbCols": -2,
+				"nbRows": -2,
+				"relativePosX": -31,
 				"relativePosY": -40
 			}
 		},
@@ -79,43 +79,43 @@
 			"name": "mode_table",
 			"horizontal": {
 				"nbCols": 1,
-				"nbRows": 2,
+				"nbRows": -2,
 				"relativePosX": -37,
 				"relativePosY": -25
 			},
 			"vertical": {
-				"nbCols": 1,
-				"nbRows": 2,
-				"relativePosX": -37,
-				"relativePosY": -25
+				"nbCols": 2,
+				"nbRows": 1,
+				"relativePosX": -28,
+				"relativePosY": -13
 			}
 		},
 		{
 			"name": "executive_sofa",
 			"horizontal": {
-				"nbCols": 2,
-				"nbRows": 3,
+				"nbCols": 1,
+				"nbRows": -3,
 				"relativePosX": -32,
 				"relativePosY": -45
 			},
 			"vertical": {
-				"nbCols": 2,
-				"nbRows": 3,
-				"relativePosX": -32,
-				"relativePosY": -45
+				"nbCols": 3,
+				"nbRows": 1,
+				"relativePosX": -28,
+				"relativePosY": -11
 			}
 		},
 		{
 			"name": "executive_chair",
 			"horizontal": {
-				"nbCols": 2,
-				"nbRows": 2,
+				"nbCols": 1,
+				"nbRows": 1,
 				"relativePosX": -31,
 				"relativePosY": -31
 			},
 			"vertical": {
-				"nbCols": 2,
-				"nbRows": 2,
+				"nbCols": 1,
+				"nbRows": 1,
 				"relativePosX": -31,
 				"relativePosY": -31
 			}

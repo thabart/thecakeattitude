@@ -8,30 +8,6 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       ];
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var map = mappingLevelToMap.filter(function(m) { return m.name === key; })[0];
-      if (shopId) {
-        // Add all the furnitures.
-        game.Services.ShopsService.get(shopId).then(function(r) {
-          var shop = r['_embedded'];
-          shop['game_entities'].forEach(function(gameEntity) {
-            var entity = new game.Entities.FurnitureEntity(0, 0, {
-              col: gameEntity.col,
-              row: gameEntity.row,
-              tile: {
-                tileset: {
-                  name: gameEntity.name
-                }
-              }
-            });
-            console.log(entity.getZIndex());
-            me.game.world.addChild(entity);
-            entity.pos.z = entity.getZIndex();
-            game.Stores.GameStore.addEntity(entity);
-          });
-        }).catch(function() {
-
-        });
-      }
-
       currentPlayer.is_owner = map.sub === map.name;
       game.Stores.UserStore.updateCurrentUser(currentPlayer);
       me.levelDirector.loadLevel(map.level);
@@ -80,8 +56,45 @@ game.Screens.GameScreen = me.ScreenObject.extend({
           game.Stores.GameStore.addEntity(child);
         }
       });
+      if (shopId) {
+        this.displayFurnitures(shopId);
+      }
     },
+    displayFurnitures : function(shopId) {
+      game.Services.ShopsService.get(shopId).then(function(r) { // Add all the furnitures.
+        var shop = r['_embedded'];
+        shop['game_entities'].forEach(function(gameEntity) {
+          var entity = null;
+          switch (gameEntity.type) {
+            case "floor":
+              entity = new game.Entities.FloorEntity(0, 0, {
+                col: gameEntity.col,
+                row: gameEntity.row,
+                resource: gameEntity.name
+              });
+            break;
+            case "furniture":
+              entity = new game.Entities.FurnitureEntity(0, 0, {
+                col: gameEntity.col,
+                row: gameEntity.row,
+                resource: gameEntity.name
+              });
+            break;
+            case "wall":
+              entity = new game.Entities.PosterEntity(0, 0, {
+                col: gameEntity.col,
+                row: gameEntity.row,
+                resource: gameEntity.name
+              });
+            break;
+          }
 
+          me.game.world.addChild(entity);
+          entity.pos.z = entity.getZIndex();
+          game.Stores.GameStore.addEntity(entity);
+        });
+      }).catch(function() { });
+    },
     onDestroyEvent: function() {
       var self = this;
       self.movableContainer.destroy();

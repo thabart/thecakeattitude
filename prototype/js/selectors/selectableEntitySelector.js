@@ -6,9 +6,7 @@ game.SelectableEntitySelector = me.Object.extend({
 	  this.pointerMoveSub = me.event.subscribe("pointermove", this.pointerMove.bind(this));
 	  this.pointerDownSub = me.event.subscribe('pointerdown', this.pointerDown.bind(this));
 		this.updateActiveEntityB = this.updateActiveEntity.bind(this);
-		this.updateSelectedEntityB = this.updateSelectedEntity.bind(this);
 		game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntityB);
-		game.Stores.GameStore.listenSelectedEntityChanged(this.updateSelectedEntityB);
 	},
 	pointerMove : function (evt) { // Move the entity.
 		if (this.sprite) {
@@ -86,32 +84,17 @@ game.SelectableEntitySelector = me.Object.extend({
 		var activeEntity = game.Stores.GameStore.getActiveEntity();
 		var row = this.sprite.tile.row - this.sprite.nbRows;
 		var col = this.sprite.tile.col - this.sprite.nbCols;
-		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, activeEntity.name, activeEntity.interaction);
+		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, { resource: activeEntity.name, interaction: activeEntity.interaction });
 		me.game.world.addChild(spr);
 		if (activeEntity.isFlipped) {
 			spr.flip();
 		}
 
 		game.Stores.GameStore.addEntity(spr);
-		spr.pos.z = this.getZIndex();
+		spr.pos.z = spr.getZIndex();
 		me.game.world.removeChild(this.sprite);
 		this.sprite = null;
 		game.Stores.GameStore.setActiveEntity(null);
-	},
-	updateSelectedEntity: function() { // Update the selected entity.
-		var selectedEntity = game.Stores.GameStore.getSelectedEntity();
-		var entities = game.Stores.GameStore.getEntities();
-		entities.forEach(function(entity) {
-			/*
-			if (entity === selectedEntity) {
-				entity.opacity(0.5);
-			} else {
-				entity.opacity(1);
-			}
-			*/
-		});
-
-		me.game.repaint();
 	},
 	updateActiveEntity: function() { // Update the active entity.
 		var activeEntity = game.Stores.GameStore.getActiveEntity();
@@ -129,7 +112,7 @@ game.SelectableEntitySelector = me.Object.extend({
 			me.game.world.removeChild(this.sprite);
 		}
 
-		this.sprite = this.create(0,0, activeEntity.name);
+		this.sprite = this.create(0,0, { resource: activeEntity.name });
 		this.sprite.opacity(0);
 		if (activeEntity.isFlipped) {
 			this.sprite.flip();
@@ -141,6 +124,5 @@ game.SelectableEntitySelector = me.Object.extend({
     me.event.unsubscribe(this.pointerMoveSub);
     me.event.unsubscribe(this.pointerDownSub);
     game.Stores.GameStore.unsubscribeActiveEntityChanged(this.updateActiveEntityB);
-		game.Stores.GameStore.unsubscribeSelectedEntityChanged(this.updateSelectedEntityB);
 	}
 });

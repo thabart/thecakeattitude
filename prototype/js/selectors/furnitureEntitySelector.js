@@ -5,11 +5,8 @@ game.FurnitureEntitySelector = game.SelectableEntitySelector.extend({
 			Constants.Selectors.Furniture
     ])
 	},
-	create: function(x, y, name, interaction) {
-		return new game.FurnitureEntity(x, y, name, interaction);
-	},
-	getZIndex: function() {
-		return Constants.playerZIndex;
+	create: function(x, y, settings) {
+		return new game.Entities.FurnitureEntity(x, y, settings);
 	},
 	isAtLimit: function(coordinates, flipped) {
 		var minRow = coordinates.row - coordinates.nbRows + 1;

@@ -3,10 +3,10 @@ game.Menu.GameMenu = me.Object.extend({
   init: function() {
     var self = this;
     var user = game.Stores.UserStore.getCurrentUser();
-    if (user.is_owner) {
+    // if (user.is_owner) {
       self.inventoryBox = new game.Menu.InventoryBox();
       self.manageEntityBox = new game.Menu.ManageEntityBox();
-    }
+    // }
 
     if (!user.is_visitor) {
       self.changeLook = new game.Menu.ChangeLookBox();
@@ -58,7 +58,8 @@ game.Menu.GameMenu = me.Object.extend({
     var user = game.Stores.UserStore.getCurrentUser();
     this.menu = $("<div id='footer'>"+
         "<ul class='no-style'>"+
-          (user.is_owner ? ("<li class='inventory'></li>") : "") +
+          // (user.is_owner ? ("<li class='inventory'></li>") : "") +
+          "<li class='inventory'></li>"+
           "<li class='navigator'></li>"+
           (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/"+user.figure+"/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
         "</ul>"+

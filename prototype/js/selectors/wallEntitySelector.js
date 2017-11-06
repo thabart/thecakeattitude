@@ -6,10 +6,7 @@ game.WallEntitySelector = game.SelectableEntitySelector.extend({
 	   ]);
 	},
 	create: function(x, y, name, interaction) {
-		return new game.PosterEntity(x, y, name, interaction);
-	},
-	getZIndex: function() {
-		return Constants.playerZIndex - 1;
+		return new game.Entities.PosterEntity(x, y, settings);
 	},
 	moveCallback: function() {
     var isLeftWall = this.sprite.tile.row > Constants.Layers.Wall.Position.Row;

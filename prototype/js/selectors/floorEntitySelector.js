@@ -5,11 +5,8 @@ game.FloorEntitySelector = game.SelectableEntitySelector.extend({
 			Constants.Selectors.Floor
     ]);
 	},
-	create: function(x, y, name, interaction) {
-		return new game.FloorEntity(x, y, name, interaction);
-	},
-	getZIndex: function() {
-		return Constants.playerZIndex - 2;
+	create: function(x, y, settings) {
+		return new game.Entities.FloorEntity(x, y, settings);
 	},
 	isAtLimit: function(coordinates, flipped) {
 		var minRow = coordinates.row - coordinates.nbRows + 1;
