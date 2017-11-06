@@ -12,7 +12,7 @@ game.Menu.NavigatorBox = me.Object.extend({
               // HEADER.
               "<div class='header'>"+
                 "<ul class='no-style tabs gray menu'>"+
-                  "<li data-target='.shops-tab'><span data-i18n='shops'></span></li>"+
+                  "<li data-target='.shops-tab' class='active'><span data-i18n='shops'></span></li>"+
                   "<li data-target='.rooms-tab'><span data-i18n='rooms'></span></li>"+
                 "</ul>"+
               "</div>"+
@@ -29,11 +29,11 @@ game.Menu.NavigatorBox = me.Object.extend({
                         "<div class='input'>"+
                           "<div class='top'></div>"+
                           "<div class='body'>"+
-                            "<select>"+
-                              "<option data-i18n='creation_date_desc'></option>"+
-                              "<option data-i18n='creation_date_asc'></option>"+
-                              "<option data-i18n='reputation_desc'></option>"+
-                              "<option data-i18n='reputation_asc'></option>"+
+                            "<select class='shop-order'>"+
+                              "<option data-i18n='creation_date_desc' data-ordername='create_datetime' data-order='desc'></option>"+
+                              "<option data-i18n='creation_date_asc' data-ordername='create_datetime' data-order='asc'></option>"+
+                              "<option data-i18n='reputation_desc' data-ordername='average_score' data-order='desc'></option>"+
+                              "<option data-i18n='reputation_asc' data-ordername='average_score' data-order='asc'></option>"+
                             "</select>"+
                           "</div>"+
                           "<div class='bottom'></div>"+
@@ -173,6 +173,16 @@ game.Menu.NavigatorBox = me.Object.extend({
       } else {
         li.addClass('active');
       }
+    });
+    $(self.navigatorBox).find('.close').click(function() {
+      $(self.navigatorBox).hide();
+    });
+    $(self.navigatorBox).find('.shop-order').change(function() {
+      var opt = $(this).find(':selected');
+      var orderName = $(opt).data('ordername'),
+        order = $(opt).data('order');
+      self._request['orders'] = [ { method : order, target: orderName } ];
+      self.refresh();
     });
   },
   toggle: function() { // Toggle the box.

@@ -19,6 +19,7 @@ game.Menu.ManageEntityBox = me.Object.extend({
       this.addListeners();
   },
   addListeners: function() {
+    var self = this;
     $(this.mgfurniture).find('.abs').on('input', function(e) {
       var selectedEntity = game.Stores.GameStore.getSelectedEntity();
       if (!selectedEntity) {
@@ -39,7 +40,7 @@ game.Menu.ManageEntityBox = me.Object.extend({
       selectedEntity.translateY(parseInt(val));
       me.game.repaint();
     });
-    $(this.mgfurniture).find('.close').click(function() {
+    $(self.mgfurniture).find('.close').click(function() {
       $(self.mgfurniture).hide();
     });
   },
