@@ -55,3 +55,25 @@ ul.list li .information {
   color: white;
   padding: 5px;
 }
+
+/* LIST OF TAGS*/
+ul.tags,
+ul.navigations {  
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.tags li,
+ul.navigations li {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+ul.navigations li {
+
+}
+
+ul.navigations li.active {
+  
+}

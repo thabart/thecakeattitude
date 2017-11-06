@@ -18,6 +18,7 @@ game.Menu.GameMenu = me.Object.extend({
     self.upRightOptions = new game.Menu.UpRightOptions();
     self.shelfBox = new game.Menu.ShelfBox();
     self.footer = $("<div id='footer'></div>");
+    self.navigatorBox = new game.Menu.NavigatorBox();
     self.updateCurrentUser = function() {
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var image = me.loader.getImage(currentPlayer.name);
@@ -58,6 +59,7 @@ game.Menu.GameMenu = me.Object.extend({
     this.menu = $("<div id='footer'>"+
         "<ul class='no-style'>"+
           (user.is_owner ? ("<li class='inventory'></li>") : "") +
+          "<li class='navigator'></li>"+
           (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/"+user.figure+"/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
         "</ul>"+
       "</div>");
@@ -68,6 +70,9 @@ game.Menu.GameMenu = me.Object.extend({
     });
     $(this.menu).find('.user').click(function() {
       self.userSubMenu.toggle();
+    });
+    $(this.menu).find('.navigator').click(function() {
+      self.navigatorBox.toggle();
     });
   },
   destroy: function() { // Destroy the menu.

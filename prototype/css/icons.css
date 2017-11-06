@@ -1,5 +1,6 @@
 /* ICONS */
-.inventory
+.inventory,
+.navigator
 {
     height: 41px;
     width: 44px;
@@ -140,6 +141,19 @@ li.active .sex-femal
 
 .help:active {
   background: url('../img/icons/help.png') 0 -38px;
+}
+
+.navigator {
+  background: url('../img/icons/navigator.png');
+}
+
+.navigator:hover {
+  background: url('../img/icons/navigator.png') 0 -41px no-repeat;
+
+}
+
+.navigator:active {
+  background: url('../img/icons/navigator.png') 0 -84px no-repeat;
 }
 
 .chatbubbles {

@@ -133,6 +133,9 @@ game.Menu.ShelfBox = me.Object.extend({
     game.Stores.GameStore.listenDisplayShelfBoxArrived(this.display.bind(this));
     game.Stores.GameStore.listenHideShelfBoxArrived(this.hide.bind(this));
   },
+  refresh: function() {
+
+  },
   addListeners: function() {
     var self = this;
     $(this.shelf).find('.close').click(function() {
