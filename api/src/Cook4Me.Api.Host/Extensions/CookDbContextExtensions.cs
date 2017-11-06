@@ -533,6 +533,17 @@ namespace Cook4Me.Api.Host.Extensions
                             PartialMapUrl = "/shops/first_shop.json",
                             OverviewName = "first_shop_overview",
                             PartialOverviewUrl = "/shops/shop_overview.png"
+                        },
+                        GameEntities = new List<GameEntity>
+                        {
+                            new GameEntity
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Col = 10,
+                                Row = 10,
+                                Type = 0,
+                                Name = "executive_table"
+                            }
                         }
                     },
                     new Shop
@@ -579,6 +590,17 @@ namespace Cook4Me.Api.Host.Extensions
                             PartialMapUrl = "/shops/first_shop.json",
                             OverviewName = "first_shop_overview",
                             PartialOverviewUrl = "/shops/shop_overview.png"
+                        },
+                        GameEntities = new List<GameEntity>
+                        {
+                            new GameEntity
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Col = 10,
+                                Row = 10,
+                                Type = 0,
+                                Name = "executive_table"
+                            }
                         }
                     },
                     new Shop
@@ -625,6 +647,17 @@ namespace Cook4Me.Api.Host.Extensions
                             PartialMapUrl = "/shops/first_shop.json",
                             OverviewName = "first_shop_overview",
                             PartialOverviewUrl = "/shops/shop_overview.png"
+                        },
+                        GameEntities = new List<GameEntity>
+                        {
+                            new GameEntity
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Col = 10,
+                                Row = 10,
+                                Type = 0,
+                                Name = "executive_table"
+                            }
                         }
                     }
                 });

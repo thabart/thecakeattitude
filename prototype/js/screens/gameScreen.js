@@ -1,6 +1,6 @@
 game.Screens = game.Screens || {};
 game.Screens.GameScreen = me.ScreenObject.extend({
-    onResetEvent: function(key) {
+    onResetEvent: function(key, shopId) {
       var self = this;
       var mappingLevelToMap = [
         { name: "reception",  level: "coffee_shop_map" },
@@ -8,6 +8,30 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       ];
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var map = mappingLevelToMap.filter(function(m) { return m.name === key; })[0];
+      if (shopId) {
+        // Add all the furnitures.
+        game.Services.ShopsService.get(shopId).then(function(r) {
+          var shop = r['_embedded'];
+          shop['game_entities'].forEach(function(gameEntity) {
+            var entity = new game.Entities.FurnitureEntity(0, 0, {
+              col: gameEntity.col,
+              row: gameEntity.row,
+              tile: {
+                tileset: {
+                  name: gameEntity.name
+                }
+              }
+            });
+            console.log(entity.getZIndex());
+            me.game.world.addChild(entity);
+            entity.pos.z = entity.getZIndex();
+            game.Stores.GameStore.addEntity(entity);
+          });
+        }).catch(function() {
+
+        });
+      }
+
       currentPlayer.is_owner = map.sub === map.name;
       game.Stores.UserStore.updateCurrentUser(currentPlayer);
       me.levelDirector.loadLevel(map.level);

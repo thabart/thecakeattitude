@@ -16,5 +16,31 @@ game.Services.ShopsService = {
 			dfd.reject(e);
 		});
 	    return dfd;
+	},
+	getAll: function() {
+		var dfd = jQuery.Deferred();		
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.get(conf.shops_endpoint).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+	    return dfd;
+	},
+	get: function(id) {
+		var dfd = jQuery.Deferred();		
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.get(conf.shops_endpoint + '/' + id).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+	    return dfd;		
 	}
 };

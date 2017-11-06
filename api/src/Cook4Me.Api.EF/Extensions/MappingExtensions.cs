@@ -636,6 +636,40 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
+        public static GameEntity ToModel(this ShopGameEntity shopGameEntity)
+        {
+            if (shopGameEntity == null)
+            {
+                throw new ArgumentNullException(nameof(shopGameEntity));
+            }
+
+            return new GameEntity
+            {
+                Id = shopGameEntity.Id,
+                Col = shopGameEntity.Col,
+                Name = shopGameEntity.Name,
+                Row = shopGameEntity.Row,
+                Type = (int)shopGameEntity.Type
+            };
+        }
+
+        public static ShopGameEntity ToAggregate(this GameEntity gameEntity)
+        {
+            if (gameEntity == null)
+            {
+                throw new ArgumentNullException(nameof(gameEntity));
+            }
+
+            return new ShopGameEntity
+            {
+                Id = gameEntity.Id,
+                Col = gameEntity.Col,
+                Name = gameEntity.Name,
+                Row = gameEntity.Row,
+                Type = (GameEntityTypes)gameEntity.Type
+            };
+        }
+
         public static ShopAggregate ToAggregate(this Shop shop)
         {
             if (shop == null)
@@ -646,6 +680,7 @@ namespace Cook4Me.Api.EF.Extensions
             ShopCategory shopCategory = null;
             ShopMap shopMap = null;
             ShopMap categoryMap = null;
+            List<ShopGameEntity> gameEntities = null;
             var tagNames = new List<string>();
             var paymentMethods = new List<ShopPaymentMethod>();
             var comments = new List<ShopComment>();
@@ -741,6 +776,11 @@ namespace Cook4Me.Api.EF.Extensions
                 };
             }
 
+            if (shop.GameEntities != null)
+            {
+                gameEntities = shop.GameEntities.Select(g => g.ToAggregate()).ToList();
+            }
+
             return new ShopAggregate
             {
                 Id = shop.Id,
@@ -771,7 +811,8 @@ namespace Cook4Me.Api.EF.Extensions
                 ShopFilters = filters,
                 ProductCategories = productCategories,
                 ShopMap = shopMap,
-                CategoryMap = categoryMap
+                CategoryMap = categoryMap,
+                ShopGameEntities = gameEntities
             };
         }
 

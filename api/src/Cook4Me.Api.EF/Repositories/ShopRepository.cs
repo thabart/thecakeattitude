@@ -143,6 +143,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.Comments)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
+                .Include(c => c.GameEntities)
                 .Select(s => s.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
@@ -161,6 +162,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.CategoryMap)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
+                .Include(c => c.GameEntities)
                 .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
             if (shop == null)
             {
@@ -440,6 +442,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.Comments)
                 .Include(c => c.ShopMap)
                 .Include(c => c.CategoryMap)
+                .Include(c => c.GameEntities)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories);
             if (parameter.CategoryIds != null && parameter.CategoryIds.Any())

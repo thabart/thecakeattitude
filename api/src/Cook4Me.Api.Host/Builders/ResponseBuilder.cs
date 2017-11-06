@@ -1205,6 +1205,22 @@ namespace Cook4Me.Api.Host.Builders
             {
                 result.Add(Constants.DtoNames.Shop.ShopMap, GetMap(shop.ShopMap));
             }
+
+            var gameEntities = new JArray();
+            if (shop.ShopGameEntities != null)
+            {
+                foreach(var shopGameEntity in shop.ShopGameEntities)
+                {
+                    var obj = new JObject();
+                    obj.Add(Constants.DtoNames.GameEntity.Id, shopGameEntity.Id);
+                    obj.Add(Constants.DtoNames.GameEntity.Name, shopGameEntity.Name);
+                    obj.Add(Constants.DtoNames.GameEntity.Row, shopGameEntity.Row);
+                    obj.Add(Constants.DtoNames.GameEntity.Col, shopGameEntity.Col);
+                    var record = CommonBuilder.MappingGameEntityTypes.First(kvp => kvp.Key == shopGameEntity.Type);
+                    obj.Add(Constants.DtoNames.GameEntity.Type, record.Value);
+                    gameEntities.Add(obj);
+                }
+            }
             
             result.Add(Constants.DtoNames.Shop.Filters, filters);
             result.Add(Constants.DtoNames.Shop.Payments, payments);
@@ -1216,6 +1232,7 @@ namespace Cook4Me.Api.Host.Builders
             result.Add(Constants.DtoNames.Shop.NbComments, nbComments);
             result.Add(Constants.DtoNames.Shop.AverageScore, shop.AverageScore);
             result.Add(Constants.DtoNames.Shop.TotalScore, shop.TotalScore);
+            result.Add(Constants.DtoNames.Shop.GameEntities, gameEntities);
             return result;
         }
 

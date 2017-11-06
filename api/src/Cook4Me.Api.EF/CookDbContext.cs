@@ -91,7 +91,8 @@ namespace Cook4Me.Api.EF
                 .AddUpsService()
                 .AddDiscounts()
                 .AddProductDiscounts()
-                .AddFeedItemMapping();
+                .AddFeedItemMapping()
+                .AddGameEntity();
         }
     }
 }

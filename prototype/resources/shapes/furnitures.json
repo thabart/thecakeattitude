@@ -4,15 +4,15 @@
 			"name": "executive_table",
 			"horizontal": {
 				"nbCols": 2,
-				"nbRows": 2,
-				"relativePosX": -46,
-				"relativePosY": -20
+				"nbRows": -2,
+				"relativePosX": -19,
+				"relativePosY": -9
 			},
 			"vertical": {
 				"nbCols": 2,
-				"nbRows": 2,
-				"relativePosX": -46,
-				"relativePosY": -20
+				"nbRows": -2,
+				"relativePosX": -19,
+				"relativePosY": -9
 			}
 		},
 		{

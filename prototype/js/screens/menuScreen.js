@@ -21,7 +21,12 @@ game.MenuScreen = me.ScreenObject.extend({
 	currentUserChanged: function() {
 		var player = game.Stores.UserStore.getCurrentUser();
 		me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
-			me.state.change(me.state.PLAY, "reception");
+			// TEMPORARY SOLUTION.
+			game.Services.ShopsService.getAll().then(function(shops) {
+				var shop = shops['_embedded'][0];
+				var shopId = shop.id;
+				me.state.change(me.state.PLAY, "shop", shopId);
+			});
 		});
 	},
 

@@ -502,6 +502,16 @@ namespace Cook4Me.Api.Host
                 public const string AverageScore = "average_score";
                 public const string NbComments = "nb_comments";
                 public const string TotalScore = "total_score";
+                public const string GameEntities = "game_entities";
+            }
+
+            public static class GameEntity
+            {
+                public const string Id = "id";
+                public const string Name = "name";
+                public const string Row = "row";
+                public const string Col = "col";
+                public const string Type = "type";
             }
 
             public static class Paginate

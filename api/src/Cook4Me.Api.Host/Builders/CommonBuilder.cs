@@ -23,6 +23,13 @@ namespace Cook4Me.Api.Host.Builders
 {
     public class CommonBuilder
     {
+        public static Dictionary<GameEntityTypes, string> MappingGameEntityTypes = new Dictionary<GameEntityTypes, string>
+        {
+            { GameEntityTypes.Floor, "floor" },
+            { GameEntityTypes.Furniture, "furniture" },
+            { GameEntityTypes.Wall, "wall" }
+        };
+
         public static Dictionary<UpsAggregateServices, string> MappingUpsAggregateServices = new Dictionary<UpsAggregateServices, string>
         {
             { UpsAggregateServices.AccessPointEconomy, "070" },

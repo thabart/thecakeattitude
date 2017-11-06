@@ -118,6 +118,10 @@ game.Menu.NavigatorBox = me.Object.extend({
             "<ul class='tags'></ul>"+
           "</div>"+
         "</li>");
+        $(elt).click(function() {
+          $(self.navigatorBox).find('.shops li').removeClass('active');
+          $(this).addClass('active');
+        });
         shop.tags.forEach(function(tag) {
           elt.find('ul').append("<li>"+tag+"</li>");
         });
@@ -164,7 +168,6 @@ game.Menu.NavigatorBox = me.Object.extend({
     $(self.navigatorBox).find('.filters .node-toggle').click(function(e) {
       e.stopPropagation();
       var li = $(this).closest('li');
-      console.log('bingo');
       if(li.hasClass('active')) {
         li.removeClass('active');
       } else {
