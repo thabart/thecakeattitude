@@ -8,7 +8,7 @@ game.Menu.NavigatorBox = me.Object.extend({
           "<div class='top'>"+
             "<span data-i18n='navigator_title'></span> <div class='close'></div>"+
           "</div>"+
-          "<div class='body'>"+          
+          "<div class='body'>"+
               // HEADER.
               "<div class='header'>"+
                 "<ul class='no-style tabs gray menu'>"+
@@ -69,13 +69,16 @@ game.Menu.NavigatorBox = me.Object.extend({
                   "</div>"+
                 "</div>"+
                 "<div class='rooms-tab tab' style='display: none; height: 500px;'>"+
-                  "<ul>"+
-                    "<li data-i18n='coffee-store'></li>"+
-                    "<li data-i18n='reception'></li>"+
+                  "<ul class='place-selector'>"+
+                    "<li class='navigate-coffee-house'>"+
+                      "<img src='/img/icons/coffee-house.png' />"+
+                      "<div data-i18n='coffee-house'></div>"+
+                    "</li>"+
+                    "<li class='navigate-coffee-house'>"+
+                      "<img src='/img/icons/coffee-house.png' />"+
+                      "<div data-i18n='reception'></div>"+
+                    "</li>"+
                   "</ul>"+
-                "</div>"+
-                "<div>"+
-                  "<button class='button button-gray' data-i18n='navigate'></button>"+
                 "</div>"+
               "</div>"+
           "</div>"+
@@ -109,7 +112,7 @@ game.Menu.NavigatorBox = me.Object.extend({
           profileImage = "/img/default-shop.png";
         }
 
-        var elt = $("<li>"+
+        var elt = $("<li data-id='"+shop.id+"' style='cursor: pointer;'>"+
           "<div class='col-3'>"+
             "<img src='"+profileImage+"' width='50' />"+
           "</div>"+
@@ -119,8 +122,12 @@ game.Menu.NavigatorBox = me.Object.extend({
           "</div>"+
         "</li>");
         $(elt).click(function() {
-          $(self.navigatorBox).find('.shops li').removeClass('active');
-          $(this).addClass('active');
+          var id = $(this).data('id');
+          me.loader.onload = function() {
+            me.state.change(me.state.PLAY, "shop", id);
+          };
+          me.loader.preload({});
+          me.state.change(me.state.LOADING)
         });
         shop.tags.forEach(function(tag) {
           elt.find('ul').append("<li>"+tag+"</li>");
@@ -141,7 +148,7 @@ game.Menu.NavigatorBox = me.Object.extend({
           });
         });
       }
-      
+
       self.displayLoading(false);
     }).catch(function() {
       self.displayLoading(false);
@@ -158,7 +165,7 @@ game.Menu.NavigatorBox = me.Object.extend({
   },
   addListeners: function() {
     var self = this;
-    $(self.navigatorBox).find('.menu li').click(function() {      
+    $(self.navigatorBox).find('.menu li').click(function() {
       $(self.navigatorBox).find('.tabs li').removeClass('active');
       $(this).addClass('active');
       $(self.navigatorBox).find('.tab').hide();
@@ -184,11 +191,18 @@ game.Menu.NavigatorBox = me.Object.extend({
       self._request['orders'] = [ { method : order, target: orderName } ];
       self.refresh();
     });
+    $(self.navigatorBox).find('.navigate-coffee-house').click(function() {
+      me.loader.onload = function() {
+        me.state.change(me.state.PLAY, "coffee-house");
+      };
+      me.loader.preload({});
+      me.state.change(me.state.LOADING)
+    });
   },
   toggle: function() { // Toggle the box.
     $(this.navigatorBox).toggle();
   },
   destroy: function() {
-    if (this.navigatorBox) $(this.changeLookBox).remove();
+    if (this.navigatorBox) $(this.navigatorBox).remove();
   }
 });

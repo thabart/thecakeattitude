@@ -54,6 +54,13 @@ var GameStoreCl = function() {
 		updateCollisions();
 	};
 
+	this.empty = function() {
+		_activeEntity = null;
+		_entities = [];
+		_selectedEntity = null;
+		_collisionLayer = null;
+	};
+
 	this.getActiveEntity = function() { // Get the active entity (with opacity 0.5)
 		return _activeEntity;
 	};

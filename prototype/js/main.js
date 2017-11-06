@@ -15,7 +15,6 @@ var game = {
         me.loader.preload(g_ressources);
         me.state.change(me.state.LOADING);
     },
-
     loaded: function () {
         game.texture = new me.video.renderer.Texture(
             me.loader.getJSON("UI_Assets"),

@@ -3,7 +3,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
     onResetEvent: function(key, shopId) {
       var self = this;
       var mappingLevelToMap = [
-        { name: "reception",  level: "coffee_shop_map" },
+        { name: "coffee-house",  level: "coffee_shop_map" },
         { name: "shop",  level: "shop_map", sub: 'thabart' }
       ];
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
@@ -38,10 +38,10 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       me.game.world.addChild(self.movableContainer);
       me.game.world.addChild(self.tileSelector, Constants.playerZIndex - 1);
       me.game.world.addChild(self.currentPlayer);
-      self.handlePointerMove = me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
+      me.input.registerPointerEvent("pointermove", me.game.viewport, function (event) {
         me.event.publish("pointermove", [ event ]);
       }, false);
-      self.handlePointerDown = me.input.registerPointerEvent("pointerdown", me.game.viewport, function (event) {
+      me.input.registerPointerEvent("pointerdown", me.game.viewport, function (event) {
         me.event.publish("pointerdown", [ event ]);
       }, false);
       self.updateCurrentUser = function() {
@@ -104,6 +104,9 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       self.furnitureSelector.destroy();
       self.gameMenu.destroy();
       self.currentPlayer.destroy();
+      game.Stores.GameStore.empty();
       game.Stores.UserStore.unsubscribeCurrentUserChanged(self.updateCurrentUser);
+      me.input.releasePointerEvent("pointerdown", me.game.viewport);
+      me.input.releasePointerEvent("pointermove", me.game.viewport);
     }
 });

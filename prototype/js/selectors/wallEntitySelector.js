@@ -5,7 +5,7 @@ game.WallEntitySelector = game.SelectableEntitySelector.extend({
 				Constants.Selectors.Wall
 	   ]);
 	},
-	create: function(x, y, name, interaction) {
+	create: function(x, y, settings) {
 		return new game.Entities.PosterEntity(x, y, settings);
 	},
 	moveCallback: function() {
