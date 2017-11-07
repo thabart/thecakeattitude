@@ -3,8 +3,9 @@ game.Screens.GameScreen = me.ScreenObject.extend({
     onResetEvent: function(key, shopId) {
       var self = this;
       var mappingLevelToMap = [
+        { name: "reception", level: "reception_map" },
         { name: "coffee-house",  level: "coffee_shop_map" },
-        { name: "shop",  level: "shop_map", sub: 'thabart' }
+        { name: "shop",  level: "shop_map" }
       ];
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var map = mappingLevelToMap.filter(function(m) { return m.name === key; })[0];
@@ -70,21 +71,24 @@ game.Screens.GameScreen = me.ScreenObject.extend({
               entity = new game.Entities.FloorEntity(0, 0, {
                 col: gameEntity.col,
                 row: gameEntity.row,
-                resource: gameEntity.name
+                resource: gameEntity.name,
+                id: gameEntity.id
               });
             break;
             case "furniture":
               entity = new game.Entities.FurnitureEntity(0, 0, {
                 col: gameEntity.col,
                 row: gameEntity.row,
-                resource: gameEntity.name
+                resource: gameEntity.name,
+                id: gameEntity.id
               });
             break;
             case "wall":
               entity = new game.Entities.PosterEntity(0, 0, {
                 col: gameEntity.col,
                 row: gameEntity.row,
-                resource: gameEntity.name
+                resource: gameEntity.name,
+                id: gameEntity.id
               });
             break;
           }
@@ -93,6 +97,8 @@ game.Screens.GameScreen = me.ScreenObject.extend({
           entity.pos.z = entity.getZIndex();
           game.Stores.GameStore.addEntity(entity);
         });
+        game.Stores.GameStore.updateColls();
+        game.Stores.GameStore.setShopInformation(shop);
       }).catch(function() { });
     },
     onDestroyEvent: function() {

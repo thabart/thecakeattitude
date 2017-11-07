@@ -12,6 +12,7 @@ game.Entities.PosterEntity = game.SelectableEntity.extend({
       {
         x: x,
         y: y,
+        id: settings.id,
         name: settings.resource,
         refLayerName: Constants.Layers.Wall.Name,
         selector: Constants.Selectors.Wall,
@@ -24,5 +25,8 @@ game.Entities.PosterEntity = game.SelectableEntity.extend({
   },
 	getZIndex: function() {
 		return Constants.playerZIndex - 1;
-	}
+	},
+  getType: function() {
+    return "wall";
+  }
 });

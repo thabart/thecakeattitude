@@ -3,10 +3,8 @@ game.Menu.GameMenu = me.Object.extend({
   init: function() {
     var self = this;
     var user = game.Stores.UserStore.getCurrentUser();
-    // if (user.is_owner) {
-      self.inventoryBox = new game.Menu.InventoryBox();
-      self.manageEntityBox = new game.Menu.ManageEntityBox();
-    // }
+    self.inventoryBox = new game.Menu.InventoryBox();
+    self.manageEntityBox = new game.Menu.ManageEntityBox();
 
     if (!user.is_visitor) {
       self.changeLook = new game.Menu.ChangeLookBox();
@@ -24,11 +22,21 @@ game.Menu.GameMenu = me.Object.extend({
       var image = me.loader.getImage(currentPlayer.name);
       $(self.footer).find('.user').css('background', 'url('+image.src+') -5px -790px no-repeat');
     };
-    game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUser);
+    self.updateCurrentUserB = this.updateCurrentUser.bind(this);
+    self.updateShopInformationB = this.updateShopInformation.bind(this);
+    game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUserB);
+    game.Stores.GameStore.listenShopInformationChanged(self.updateShopInformationB);
     $(document.body).append(self.footer);
     self.addUserSubMenu();
     self.addMenu();
     $(this.footer).i18n();
+  },
+  updateShopInformation: function() {
+    var user = game.Stores.UserStore.getCurrentUser();
+    var shop = game.Stores.GameStore.getShopInformation();
+    if (user.sub === shop.subject) {
+      $(this.menu).find('.inventory').show();
+    }
   },
   addUserSubMenu: function() { // Add sub menu.
     this.userSubMenu = $("<div id='user-sub-menu' class='heavygray-panel' style='display: none;'>"+
@@ -58,8 +66,7 @@ game.Menu.GameMenu = me.Object.extend({
     var user = game.Stores.UserStore.getCurrentUser();
     this.menu = $("<div id='footer'>"+
         "<ul class='no-style'>"+
-          // (user.is_owner ? ("<li class='inventory'></li>") : "") +
-          "<li class='inventory'></li>"+
+          "<li class='inventory' style='display: none;'></li>"+
           "<li class='navigator'></li>"+
           (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/"+user.figure+"/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
         "</ul>"+
@@ -89,6 +96,7 @@ game.Menu.GameMenu = me.Object.extend({
     if (this.footer) $(this.footer).remove();
     if (this.menu) $(this.menu).remove();
     if (this.userSubMenu) $(this.userSubMenu).remove();
-    game.Stores.UserStore.unsubscribeCurrentUserChanged(this.updateCurrentUser);
+    game.Stores.UserStore.unsubscribeCurrentUserChanged(this.updateCurrentUserB);
+    game.Stores.GameStore.unsubscribeShopInformationChanged(self.updateShopInformationB);
   }
 });

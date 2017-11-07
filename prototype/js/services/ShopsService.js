@@ -42,5 +42,26 @@ game.Services.ShopsService = {
 			dfd.reject(e);
 		});
 	    return dfd;		
+	},
+	update: function(id, content) {
+		var dfd = jQuery.Deferred();
+		var accessToken = sessionStorage.getItem(Constants.sessionName);
+		$.get(Constants.apiConfigurationUrl).then(function(conf) {
+			$.ajax(conf.shops_endpoint + '/' + id, {
+				method: 'PUT',
+				contentType: 'application/json',
+				data: JSON.stringify(content),
+		      	headers: {
+		        	'Authorization': 'Bearer ' + accessToken
+		      	}
+			}).then(function(r) {
+				dfd.resolve(r);
+			}).fail(function(e) {
+				dfd.reject(e);
+			});
+		}).fail(function(e) {
+			dfd.reject(e);
+		});
+		return dfd;
 	}
 };

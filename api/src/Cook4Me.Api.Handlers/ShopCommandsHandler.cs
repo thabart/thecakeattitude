@@ -242,6 +242,19 @@ namespace Cook4Me.Api.Handlers
                 });
             }
 
+            IEnumerable<ShopGameEntity> shopGameEntities = null;
+            if (message.UpdateGameEntities != null)
+            {
+                shopGameEntities = message.UpdateGameEntities.Select(u => new ShopGameEntity
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Row = u.Row,
+                    Col = u.Col,
+                    Type = u.Type
+                }).ToList();
+            }
+
             var shop = await _shopRepository.Get(message.Id);
             if (shop == null)
             {
@@ -291,6 +304,7 @@ namespace Cook4Me.Api.Handlers
                 }).ToList();
             }
 
+            shop.ShopGameEntities = shopGameEntities;
             await _shopRepository.Update(shop);
             _eventPublisher.Publish(new ShopUpdatedEvent
             {

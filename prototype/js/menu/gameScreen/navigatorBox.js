@@ -74,7 +74,7 @@ game.Menu.NavigatorBox = me.Object.extend({
                       "<img src='/img/icons/coffee-house.png' />"+
                       "<div data-i18n='coffee-house'></div>"+
                     "</li>"+
-                    "<li class='navigate-coffee-house'>"+
+                    "<li class='navigate-reception'>"+
                       "<img src='/img/icons/coffee-house.png' />"+
                       "<div data-i18n='reception'></div>"+
                     "</li>"+
@@ -196,7 +196,14 @@ game.Menu.NavigatorBox = me.Object.extend({
         me.state.change(me.state.PLAY, "coffee-house");
       };
       me.loader.preload({});
-      me.state.change(me.state.LOADING)
+      me.state.change(me.state.LOADING);
+    });
+    $(self.navigatorBox).find('.navigate-reception').click(function() {
+      me.loader.onload = function() {
+        me.state.change(me.state.PLAY, "reception");
+      };
+      me.loader.preload({});
+      me.state.change(me.state.LOADING);
     });
   },
   toggle: function() { // Toggle the box.

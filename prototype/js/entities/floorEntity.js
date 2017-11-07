@@ -13,6 +13,7 @@ game.Entities.FloorEntity = game.SelectableEntity.extend({
           x: x,
           y: y,
           name: settings.resource,
+          id: settings.id,
           refLayerName: Constants.Layers.Ground.Name,
           selector: Constants.Selectors.Floor,
           interaction: null
@@ -27,5 +28,8 @@ game.Entities.FloorEntity = game.SelectableEntity.extend({
   },
   getZIndex: function() {
     return Constants.playerZIndex - 2;
+  },
+  getType: function() {
+    return "floor";
   }
 });

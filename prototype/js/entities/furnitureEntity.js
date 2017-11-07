@@ -12,6 +12,7 @@ game.Entities.FurnitureEntity = game.SelectableEntity.extend({
       {
         x: x,
         y: y,
+        id: settings.id,
         name: settings.resource,
         refLayerName: Constants.Layers.Ground.Name,
         selector: Constants.Selectors.Furniture,
@@ -30,5 +31,8 @@ game.Entities.FurnitureEntity = game.SelectableEntity.extend({
   },
   getZIndex: function() {
     return Constants.playerZIndex;
+  },
+  getType: function() {
+    return "furniture";
   }
 });

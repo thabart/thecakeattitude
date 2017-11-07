@@ -1194,11 +1194,47 @@ namespace Cook4Me.Api.Host.Builders
                 }
             }
 
+            var gameEntities = new List<UpdateGameEntity>();
+            var gameEntitiesObj = jObj[Constants.DtoNames.Shop.GameEntities];
+            if (gameEntitiesObj != null)
+            {
+                var gameEntitiesArr = gameEntitiesObj as JArray;
+                foreach(var gameEntity in gameEntitiesObj)
+                {
+                    gameEntities.Add(GetUpdateGameEntity(gameEntity as JObject));
+                }
+            }
+
             result.ProductFilters = filters;
             result.ProductCategories = productCategories;
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
             result.PaymentMethods = paymentMethods;
+            result.UpdateGameEntities = gameEntities;
             return result;
+        }
+
+        public UpdateGameEntity GetUpdateGameEntity(JObject jObj)
+        {
+            if (jObj == null)
+            {
+                throw new ArgumentNullException(nameof(jObj));
+            }
+
+            var type = GameEntityTypes.Furniture;
+            var keyValuePair = CommonBuilder.MappingGameEntityTypes.FirstOrDefault(kvp => kvp.Value == jObj.TryGetString(Constants.DtoNames.GameEntity.Type));
+            if (!keyValuePair.Equals(default(KeyValuePair<GameEntityTypes, string>)) && !string.IsNullOrWhiteSpace(keyValuePair.Value))
+            {
+                type = keyValuePair.Key;
+            }
+
+            return new UpdateGameEntity
+            {
+                Id = jObj.TryGetString(Constants.DtoNames.GameEntity.Id),
+                Col = jObj.TryGetInt(Constants.DtoNames.GameEntity.Col),
+                Row = jObj.TryGetInt(Constants.DtoNames.GameEntity.Row),
+                Name = jObj.TryGetString(Constants.DtoNames.GameEntity.Name),
+                Type = type
+            };
         }
 
         public SearchShopsParameter GetSearchShops(JObject jObj)

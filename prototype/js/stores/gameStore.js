@@ -3,6 +3,7 @@ var GameStoreCl = function() {
 	var _entities = [];
 	var _selectedEntity = null;
 	var _collisionLayer = null;
+	var _shopInformation = null;
 
 	var updateCollisions = function() {
 		var refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
@@ -30,23 +31,6 @@ var GameStoreCl = function() {
 						_collisionLayer.setWalkableAt(row, col, false);
 					}
 				}
-
-				/*
-				if (spr.flipped) { // Vertical.
-					for (var col = collisionCoordinate.col; col < collisionCoordinate.col + sprCoordinates.nbCols; col++) {
-						for (var row = collisionCoordinate.row; row > collisionCoordinate.row - sprCoordinates.nbRows; row--) {
-							console.log(collisionCoordinate.col+" "+ col+" "+row);
-							_collisionLayer.setWalkableAt(row, col, false);
-						}
-					}
-				} else { // Horizontal.
-					for (var col = collisionCoordinate.col; col > collisionCoordinate.col - sprCoordinates.nbCols; col--) {
-						for (var row = collisionCoordinate.row; row > collisionCoordinate.row - sprCoordinates.nbRows; row--) {
-							_collisionLayer.setWalkableAt(row, col, false);
-						}
-					}
-				}
-				*/
 		});
 	};
 
@@ -59,6 +43,16 @@ var GameStoreCl = function() {
 		_entities = [];
 		_selectedEntity = null;
 		_collisionLayer = null;
+		_shopInformation = null;
+	};
+
+	this.getShopInformation = function() { // Get the shop information.
+		return _shopInformation;
+	};
+
+	this.setShopInformation = function(shopInformation) { // Set the shop information.
+		_shopInformation = shopInformation;
+		$(this).trigger('shopInformationChanged');
 	};
 
 	this.getActiveEntity = function() { // Get the active entity (with opacity 0.5)
@@ -89,21 +83,46 @@ var GameStoreCl = function() {
 		$(this).trigger('selectedEntityChanged');
 	};
 
-	this.addEntity = function(f) { // Add an entity and update the collisions.
+	this.addEntity = function(f, update = false) { // Add an entity and update the collisions.
 		_entities.push(f);
-		updateCollisions();
+		if (update) {
+			updateCollisions();			
+			var gameEntities = _shopInformation['game_entities'];
+			if (!gameEntities) {
+				gameEntities = [];
+			}
+
+			var coordinates = f.getCoordinates();
+			gameEntities.push({
+				id: f.metadata.id,
+				name: f.metadata.name,
+				col: coordinates.col,
+				row: coordinates.row,
+				type: f.getType()
+			});
+			_shopInformation['game_entities'] = gameEntities;
+			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
+		}
 	};
 
 	this.getEntities = function() { // Get all the entities.
 		return _entities;
 	};
 
-	this.removeEntity = function(f) { // Remove an entity and update the collisions.
+	this.removeEntity = function(f, update = false) { // Remove an entity and update the collisions.
 		var index = _entities.indexOf(f);
 		if (index === -1) { return; }
 		me.game.world.removeChild(f);
 		_entities.splice(index, 1);
-		updateCollisions();
+		if (update) {			
+			updateCollisions();
+			var gameEntities = _shopInformation['game_entities'];
+			var removedEntity = gameEntities.filter(function(g) { return g.id === f.metadata.id })[0];
+			var indexRemoved = gameEntities.indexOf(removedEntity);
+			gameEntities.splice(indexRemoved, 1);
+			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
+		}
+
 		me.game.repaint();
 	};
 
@@ -152,6 +171,14 @@ var GameStoreCl = function() {
 	};
 
 	/* LISTEN THE EVENTS */
+	this.listenShopInformationChanged = function(callback) {
+		$(this).on('shopInformationChanged', callback);
+	};
+
+	this.unsubscribeShopInformationChanged = function(callback) {
+		$(this).off('shopInformationChanged', callback);
+	};
+
 	this.listenActiveEntityChanged = function(callback) {
 		$(this).on('activeEntityChanged', callback);
 	};

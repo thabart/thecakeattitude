@@ -25,13 +25,13 @@ game.Menu.ActionsBox = me.Object.extend({
       var flipped = selectedEntity.flipped;
       var selector = selectedEntity.selector;
       game.Stores.GameStore.setActiveEntity(name, selector, flipped);
-      game.Stores.GameStore.removeEntity(selectedEntity);
+      game.Stores.GameStore.removeEntity(selectedEntity, true);
       $(self.actions).hide();
       game.Stores.GameStore.hideInformation();
     });
     $(this.actions).find('.remove').click(function() {
       var selectedEntity = game.Stores.GameStore.getSelectedEntity();
-      game.Stores.GameStore.removeEntity(selectedEntity);
+      game.Stores.GameStore.removeEntity(selectedEntity, true);
       $(self.actions).hide();
       game.Stores.GameStore.hideInformation();
     });

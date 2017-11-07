@@ -19,6 +19,7 @@ using Cook4Me.Api.Core.Parameters;
 using Cook4Me.Api.Core.Repositories;
 using Cook4Me.Api.Core.Results;
 using Cook4Me.Api.EF.Extensions;
+using Cook4Me.Api.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -415,6 +416,23 @@ namespace Cook4Me.Api.EF.Repositories
                             Subject = commentToAdd.Subject
                         };
                         _context.Comments.Add(rec);
+                    }
+
+
+                    record.GameEntities.Clear();
+                    if (shop.ShopGameEntities != null)
+                    {
+                        foreach(var shopGameEntity in shop.ShopGameEntities)
+                        {
+                            record.GameEntities.Add(new GameEntity
+                            {
+                                Id = shopGameEntity.Id,
+                                Col = shopGameEntity.Col,
+                                Name = shopGameEntity.Name,
+                                Row = shopGameEntity.Row,
+                                Type = (int)shopGameEntity.Type
+                            });
+                        }
                     }
 
                     await _context.SaveChangesAsync().ConfigureAwait(false);

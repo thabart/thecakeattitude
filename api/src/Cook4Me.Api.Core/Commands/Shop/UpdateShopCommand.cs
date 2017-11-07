@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,15 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string PaypalAccount { get; set; }
     }
 
+    public class UpdateGameEntity
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int Col { get; set; }
+        public int Row { get; set; }
+        public GameEntityTypes Type { get; set; }
+    }
+    
     public class UpdateShopCommand : Command
     {
         public string Id { get; set; }
@@ -75,5 +85,6 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public IEnumerable<UpdatePaymentInformation> PaymentMethods { get; set; }
         public IEnumerable<UpdateShopProductCategory> ProductCategories { get; set; }
         public IEnumerable<UpdateProductShopFilter> ProductFilters { get; set; }
+        public IEnumerable<UpdateGameEntity> UpdateGameEntities { get; set; }
     }
 }
