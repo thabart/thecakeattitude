@@ -1,4 +1,5 @@
-game.InteractionLauncher = me.Object.extend({
+game.Interactions = game.Interactions || {};
+game.Interactions.Launcher = me.Object.extend({
   init: function() {
     var shelfInteraction = new game.ShelfInteraction();
     this.interactions = [

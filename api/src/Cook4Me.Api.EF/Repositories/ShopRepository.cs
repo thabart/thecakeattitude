@@ -191,6 +191,7 @@ namespace Cook4Me.Api.EF.Repositories
                         .Include(c => c.CategoryMap)
                         .Include(s => s.ProductCategories)
                         .Include(s => s.ShopTags)
+                        .Include(s => s.GameEntities)
                         .Include(s => s.Filters).ThenInclude(f => f.Values)
                         .FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
                     if (record == null)
@@ -419,27 +420,45 @@ namespace Cook4Me.Api.EF.Repositories
                     }
 
 
-                    record.GameEntities.Clear();
-                    if (shop.ShopGameEntities != null)
+                    var gameEntities = shop.ShopGameEntities == null ? new List<ShopGameEntity>() : shop.ShopGameEntities; // Update game entities.
+                    var gameEntitiesId = gameEntities.Select(c => c.Id);
+                    var gameEntitiesToUpdate = record.GameEntities.Where(c => gameEntitiesId.Contains(c.Id));
+                    var gameEntitiesToRemove = record.GameEntities.Where(c => !gameEntitiesId.Contains(c.Id));
+                    var existingGameEntitiesId = record.GameEntities.Select(c => c.Id);
+                    var gameEntitiesToAdd = gameEntities.Where(c => !existingGameEntitiesId.Contains(c.Id));
+                    foreach (var gameEntityToUpdate in gameEntitiesToUpdate)
                     {
-                        foreach(var shopGameEntity in shop.ShopGameEntities)
+                        var gameEntity = gameEntities.First(c => c.Id == gameEntityToUpdate.Id);
+                        gameEntityToUpdate.Type = (int)gameEntity.Type;
+                        gameEntityToUpdate.Col = gameEntity.Col;
+                        gameEntityToUpdate.Row = gameEntity.Row;
+                        gameEntityToUpdate.Name = gameEntity.Name;
+                    }
+
+                    foreach (var gameEntityToRemove in gameEntitiesToRemove)
+                    {
+                        _context.GameEntities.Remove(gameEntityToRemove);
+                    }
+
+                    foreach (var gameEntityToAdd in gameEntitiesToAdd)
+                    {
+                        var rec = new Models.GameEntity
                         {
-                            record.GameEntities.Add(new GameEntity
-                            {
-                                Id = shopGameEntity.Id,
-                                Col = shopGameEntity.Col,
-                                Name = shopGameEntity.Name,
-                                Row = shopGameEntity.Row,
-                                Type = (int)shopGameEntity.Type
-                            });
-                        }
+                            Id = gameEntityToAdd.Id,
+                            Col = gameEntityToAdd.Col,
+                            Row = gameEntityToAdd.Row,
+                            Name = gameEntityToAdd.Name,
+                            ShopId = shop.Id,
+                            Type = (int)gameEntityToAdd.Type
+                        };
+                        _context.GameEntities.Add(rec);
                     }
 
                     await _context.SaveChangesAsync().ConfigureAwait(false);
                     transaction.Commit();
                     return true;
                 }
-                catch
+                catch(Exception ex)
                 {
                     transaction.Rollback();
                     return false;

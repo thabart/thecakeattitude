@@ -3,15 +3,13 @@
  */
 
 var g_ressources = [
-    { name: "UI_Assets",    type: "image",  src: "resources/UI_Assets.png" }, // UI texture pack.
-    { name: "UI_Assets",    type: "json",  src: "resources/UI_Assets.json" },
-    { name: "reception_map",     type: "tmx",    src: "resources/reception-map.tmx" }, // Load the reception map.
-    { name: "shop_map",     type: "tmx",    src: "resources/shop-map.tmx" }, // Load the shop map.
+    { name: "reception_map",     type: "tmx",    src: "resources/reception-map.tmx" }, // Load the maps
+    { name: "shop_map",     type: "tmx",    src: "resources/shop-map.tmx" },
+    { name: "coffee_shop_map", type: "tmx", src: "resources/coffee-house/habbo-coffee-house.tmx" },
     { name: "wall_right", type: "image", src: "resources/wall_right.png" },
     { name: "wall_left", type: "image", src: "resources/wall_left.png" },
     { name: "gallery_n10", type: "image", src: "resources/gallery_n10.gif" },
     { name: "floor", type: "image", src: "resources/floor.png" },
-    { name: "coffee_shop_map", type: "tmx", src: "resources/coffee-house/habbo-coffee-house.tmx" }, // Load the COFFEE SHOP MAP.
     { name: "wood-floor", type: "image", src: "resources/coffee-house/wood-floor.png" },
     { name: "brick", type: "image", src: "resources/coffee-house/brick.png" },
     { name: "window", type: "image", src: "resources/coffee-house/window.png" },
@@ -87,5 +85,6 @@ var g_ressources = [
     { name: "furnitures_shapes", type: "json", src: "resources/shapes/furnitures.json" }, // Load the shapes.
     { name: "walls_shapes", type: "json", src: "resources/shapes/walls.json" },
     { name: "player_shape", type: "json", src: "resources/shapes/player.json" },
-    { name: "grounds_shapes", type: "json", src: "resources/shapes/grounds.json" }
+    { name: "grounds_shapes", type: "json", src: "resources/shapes/grounds.json" },
+    { name: "furnitures", type: "json", src: "resources/furnitures.json" }
 ];

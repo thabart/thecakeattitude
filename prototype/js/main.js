@@ -16,11 +16,6 @@ var game = {
         me.state.change(me.state.LOADING);
     },
     loaded: function () {
-        game.texture = new me.video.renderer.Texture(
-            me.loader.getJSON("UI_Assets"),
-            me.loader.getImage("UI_Assets")
-        );
-
         me.game.world.autoSort = true;
         me.game.world.sortOn = 'y';
 

@@ -55,6 +55,7 @@ namespace Cook4Me.Api.EF
         public virtual DbSet<Discount> Discounts { get; set; }
         public virtual DbSet<ProductDiscount> ProductDiscounts { get; set; }
         public virtual DbSet<FeedItem> FeedItems { get; set; }
+        public virtual DbSet<GameEntity> GameEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
