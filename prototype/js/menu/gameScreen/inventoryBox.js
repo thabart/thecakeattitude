@@ -2,7 +2,8 @@ game.Menu = game.Menu || {};
 game.Menu.InventoryBox = me.Object.extend({
   init: function() {
       var self = this;
-      this.categories = me.loader.getJSON("furnitures");
+      this.entities = me.loader.getJSON("entities");
+      this.categories = me.loader.getJSON("categories");
       var indice = 0;
       var tabs = this.categories.map(function(category) {
         if (indice === 0) {

@@ -86,5 +86,6 @@ var g_ressources = [
     { name: "walls_shapes", type: "json", src: "resources/shapes/walls.json" },
     { name: "player_shape", type: "json", src: "resources/shapes/player.json" },
     { name: "grounds_shapes", type: "json", src: "resources/shapes/grounds.json" },
-    { name: "furnitures", type: "json", src: "resources/furnitures.json" }
+    { name: "entities", type: "json", src: "resources/entities.json" },
+    { name: "categories", type: "json", src: "resources/categories.json" }
 ];

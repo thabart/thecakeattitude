@@ -1,0 +1,119 @@
+[
+	{
+		"name": "furnitures_tab",
+		"selector": "furniture",
+		"types": [
+			{
+				"name": "type_table",
+				"themes": [
+					{
+						"name": "theme_executive",
+						"furnitures": [ "executive_table", "executive_desk" ]
+					},
+					{
+						"name": "theme_glass",
+						"furnitures": [ "glass_table" ]
+					},
+					{
+	                  "name": "theme_grunge",
+	                  "furnitures": [ "grunge_table" ]
+	                },
+	                {
+	                	"name": "theme_mode",
+	                	"furnitures": [ "mode_table" ]
+	                }
+				]				
+			},
+			{
+				"name": "type_chair",
+				"themes": [
+					{ 
+						"name": "theme_executive",
+						"furnitures": [ "executive_sofa", "executive_chair" ]
+					}
+				]
+			},
+			{
+				"name": "type_shelf",
+				"themes" : [
+					{
+						"name": "theme_glass",
+						"furnitures": [ "glass_shelves" ]
+					}
+				]
+			}
+		]
+	},
+	{
+		"name": "wall_tab",
+		"selector": "wall",
+		"types": [
+			{ 
+				"name": "type_posters",
+				"themes": [
+					{
+						"name": "theme_default",
+						"furnitures": [ "gallery_1", "gallery_2", "gallery_n1", "gallery_n2", "gallery_n3", "gallery_n4", "gallery_n5", "gallery_n6", "gallery_n7", "gallery_n8", "gallery_n9", "gallery_n10", "gallery_n11", "gallery_n12", "gallery_n13", "gallery_n14" ]
+					}
+				]				
+			},
+			{
+				"name": "type_flags",
+				"themes": [
+					{
+						"name": "theme_default",
+						"furnitures": [ "flag_1", "flag_2", "flag_3", "flag_4", "flag_5" ]
+					}
+				]				
+			}
+		]
+	},
+	{
+		"name": "interior_tab",
+		"selector": "furniture",
+		"types": [
+			{
+				"name": "type_plants",
+				"themes": [
+					{
+						"name": "theme_default",
+						"furnitures": [ "plant_1", "plant_2", "plant_3", "plant_4", "plant_5", "plant_6", "plant_7", "plant_8", "plant_9", "plant_10"]
+					}
+				]
+				
+			}
+		]
+	},
+	{
+		"name": "field_tab",
+		"selector": "furniture",
+		"types": [
+			{
+				"name": "type_field",
+				"themes": [
+					{ 
+						"name": "theme_executive",
+						"furnitures": [ "exe_floor" ]
+					},
+					{ 
+						"name": "theme_star",
+						"furnitures": [ "hw_tile_1", "hw_tile_2", "hw_tile_3" ]
+					}
+				]
+			},
+			{
+				"name": "type_rug",
+				"themes": [ 
+					{
+						"name": "theme_japanese",
+						"furnitures": [ "jp_tatami_large", "jp_tatami_small" ]
+					},
+					{
+						"name": "",
+						"furnitures": [ "bear_rug_blue", "bear_rug_mint" ]
+					}
+				]
+			}
+		]
+	}
+]
