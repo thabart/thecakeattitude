@@ -59,7 +59,7 @@ game.Menu.GameMenu = me.Object.extend({
     var shop = game.Stores.GameStore.getShopInformation();
     this.menu = $("<div id='footer'>"+
         "<ul class='no-style'>"+
-          ( user.sub === shop.subject ? "<li class='inventory'></li>" : "" ) +
+          ( !user.is_visitor && user.sub === shop.subject ? "<li class='inventory'></li>" : "" ) +
           "<li class='navigator'></li>"+
           (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/"+user.figure+"/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
         "</ul>"+

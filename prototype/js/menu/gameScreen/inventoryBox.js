@@ -14,9 +14,10 @@ game.Menu.InventoryBox = me.Object.extend({
           inStock = gameEntity['max_available_in_stock'] - shopGameEntities.length;
         }
         else if (gameEntity && gameEntity.is_shelf) {
-          inStock = shop['product_categories'] - shopGameEntities.length;
+          inStock = shop['product_categories'].length - shopGameEntities.length;
         }
 
+        entity.is_shelf = gameEntity.is_shelf;
         entity.in_stock = inStock;
       });
       var indice = 0;
@@ -76,7 +77,7 @@ game.Menu.InventoryBox = me.Object.extend({
       this.addListeners();
       $(this.inventory).find('.tabs li:first-child').click();
       $(this.inventory).hide();
-      $(this.inventory).draggable({ "handle": ".top" });
+      $(this.inventory).draggable({ "handle": ".container > .content > .top" });
       $(this.inventory).i18n();
       this.updateActiveEntityB = this.updateActiveEntity.bind(this);
       this.addEntityB = this.addEntity.bind(this);
@@ -127,16 +128,39 @@ game.Menu.InventoryBox = me.Object.extend({
       "<div class='action'>"+
         "<b data-i18n='"+entity.description+"'></b>"+
         "<p><span data-i18n='entityInStock'></span> <span class='in_stock'>"+entity.in_stock+"</span></p>"+
+        "<p class='product-categories'></p>"+
         "<button class='button button-gray' data-i18n='add_into_shop'></button>"+
       "</div>"+
     "</div>");
+    if (entity.is_shelf) {
+      var shop = game.Stores.GameStore.getShopInformation();
+      var selector = $("<div class='input'>"+
+        "<div class='top'></div>"+
+        "<div class='body'>"+
+          "<select class='product-category-chooser'></select>"+
+        "</div>"+
+        "<div class='bottom'></div>"+
+      "</div>");
+      shop['product_categories'].forEach(function(productCategory) {
+        $(selector).find('.product-category-chooser').append("<option data-id='"+productCategory.id+"' data-i18n='"+productCategory.name+"'></option>");
+      });
+      $(n).find('.product-categories').append(selector);
+    }
+
     $(entityInformation).append(n);
+    $(n).i18n();
     $(n).find('.button').click(function() {
       var name = $(elt).data('name'),
         selector = $(elt).data('selector');
       var entity = self.entities.filter(function(e) { return e.name === name; })[0];
       if (entity.in_stock === 0) { return; }
-      game.Stores.GameStore.setActiveEntity(name, selector, entity.type, false);
+      var productCategoryId = $(n).find('.product-category-chooser option:selected').data("id");
+      var productCategory = null;
+      if (productCategoryId) {
+        productCategory = shop['product_categories'].filter(function(pc) { return pc.id === productCategoryId; })[0];
+      }
+
+      game.Stores.GameStore.setActiveEntity(name, selector, entity.type, false, productCategory);
     });
     $(entityInformation).i18n();
   },

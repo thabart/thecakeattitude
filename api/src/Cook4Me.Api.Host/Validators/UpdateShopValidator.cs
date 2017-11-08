@@ -183,7 +183,9 @@ namespace Cook4Me.Api.Host.Validators
 
             if (shop.UpdateGameEntities != null)
             {
-                if (shop.UpdateGameEntities.Any(ug => record.ProductCategories.Any(pc => !string.IsNullOrWhiteSpace(ug.ProductCategoryId) && ug.ProductCategoryId != pc.Id)))
+                var updateGameEntitiesIdDinstinct = shop.UpdateGameEntities.Where(g => !string.IsNullOrWhiteSpace(g.ProductCategoryId)).Select(g => g.ProductCategoryId);
+                var productCategoriesId = record.ProductCategories.Select(pc => pc.Id);
+                if (updateGameEntitiesIdDinstinct.Any(id => !productCategoriesId.Contains(id)))
                 {
                     return new UpdateShopValidationResult(ErrorDescriptions.TheProductCategoriesDoesntExist);
                 }

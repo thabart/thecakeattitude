@@ -69,15 +69,16 @@ var GameStoreCl = function() {
 		return _activeEntity;
 	};
 
-	this.setActiveEntity = function(name, selector, type, isFlipped) { // Set the active entity (with opacity 0.5)
+	this.setActiveEntity = function(name, selector, type, isFlipped, productCategory) { // Set the active entity (with opacity 0.5)
 		if (!name || name === null) {
-			_activeEntity = null;
+			_activeEntity = {};
 		} else {
 			_activeEntity = {
 				name: name,
 				selector: selector,
 				type: type,
-				isFlipped: isFlipped
+				isFlipped: isFlipped,
+				productCategory: productCategory
 			};
 		}
 
@@ -106,9 +107,10 @@ var GameStoreCl = function() {
 			gameEntities.push({
 				id: f.metadata.id,
 				name: f.metadata.name,
+				product_category_id: f.metadata.product_category ? f.metadata.product_category.id : null,
 				col: coordinates.col,
 				row: coordinates.row,
-				type: f.getType()
+				type: f.getType(),
 			});
 			_shopInformation['game_entities'] = gameEntities;
 			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
