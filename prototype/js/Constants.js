@@ -23,9 +23,6 @@ var Constants = {
     Wall: "wall",
     Floor: "floor"
   },
-  Interactions: {
-    Shelf: "Shelf"
-  },
   playerZIndex: 7,
   sessionName: "shopingame-game",
   apiConfigurationUrl: 'http://localhost:5000/.well-known/configuration',

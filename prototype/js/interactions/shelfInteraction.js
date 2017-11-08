@@ -1,8 +1,8 @@
 game.ShelfInteraction = me.Object.extend({
   init: function() {
-    this.key = Constants.Interactions.Shelf;
+    this.key = "shelf";
   },
   execute: function() {
-    ShopStore.displayShelfBox();
+    game.Stores.GameStore.displayShelfBox();
   }
 });

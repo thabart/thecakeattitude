@@ -59,15 +59,15 @@ var GameStoreCl = function() {
 		return _activeEntity;
 	};
 
-	this.setActiveEntity = function(name, selector, interaction, isFlipped) { // Set the active entity (with opacity 0.5)
+	this.setActiveEntity = function(name, selector, type, isFlipped) { // Set the active entity (with opacity 0.5)
 		if (!name || name === null) {
 			_activeEntity = null;
 		} else {
 			_activeEntity = {
 				name: name,
-				isFlipped: isFlipped,
 				selector: selector,
-				interaction: interaction
+				type: type,
+				isFlipped: isFlipped
 			};
 		}
 
@@ -86,7 +86,7 @@ var GameStoreCl = function() {
 	this.addEntity = function(f, update = false) { // Add an entity and update the collisions.
 		_entities.push(f);
 		if (update) {
-			updateCollisions();			
+			updateCollisions();
 			var gameEntities = _shopInformation['game_entities'];
 			if (!gameEntities) {
 				gameEntities = [];
@@ -114,7 +114,7 @@ var GameStoreCl = function() {
 		if (index === -1) { return; }
 		me.game.world.removeChild(f);
 		_entities.splice(index, 1);
-		if (update) {			
+		if (update) {
 			updateCollisions();
 			var gameEntities = _shopInformation['game_entities'];
 			var removedEntity = gameEntities.filter(function(g) { return g.id === f.metadata.id })[0];

@@ -7,7 +7,7 @@ game.Entities.PosterEntity = game.SelectableEntity.extend({
       x = coordinates.x;
       y = coordinates.y;
     }
-    
+
     this._super(game.SelectableEntity, "init", [
       {
         x: x,
@@ -16,7 +16,7 @@ game.Entities.PosterEntity = game.SelectableEntity.extend({
         name: settings.resource,
         refLayerName: Constants.Layers.Wall.Name,
         selector: Constants.Selectors.Wall,
-        interaction: settings.interaction
+        type: settings.type
       }
     ]);
     this.addCollision("posters_collision");

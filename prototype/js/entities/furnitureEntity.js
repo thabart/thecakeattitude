@@ -7,7 +7,7 @@ game.Entities.FurnitureEntity = game.SelectableEntity.extend({
       x = coordinates.x;
       y = coordinates.y;
     }
-    
+
     this._super(game.SelectableEntity, "init", [
       {
         x: x,
@@ -17,7 +17,7 @@ game.Entities.FurnitureEntity = game.SelectableEntity.extend({
         refLayerName: Constants.Layers.Ground.Name,
         selector: Constants.Selectors.Furniture,
         isCollidable: true,
-        interaction: null,
+        type: settings.type,
         flipped: settings.flipped || false
       }
     ]);

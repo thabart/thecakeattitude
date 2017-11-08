@@ -130,8 +130,10 @@ game.Menu.ShelfBox = me.Object.extend({
     $(this.shelf).draggable({ "handle": ".top" });
     $(this.shelf).i18n();
     this.addListeners();
-    game.Stores.GameStore.listenDisplayShelfBoxArrived(this.display.bind(this));
-    game.Stores.GameStore.listenHideShelfBoxArrived(this.hide.bind(this));
+    this.displayB = this.display.bind(this);
+    this.hideB = this.hide.bind(this);
+    game.Stores.GameStore.listenDisplayShelfBoxArrived(this.displayB);
+    game.Stores.GameStore.listenHideShelfBoxArrived(this.hideB);
   },
   refresh: function() {
 
@@ -166,7 +168,7 @@ game.Menu.ShelfBox = me.Object.extend({
   },
   destroy: function() {
     if (this.shelf) $(this.shelf).remove();
-    if (this.display) game.Stores.GameStore.unsubscribeDisplayShelfBoxArrived(this.display.bind(this));
-    if (this.hide) game.Stores.GameStore.unsubscribeHideShelfBoxArrived(this.hide.bind(this));
+    if (this.displayB) game.Stores.GameStore.unsubscribeDisplayShelfBoxArrived(this.displayB);
+    if (this.hideB) game.Stores.GameStore.unsubscribeHideShelfBoxArrived(this.hideB);
   }
 });

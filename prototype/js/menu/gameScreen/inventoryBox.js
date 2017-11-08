@@ -81,21 +81,25 @@ game.Menu.InventoryBox = me.Object.extend({
   },
   displayEntityInformation: function(elt) { // Display the entity information.
     var self = this;
+    var entity = self.entities.filter(function(e) { return e.name === $(elt).data('name'); })[0];
     var entityInformation = $(self.inventory).find('.entity-information');
     entityInformation.empty();
     var n = $("<div>"+
       "<div class='picture'>"+
-        "<img src='"+$(elt).data('img')+"' />"+
+        "<img src='"+entity.url+"' />"+
       "</div>"+
       "<div class='action'>"+
-        "<b data-i18n='"+$(elt).data('description')+"'></b>"+
-        "<p><span data-i18n='entityInStock'></span> "+$(elt).data('instock')+"</p>"+
+        "<b data-i18n='"+entity.description+"'></b>"+
+        "<p><span data-i18n='entityInStock'></span> "+entity.in_stock+"</p>"+
         "<button class='button button-gray' data-i18n='add_into_shop'></button>"+
       "</div>"+
     "</div>");
     $(entityInformation).append(n);
     $(n).find('.button').click(function() {
-      game.Stores.GameStore.setActiveEntity($(elt).data('furniture'), $(elt).data('selector'), $(elt).data('interaction'), false);
+      var name = $(elt).data('name'),
+        selector = $(elt).data('selector');
+      var entity = self.entities.filter(function(e) { return e.name === name; })[0];
+      game.Stores.GameStore.setActiveEntity(name, selector, entity.type, false);
     });
     $(entityInformation).i18n();
   },
@@ -112,12 +116,11 @@ game.Menu.InventoryBox = me.Object.extend({
       var theme = type.themes.filter(function(t) { return t.name === themeName; })[0];
       if (!theme) { return; }
       $(self.inventory).find('.furnitures').empty();
-      theme.furnitures.forEach(function(furniture) {
+      theme.furnitures.forEach(function(furnitureName) {
+        var entity = self.entities.filter(function(e) { return e.name === furnitureName; })[0];
         $(self.inventory).find('.furnitures').append(
-          "<li data-furniture='"+furniture.name+"'"+
-              "data-selector='"+category.selector+"' data-img='"+furniture.url+"' data-description='"+furniture.description+"'"+
-              "data-instock='"+furniture.in_stock+"' data-interaction='"+(type.interaction || '')+"'>"+
-            "<img src='"+furniture.icon+"' />"+
+          "<li data-name='"+entity.name+"' data-selector='"+category.selector+"'>"+
+            "<img src='"+entity.icon+"' />"+
           "</li>");
       });
 
@@ -184,6 +187,6 @@ game.Menu.InventoryBox = me.Object.extend({
   },
   destroy: function() {
     if (this.inventory) $(this.inventory).remove();
-    if (this.update) game.Stores.GameStore.unsubscribeActiveEntityChanged(this.update.bind(this));   
+    if (this.update) game.Stores.GameStore.unsubscribeActiveEntityChanged(this.update.bind(this));
   }
 });

@@ -7,7 +7,7 @@ game.Entities.FloorEntity = game.SelectableEntity.extend({
         x = coordinates.x;
         y = coordinates.y;
       }
-      
+
       this._super(game.SelectableEntity, "init", [
         {
           x: x,
@@ -16,7 +16,7 @@ game.Entities.FloorEntity = game.SelectableEntity.extend({
           id: settings.id,
           refLayerName: Constants.Layers.Ground.Name,
           selector: Constants.Selectors.Floor,
-          interaction: null
+          interaction: settings.type
         }
       ]);
       this.addCollision("grounds_collision");

@@ -9,7 +9,7 @@ game.Menu.ActionsBox = me.Object.extend({
         "<button class='button button-gray use' data-i18n='use'></button>"+
       "</div>");
       $("#bottom-right-container").append(this.actions);
-      // this.launcher = new game.InteractionLauncher();
+      this.launcher = new game.Interactions.Launcher ();
       this.mgfurniture = new game.Menu.ManageEntityBox();
       this.addListeners();
       $(this.actions).hide();
@@ -47,25 +47,34 @@ game.Menu.ActionsBox = me.Object.extend({
       self.mgfurniture.toggle();
     });
     $(this.actions).find('.use').click(function() {
-      /*
       var selectedEntity = game.Stores.GameStore.getSelectedEntity();
-      var interaction = selectedEntity.metadata.interaction;
-      self.launcher.launch(interaction);
-      */
+      var type = selectedEntity.metadata.type;
+      if (!type) {
+        return;
+      }
+
+      self.launcher.launch(type);
     });
   },
   display: function(e, metadata) {
     var user = game.Stores.UserStore.getCurrentUser();
     var shop = game.Stores.GameStore.getShopInformation();
-    console.log(user.sub+" "+shop.subject);
-    if (user.sub !== shop.subject) { return; }
-    if (metadata.interaction && metadata.interaction !== '') {
-      $(this.actions).find('.use').show();
-    } else {
-      $(this.actions).find('.use').hide();
+    if (!metadata.type && user.sub !== shop.subject) {
+      return;
     }
 
     $(this.actions).show();
+    $(this.actions).find('button').hide();
+    $(this.actions).find('button').prop('disabled', true);
+    if (metadata.type) {
+      $(this.actions).find('.use').show();
+      $(this.actions).find('.use').prop('disabled', false);
+    }
+
+    if (user.sub === shop.subject) {
+      $(this.actions).find('.move, .remove, .turn, .translate').show();
+      $(this.actions).find('.move, .remove, .turn, .translate').prop('disabled', false);
+    }
   },
   hide: function() {
     $(this.actions).hide();

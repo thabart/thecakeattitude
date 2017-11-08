@@ -66,30 +66,25 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         var shop = r['_embedded'];
         shop['game_entities'].forEach(function(gameEntity) {
           var entity = null;
+          var entities = me.loader.getJSON("entities");
+          var entObj = entities.filter(function(e) { return e.name === gameEntity.name; })[0];
+          var commonProps = {
+            col: gameEntity.col,
+            row: gameEntity.row,
+            resource: gameEntity.name,
+            id: gameEntity.id,
+            type: entObj.type
+          };
+          console.log(commonProps);
           switch (gameEntity.type) {
             case "floor":
-              entity = new game.Entities.FloorEntity(0, 0, {
-                col: gameEntity.col,
-                row: gameEntity.row,
-                resource: gameEntity.name,
-                id: gameEntity.id
-              });
+              entity = new game.Entities.FloorEntity(0, 0, commonProps);
             break;
             case "furniture":
-              entity = new game.Entities.FurnitureEntity(0, 0, {
-                col: gameEntity.col,
-                row: gameEntity.row,
-                resource: gameEntity.name,
-                id: gameEntity.id
-              });
+              entity = new game.Entities.FurnitureEntity(0, 0, commonProps);
             break;
             case "wall":
-              entity = new game.Entities.PosterEntity(0, 0, {
-                col: gameEntity.col,
-                row: gameEntity.row,
-                resource: gameEntity.name,
-                id: gameEntity.id
-              });
+              entity = new game.Entities.PosterEntity(0, 0, commonProps);
             break;
           }
 

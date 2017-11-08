@@ -51,7 +51,6 @@ game.SelectableEntitySelector = me.Object.extend({
 		this.sprite.nbCols = nbCols;
 		this.sprite.pos.x = coordinates.x;
 		this.sprite.pos.y = coordinates.y;
-		console.log(tile);
 		if (this.moveCallback) {
 			this.moveCallback();
 		}
@@ -83,7 +82,7 @@ game.SelectableEntitySelector = me.Object.extend({
 		if (this.intersects) { return; }
 		evt.handled = true;
 		var activeEntity = game.Stores.GameStore.getActiveEntity();
-		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, { resource: activeEntity.name, interaction: activeEntity.interaction, id: game.Helpers.Guid.new() });
+		var spr = this.create(this.sprite.pos.x, this.sprite.pos.y, { resource: activeEntity.name, type: activeEntity.type, id: game.Helpers.Guid.new() });
 		me.game.world.addChild(spr);
 		if (activeEntity.isFlipped) {
 			spr.flip();

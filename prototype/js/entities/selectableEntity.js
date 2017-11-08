@@ -13,7 +13,7 @@ game.SelectableEntity = me.Entity.extend({
       name: opts.name,
       id: opts.id,
       image: "<img src='"+image.src+"' />'",
-      interaction: opts.interaction
+      type: opts.type
     };
     this._super(me.Entity, "init", [opts.x, opts.y , {
       width: image.width,
