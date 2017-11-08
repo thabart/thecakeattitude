@@ -104,8 +104,16 @@ game.Menu.ShelfBox = me.Object.extend({
     this.addListeners();
     this.displayB = this.display.bind(this);
     this.hideB = this.hide.bind(this);
+    this.updateSelectedEntityB = this.updateSelectedEntity.bind(this);
     game.Stores.GameStore.listenDisplayShelfBoxArrived(this.displayB);
     game.Stores.GameStore.listenHideShelfBoxArrived(this.hideB);
+    game.Stores.GameStore.listenSelectedEntityChanged(this.updateSelectedEntityB);
+  },
+  updateSelectedEntity: function() {
+    if (!$(this.shelf).is(':visible')) { return; }
+    var selectedEntity = game.Stores.GameStore.getSelectedEntity();
+    if (!selectedEntity || selectedEntity === null) { return; }
+    this.display(null, selectedEntity.metadata);
   },
   refresh: function() {
     var self = this;
@@ -211,6 +219,7 @@ game.Menu.ShelfBox = me.Object.extend({
       this._product_category = settings.product_category;
       this._request['category_id'] = [ settings.product_category.id ];
       this._request['shop_id'] = [ shop.id ];
+      this.refresh();
     }
 
     $(this.shelf).show();
@@ -226,5 +235,6 @@ game.Menu.ShelfBox = me.Object.extend({
     if (this.shelf) $(this.shelf).remove();
     if (this.displayB) game.Stores.GameStore.unsubscribeDisplayShelfBoxArrived(this.displayB);
     if (this.hideB) game.Stores.GameStore.unsubscribeHideShelfBoxArrived(this.hideB);
+    if (this.updateSelectedEntityB) game.Stores.GameStore.unsubscribeSelectedEntityChanged(this.updateSelectedEntityB);
   }
 });

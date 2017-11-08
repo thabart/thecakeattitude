@@ -94,6 +94,10 @@ game.Menu.InventoryBox = me.Object.extend({
     if (entity.in_stock === 0) {
       $(this.inventory).find('.entity-information .button').hide();
     }
+
+    if (entity.is_shelf) {
+      this.refreshProductCategories();
+    }
   },
   removeEntity: function(e, obj) {
     var entity = this.entities.filter(function(e) { return e.name === obj.metadata.name; })[0];
@@ -101,12 +105,45 @@ game.Menu.InventoryBox = me.Object.extend({
     entity.in_stock++;
     $(this.inventory).find('.entity-information .in_stock').html(entity.in_stock);
     $(this.inventory).find('.entity-information .button').show();
+    if (entity.is_shelf) {
+      this.refreshProductCategories();
+    }
   },
   addListeners: function() {
     this.listenTheme();
     this.listenType();
     this.listenTabClick();
     this.listenClose();
+  },
+  refreshProductCategories: function() {
+    var self = this;
+    var shop = game.Stores.GameStore.getShopInformation();
+    var productCategoryIds = game.Stores.GameStore.getEntities()
+      .filter(function(entity) { return entity.metadata.product_category && entity.metadata.product_category !== null; })
+      .map(function(entity) { return entity.metadata.product_category.id; });
+    var productCategoriesElt = $(self.inventory).find('.entity-information .product-categories');
+    productCategoriesElt.empty();
+    var selector = $("<div class='input'>"+
+      "<div class='top'></div>"+
+      "<div class='body'>"+
+        "<select class='product-category-chooser'></select>"+
+      "</div>"+
+      "<div class='bottom'></div>"+
+    "</div>");
+    var insert = false;
+    shop['product_categories'].forEach(function(productCategory) {
+      if (productCategoryIds.includes(productCategory.id)) {
+        return;
+      }
+
+      $(selector).find('.product-category-chooser').append("<option data-id='"+productCategory.id+"' data-i18n='"+productCategory.name+"'></option>");
+      insert = true;
+    });
+
+    if (insert) {
+      productCategoriesElt.append(selector);
+      $(selector).i18n();
+    }
   },
   updateListeners: function() {
     var self = this;
@@ -132,26 +169,13 @@ game.Menu.InventoryBox = me.Object.extend({
         "<button class='button button-gray' data-i18n='add_into_shop'></button>"+
       "</div>"+
     "</div>");
-    if (entity.is_shelf) {
-      var shop = game.Stores.GameStore.getShopInformation();
-      var selector = $("<div class='input'>"+
-        "<div class='top'></div>"+
-        "<div class='body'>"+
-          "<select class='product-category-chooser'></select>"+
-        "</div>"+
-        "<div class='bottom'></div>"+
-      "</div>");
-      shop['product_categories'].forEach(function(productCategory) {
-        $(selector).find('.product-category-chooser').append("<option data-id='"+productCategory.id+"' data-i18n='"+productCategory.name+"'></option>");
-      });
-      $(n).find('.product-categories').append(selector);
-    }
-
     $(entityInformation).append(n);
+    if (entity.is_shelf) { self.refreshProductCategories(); }
     $(n).i18n();
     $(n).find('.button').click(function() {
       var name = $(elt).data('name'),
         selector = $(elt).data('selector');
+      var shop = game.Stores.GameStore.getShopInformation();
       var entity = self.entities.filter(function(e) { return e.name === name; })[0];
       if (entity.in_stock === 0) { return; }
       var productCategoryId = $(n).find('.product-category-chooser option:selected').data("id");
