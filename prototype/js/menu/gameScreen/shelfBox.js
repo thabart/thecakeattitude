@@ -125,6 +125,7 @@ game.Menu.ShelfBox = me.Object.extend({
                         "</div>"+
                       "</li>"+
                     "</ul>"+
+                    "<ul class='navigations'></ul>"+
                   "</div>"+
                 "</div>"+
               "</div>"+
@@ -148,8 +149,48 @@ game.Menu.ShelfBox = me.Object.extend({
     var self = this;
     if (!self._product_category || self._product_category === null) { return; }
     self.displayLoading(true);
+    var productsElt = $(self.shelf).find('.products .list');
+    var navigationsElt = $(self.shelf).find('.navigations');
+    productsElt.empty();
+    navigationsElt.empty();
     game.Services.ProductsService.search(self._request).then(function(result) {
-      console.log(result);
+      var products = result['_embedded'],
+        navigation = result['_links']['navigation'];
+      if (!(products instanceof Array)) {
+        products = [ products];
+      }
+
+      products.forEach(function(product) {
+        var elt = $("<li>"+
+          "<div class='information'>"+
+            product.name+
+          "</div>"+
+          "<div>"+
+            "<div class='col-8'>"+
+              "<span>€ "+product.price+"</span>"+
+            "</div>"+
+            "<div class='col-4' style='text-align: right;'>"+
+              "<button class='button button-green' data-i18n='see'></button>"+
+            "</div>"+
+          "</div>"+
+        "</li>");
+        productsElt.append(elt);
+      });
+      productsElt.i18n();
+      if (navigation && navigation.length > 0) {
+        navigation.forEach(function(nav) {
+          var n = $("<li>"+nav.name+"</li>");
+          navigationsElt.append(n);
+          $(n).click(function() {
+            $(self.shelf).find('.navigations li').removeClass('active');
+            $(this).addClass('active');
+            var page = $(this).html();
+            self._request.start_index = self._request.count * (parseInt(page) - 1);
+            self.refresh();
+          });
+        });
+      }
+
       self.displayLoading(false);
     }).catch(function() {
       self.displayLoading(false);
@@ -175,7 +216,7 @@ game.Menu.ShelfBox = me.Object.extend({
       $(self.shelf).find(target).show();
       $(self.shelf).find('.tabs li').removeClass('active');
       $(this).addClass('active');
-      if (target === '.products') {
+      if (target === '.tab-content > .products') {
         self.refresh();
       }
     });
@@ -191,6 +232,7 @@ game.Menu.ShelfBox = me.Object.extend({
   },
   display: function(e, settings) {
     if (settings.product_category) {
+      var shop = game.Stores.GameStore.getShopInformation();
       $(this.shelf).find('.tab-content > .description').empty();
       $(this.shelf).find('.tab-content > .description').append(
         "<div>"+
@@ -200,6 +242,7 @@ game.Menu.ShelfBox = me.Object.extend({
       );
       this._product_category = settings.product_category;
       this._request['category_id'] = [ settings.product_category.id ];
+      this._request['shop_id'] = [ shop.id ];
     }
 
     $(this.shelf).show();
