@@ -1,7 +1,7 @@
 game.Menu = game.Menu || {};
 game.Menu.NavigatorBox = me.Object.extend({
   init: function() {
-    this._request = { count: 2, start_index: 0 };
+    this._request = { count: 5, start_index: 0 };
     this.navigatorBox =$("<div class='modal blue lg navigator-box'>"+
       "<div class='container'>"+
         "<div class='content'>"+

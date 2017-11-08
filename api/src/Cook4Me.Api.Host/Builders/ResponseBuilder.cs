@@ -1216,6 +1216,7 @@ namespace Cook4Me.Api.Host.Builders
                     obj.Add(Constants.DtoNames.GameEntity.Name, shopGameEntity.Name);
                     obj.Add(Constants.DtoNames.GameEntity.Row, shopGameEntity.Row);
                     obj.Add(Constants.DtoNames.GameEntity.Col, shopGameEntity.Col);
+                    obj.Add(Constants.DtoNames.GameEntity.ProductCategoryId, shopGameEntity.ProductCategoryId);
                     var record = CommonBuilder.MappingGameEntityTypes.First(kvp => kvp.Key == shopGameEntity.Type);
                     obj.Add(Constants.DtoNames.GameEntity.Type, record.Value);
                     gameEntities.Add(obj);

@@ -29,6 +29,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public int Row { get; set; }
         public int Col { get; set; }
         public string Name { get; set; }
+        public string ProductCategoryId { get; set; }
         public GameEntityTypes Type { get; set; }
     }
 }

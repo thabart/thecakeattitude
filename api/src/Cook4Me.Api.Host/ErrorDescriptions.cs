@@ -121,5 +121,6 @@ namespace Cook4Me.Api.Host
         public const string TheProductCannotBeRemovedByYou = "the product cannot be removed by you";
         public const string TheServiceCannotBeRemovedByYou = "the service cannot be removed by you";
         public const string TheTransporterDhlIsNotSupported = "the transporter DHL is not yet supported";
+        public const string TheProductCategoriesDoesntExist = "one or more product categories don't exist";
     }
 }

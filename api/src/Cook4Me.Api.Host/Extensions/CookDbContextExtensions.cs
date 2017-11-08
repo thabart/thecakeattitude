@@ -543,6 +543,15 @@ namespace Cook4Me.Api.Host.Extensions
                                 Row = 10,
                                 Type = 0,
                                 Name = "executive_table"
+                            },
+                            new GameEntity
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Col = 15,
+                                Row = 15,
+                                Type = 0,
+                                Name = "glass_shelves",
+                                ProductCategoryId = _womenProductCategory
                             }
                         }
                     },
@@ -600,6 +609,14 @@ namespace Cook4Me.Api.Host.Extensions
                                 Row = 10,
                                 Type = 0,
                                 Name = "executive_table"
+                            },
+                            new GameEntity
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Col = 15,
+                                Row = 15,
+                                Type = 0,
+                                Name = "glass_shelves"
                             }
                         }
                     },
@@ -657,6 +674,14 @@ namespace Cook4Me.Api.Host.Extensions
                                 Row = 10,
                                 Type = 0,
                                 Name = "executive_table"
+                            },
+                            new GameEntity
+                            {
+                                Id = Guid.NewGuid().ToString(),
+                                Col = 15,
+                                Row = 15,
+                                Type = 0,
+                                Name = "glass_shelves"
                             }
                         }
                     }

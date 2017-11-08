@@ -1233,6 +1233,7 @@ namespace Cook4Me.Api.Host.Builders
                 Col = jObj.TryGetInt(Constants.DtoNames.GameEntity.Col),
                 Row = jObj.TryGetInt(Constants.DtoNames.GameEntity.Row),
                 Name = jObj.TryGetString(Constants.DtoNames.GameEntity.Name),
+                ProductCategoryId = jObj.TryGetString(Constants.DtoNames.GameEntity.ProductCategoryId),
                 Type = type
             };
         }

@@ -18,7 +18,8 @@ game.Entities.FurnitureEntity = game.SelectableEntity.extend({
         selector: Constants.Selectors.Furniture,
         isCollidable: true,
         type: settings.type,
-        flipped: settings.flipped || false
+        flipped: settings.flipped || false,
+        product_category: settings.product_category
       }
     ]);
     this.addCollision("furnitures_collision");

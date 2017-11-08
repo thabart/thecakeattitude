@@ -649,6 +649,7 @@ namespace Cook4Me.Api.EF.Extensions
                 Col = shopGameEntity.Col,
                 Name = shopGameEntity.Name,
                 Row = shopGameEntity.Row,
+                ProductCategoryId = shopGameEntity.ProductCategoryId,
                 Type = (int)shopGameEntity.Type
             };
         }
@@ -666,6 +667,7 @@ namespace Cook4Me.Api.EF.Extensions
                 Col = gameEntity.Col,
                 Name = gameEntity.Name,
                 Row = gameEntity.Row,
+                ProductCategoryId = gameEntity.ProductCategoryId,
                 Type = (GameEntityTypes)gameEntity.Type
             };
         }

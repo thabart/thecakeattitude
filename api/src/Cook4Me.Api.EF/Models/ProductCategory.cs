@@ -32,5 +32,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual Shop Shop { get; set; }
         public DateTime CreateDateTime { get; set; }
         public DateTime UpdateDateTime { get; set; }
+        public virtual ICollection<GameEntity> GameEntities { get; set; }
     }
 }

@@ -300,7 +300,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Furnitures">
-  <object id="5" name="FurnitureEntity" type="table" gid="20" x="734" y="838.167" width="48" height="53">
+  <object id="5" name="FurnitureEntity" gid="20" x="734" y="838.167" width="48" height="53">
    <properties>
     <property name="resource" value="coffee-table"/>
    </properties>
@@ -310,12 +310,12 @@
     <property name="resource" value="coffee-table"/>
    </properties>
   </object>
-  <object id="10" name="FurnitureEntity" type="table" gid="20" x="541.333" y="804" width="48" height="53">
+  <object id="10" name="FurnitureEntity" gid="20" x="541.333" y="804" width="48" height="53">
    <properties>
     <property name="resource" value="coffee-table"/>
    </properties>
   </object>
-  <object id="11" name="FurnitureEntity" type="table" gid="20" x="891.667" y="864.333" width="48" height="53">
+  <object id="11" name="FurnitureEntity" gid="20" x="891.667" y="864.333" width="48" height="53">
    <properties>
     <property name="resource" value="coffee-table"/>
    </properties>

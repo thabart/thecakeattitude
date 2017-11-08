@@ -57,6 +57,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
           game.Stores.GameStore.addEntity(child);
         }
       });
+      game.Stores.GameStore.updateColls();
       if (shopId) {
         this.displayFurnitures(shopId);
       }
@@ -73,9 +74,17 @@ game.Screens.GameScreen = me.ScreenObject.extend({
             row: gameEntity.row,
             resource: gameEntity.name,
             id: gameEntity.id,
-            type: entObj.type
+            type: entObj.type,
+            product_category_id: gameEntity.product_category_id
           };
-          console.log(commonProps);
+
+          if (gameEntity.product_category_id) {
+            var productCategory = shop['product_categories'].filter(function(pc) { return pc.id === gameEntity.product_category_id; })[0];
+            if (productCategory) {
+              commonProps['product_category'] = productCategory;
+            }
+          }
+
           switch (gameEntity.type) {
             case "floor":
               entity = new game.Entities.FloorEntity(0, 0, commonProps);
@@ -92,6 +101,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
           entity.pos.z = entity.getZIndex();
           game.Stores.GameStore.addEntity(entity);
         });
+
         game.Stores.GameStore.updateColls();
         game.Stores.GameStore.setShopInformation(shop);
       }).catch(function() { });

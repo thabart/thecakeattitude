@@ -512,6 +512,7 @@ namespace Cook4Me.Api.Host
                 public const string Row = "row";
                 public const string Col = "col";
                 public const string Type = "type";
+                public const string ProductCategoryId = "product_category_id";
             }
 
             public static class Paginate

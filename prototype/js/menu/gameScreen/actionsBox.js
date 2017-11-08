@@ -53,13 +53,13 @@ game.Menu.ActionsBox = me.Object.extend({
         return;
       }
 
-      self.launcher.launch(type);
+      self.launcher.launch(type, selectedEntity.metadata);
     });
   },
   display: function(e, metadata) {
     var user = game.Stores.UserStore.getCurrentUser();
     var shop = game.Stores.GameStore.getShopInformation();
-    if (!metadata.type && user.sub !== shop.subject) {
+    if (!metadata.type && (!shop || user.sub !== shop.subject)) {
       return;
     }
 
@@ -71,7 +71,7 @@ game.Menu.ActionsBox = me.Object.extend({
       $(this.actions).find('.use').prop('disabled', false);
     }
 
-    if (user.sub === shop.subject) {
+    if (shop && user.sub === shop.subject) {
       $(this.actions).find('.move, .remove, .turn, .translate').show();
       $(this.actions).find('.move, .remove, .turn, .translate').prop('disabled', false);
     }

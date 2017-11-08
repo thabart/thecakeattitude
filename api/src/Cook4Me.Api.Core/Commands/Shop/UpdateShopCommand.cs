@@ -63,6 +63,7 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string Name { get; set; }
         public int Col { get; set; }
         public int Row { get; set; }
+        public string ProductCategoryId { get; set; }
         public GameEntityTypes Type { get; set; }
     }
     

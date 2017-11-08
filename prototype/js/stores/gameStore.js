@@ -142,8 +142,8 @@ var GameStoreCl = function() {
 		$(this).trigger('hidePlayerPseudoArrived');
 	};
 
-	this.displayShelfBox = function() { // Display the shelf box.
-		$(this).trigger('displayShelfBoxArrived');
+	this.displayShelfBox = function(settings) { // Display the shelf box.
+		$(this).trigger('displayShelfBoxArrived', [ settings ]);
 	};
 
 	this.hideShelfBox = function() { // Hide the shelf box.

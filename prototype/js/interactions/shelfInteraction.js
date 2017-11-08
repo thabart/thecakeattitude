@@ -2,7 +2,7 @@ game.ShelfInteraction = me.Object.extend({
   init: function() {
     this.key = "shelf";
   },
-  execute: function() {
-    game.Stores.GameStore.displayShelfBox();
+  execute: function(settings) {
+    game.Stores.GameStore.displayShelfBox(settings);
   }
 });

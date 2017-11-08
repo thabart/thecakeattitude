@@ -317,9 +317,10 @@ ul.tabs li.active
   z-index: 12;
 }
 
-.shelf-box .body .content {
+.shelf-box .body .tab-container {
   min-height: 500px;
   min-width: 500px;
+  padding: 0 5px 0 5px;
 }
 
 /* CHANGE LOOK BOX */

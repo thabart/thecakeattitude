@@ -19,11 +19,13 @@ namespace Cook4Me.Api.EF.Models
     public class GameEntity
     {
         public string Id { get; set; }
+        public string ProductCategoryId { get; set; }
         public string ShopId { get; set; }
         public int Row { get; set; }
         public int Col { get; set; }
         public string Name { get; set; }
         public int Type { get; set; } // Furniture || Poster || Floor
         public virtual Shop Shop { get; set; }
+        public virtual ProductCategory ProductCategory { get; set; }
     }
 }

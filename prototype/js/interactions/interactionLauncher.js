@@ -6,9 +6,9 @@ game.Interactions.Launcher = me.Object.extend({
       shelfInteraction
     ];
   },
-  launch: function(key) {
+  launch: function(key, settings) {
     var interaction = this.interactions.filter(function(interaction) { return interaction.key === key})[0];
     if (!interaction) { return; }
-    interaction.execute();
+    interaction.execute(settings);
   }
 });
