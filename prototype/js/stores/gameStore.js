@@ -113,6 +113,8 @@ var GameStoreCl = function() {
 			_shopInformation['game_entities'] = gameEntities;
 			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
 		}
+
+		$(this).trigger('entityAdded', [ f ]);
 	};
 
 	this.getEntities = function() { // Get all the entities.
@@ -134,6 +136,7 @@ var GameStoreCl = function() {
 		}
 
 		me.game.repaint();
+		$(this).trigger('entityRemoved', [ f ]);
 	};
 
 	this.getCollisionLayer = function() { // Get collision layer.
@@ -181,6 +184,22 @@ var GameStoreCl = function() {
 	};
 
 	/* LISTEN THE EVENTS */
+	this.listenEntityRemoved = function(callback) {
+		$(this).on('entityRemoved', callback);
+	};
+
+	this.unsubscribeEntityRemoved = function(callback) {
+		$(this).off('entityRemoved', callback);
+	};
+
+	this.listenEntityAdded = function(callback) {
+		$(this).on('entityAdded', callback);
+	};
+
+	this.unsubscribeEntityAdded = function(callback) {
+		$(this).off('entityAdded', callback);
+	};
+
 	this.listenShopInformationChanged = function(callback) {
 		$(this).on('shopInformationChanged', callback);
 	};

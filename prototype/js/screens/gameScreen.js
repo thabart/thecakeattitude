@@ -71,7 +71,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       }
 
 
-      $.when(this.setFurnitures(shopId), this.setEntities).then(function() {
+      $.when(this.setFurnitures(shopId), this.setEntities()).then(function() {
         dfd.resolve();
       });
 
@@ -128,7 +128,6 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       var dfd = jQuery.Deferred();
       game.Services.GameEntitiesService.getAll().then(function(r) {
         game.Stores.GameStore.setGameEntities(r);
-        console.log(r);
         dfd.resolve();
       }).catch(function() { dfd.resolve(); });
       return dfd;

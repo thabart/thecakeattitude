@@ -2,9 +2,23 @@ game.Menu = game.Menu || {};
 game.Menu.InventoryBox = me.Object.extend({
   init: function() {
       var self = this;
+      var gameEntities = game.Stores.GameStore.getGameEntities();
+      var shop = game.Stores.GameStore.getShopInformation();
       this.entities = me.loader.getJSON("entities");
       this.categories = me.loader.getJSON("categories");
-      var shop = game.Stores.GameStore.getShopInformation();
+      this.entities.forEach(function(entity) {
+        var gameEntity = gameEntities.filter(function(ge) { return ge.name === entity.name; })[0];
+        var shopGameEntities = shop['game_entities'].filter(function(ge) { return ge.name === entity.name; });
+        var inStock = 0;
+        if (gameEntity && !gameEntity.is_shelf) {
+          inStock = gameEntity['max_available_in_stock'] - shopGameEntities.length;
+        }
+        else if (gameEntity && gameEntity.is_shelf) {
+          inStock = shop['product_categories'] - shopGameEntities.length;
+        }
+
+        entity.in_stock = inStock;
+      });
       var indice = 0;
       var tabs = this.categories.map(function(category) {
         if (indice === 0) {
@@ -65,7 +79,27 @@ game.Menu.InventoryBox = me.Object.extend({
       $(this.inventory).draggable({ "handle": ".top" });
       $(this.inventory).i18n();
       this.updateActiveEntityB = this.updateActiveEntity.bind(this);
+      this.addEntityB = this.addEntity.bind(this);
+      this.removeEntityB = this.removeEntity.bind(this);
       game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntityB);
+      game.Stores.GameStore.listenEntityAdded(this.addEntityB);
+      game.Stores.GameStore.listenEntityRemoved(this.removeEntityB);
+  },
+  addEntity: function(e, obj) {
+    var entity = this.entities.filter(function(e) { return e.name === obj.metadata.name; })[0];
+    if (!entity) { return; }
+    entity.in_stock--;
+    $(this.inventory).find('.entity-information .in_stock').html(entity.in_stock);
+    if (entity.in_stock === 0) {
+      $(this.inventory).find('.entity-information .button').hide();
+    }
+  },
+  removeEntity: function(e, obj) {
+    var entity = this.entities.filter(function(e) { return e.name === obj.metadata.name; })[0];
+    if (!entity) { return; }
+    entity.in_stock++;
+    $(this.inventory).find('.entity-information .in_stock').html(entity.in_stock);
+    $(this.inventory).find('.entity-information .button').show();
   },
   addListeners: function() {
     this.listenTheme();
@@ -92,7 +126,7 @@ game.Menu.InventoryBox = me.Object.extend({
       "</div>"+
       "<div class='action'>"+
         "<b data-i18n='"+entity.description+"'></b>"+
-        "<p><span data-i18n='entityInStock'></span> "+entity.in_stock+"</p>"+
+        "<p><span data-i18n='entityInStock'></span> <span class='in_stock'>"+entity.in_stock+"</span></p>"+
         "<button class='button button-gray' data-i18n='add_into_shop'></button>"+
       "</div>"+
     "</div>");
@@ -101,6 +135,7 @@ game.Menu.InventoryBox = me.Object.extend({
       var name = $(elt).data('name'),
         selector = $(elt).data('selector');
       var entity = self.entities.filter(function(e) { return e.name === name; })[0];
+      if (entity.in_stock === 0) { return; }
       game.Stores.GameStore.setActiveEntity(name, selector, entity.type, false);
     });
     $(entityInformation).i18n();
@@ -190,5 +225,7 @@ game.Menu.InventoryBox = me.Object.extend({
   destroy: function() {
     if (this.inventory) $(this.inventory).remove();
     if (this.updateActiveEntityB) game.Stores.GameStore.unsubscribeActiveEntityChanged(this.updateActiveEntityB);
+    if (this.addEntityB) game.Stores.GameStore.unsubscribeEntityAdded(this.addEntityB);
+    if (this.removeEntityB) game.Stores.GameStore.unsubscribeEntityRemoved(this.removeEntityB);
   }
 });

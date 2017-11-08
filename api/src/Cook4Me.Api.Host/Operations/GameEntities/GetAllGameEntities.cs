@@ -50,6 +50,7 @@ namespace Cook4Me.Api.Host.Operations.GameEntities
                 jObj.Add(Constants.DtoNames.GameEntity.Name, record.Name);
                 jObj.Add(Constants.DtoNames.GameEntity.MaxAvailableInStock, record.MaxAvailableInStock);
                 jObj.Add(Constants.DtoNames.GameEntity.Description, record.Description);
+                jObj.Add(Constants.DtoNames.GameEntity.IsShelf, record.IsShelf);
                 var kvp = CommonBuilder.MappingGameEntityTypes.FirstOrDefault(k => k.Key == record.Type);
                 if (kvp.Equals(default(KeyValuePair<GameEntityTypes, string>)) && !string.IsNullOrWhiteSpace(kvp.Value))
                 {
@@ -59,7 +60,7 @@ namespace Cook4Me.Api.Host.Operations.GameEntities
                 jArr.Add(jObj);
             }
 
-            return new OkObjectResult(result);
+            return new OkObjectResult(jArr);
         }
     }
 }

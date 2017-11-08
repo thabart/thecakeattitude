@@ -192,7 +192,7 @@ namespace Cook4Me.Api.Host.Validators
                 foreach(var kvp in groupedResult)
                 {
                     var gameEntity = await _gameEntityRepository.Get(kvp.Key);
-                    if (gameEntity.MaxAvailableInStock > kvp.Count() && !gameEntity.IsShelf)
+                    if (gameEntity.MaxAvailableInStock < kvp.Count() && !gameEntity.IsShelf)
                     {
                         return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheNumberOfAllowedEntitiesExceed, kvp.Key, gameEntity.MaxAvailableInStock));
                     }
