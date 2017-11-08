@@ -242,10 +242,10 @@ namespace Cook4Me.Api.Handlers
                 });
             }
 
-            IEnumerable<ShopGameEntity> shopGameEntities = null;
+            IEnumerable<ShopAggregateGameEntity> shopGameEntities = null;
             if (message.UpdateGameEntities != null)
             {
-                shopGameEntities = message.UpdateGameEntities.Select(u => new ShopGameEntity
+                shopGameEntities = message.UpdateGameEntities.Select(u => new ShopAggregateGameEntity
                 {
                     Id = u.Id,
                     Name = u.Name,

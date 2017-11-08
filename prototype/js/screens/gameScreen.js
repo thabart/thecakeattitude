@@ -27,7 +27,6 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
       game.Stores.GameStore.setCollisionLayer(collisionLayer);
       self.movableContainer = new game.MovableContainer();
-      self.gameMenu = new game.Menu.GameMenu();
       self.currentPlayer = new game.PlayerEntity(playerCoordinates.col, playerCoordinates.row, currentPlayer);
       self.tileSelector = new game.TileSelectorEntity(0, 0);
       self.floorSelector = new game.FloorEntitySelector();
@@ -58,11 +57,28 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         }
       });
       game.Stores.GameStore.updateColls();
-      if (shopId) {
-        this.displayFurnitures(shopId);
-      }
+      this.initialize(shopId).then(function() {
+        self.gameMenu = new game.Menu.GameMenu();
+      });
     },
-    displayFurnitures : function(shopId) {
+    initialize : function(shopId) {
+      var dfd = jQuery.Deferred();
+      if (!shopId) {
+        setTimeout(function() {
+          dfd.resolve();
+        }, 1000);
+        return dfd;
+      }
+
+
+      $.when(this.setFurnitures(shopId), this.setEntities).then(function() {
+        dfd.resolve();
+      });
+
+      return dfd;
+    },
+    setFurnitures: function(shopId) {
+      var dfd = jQuery.Deferred();
       game.Services.ShopsService.get(shopId).then(function(r) { // Add all the furnitures.
         var shop = r['_embedded'];
         shop['game_entities'].forEach(function(gameEntity) {
@@ -104,7 +120,18 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
         game.Stores.GameStore.updateColls();
         game.Stores.GameStore.setShopInformation(shop);
-      }).catch(function() { });
+        dfd.resolve();
+      }).catch(function() { dfd.resolve(); });
+      return dfd;
+    },
+    setEntities: function() {
+      var dfd = jQuery.Deferred();
+      game.Services.GameEntitiesService.getAll().then(function(r) {
+        game.Stores.GameStore.setGameEntities(r);
+        console.log(r);
+        dfd.resolve();
+      }).catch(function() { dfd.resolve(); });
+      return dfd;
     },
     onDestroyEvent: function() {
       var self = this;

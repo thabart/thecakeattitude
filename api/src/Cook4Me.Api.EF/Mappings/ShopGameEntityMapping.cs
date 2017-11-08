@@ -14,17 +14,25 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.EF.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.EF.Mappings
 {
-    public class GameEntity
+    internal static class ShopGameEntityMapping
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int MaxAvailableInStock { get; set; }
-        public bool IsShelf { get; set; }
-        public int Type { get; set; } // Furniture || Poster || Floor
-        public virtual ICollection<ShopGameEntity> ShopGameEntities { get; set; }
+        public static ModelBuilder AddShopGameEntity(this ModelBuilder modelBuilder)
+        {
+            if (modelBuilder == null)
+            {
+                throw new ArgumentNullException(nameof(modelBuilder));
+            }
+
+            modelBuilder.Entity<ShopGameEntity>()
+                .ToTable("shopGameEntities")
+                .HasKey(s => s.Id);
+            return modelBuilder;
+        }
     }
 }

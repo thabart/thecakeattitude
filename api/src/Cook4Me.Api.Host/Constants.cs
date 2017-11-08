@@ -46,6 +46,7 @@ namespace Cook4Me.Api.Host
             public const string Discounts = "discounts";
             public const string Notifications = "notifications";
             public const string ClientServices = "clientservices";
+            public const string GameEntities = "gameentities";
             public const string FeedItems = "feeditems";
             public const string Services = "services";
             public const string Products = "products";
@@ -513,6 +514,9 @@ namespace Cook4Me.Api.Host
                 public const string Col = "col";
                 public const string Type = "type";
                 public const string ProductCategoryId = "product_category_id";
+                public const string MaxAvailableInStock = "max_available_in_stock";
+                public const string Description = "description";
+                public const string IsShelf = "is_shelf";
             }
 
             public static class Paginate

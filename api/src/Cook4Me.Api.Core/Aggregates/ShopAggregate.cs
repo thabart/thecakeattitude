@@ -58,7 +58,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public ICollection<ShopComment> Comments { get; set; }
         public ICollection<ShopFilter> ShopFilters { get; set; }
         public ICollection<ShopProductCategory> ProductCategories { get; set; }
-        public IEnumerable<ShopGameEntity> ShopGameEntities { get; set; }
+        public IEnumerable<ShopAggregateGameEntity> ShopGameEntities { get; set; }
 
         public void AddComment(ShopComment comment)
         {

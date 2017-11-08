@@ -28,6 +28,7 @@ using Cook4Me.Api.Host.Operations.Announcement;
 using Cook4Me.Api.Host.Operations.Dhl;
 using Cook4Me.Api.Host.Operations.Discount;
 using Cook4Me.Api.Host.Operations.Feeds;
+using Cook4Me.Api.Host.Operations.GameEntities;
 using Cook4Me.Api.Host.Operations.Messages;
 using Cook4Me.Api.Host.Operations.Notifications;
 using Cook4Me.Api.Host.Operations.Orders;
@@ -276,6 +277,7 @@ namespace Cook4Me.Api.Host
             services.AddTransient<IGetOrderTransactionOperation, GetOrderTransactionOperation>();
             services.AddTransient<IPurchaseUpsLabelOperation, PurchaseUpsLabelOperation>();
             services.AddTransient<ISearchDhlCapabalitiesOperation, SearchDhlCapabalitiesOperation>();
+            services.AddTransient<IGetAllGameEntities, GetAllGameEntities>();
             services.AddTransient<ISearchMineClientServices, SearchMineClientServices>();
             services.AddTransient<IServiceCommentEnricher, ServiceCommentEnricher>();
             services.AddTransient<IShopEnricher, ShopEnricher>();

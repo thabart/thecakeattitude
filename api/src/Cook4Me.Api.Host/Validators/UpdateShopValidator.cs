@@ -52,11 +52,13 @@ namespace Cook4Me.Api.Host.Validators
     {
         private readonly IShopRepository _shopRepository;
         private readonly IMapRepository _mapRepository;
+        private readonly IGameEntityRepository _gameEntityRepository;
 
-        public UpdateShopValidator(IShopRepository shopRepository, IMapRepository mapRepository)
+        public UpdateShopValidator(IShopRepository shopRepository, IMapRepository mapRepository, IGameEntityRepository gameEntityRepository)
         {
             _shopRepository = shopRepository;
             _mapRepository = mapRepository;
+            _gameEntityRepository = gameEntityRepository;
         }
 
         public async Task<UpdateShopValidationResult> Validate(UpdateShopCommand shop, string subject)
@@ -184,6 +186,21 @@ namespace Cook4Me.Api.Host.Validators
                 if (shop.UpdateGameEntities.Any(ug => record.ProductCategories.Any(pc => !string.IsNullOrWhiteSpace(ug.ProductCategoryId) && ug.ProductCategoryId != pc.Id)))
                 {
                     return new UpdateShopValidationResult(ErrorDescriptions.TheProductCategoriesDoesntExist);
+                }
+
+                var groupedResult = shop.UpdateGameEntities.GroupBy(u => u.Name);
+                foreach(var kvp in groupedResult)
+                {
+                    var gameEntity = await _gameEntityRepository.Get(kvp.Key);
+                    if (gameEntity.MaxAvailableInStock > kvp.Count() && !gameEntity.IsShelf)
+                    {
+                        return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheNumberOfAllowedEntitiesExceed, kvp.Key, gameEntity.MaxAvailableInStock));
+                    }
+
+                    if (gameEntity.IsShelf && kvp.Count() > shop.ProductCategories.Count())
+                    {
+                        return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheNumberOfAllowedShelvesExceed, gameEntity.MaxAvailableInStock));
+                    }
                 }
             }
 

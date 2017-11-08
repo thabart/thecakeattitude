@@ -30,7 +30,11 @@ namespace Cook4Me.Api.EF.Mappings
             }
             
             modelBuilder.Entity<GameEntity>()
-                .HasKey(a => a.Id);
+                .HasKey(a => a.Name);
+            modelBuilder.Entity<GameEntity>()
+                .HasMany(s => s.ShopGameEntities)
+                .WithOne(s => s.GameEntity)
+                .HasForeignKey(s => s.GameEntityId);
             return modelBuilder;
         }
     }

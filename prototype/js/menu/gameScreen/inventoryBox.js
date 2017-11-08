@@ -4,6 +4,7 @@ game.Menu.InventoryBox = me.Object.extend({
       var self = this;
       this.entities = me.loader.getJSON("entities");
       this.categories = me.loader.getJSON("categories");
+      var shop = game.Stores.GameStore.getShopInformation();
       var indice = 0;
       var tabs = this.categories.map(function(category) {
         if (indice === 0) {
@@ -63,7 +64,8 @@ game.Menu.InventoryBox = me.Object.extend({
       $(this.inventory).hide();
       $(this.inventory).draggable({ "handle": ".top" });
       $(this.inventory).i18n();
-      game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntity.bind(this));
+      this.updateActiveEntityB = this.updateActiveEntity.bind(this);
+      game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntityB);
   },
   addListeners: function() {
     this.listenTheme();
@@ -187,6 +189,6 @@ game.Menu.InventoryBox = me.Object.extend({
   },
   destroy: function() {
     if (this.inventory) $(this.inventory).remove();
-    if (this.update) game.Stores.GameStore.unsubscribeActiveEntityChanged(this.update.bind(this));
+    if (this.updateActiveEntityB) game.Stores.GameStore.unsubscribeActiveEntityChanged(this.updateActiveEntityB);
   }
 });

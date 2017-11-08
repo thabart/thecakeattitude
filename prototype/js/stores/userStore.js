@@ -1,7 +1,7 @@
 'use strict';
 game.Stores = game.Stores || {};
 var UserStoreCl = function() {
-	var _currentUser = null;
+	var _currentUser = {};
 
 	this.setCurrentUser = function(currentUser) {
 		this._currentUser = currentUser;

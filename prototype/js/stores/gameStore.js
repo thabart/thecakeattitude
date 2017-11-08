@@ -1,9 +1,10 @@
 var GameStoreCl = function() {
-	var _activeEntity = null;
+	var _activeEntity = {};
 	var _entities = [];
-	var _selectedEntity = null;
-	var _collisionLayer = null;
-	var _shopInformation = null;
+	var _selectedEntity = {};
+	var _collisionLayer = {};
+	var _shopInformation = {};
+	var _gameEntities = [];
 
 	var updateCollisions = function() {
 		var refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
@@ -39,11 +40,20 @@ var GameStoreCl = function() {
 	};
 
 	this.empty = function() {
-		_activeEntity = null;
+		_activeEntity = {};
 		_entities = [];
-		_selectedEntity = null;
-		_collisionLayer = null;
-		_shopInformation = null;
+		_selectedEntity = {};
+		_collisionLayer = {};
+		_shopInformation = {};
+		_gameEntities = [];
+	};
+
+	this.getGameEntities = function() {
+		return _gameEntities;
+	};
+
+	this.setGameEntities = function(ge) {
+		_gameEntities = ge;
 	};
 
 	this.getShopInformation = function() { // Get the shop information.

@@ -25,7 +25,9 @@ game.Menu.ShelfBox = me.Object.extend({
                     "<div class='input edit'>"+
                       "<div class='top'></div>"+
                       "<div class='body'>"+
-                        "<input type='text' placeholder='Search product' />"+
+                        "<form class='search-product-form'>"+
+                        "<input type='text' class='product-name' placeholder='Search product' />"+
+                        "</form>"+
                       "</div>"+
                       "<div class='bottom'></div>"+
                     "</div>"+
@@ -84,47 +86,7 @@ game.Menu.ShelfBox = me.Object.extend({
                   "</div>"+
                   "<div class='col-8'>"+
                     // DISPLAY THE PRODUCTS.
-                    "<ul class='list' style='padding: 0 10px 0 10px'>"+
-                      "<li>"+
-                        "<div class='information'>"+
-                          "Jean"+
-                        "</div>"+
-                        "<div>"+
-                          "<div class='col-8'>"+
-                            "<span>€ 100</span>"+
-                          "</div>"+
-                          "<div class='col-4' style='text-align: right;'>"+
-                            "<button class='button button-green'>Voir</button>"+
-                          "</div>"+
-                        "</div>"+
-                      "</li>"+
-                      "<li>"+
-                        "<div class='information'>"+
-                          "Jean"+
-                        "</div>"+
-                        "<div>"+
-                          "<div class='col-8'>"+
-                            "<span>€ 100</span>"+
-                          "</div>"+
-                          "<div class='col-4' style='text-align: right;'>"+
-                            "<button class='button button-green'>Voir</button>"+
-                          "</div>"+
-                        "</div>"+
-                      "</li>"+
-                      "<li>"+
-                        "<div class='information'>"+
-                          "Jean"+
-                        "</div>"+
-                        "<div>"+
-                          "<div class='col-8'>"+
-                            "<span>€ 100</span>"+
-                          "</div>"+
-                          "<div class='col-4' style='text-align: right;'>"+
-                            "<button class='button button-green'>Voir</button>"+
-                          "</div>"+
-                        "</div>"+
-                      "</li>"+
-                    "</ul>"+
+                    "<ul class='list' style='padding: 0 10px 0 10px'></ul>"+
                     "<ul class='navigations'></ul>"+
                   "</div>"+
                 "</div>"+
@@ -219,6 +181,12 @@ game.Menu.ShelfBox = me.Object.extend({
       if (target === '.tab-content > .products') {
         self.refresh();
       }
+    });
+    $(this.shelf).find('.search-product-form').submit(function(e) {
+      e.preventDefault();
+      var val = $(self.shelf).find('.product-name').val();
+      self._request['name'] = val;
+      self.refresh();
     });
   },
   displayLoading: function(b) {

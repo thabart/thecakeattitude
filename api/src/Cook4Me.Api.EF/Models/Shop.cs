@@ -53,6 +53,6 @@ namespace Cook4Me.Api.EF.Models
         public virtual ICollection<ProductCategory> ProductCategories { get; set; }
         public virtual ICollection<Service> Services { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
-        public virtual ICollection<GameEntity> GameEntities { get; set; }
+        public virtual ICollection<ShopGameEntity> ShopGameEntities { get; set; }
     }
 }

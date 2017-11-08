@@ -61,7 +61,7 @@ namespace Cook4Me.Api.EF.Mappings
                 .WithOne(s => s.Shop)
                 .HasForeignKey(s => s.ShopId);
             modelBuilder.Entity<Shop>()
-                .HasMany(s => s.GameEntities)
+                .HasMany(s => s.ShopGameEntities)
                 .WithOne(s => s.Shop)
                 .HasForeignKey(s => s.ShopId);
             return modelBuilder;

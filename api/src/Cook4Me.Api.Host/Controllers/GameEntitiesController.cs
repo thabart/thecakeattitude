@@ -14,17 +14,25 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Generic;
+using Cook4Me.Api.Host.Operations.GameEntities;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Host.Controllers
 {
-    public class GameEntity
+    [Route(Constants.RouteNames.GameEntities)]
+    public class GameEntitiesController : Controller
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int MaxAvailableInStock { get; set; }
-        public bool IsShelf { get; set; }
-        public int Type { get; set; } // Furniture || Poster || Floor
-        public virtual ICollection<ShopGameEntity> ShopGameEntities { get; set; }
+        private readonly IGetAllGameEntities _getAllGameEntities;
+
+        public GameEntitiesController(IGetAllGameEntities getAllGameEntities)
+        {
+            _getAllGameEntities = getAllGameEntities;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            return await _getAllGameEntities.Execute();
+        }
     }
 }

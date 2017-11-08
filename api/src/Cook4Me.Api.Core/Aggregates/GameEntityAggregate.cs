@@ -14,24 +14,14 @@
 // limitations under the License.
 #endregion
 
-using System;
-using System.Collections.Generic;
-
-namespace Cook4Me.Api.EF.Models
+namespace Cook4Me.Api.Core.Aggregates
 {
-    public class ProductCategory
+    public class GameEntityAggregate
     {
-        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string ParentProductCategoryId { get; set; }
-        public string ShopId { get; set; }
-        public string ShopSectionName { get; set; }
-        public virtual ProductCategory Parent { get; set; }
-        public virtual ICollection<ProductCategory> Children { get; set; }
-        public virtual Shop Shop { get; set; }
-        public DateTime CreateDateTime { get; set; }
-        public DateTime UpdateDateTime { get; set; }
-        public virtual ICollection<ShopGameEntity> GameEntities { get; set; }
+        public int MaxAvailableInStock { get; set; }
+        public bool IsShelf { get; set; }
+        public GameEntityTypes Type { get; set; } // Furniture || Poster || Floor
     }
 }

@@ -3,8 +3,11 @@ game.Menu.GameMenu = me.Object.extend({
   init: function() {
     var self = this;
     var user = game.Stores.UserStore.getCurrentUser();
-    self.inventoryBox = new game.Menu.InventoryBox();
-    self.manageEntityBox = new game.Menu.ManageEntityBox();
+    var shop = game.Stores.GameStore.getShopInformation();
+    if (user.sub === shop.subject) {
+      self.inventoryBox = new game.Menu.InventoryBox();
+      self.manageEntityBox = new game.Menu.ManageEntityBox();
+    }
 
     if (!user.is_visitor) {
       self.changeLook = new game.Menu.ChangeLookBox();
@@ -17,23 +20,12 @@ game.Menu.GameMenu = me.Object.extend({
     self.shelfBox = new game.Menu.ShelfBox();
     self.footer = $("<div id='footer'></div>");
     self.navigatorBox = new game.Menu.NavigatorBox();
-    self.updateCurrentUser = function() {
-      var currentPlayer = game.Stores.UserStore.getCurrentUser();
-      var image = me.loader.getImage(currentPlayer.name);
-      $(self.footer).find('.user').css('background', 'url('+image.src+') -5px -790px no-repeat');
-    };
-    self.updateCurrentUserB = this.updateCurrentUser.bind(this);
-    self.updateShopInformationB = this.updateShopInformation.bind(this);
-    game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUserB);
-    game.Stores.GameStore.listenShopInformationChanged(self.updateShopInformationB);
     $(document.body).append(self.footer);
     self.addUserSubMenu();
     self.addMenu();
     $(this.footer).i18n();
   },
   updateShopInformation: function() {
-    var user = game.Stores.UserStore.getCurrentUser();
-    var shop = game.Stores.GameStore.getShopInformation();
     if (user.sub === shop.subject) {
       $(this.menu).find('.inventory').show();
     }
@@ -64,21 +56,28 @@ game.Menu.GameMenu = me.Object.extend({
   },
   addMenu: function() { // Add the menu.
     var user = game.Stores.UserStore.getCurrentUser();
+    var shop = game.Stores.GameStore.getShopInformation();
     this.menu = $("<div id='footer'>"+
         "<ul class='no-style'>"+
-          "<li class='inventory' style='display: none;'></li>"+
+          ( user.sub === shop.subject ? "<li class='inventory' style='display: none;'></li>" : "" ) +
           "<li class='navigator'></li>"+
           (!user.is_visitor ? ("<li class='user' style='background: url(/resources/players/"+user.figure+"/sprite.png) -5px  -790px no-repeat;'></li>") : "")+
         "</ul>"+
       "</div>");
     $(this.footer).append(this.menu);
     var self = this;
-    $(this.menu).find('.inventory').click(function() {
-      self.inventoryBox.display();
-    });
-    $(this.menu).find('.user').click(function() {
-      self.userSubMenu.toggle();
-    });
+    if (user.sub === shop.subject) {
+      $(this.menu).find('.inventory').click(function() {
+        self.inventoryBox.display();
+      });
+    }
+
+    if (!user.is_visitor) {
+      $(this.menu).find('.user').click(function() {
+        self.userSubMenu.toggle();
+      });
+    }
+
     $(this.menu).find('.navigator').click(function() {
       self.navigatorBox.toggle();
     });
@@ -96,7 +95,5 @@ game.Menu.GameMenu = me.Object.extend({
     if (this.footer) $(this.footer).remove();
     if (this.menu) $(this.menu).remove();
     if (this.userSubMenu) $(this.userSubMenu).remove();
-    game.Stores.UserStore.unsubscribeCurrentUserChanged(this.updateCurrentUserB);
-    game.Stores.GameStore.unsubscribeShopInformationChanged(self.updateShopInformationB);
   }
 });

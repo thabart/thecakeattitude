@@ -73,7 +73,300 @@ namespace Cook4Me.Api.Host.Extensions
             InsertOrders(context);
             InsertFeedItems(context);
             InsertUpsServices(context);
+            InsertGameEntities(context);
             context.SaveChanges();
+        }
+
+        private static void InsertGameEntities(CookDbContext context)
+        {
+            if (!context.GameEntities.Any())
+            {
+                context.GameEntities.AddRange(new[]
+                {
+                    new GameEntity
+                    {
+                        Name = "executive_table",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "executive_desk",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "glass_table",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "grunge_table",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "mode_table",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "executive_sofa",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "executive_chair",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "glass_shelves",
+                        Type = 0,
+                        IsShelf = true
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_1",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_2",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n1",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n2",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n3",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n4",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n5",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n6",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n7",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n8",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n9",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n10",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n11",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n12",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n13",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "gallery_n14",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "flag_1",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "flag_2",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "flag_3",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "flag_4",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "flag_5",
+                        Type = 1,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_1",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_2",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_3",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_4",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_5",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_6",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_7",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_8",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_9",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "plant_10",
+                        Type = 0,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "exe_floor",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "hw_tile_1",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "hw_tile_2",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "hw_tile_3",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "jp_tatami_large",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "jp_tatami_small",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "bear_rug_blue",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    },
+                    new GameEntity
+                    {
+                        Name = "bear_rug_mint",
+                        Type = 2,
+                        MaxAvailableInStock = 5
+                    }
+                });
+            }
         }
 
         private static void InsertFeedItems(CookDbContext context)
@@ -534,23 +827,21 @@ namespace Cook4Me.Api.Host.Extensions
                             OverviewName = "first_shop_overview",
                             PartialOverviewUrl = "/shops/shop_overview.png"
                         },
-                        GameEntities = new List<GameEntity>
+                        ShopGameEntities = new List<ShopGameEntity>
                         {
-                            new GameEntity
+                            new ShopGameEntity
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Col = 10,
                                 Row = 10,
-                                Type = 0,
-                                Name = "executive_table"
+                                GameEntityId = "executive_table"
                             },
-                            new GameEntity
+                            new ShopGameEntity
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Col = 15,
                                 Row = 15,
-                                Type = 0,
-                                Name = "glass_shelves",
+                                GameEntityId = "glass_shelves",
                                 ProductCategoryId = _womenProductCategory
                             }
                         }
@@ -600,23 +891,21 @@ namespace Cook4Me.Api.Host.Extensions
                             OverviewName = "first_shop_overview",
                             PartialOverviewUrl = "/shops/shop_overview.png"
                         },
-                        GameEntities = new List<GameEntity>
+                        ShopGameEntities = new List<ShopGameEntity>
                         {
-                            new GameEntity
+                            new ShopGameEntity
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Col = 10,
                                 Row = 10,
-                                Type = 0,
-                                Name = "executive_table"
+                                GameEntityId = "executive_table"
                             },
-                            new GameEntity
+                            new ShopGameEntity
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Col = 15,
                                 Row = 15,
-                                Type = 0,
-                                Name = "glass_shelves"
+                                GameEntityId = "glass_shelves"
                             }
                         }
                     },
@@ -665,23 +954,21 @@ namespace Cook4Me.Api.Host.Extensions
                             OverviewName = "first_shop_overview",
                             PartialOverviewUrl = "/shops/shop_overview.png"
                         },
-                        GameEntities = new List<GameEntity>
+                        ShopGameEntities = new List<ShopGameEntity>
                         {
-                            new GameEntity
+                            new ShopGameEntity
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Col = 10,
                                 Row = 10,
-                                Type = 0,
-                                Name = "executive_table"
+                                GameEntityId = "executive_table"
                             },
-                            new GameEntity
+                            new ShopGameEntity
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 Col = 15,
                                 Row = 15,
-                                Type = 0,
-                                Name = "glass_shelves"
+                                GameEntityId = "glass_shelves"
                             }
                         }
                     }

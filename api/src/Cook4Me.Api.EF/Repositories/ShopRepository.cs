@@ -144,7 +144,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.Comments)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
-                .Include(c => c.GameEntities)
+                .Include(c => c.ShopGameEntities).ThenInclude(s => s.GameEntity)
                 .Select(s => s.ToAggregate()).ToListAsync().ConfigureAwait(false);
         }
 
@@ -163,7 +163,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.CategoryMap)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
-                .Include(c => c.GameEntities)
+                .Include(c => c.ShopGameEntities).ThenInclude(s => s.GameEntity)
                 .FirstOrDefaultAsync(s => s.Id == id).ConfigureAwait(false);
             if (shop == null)
             {
@@ -191,7 +191,7 @@ namespace Cook4Me.Api.EF.Repositories
                         .Include(c => c.CategoryMap)
                         .Include(s => s.ProductCategories)
                         .Include(s => s.ShopTags)
-                        .Include(s => s.GameEntities)
+                        .Include(c => c.ShopGameEntities).ThenInclude(s => s.GameEntity)
                         .Include(s => s.Filters).ThenInclude(f => f.Values)
                         .FirstOrDefaultAsync(s => s.Id == shop.Id).ConfigureAwait(false);
                     if (record == null)
@@ -420,38 +420,38 @@ namespace Cook4Me.Api.EF.Repositories
                     }
 
 
-                    var gameEntities = shop.ShopGameEntities == null ? new List<ShopGameEntity>() : shop.ShopGameEntities; // Update game entities.
+                    var gameEntities = shop.ShopGameEntities == null ? new List<ShopAggregateGameEntity>() : shop.ShopGameEntities; // Update game entities.
                     var gameEntitiesId = gameEntities.Select(c => c.Id);
-                    var gameEntitiesToUpdate = record.GameEntities.Where(c => gameEntitiesId.Contains(c.Id));
-                    var gameEntitiesToRemove = record.GameEntities.Where(c => !gameEntitiesId.Contains(c.Id));
-                    var existingGameEntitiesId = record.GameEntities.Select(c => c.Id);
+                    var gameEntitiesToUpdate = record.ShopGameEntities.Where(c => gameEntitiesId.Contains(c.Id));
+                    var gameEntitiesToRemove = record.ShopGameEntities.Where(c => !gameEntitiesId.Contains(c.Id));
+                    var existingGameEntitiesId = record.ShopGameEntities.Select(c => c.Id);
                     var gameEntitiesToAdd = gameEntities.Where(c => !existingGameEntitiesId.Contains(c.Id));
                     foreach (var gameEntityToUpdate in gameEntitiesToUpdate)
                     {
                         var gameEntity = gameEntities.First(c => c.Id == gameEntityToUpdate.Id);
-                        gameEntityToUpdate.Type = (int)gameEntity.Type;
                         gameEntityToUpdate.Col = gameEntity.Col;
                         gameEntityToUpdate.Row = gameEntity.Row;
-                        gameEntityToUpdate.Name = gameEntity.Name;
+                        gameEntityToUpdate.GameEntityId = gameEntity.Name;
+                        gameEntityToUpdate.ProductCategoryId = gameEntity.ProductCategoryId;
                     }
 
                     foreach (var gameEntityToRemove in gameEntitiesToRemove)
                     {
-                        _context.GameEntities.Remove(gameEntityToRemove);
+                        _context.ShopGameEntities.Remove(gameEntityToRemove);
                     }
 
                     foreach (var gameEntityToAdd in gameEntitiesToAdd)
                     {
-                        var rec = new Models.GameEntity
+                        var rec = new Models.ShopGameEntity
                         {
                             Id = gameEntityToAdd.Id,
                             Col = gameEntityToAdd.Col,
                             Row = gameEntityToAdd.Row,
-                            Name = gameEntityToAdd.Name,
-                            ShopId = shop.Id,
-                            Type = (int)gameEntityToAdd.Type
+                            GameEntityId = gameEntityToAdd.Name,
+                            ProductCategoryId = gameEntityToAdd.ProductCategoryId,
+                            ShopId = shop.Id
                         };
-                        _context.GameEntities.Add(rec);
+                        _context.ShopGameEntities.Add(rec);
                     }
 
                     await _context.SaveChangesAsync().ConfigureAwait(false);
@@ -479,7 +479,7 @@ namespace Cook4Me.Api.EF.Repositories
                 .Include(c => c.Comments)
                 .Include(c => c.ShopMap)
                 .Include(c => c.CategoryMap)
-                .Include(c => c.GameEntities)
+                .Include(c => c.ShopGameEntities).ThenInclude(s => s.GameEntity)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories);
             if (parameter.CategoryIds != null && parameter.CategoryIds.Any())

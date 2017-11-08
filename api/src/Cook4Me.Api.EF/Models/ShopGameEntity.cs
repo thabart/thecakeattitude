@@ -14,22 +14,18 @@
 // limitations under the License.
 #endregion
 
-namespace Cook4Me.Api.Core.Aggregates
+namespace Cook4Me.Api.EF.Models
 {
-    public enum GameEntityTypes
-    {
-        Furniture,
-        Wall,
-        Floor
-    }
-
     public class ShopGameEntity
     {
         public string Id { get; set; }
+        public string ProductCategoryId { get; set; }
+        public string ShopId { get; set; }
+        public string GameEntityId { get; set; }
         public int Row { get; set; }
         public int Col { get; set; }
-        public string Name { get; set; }
-        public string ProductCategoryId { get; set; }
-        public GameEntityTypes Type { get; set; }
+        public virtual Shop Shop { get; set; }
+        public virtual ProductCategory ProductCategory { get; set; }
+        public virtual GameEntity GameEntity { get; set; }
     }
 }

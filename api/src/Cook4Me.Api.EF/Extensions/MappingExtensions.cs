@@ -25,6 +25,23 @@ namespace Cook4Me.Api.EF.Extensions
 {
     internal static class MappingExtensions
     {
+        public static GameEntityAggregate ToAggregate(this GameEntity gameEntity)
+        {
+            if (gameEntity == null)
+            {
+                throw new ArgumentNullException(nameof(gameEntity));
+            }
+
+            return new GameEntityAggregate
+            {
+                Description = gameEntity.Description,
+                MaxAvailableInStock = gameEntity.MaxAvailableInStock,
+                Name = gameEntity.Name,
+                Type = (GameEntityTypes)gameEntity.Type,
+                IsShelf = gameEntity.IsShelf
+            };
+        }
+
         public static FeedItem ToModel(this FeedItemAggregate feedItem)
         {
             if (feedItem == null)
@@ -636,39 +653,38 @@ namespace Cook4Me.Api.EF.Extensions
             };
         }
 
-        public static GameEntity ToModel(this ShopGameEntity shopGameEntity)
+        public static ShopGameEntity ToModel(this ShopAggregateGameEntity shopGameEntity)
         {
             if (shopGameEntity == null)
             {
                 throw new ArgumentNullException(nameof(shopGameEntity));
             }
 
-            return new GameEntity
+            return new ShopGameEntity
             {
                 Id = shopGameEntity.Id,
                 Col = shopGameEntity.Col,
-                Name = shopGameEntity.Name,
+                GameEntityId = shopGameEntity.Name,
                 Row = shopGameEntity.Row,
-                ProductCategoryId = shopGameEntity.ProductCategoryId,
-                Type = (int)shopGameEntity.Type
+                ProductCategoryId = shopGameEntity.ProductCategoryId
             };
         }
 
-        public static ShopGameEntity ToAggregate(this GameEntity gameEntity)
+        public static ShopAggregateGameEntity ToAggregate(this ShopGameEntity shopGameEntity)
         {
-            if (gameEntity == null)
+            if (shopGameEntity == null)
             {
-                throw new ArgumentNullException(nameof(gameEntity));
+                throw new ArgumentNullException(nameof(shopGameEntity));
             }
 
-            return new ShopGameEntity
+            return new ShopAggregateGameEntity
             {
-                Id = gameEntity.Id,
-                Col = gameEntity.Col,
-                Name = gameEntity.Name,
-                Row = gameEntity.Row,
-                ProductCategoryId = gameEntity.ProductCategoryId,
-                Type = (GameEntityTypes)gameEntity.Type
+                Id = shopGameEntity.Id,
+                Col = shopGameEntity.Col,
+                Name = shopGameEntity.GameEntity == null ? string.Empty : shopGameEntity.GameEntity.Name,
+                Row = shopGameEntity.Row,
+                ProductCategoryId = shopGameEntity.ProductCategoryId,
+                Type = shopGameEntity.GameEntity == null ? GameEntityTypes.Furniture : (GameEntityTypes)shopGameEntity.GameEntity.Type
             };
         }
 
@@ -682,7 +698,7 @@ namespace Cook4Me.Api.EF.Extensions
             ShopCategory shopCategory = null;
             ShopMap shopMap = null;
             ShopMap categoryMap = null;
-            List<ShopGameEntity> gameEntities = null;
+            List<ShopAggregateGameEntity> gameEntities = null;
             var tagNames = new List<string>();
             var paymentMethods = new List<ShopPaymentMethod>();
             var comments = new List<ShopComment>();
@@ -778,9 +794,9 @@ namespace Cook4Me.Api.EF.Extensions
                 };
             }
 
-            if (shop.GameEntities != null)
+            if (shop.ShopGameEntities != null)
             {
-                gameEntities = shop.GameEntities.Select(g => g.ToAggregate()).ToList();
+                gameEntities = shop.ShopGameEntities.Select(g => g.ToAggregate()).ToList();
             }
 
             return new ShopAggregate
