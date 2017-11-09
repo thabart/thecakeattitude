@@ -9,6 +9,11 @@
     cursor: pointer;
 }
 
+.button:disabled
+{
+  opacity: 0.2;
+}
+
 .button-green
 {
     background: #00a100;

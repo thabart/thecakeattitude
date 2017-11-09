@@ -405,6 +405,12 @@ ul.tabs li.active
   min-width: 500px;
 }
 
+.changelook-box .player-image {
+  text-align: center;
+  height: 140px;
+  background: url("../img/icons/bg_avatar_stage.gif") no-repeat center 85px;
+}
+
 /* ACTIONS BOX */
 .actions-box {
   padding-top: 10px;

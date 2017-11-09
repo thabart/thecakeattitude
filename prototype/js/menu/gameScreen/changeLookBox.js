@@ -1,6 +1,7 @@
 game.Menu = game.Menu || {};
 game.Menu.ChangeLookBox = me.Object.extend({
   init: function() {
+    this._currentDisplayedDirection = 3;
     var player = game.Stores.UserStore.getCurrentUser();
     var playersStyle = me.loader.getJSON("players");
     var menHeadsSelector = $("<ul class='no-style items-selector heads-selector men-heads-selector' style='display: none;'></ul>");
@@ -53,10 +54,10 @@ game.Menu.ChangeLookBox = me.Object.extend({
           "<div class='top'>"+
             "<span data-i18n='change_look_title'></span> <div class='close'></div>"+
           "</div>"+
-          "<div class='body'>"+          
+          "<div class='body'>"+
               // HEADER.
               "<div class='header'>"+
-                "<div class='title'><h2>THABART</h2></div>"+
+                "<div class='title'><h2>"+player.name+"</h2></div>"+
                 "<ul class='no-style tabs gray menu'>"+
                   "<li data-target='.player-body-tab'><span class='player-body'></span></li>"+
                   "<li data-target='.player-head-tab'><span class='player-head'></span></li>"+
@@ -107,10 +108,15 @@ game.Menu.ChangeLookBox = me.Object.extend({
                   "<div>"+
                     lowersColorsSelector[0].outerHTML+
                   "</div>"+
-                "</div>"+ 
+                "</div>"+
                 "<div class='col-4'>"+
                   "<div class='player-image'></div>"+
-                  "<button class='button button-gray change-look' data-i18n='ok'></button>"+
+                  "<div style='text-align: center; cursor: pointer;'>"+
+                    "<img src='/img/icons/turn.png' class='turn-player' />"+
+                  "</div>"+
+                  "<div style='text-align: center; padding-top: 10px;'>"+
+                    "<button class='button button-gray change-look' data-i18n='ok'></button>"+
+                  "</div>"+
                 "</div>"+
               "</div>"+
           "</div>"+
@@ -135,9 +141,11 @@ game.Menu.ChangeLookBox = me.Object.extend({
     $(this.changeLookBox).find(".upper-colors-selector "+ (figure.ch ? "li[data-id='"+figure.ch.color+"']" : "li:first-child")).addClass('active');
     $(this.changeLookBox).find(".lowers-selector li[data-id='"+ figure.lg.id +"']").addClass('active');
     $(this.changeLookBox).find(".lower-colors-selector "+ (figure.lg ? "li[data-id='"+figure.lg.color+"']" : "li:first-child")).addClass('active');
-    var userUrl = this.getUserUrl();
-    $(this.changeLookBox).find(".player-image").append("<img src='"+this.getUserUrl()+"' />");
-    console.log(figure);
+    if (figure.hd.id > 600) {
+      $(this.changeLookBox).find(".sex-selector li[data-sex='f']").click();
+    }
+
+    this.updateUserImage();
   },
   addListeners: function() {
     this.listenClose();
@@ -219,19 +227,39 @@ game.Menu.ChangeLookBox = me.Object.extend({
       $(this).addClass('active');
       self.updateUserImage();
     });
+    $(self.changeLookBox).find('.turn-player').click(function() {
+      self._currentDisplayedDirection++;
+      if (self._currentDisplayedDirection > 7) {
+        self._currentDisplayedDirection = 0;
+      }
+
+      self.updateUserImage();
+    });
     $(self.changeLookBox).find('.change-look').click(function() {
       var figure = self.getUserFigure();
       $(self.changeLookBox).find('.change-look').prop('disabled', true);
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
+      self.displayLoading(true);
       game.Services.PlayerService.addSprite(figure).then(function(r) {
-        me.loader.load({ name: currentPlayer.pseudo, src: r.sprite, type: 'image' }, function() {
+        me.loader.load({ name: currentPlayer.name, src: r.sprite, type: 'image' }, function() {
           game.Stores.UserStore.updateCurrentUser({ figure: figure });
-          $(self.changeLookBox).find('.change-look').prop('disabled', false);
+          self.displayLoading(false);
         });
       }).catch(function() {
-        $(self.changeLookBox).find('.change-look').prop('disabled', false);
+        self.displayLoading(false);
       });
     });
+  },
+  displayLoading: function(b) {
+    var changeLookBtn = $(this.changeLookBox).find('.change-look');
+    if (b) {
+      changeLookBtn.data('i18n', 'loading');
+    } else {
+      changeLookBtn.data('i18n', 'ok');
+    }
+
+    changeLookBtn.i18n();
+    changeLookBtn.prop('disabled', b);
   },
   updateUserImage: function() { // Update the user image.
     var self = this;
@@ -241,7 +269,7 @@ game.Menu.ChangeLookBox = me.Object.extend({
   },
   getUserUrl: function() { // Get the user url.
     var figure = this.getUserFigure();
-    return "https://www.habbo.de/habbo-imaging/avatarimage?figure="+figure+"&direction=3&head_direction=3&action=std&gesture=std&size=n&frame=0&img_format=png"
+    return "https://www.habbo.de/habbo-imaging/avatarimage?figure="+figure+"&direction="+this._currentDisplayedDirection+"&head_direction="+this._currentDisplayedDirection+"&action=std&gesture=std&size=n&frame=0&img_format=png"
   },
   getUserFigure: function() { // Get the user figure.
     var self = this;

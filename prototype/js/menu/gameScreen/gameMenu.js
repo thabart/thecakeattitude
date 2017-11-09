@@ -24,6 +24,14 @@ game.Menu.GameMenu = me.Object.extend({
     self.addUserSubMenu();
     self.addMenu();
     $(this.footer).i18n();
+    if (!user.is_visitor) {
+      this.updateCurrentUserB = this.updateCurrentUser.bind(this);
+      game.Stores.UserStore.listenCurrentUserChanged(this.updateCurrentUserB);
+    }
+  },
+  updateCurrentUser: function() {
+    var currentUser = game.Stores.UserStore.getCurrentUser();
+    $(this.menu).find('.user').css('background', 'url(/resources/players/'+currentUser.figure+'/sprite.png) -5px  -790px no-repeat');
   },
   updateShopInformation: function() {
     if (user.sub === shop.subject) {
@@ -95,5 +103,6 @@ game.Menu.GameMenu = me.Object.extend({
     if (this.footer) $(this.footer).remove();
     if (this.menu) $(this.menu).remove();
     if (this.userSubMenu) $(this.userSubMenu).remove();
+		if (this.updateCurrentUserB) game.Stores.UserStore.unsubscribeCurrentUserChanged(this.updateCurrentUserB);
   }
 });
