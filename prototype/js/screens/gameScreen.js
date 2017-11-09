@@ -47,6 +47,8 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       self.updateCurrentUser = function() {
         var currentPlayer = game.Stores.UserStore.getCurrentUser();
         self.currentPlayer.updateSprite(currentPlayer);
+        var image = me.loader.getImage(currentPlayer.name);
+        self.currentPlayer.metadata.image = "<div style='background: url("+image.src+") -5px  -790px no-repeat; width: 64px; height: 110px;' class='img'></div>";
       };
       game.Stores.UserStore.listenCurrentUserChanged(self.updateCurrentUser);
       me.game.viewport.moveTo(self.currentPlayer.pos.x - (me.game.viewport.width / 2), self.currentPlayer.pos.y - (me.game.viewport.height / 2));

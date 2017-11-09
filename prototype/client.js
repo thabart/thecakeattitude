@@ -11,7 +11,8 @@ var through2 = require('through2');
 var services = require('./server/services');
 var async = require('async');
 var app = express();
-const isProxyEnabled = true;
+
+const isProxyEnabled = false;
 const nbJobs = 0;
 const maxNbJobs = 5;
 

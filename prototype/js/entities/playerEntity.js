@@ -243,27 +243,6 @@ game.PlayerEntity = me.Entity.extend({
         // tile = this.refLayer.getTile(posX + this.diamondShape.getBounds().width / 2, posY - this.diamondShape.getBounds().height / 2);
       }
 
-      /*
-      if (!tile) {
-        tile = {};
-        if (mvt === 'top') {
-          tile.col = this.currentTile.col - 1;
-          tile.row = this.currentTile.row - 1;
-        }
-        var t = this.refLayer.layerData[tile.col][tile.row];
-        console.log(t);
-        // console.log(t);
-        /*
-        if (this.currentTile.col === Constants.Layers.Ground.Position.col) {
-          tile.col = Constants.Layers.Ground.Position.col;
-        }
-
-        if (this.currentTile.row === Constants.Layers.Ground.Position.row) {
-          tile.row = Constants.Layers.Ground.Position.row;
-        }
-      }
-      */
-
       if (!tile) {
         this.currentMvt = this.movements.length;
         this.renderable.setCurrentAnimation("standing_" + mvt);
