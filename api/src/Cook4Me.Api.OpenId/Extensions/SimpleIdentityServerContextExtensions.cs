@@ -488,7 +488,7 @@ namespace Cook4Me.Api.OpenId.Extensions
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = Constants.Claims.Figure,
-                                Value = "hd-209-1.ch-215-1427.cc-886-62.lg-3353-1408.sh-3035-62"
+                                Value = "hd-209-31.hr-100-32.ch-220-70.lg-3017-67.sh-305-62"
                             }
                         },
                         Password = ComputeHash("password"),
@@ -551,7 +551,7 @@ namespace Cook4Me.Api.OpenId.Extensions
                             {
                                 Id = Guid.NewGuid().ToString(),
                                 ClaimCode = Constants.Claims.Figure,
-                                Value = "hd-180-5.hr-100-40.ch-255-66.lg-280-110.sh-305-62"
+                                Value = "hd-605-31.hr-515-36.ch-645-70.lg-716-68.sh-305-62"
                             }
                         },
                         Password = ComputeHash("password"),

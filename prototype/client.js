@@ -22,7 +22,7 @@ function sleep(x) {
 }
 
 var download = function(uri, filename, row, col){
-	return new Promise(function(resolve) {
+	return new Promise(function(resolve, reject) {
 		var proxiedRequest = isProxyEnabled ? request.defaults({ 'proxy' : 'http://proxybc.riziv.org:8080' }) : request;
 		var opts = {
 			url: uri,
@@ -32,9 +32,13 @@ var download = function(uri, filename, row, col){
 			}
 		};
 
-
-		proxiedRequest(opts).pipe(fs.createWriteStream(filename)).on('close', function() {
+		proxiedRequest(opts).on('error', function(e) {
+			console.log(e);
+			reject(e);
+		}).pipe(fs.createWriteStream(filename)).on('close', function() {
 			resolve({filename: filename, order: (row * 5) + col});
+		}).on('error', function(e) {
+			reject(e);
 		});	
 	});
 };
@@ -67,7 +71,7 @@ app.post('/player', function(req, res) { // Add player sprite.
 			var wurl = "https://www.habbo.de/habbo-imaging/avatarimage?figure="+figure+"&direction="+direction+"&head_direction="+direction+"&action=wlk&gesture=std&size=n&frame="+i+"&img_format=png";
 			subPromises.push(download(wurl, dir + "\\" + (direction - 3) + "_" + (i + 1) + ".png", (direction - 3), (i + 1)));
 		}
-
+		
 		return subPromises;
 	};
 
@@ -79,7 +83,7 @@ app.post('/player', function(req, res) { // Add player sprite.
 					direction++;
 					files = files.concat(fs);
 					cb();
-				}, 200);
+				}, 1000);
 			});
 		};
 		cb();

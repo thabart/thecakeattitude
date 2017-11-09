@@ -1,0 +1,111 @@
+{
+	"heads": {
+		"colors": [
+			{ "id": "31", "color": "rgb(255, 214, 169)" },
+	    	{ "id": "32", "color": "rgb(223, 166, 111)" },
+	      	{ "id": "33", "color": "rgb(209, 128, 58)" },
+	      	{ "id": "34", "color": "rgb(255, 238, 185)" },
+	      	{ "id": "35", "color": "rgb(246, 208, 89)" },
+	      	{ "id": "36", "color": "rgb(242, 177, 29)" },
+	      	{ "id": "37", "color": "rgb(154, 93, 46)" },
+	      	{ "id": "38", "color": "rgb(172, 83, 0)" },
+	      	{ "id": "39", "color": "rgb(120, 52, 0)" },
+	      	{ "id": "40", "color": "rgb(216, 211, 217)" }
+		],
+		"content": [			
+	      { "id": "180", "url": "resources/players/heads/mal/hd180.png", "sex": "m" },
+	      { "id": "185", "url": "resources/players/heads/mal/hd180.png", "sex": "m" },
+	      { "id": "190", "url": "resources/players/heads/mal/hd185.png", "sex": "m" },
+	      { "id": "190", "url": "resources/players/heads/mal/hd190.png", "sex": "m" },
+	      { "id": "195", "url": "resources/players/heads/mal/hd195.png", "sex": "m" },
+	      { "id": "200", "url": "resources/players/heads/mal/hd200.png", "sex": "m" },
+	      { "id": "205", "url": "resources/players/heads/mal/hd205.png", "sex": "m" },
+	      { "id": "206", "url": "resources/players/heads/mal/hd206.png", "sex": "m" },
+	      { "id": "207", "url": "resources/players/heads/mal/hd207.png", "sex": "m" },
+	      { "id": "208", "url": "resources/players/heads/mal/hd208.png", "sex": "m" },
+	      { "id": "209", "url": "resources/players/heads/mal/hd209.png", "sex": "m" },
+	      { "id": "600", "url": "resources/players/heads/female/hd600.png", "sex": "f" },
+	      { "id": "605", "url": "resources/players/heads/female/hd605.png", "sex": "f" },
+	      { "id": "610", "url": "resources/players/heads/female/hd610.png", "sex": "f" },
+	      { "id": "615", "url": "resources/players/heads/female/hd615.png", "sex": "f" },
+	      { "id": "620", "url": "resources/players/heads/female/hd620.png", "sex": "f" },
+	      { "id": "625", "url": "resources/players/heads/female/hd625.png", "sex": "f" },
+	      { "id": "626", "url": "resources/players/heads/female/hd626.png", "sex": "f" },
+	      { "id": "627", "url": "resources/players/heads/female/hd627.png", "sex": "f" },
+	      { "id": "628", "url": "resources/players/heads/female/hd628.png", "sex": "f" }
+		]
+	},
+	"hairCuts": {
+		"colors": [
+	    	{ "id": "31", "color": "rgb(255, 214, 169)" },
+	      	{ "id": "32", "color": "rgb(223, 166, 111)" },
+	      	{ "id": "33", "color": "rgb(209, 128, 58)" },
+	      	{ "id": "34", "color": "rgb(255, 238, 185)" },
+	      	{ "id": "35", "color": "rgb(246, 208, 89)" },
+	      	{ "id": "36", "color": "rgb(242, 177, 29)" },
+	      	{ "id": "37", "color": "rgb(154, 93, 46)" },
+	      	{ "id": "38", "color": "rgb(172, 83, 0)" },
+	      	{ "id": "39", "color": "rgb(120, 52, 0)" },
+	      	{ "id": "40", "color": "rgb(216, 211, 217)" }
+		],
+		"content": [
+			{ "id": "100", "url": "resources/players/haircuts/mal/hr100.png", "sex": "m" },
+	    	{ "id": "105", "url": "resources/players/haircuts/mal/hr105.png", "sex": "m" },
+	      	{ "id": "110", "url": "resources/players/haircuts/mal/hr110.png", "sex": "m" },
+	      	{ "id": "115", "url": "resources/players/haircuts/mal/hr115.png", "sex": "m" },
+	      	{ "id": "500", "url": "resources/players/haircuts/female/hr500.png", "sex": "f" },
+	      	{ "id": "505", "url": "resources/players/haircuts/female/hr505.png", "sex": "f" },
+	      	{ "id": "510", "url": "resources/players/haircuts/female/hr510.png", "sex": "f" },
+	      	{ "id": "515", "url": "resources/players/haircuts/female/hr515.png", "sex": "f" },
+	      	{ "id": "520", "url": "resources/players/haircuts/female/hr520.png", "sex": "f" },
+	      	{ "id": "530", "url": "resources/players/haircuts/female/hr530.png", "sex": "f" },
+	      	{ "id": "540", "url": "resources/players/haircuts/female/hr540.png", "sex": "f" }
+		]
+	},
+	"uppers": {
+		"colors": [
+			{ "id": "63", "color": "rgb(164, 164, 164)" },
+			{ "id": "64", "color": "rgb(89, 89, 89)" },
+			{ "id": "66", "color": "rgb(231, 176, 39)"  },
+			{ "id": "67", "color": "rgb(168, 107, 25)" },
+			{ "id": "68", "color": "rgb(248, 199, 144)" },
+			{ "id": "70", "color": "rgb(199, 68, 0)" }
+		],
+		"content": [
+			{ "id": "210", "url": "resources/players/uppers/mal/ch210.png", "sex": "m" },
+			{ "id": "215", "url": "resources/players/uppers/mal/ch215.png", "sex": "m" },
+			{ "id": "220", "url": "resources/players/uppers/mal/ch220.png", "sex": "m" },
+			{ "id": "225", "url": "resources/players/uppers/mal/ch225.png", "sex": "m" },
+			{ "id": "230", "url": "resources/players/uppers/mal/ch230.png", "sex": "m" },
+			{ "id": "630", "url": "resources/players/uppers/female/ch630.png", "sex": "f" },
+			{ "id": "635", "url": "resources/players/uppers/female/ch635.png", "sex": "f" },
+			{ "id": "640", "url": "resources/players/uppers/female/ch640.png", "sex": "f" },
+			{ "id": "645", "url": "resources/players/uppers/female/ch645.png", "sex": "f" },
+			{ "id": "650", "url": "resources/players/uppers/female/ch650.png", "sex": "f" },
+			{ "id": "655", "url": "resources/players/uppers/female/ch655.png", "sex": "f" }
+		]
+	},
+	"lowers": {
+		"colors": [
+			{ "id": "63", "color": "rgb(164, 164, 164)" },
+			{ "id": "64", "color": "rgb(89, 89, 89)" },
+			{ "id": "66", "color": "rgb(231, 176, 39)"  },
+			{ "id": "67", "color": "rgb(168, 107, 25)" },
+			{ "id": "68", "color": "rgb(248, 199, 144)" },
+			{ "id": "70", "color": "rgb(199, 68, 0)" }
+		],
+		"content": [
+			{ "id": "270", "url": "resources/players/lowers/mal/lg270.png", "sex": "m" },
+			{ "id": "275", "url": "resources/players/lowers/mal/lg275.png", "sex": "m" },
+			{ "id": "280", "url": "resources/players/lowers/mal/lg280.png", "sex": "m" },
+			{ "id": "281", "url": "resources/players/lowers/mal/lg281.png", "sex": "m" },
+			{ "id": "285", "url": "resources/players/lowers/mal/lg285.png", "sex": "m" },
+			{ "id": "3017", "url": "resources/players/lowers/mal/lg3017.png", "sex": "m" },
+			{ "id": "716", "url": "resources/players/lowers/female/lg716.png", "sex": "f" },
+			{ "id": "710", "url": "resources/players/lowers/female/lg710.png", "sex": "f" },
+			{ "id": "696", "url": "resources/players/lowers/female/lg696.png", "sex": "f" },
+			{ "id": "695", "url": "resources/players/lowers/female/lg695.png", "sex": "f" },
+			{ "id": "3006", "url": "resources/players/lowers/female/lg3006.png", "sex": "f" }
+		]
+	}
+}

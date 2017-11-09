@@ -53,7 +53,7 @@ game.Menu.AuthenticateMethodChooserBox = me.Object.extend({
 			var pseudo = $(self.authenticateMethodChooserBox).find('input[name="pseudo"]').val();
 			var player = {
 				name : pseudo,
-				figure: 'hd-180-1.ch-255-66.lg-280-110.sh-305-62.ha-1012-110.hr-828-61',
+				figure: 'hd-209-31.ch-215-63.lg-270-63.sh-305-62',
 				is_visitor : true
 			};
 			game.Stores.UserStore.setCurrentUser(player);
