@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Tooltip } from "reactstrap";
 import { Guid } from '../utils';
 import { translate } from 'react-i18next';
-import ShelfChooser from '../game/shelfChooser';
 import TagsInput from "react-tagsinput";
 import $ from 'jquery';
 
@@ -92,7 +91,35 @@ class ProductCategories extends Component {
         )}
       </div>
       <div className="col-md-6">
-        <ShelfChooser ref="shelfChooser" />
+        <div style={{ position: "relative"}}>
+          <img src="/images/shop-map.png" width="600" />
+          { /* FIRST COLUMN */ }
+          <div style={{position: "absolute", left: "105px", top: "155px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+          <div style={{position: "absolute", left: "130px", top: "140px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+          <div style={{position: "absolute", left: "155px", top: "125px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+          <div style={{position: "absolute", left: "180px", top: "110px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+          { /* SECOND COLUMN */ }
+          <div style={{position: "absolute", left: "130px", top: "170px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+          <div style={{position: "absolute", left: "155px", top: "160px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+          <div style={{position: "absolute", left: "180px", top: "150px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+          <div style={{position: "absolute", left: "205px", top: "140px"}}>
+            <img src="/images/shelves.gif" />
+          </div>
+        </div>
       </div>
     </div>);
   }
@@ -108,10 +135,12 @@ class ProductCategories extends Component {
           shelves.forEach(function(shelf) {
             var value = '';
             var id = Guid.generate();
-            var filteredProductCategories = self.props.productCategories.filter(function(cat) { return cat.shop_section_name === shelf.name; });
-            if (filteredProductCategories.length === 1) {
-              value = filteredProductCategories[0].name;
-              id = filteredProductCategories[0].id;
+            if (self.props.productCategories) {
+              var filteredProductCategories = self.props.productCategories.filter(function(cat) { return cat.shop_section_name === shelf.name; });
+              if (filteredProductCategories.length === 1) {
+                value = filteredProductCategories[0].name;
+                id = filteredProductCategories[0].id;
+              }
             }
 
             shelf.isSelected = false;

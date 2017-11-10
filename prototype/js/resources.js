@@ -18,6 +18,7 @@ var g_ressources = [
     { name: "reception-column", type: "image", src: "resources/reception/reception-column.png" },
     { name: "reception-wall", type: "image", src: "resources/reception/reception-wall.png" },
     { name: "ground-reception", type: "image", src: "resources/reception/ground-reception.png" },
+    { name: "shop-door", type: "image", src: "resources/shop-door.png" },
     { name: "entry", type: "image", src: "resources/entry.png" }, // Load the entry
     { name: "executive_table", type: "image", src: "resources/entities/furnitures/executive/table.gif" }, // Load the furnitures.
     { name: "executive_desk", type: "image", src: "resources/entities/furnitures/executive/desk.gif" },
