@@ -651,4 +651,7 @@ ul.tabs li.active
   padding-top: 5px;
 }
 
-/* MENU SCREEN BOX */
+/* PRODUCT BOX */
+.product-box .body > .content {
+  padding: 5px;
+}

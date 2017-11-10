@@ -140,11 +140,14 @@ game.Menu.ShelfBox = me.Object.extend({
               "<span>€ "+product.price+"</span>"+
             "</div>"+
             "<div class='col-4' style='text-align: right;'>"+
-              "<button class='button button-green' data-i18n='see'></button>"+
+              "<button  data-id='"+product.id+"' class='button button-green see' data-i18n='see'></button>"+
             "</div>"+
           "</div>"+
         "</li>");
         productsElt.append(elt);
+        $(elt).find('.see').click(function() {
+          game.Stores.GameStore.displayProduct($(this).data('id'));
+        });
       });
       productsElt.i18n();
       if (navigation && navigation.length > 0) {

@@ -199,7 +199,31 @@ var GameStoreCl = function() {
 		$(this).trigger('messageArrived', [ message ]);
 	};
 
+	this.displayProduct = function(productId) {
+		$(this).trigger('productDisplayed', [ productId ]);
+	};
+
+	this.hideProduct = function() {
+		$(this).trigger('productHidden');
+	};
+
 	/* LISTEN THE EVENTS */
+	this.listenDisplayProduct = function(callback) {
+		$(this).on('productDisplayed', callback);
+	};
+
+	this.unsubscribeDisplayProduct = function(callback) {
+		$(this).off('productDisplayed', callback);
+	};
+
+	this.listenHideProduct = function(callback) {
+		$(this).on('productHidden', callback);
+	};
+
+	this.unsubscribeHideProduct = function(callback) {
+		$(this).off('productHidden', callback);
+	};
+
 	this.listenEntityRemoved = function(callback) {
 		$(this).on('entityRemoved', callback);
 	};

@@ -24,9 +24,7 @@ game.Menu.ActionsBox = me.Object.extend({
     $(this.actions).find('.move').click(function() {
       var selectedEntity = game.Stores.GameStore.getSelectedEntity();
       var name = selectedEntity.getName();
-      var flipped = selectedEntity.flipped;
-      var selector = selectedEntity.selector;
-      game.Stores.GameStore.setActiveEntity(name, selector, flipped);
+      game.Stores.GameStore.setActiveEntity(name, selectedEntity.selector, selectedEntity.metadata.type, selectedEntity.flipped, selectedEntity.metadata.product_category);
       game.Stores.GameStore.removeEntity(selectedEntity, true);
       $(self.actions).hide();
       game.Stores.GameStore.hideInformation();

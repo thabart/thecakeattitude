@@ -280,7 +280,11 @@ game.PlayerEntity = me.Entity.extend({
       return true;
     },
     destroy: function() {
-      if (this.informationBox) $(this.informationBox).remove();
+      if (this.informationBox) {
+        $(this.informationBox).remove();
+        this.informationBox = null;
+      }
+      
       game.Stores.GameStore.unsubscribeMessageArrived(this.onMessageArrivedB);
       game.Stores.GameStore.unsubscribeDisplayPlayerPseudoArrived(this.displayPseudoB);
       game.Stores.GameStore.unsubscribeHidePlayerPseudoArrived(this.hidePseudoB);

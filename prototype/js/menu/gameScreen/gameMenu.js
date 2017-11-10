@@ -18,6 +18,7 @@ game.Menu.GameMenu = me.Object.extend({
     self.chatForm = new game.Menu.ChatForm();
     self.upRightOptions = new game.Menu.UpRightOptions();
     self.shelfBox = new game.Menu.ShelfBox();
+    self.productBox = new game.Menu.ProductBox();
     self.footer = $("<div id='footer'></div>");
     self.navigatorBox = new game.Menu.NavigatorBox();
     $(document.body).append(self.footer);
@@ -100,6 +101,7 @@ game.Menu.GameMenu = me.Object.extend({
     if (this.shelfBox) this.shelfBox.destroy();
     if (this.changeLook) this.changeLook.destroy();
     if (this.navigatorBox) this.navigatorBox.destroy();
+    if (this.productBox) this.productBox.destroy();
     if (this.footer) $(this.footer).remove();
     if (this.menu) $(this.menu).remove();
     if (this.userSubMenu) $(this.userSubMenu).remove();
