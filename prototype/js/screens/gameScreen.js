@@ -92,7 +92,8 @@ game.Screens.GameScreen = me.ScreenObject.extend({
             row: gameEntity.row,
             resource: gameEntity.name,
             id: gameEntity.id,
-            type: entObj.type
+            type: entObj.type,
+            flipped: gameEntity.is_flipped
           };
 
           if (gameEntity.product_category_id) {

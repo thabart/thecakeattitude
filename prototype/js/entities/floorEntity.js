@@ -25,6 +25,9 @@ game.Entities.FloorEntity = game.SelectableEntity.extend({
       this.body.setCollisionMask(
         me.collision.types.WORLD_SHAPE
       );
+      if (settings.flipped) {
+        this.flip();
+      }
   },
   getZIndex: function() {
     return Constants.playerZIndex - 2;

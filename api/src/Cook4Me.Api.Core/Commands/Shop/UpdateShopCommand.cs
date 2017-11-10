@@ -65,6 +65,7 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public int Row { get; set; }
         public string ProductCategoryId { get; set; }
         public GameEntityTypes Type { get; set; }
+        public bool IsFlipped { get; set; }
     }
     
     public class UpdateShopCommand : Command

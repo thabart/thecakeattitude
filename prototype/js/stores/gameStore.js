@@ -111,6 +111,7 @@ var GameStoreCl = function() {
 				col: coordinates.col,
 				row: coordinates.row,
 				type: f.getType(),
+				is_flipped: f.flipped
 			});
 			_shopInformation['game_entities'] = gameEntities;
 			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
@@ -139,6 +140,19 @@ var GameStoreCl = function() {
 
 		me.game.repaint();
 		$(this).trigger('entityRemoved', [ f ]);
+	};
+
+	this.updateEntity = function(f, update = false) {
+		if (update) {
+			var gameEntities = _shopInformation['game_entities'];
+			var gameEntityToUpdate = gameEntities.filter(function(g) { return g.id === f.metadata.id; })[0];
+			if (!gameEntityToUpdate) {
+				return;
+			}
+
+			gameEntityToUpdate['is_flipped'] = f.flipped;
+			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
+		}
 	};
 
 	this.getCollisionLayer = function() { // Get collision layer.

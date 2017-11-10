@@ -31,6 +31,7 @@ namespace Cook4Me.Api.Core.Aggregates
         public string Name { get; set; }
         public string Description { get; set; }
         public string ProductCategoryId { get; set; }
+        public bool IsFlipped { get; set; }
         public GameEntityTypes Type { get; set; }
     }
 }

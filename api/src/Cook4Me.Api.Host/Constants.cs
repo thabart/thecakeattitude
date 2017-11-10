@@ -517,6 +517,7 @@ namespace Cook4Me.Api.Host
                 public const string MaxAvailableInStock = "max_available_in_stock";
                 public const string Description = "description";
                 public const string IsShelf = "is_shelf";
+                public const string IsFlipped = "is_flipped";
             }
 
             public static class Paginate

@@ -24,6 +24,7 @@ namespace Cook4Me.Api.EF.Models
         public string GameEntityId { get; set; }
         public int Row { get; set; }
         public int Col { get; set; }
+        public bool IsFlipped { get; set; }
         public virtual Shop Shop { get; set; }
         public virtual ProductCategory ProductCategory { get; set; }
         public virtual GameEntity GameEntity { get; set; }

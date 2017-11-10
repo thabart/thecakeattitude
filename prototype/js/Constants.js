@@ -10,7 +10,7 @@ var Constants = {
     Wall: {
       Name: "Walls",
       Position: {
-        Row: 0,
+        Row: 4,
         Col: 0
       }
     },

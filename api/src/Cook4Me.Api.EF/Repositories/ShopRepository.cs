@@ -433,6 +433,7 @@ namespace Cook4Me.Api.EF.Repositories
                         gameEntityToUpdate.Row = gameEntity.Row;
                         gameEntityToUpdate.GameEntityId = gameEntity.Name;
                         gameEntityToUpdate.ProductCategoryId = gameEntity.ProductCategoryId;
+                        gameEntityToUpdate.IsFlipped = gameEntity.IsFlipped;
                     }
 
                     foreach (var gameEntityToRemove in gameEntitiesToRemove)
@@ -449,7 +450,8 @@ namespace Cook4Me.Api.EF.Repositories
                             Row = gameEntityToAdd.Row,
                             GameEntityId = gameEntityToAdd.Name,
                             ProductCategoryId = gameEntityToAdd.ProductCategoryId,
-                            ShopId = shop.Id
+                            ShopId = shop.Id,
+                            IsFlipped = gameEntityToAdd.IsFlipped
                         };
                         _context.ShopGameEntities.Add(rec);
                     }

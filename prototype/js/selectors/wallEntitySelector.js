@@ -12,7 +12,7 @@ game.WallEntitySelector = game.SelectableEntitySelector.extend({
     var isLeftWall = this.sprite.tile.row > Constants.Layers.Wall.Position.Row;
     if ((!this.sprite.flipped && isLeftWall) || (this.sprite.flipped && !isLeftWall)) {
       this.sprite.flip();
-			var activeEntity = ShopStore.getActiveEntity();
+			var activeEntity = game.Stores.GameStore.getActiveEntity();
 			activeEntity.isFlipped = this.sprite.flipped;
     }
 	},

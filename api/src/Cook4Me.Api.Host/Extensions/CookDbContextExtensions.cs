@@ -842,7 +842,8 @@ namespace Cook4Me.Api.Host.Extensions
                                 Col = 15,
                                 Row = 15,
                                 GameEntityId = "glass_shelves",
-                                ProductCategoryId = _womenProductCategory
+                                ProductCategoryId = _womenProductCategory,
+                                IsFlipped = true
                             }
                         }
                     },

@@ -666,7 +666,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Col = shopGameEntity.Col,
                 GameEntityId = shopGameEntity.Name,
                 Row = shopGameEntity.Row,
-                ProductCategoryId = shopGameEntity.ProductCategoryId
+                ProductCategoryId = shopGameEntity.ProductCategoryId,
+                IsFlipped = shopGameEntity.IsFlipped
             };
         }
 
@@ -684,7 +685,8 @@ namespace Cook4Me.Api.EF.Extensions
                 Name = shopGameEntity.GameEntity == null ? string.Empty : shopGameEntity.GameEntity.Name,
                 Row = shopGameEntity.Row,
                 ProductCategoryId = shopGameEntity.ProductCategoryId,
-                Type = shopGameEntity.GameEntity == null ? GameEntityTypes.Furniture : (GameEntityTypes)shopGameEntity.GameEntity.Type
+                Type = shopGameEntity.GameEntity == null ? GameEntityTypes.Furniture : (GameEntityTypes)shopGameEntity.GameEntity.Type,
+                IsFlipped = shopGameEntity.IsFlipped
             };
         }
 

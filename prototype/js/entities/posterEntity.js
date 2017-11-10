@@ -22,6 +22,9 @@ game.Entities.PosterEntity = game.SelectableEntity.extend({
     this.addCollision("posters_collision");
     this.addShape("walls_shapes");
     this.body.collisionType = me.collision.types.ACTION_OBJECT;
+    if (settings.flipped) {
+      this.flip();
+    }
   },
 	getZIndex: function() {
 		return Constants.playerZIndex - 1;

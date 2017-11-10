@@ -252,7 +252,8 @@ namespace Cook4Me.Api.Handlers
                     Row = u.Row,
                     Col = u.Col,
                     Type = u.Type,
-                    ProductCategoryId = u.ProductCategoryId
+                    ProductCategoryId = u.ProductCategoryId,
+                    IsFlipped = u.IsFlipped
                 }).ToList();
             }
 

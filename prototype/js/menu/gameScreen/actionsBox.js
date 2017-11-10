@@ -42,6 +42,7 @@ game.Menu.ActionsBox = me.Object.extend({
       selectedEntity.flip();
       game.Stores.GameStore.updateColls();
       me.game.repaint();
+      game.Stores.GameStore.updateEntity(selectedEntity, true);
     });
     $(this.actions).find('.translate').click(function() {
       self.mgfurniture.toggle();
