@@ -3,7 +3,7 @@
  */
 
 var g_ressources = [
-    { name: "reception_map",     type: "tmx",    src: "resources/reception-map.tmx" }, // Load the maps
+    { name: "reception_map",     type: "tmx",    src: "resources/reception/reception-map.tmx" }, // Load the maps
     { name: "shop_map",     type: "tmx",    src: "resources/shop-map.tmx" },
     { name: "coffee_shop_map", type: "tmx", src: "resources/coffee-house/habbo-coffee-house.tmx" },
     { name: "wall_right", type: "image", src: "resources/wall_right.png" },
@@ -15,6 +15,9 @@ var g_ressources = [
     { name: "window", type: "image", src: "resources/coffee-house/window.png" },
     { name: "coffee-wall-right", type: "image", src: "resources/coffee-house/coffee-wall-right.png" },
     { name: "coffee-table", type: "image", src: "resources/coffee-house/coffee-table.png" },
+    { name: "reception-column", type: "image", src: "resources/reception/reception-column.png" },
+    { name: "reception-wall", type: "image", src: "resources/reception/reception-wall.png" },
+    { name: "ground-reception", type: "image", src: "resources/reception/ground-reception.png" },
     { name: "entry", type: "image", src: "resources/entry.png" }, // Load the entry
     { name: "executive_table", type: "image", src: "resources/entities/furnitures/executive/table.gif" }, // Load the furnitures.
     { name: "executive_desk", type: "image", src: "resources/entities/furnitures/executive/desk.gif" },
@@ -29,6 +32,7 @@ var g_ressources = [
     { name: "coffee-sofa", type: "image", src: "resources/entities/furnitures/coffee/sofa.png"},
     { name: "coffee-library", type: "image", src: "resources/entities/furnitures/coffee/library.png"},
     { name: "coffee-low-table", type: "image", src: "resources/entities/furnitures/coffee/low-table.png"},
+    { name: "reception-bar", type: "image", src: "resources/entities/furnitures/reception/reception-bar.png"},
     { name: "gallery_1", type: "image", src: "resources/entities/walls/posters/gallery_1.gif" }, // Load the posters.
     { name: "gallery_2", type: "image", src: "resources/entities/walls/posters/gallery_2.gif" },
     { name: "gallery_n1", type: "image", src: "resources/entities/walls/posters/gallery_n1.gif" },
@@ -62,6 +66,7 @@ var g_ressources = [
     { name: "plant_11", type: "image", src: "resources/entities/decorations/plants/plant_11.png" },
     { name: "plant_12", type: "image", src: "resources/entities/decorations/plants/plant_12.gif" },
     { name: "plant_13", type: "image", src: "resources/entities/decorations/plants/plant_13.png" },
+    { name: "plant_14", type: "image", src: "resources/entities/decorations/plants/plant_14.png" },
     { name: "flag_1", type: "image", src: "resources/entities/walls/flags/flag_1.gif" }, // Load the flags.
     { name: "flag_2", type: "image", src: "resources/entities/walls/flags/flag_2.gif" },
     { name: "flag_3", type: "image", src: "resources/entities/walls/flags/flag_3.gif" },

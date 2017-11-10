@@ -389,6 +389,36 @@
 				"relativePosX": -88,
 				"relativePosY": -63
 			}
+		},
+		{
+			"name": "reception-bar",
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": -4,
+				"relativePosX": -26,
+				"relativePosY": -49
+			},
+			"vertical": {
+				"nbCols": 1,
+				"nbRows": -4,
+				"relativePosX": -26,
+				"relativePosY": -49
+			}
+		},
+		{
+			"name": "plant_14",
+			"horizontal": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -35,
+				"relativePosY": -91
+			},
+			"vertical": {
+				"nbCols": 1,
+				"nbRows": 1,
+				"relativePosX": -35,
+				"relativePosY": -91
+			}
 		}
 	]
 }
