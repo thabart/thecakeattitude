@@ -32,7 +32,12 @@ var game = {
             game.Stores.UserStore.setCurrentUser(player);
             player.is_visitor = false;
             me.loader.load({ name: player.name, src: 'resources/players/'+player.figure+'/sprite.png', type: 'image' }, function() {
-                me.state.change(me.state.PLAY, "reception");
+                var shopId = game.Helpers.Url.getUrlParameter('shop_id');
+                if (!shopId) {
+                  me.state.change(me.state.PLAY, "reception");
+                } else {
+                  me.state.change(me.state.PLAY, "shop", shopId);
+                }
             });
         }).catch(function() {
             sessionStorage.removeItem(Constants.sessionName);

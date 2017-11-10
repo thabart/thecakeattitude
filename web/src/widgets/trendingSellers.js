@@ -15,6 +15,7 @@ class TrendingSellers extends Component {
         this._waitForToken = null;
         this.navigate = this.navigate.bind(this);
         this.localize = this.localize.bind(this);
+        this.navigateToGame = this.navigateToGame.bind(this);
         this.state = {
             errorMessage: null,
             isLoading: false,
@@ -93,6 +94,12 @@ class TrendingSellers extends Component {
       this.refs.widget.enableMove(b);
     }
 
+    navigateToGame(e, shopId) { // Navigate to the game.
+      e.preventDefault();
+      e.stopPropagation();
+      window.open(Constants.gameUrl + '?shop_id=' + shopId, "_blank");
+    }
+
     // Render the view
     render() {
         const {t} = this.props;
@@ -138,9 +145,9 @@ class TrendingSellers extends Component {
                                   self.localize(e, shop);
                               }}></i>
                             </Button>
-                            <Button outline color="secondary" size="sm">
+                            <a href="#" onClick={ (e) => self.navigateToGame(e, shop.id) } className="btn btn-outline-secondary btn-sm">
                               <i className="fa fa-gamepad gamepad"></i>
-                            </Button>
+                            </a>
                             <br />
                             <i>{shop.category.name}</i><br/>
                         </div>

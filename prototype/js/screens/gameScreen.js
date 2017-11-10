@@ -123,7 +123,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         game.Stores.GameStore.updateColls();
         game.Stores.GameStore.setShopInformation(shop);
         dfd.resolve();
-      }).catch(function() { dfd.resolve(); });
+      }).catch(function() { console.error("the shop doesn't exist"); dfd.resolve(); });
       return dfd;
     },
     setEntities: function() {

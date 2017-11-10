@@ -15,6 +15,7 @@ class BestDeals extends Component {
         this.navigate = this.navigate.bind(this);
         this.navigateProduct = this.navigateProduct.bind(this);
         this.localize = this.localize.bind(this);
+        this.navigateToGame = this.navigateToGame.bind(this);
         this.state = {
             errorMessage: null,
             isLoading: false,
@@ -95,6 +96,12 @@ class BestDeals extends Component {
       this.refs.widget.enableMove(b);
     }
 
+    navigateToGame(e, shopId) { // Navigate to the game.
+      e.preventDefault();
+      e.stopPropagation();
+      window.open(Constants.gameUrl + '?shop_id=' + shopId, "_blank");
+    }
+
     render() {   // Render the view
       const {t} = this.props;
         var title = t('bestDealsWidgetTitle'),
@@ -149,9 +156,9 @@ class BestDeals extends Component {
                         <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, product); }}>
                           <i className="fa fa-map-marker localize" aria-hidden="true"></i>
                         </Button>
-                        <Button outline color="secondary" size="sm">
+                        <a href="#" onClick={(e) => self.navigateToGame(e, product.shop_id) } className="btn btn-outline-secondary btn-sm">
                           <i className="fa fa-gamepad gamepad"></i>
-                        </Button>
+                        </a>
                        </div>
                     </a>));
             });

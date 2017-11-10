@@ -8,6 +8,7 @@ module.exports = {
     googleMapKey: 'AIzaSyBN72d3ipuyzbqhJgjwav5HnnKkLqp3KCU',
     apiUrl: 'http://localhost:5000',
     openIdUrl: 'http://localhost:5001',
+    gameUrl: 'http://localhost:3002',
     maxPackageSize: {
       length: 50,
       width: 80,
