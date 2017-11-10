@@ -29,6 +29,66 @@
   			"relativePosX": -18,
   			"relativePosY": -79
   		}
+    },
+    {
+      "name": "gallery_n21",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": -10,
+  			"relativePosY": -40
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -10,
+  			"relativePosY": -40
+  		}
+    },
+    {
+      "name": "gallery_n22",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": 0,
+  			"relativePosY": -40
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": 0,
+  			"relativePosY": -40
+  		}
+    },
+    {
+      "name": "gallery_n23",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": 0,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": 0,
+  			"relativePosY": -50
+  		}
+    },
+    {
+      "name": "gallery_n24",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": 0,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": 0,
+  			"relativePosY": -50
+  		}
     }
   ]
 }

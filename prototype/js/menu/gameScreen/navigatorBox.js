@@ -75,7 +75,7 @@ game.Menu.NavigatorBox = me.Object.extend({
                       "<div data-i18n='coffee-house'></div>"+
                     "</li>"+
                     "<li class='navigate-reception'>"+
-                      "<img src='/img/icons/coffee-house.png' />"+
+                      "<img src='/img/icons/reception.png' />"+
                       "<div data-i18n='reception'></div>"+
                     "</li>"+
                   "</ul>"+
