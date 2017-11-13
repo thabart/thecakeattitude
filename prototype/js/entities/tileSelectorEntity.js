@@ -33,13 +33,6 @@ game.TileSelectorEntity = me.Entity.extend({
       console.log('row '+ tile.row+" col "+ tile.col+" x " + this.pos.x+" y "+this.pos.y);
     },
     update: function(dt) {
-      var isCollide = me.collision.check(this);
-      if (isCollide) {
-        game.Stores.GameStore.displayPlayerPseudo();
-      } else {
-        game.Stores.GameStore.hidePlayerPseudo();
-      }
-
       this._super(me.Entity, "update", [dt]);
       return true;
     },

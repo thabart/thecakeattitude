@@ -29,5 +29,6 @@ var Constants = {
   openIdUrl: "http://localhost:5001",
   userClaims : 'http://localhost:5001/users/claims',
   callbackUrl: "http://localhost:3002/callback",
+  socketServer: 'http://localhost:3005',
   clientId : "game"
 };

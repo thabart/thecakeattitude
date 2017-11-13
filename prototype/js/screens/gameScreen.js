@@ -2,6 +2,7 @@ game.Screens = game.Screens || {};
 game.Screens.GameScreen = me.ScreenObject.extend({
     onResetEvent: function(key, shopId) {
       var self = this;
+      self._players = [];
       var mappingLevelToMap = [
         { name: "reception", level: "reception_map" },
         { name: "coffee-house",  level: "coffee_shop_map" },
@@ -27,7 +28,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
       game.Stores.GameStore.setCollisionLayer(collisionLayer);
       self.movableContainer = new game.MovableContainer();
-      self.currentPlayer = new game.PlayerEntity(playerCoordinates.col, playerCoordinates.row, currentPlayer);
+      self.currentPlayer = new game.Entities.CurrentPlayerEntity(playerCoordinates.col, playerCoordinates.row, currentPlayer);
       self.tileSelector = new game.TileSelectorEntity(0, 0);
       self.floorSelector = new game.FloorEntitySelector();
       self.wallSelector =  new game.WallEntitySelector();
@@ -59,9 +60,28 @@ game.Screens.GameScreen = me.ScreenObject.extend({
         }
       });
       game.Stores.GameStore.updateColls();
-      this.initialize(shopId).then(function() {
+      self.initialize(shopId).then(function() {
         self.gameMenu = new game.Menu.GameMenu();
       });
+      self.socket = io(Constants.socketServer).connect(); // Listen websockets.
+      self.socket.on('connect', function() {
+			   self.socket.emit('new_player', { col : self.currentPlayer.currentTile.col, row : self.currentPlayer.currentTile.row, figure : currentPlayer.figure, map: map.name, name: self.currentPlayer.metadata.name });
+      });
+      self.socket.on('new_player', function(data) {
+        self.addPlayer(data);
+      });
+      self.socket.on('remove_player', function() {
+
+      });
+      self.socket.on('move_player', function() {
+
+      });
+      self.socket.on('message', function() {
+
+      });
+  		self.socket.on('disconnect', function() {
+  			self.socket.emit('remove');
+  		});
     },
     initialize : function(shopId) {
       var dfd = jQuery.Deferred();
@@ -134,6 +154,16 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       }).catch(function() { dfd.resolve(); });
       return dfd;
     },
+    addPlayer: function(data) {
+      var self = this;
+      me.loader.load({ name: data.name, src: 'resources/players/'+data.figure+'/sprite.png', type: 'image' }, function() {
+        var player = new game.Entities.PlayerEntity(data.col, data.row, {
+          name: data.name
+        });
+        me.game.world.addChild(player);
+        self._players.push(player);
+      });
+    },
     onDestroyEvent: function() {
       var self = this;
       self.movableContainer.destroy();
@@ -147,5 +177,6 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       game.Stores.UserStore.unsubscribeCurrentUserChanged(self.updateCurrentUser);
       me.input.releasePointerEvent("pointerdown", me.game.viewport);
       me.input.releasePointerEvent("pointermove", me.game.viewport);
+      self.socket.disconnect();
     }
 });

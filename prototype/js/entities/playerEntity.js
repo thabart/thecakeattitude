@@ -1,4 +1,5 @@
-game.PlayerEntity = me.Entity.extend({
+game.Entities = game.Entities || {};
+game.Entities.PlayerEntity = me.Entity.extend({
     init: function(col, row, opts) {
         this.refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
         var coordinates = this.refLayer.getRenderer().tileToPixelCoords(col, row);
@@ -8,7 +9,8 @@ game.PlayerEntity = me.Entity.extend({
         var playerHeight = 110;
         this.metadata = {
           name:  opts.name,
-          image: "<div style='background: url("+image.src+") -5px  -790px no-repeat; width: 64px; height: 110px;' class='img'></div>"
+          image: "<div style='background: url("+image.src+") -5px  -790px no-repeat; width: 64px; height: 110px;' class='img'></div>",
+          isMoveable: opts.isMoveable || false
         };
         this.messageBubble = null; // Display the messages.
         this.messageTimeout = null;
@@ -57,17 +59,25 @@ game.PlayerEntity = me.Entity.extend({
         this.currentMvt = 0;
         this.movements = [];
         var self = this;
-        me.event.subscribe('pointerdown', this.pointerDown.bind(this));
         me.event.subscribe(me.event.VIEWPORT_ONCHANGE, function() {
           self.updateMessagePosition.bind(self);
           self.updatePlayerInformationPosition.bind(self);
         });
-        this.onMessageArrivedB = this.onMessageArrived.bind(this);
-        this.displayPseudoB = this.displayPseudo.bind(this);
-        this.hidePseudoB = this.hidePseudo.bind(this);
-        game.Stores.GameStore.listenMessageArrived(this.onMessageArrivedB);
-        game.Stores.GameStore.listenDisplayPlayerPseudoArrived(this.displayPseudoB);
-        game.Stores.GameStore.listenHidePlayerPseudoArrived(this.hidePseudoB);
+        this.pointerDownB = this.pointerDown.bind(this);
+        me.event.subscribe('pointerdown', this.pointerDownB);
+    },
+    pointerDown: function(evt) { // Calculate the movements OR display the player informations.
+      if (evt.which !== 1) { return; }
+      // if (evt.handled) { return; }
+      if (this.informationBox && this.informationBox !== null) {
+        game.Stores.GameStore.displayInformation(this.metadata);
+        return;
+      }
+
+      if (this.metadata.isMoveable) {
+        var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
+        this.move(tile);
+      }
     },
     displayPseudo: function() { // Display the pseudo.
       $('html,body').css( 'cursor', 'pointer' );
@@ -113,23 +123,14 @@ game.PlayerEntity = me.Entity.extend({
       this.renderable.addAnimation("downright", [36, 37, 38, 39]);
       this.renderable.setCurrentAnimation("standing_down");
     },
-    pointerDown: function(evt) { // Calculate the movements OR display the player informations.
-      if (evt.which !== 1) { return; }
-      // if (evt.handled) { return; }
-      if (this.informationBox && this.informationBox !== null) {
-        game.Stores.GameStore.displayInformation(this.metadata);
-        return;
-      }
-
-      if (this.movements.length > 0 && this.currentMvt < this.movements.length) { return; }
-  		var tile = this.refLayer.getTile(evt.gameWorldX, evt.gameWorldY);
+    move: function(tile) { // Move the player.
       if (!tile) { return; }
+      if (this.movements.length > 0 && this.currentMvt < this.movements.length) { return; }
       var self = this;
       var finder = new PF.AStarFinder({
         allowDiagonal: true
       });
       var currentTile = CoordinateCalculator.getRelativePlayerPosition(this.currentTile);
-      tile = CoordinateCalculator.getRelativePlayerPosition(tile);
       var collisionLayer = game.Stores.GameStore.getCollisionLayer();
       var path = finder.findPath(currentTile.row, currentTile.col, tile.row, tile.col, collisionLayer.clone());
       var mvts = [];
@@ -160,7 +161,7 @@ game.PlayerEntity = me.Entity.extend({
       this.movements = mvts;
       this.currentMvt = 0;
     },
-    onMessageArrived: function(e, msg) { // This method is called when a message arrived.
+    displayMessage: function(msg) { // This method is called when a message arrived.
       if (this.messageBubble) { // Remove the message bubble.
         $(this.messageBubble).remove();
         clearTimeout(this.messageTimeout);
@@ -196,6 +197,11 @@ game.PlayerEntity = me.Entity.extend({
       $(this.messageBubble).css('top', coordinates.y + gamePosition.top - $(this.messageBubble).outerHeight() - this.height);
     },
     update: function(dt) {
+      var isCollide = me.collision.check(this);
+      if (!isCollide) {
+        this.hidePseudo();
+      }
+
       if (this.currentMvt >= this.movements.length) { return false; }
       var mvt = this.movements[this.currentMvt];
       var posY = this.pos.y;
@@ -284,9 +290,19 @@ game.PlayerEntity = me.Entity.extend({
         $(this.informationBox).remove();
         this.informationBox = null;
       }
-      
-      game.Stores.GameStore.unsubscribeMessageArrived(this.onMessageArrivedB);
-      game.Stores.GameStore.unsubscribeDisplayPlayerPseudoArrived(this.displayPseudoB);
-      game.Stores.GameStore.unsubscribeHidePlayerPseudoArrived(this.hidePseudoB);
+
+      if (this.pointerDownB) me.event.unsubscribe(this.pointerDownB);
+      if (this.destroyCb) {
+        this.destroyCb();
+      }
+    },
+    onCollision: function(response) {
+      if (response.b instanceof game.TileSelectorEntity) {
+        this.displayPseudo();
+      } else {
+        this.hidePseudo();
+      }
+
+      return false;
     }
 });
