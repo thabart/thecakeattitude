@@ -152,7 +152,9 @@ class Shop extends Component {
                 scores: scores,
                 nbComments: nbComments
             });
-            self.refs.rater.onRate(average);
+            if (self.refs.rater) {
+              self.refs.rater.onRate(average);
+            }
         });
     }
 
@@ -394,6 +396,9 @@ class Shop extends Component {
                           { this.state.isEditable && (
                             <NavLink to={settingsUrl} className={action === 'settings' ? 'nav-link active-nav-link' : 'nav-link'}>{t('settings')}</NavLink>)
                           }
+                      </li>
+                      <li className="nav-item">
+                        <a href={Constants.gameUrl + "?shop_id="+self.state.shop.id} className="nav-link" target="_blank">{t('gameMenuItem')}</a>
                       </li>
                   </ul>
                   <ul className="nav nav-pills menu-profile-options">

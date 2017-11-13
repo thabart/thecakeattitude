@@ -53,7 +53,6 @@ namespace Cook4Me.Api.Handlers
                 BannerImage = message.BannerImage,
                 ProfileImage = message.ProfileImage,
                 CategoryId = message.CategoryId,
-                PlaceId = message.PlaceId,
                 StreetAddress = message.StreetAddress,
                 PostalCode = message.PostalCode,
                 Locality = message.Locality,

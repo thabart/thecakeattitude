@@ -48,7 +48,6 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string BannerImage { get; set; }
         public string ProfileImage { get; set; }
         public string CategoryId { get; set; }
-        public string PlaceId { get; set; }
         public string StreetAddress { get; set; }
         public string PostalCode { get; set; }
         public string Locality { get; set; }

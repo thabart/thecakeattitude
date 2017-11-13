@@ -70,9 +70,10 @@ class ShopProductFilter extends Component {
   }
 
   getFilters() {
-    return this.state.filters
+    var result = this.state.filters
       .filter(function(f) { return !f.isNotComplete && f.isCorrect; })
       .map(function(f) { return { id: f.externalId, name: f.name, values: f.tags }; });
+      return result;
   }
 
   renderTag(props) {
@@ -205,6 +206,7 @@ class ShopProductFilter extends Component {
     if (this.props.filters) {
       var filters = this.props.filters;
       filters.forEach(function(filter) { filter.isCorrect = true; filter.isNotComplete = false; });
+      console.log(filters);
       this.setState({
         filters: filters
       });

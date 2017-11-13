@@ -75,6 +75,7 @@ class ProductCategories extends Component {
       shelves = self.props.productCategories.map(function(pc) {
           var result = { name: "#"+indice, id: pc.id, category_name: pc.name, isSelected : false };
           indice++;
+          return result;
       });
     }
 

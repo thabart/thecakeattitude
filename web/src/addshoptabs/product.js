@@ -47,13 +47,10 @@ class ProductForm extends Component {
     var filtersJson = [],
       filters = this.refs.shopProductFilter.getWrappedInstance().getFilters(),
       productCategoriesJson = this.refs.productCategories.getWrappedInstance().getCategories();
-    filters = filters.filter(function(filter) {
-      return filter.isCorrect === true && filter.isNotComplete === false;
-    });
     filters.map(function(filter) {
       var record = {
         name: filter.name,
-        values : filter.tags.map(function(t) { return t.content; })
+        values : filter.values.map(function(t) { return t.content; })
       };
       filtersJson.push(record);
     });

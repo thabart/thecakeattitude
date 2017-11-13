@@ -156,7 +156,7 @@ class BestDeals extends Component {
                         <Button outline color="secondary" size="sm" onClick={(e) => { self.localize(e, product); }}>
                           <i className="fa fa-map-marker localize" aria-hidden="true"></i>
                         </Button>
-                        <a href="#" onClick={(e) => self.navigateToGame(e, product.shop_id) } className="btn btn-outline-secondary btn-sm">
+                        <a href="#" onClick={(e) => self.navigateToGame(e, product.shop_id) } className="btn btn-outline-secondary btn-sm no-style">
                           <i className="fa fa-gamepad gamepad"></i>
                         </a>
                        </div>

@@ -25,10 +25,10 @@ class EditableShopServicePlanning extends Component {
 	    this.state = {
 	      valid : true,
 	      days: days,
-	      startTime: moment(occurrence.start_time, 'HH:mm:ss') || moment('08:00:00', 'HH:mm:ss'),
-	      endTime:  moment(occurrence.end_time, 'HH:mm:ss') || moment('23:00:00', 'HH:mm:ss'),
-	      startDate: moment(occurrence.start_datetime) || moment(),
-	      endDate: moment(occurrence.end_datetime) || moment().add(2, 'months'),
+	      startTime: occurrence && occurrence.start_time ? moment(occurrence.start_time, 'HH:mm:ss') : moment('08:00:00', 'HH:mm:ss'),
+	      endTime:  occurrence && occurrence.end_time ? moment(occurrence.end_time, 'HH:mm:ss') : moment('23:00:00', 'HH:mm:ss'),
+	      startDate: occurrence && occurrence.start_datetime ? moment(occurrence.start_datetime) : moment(),
+	      endDate: occurrence && occurrence.end_datetime ? moment(occurrence.end_datetime) : moment().add(2, 'months'),
 	      tooltip: {
 	        toggleTimePeriodTooltip: false,
 	        toggleDatePeriodTooltip: false,
@@ -215,11 +215,11 @@ class EditableShopServicePlanning extends Component {
 	            <div className="row">
 	              <div className="col-md-6">
 	                <Label className="col-form-label">{t('fromTime')}</Label>
-	                <TimePicker value={this.state.startTime} onChange={this.handleChangeStartTime} />
+	                <TimePicker value={this.state.startTime} showSecond={true} onChange={this.handleChangeStartTime} />
 	              </div>
 	              <div className="col-md-6">
 	                <Label className="col-form-label">{t('toTime')}</Label>
-	                <TimePicker value={this.state.endTime} onChange={this.handleChangeEndTime} />
+	                <TimePicker value={this.state.endTime} showSecond={true} onChange={this.handleChangeEndTime} />
 	              </div>
 	            </div>
 	            <FormFeedback>{timePeriodError}</FormFeedback>

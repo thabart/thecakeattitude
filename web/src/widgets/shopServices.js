@@ -25,6 +25,7 @@ class ShopServices extends Component {
         this._waitForToken = null;
         this.navigateService = this.navigateService.bind(this);
         this.localize = this.localize.bind(this);
+        this.navigateToGame = this.navigateToGame.bind(this);
         this.state = {
             isLoading: false
         };
@@ -104,6 +105,12 @@ class ShopServices extends Component {
       this.refs.widget.enableMove(b);
     }
 
+    navigateToGame(e, shopId) { // Navigate to the game.
+      e.preventDefault();
+      e.stopPropagation();
+      window.open(Constants.gameUrl + '?shop_id=' + shopId, "_blank");
+    }
+
     render() { // Display the widget.
         const {t} = this.props;
         var title = t('bestServicesWidgetTitle'),
@@ -158,9 +165,9 @@ class ShopServices extends Component {
                         <Button outline color="secondary" size="sm"  onClick={(e) => { self.localize(e, service); }}>
                           <i className="fa fa-map-marker localize" aria-hidden="true" onClick={(e) => { self.localize(e, service); }}></i>
                         </Button>
-                        <Button outline color="secondary" size="sm">
-                          <i className="fa fa-gamepad gamepad"></i>
-                        </Button>
+                        <a href="#" onClick={ (e) => self.navigateToGame(e, service.shop_id) } className="btn btn-outline-secondary btn-sm no-style">
+                            <i className="fa fa-gamepad gamepad"></i>
+                        </a>
                        </div>
                     </a>));
             });

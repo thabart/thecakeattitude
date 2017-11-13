@@ -644,7 +644,7 @@ class Map extends Component {
             subShopCategoriesElts.push((<NavLink to={"/shopcategories/" + subShopCategory.id} className="sub-menu-item no-decoration">
               {subShopCategory.name}  
               <div className="actions">
-                <i className={eyeCl} onClick={() => { self.toggleEye(subShopCategory); }}></i>
+                <i className={eyeCl} onClick={(e) => { e.preventDefault(); e.stopPropagation(); self.toggleEye(subShopCategory); }}></i>
               </div>
             </NavLink>));
           });
@@ -655,7 +655,7 @@ class Map extends Component {
             <li className="menu-item">
               <h6 className="title">{shopCategory.name}</h6>
               <div className="actions">
-                <i className={eyeCl} onClick={() => { self.toggleEye(shopCategory); }}></i>
+                <i className={eyeCl} onClick={(e) => { e.preventDefault(); e.stopPropagation(); self.toggleEye(shopCategory); }}></i>
                 <i className={arrowCl} onClick={() => { self.toggleCategory(shopCategory); }}></i>
               </div>
               {shopCategory.isDeployed ? (<ul>{subShopCategoriesElts}</ul>) : '' }

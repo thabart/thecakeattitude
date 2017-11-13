@@ -11,10 +11,7 @@ class PaymentForm extends Component {
     }
 
     confirm() { // Executes when the user clicks on "confirm".
-        var result = this.refs.selector.getWrappedInstance().validate();
-        if (result && result !== null) {
-            if (this.props.onConfirm) this.props.onConfirm();
-        }
+        if (this.props.onConfirm) this.props.onConfirm();
     }
 
     previous() { // Executes when the user clicks on "previous".

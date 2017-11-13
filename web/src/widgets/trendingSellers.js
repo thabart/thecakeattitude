@@ -145,7 +145,7 @@ class TrendingSellers extends Component {
                                   self.localize(e, shop);
                               }}></i>
                             </Button>
-                            <a href="#" onClick={ (e) => self.navigateToGame(e, shop.id) } className="btn btn-outline-secondary btn-sm">
+                            <a href="#" onClick={ (e) => self.navigateToGame(e, shop.id) } className="btn btn-outline-secondary btn-sm no-style">
                               <i className="fa fa-gamepad gamepad"></i>
                             </a>
                             <br />

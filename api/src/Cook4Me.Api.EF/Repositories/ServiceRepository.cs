@@ -508,7 +508,7 @@ namespace Cook4Me.Api.EF.Repositories
                     transaction.Commit();
                     return true;
                 }
-                catch
+                catch(Exception ex)
                 {
                     transaction.Rollback();
                     return false;

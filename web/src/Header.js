@@ -410,6 +410,7 @@ class Header extends Component {
                       <ul>
                         { /* Help button */ }
                         <li><a href="#" className="nav-link no-style" onClick={this.displayHelpModal}><i className="fa fa-question-circle"></i></a></li>
+                        <li><a href={Constants.gameUrl} className="nav-link no-style" target="_blank"><i className="fa fa-gamepad gamepad"></i></a></li>
                         { /* Messages */ }
                         {
                           (self.state.isLoggedIn ? (
@@ -586,7 +587,7 @@ class Header extends Component {
                       <div style={{height: "500px"}}>
 
                       </div>                  
-                      <button className="btn btn-default" onClick={() => self.navigateHelpModalTab(1)}>
+                      <button className="btn btn-default" onClick={() => self.navigateHelpModalTab(0)}>
                         {t('previous')}
                       </button>
                     </div>

@@ -86,10 +86,11 @@ class CommentLst extends Component {
     var value = null,
       name = null;
     if ($(target).hasClass('will-be-active')) {
-      var parent = $(target).parent();
-      var children = parent.find('a');
-      value = children.index(target) + 1;
-      name = parent.attr('name');
+      var parentDiv = $(target).parent();
+      var reactRater = $(parentDiv).parent();
+      var children = reactRater.find('> div');
+      value = children.index(parentDiv) + 1;
+      name = reactRater.attr('name');
     } else {
       value = target.type === 'checkbox' ? target.checked : target.value;
       name = target.name;
@@ -135,6 +136,7 @@ class CommentLst extends Component {
       isScoreInvalid = false,
       isValid = true;
     const {t} = this.props;
+    console.log(self.state.score);
     // 1. Check rating exists
     if (self.state.score === 0) {
       isScoreInvalid = true;

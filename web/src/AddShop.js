@@ -22,7 +22,7 @@ class AddShop extends Component {
         this.toggleError = this.toggleError.bind(this);
         this.data = {};
         this.state = {
-            activeTab: '4',
+            activeTab: '1',
             successMessage: null,
             warningMessage: null,
             errorMessage: null,
@@ -103,6 +103,7 @@ class AddShop extends Component {
             $.extend(content, this.data[key]);
         }
 
+        console.log(content);
         self.loading(true);
         ShopsService.add(content).then(function () {
             self.loading(false);

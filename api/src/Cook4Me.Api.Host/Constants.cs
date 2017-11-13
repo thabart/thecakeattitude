@@ -476,7 +476,6 @@ namespace Cook4Me.Api.Host
                 public const string ShopMap = "shop_map";
                 public const string CategoryId = "category_id";
                 public const string Category = "category";
-                public const string Place = "place";
                 // Address
                 public const string StreetAddress = "street_address";
                 public const string PostalCode = "postal_code";

@@ -32,7 +32,6 @@ namespace Cook4Me.Api.EF.Models
         public string PostalCode { get; set; }
         public string Locality { get; set; }
         public string Country { get; set; }
-        public string PlaceId { get; set; }
         public string GooglePlaceId { get; set; }
         public float Longitude { get; set; }
         public float Latitude { get; set; }

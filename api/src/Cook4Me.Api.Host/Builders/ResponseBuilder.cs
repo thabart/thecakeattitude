@@ -1145,7 +1145,6 @@ namespace Cook4Me.Api.Host.Builders
                 result.Add(Constants.DtoNames.Shop.Category, GetShopCategory(shop.ShopCategory));
             }
 
-            result.Add(Constants.DtoNames.Shop.Place, shop.PlaceId);
             result.Add(Constants.DtoNames.Shop.StreetAddress, shop.StreetAddress); // Street address
             result.Add(Constants.DtoNames.Shop.PostalCode, shop.PostalCode);
             result.Add(Constants.DtoNames.Shop.Locality, shop.Locality);

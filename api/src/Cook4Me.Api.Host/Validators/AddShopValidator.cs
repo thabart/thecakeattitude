@@ -104,11 +104,6 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Shop.Description, 5, 15));
             }
 
-            if (!IsValid(shop.PlaceId))
-            {
-                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Place));
-            }
-
             if (!IsValid(shop.GooglePlaceId))
             {
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.GooglePlaceId));
