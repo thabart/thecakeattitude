@@ -22,7 +22,7 @@ class AddShop extends Component {
         this.toggleError = this.toggleError.bind(this);
         this.data = {};
         this.state = {
-            activeTab: '1',
+            activeTab: '4',
             successMessage: null,
             warningMessage: null,
             errorMessage: null,
@@ -90,8 +90,8 @@ class AddShop extends Component {
       });
     }
 
-    save(json) { // Save the shop.
-        var content = json,
+    save() { // Save the shop.
+        var content = {},
             self = this,
             {t} = this.props;
         if (!this.data || !this.data['1'] || !this.data['2']) {
@@ -190,8 +190,8 @@ class AddShop extends Component {
                               this.displayError(msg);
                           }} onPrevious={() => {
                               this.toggle('4');
-                          }} onConfirm={ (json) => {
-                              this.save(json);
+                          }} onConfirm={ () => {
+                              this.save();
                           }}/>
                       </TabPane>
                   </TabContent>

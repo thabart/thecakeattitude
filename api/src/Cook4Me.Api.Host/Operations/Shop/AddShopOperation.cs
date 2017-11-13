@@ -14,7 +14,6 @@
 // limitations under the License.
 #endregion
 
-using Cook4Me.Api.Core.Aggregates;
 using Cook4Me.Api.Core.Bus;
 using Cook4Me.Api.Core.Commands.Shop;
 using Cook4Me.Api.Host.Builders;
@@ -117,65 +116,9 @@ namespace Cook4Me.Api.Host.Operations.Shop
                 }
             }
 
-            // 2. Add the files.
-            if (!AddShopMap(command, validationResult.CategoryMap, request))
-            {
-                var error = _responseBuilder.GetError(ErrorCodes.Server, ErrorDescriptions.TheShopCannotBeAdded);
-                return _controllerHelper.BuildResponse(HttpStatusCode.InternalServerError, error);
-            }
-
             var res = new { id = command.Id };
             _commandSender.Send(command);
             return new OkObjectResult(res);
-        }
-
-        private bool AddShopMap(AddShopCommand shop, ShopMap map, HttpRequest request)
-        {
-            if (!File.Exists(Constants.Assets.PartialShop) || !File.Exists(Constants.Assets.PartialUnderground))
-            {
-                return false;
-            }
-
-            var shopLines = File.ReadAllLines(Constants.Assets.PartialShop);
-            var undergroundLines = File.ReadAllLines(Constants.Assets.PartialUnderground);
-            var shopRelativePath = GetRelativeShopPath(shop.Id);
-            var underGroundPath = GetRelativeUndergroundPath(shop.Id);
-            var shopPath = Path.Combine(_env.WebRootPath, shopRelativePath);
-            var undergroundPath = Path.Combine(_env.WebRootPath, underGroundPath);
-            var shopFile = File.Create(shopPath);
-            var undergroundFile = File.Create(undergroundPath);
-            var virtualPath = request.GetAbsoluteUriWithVirtualPath();
-            shop.ShopMap = new AddShopMapCommand
-            {
-                MapName = shop.Id + "_map",
-                OverviewName = shop.Id + "_overview",
-                PartialMapUrl = "/" + shopRelativePath,
-                PartialOverviewUrl = "/shops/shop_overview.png"
-            };
-            using (var shopWriter = new StreamWriter(shopFile))
-            {
-                foreach (var shopLine in shopLines)
-                {
-                    shopWriter
-                        .WriteLine(shopLine.Replace("<target_category_map_path>", virtualPath + map.PartialMapUrl)
-                        .Replace("<target_category_overview_path>", virtualPath + map.PartialOverviewUrl)
-                        .Replace("<target_underground_map_path>", virtualPath + "/" + underGroundPath)
-                        .Replace("<target_underground_overview_path>", virtualPath + "/shops/underground_overview.png")
-                        .Replace("<target_category_map_name>", map.MapName));
-                }
-            }
-
-            using (var undergroundWriter = new StreamWriter(undergroundFile))
-            {
-                foreach (var undergroundLine in undergroundLines)
-                {
-                    undergroundWriter
-                        .WriteLine(undergroundLine.Replace("<target_shop_map_path>", virtualPath + shop.ShopMap.PartialMapUrl)
-                        .Replace("<target_shop_overview_path>", virtualPath + "/shops/shop_overview.png"));
-                }
-            }
-
-            return true;
         }
 
         private static string GetRelativeShopPath(string id)

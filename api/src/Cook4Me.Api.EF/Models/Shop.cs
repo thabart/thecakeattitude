@@ -28,8 +28,6 @@ namespace Cook4Me.Api.EF.Models
         public string CategoryId { get; set; }
         public string BannerImage { get; set; }
         public string ProfileImage { get; set; }
-        public string CategoryMapName { get; set; }
-        public string ShopMapName { get; set; }
         public string StreetAddress { get; set; }
         public string PostalCode { get; set; }
         public string Locality { get; set; }
@@ -44,10 +42,7 @@ namespace Cook4Me.Api.EF.Models
         public double AverageScore { get; set; }
         public virtual Category Category { get; set; }
         public virtual ICollection<ShopTag> ShopTags { get; set; }
-        public virtual ICollection<PaymentMethod> PaymentMethods { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual Map CategoryMap { get; set; }
-        public virtual Map ShopMap { get; set; }
         public virtual ICollection<Filter> Filters { get; set; }
         public virtual ICollection<Product> Products { get; set; }
         public virtual ICollection<ProductCategory> ProductCategories { get; set; }

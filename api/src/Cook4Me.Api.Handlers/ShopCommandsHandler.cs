@@ -44,18 +44,6 @@ namespace Cook4Me.Api.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
 
-            IEnumerable<ShopPaymentMethod> paymentMethods = null;
-            if (message.PaymentMethods != null)
-            {
-                paymentMethods = message.PaymentMethods.Select(m => new ShopPaymentMethod
-                {
-                    Id = m.Id,
-                    Iban = m.Iban,
-                    PaypalAccount = m.PaypalAccount,
-                    Method = (ShopPaymentMethods)m.Method
-                });
-            }
-
             var aggregate = new ShopAggregate
             {
                 Id = message.Id,
@@ -64,7 +52,6 @@ namespace Cook4Me.Api.Handlers
                 Description = message.Description,
                 BannerImage = message.BannerImage,
                 ProfileImage = message.ProfileImage,
-                CategoryMapName = message.CategoryMapName,
                 CategoryId = message.CategoryId,
                 PlaceId = message.PlaceId,
                 StreetAddress = message.StreetAddress,
@@ -76,19 +63,8 @@ namespace Cook4Me.Api.Handlers
                 Latitude = message.Latitude,
                 CreateDateTime = message.CreateDateTime,
                 UpdateDateTime = message.UpdateDateTime,
-                ShopPaymentMethods = paymentMethods,
                 TagNames = message.TagNames
             };
-            if (message.ShopMap != null)
-            {
-                aggregate.ShopMap = new ShopMap
-                {
-                    MapName = message.ShopMap.MapName,
-                    OverviewName = message.ShopMap.OverviewName,
-                    PartialMapUrl = message.ShopMap.PartialMapUrl,
-                    PartialOverviewUrl = message.ShopMap.PartialOverviewUrl
-                };
-            }
 
             if (message.ProductCategories != null)
             {
@@ -96,7 +72,6 @@ namespace Cook4Me.Api.Handlers
                 {
                     Id = Guid.NewGuid().ToString(),
                     Name = p.Name,
-                    ShopSectionName = p.ShopSectionName,
                     Description = p.Description,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow
@@ -230,18 +205,6 @@ namespace Cook4Me.Api.Handlers
                 throw new ArgumentNullException(nameof(message));
             }
 
-            IEnumerable<ShopPaymentMethod> paymentMethods = null;
-            if (message.PaymentMethods != null)
-            {
-                paymentMethods = message.PaymentMethods.Select(m => new ShopPaymentMethod
-                {
-                    Id = m.Id,
-                    Iban = m.Iban,
-                    PaypalAccount = m.PaypalAccount,
-                    Method = (ShopPaymentMethods)m.Method
-                });
-            }
-
             IEnumerable<ShopAggregateGameEntity> shopGameEntities = null;
             if (message.UpdateGameEntities != null)
             {
@@ -275,7 +238,6 @@ namespace Cook4Me.Api.Handlers
             shop.Longitude = message.Longitude;
             shop.Latitude = message.Latitude;
             shop.UpdateDateTime = message.UpdateDateTime;
-            shop.ShopPaymentMethods = paymentMethods;
             shop.TagNames = message.TagNames;
             if (message.ProductCategories != null)
             {
@@ -284,7 +246,6 @@ namespace Cook4Me.Api.Handlers
                     Id = p.Id,
                     Name = p.Name,
                     Description = p.Description,
-                    ShopSectionName = p.ShopSectionName,
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow
                 }).ToList();

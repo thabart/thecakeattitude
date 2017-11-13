@@ -13,7 +13,7 @@ class PaymentForm extends Component {
     confirm() { // Executes when the user clicks on "confirm".
         var result = this.refs.selector.getWrappedInstance().validate();
         if (result && result !== null) {
-            if (this.props.onConfirm) this.props.onConfirm({payments: result});
+            if (this.props.onConfirm) this.props.onConfirm();
         }
     }
 
@@ -29,9 +29,8 @@ class PaymentForm extends Component {
                     <section className="row p-1">
                         <p>
                             <i className="fa fa-exclamation-circle txt-info"/>{' '}
-                            {t('choosePaymentMethodDescription')}
+                            {t('paypalPaymentDescription')}
                         </p>
-                        <PaymentMethodsSelector ref="selector" onError={this.props.onError}/>
                     </section>
                     <section className="row p-1">
                         <Button color="default" onClick={this.previous}>{t('previous')}</Button>

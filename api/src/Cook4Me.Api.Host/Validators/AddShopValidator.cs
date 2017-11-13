@@ -41,30 +41,26 @@ namespace Cook4Me.Api.Host.Validators
             Message = message;
         }
 
-        public AddShopValidationResult(ShopCategoryAggregate category, ShopMap categoryMap)
+        public AddShopValidationResult(ShopCategoryAggregate category)
         {
             IsValid = true;
             Category = category;
-            CategoryMap = categoryMap;
         }
 
         public bool IsValid { get; private set; }
         public string Message { get; private set; }
         public ShopCategoryAggregate Category { get; private set; }
-        public ShopMap CategoryMap { get; private set; }
     }
 
     public class AddShopValidator : IAddShopValidator
     {
         private readonly IShopCategoryRepository _categoryRepository;
         private readonly IShopRepository _shopRepository;
-        private readonly IMapRepository _mapRepository;
 
-        public AddShopValidator(IShopCategoryRepository categoryRepository, IShopRepository shopRepository, IMapRepository mapRepository)
+        public AddShopValidator(IShopCategoryRepository categoryRepository, IShopRepository shopRepository)
         {
             _categoryRepository = categoryRepository;
             _shopRepository = shopRepository;
-            _mapRepository = mapRepository;
         }
 
         public async Task<AddShopValidationResult> Validate(AddShopCommand shop, string subject)
@@ -86,33 +82,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(ErrorDescriptions.TheCategoryDoesntExist);
             }
 
-            // 2. Check map
-            var map = await _mapRepository.Get(shop.CategoryMapName);
-            if (map == null)
-            {
-                return new AddShopValidationResult(ErrorDescriptions.TheMapDoesntExist);
-            }
-
-            // 3. Check place id exists.
-            var partialMap = "wwwroot" + map.PartialMapUrl;
-            if (!File.Exists(partialMap))
-            {
-                return new AddShopValidationResult(ErrorDescriptions.TheMapFileDoesntExist);
-            }
-
-            using (var stream = File.OpenText(partialMap))
-            {
-                using (var reader = new JsonTextReader(stream))
-                {
-                    var obj = JObject.Load(reader);
-                    if (obj.SelectToken(@"$..layers[?(@.name == 'Houses')].objects[?(@.name == '" + shop.PlaceId + "')]") == null)
-                    {
-                        return new AddShopValidationResult(ErrorDescriptions.ThePlaceDoesntExist);
-                    }
-                }
-            }
-
-            // 4. Check the user doesn't already have a shop on the same category.
+            // 2. Check the user doesn't already have a shop on the same category.
             var searchResult = await _shopRepository.Search(new SearchShopsParameter
             {
                 CategoryIds = new[] { shop.CategoryId },
@@ -123,7 +93,7 @@ namespace Cook4Me.Api.Host.Validators
                 return new AddShopValidationResult(ErrorDescriptions.TheShopCannotBeAddedBecauseThereIsAlreadyOneInTheCategory);
             }
 
-            // 5. Check mandatory parameters.
+            // 3. Check mandatory parameters.
             if (!IsValid(shop.Name, 1, 15))
             {
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatoryAndShouldContainsBetween, Constants.DtoNames.Shop.Name, 1, 15));
@@ -162,31 +132,6 @@ namespace Cook4Me.Api.Host.Validators
             if (!IsValid(shop.Country))
             {
                 return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Country));
-            }
-
-            if (shop.PaymentMethods == null || !shop.PaymentMethods.Any())
-            {
-                return new AddShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Payments));
-            }
-
-            foreach(var paymentMethod in shop.PaymentMethods)
-            {
-                if (paymentMethod.Method == AddPaymentInformationMethods.BankTransfer) // Check bank transfer.
-                {
-                    var regex = new Regex("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}", RegexOptions.IgnoreCase);
-                    if (!regex.IsMatch(paymentMethod.Iban))
-                    {
-                        return new AddShopValidationResult(ErrorDescriptions.TheIbanIsNotValid);
-                    }
-                }
-                else if (paymentMethod.Method == AddPaymentInformationMethods.PayPal) // Check paypal account.
-                {
-                    var regex = new Regex(@"^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", RegexOptions.IgnoreCase);
-                    if (!regex.IsMatch(paymentMethod.PaypalAccount))
-                    {
-                        return new AddShopValidationResult(ErrorDescriptions.ThePaypalAccountIsNotValid);
-                    }
-                }
             }
 
             if (shop.ProductCategories != null)
@@ -230,7 +175,7 @@ namespace Cook4Me.Api.Host.Validators
                 }
             }
 
-            return new AddShopValidationResult(category, map);
+            return new AddShopValidationResult(category);
         }
 
         private static bool IsValid(string value, int min, int max)

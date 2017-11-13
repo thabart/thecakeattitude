@@ -716,43 +716,6 @@ namespace Cook4Me.Api.Host.Extensions
                     new Category { Id = _shoesCategoryId, Name = "Shoes", Description = "Shoes", ParentId = clothesCategory.Id, PinImagePartialPath = "/pins/shoes-pin.png" },
                     new Category { Id = _bakeryCategoryId, Name = "Pastry & Bakery", Description = "Pastry & Bakery", ParentId = alimentationCategory.Id, PinImagePartialPath = "/pins/pastry-pin.png" }
                 });
-                context.Maps.AddRange(new[]
-                {
-                    new Map
-                    {
-                        CategoryId = _shoesCategoryId,
-                        MapName = "first_shoes_map",
-                        PartialMapUrl = "/maps/first_shoes_map.json",
-                        PartialOverviewUrl = "/maps/first_shoes_map_overview.png",
-                        OverviewName = "first_shoes_map_overview",
-                        IsMain = true
-                    },
-                    new Map
-                    {
-                        CategoryId = _shoesCategoryId,
-                        MapName = "second_shoes_map",
-                        PartialMapUrl = "/maps/second_shoes_map.json",
-                        PartialOverviewUrl = "/maps/second_shoes_map_overview.png",
-                        OverviewName = "second_shoes_map_overview"
-                    },
-                    new Map
-                    {
-                        CategoryId = _bakeryCategoryId,
-                        MapName = "first_bakery_map",
-                        PartialMapUrl = "/maps/first_bakery_map.json",
-                        PartialOverviewUrl = "/maps/first_bakery_map_overview.png",
-                        OverviewName = "first_bakery_overview",
-                        IsMain = true
-                    },
-                    new Map
-                    {
-                        CategoryId = _bakeryCategoryId,
-                        MapName = "second_bakery_map",
-                        PartialMapUrl = "/maps/second_bakery_map.json",
-                        PartialOverviewUrl = "/maps/second_bakery_map_overview.png",
-                        OverviewName = "second_bakery_overview"
-                    }
-                });
             }
         }
 
@@ -789,7 +752,6 @@ namespace Cook4Me.Api.Host.Extensions
                         Name = "shop 1",
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
-                        CategoryMapName = "first_shoes_map",
                         StreetAddress = isTstMode ? "NIEDERWALLSTRASSE 29" : "rue solleveld 20",
                         PostalCode = isTstMode ? "41460" : "1200",
                         Locality = isTstMode ? "NEUSS": "Bruxelles",
@@ -800,33 +762,6 @@ namespace Cook4Me.Api.Host.Extensions
                         Latitude = isTstMode ? 51.2010754F : 50.8939195F,
                         TotalScore = 16,
                         AverageScore = 3.2,
-                        PaymentMethods = new List<PaymentMethod>
-                        {
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 0
-                            },
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 1,
-                                Iban = "BE400000000000000"
-                            },
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 2,
-                                PaypalAccount = "habarthierry@hotmail.fr"
-                            }
-                        },
-                        ShopMap = new Map
-                        {
-                            MapName = "first_shop",
-                            PartialMapUrl = "/shops/first_shop.json",
-                            OverviewName = "first_shop_overview",
-                            PartialOverviewUrl = "/shops/shop_overview.png"
-                        },
                         ShopGameEntities = new List<ShopGameEntity>
                         {
                             new ShopGameEntity
@@ -854,7 +789,6 @@ namespace Cook4Me.Api.Host.Extensions
                         Name = "shop 2",
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
-                        CategoryMapName = "first_shoes_map",
                         StreetAddress = isTstMode ? "10 GOERLITZER STRASSE" : "223 avenue des croix du feu",
                         PostalCode = isTstMode ? "41460" : "1020",
                         Locality = isTstMode ? "NEUSS": "Bruxelles",
@@ -865,33 +799,6 @@ namespace Cook4Me.Api.Host.Extensions
                         Latitude = 51.12947F,
                         TotalScore = 16,
                         AverageScore = 1,
-                        PaymentMethods = new List<PaymentMethod>
-                        {
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 0
-                            },
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 1,
-                                Iban = "BE400000000000000"
-                            },
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 2,
-                                PaypalAccount = "habarthierry@hotmail.fr"
-                            }
-                        },
-                        ShopMap = new Map
-                        {
-                            MapName = "first_shop",
-                            PartialMapUrl = "/shops/first_shop.json",
-                            OverviewName = "first_shop_overview",
-                            PartialOverviewUrl = "/shops/shop_overview.png"
-                        },
                         ShopGameEntities = new List<ShopGameEntity>
                         {
                             new ShopGameEntity
@@ -917,7 +824,6 @@ namespace Cook4Me.Api.Host.Extensions
                         Name = "shop 3",
                         Description = "description 1",
                         CategoryId = _shoesCategoryId,
-                        CategoryMapName = "first_shoes_map",
                         StreetAddress = isTstMode ? "10 GOERLITZER STRASSE" : "223 avenue des croix du feu",
                         PostalCode = isTstMode ? "41460" : "1020",
                         Locality = isTstMode ? "NEUSS": "Bruxelles",
@@ -928,33 +834,6 @@ namespace Cook4Me.Api.Host.Extensions
                         Latitude = 51.12947F,
                         TotalScore = 16,
                         AverageScore = 4,
-                        PaymentMethods = new List<PaymentMethod>
-                        {
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 0
-                            },
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 1,
-                                Iban = "BE400000000000000"
-                            },
-                            new PaymentMethod
-                            {
-                                Id = Guid.NewGuid().ToString(),
-                                Method = 2,
-                                PaypalAccount = "habarthierry@hotmail.fr"
-                            }
-                        },
-                        ShopMap = new Map
-                        {
-                            MapName = "first_shop",
-                            PartialMapUrl = "/shops/first_shop.json",
-                            OverviewName = "first_shop_overview",
-                            PartialOverviewUrl = "/shops/shop_overview.png"
-                        },
                         ShopGameEntities = new List<ShopGameEntity>
                         {
                             new ShopGameEntity
@@ -1136,7 +1015,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Women",
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
-                    ShopSectionName = "thirdSection",
                     ShopId = _firstShopId
                 },
                 new ProductCategory
@@ -1146,7 +1024,6 @@ namespace Cook4Me.Api.Host.Extensions
                     Description = "Man",
                     CreateDateTime = DateTime.UtcNow,
                     UpdateDateTime = DateTime.UtcNow,
-                    ShopSectionName = "secondSection",
                     ShopId = _firstShopId
                 }
             });

@@ -51,13 +51,11 @@ namespace Cook4Me.Api.Host.Validators
     internal class UpdateShopValidator : IUpdateShopValidator
     {
         private readonly IShopRepository _shopRepository;
-        private readonly IMapRepository _mapRepository;
         private readonly IGameEntityRepository _gameEntityRepository;
 
-        public UpdateShopValidator(IShopRepository shopRepository, IMapRepository mapRepository, IGameEntityRepository gameEntityRepository)
+        public UpdateShopValidator(IShopRepository shopRepository,IGameEntityRepository gameEntityRepository)
         {
             _shopRepository = shopRepository;
-            _mapRepository = mapRepository;
             _gameEntityRepository = gameEntityRepository;
         }
 
@@ -113,31 +111,6 @@ namespace Cook4Me.Api.Host.Validators
             if (!IsValid(shop.Country))
             {
                 return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Country));
-            }
-
-            if (shop.PaymentMethods == null || !shop.PaymentMethods.Any())
-            {
-                return new UpdateShopValidationResult(string.Format(ErrorDescriptions.TheParameterIsMandatory, Constants.DtoNames.Shop.Payments));
-            }
-
-            foreach (var paymentMethod in shop.PaymentMethods)
-            {
-                if (paymentMethod.Method == AddPaymentInformationMethods.BankTransfer) // Check bank transfer.
-                {
-                    var regex = new Regex("^[A-Z]{2}[0-9]{2}([0-9]{4}){3}", RegexOptions.IgnoreCase);
-                    if (!regex.IsMatch(paymentMethod.Iban))
-                    {
-                        return new UpdateShopValidationResult(ErrorDescriptions.TheIbanIsNotValid);
-                    }
-                }
-                else if (paymentMethod.Method == AddPaymentInformationMethods.PayPal) // Check paypal account.
-                {
-                    var regex = new Regex(@"^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$", RegexOptions.IgnoreCase);
-                    if (!regex.IsMatch(paymentMethod.PaypalAccount))
-                    {
-                        return new UpdateShopValidationResult(ErrorDescriptions.ThePaypalAccountIsNotValid);
-                    }
-                }
             }
 
             if (shop.ProductCategories != null)

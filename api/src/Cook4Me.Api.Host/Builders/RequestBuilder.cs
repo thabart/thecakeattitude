@@ -73,8 +73,6 @@ namespace Cook4Me.Api.Host.Builders
         UpdateServiceOccurrence GetUpdateServiceOccurrence(JObject jObj);
         AddServiceOccurrence GetAddServiceOccurrence(JObject jObj);
         UpdateShopCommand GetUpdateShop(JObject jObj);
-        AddPaymentInformation GetPaymentMethod(JObject jObj);
-        UpdatePaymentInformation GetUpdatePaymentMethod(JObject jObj);
         AddShopCommentCommand GetAddShopComment(JObject jObj);
         AddProductCommentCommand GetAddProductComment(JObject jObj);
         AddServiceCommentCommand GetAddServiceComment(JObject jObj);
@@ -887,23 +885,12 @@ namespace Cook4Me.Api.Host.Builders
             result.TagNames = ts;
             result.BannerImage = jObj.Value<string>(Constants.DtoNames.Shop.BannerImage);
             result.ProfileImage = jObj.Value<string>(Constants.DtoNames.Shop.ProfileImage);
-            result.CategoryMapName = jObj.Value<string>(Constants.DtoNames.Shop.CategoryMapName);
             result.CategoryId = jObj.Value<string>(Constants.DtoNames.Shop.CategoryId);
             result.PlaceId = jObj.Value<string>(Constants.DtoNames.Shop.Place);
             result.StreetAddress = jObj.Value<string>(Constants.DtoNames.Shop.StreetAddress); // Street address
             result.PostalCode = jObj.Value<string>(Constants.DtoNames.Shop.PostalCode);
             result.Locality = jObj.Value<string>(Constants.DtoNames.Shop.Locality);
             result.Country = jObj.Value<string>(Constants.DtoNames.Shop.Country);
-            var paymentMethods = new List<AddPaymentInformation>();
-            var payments = jObj[Constants.DtoNames.Shop.Payments];
-            JArray arr = null;
-            if (payments != null && (arr = payments as JArray) != null)
-            {
-                foreach(var payment in payments)
-                {
-                    paymentMethods.Add(GetPaymentMethod(payment as JObject));
-                }
-            }
 
             var location = jObj[Constants.DtoNames.Shop.Location];
             if (location != null)
@@ -940,7 +927,6 @@ namespace Cook4Me.Api.Host.Builders
             result.ProductFilters = filters;
             result.ProductCategories = productCategories;
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
-            result.PaymentMethods = paymentMethods;
             return result;
         }
 
@@ -1054,8 +1040,7 @@ namespace Cook4Me.Api.Host.Builders
             return new AddShopProductCategory
             {
                 Name = jObj.TryGetString(Constants.DtoNames.ProductCategory.Name),
-                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description),
-                ShopSectionName = jObj.TryGetString(Constants.DtoNames.ProductCategory.ShopSectionName)
+                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description)
             };
         }
 
@@ -1070,8 +1055,7 @@ namespace Cook4Me.Api.Host.Builders
             {
                 Id = jObj.TryGetString(Constants.DtoNames.ProductCategory.Id),
                 Name = jObj.TryGetString(Constants.DtoNames.ProductCategory.Name),
-                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description),
-                ShopSectionName = jObj.TryGetString(Constants.DtoNames.ProductCategory.ShopSectionName)
+                Description = jObj.TryGetString(Constants.DtoNames.ProductCategory.Description)
             };
         }
 
@@ -1151,16 +1135,6 @@ namespace Cook4Me.Api.Host.Builders
             result.PostalCode = jObj.Value<string>(Constants.DtoNames.Shop.PostalCode);
             result.Locality = jObj.Value<string>(Constants.DtoNames.Shop.Locality);
             result.Country = jObj.Value<string>(Constants.DtoNames.Shop.Country);
-            var paymentMethods = new List<UpdatePaymentInformation>();
-            var payments = jObj[Constants.DtoNames.Shop.Payments];
-            JArray arr = null;
-            if (payments != null && (arr = payments as JArray) != null)
-            {
-                foreach (var payment in payments)
-                {
-                    paymentMethods.Add(GetUpdatePaymentMethod(payment as JObject));
-                }
-            }
 
             var location = jObj[Constants.DtoNames.Shop.Location];
             if (location != null)
@@ -1208,7 +1182,6 @@ namespace Cook4Me.Api.Host.Builders
             result.ProductFilters = filters;
             result.ProductCategories = productCategories;
             result.GooglePlaceId = jObj.Value<string>(Constants.DtoNames.Shop.GooglePlaceId);
-            result.PaymentMethods = paymentMethods;
             result.UpdateGameEntities = gameEntities;
             return result;
         }
@@ -1274,7 +1247,6 @@ namespace Cook4Me.Api.Host.Builders
             {
                 ShopIds = jObj.TryGetStringArray(Constants.DtoNames.SearchShop.ShopIds),
                 CategoryIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.CategoryId),
-                CategoryMapNames = jObj.TryGetStringArray(Constants.DtoNames.Shop.CategoryMapName),
                 PlaceIds = jObj.TryGetStringArray(Constants.DtoNames.Shop.Place),
                 Subjects = jObj.TryGetStringArray(Constants.DtoNames.SearchShop.Subject),
                 Tags = jObj.TryGetStringArray(Constants.DtoNames.SearchShop.Tags),
@@ -1328,80 +1300,6 @@ namespace Cook4Me.Api.Host.Builders
             }
 
             return result;
-        }
-
-        public AddPaymentInformation GetPaymentMethod(JObject jObj)
-        {
-            if (jObj == null)
-            {
-                throw new ArgumentNullException(nameof(jObj));
-            }
-
-            AddPaymentInformationMethods? methodEnum = null;
-            var method = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Method);
-            if (string.Equals(method, "cash", StringComparison.CurrentCultureIgnoreCase))
-            {
-                methodEnum = AddPaymentInformationMethods.Cash;
-            }
-            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase) ||
-                string.Equals(method, "BankTransfer", StringComparison.CurrentCultureIgnoreCase))
-            {
-                methodEnum = AddPaymentInformationMethods.BankTransfer;
-            }
-            else if (string.Equals(method, "paypal", StringComparison.CurrentCultureIgnoreCase))
-            {
-                methodEnum = AddPaymentInformationMethods.PayPal;
-            }
-
-            if (methodEnum == null)
-            {
-                throw new ArgumentException(ErrorDescriptions.ThePaymentMethodDoesntExist);
-            }
-
-            return new AddPaymentInformation
-            {
-                Id = Guid.NewGuid().ToString(),
-                Method = (AddPaymentInformationMethods)methodEnum.Value,
-                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban),
-                PaypalAccount = jObj.Value<string>(Constants.DtoNames.PaymentMethod.PaypalAccount)
-            };
-        }
-
-        public UpdatePaymentInformation GetUpdatePaymentMethod(JObject jObj)
-        {
-            if (jObj == null)
-            {
-                throw new ArgumentNullException(nameof(jObj));
-            }
-
-            AddPaymentInformationMethods? methodEnum = null;
-            var method = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Method);
-            if (string.Equals(method, "cash", StringComparison.CurrentCultureIgnoreCase))
-            {
-                methodEnum = AddPaymentInformationMethods.Cash;
-            }
-            else if (string.Equals(method, "bank_transfer", StringComparison.CurrentCultureIgnoreCase) ||
-                string.Equals(method, "BankTransfer", StringComparison.CurrentCultureIgnoreCase))
-            {
-                methodEnum = AddPaymentInformationMethods.BankTransfer;
-            }
-            else if (string.Equals(method, "paypal", StringComparison.CurrentCultureIgnoreCase))
-            {
-                methodEnum = AddPaymentInformationMethods.PayPal;
-            }
-
-            if (methodEnum == null)
-            {
-                throw new ArgumentException(ErrorDescriptions.ThePaymentMethodDoesntExist);
-            }
-
-            return new UpdatePaymentInformation
-            {
-                Id = Guid.NewGuid().ToString(),
-                Method = (AddPaymentInformationMethods)methodEnum.Value,
-                Iban = jObj.Value<string>(Constants.DtoNames.PaymentMethod.Iban),
-                PaypalAccount = jObj.Value<string>(Constants.DtoNames.PaymentMethod.PaypalAccount)
-            };
         }
 
         public Location GetLocation(JObject jObj)

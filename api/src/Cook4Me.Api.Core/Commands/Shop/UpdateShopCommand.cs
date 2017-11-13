@@ -33,7 +33,6 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string ShopSectionName { get; set; }
     }
 
     public class UpdateProductShopFilterValue
@@ -47,14 +46,6 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public string Id { get; set; }
         public string Name { get; set; }
         public IEnumerable<UpdateProductShopFilterValue> Values { get; set; }
-    }
-
-    public class UpdatePaymentInformation
-    {
-        public string Id { get; set; }
-        public AddPaymentInformationMethods Method { get; set; }
-        public string Iban { get; set; }
-        public string PaypalAccount { get; set; }
     }
 
     public class UpdateGameEntity
@@ -84,7 +75,6 @@ namespace Cook4Me.Api.Core.Commands.Shop
         public float Longitude { get; set; }
         public float Latitude { get; set; }
         public IEnumerable<string> TagNames { get; set; }
-        public IEnumerable<UpdatePaymentInformation> PaymentMethods { get; set; }
         public IEnumerable<UpdateShopProductCategory> ProductCategories { get; set; }
         public IEnumerable<UpdateProductShopFilter> ProductFilters { get; set; }
         public IEnumerable<UpdateGameEntity> UpdateGameEntities { get; set; }

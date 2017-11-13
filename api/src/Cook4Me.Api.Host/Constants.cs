@@ -473,8 +473,6 @@ namespace Cook4Me.Api.Host
                 public const string Tags = "tags";
                 public const string BannerImage = "banner_image";
                 public const string ProfileImage = "profile_image";
-                public const string CategoryMapName = "category_map_name";
-                public const string CategoryMap = "category_map";
                 public const string ShopMap = "shop_map";
                 public const string CategoryId = "category_id";
                 public const string Category = "category";
@@ -486,17 +484,12 @@ namespace Cook4Me.Api.Host
                 public const string Country = "country";
                 public const string Location = "location";
                 public const string GooglePlaceId = "google_place_id";
-                // Payment
-                public const string Payments = "payments";
                 // Filters
                 public const string Filters = "filters";
                 // Comments
                 public const string Comments = "comments";
                 // Product categories
                 public const string ProductCategories = "product_categories";
-                // Tilemap information
-                public const string ShopPath = "shop_path";
-                public const string UndergroundPath = "underground_path";
                 // Other information
                 public const string CreateDateTime = "create_datetime";
                 public const string UpdateDateTime = "update_datetime";

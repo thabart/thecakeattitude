@@ -26,6 +26,5 @@ namespace Cook4Me.Api.Core.Aggregates
         public string ParentId { get; set; }
         public string PinImagePartialPath { get; set; }
         public IEnumerable<ShopCategoryAggregate> Children { get; set; }
-        public IEnumerable<ShopMap> Maps { get; set; }
     }
 }

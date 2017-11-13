@@ -538,5 +538,6 @@
   "someFigures": "Some figures",
   "noNews": "No news",
   "whyShopInGame": "Why ShopInGame ?",
-  "notYetSupported": "Not yet supported"
+  "notYetSupported": "Not yet supported",
+  "paypalPaymentDescription": "All the transactions are performed via Paypal. An account must be linked to your profile."
 }

@@ -33,7 +33,6 @@ namespace Cook4Me.Api.EF
 
         public virtual DbSet<Shop> Shops { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Map> Maps { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<ShopTag> ShopTags { get; set; }
@@ -63,10 +62,8 @@ namespace Cook4Me.Api.EF
             base.OnModelCreating(modelBuilder);
             modelBuilder.AddCategory()
                 .AddShopMapping()
-                .AddMapMapping()
                 .AddTagMapping()
                 .AddShopTagMapping()
-                .AddPaymentMethod()
                 .AddComment()
                 .AddFilter()
                 .AddFilterValue()

@@ -137,10 +137,7 @@ namespace Cook4Me.Api.EF.Repositories
         public async Task<IEnumerable<ShopAggregate>> Get()
         {
             return await _context.Shops.Include(c => c.Category)
-                .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
-                .Include(c => c.ShopMap)
-                .Include(c => c.CategoryMap)
                 .Include(c => c.Comments)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
@@ -156,11 +153,8 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             var shop = await _context.Shops.Include(c => c.Category)
-                .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags)
                 .Include(c => c.Comments)
-                .Include(c => c.ShopMap)
-                .Include(c => c.CategoryMap)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories)
                 .Include(c => c.ShopGameEntities).ThenInclude(s => s.GameEntity)
@@ -186,9 +180,6 @@ namespace Cook4Me.Api.EF.Repositories
                 {
                     var record = await _context.Shops
                         .Include(s => s.Comments)
-                        .Include(s => s.PaymentMethods)
-                        .Include(c => c.ShopMap)
-                        .Include(c => c.CategoryMap)
                         .Include(s => s.ProductCategories)
                         .Include(s => s.ShopTags)
                         .Include(c => c.ShopGameEntities).ThenInclude(s => s.GameEntity)
@@ -208,7 +199,6 @@ namespace Cook4Me.Api.EF.Repositories
                     record.Latitude = shop.Latitude;
                     record.Locality = shop.Locality;
                     record.Longitude = shop.Longitude;
-                    record.CategoryMapName = shop.CategoryMapName;
                     record.Name = shop.Name;
                     record.PostalCode = shop.PostalCode;
                     record.ProfileImage = shop.ProfileImage;
@@ -250,39 +240,7 @@ namespace Cook4Me.Api.EF.Repositories
                         });
                     }
                     record.ShopTags = tags; 
-
-                    var paymentMethods = shop.ShopPaymentMethods == null ? new List<ShopPaymentMethod>() : shop.ShopPaymentMethods; // Update payment methods.
-                    var paymentMethodIds = paymentMethods.Select(p => p.Id);
-                    var paymentsToUpdate = record.PaymentMethods.Where(c => paymentMethodIds.Contains(c.Id));
-                    var paymentsToRemove = record.PaymentMethods.Where(c => !paymentMethodIds.Contains(c.Id));
-                    var existingPaymentIds = record.PaymentMethods.Select(c => c.Id);
-                    var paymentsToAdd = paymentMethods.Where(c => !existingPaymentIds.Contains(c.Id));
-                    foreach (var paymentToUpdate in paymentsToUpdate)
-                    {
-                        var payment = paymentMethods.First(c => c.Id == paymentToUpdate.Id);
-                        paymentToUpdate.Method = (int)payment.Method;
-                        paymentToUpdate.Iban = payment.Iban;
-                        paymentToUpdate.PaypalAccount = payment.PaypalAccount;
-                    }
-
-                    foreach (var paymentToRemove in paymentsToRemove)
-                    {
-                        _context.PaymentMethods.Remove(paymentToRemove);
-                    }
-
-                    foreach (var paymentToAdd in paymentsToAdd)
-                    {
-                        var rec = new Models.PaymentMethod
-                        {
-                            Id = paymentToAdd.Id,
-                            Iban = paymentToAdd.Iban,
-                            Method = (int)paymentToAdd.Method,
-                            ShopId = shop.Id,
-                            PaypalAccount = paymentToAdd.PaypalAccount
-                        };
-                        _context.PaymentMethods.Add(rec);
-                    }
-
+                    
                     var productCategories = shop.ProductCategories == null ? new List<ShopProductCategory>() : shop.ProductCategories;
                     var productCategoryIds = productCategories.Select(p => p.Id);
                     var productCategoriesToUpdate = record.ProductCategories.Where(c => productCategoryIds.Contains(c.Id));
@@ -295,7 +253,6 @@ namespace Cook4Me.Api.EF.Repositories
                         productCategoryToUpdate.Name = productCategory.Name;
                         productCategoryToUpdate.UpdateDateTime = productCategory.UpdateDateTime;
                         productCategoryToUpdate.Description = productCategory.Description;
-                        productCategoryToUpdate.ShopSectionName = productCategory.ShopSectionName;
                     }
 
                     foreach(var productCategoryToRemove in productCategoriesToRemove)
@@ -312,8 +269,7 @@ namespace Cook4Me.Api.EF.Repositories
                             Name = productCategoryToAdd.Name,
                             CreateDateTime = productCategoryToAdd.CreateDateTime,
                             UpdateDateTime = productCategoryToAdd.UpdateDateTime,
-                            ShopId = shop.Id,
-                            ShopSectionName = productCategoryToAdd.ShopSectionName
+                            ShopId = shop.Id
                         };
                         _context.ProductCategories.Add(rec);
                     }
@@ -476,11 +432,8 @@ namespace Cook4Me.Api.EF.Repositories
             }
 
             IQueryable<Models.Shop> shops = _context.Shops.Include(c => c.Category)
-                .Include(c => c.PaymentMethods)
                 .Include(c => c.ShopTags).ThenInclude(t => t.Tag)
                 .Include(c => c.Comments)
-                .Include(c => c.ShopMap)
-                .Include(c => c.CategoryMap)
                 .Include(c => c.ShopGameEntities).ThenInclude(s => s.GameEntity)
                 .Include(c => c.Filters).ThenInclude(f => f.Values)
                 .Include(c => c.ProductCategories);
@@ -507,11 +460,6 @@ namespace Cook4Me.Api.EF.Repositories
             if (parameter.Subjects != null && parameter.Subjects.Any())
             {
                 shops = shops.Where(s => parameter.Subjects.Contains(s.Subject));
-            }
-
-            if (parameter.CategoryMapNames != null && parameter.CategoryMapNames.Any())
-            {
-                shops = shops.Where(s => parameter.CategoryMapNames.Contains(s.CategoryMapName));
             }
 
             if (parameter.PlaceIds != null && parameter.PlaceIds.Any())

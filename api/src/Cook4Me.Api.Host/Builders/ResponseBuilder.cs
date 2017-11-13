@@ -90,7 +90,6 @@ namespace Cook4Me.Api.Host.Builders
         JObject GetShopUpdatedEvent(ShopUpdatedEvent evt);
         JObject GetError(string errorCode, string errorDescription);
         JObject GetShopCategory(ShopCategoryAggregate category);
-        JObject GetMap(ShopMap map);
         JObject GetTag(TagAggregate tag);
         JObject GetShopComment(ShopComment comment);
         JObject GetProductComment(ProductComment productComment);
@@ -1140,7 +1139,6 @@ namespace Cook4Me.Api.Host.Builders
 
             result.Add(Constants.DtoNames.Shop.BannerImage, shop.BannerImage);
             result.Add(Constants.DtoNames.Shop.ProfileImage, shop.ProfileImage);
-            result.Add(Constants.DtoNames.Shop.CategoryMapName, shop.CategoryMapName);
             result.Add(Constants.DtoNames.Shop.CategoryId, shop.CategoryId);
             if (shop.ShopCategory != null)
             {
@@ -1157,26 +1155,6 @@ namespace Cook4Me.Api.Host.Builders
             location.Add(Constants.DtoNames.Location.Longitude, shop.Longitude);
             result.Add(Constants.DtoNames.Shop.Location, location);
             result.Add(Constants.DtoNames.Shop.GooglePlaceId, shop.GooglePlaceId);
-            var payments = new JArray(); // Payments
-            if (shop.ShopPaymentMethods != null && shop.ShopPaymentMethods.Any())
-            {
-                foreach(var record in shop.ShopPaymentMethods)
-                {
-                    var payment = new JObject();
-                    payment.Add(Constants.DtoNames.PaymentMethod.Method, Enum.GetName(typeof(ShopPaymentMethods), record.Method));
-                    if (!string.IsNullOrWhiteSpace(record.Iban))
-                    {
-                        payment.Add(Constants.DtoNames.PaymentMethod.Iban, record.Iban);
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(record.PaypalAccount))
-                    {
-                        payment.Add(Constants.DtoNames.PaymentMethod.PaypalAccount, record.PaypalAccount);
-                    }
-
-                    payments.Add(payment);
-                }
-            }
 
             var productCategories = new JArray();
             if (shop.ProductCategories != null && shop.ProductCategories.Any())
@@ -1194,16 +1172,6 @@ namespace Cook4Me.Api.Host.Builders
                 {
                     filters.Add(GetFilter(filter));
                 }
-            }
-
-            if (shop.CategoryMap != null) // Category Map
-            {
-                result.Add(Constants.DtoNames.Shop.CategoryMap, GetMap(shop.CategoryMap));
-            }
-
-            if (shop.ShopMap != null) // Shop map.
-            {
-                result.Add(Constants.DtoNames.Shop.ShopMap, GetMap(shop.ShopMap));
             }
 
             var gameEntities = new JArray();
@@ -1225,10 +1193,7 @@ namespace Cook4Me.Api.Host.Builders
             }
             
             result.Add(Constants.DtoNames.Shop.Filters, filters);
-            result.Add(Constants.DtoNames.Shop.Payments, payments);
             result.Add(Constants.DtoNames.Shop.ProductCategories, productCategories);
-            result.Add(Constants.DtoNames.Shop.ShopPath, shop.ShopRelativePath); // Game
-            result.Add(Constants.DtoNames.Shop.UndergroundPath, shop.UndergroundRelativePath);
             result.Add(Constants.DtoNames.Shop.CreateDateTime, shop.CreateDateTime); // Other informations
             result.Add(Constants.DtoNames.Shop.UpdateDateTime, shop.UpdateDateTime);
             result.Add(Constants.DtoNames.Shop.NbComments, nbComments);
@@ -1387,33 +1352,6 @@ namespace Cook4Me.Api.Host.Builders
                 jObj.Add(Constants.DtoNames.Category.Children, arr);
             }
 
-            if (category.Maps != null && category.Maps.Any())
-            {
-                var arr = new JArray();
-                foreach(var map in category.Maps)
-                {
-                    arr.Add(GetMap(map));
-                }
-
-                jObj.Add(Constants.DtoNames.Category.Maps, arr);
-            }
-
-            return jObj;
-        }
-
-        public JObject GetMap(ShopMap map)
-        {
-            if (map == null)
-            {
-                throw new ArgumentNullException(nameof(map));
-            }
-
-            var jObj = new JObject();
-            jObj.Add(Constants.DtoNames.Map.MapName, map.MapName);
-            jObj.Add(Constants.DtoNames.Map.MapPartialUrl, map.PartialMapUrl);
-            jObj.Add(Constants.DtoNames.Map.OverViewName, map.OverviewName);
-            jObj.Add(Constants.DtoNames.Map.OverviewPartialUrl, map.PartialOverviewUrl);
-            jObj.Add(Constants.DtoNames.Map.IsMain, map.IsMain);
             return jObj;
         }
 
