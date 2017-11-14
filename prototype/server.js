@@ -63,7 +63,7 @@ io.on('connection', function(socket) {
 		player.row = data.row;
 	});
   socket.on('message', function(data) {
-
+		this.broadcast.emit('message', { id : this.id, message: data.message });
   });
   socket.on('disconnect', function(data) {
 		removePlayer(this.id, this.broadcast);

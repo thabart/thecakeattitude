@@ -10,7 +10,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       ];
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var map = mappingLevelToMap.filter(function(m) { return m.name === key; })[0];
-      currentPlayer.is_owner = map.sub === map.name;
+      self.currentMapName = map.name;
       game.Stores.UserStore.updateCurrentUser(currentPlayer);
       me.levelDirector.loadLevel(map.level);
       var entry = me.game.world.getChildByName(Constants.Layers.Entry.Name)[0];
@@ -63,27 +63,30 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       });
       game.Stores.GameStore.updateColls();
       self.initialize(shopId).then(function() {
+        if (self.currentMapName === 'shop') { self.currentMapName = shopId; }
         self.gameMenu = new game.Menu.GameMenu();
+        self.socket = io(Constants.socketServer).connect(); // Listen websockets.
+        self.socket.on('connect', function() {
+  			   self.socket.emit('new_player', { col : self.currentPlayer.currentTile.col, row : self.currentPlayer.currentTile.row, figure : currentPlayer.figure, map: self.currentMapName, name: self.currentPlayer.metadata.name });
+        });
+        self.socket.on('new_player', function(data) {
+          self.addPlayer(data);
+        });
+        self.socket.on('remove_player', function(data) {
+          self.removePlayer(data);
+        });
+        self.socket.on('move_player', function(data) {
+          self.moveUser(data);
+        });
+        self.socket.on('message', function(data) {
+          self.displayMessage(data);
+        });
+    		self.socket.on('disconnect', function() {
+    			self.socket.emit('remove');
+    		});
       });
-      self.socket = io(Constants.socketServer).connect(); // Listen websockets.
-      self.socket.on('connect', function() {
-			   self.socket.emit('new_player', { col : self.currentPlayer.currentTile.col, row : self.currentPlayer.currentTile.row, figure : currentPlayer.figure, map: map.name, name: self.currentPlayer.metadata.name });
-      });
-      self.socket.on('new_player', function(data) {
-        self.addPlayer(data);
-      });
-      self.socket.on('remove_player', function(data) {
-        self.removePlayer(data);
-      });
-      self.socket.on('move_player', function(data) {
-        self.moveUser(data);
-      });
-      self.socket.on('message', function() {
-
-      });
-  		self.socket.on('disconnect', function() {
-  			self.socket.emit('remove');
-  		});
+      this.onMessageArrivedB = this.onMessageArrived.bind(this);
+      game.Stores.GameStore.listenMessageArrived(this.onMessageArrivedB);
     },
     initialize : function(shopId) {
       var dfd = jQuery.Deferred();
@@ -158,14 +161,30 @@ game.Screens.GameScreen = me.ScreenObject.extend({
     },
     movePlayerCallback: function(nextTile) {
       var self = this;
+      if (!self.socket) { return; }
       self.socket.emit('move_player', { nextcol: nextTile.col, nextrow: nextTile.row });
     },
     updateMoveCallback: function(currentTile) {
       var self = this;
+      if (!self.socket) { return; }
       self.socket.emit('update_player_position', { row: currentTile.row, col: currentTile.col });
+    },
+    onMessageArrived: function(e, message) { // Send a message.
+      if (!this.socket) { return; }
+      this.socket.emit('message', { message : message });
+    },
+    displayMessage: function(data) { // Display a message.
+      var self = this;
+      var record = self.getPlayer(data.id);
+      if (record === null) {
+        return;
+      }
+
+      record.player.displayMessage(data.message);
     },
     addPlayer: function(data) {
       var self = this;
+      if (data.map !== self.currentMapName) { return; }
       me.loader.load({ name: data.name, src: 'resources/players/'+data.figure+'/sprite.png', type: 'image' }, function() {
         var player = new game.Entities.PlayerEntity(data.col, data.row, {
           name: data.name
@@ -218,5 +237,6 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       me.input.releasePointerEvent("pointerdown", me.game.viewport);
       me.input.releasePointerEvent("pointermove", me.game.viewport);
       self.socket.disconnect();
+      if (self.onMessageArrivedB) game.Stores.GameStore.unsubscribeMessageArrived(self.onMessageArrivedB)
     }
 });
