@@ -28,6 +28,8 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
       game.Stores.GameStore.setCollisionLayer(collisionLayer);
       self.movableContainer = new game.MovableContainer();
+      currentPlayer.moveCallback = self.movePlayerCallback.bind(self);
+      currentPlayer.moveFinishedCallback = self.updateMoveCallback.bind(self);
       self.currentPlayer = new game.Entities.CurrentPlayerEntity(playerCoordinates.col, playerCoordinates.row, currentPlayer);
       self.tileSelector = new game.TileSelectorEntity(0, 0);
       self.floorSelector = new game.FloorEntitySelector();
@@ -70,11 +72,11 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       self.socket.on('new_player', function(data) {
         self.addPlayer(data);
       });
-      self.socket.on('remove_player', function() {
-
+      self.socket.on('remove_player', function(data) {
+        self.removePlayer(data);
       });
-      self.socket.on('move_player', function() {
-
+      self.socket.on('move_player', function(data) {
+        self.moveUser(data);
       });
       self.socket.on('message', function() {
 
@@ -154,6 +156,14 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       }).catch(function() { dfd.resolve(); });
       return dfd;
     },
+    movePlayerCallback: function(nextTile) {
+      var self = this;
+      self.socket.emit('move_player', { nextcol: nextTile.col, nextrow: nextTile.row });
+    },
+    updateMoveCallback: function(currentTile) {
+      var self = this;
+      self.socket.emit('update_player_position', { row: currentTile.row, col: currentTile.col });
+    },
     addPlayer: function(data) {
       var self = this;
       me.loader.load({ name: data.name, src: 'resources/players/'+data.figure+'/sprite.png', type: 'image' }, function() {
@@ -161,8 +171,38 @@ game.Screens.GameScreen = me.ScreenObject.extend({
           name: data.name
         });
         me.game.world.addChild(player);
-        self._players.push(player);
+        self._players.push({ id : data.id, player : player });
       });
+    },
+    moveUser: function(data) { // Move a user.
+      var self = this;
+      var record = self.getPlayer(data.id);
+      if (record === null) {
+        return;
+      }
+
+      record.player.setCurrentTile({ col: data.col, row: data.row });
+      record.player.move({ col: data.nextcol, row: data.nextrow });
+    },
+    removePlayer: function(data) { // Remove the player.
+      var self = this;
+      var record = self.getPlayer(data.id);
+      if (record === null) {
+        return;
+      }
+
+      me.game.world.removeChild(record.player);
+      var index = self._players.indexOf(record);
+      self._players.splice(index, 1);
+    },
+    getPlayer: function(playerId) { // Get the player.
+      var self = this;
+      var record = self._players.filter(function(r) { return r.id === playerId; })[0];
+      if (!record) {
+        return null;
+      }
+
+      return record;
     },
     onDestroyEvent: function() {
       var self = this;

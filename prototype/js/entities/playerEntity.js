@@ -7,6 +7,8 @@ game.Entities.PlayerEntity = me.Entity.extend({
         this.speed = 2;
         var playerWidth = 64;
         var playerHeight = 110;
+        this.moveCallback = opts.moveCallback || null;
+        this.moveFinishedCallback = opts.moveFinishedCallback || null;
         this.metadata = {
           name:  opts.name,
           image: "<div style='background: url("+image.src+") -5px  -790px no-repeat; width: 64px; height: 110px;' class='img'></div>",
@@ -79,6 +81,15 @@ game.Entities.PlayerEntity = me.Entity.extend({
         this.move(tile);
       }
     },
+    setCurrentTile: function(tile) { // Set the current tile.
+      var self = this;
+      self.currentTile = tile;
+      var coordinates = self.refLayer.getRenderer().tileToPixelCoords(tile.col, tile.row);
+      self.pos.x = coordinates.x;
+      self.pos.y = coordinates.y;
+      self.movements = [];
+      self.currentMvt = 0;
+    },
     displayPseudo: function() { // Display the pseudo.
       $('html,body').css( 'cursor', 'pointer' );
       if (this.informationBox && this.informationBox !== null) {
@@ -126,11 +137,15 @@ game.Entities.PlayerEntity = me.Entity.extend({
     move: function(tile) { // Move the player.
       if (!tile) { return; }
       if (this.movements.length > 0 && this.currentMvt < this.movements.length) { return; }
+      if (this.moveCallback) {
+        this.moveCallback(tile);
+      }
+      
       var self = this;
       var finder = new PF.AStarFinder({
         allowDiagonal: true
       });
-      var currentTile = CoordinateCalculator.getRelativePlayerPosition(this.currentTile);
+      var currentTile = this.currentTile;
       var collisionLayer = game.Stores.GameStore.getCollisionLayer();
       var path = finder.findPath(currentTile.row, currentTile.col, tile.row, tile.col, collisionLayer.clone());
       var mvts = [];
@@ -273,6 +288,9 @@ game.Entities.PlayerEntity = me.Entity.extend({
         posY = coordinates.y;
         if (this.currentMvt >= this.movements.length) {
           this.renderable.setCurrentAnimation("standing_" + mvt);
+          if (this.moveFinishedCallback) {
+            this.moveFinishedCallback(this.currentTile);
+          }
         }
       }
 

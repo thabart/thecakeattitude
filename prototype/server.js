@@ -32,13 +32,11 @@ io.on('connection', function(socket) {
   socket.on('new_player', function(data) {
 		var player = new Player(data.col, data.row, data.map, data.name, data.figure, this.id);
 		this.broadcast.emit('new_player', { id: player.id, col : player.col, row : player.row, map : player.map, name: player.name, figure: player.figure });
-    /*
 		var i, existingPlayer
 		for (i = 0; i < players.length; i++) {
 			existingPlayer = players[i];
-			this.emit('new_player', { id: existingPlayer.getId(), x : existingPlayer.getX(), y : existingPlayer.getY(), direction: existingPlayer.getDirection(), mapId : existingPlayer.getMapId(), pseudo: existingPlayer.getPseudo() });
+			this.emit('new_player', { id: existingPlayer.id, col : existingPlayer.col, row : existingPlayer.row, map : existingPlayer.map, name: existingPlayer.name, figure: existingPlayer.figure });
 		}
-    */
 
 		players.push(player);
   });
@@ -63,7 +61,6 @@ io.on('connection', function(socket) {
 
 		player.col = data.col;
 		player.row = data.row;
-		this.broadcast.emit('update_player_position', { id : player.id, col : player.col, row : player.row });
 	});
   socket.on('message', function(data) {
 

@@ -16,6 +16,8 @@ var game = {
         me.state.change(me.state.LOADING);
     },
     loaded: function () {
+        me.sys.pauseOnBlur = false;
+        me.sys.stopOnBlur = false;
         me.game.world.autoSort = true;
         me.game.world.sortOn = 'y';
 
