@@ -31,6 +31,216 @@
   		}
     },
     {
+      "name": "gallery_n1",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -37,
+  			"relativePosY": -96
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -19,
+  			"relativePosY": -96
+  		}
+    },
+    {
+      "name": "gallery_n2",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -70
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -17,
+  			"relativePosY": -70
+  		}
+    },
+    {
+      "name": "gallery_n3",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -37,
+  			"relativePosY": -41
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -29,
+  			"relativePosY": -41
+  		}
+    },
+    {
+      "name": "gallery_n4",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -36,
+  			"relativePosY": -43
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -24,
+  			"relativePosY": -43
+  		}
+    },
+    {
+      "name": "gallery_n5",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -46,
+  			"relativePosY": -31
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": 3,
+  			"relativePosY": -31
+  		}
+    },
+    {
+      "name": "gallery_n6",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -32,
+  			"relativePosY": -75
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -16,
+  			"relativePosY": -75
+  		}
+    },
+    {
+      "name": "gallery_n7",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -36,
+  			"relativePosY": -48
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -31,
+  			"relativePosY": -48
+  		}
+    },
+    {
+      "name": "gallery_n8",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -70
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -9,
+  			"relativePosY": -70
+  		}
+    },
+    {
+      "name": "gallery_n9",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -130
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -15,
+  			"relativePosY": -130
+  		}
+    },
+    {
+      "name": "gallery_n10",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -48
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -32,
+  			"relativePosY": -48
+  		}
+    },
+    {
+      "name": "gallery_n11",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -48
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -32,
+  			"relativePosY": -48
+  		}
+    },
+    {
+      "name": "gallery_n12",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -24,
+  			"relativePosY": -50
+  		}
+    },
+    {
+      "name": "gallery_n13",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -36,
+  			"relativePosY": -60
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": 0,
+  			"relativePosY": -60
+  		}
+    },
+    {
+      "name": "gallery_n14",
+  		"horizontal": {
+    		"nbCols": 2,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -89
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -22,
+  			"relativePosY": -89
+  		}
+    },
+    {
       "name": "gallery_n21",
   		"horizontal": {
     		"nbCols": 1,
@@ -87,6 +297,81 @@
     		"nbCols": 1,
     		"nbRows": 2,
   			"relativePosX": 0,
+  			"relativePosY": -50
+  		}
+    },
+    {
+      "name": "flag_1",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -20,
+  			"relativePosY": -50
+  		}
+    },
+    {
+      "name": "flag_2",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -20,
+  			"relativePosY": -50
+  		}
+    },
+    {
+      "name": "flag_3",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -20,
+  			"relativePosY": -50
+  		}
+    },
+    {
+      "name": "flag_4",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -20,
+  			"relativePosY": -50
+  		}
+    },
+    {
+      "name": "flag_5",
+  		"horizontal": {
+    		"nbCols": 1,
+    		"nbRows": 1,
+  			"relativePosX": -34,
+  			"relativePosY": -50
+  		},
+  		"vertical": {
+    		"nbCols": 1,
+    		"nbRows": 2,
+  			"relativePosX": -20,
   			"relativePosY": -50
   		}
     }
