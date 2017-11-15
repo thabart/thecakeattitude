@@ -94,8 +94,15 @@ var GameStoreCl = function() {
 		$(this).trigger('selectedEntityChanged');
 	};
 
+	this.clearEntities = function() { // Clear all the entities.
+		_entities = [];
+	};
+
+	this.getEntities = function() { // Get all the entities.
+		return _entities;
+	};
+
 	this.addEntity = function(f, update = false) { // Add an entity and update the collisions.
-		_entities.push(f);
 		if (update) {
 			updateCollisions();
 			var gameEntities = _shopInformation['game_entities'];
@@ -115,31 +122,23 @@ var GameStoreCl = function() {
 			});
 			_shopInformation['game_entities'] = gameEntities;
 			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
+		} else {
+			_entities.push(f);
 		}
-
-		$(this).trigger('entityAdded', [ f ]);
-	};
-
-	this.getEntities = function() { // Get all the entities.
-		return _entities;
 	};
 
 	this.removeEntity = function(f, update = false) { // Remove an entity and update the collisions.
-		var index = _entities.indexOf(f);
-		if (index === -1) { return; }
-		me.game.world.removeChild(f);
-		_entities.splice(index, 1);
 		if (update) {
-			updateCollisions();
 			var gameEntities = _shopInformation['game_entities'];
 			var removedEntity = gameEntities.filter(function(g) { return g.id === f.metadata.id })[0];
 			var indexRemoved = gameEntities.indexOf(removedEntity);
 			gameEntities.splice(indexRemoved, 1);
 			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
+		} else {
+			var index = _entities.indexOf(f);
+			if (index === -1) { return; }
+			_entities.splice(index, 1);
 		}
-
-		me.game.repaint();
-		$(this).trigger('entityRemoved', [ f ]);
 	};
 
 	this.updateEntity = function(f, update = false) {
@@ -222,22 +221,6 @@ var GameStoreCl = function() {
 
 	this.unsubscribeHideProduct = function(callback) {
 		$(this).off('productHidden', callback);
-	};
-
-	this.listenEntityRemoved = function(callback) {
-		$(this).on('entityRemoved', callback);
-	};
-
-	this.unsubscribeEntityRemoved = function(callback) {
-		$(this).off('entityRemoved', callback);
-	};
-
-	this.listenEntityAdded = function(callback) {
-		$(this).on('entityAdded', callback);
-	};
-
-	this.unsubscribeEntityAdded = function(callback) {
-		$(this).off('entityAdded', callback);
 	};
 
 	this.listenShopInformationChanged = function(callback) {

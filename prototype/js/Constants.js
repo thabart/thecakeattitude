@@ -25,6 +25,7 @@ var Constants = {
   },
   playerZIndex: 7,
   sessionName: "shopingame-game",
+  apiUrl: 'http://localhost:5000',
   apiConfigurationUrl: 'http://localhost:5000/.well-known/configuration',
   openIdUrl: "http://localhost:5001",
   userClaims : 'http://localhost:5001/users/claims',

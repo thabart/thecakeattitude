@@ -655,3 +655,8 @@ ul.tabs li.active
 .product-box .body > .content {
   padding: 5px;
 }
+
+/* NAVIGATOR BOX */
+.navigator-box ul.shops > li {
+  margin-bottom: 3px;
+}

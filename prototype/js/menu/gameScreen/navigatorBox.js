@@ -112,12 +112,14 @@ game.Menu.NavigatorBox = me.Object.extend({
           profileImage = "/img/default-shop.png";
         }
 
+        var currentUser = game.Stores.UserStore.getCurrentUser();
+        var isOwner = currentUser && currentUser.sub && shop.subject === currentUser.sub;
         var elt = $("<li data-id='"+shop.id+"' style='cursor: pointer;'>"+
           "<div class='col-3'>"+
             "<img src='"+profileImage+"' width='50' />"+
           "</div>"+
           "<div class='col-9'>"+
-            "<h3>"+shop.name+"</h3>"+
+            "<h3>"+(isOwner ? (shop.name+" "+"<span data-i18n='mine-shop' style='font-style: oblique;'></span>"): shop.name)+"</h3>"+
             "<ul class='tags'></ul>"+
           "</div>"+
         "</li>");
@@ -133,6 +135,7 @@ game.Menu.NavigatorBox = me.Object.extend({
           elt.find('ul').append("<li>"+tag+"</li>");
         });
         $(self.navigatorBox).find('.shops').append(elt);
+        $(elt).i18n();
       });
 
       if (navigation && navigation.length > 0) {

@@ -3,6 +3,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
     onResetEvent: function(key, shopId) {
       var self = this;
       self._players = [];
+      self.killConnection = false;
       var mappingLevelToMap = [
         { name: "reception", level: "reception_map" },
         { name: "coffee-house",  level: "coffee_shop_map" },
@@ -84,6 +85,35 @@ game.Screens.GameScreen = me.ScreenObject.extend({
     		self.socket.on('disconnect', function() {
     			self.socket.emit('remove');
     		});
+
+        self.signalrConnection = $.hubConnection(Constants.apiUrl); // Listen changes made on shops.
+        var proxy = self.signalrConnection.createHubProxy("notifier");
+        proxy.on('shopUpdated', function(message) { // Shop has been updated.
+          if (self.currentMapName !== message.id) { return; }
+          var entities = game.Stores.GameStore.getEntities();
+          entities.forEach(function(entity) {
+            me.game.world.removeChild(entity);
+          });
+          game.Stores.GameStore.clearEntities();
+          self.setFurnitures(self.currentMapName).then(function() {
+            if (self.gameMenu.inventoryBox) {
+              self.gameMenu.inventoryBox.refresh();
+            }
+          });
+        });
+        self.signalrConnection.disconnected(function() {
+          if (self.killConnection) { return; }
+          setTimeout(function() {
+            self.signalrConnection.start();
+          }, 1000);
+        });
+        self.signalrConnection.start({jsonp: false})
+          .done(function () {
+            console.log('Now connected, connection ID=' + self.signalrConnection.id);
+          })
+          .fail(function () {
+            console.log('Could not connect');
+        });
       });
       this.onMessageArrivedB = this.onMessageArrived.bind(this);
       game.Stores.GameStore.listenMessageArrived(this.onMessageArrivedB);
@@ -147,8 +177,8 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
         game.Stores.GameStore.updateColls();
         game.Stores.GameStore.setShopInformation(shop);
-        dfd.resolve();
-      }).catch(function() { console.error("the shop doesn't exist"); dfd.resolve(); });
+        dfd.resolve(shop);
+      }).catch(function() { console.error("the shop doesn't exist"); dfd.resolve(null); });
       return dfd;
     },
     setEntities: function() {
@@ -238,5 +268,9 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       me.input.releasePointerEvent("pointermove", me.game.viewport);
       self.socket.disconnect();
       if (self.onMessageArrivedB) game.Stores.GameStore.unsubscribeMessageArrived(self.onMessageArrivedB)
+      if (self.signalrConnection) {
+        self.killConnection = true;
+        self.signalrConnection.stop();
+      }
     }
 });

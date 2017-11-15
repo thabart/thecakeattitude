@@ -2,25 +2,9 @@ game.Menu = game.Menu || {};
 game.Menu.InventoryBox = me.Object.extend({
   init: function() {
       var self = this;
-      var gameEntities = game.Stores.GameStore.getGameEntities();
-      var shop = game.Stores.GameStore.getShopInformation();
-      this.entities = me.loader.getJSON("entities");
-      this.categories = me.loader.getJSON("categories");
-      this.entities.forEach(function(entity) {
-        var gameEntity = gameEntities.filter(function(ge) { return ge.name === entity.name; })[0];
-        var shopGameEntities = shop['game_entities'].filter(function(ge) { return ge.name === entity.name; });
-        var inStock = 0;
-        if (gameEntity && !gameEntity.is_shelf) {
-          inStock = gameEntity['max_available_in_stock'] - shopGameEntities.length;
-        }
-        else if (gameEntity && gameEntity.is_shelf) {
-          inStock = shop['product_categories'].length - shopGameEntities.length;
-        }
-
-        entity.is_shelf = gameEntity.is_shelf;
-        entity.in_stock = inStock;
-      });
       var indice = 0;
+      self.currentEntity = null;
+      self.updateStock();
       var tabs = this.categories.map(function(category) {
         if (indice === 0) {
           indice++;
@@ -83,8 +67,31 @@ game.Menu.InventoryBox = me.Object.extend({
       this.addEntityB = this.addEntity.bind(this);
       this.removeEntityB = this.removeEntity.bind(this);
       game.Stores.GameStore.listenActiveEntityChanged(this.updateActiveEntityB);
-      game.Stores.GameStore.listenEntityAdded(this.addEntityB);
-      game.Stores.GameStore.listenEntityRemoved(this.removeEntityB);
+  },
+  refresh: function() {
+    this.updateStock();
+    if (!this.currentEntity || this.currentEntity === null) { return; }
+    this.displayEntityInformation(this.currentEntity);
+  },
+  updateStock: function() { // Update the stock.
+    var gameEntities = game.Stores.GameStore.getGameEntities();
+    var shop = game.Stores.GameStore.getShopInformation();
+    this.entities = me.loader.getJSON("entities");
+    this.categories = me.loader.getJSON("categories");
+    this.entities.forEach(function(entity) {
+      var gameEntity = gameEntities.filter(function(ge) { return ge.name === entity.name; })[0];
+      var shopGameEntities = shop['game_entities'].filter(function(ge) { return ge.name === entity.name; });
+      var inStock = 0;
+      if (gameEntity && !gameEntity.is_shelf) {
+        inStock = gameEntity['max_available_in_stock'] - shopGameEntities.length;
+      }
+      else if (gameEntity && gameEntity.is_shelf) {
+        inStock = shop['product_categories'].length - shopGameEntities.length;
+      }
+
+      entity.is_shelf = gameEntity.is_shelf;
+      entity.in_stock = inStock;
+    });
   },
   addEntity: function(e, obj) {
     var entity = this.entities.filter(function(e) { return e.name === obj.metadata.name; })[0];
@@ -187,6 +194,7 @@ game.Menu.InventoryBox = me.Object.extend({
       game.Stores.GameStore.setActiveEntity(name, selector, entity.type, false, productCategory);
     });
     $(entityInformation).i18n();
+    self.currentEntity = elt;
   },
   listenTheme: function() { // When the user clicks on the theme then display all the items.
     var self = this;
@@ -273,7 +281,5 @@ game.Menu.InventoryBox = me.Object.extend({
   destroy: function() {
     if (this.inventory) $(this.inventory).remove();
     if (this.updateActiveEntityB) game.Stores.GameStore.unsubscribeActiveEntityChanged(this.updateActiveEntityB);
-    if (this.addEntityB) game.Stores.GameStore.unsubscribeEntityAdded(this.addEntityB);
-    if (this.removeEntityB) game.Stores.GameStore.unsubscribeEntityRemoved(this.removeEntityB);
   }
 });
