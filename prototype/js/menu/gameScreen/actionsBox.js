@@ -70,7 +70,7 @@ game.Menu.ActionsBox = me.Object.extend({
       $(this.actions).find('.use').prop('disabled', false);
     }
 
-    if (shop && user.sub === shop.subject) {
+    if (shop && shop.subject && user.sub === shop.subject) {
       $(this.actions).find('.move, .remove, .turn, .translate').show();
       $(this.actions).find('.move, .remove, .turn, .translate').prop('disabled', false);
     }

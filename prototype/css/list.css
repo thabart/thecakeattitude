@@ -19,6 +19,10 @@
   display: block;
 }
 
+.treeview .filter.active {
+  font-weight: bold;
+}
+
 .treeview .node-toggle:before {
   position: absolute;
   content: '';
@@ -80,11 +84,15 @@ ul.place-selector li {
 }
 
 ul.navigations li {
-
+  border: 1px solid #757571;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: #d2d1cb;
+  cursor: pointer;
 }
 
 ul.navigations li.active {
-
+  background-color: white !important;
 }
 
 ul.place-selector {
