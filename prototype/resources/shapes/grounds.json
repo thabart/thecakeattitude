@@ -31,6 +31,66 @@
       }
 		},
 		{
+			"name": "hw_tile_2",
+      "horizontal": {
+  			"nbCols": 1,
+  			"nbRows": 1,
+  			"relativePosX": -29,
+  			"relativePosY": 6
+      },
+      "vertical": {
+  			"nbCols": 3,
+  			"nbRows": 3,
+  			"relativePosX": -29,
+  			"relativePosY": 6
+      }
+		},
+		{
+			"name": "hw_tile_3",
+      "horizontal": {
+  			"nbCols": 1,
+  			"nbRows": 1,
+  			"relativePosX": -29,
+  			"relativePosY": -1
+      },
+      "vertical": {
+  			"nbCols": 3,
+  			"nbRows": 3,
+  			"relativePosX": -29,
+  			"relativePosY": -1
+      }
+		},
+		{
+			"name": "jp_tatami_large",
+      "horizontal": {
+  			"nbCols": 1,
+  			"nbRows": 1,
+  			"relativePosX": -26,
+				"relativePosY": -23
+      },
+      "vertical": {
+  			"nbCols": 1,
+  			"nbRows": 1,
+  			"relativePosX": -30,
+  			"relativePosY": 5
+      }
+		},
+		{
+			"name": "jp_tatami_small",
+      "horizontal": {
+  			"nbCols": 1,
+  			"nbRows": 1,
+  			"relativePosX": -26,
+  			"relativePosY": 0
+      },
+      "vertical": {
+  			"nbCols": 1,
+  			"nbRows": 1,
+  			"relativePosX": -26,
+  			"relativePosY": 0
+      }
+		},
+		{
 			"name": "coffee-carpet",
       "horizontal": {
   			"nbCols": 6,

@@ -205,7 +205,7 @@ game.Menu.InventoryBox = me.Object.extend({
         var entity = self.entities.filter(function(e) { return e.name === furnitureName; })[0];
         $(self.inventory).find('.furnitures').append(
           "<li data-name='"+entity.name+"' data-selector='"+category.selector+"'>"+
-            "<img src='"+entity.icon+"' />"+
+            "<img src='"+entity.icon+"' height='36' width='36' />"+
           "</li>");
       });
 
