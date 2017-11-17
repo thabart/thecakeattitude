@@ -1,7 +1,7 @@
 game.Menu = game.Menu || {};
 game.Menu.ShelfBox = me.Object.extend({
   init: function() {
-    this._request = { count: 2, start_index: 0 };
+    this._request = { count: 3, start_index: 0 };
     this._product_category = null;
     this.shelf = $("<div class='modal blue lg shelf-box'>"+
       "<div class='container'>"+
@@ -13,7 +13,6 @@ game.Menu.ShelfBox = me.Object.extend({
               "<li data-i18n='products' data-target='.tab-content > .products'></li>"+
             "</ul>"+
             "<div class='tab-container'>"+
-              "<div class='loader' data-i18n='loading' style='display: none;'></div>"+
               "<div class='tab-content'>"+
                 // DISPLAY THE DESCRIPTION.
                 "<div class='description'>"+
@@ -37,24 +36,27 @@ game.Menu.ShelfBox = me.Object.extend({
                       "<div class='body'>"+
                         // BEST DEALS.
                         "<div>"+
-                          "<input type='checkbox' /><label data-i18n='best_deals'></label>"+
+                          "<input type='checkbox' class='bestDeals' /><label data-i18n='best_deals'></label>"+
                         "</div>"+
-                        // MIN PRICE.
-                        "<div class='input' style='padding-top:2px;'>"+
-                          "<div class='top'></div>"+
-                          "<div class='body' style='padding:5px;'>"+
-                            "<input type='text' min='1' max='999999' placeholder='Min price' />"+
+                        "<form class='search-product-price-form'>"+
+                          // MIN PRICE.
+                          "<div class='input' style='padding-top:2px;'>"+
+                            "<div class='top'></div>"+
+                            "<div class='body' style='padding:5px;'>"+
+                              "<input type='text' class='min-price' min='1' max='999999' placeholder='Min price' />"+
+                            "</div>"+
+                            "<div class='bottom'></div>"+
                           "</div>"+
-                          "<div class='bottom'></div>"+
-                        "</div>"+
-                        // MAX PRICE.
-                        "<div class='input' style='padding-top:2px;'>"+
-                          "<div class='top'></div>"+
-                          "<div class='body' style='padding:5px;'>"+
-                            "<input type='number' min='1' max='999999' placeholder='Max price' />"+
+                          // MAX PRICE.
+                          "<div class='input' style='padding-top:2px;'>"+
+                            "<div class='top'></div>"+
+                            "<div class='body' style='padding:5px;'>"+
+                              "<input type='number' class='max-price' min='1' max='999999' placeholder='Max price' />"+
+                            "</div>"+
+                            "<div class='bottom'></div>"+
                           "</div>"+
-                          "<div class='bottom'></div>"+
-                        "</div>"+
+                          "<button data-i18n='search' style='margin-top: 2px;' class='button button-green'></button>"+
+                        "</form>"+
                       "</div>"+
                       "<div class='bottom'></div>"+
                     "</div>"+
@@ -71,10 +73,13 @@ game.Menu.ShelfBox = me.Object.extend({
                     "</div>"+
                   "</div>"+
                   "<div class='col-8'>"+
+                    "<div class='loader' data-i18n='loading' style='display: none;'></div>"+
                     // DISPLAY THE PRODUCTS.
-                    "<ul class='no-style product-categories' style='margin-bottom: 5px;'></ul>"+
-                    "<ul class='list' style='padding: 0 10px 0 10px'></ul>"+
-                    "<ul class='navigations'></ul>"+
+                    "<div class='products-containers'>"+
+                      "<ul class='no-style product-categories' style='margin-bottom: 5px;'></ul>"+
+                      "<ul class='list' style='padding: 0 10px 0 10px'></ul>"+
+                      "<ul class='navigations'></ul>"+
+                    "</div>"+
                   "</div>"+
                 "</div>"+
               "</div>"+
@@ -198,7 +203,7 @@ game.Menu.ShelfBox = me.Object.extend({
             "<ul class='filters'></ul>"+
           "</div>"+
           "<div class='col-4' style='text-align: right;'>"+
-            "<button  data-id='"+product.id+"' class='button button-green see' data-i18n='see'></button>"+
+            "<button  data-id='"+product.id+"' style='margin-top: 5px;' class='button button-green see' data-i18n='see'></button>"+
           "</div>"+
         "</div>"+
       "</li>");
@@ -281,13 +286,38 @@ game.Menu.ShelfBox = me.Object.extend({
       $(self.shelf).find('.product-filters .filter').removeClass('active');
       self.refresh();
     });
+    $(this.shelf).find('.bestDeals').change(function() {
+      var isChecked = $(this).is(':checked');
+      self._request.contains_valid_promotions = isChecked;
+      self._request.start_index = 0;
+      self.refresh();
+    });
+    $(this.shelf).find('.search-product-price-form').submit(function(e) {
+      e.preventDefault();
+      var minPrice = $(self.shelf).find('.min-price').val();
+      var maxPrice = $(self.shelf).find('.max-price').val();
+      if (minPrice) {
+        self._request.min_price = minPrice;
+      } else {
+        self._request.min_price = 1;
+      }
+
+      if (maxPrice) {
+        self._request.max_price = maxPrice;
+      } else {
+        self._request.max_price = 999999;
+      }
+
+      self._request.start_index = 0;
+      self.refresh();
+    });
   },
   displayLoading: function(b) {
     if (b) {
-      $(this.shelf).find('.tab-content').hide();
+      $(this.shelf).find('.products-containers').hide();
       $(this.shelf).find('.loader').show();
     } else {
-      $(this.shelf).find('.tab-content').show();
+      $(this.shelf).find('.products-containers').show();
       $(this.shelf).find('.loader').hide();
     }
   },
