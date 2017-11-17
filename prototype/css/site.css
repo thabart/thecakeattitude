@@ -60,6 +60,13 @@ select {
   padding-left: 5px;
 }
 
+#bottom-left-menu {
+  position: fixed;
+  bottom: 70px;
+  left: 0px;
+  height: 100px;
+}
+
 .game-container {
 	display: inline-block;
 	position: relative;

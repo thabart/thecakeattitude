@@ -5,6 +5,7 @@ var GameStoreCl = function() {
 	var _collisionLayer = {};
 	var _shopInformation = {};
 	var _gameEntities = [];
+	var _activeMap = null;
 
 	var updateCollisions = function() {
 		var refLayer = me.game.world.getChildByName(Constants.Layers.Ground.Name)[0];
@@ -46,6 +47,15 @@ var GameStoreCl = function() {
 		_collisionLayer = {};
 		_shopInformation = {};
 		_gameEntities = [];
+		_activeMap = null;
+	};
+
+	this.setActiveMap = function(map) {
+		_activeMap = map;
+	};
+
+	this.getActiveMap = function() {
+		return _activeMap;
 	};
 
 	this.getGameEntities = function() {

@@ -24,6 +24,7 @@ game.Menu.GameMenu = me.Object.extend({
     $(document.body).append(self.footer);
     self.addUserSubMenu();
     self.addMenu();
+    self.addBottomLeftMenu();
     $(this.footer).i18n();
     if (!user.is_visitor) {
       this.updateCurrentUserB = this.updateCurrentUser.bind(this);
@@ -38,6 +39,19 @@ game.Menu.GameMenu = me.Object.extend({
     if (user.sub === shop.subject) {
       $(this.menu).find('.inventory').show();
     }
+  },
+  addBottomLeftMenu: function() { // Add bottom left menu.
+    var map = game.Stores.GameStore.getActiveMap();
+    var shop = game.Stores.GameStore.getShopInformation();
+    var elt = map === 'shop' ? ("<h3><span data-i18n='welcome-to-the-shop'></span> " + shop.name+"</h3>") : ("<h3 data-i18n='welcome-to-"+map+"'></h3>");
+    var elt = $("<div id='bottom-left-menu' class='toggle-box'>"+
+      "<div class='toggler'><span class='arrow'></span></div>"+
+      "<div class='content'>"+elt+"</div>"+
+    "</div>");
+    this.footer.append(elt);
+    $(elt).find('.toggler').click(function() {
+      $(elt).toggleClass('active');
+    });
   },
   addUserSubMenu: function() { // Add sub menu.
     this.userSubMenu = $("<div id='user-sub-menu' class='heavygray-panel' style='display: none;'>"+

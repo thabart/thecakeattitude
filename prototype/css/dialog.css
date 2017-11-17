@@ -660,3 +660,48 @@ ul.tabs li.active
 .navigator-box ul.shops > li {
   margin-bottom: 3px;
 }
+
+/* TOGGLE BOX */
+.toggle-box {
+  background-color: rgb(27,27,23);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  color: white;
+}
+
+.toggle-box .toggler {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background-color: rgb(58, 56, 50);
+  width: 14px;
+  height: 100%;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.toggle-box .toggler .arrow {
+  width: 6px;
+  height: 8px;
+  position: absolute;
+  top: 45%;
+  left: 20%;
+}
+
+.toggle-box .toggler .arrow {
+  background: url('/img/icons/arrow-right.png') no-repeat;
+}
+
+.toggle-box.active .toggler .arrow {
+  background: url('/img/icons/arrow-left.png') no-repeat;
+}
+
+.toggle-box .content {
+  padding: 3px;
+  vertical-align: top;
+  display: none;
+}
+
+.toggle-box.active .content {
+  display: inline-block;
+}

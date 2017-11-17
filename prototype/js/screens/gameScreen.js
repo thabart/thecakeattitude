@@ -12,6 +12,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
       var currentPlayer = game.Stores.UserStore.getCurrentUser();
       var map = mappingLevelToMap.filter(function(m) { return m.name === key; })[0];
       self.currentMapName = map.name;
+      game.Stores.GameStore.setActiveMap(map.name);
       game.Stores.UserStore.updateCurrentUser(currentPlayer);
       me.levelDirector.loadLevel(map.level);
       var entry = me.game.world.getChildByName(Constants.Layers.Entry.Name)[0];
