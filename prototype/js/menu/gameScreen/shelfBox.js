@@ -72,6 +72,7 @@ game.Menu.ShelfBox = me.Object.extend({
                   "</div>"+
                   "<div class='col-8'>"+
                     // DISPLAY THE PRODUCTS.
+                    "<ul class='no-style product-categories' style='margin-bottom: 5px;'></ul>"+
                     "<ul class='list' style='padding: 0 10px 0 10px'></ul>"+
                     "<ul class='navigations'></ul>"+
                   "</div>"+
@@ -88,6 +89,7 @@ game.Menu.ShelfBox = me.Object.extend({
     $(this.shelf).draggable({ "handle": ".top" });
     $(this.shelf).i18n();
     this.displayProductFilters();
+    this.displayProductCategories();
     this.addListeners();
     this.displayB = this.display.bind(this);
     this.hideB = this.hide.bind(this);
@@ -126,6 +128,35 @@ game.Menu.ShelfBox = me.Object.extend({
 
       productFiltersElt.append(parent);
     });
+  },
+  displayProductCategories: function() { // Display the product categories.
+    var self = this;
+    var currentShopInformation = game.Stores.GameStore.getShopInformation();
+    if (!currentShopInformation || !currentShopInformation['product_categories'] || currentShopInformation['product_categories'] === null) { return; }
+    var productCategoriesElt = $(self.shelf).find('.product-categories');
+    productCategoriesElt.empty();
+    var allElt = $("<li data-i18n='all' class='active category'></li>");
+    allElt.click(function() {
+      self._request.category_id = [];
+      self._request.start_index = 0;
+      $(self.shelf).find('.product-categories .category').removeClass('active');
+      $(this).addClass('active');
+      self.refresh();
+    });
+    productCategoriesElt.append(allElt);
+    currentShopInformation['product_categories'] .forEach(function(productCategory) {
+      var elt = $("<li data-id='"+productCategory.id+"' class='category'>"+productCategory.name+"</li>");
+      productCategoriesElt.append(elt);
+      $(elt).click(function() {
+        self._request.category_id = [ $(this).data('id') ];
+        self._request.start_index = 0;
+        $(self.shelf).find('.product-categories .category').removeClass('active');
+        $(this).addClass('active');
+        self.refresh();
+      });
+    });
+
+    productCategoriesElt.i18n();
   },
   updateSelectedEntity: function() {
     if (!$(this.shelf).is(':visible')) { return; }

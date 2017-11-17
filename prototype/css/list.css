@@ -64,10 +64,31 @@ ul.list > li .information {
 ul.tags,
 ul.navigations,
 ul.filters,
-ul.place-selector {
+ul.place-selector,
+ul.product-categories {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+
+ul.tags li,
+ul.filters li,
+ul.navigations li,
+ul.place-selector li,
+ul.product-categories li {
+  display: inline-block;
+  margin-right: 5px;
+}
+
+ul.product-categories li {
+  border-radius: 5px;
+  background-color: #d2d1cb;
+  border: 1px solid rgb(117, 117, 113);
+  padding: 3px;
+}
+
+ul.product-categories li.active {
+  background-color: white;
 }
 
 ul.tags li,
@@ -76,14 +97,6 @@ ul.filters li {
   font-style: oblique;
   padding: 5px;
   color: #615d5d;
-}
-
-ul.tags li,
-ul.filters li,
-ul.navigations li,
-ul.place-selector li {
-  display: inline-block;
-  margin-right: 5px;
 }
 
 ul.navigations li {
