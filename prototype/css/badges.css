@@ -1,0 +1,9 @@
+.badge {
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.badge.green {
+  background-color: rgb(98, 176, 97);
+  color: white;
+}

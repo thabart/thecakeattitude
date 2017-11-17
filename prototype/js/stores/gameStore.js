@@ -141,17 +141,15 @@ var GameStoreCl = function() {
 		}
 	};
 
-	this.updateEntity = function(f, update = false) {
-		if (update) {
-			var gameEntities = _shopInformation['game_entities'];
-			var gameEntityToUpdate = gameEntities.filter(function(g) { return g.id === f.metadata.id; })[0];
-			if (!gameEntityToUpdate) {
-				return;
-			}
-
-			gameEntityToUpdate['is_flipped'] = f.flipped;
-			game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
+	this.updateEntity = function(f) { // Update the entity.
+		var gameEntities = _shopInformation['game_entities'];
+		var gameEntityToUpdate = gameEntities.filter(function(g) { return g.id === f.metadata.id; })[0];
+		if (!gameEntityToUpdate) {
+			return;
 		}
+
+		gameEntityToUpdate['is_flipped'] = f.flipped;
+		game.Services.ShopsService.update(_shopInformation.id, _shopInformation).then(function() { }).catch(function() { });
 	};
 
 	this.getCollisionLayer = function() { // Get collision layer.

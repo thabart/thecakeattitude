@@ -134,7 +134,7 @@ game.Screens.GameScreen = me.ScreenObject.extend({
 
       return dfd;
     },
-    setFurnitures: function(shopId) {
+    setFurnitures: function(shopId) { // Display the furntiures.
       var dfd = jQuery.Deferred();
       game.Services.ShopsService.get(shopId).then(function(r) { // Add all the furnitures.
         var shop = r['_embedded'];

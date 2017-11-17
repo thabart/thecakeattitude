@@ -35,12 +35,11 @@ game.Menu.ActionsBox = me.Object.extend({
       $(self.actions).hide();
       game.Stores.GameStore.hideInformation();
     });
-    $(this.actions).find('.turn').click(function() {
+    $(this.actions).find('.turn').click(function() { // Turn the selected entity.
       var selectedEntity = game.Stores.GameStore.getSelectedEntity();
-      selectedEntity.flip();
+      selectedEntity.flipped = !selectedEntity.flipped;
       game.Stores.GameStore.updateColls();
-      me.game.repaint();
-      game.Stores.GameStore.updateEntity(selectedEntity, true);
+      game.Stores.GameStore.updateEntity(selectedEntity);
     });
     $(this.actions).find('.translate').click(function() {
       self.mgfurniture.toggle();

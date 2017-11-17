@@ -2,6 +2,7 @@ game.Menu = game.Menu || {};
 game.Menu.NavigatorBox = me.Object.extend({
   init: function() {
     this._request = { count: 5, start_index: 0 };
+    var currentUser = game.Stores.UserStore.getCurrentUser();
     this.navigatorBox =$("<div class='modal blue lg navigator-box'>"+
       "<div class='container'>"+
         "<div class='content'>"+
@@ -17,7 +18,6 @@ game.Menu.NavigatorBox = me.Object.extend({
                 "</ul>"+
               "</div>"+
               // CONTENT.
-              "<div class='shop-loading' data-i18n='loading' style='display: none;'></div>"+
               "<div style='padding: 10px;' class='tab-container'>"+
                 "<div class='shops-tab tab' style='height: 500px;'>"+
                   "<div class='col-4'>"+
@@ -25,40 +25,44 @@ game.Menu.NavigatorBox = me.Object.extend({
                     "<div class='gray-panel'>"+
                       "<div class='top'></div>"+
                       "<div class='body'>"+
-                        "<label data-i18n='orderBy'></label>"+
-                        "<div class='input'>"+
-                          "<div class='top'></div>"+
-                          "<div class='body'>"+
-                            "<select class='shop-order'>"+
-                              "<option data-i18n='creation_date_desc' data-ordername='create_datetime' data-order='desc'></option>"+
-                              "<option data-i18n='creation_date_asc' data-ordername='create_datetime' data-order='asc'></option>"+
-                              "<option data-i18n='reputation_desc' data-ordername='average_score' data-order='desc'></option>"+
-                              "<option data-i18n='reputation_asc' data-ordername='average_score' data-order='asc'></option>"+
-                            "</select>"+
+                        "<div>"+ // Display order by.
+                          "<label data-i18n='orderBy'></label>"+
+                          "<div class='input'>"+
+                            "<div class='top'></div>"+
+                            "<div class='body'>"+
+                              "<select class='shop-order'>"+
+                                "<option data-i18n='creation_date_desc' data-ordername='create_datetime' data-order='desc'></option>"+
+                                "<option data-i18n='creation_date_asc' data-ordername='create_datetime' data-order='asc'></option>"+
+                                "<option data-i18n='reputation_desc' data-ordername='average_score' data-order='desc'></option>"+
+                                "<option data-i18n='reputation_asc' data-ordername='average_score' data-order='asc'></option>"+
+                              "</select>"+
+                            "</div>"+
+                            "<div class='bottom'></div>"+
                           "</div>"+
-                          "<div class='bottom'></div>"+
                         "</div>"+
+                        ( currentUser && !currentUser.is_visitor ? "<div><input type='checkbox' class='displayMyShops' /> <label data-i18n='display-my-shops'></label></div>"  : "" ) +
                       "</div>"+
                        "<div class='bottom'></div>"+
                     "</div>"+
                     // FILTER ON CATEGORIES.
                     "<div class='gray-panel' style='padding-top: 5px;'>"+
                       "<div class='top'></div>"+
-                      "<div class='body'>"+
-                        "<div class='body'>"+
-                          "<label data-i18n='categories'></label>"+
-                          "<div class='treeview filters'>"+
-                            "<ul class='shop-categories'></ul>"+
-                          "</div>"+
+                      "<div class='body shop-categories-loading' data-i18n='loading' style='display: none;' />"+
+                      "<div class='body shop-categories-container'>"+
+                        "<a href='#' class='clear-filter' data-i18n='clear-filter'></a>"+
+                        "<div class='treeview filters'>"+
+                          "<ul class='shop-categories'></ul>"+
                         "</div>"+
                       "</div>"+
                        "<div class='bottom'></div>"+
                     "</div>"+
                   "</div>"+
-                  "<div class='col-8'>"+
-                    "<ul class='list shops' style='padding: 0 10px 0 10px'></ul>"+
-                    "<div class='shop-categories-loading' data-i18n='loading' style='display: none;'></div>"+
-                    "<ul class='navigations'></ul>"+
+                  "<div class='col-8'>"+ // Display the shops.
+                    "<div class='shops-loading' data-i18n='loading' style='display: none;'></div>"+
+                    "<div class='shops-container'>"+
+                      "<ul class='list shops' style='padding: 0 10px 0 10px'></ul>"+
+                      "<ul class='navigations'></ul>"+
+                    "</div>"+
                   "</div>"+
                 "</div>"+
                 "<div class='rooms-tab tab' style='display: none; height: 500px;'>"+
@@ -165,7 +169,7 @@ game.Menu.NavigatorBox = me.Object.extend({
           "<img src='"+profileImage+"' width='50' />"+
         "</div>"+
         "<div class='col-9'>"+
-          "<h3 class='no-style'>"+(isOwner ? (shop.name+" "+"<span data-i18n='mine-shop' style='font-style: oblique;'></span>"): shop.name)+"</h3>"+
+          "<h3 class='no-style' style='display: inline-block;'>"+shop.name+"</h3>" + ( isOwner ? "<span data-i18n='mine' style='margin-left: 5px;' class='badge green' style='font-style: oblique;'></span>" : "" ) +
           "<div class='score' style='padding: 3px 0px 3px 0px;'></div>"+
           "<ul class='tags'></ul>"+
         "</div>"+
@@ -192,6 +196,7 @@ game.Menu.NavigatorBox = me.Object.extend({
   },
   displayNavigation: function(navigation) { // Display the navigation bar.
     var self = this;
+    self.navigation
     $(self.navigatorBox).find('.navigations').empty();
     if (navigation && navigation.length > 0) {
       var indice = 0;
@@ -223,19 +228,19 @@ game.Menu.NavigatorBox = me.Object.extend({
   },
   displayShopsLoading: function(b) { // Display shops loader.
     if (b) {
-      $(this.navigatorBox).find('.tab-container').hide();
-      $(this.navigatorBox).find('.shop-loading').show();
+      $(this.navigatorBox).find('.shops-container').hide();
+      $(this.navigatorBox).find('.shops-loading').show();
     } else {
-      $(this.navigatorBox).find('.tab-container').show();
-      $(this.navigatorBox).find('.shop-loading').hide();
+      $(this.navigatorBox).find('.shops-container').show();
+      $(this.navigatorBox).find('.shops-loading').hide();
     }
   },
   displayShopCategoriesLoading: function(b) { // Display shop categories loader.
     if (b) {
-      $(this.navigatorBox).find('.shop-categories').hide();
+      $(this.navigatorBox).find('.shop-categories-container').hide();
       $(this.navigatorBox).find('.shop-categories-loading').show();
     } else {
-      $(this.navigatorBox).find('.shop-categories').show();
+      $(this.navigatorBox).find('.shop-categories-container').show();
       $(this.navigatorBox).find('.shop-categories-loading').hide();
     }
   },
@@ -271,6 +276,23 @@ game.Menu.NavigatorBox = me.Object.extend({
       };
       me.loader.preload({});
       me.state.change(me.state.LOADING);
+    });
+    $(self.navigatorBox).find('.clear-filter').click(function(e) {
+      e.preventDefault();
+      self._request.category_id = [ ];
+      $(self.navigatorBox).find('.shop-categories .filter').removeClass('active');
+      self.refreshShops();
+    });
+    $(self.navigatorBox).find('.displayMyShops').change(function() {
+      var isChecked = $(this).is(':checked');
+      if (isChecked) {
+        var currentUser = game.Stores.UserStore.getCurrentUser();
+        self._request['subject'] = [ currentUser.sub ];
+      } else {
+        self._request['subject'] = [ ];
+      }
+
+      self.refreshShops();
     });
   },
   toggle: function() { // Toggle the box.

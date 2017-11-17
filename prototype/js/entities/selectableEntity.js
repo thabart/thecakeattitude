@@ -88,15 +88,6 @@ game.SelectableEntity = me.Entity.extend({
 
     var nbRows = (!this.flipped) ? this.shapeDef.horizontal.nbRows : this.shapeDef.vertical.nbRows;
     var nbCols = (!this.flipped) ? this.shapeDef.horizontal.nbCols : this.shapeDef.vertical.nbCols;
-    console.log("===="+this.metadata.name+"====");
-    console.log({
-      row: tile.row,
-      col: tile.col,
-      nbRows: nbRows,
-      nbCols: nbCols,
-      x: this.pos.x,
-      y: this.pos.y
-    });
     return {
       row: tile.row,
       col: tile.col,
