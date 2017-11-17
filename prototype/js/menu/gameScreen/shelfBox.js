@@ -62,23 +62,9 @@ game.Menu.ShelfBox = me.Object.extend({
                     "<div class='gray-panel' style='padding-top: 5px'>"+
                       "<div class='top'></div>"+
                       "<div class='body'>"+
+                        "<a href='#' class='clear-filter' data-i18n='clear-filter'></a>"+
                         "<div class='treeview filters'>"+
-                          "<ul>"+
-                            "<li>"+
-                              "<span class='node-toggle'></span>"+
-                              "<span>Color</span>"+
-                              "<ul>"+
-                                "<li class='filter'>Red</li>"+
-                              "</ul>"+
-                            "</li>"+
-                            "<li>"+
-                              "<span class='node-toggle'></span>"+
-                              "<span>Size</span>"+
-                              "<ul>"+
-                                "<li>Medium</li>"+
-                              "</ul>"+
-                            "</li>"+
-                          "</ul>"+
+                          "<ul class='product-filters'></ul>"+
                         "</div>"+
                       "</div>"+
                       "<div class='bottom'></div>"+
@@ -101,6 +87,7 @@ game.Menu.ShelfBox = me.Object.extend({
     $(this.shelf).hide();
     $(this.shelf).draggable({ "handle": ".top" });
     $(this.shelf).i18n();
+    this.displayProductFilters();
     this.addListeners();
     this.displayB = this.display.bind(this);
     this.hideB = this.hide.bind(this);
@@ -109,20 +96,47 @@ game.Menu.ShelfBox = me.Object.extend({
     game.Stores.GameStore.listenHideShelfBoxArrived(this.hideB);
     game.Stores.GameStore.listenSelectedEntityChanged(this.updateSelectedEntityB);
   },
+  displayProductFilters: function() { // Display the product categories.
+    var self = this;
+    var currentShopInformation = game.Stores.GameStore.getShopInformation();
+    if (!currentShopInformation || !currentShopInformation['filters'] || currentShopInformation['filters'] === null) { return; }
+    var productFilters = currentShopInformation['filters'];
+    var productFiltersElt = $(this.shelf).find('.product-filters');
+    productFiltersElt.empty();
+    productFilters.forEach(function(productFilter) {
+      var parent = $("<li>"+
+        "<span class='node-toggle'></span>"+
+        "<span>"+productFilter.name+"</span>"+
+        "<ul class='children'></ul>"+
+      "</li>");
+      if (productFilter.values) {
+        var childrenElt = parent.find('.children');
+        productFilter.values.forEach(function(child) {
+          var elt = $("<li data-filterid='"+productFilter.id+"' data-content='"+child.content+"' class='filter'>"+child.content+"</li>");
+          childrenElt.append(elt);
+          $(elt).click(function() {
+            self._request.filters = [ { id: $(this).data('filterid'), value: $(this).data('content') } ];
+            self._request.start_index = 0;
+            $(self.shelf).find('.product-filters .filter').removeClass('active');
+            $(this).addClass('active');
+            self.refresh();
+          });
+        });
+      }
+
+      productFiltersElt.append(parent);
+    });
+  },
   updateSelectedEntity: function() {
     if (!$(this.shelf).is(':visible')) { return; }
     var selectedEntity = game.Stores.GameStore.getSelectedEntity();
     if (!selectedEntity || selectedEntity === null) { return; }
     this.display(null, selectedEntity.metadata);
   },
-  refresh: function() {
+  refresh: function() { // Refresh the list of products & navigations.
     var self = this;
     if (!self._product_category || self._product_category === null) { return; }
     self.displayLoading(true);
-    var productsElt = $(self.shelf).find('.products .list');
-    var navigationsElt = $(self.shelf).find('.navigations');
-    productsElt.empty();
-    navigationsElt.empty();
     game.Services.ProductsService.search(self._request).then(function(result) {
       var products = result['_embedded'],
         navigation = result['_links']['navigation'];
@@ -130,46 +144,77 @@ game.Menu.ShelfBox = me.Object.extend({
         products = [ products];
       }
 
-      products.forEach(function(product) {
-        var elt = $("<li>"+
-          "<div class='information'>"+
-            product.name+
-          "</div>"+
-          "<div>"+
-            "<div class='col-8'>"+
-              "<span>€ "+product.price+"</span>"+
-            "</div>"+
-            "<div class='col-4' style='text-align: right;'>"+
-              "<button  data-id='"+product.id+"' class='button button-green see' data-i18n='see'></button>"+
-            "</div>"+
-          "</div>"+
-        "</li>");
-        productsElt.append(elt);
-        $(elt).find('.see').click(function() {
-          game.Stores.GameStore.displayProduct($(this).data('id'));
-        });
-      });
-      productsElt.i18n();
-      if (navigation && navigation.length > 0) {
-        navigation.forEach(function(nav) {
-          var n = $("<li>"+nav.name+"</li>");
-          navigationsElt.append(n);
-          $(n).click(function() {
-            $(self.shelf).find('.navigations li').removeClass('active');
-            $(this).addClass('active');
-            var page = $(this).html();
-            self._request.start_index = self._request.count * (parseInt(page) - 1);
-            self.refresh();
-          });
-        });
-      }
-
+      self.displayProducts(products);
+      self.displayNavigation(navigation);
       self.displayLoading(false);
     }).catch(function() {
       self.displayLoading(false);
     });
   },
-  addListeners: function() {
+  displayProducts: function(products) { // Display the products.
+    var self = this;
+    var productsElt = $(self.shelf).find('.products .list');
+    productsElt.empty();
+    if (!products || products.length === 0) { return; }
+    products.forEach(function(product) {
+      var elt = $("<li style='margin-bottom: 3px;'>"+
+        "<div class='information'>"+
+          product.name+
+        "</div>"+
+        "<div>"+
+          "<div class='col-8'>"+
+            "<h3>€ "+product.price+"</h3>"+
+            "<ul class='filters'></ul>"+
+          "</div>"+
+          "<div class='col-4' style='text-align: right;'>"+
+            "<button  data-id='"+product.id+"' class='button button-green see' data-i18n='see'></button>"+
+          "</div>"+
+        "</div>"+
+      "</li>");
+      if (product.filters && product.filters.length > 0) {
+        product.filters.forEach(function(filter) {
+          elt.find('.filters').append("<li>"+ filter.name + " : "+ filter.content +"</li>");
+        });
+      }
+
+      productsElt.append(elt);
+      $(elt).find('.see').click(function() {
+        game.Stores.GameStore.displayProduct($(this).data('id'));
+      });
+    });
+    productsElt.i18n();
+  },
+  displayNavigation: function(navigation) { // Display the navigations.
+    var self = this;
+    var navigationsElt = $(self.shelf).find('.navigations');
+    navigationsElt.empty();
+    if (!navigation || navigation.length === 0) { return; }
+    var indice = 0;
+    navigation.forEach(function(nav) {
+      var n = $("<li class='"+( indice === 0 ? "active": "" )+"'>"+nav.name+"</li>");
+      navigationsElt.append(n);
+      $(n).click(function() {
+        $(self.shelf).find('.navigations li').removeClass('active');
+        $(this).addClass('active');
+        var page = $(this).html();
+        self._request.start_index = self._request.count * (parseInt(page) - 1);
+        self.displayLoading(true);
+        game.Services.ProductsService.search(self._request).then(function(result) {
+          var products = result['_embedded'];
+          if (!(products instanceof Array)) {
+            products = [ products];
+          }
+
+          self.displayProducts(products);
+          self.displayLoading(false);
+        }).catch(function() {
+          self.displayLoading(false);
+        });
+      });
+      indice++;
+    });
+  },
+  addListeners: function() { // Add listeners.
     var self = this;
     $(this.shelf).find('.close').click(function() {
       self.hide();
@@ -197,6 +242,12 @@ game.Menu.ShelfBox = me.Object.extend({
       e.preventDefault();
       var val = $(self.shelf).find('.product-name').val();
       self._request['name'] = val;
+      self.refresh();
+    });
+    $(this.shelf).find('.clear-filter').click(function(e) {
+      e.preventDefault();
+      self._request['filters'] = [];
+      $(self.shelf).find('.product-filters .filter').removeClass('active');
       self.refresh();
     });
   },
